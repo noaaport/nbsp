@@ -1,35 +1,35 @@
 #!/bin/sh
-#
-# $Id$
-#
 
+project=nbsp
+
+# nbsptclhttpd receives special treatment
+tcllibs="tclgrads tclmetar tclupperair"
+srclibs="libconnth libqdb libspoolbdb libtclconf"
+tclhttpd=${project}tclhttpd
+
+exclude="build dev-notes examples/filters"
 tmpdir=tmp
-exclude="tools dev-notes examples/filters bsd rpm macosx debian"
-libs="libconnth libtclconf libqdb libspoolbdb"
 
 # read name and version
-. ../VERSION
+. ../../VERSION
 
 rm -r -f $tmpdir
 mkdir $tmpdir
-
 cd $tmpdir
-cvs export -D now -d ${name}-${version} ${name}
 
-cd ${name}-${version}
+svn export file:///home/svn/$project/trunk $project-$version
+cd $project-$version
 rm -r $exclude
-cvs export -D now -d tclhttpd nbsptclhttpd
-#cvs export -D now tclmetar
-#cvs export -D now tclupperair
-for l in tclmetar tclupperair
+for p in $tcllibs
 do
-  cvs -d :ext:nieves@${l}.cvs.sourceforge.net:/cvsroot/${l} export -D now ${l}
+  svn export file:///home/svn/$p/trunk $p
 done
+svn export file:///home/svn/$tclhttpd/trunk tclhttpd
 
 cd src
-for l in $libs
+for p in $srclibs
 do
-  cvs export -D now ${l}
+  svn export file:///home/svn/$p/trunk $p
 done
 
 cd ../.. 
