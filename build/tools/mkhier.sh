@@ -6,7 +6,7 @@
 root=/home/www/pub/software
 
 # get $name and $version
-. ../VERSION
+. ../../VERSION
 
 base=${name}-${branch}
 

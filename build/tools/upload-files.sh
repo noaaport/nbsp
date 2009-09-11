@@ -2,8 +2,8 @@
 
 . upload.conf
 
-cp ../../QUICK* ../../RELEASE_NOTES ../../UPGRADING ../../conf/CONFIGURING \
-    ../../READMEs/*.README .
+cp ../../QUICK_START/* ../../RELEASE_NOTES ../../UPGRADING \
+    ../../conf/CONFIGURING ../../READMEs/*.README .
 upload_files="QUICK* RELEASE_NOTES UPGRADING CONFIGURING *.README"
 
 release_file=RELEASE_NOTES
