@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+# This file contains configuration settings that are different for
+# the various operating systems.
+
+# See the note in nbspd.conf
+set udprcvsize	[expr 192 * 1024]

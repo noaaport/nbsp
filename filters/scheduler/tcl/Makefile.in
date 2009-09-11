@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2006-2009 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+LIBEXECTARGET = scheduler
+BINTARGET =	nbspscheduler
+TCLSOURCES =	scheduler.tcl nbspscheduler.tcl
+SAMPLES =	scheduler.conf-sample
+
+TARGET =	${LIBEXECTARGET} ${BINTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+SCHEDCONF =	@SCHEDCONF@
+
+all: ${TARGET}
+
+scheduler: scheduler.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# scheduler.tcl > scheduler
+
+scheduler.conf-sample: ${SCHEDCONF}
+	cp ${SCHEDCONF} scheduler.conf-sample
+
+nbspscheduler: nbspscheduler.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspscheduler.tcl > nbspscheduler
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${LIBEXECTARGET} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${BINTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

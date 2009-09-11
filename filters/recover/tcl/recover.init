@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+# Default configuration setting for the recover filter. Must be read
+# after reading the default filters.init. This filter must read also
+# nbspd.init to the location of the spool directory and the infeedfifo.
+
+set recover(conf)	[file join $common(confdir) "recover.conf"];
+set recover(dir)	[file join $common(nbspdir) "recover"];
+set recover(fnameformat) "%Y%m%d.log";
+set recover(infeed_enable)	1;
+set recover(backuphostport) "noaaport2:8015";
+set recover(curl_retries)	2;
+set recover(curl_timeout)	1;
+set recover(curl_options)	{-f -s -S};
+
+# The optional configuration file
+if {[file exists $recover(conf)] == 1} {
+    source $recover(conf);
+}

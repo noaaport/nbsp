@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+# These what unisys uses -
+#
+			code	lat	lon	
+atlantic		at	0,60	-110,-15
+eastern pacific		ep,cp	0,60	-175,-85
+westen pacific			0,60	100,175
+south pacific			-55,0	115,175
+south indian			-55,0	30,120
+north indian			-5,25	45,105

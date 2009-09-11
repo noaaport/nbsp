@@ -1,0 +1,51 @@
+#
+# $Id$
+#
+
+The rstfilter can produce loop sequences of the radar
+and satellite images. The relevant settings are commented out
+in the ``rstfilter.conf'' file.
+
+The functionality is enabled by setting the variables
+
+	set rstfilter(radloop_enable) 1
+	set rstfilter(satloop_enable) 1
+
+in that file. The default program used is gifsicle,
+but others can be used. The program is called with a cmd line
+equivalent of
+
+	<program> <preoptions> <files> <postoptions> > <outputfile>
+
+where the <preoptions> and <postoptions> are the settings in the
+variables (e.g., for the radar loops)
+
+	rstfilter(radloop_program_preoptions)
+	rstfilter(radloop_program_postoptions)
+
+respectively. Thus, for example, to create an endless loop,
+with a 2 second delay between the last frame and the start of the
+next sequence, the following can be used
+(in the first line the character is the letter "ell", in the second it is
+the number "one")
+
+	set rstfilter(radloop_program_preoptions) {-l}
+	set rstfilter(radloop_program_postoptions) {-d 200 #-1}
+
+To make a loop that repeats the sequence only three times
+
+	set rstfilter(radloop_program_preoptions) {-l 3}
+
+In any case, adding the "-O2" option (capital letter 'O') in the postoptions
+can be useful to optimize the animations.
+
+The variable "rstfilter(radloop_regex)" determines for which
+sites and type combinations the loops are generated. Its format is similar to
+the variable "rstfilter(rad_regex)". The latter determined which images
+are generated, and the former the loops.
+
+The variables for the satellite images have an analogous meaning.
+
+Note that the radar images require that gempak be installed since
+they are generated sing the gpmap_gif program. The satellite images
+do not require gempak, unless the map outlines are desired.

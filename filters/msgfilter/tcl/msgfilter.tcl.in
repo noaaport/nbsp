@@ -1,0 +1,376 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require fileutil;
+package require textutil;
+package require mime;
+package require smtp;
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "msgfilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+        return 1;
+}
+unset filters_init_status;
+
+# Default configuration and rc files
+set msgfilter(conf)   [file join $common(confdir) "msgfilter.conf"];
+set msgfilter(rc)     [file join $common(confdir) "msgfilter.rc"];
+set msgfilter(rcdir)  [file join $common(rcdir) "msg"];
+set msgfilter(localconfdirs) $common(localconfdirs);
+set msgfilter(prerc)   "";
+set msgfilter(postrc)   "";
+set msgfilter(prodcodes) [file join \
+				$common(confdir) "msgfilter-prodcodes.def"];
+set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
+#
+# Configuration variables
+#
+set msgfilter(smtp,originator) "nbsp@localhost";
+set msgfilter(smtp,servers)    "localhost";
+#
+# The priority may be specified as a ``facility.level'' pair.
+# For example, ``local3.info'' logs the message as informational
+# level in the local3 facility.  The default is ``user.err''.
+#
+set msgfilter(syslogid) "nbsp-msgfilter";
+set msgfilter(syslogpri) "user.err";
+#
+# Parameters (not in the configuration file)
+#
+set msgfilter(flatlineseparator) ";";
+set msgfilter(pzseparator) "_";       # separate <prod_regex> from <zone_regex>
+set msgfilter(pzlistseparator) ",";   # separate terms in <prodzone_spec>
+#
+# Variables
+#
+set msgfilter(ccbsaved)	$common(ccbsaved);
+set msgfilter(ccbsize)	$common(ccbsize);
+set msgfilter(subscribers) [list]l;
+
+#
+# Read the optional configuration file for this filter.
+#
+if {[file exists $msgfilter(conf)] == 1} {
+    source $msgfilter(conf);
+}
+
+# The product codes file must exist
+if {[file exists $msgfilter(prodcodes)] == 0} {
+    log_msg "Filter disabled: $msgfilter(proccodes) not found.";
+    return 1;
+}
+source $msgfilter(prodcodes);
+
+# The main rc file is required
+if {[file exists $msgfilter(rc)] == 0} {
+    log_msg "Filter disabled: $msgfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set msgfilter(rcfiles) [filterlib_get_rcfiles [file tail $msgfilter(rc)] \
+    $msgfilter(localconfdirs) $msgfilter(rcdir) \
+    $msgfilter(prerc) $msgfilter(postrc)];
+
+# The main rc file can use some functions for dynamic initalization,
+# (source and convert flat files and so on) so it must be read parsed
+# after the function library is read.
+
+proc main {argc argv} {
+
+    global errorInfo;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global msgfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    # Restrict the files processed right here.
+    if {$rc(txtflag) == 0} {
+	return;
+    }
+    set prod_type "txt";
+
+    set prod_code $rc(awips1);
+    if {$prod_code eq ""} {
+	set prod_code $rc(wmoid);
+    }
+
+    set prod_name $rc(fname);
+    set prod_body [::fileutil::cat $rc(fpath)];
+    if {$msgfilter(ccbsaved) == 1} {
+	set prod_body [string range $prod_body $msgfilter(ccbsize) end];
+    }
+    set ugczones [ugc_get_lines [split $prod_body "\n"]];
+
+    # The $msgfilter(subscribers) variable is a list of "subscriber lists",
+    # where each element of a "subscriber list" is a string
+    # of the form
+    #	<destination> <prodzonespcec> <flags>;
+    #
+    # The <prodzonespcec> is a comma separated list of
+    # products and zone regexes:
+    #
+    # <prod_regex1>_<zone_regex1>,<prod_regex2>_<zone_regex2>,...
+
+    foreach sl $msgfilter(subscribers) {
+	foreach s $sl {
+	    set s_parts [::textutil::splitx [string trim $s]];
+	    set s_addr [::textutil::splitx [lindex $s_parts 0] {://}];
+	    set s_addr_transp [lindex $s_addr 0];
+	    set s_addr_dest [lindex $s_addr 1];
+	    set s_prodzone_list \
+		[split [lindex $s_parts 1] $msgfilter(pzlistseparator)];
+	    set s_flags [lindex $s_parts 2];
+	    foreach s_prodzone $s_prodzone_list {
+		set s_prodzone_parts \
+			[split $s_prodzone $msgfilter(pzseparator)];
+		set s_prod_code_regex [lindex $s_prodzone_parts 0];
+		set s_zone_code_regex [lindex $s_prodzone_parts 1];
+		if {[regexp $s_prod_code_regex $prod_code] && \
+			[regexp $s_zone_code_regex $ugczones]} {
+		    lappend sendtolist($s_addr_transp,$s_flags) $s_addr_dest;
+
+		    break;
+		}
+	    }
+	}
+    }
+    foreach key [array names sendtolist] {
+	set t [lindex [split $key ","] 0];
+	set f [lindex [split $key ","] 1];
+	msgfilter_dispatch $t $f $sendtolist($key) \
+	    $prod_name $prod_type $prod_code $prod_body;
+    }
+}
+
+proc msgfilter_dispatch {transport flags recipients \
+	prod_name prod_type prod_code prod_body} {
+
+    if {$transport ne "smtp"} {
+	log_msg "Invalid transport $transport.";
+	return;
+    }
+
+    # For the moment only text files
+    if {$prod_type ne "txt"} {
+	log_msg "Invalid file type. Only handling txt files.";
+	return;
+    }
+
+    set prod_summary [msgfilter_prod_summary $prod_code];
+    if {$flags eq "F"} {
+	append subject $prod_name " - " $prod_summary;
+	set body $prod_body;
+    } elseif {$flags eq "S"} {
+	set subject $prod_name;
+	append body $prod_summary;
+    } else {
+	log_msg "Invalid flag $flags";
+	return;
+    }
+
+    msgfilter_smtp_send_txt $recipients $subject $body;
+}
+
+# This function takes as input a flat db file, parses it, and lappends the
+# elements of each line in the subscribers list.
+#
+proc msgfilter_add_flat_file {file} {
+
+    global msgfilter subscribers;
+
+    set separator $msgfilter(flatlineseparator);
+
+    set f [open $file "r"];
+    set entry "";
+    while {[gets $f line] >= 0} {
+	if {[regexp {^\#|^\s*$} $line]} {
+	    continue;
+	}
+	append entry [string trimright $line $separator];
+	if {[string range $line end end] eq $separator} {
+	    lappend subscribers $entry;
+	    set entry "";
+	}
+    }
+    close $f;
+}
+
+# Here recipients is a tcl list (that gets converted to a comma-separated
+# string).
+#
+proc msgfilter_smtp_send_txt {recipients subject body} {
+
+    global msgfilter;
+
+    set token [mime::initialize -canonical text/plain -string $body];
+
+    set result [smtp::sendmessage $token \
+		    -originator $msgfilter(smtp,originator) \
+		    -servers $msgfilter(smtp,servers) \
+		    -recipients [join $recipients ","] \
+		    -header [list Subject $subject]];
+
+    mime::finalize $token;
+
+    if {[llength $result] == 0} {
+	set status 0;
+    } else {
+        set status 1;
+        foreach r $result {
+            exec logger -t $msgfilter(syslogid) -p $msgfilter(syslogpri) \
+                [join $r ":"];
+        }
+    }
+
+    return $status;
+}
+
+#
+# UGC-functions library to support the UGC lines in bulletins.
+# These functions do not use any global variables and can be put
+# in a separate file if other filters need them.
+#
+
+# Expand a line of the form
+#
+# SSFnnn-(nnn-nnn>nnn-...SSFnnn-SSFnnn-...)DDHHMM-
+#
+# to a string of SSFnnn terms separated by "-". The ddhhmm is put at the end,
+# after a "-".
+# E.g.,
+#	txz254-txz255-txz256-txz257-060000
+#
+proc ugc_expand {line} {
+
+    # Trim the ending -ddhhmm- string
+    if {[regexp {^(.+)-([[:digit:]]{6})-$} $line match s1 s2]} {
+	set time $s2;
+	set line $s1;
+    }
+
+    # expand all the '>' and write the zones explicitly
+    while {[regexp {(.*)([[:digit:]]{3})>([[:digit:]]{3})(.*)} \
+		$line match s1 s2 s3 s4]} {
+
+	set i $s2;
+	while {$i < $s3} {
+	    # Strip leading zeros, increment and put zeros back
+    	    set j [string trimleft $i "0"];
+    	    incr j;
+    	    set i [format "%03d" $j];
+	    append s2 "-" $i;
+	}
+	set line "";
+	append line $s1 $s2 $s4;
+    }
+    
+    # Add the SSF to every zone.
+    set zonelist [split $line "-"];
+    set new_zonelist [list];
+    foreach z $zonelist {
+	if {[string length $z] == 6} {
+	    set ssf [string range $z 0 2];
+	    lappend new_zonelist $z;
+	} elseif {[string length $z] == 3} {
+	    set zz $ssf;
+	    append zz $z;
+	    lappend new_zonelist $zz;
+	} else {
+#	    puts "Invalid zone code $z";
+#	    exit 1;
+	    
+	    return "";
+	}
+    }
+    set line [join $new_zonelist "-"];
+    append line "-" $time;
+
+    return $line;
+}
+
+proc ugc_find {line} {
+
+    return [regexp {^[A-Z]{2}(Z|C)[[:digit:]]{3}(-|>).*[[:digit:]]{6}-} $line];
+}
+
+proc ugc_get_time {line} {
+
+    # Trim the ending -ddhhmm- string
+    if {[regexp {^(.+)-([[:digit:]]{6})-$} $line match s1 s2]} {
+	set time $s2;
+    } else {
+	set time "";
+    }
+
+    return $time;
+}
+
+# Look for ugc lines. Each one is expanded as explained above. If there are
+# several such lines, they are joined in one string with a space as separator.
+# E.g.,
+#   amz700-062245 amz710-062245 amz720-062245 
+#
+proc ugc_get_lines {body} {
+
+    set zone_list [list];
+    foreach line $body {
+	if {[ugc_find $line]} {
+	    set line [ugc_expand $line];
+	    lappend zone_list $line;
+	}
+    }
+    set zone_list [string tolower [join $zone_list " "]];
+
+    return $zone_list;
+}
+
+proc msgfilter_prod_summary {prod_code} {
+
+    global filtersprodcodes;
+
+    if {[info exists filtersprodcodes($prod_code)]} {
+	set summary $filtersprodcodes($prod_code);
+    } else {
+        append summary $prod_code " - No description found" ;
+    }
+
+    return $summary;
+}
+
+# Load the subscribers rules
+source $msgfilter(rc);
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

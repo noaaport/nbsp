@@ -1,0 +1,77 @@
+#
+# $Id$
+#
+.include "../Makefile.inc"
+.include "../VERSION"
+.include "pkginfo.mk"
+
+package_version = ${version}_${package_build} 
+package_origin = ${package_category}/${name}
+package_name = ${name}-${package_version}
+package_file = ${package_name}.${package_ext}
+package_name_client = ${nameclient}-${package_version}
+package_file_client = ${package_name_client}.${package_ext}
+package_origin_client = ${package_category}/${nameclient}
+
+option_files = -f pkg-plist \
+	-c pkg-comment \
+	-d pkg-descr \
+	-k pkg-deinstall \
+	-i pkg-postinstall \
+	-r pkg-req \
+	-D ${package_display_file}
+
+option_files_client = -f pkg-plist-client \
+	-c pkg-comment-client \
+	-d pkg-descr-client \
+	-k pkg-deinstall-client \
+	-i pkg-postinstall-client \
+	-r pkg-req-client \
+	-D ${package_display_file_client}
+
+default: build
+
+../Makefile: ../Makefile.in
+	cd ..; ./configure.sh
+
+build: ../Makefile
+	cd ..; ${MAKE}
+
+install: build
+	rm -rf pkg
+.if ${OS} == FreeBSD || ${OS} == NetBSD
+	install -d pkg
+	cd pkg; install -d `cat ../dirs`
+	cd ..; ${MAKE} DESTDIR=`pwd`/bsd/pkg PKGCONFDIR=/dist install
+.elif ${OS} == OpenBSD
+	install -d pkg/${PREFIX}
+	dirslist=`pwd`/dirs; cd pkg/${PREFIX}; install -d `cat $$dirslist`
+	cd ..; ${MAKE} PKGBUILDDIR=`pwd`/bsd/pkg PKGCONFDIR=/dist install
+.endif
+
+package: install
+.if ${OS} == FreeBSD
+	pkg_create -p ${DESTDIR} -s `pwd`/pkg -o ${package_origin} \
+	${option_files} ${package_file}
+	pkg_create -p ${DESTDIR} -s `pwd`/pkg -o ${package_origin_client} \
+	${option_files_client} ${package_file_client}	
+.elif ${OS} == NetBSD
+	./mk-pkg-buildinfo.sh > ${package_buildinfo_file}
+	pkg_create -U -I ${DESTDIR} -p `pwd`/pkg -B ${package_buildinfo_file} \
+	${option_files} ${package_file}
+	./mk-pkg-buildinfo-client.sh > ${package_buildinfo_file_client}
+	pkg_create -U -I ${DESTDIR} -p `pwd`/pkg \
+	-B ${package_buildinfo_file_client} ${option_files+client} \
+	${package_file_client}
+.elif ${OS} == OpenBSD
+	pkg_create -p ${DESTDIR} -B `pwd`/pkg ${option_files} ${package_file}
+	pkg_create -p ${DESTDIR} -B `pwd`/pkg \
+	${option_files_client} ${package_file_client}  
+.endif
+
+clean:
+	rm -f *~
+	rm -f -r pkg
+	rm -f ${package_file} ${package_buildinfo_file}
+	rm -f ${package_file_client} ${package_buildinfo_file_client}	
+	cd ..; make clean

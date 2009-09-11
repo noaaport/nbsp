@@ -1,0 +1,5 @@
+nbsp (1.8.r2-1) stable; urgency=low
+
+  * Initial debian package release
+
+ -- Jose F Nieves <nieves@ltp.upr.clu.edu>  Sat, 05 Sep 2009 12:38:33 -0400

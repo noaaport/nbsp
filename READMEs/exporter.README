@@ -1,0 +1,256 @@
+#
+# $Id$
+#
+The exporter module, which is enabled by default, allows client
+programs to access the noaaport data files by http. The api consists
+of just three commands that are sent to the server by http.
+
+The module is designed with a REST service model in mind.
+(See, for example, http://www.xfront.com/REST-Web-Services.html,
+in particular the section titled ``The Classic REST System'').
+In short a client can ask for the list of data directories. Then,
+for each directory, request the list of files available, or the list
+of files matching certain criteria, and finally retrieve a particular
+file.
+
+The module is complemented by two additional commands, that are part
+of the batch module but are mentioned here for completeness. The difference
+is that these two commands act on the raw data files saved in the
+spool directory, while the exporter deals with the data files processed
+by the filters (dafilter, gempakfilter, ...). The usage of these two commands
+is explained in the section of this file that starts with the title
+"Spool commands".
+
+Usage:
+=====
+	http://<server>[:<port>]/<command>
+
+where <command> is one of the following:
+
+	/_export/query_list?select=<regexp>[&format=xml|csv]
+
+	/_export/query_dir?dir=<dir>&select=<regexp>[&format=xml]
+
+	/_export_get/<dir>/<file>
+
+The "select" parameter is a regular expression (as explained below)
+that gives a simple and powerful method to query and select
+the files of interest. The "format" parameter instructs the server
+to return the information in xml format (more on that below).
+
+The module is designed to be simple, convenient and powerful for scripts
+and special applications, rather than for interactive use through
+web browsers.
+
+Examples:
+========
+
+For example, using our own test server (diablo),
+
+wget 'http://diablo:8015/_export/query_list?select=nwx'
+wget 'http://diablo:8015/_export/query_list?select=nwx&format=xml'
+
+wget 'http://diablo:8015/_export/query_dir?
+    dir=digatmos/nwx/watch_warn/flw&select=20081211'
+
+wget 'http://diablo:8015/_export/query_dir?
+    dir=digatmos/nwx/watch_warn/flw&select=20081211&format=xml'
+
+wget http://diablo:8015/_export_get/
+    digatmos/nwx/watch_warn/flw/2008121115.flw
+
+(The last three lines above are split for readablity.)
+
+Explanations:
+============
+
+1) The query_list command
+
+	/_export/query_list?select=<regexp>[&format=xml|csv]
+
+takes one or two arguments. The "select" argument is a regular
+expression that is matched against the list of subdirectories
+that contain the data files. The first few subdirectories are,
+
+	digatmos/surface
+	digatmos/nwx/public_products
+	digatmos/upperair
+
+and there are many (300+) more. For example,
+
+	/_export/query_list?select=nwx/public_products
+
+will match the directories
+
+	digatmos/nwx/pub_prod/rws
+	digatmos/nwx/pub_prod/afm
+	digatmos/nwx/watch_warn/flw
+
+and many others. Then the server will return the list
+
+	Public Products,digatmos/nwx/pub_prod/rws,%{ymdh}.rws
+	Public Products,digatmos/nwx/pub_prod/afm,%{ymdh}.afm
+	Watch and Warning Products,digatmos/nwx/watch_warn/flw,%{ymdh}.flw
+
+and so on. Each item that matches contains
+
+	description of the data
+	subdirectory
+	name format of the data file
+
+For example, the %{ymdh}.fwl in the third line above means that the subdiretory
+"digatmos/nwx/watch_warn/flw" contains files named like
+
+	2008121121.fwl
+	2008121122.fwl
+	2008121123.fwl
+
+If the second argument (format=xml) is given, that is
+
+	/_export/query_list?select=nwx/public_products&format=xml
+
+then the list will be returned in xml format instead of a comma
+separated trio in each line.
+
+2) query_dir command
+
+This command can also take two arguments
+
+	/_export/query_dir?dir=<dir>&select=<regexp>[&format=xml|csv]
+
+For example, with just one argument,
+
+	/_export/query_dir?dir=digatmos/nwx/watch_warn/flw&select=20081211
+
+it will return the list of files in the subdirectory
+
+	digatmos/nwx/watch_warn
+
+whose names match the regular expression that is passed in the
+"select" parameter. In this example, it will return a list
+like
+
+	2008121100.flw
+	2008121101.flw
+	2008121102.flw
+
+and so on. A command like
+
+	/_export/query_dir?dir=digatmos/nwx/watch_warn/flw&select=2008121[12]
+
+will return the list of files on days 11 and 12, and a command like
+
+	/_export/query_dir?dir=digatmos/nwx/watch_warn/flw \
+		&select=200812110[1-4]
+
+will return the list corresponding to 2008-12-11 between 1 and 4 am.
+
+In any case, if the second parameter is used, like
+
+	/_export/query_dir?dir=digatmos/nwx/watch_warn/flw&select=20081211&
+		format=xml
+
+then the list is returned in xml format.
+
+3) _export_get command
+
+This command is used to retrieve a particular file. For example
+
+	wget http://diablo:8015/_export_get/
+    		digatmos/nwx/watch_warn/flw/2008121115.flw
+
+will return that particular data file.
+
+Summary:
+=======
+
+In summary, the "query_list" command is used to get the list
+of data subdirectories and the format of the file names.
+The select parameter is used to restrict the set of subdirectories.
+
+The "query_dir" command is used to get the list of data files
+in a given subdirectory. The select parameter restricts the
+date and times of the set of files.
+
+Finally the "export_get" command is used to retrieve a particular
+file from a particular data subdirectory.
+
+The meaning of a "format tag" like %{ymdh} in the file names of the ist
+returned has been explained above. Other tags that are used
+with a similar meaning are
+
+%{ymdh_mh}    20081211_1045
+%{wmoid}      fous41
+%{awips}      n0rjua
+%{awips1}     n0r  (first three letters of %{awips})
+%{awips2}     jua  (last three letters of %{awips})
+
+At the moment of writing, only the data subdirectories of the
+digatmos directory are exported. Other ditectories (e.g., gempak)
+will be included as the module is developed further.
+
+Spool commands -
+================
+
+The spool commands are
+
+	http://<host>:8015/_get/spool/<fname>
+	http://<host>:8015/_query/spool/station=<kkkk>&select=<glob pattern>
+	http://<host>:8015/_get/inv/<hhmm>
+
+The first can be used to request file transfers after a panfilter
+notification, and the second to periodically request the latest set of files.
+The third command can be used to periodically request the latest minutely
+inventory file; the <hhmm> in that command should not contain
+the ".log" file extension.
+
+In the first command, the transfered file is the raw file that nbsp
+saves in the spool directory. If nbsp is configured to save the spool
+files with the CCB, then the transfered file will contain the (24 bytes) CCB.
+
+An additional argument in the second command as "&format=xml" to return
+an xml formatted list.
+
+For example, the following command queries the "n0r" radar files in
+the tjsj station:
+
+    wget -O output \
+	"http://diablo:8015/_query/spool?station=tjsj&select=*n0r*&format=xml"
+
+The following will be saved in the file "output":
+
+<?spooler_filelist version="1.0"?>
+
+<spooler_filelist>
+<fname>tjsj_sdus52-n0rjua.152206_164012674</fname>
+<fname>tjsj_sdus52-n0rjua.152232_164041396</fname>
+<fname>tjsj_sdus52-n0rjua.152011_163888260</fname>
+<fname>tjsj_sdus52-n0rjua.152056_163940956</fname>
+<fname>tjsj_sdus52-n0rjua.152109_163951708</fname>
+<fname>tjsj_sdus52-n0rjua.152154_163998910</fname>
+<fname>tjsj_sdus52-n0rjua.152219_164023843</fname>
+<fname>tjsj_sdus52-n0rjua.152128_163967777</fname>
+<fname>tjsj_sdus52-n0rjua.152200_164005390</fname>
+<fname>tjsj_sdus52-n0rjua.152213_164018263</fname>
+<fname>tjsj_sdus52-n0rjua.152115_163957152</fname>
+<fname>tjsj_sdus52-n0rjua.152141_163984080</fname>
+<fname>tjsj_sdus52-n0rjua.152102_163946569</fname>
+<fname>tjsj_sdus52-n0rjua.152024_163898004</fname>
+<fname>tjsj_sdus52-n0rjua.152122_163962391</fname>
+<fname>tjsj_sdus52-n0rjua.152043_163911093</fname>
+<fname>tjsj_sdus52-n0rjua.152147_163991948</fname>
+<fname>tjsj_sdus52-n0rjua.152226_164028863</fname>
+<fname>tjsj_sdus52-n0rjua.152134_163974745</fname>
+<fname>tjsj_sdus52-n0rjua.152030_163902126</fname>
+<fname>tjsj_sdus52-n0rjua.152037_163906579</fname>
+<fname>tjsj_sdus52-n0rjua.152050_163921363</fname>
+</spooler_filelist>
+
+Then executing
+
+    wget "http://diablo:8015/_get/spool/tjsj_sdus52-n0rjua.152050_163921363"
+
+will retrieve the file "tjsj_sdus52-n0rjua.152050_163921363".
+
+-
+Sat Dec 13 14:30:59 AST 2008

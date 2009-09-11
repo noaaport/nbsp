@@ -1,0 +1,77 @@
+#
+# $Id$
+#
+The dafilter and gpfilter are both heavy in terms of the use of
+resources, disk and cpu. They both have a mechanism for disabling
+some of the rules without touching the "rc" files, for those cases
+in which the interest is in a particular set set of data and not all of it.
+
+In the dafilter there are a few variables defined like
+
+	set dafilter(<type>_enable) 1;
+	set dafilter(<type>_regex)   {.*};
+
+where <type> is
+
+	sat
+	rad
+	grib
+	file
+
+By setting the "dafilter(<type>_enable)" to 0, the rule that processes
+that type of file is disabled; for example,
+
+	set dafilter(grib_enable) 0;
+
+will disable completely grib processing by the dafilter. On the other
+hand, if the that variable is set to 1 (the default), then the variable
+"dafilter(grib_regex)" can be used to get finer control over which grib files
+are processed.  The value of that variables is a ("uwildregex")
+regular expression that is matches against the subdirectory name (under the
+"digatmos" data directory in this case) where the files are saved.
+For example, setting
+
+	set dafilter(grib_regex) {gfs|nam|ngm}
+
+will process only the files that are saved under
+
+	grib/grb/gfs
+	grib/grb/nam
+	grib/grb/ngm
+
+in the digatmos data directory.
+
+For the gpfilter, the analogous variables are
+
+	gpfilter(decoder_enable)
+	gpfilter(sat_enable)
+	gpfilter(rad_enable)
+	gpfilter(file_enable)
+
+together with the corresponding gpfilter(<type>_regex) variable.
+For the sat, rad and file, the method is as explained above. For
+the "decoder" variable, the value of
+
+	gpfilter(decoder_regex)
+
+is matched against the decoer name (dcgrib, dcwarn ...). Thus, for example,
+setting
+
+	set gpfilter(decoder_enable) 0
+
+will turn off all the decoder rules, while setting
+
+	set gpfilter(decoder_regex) {dcwarn}
+
+will turn on only dcwarn and
+
+	set gpfilter(decoder_regex) {!dcgrib}
+
+will turn on all except dcgrib.
+
+The syntax of the "uwildregex" is more general an poweful than what is
+mentioned in these examples, and it is explained in more detail in the file
+"uwildregex.README".
+
+-
+Tue Dec 30 18:10:14 AST 2008

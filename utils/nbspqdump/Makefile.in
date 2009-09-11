@@ -1,0 +1,43 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+TARGET =	nbspqdc
+SOURCE =	nbspqdc.c
+OBJECTS =	nbspqdc.o
+NBSPOBJECTS =	../../src/packfpu.o ../../src/util.o
+ALLOBJECTS =	${OBJECTS} ${NBSPOBJECTS}
+TCLTARGET =     nbspqdump nbspqstat
+
+CFLAGS +=	-c -Wall
+
+TCLSH =         @TCLSH@
+DB_BINDIR =	@DB_BINDIR@
+INSTALL =       @INSTALL@
+
+all: ${TARGET} ${TCLTARGET}
+
+.c.o:
+	${CC} ${CFLAGS} $<
+
+nbspqdump: nbspqdump.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%DB_BINDIR%/s##${DB_BINDIR}# nbspqdump.tcl > nbspqdump
+
+nbspqstat: nbspqstat.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%DB_BINDIR%/s##${DB_BINDIR}# nbspqstat.tcl > nbspqstat
+
+${TARGET}: ${OBJECTS}
+	${CC} -o ${TARGET} ${ALLOBJECTS}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${TCLTARGET} ${BINDIR}
+
+clean:
+	rm -f *~ ${TARGET} ${TCLTARGET} ${OBJECTS} Makefile

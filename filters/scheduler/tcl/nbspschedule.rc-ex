@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+#
+# Sample script to be run by nbspscheduler
+#
+
+set glevel 900;
+
+foreach hh [list 48 54 60 72 96 108 120] {
+    schedule H/4 nbspgdstream -R gdstream-pr.rc -o stream_f$hh.gif \
+		-D "gdattim=f$hh" -D "glevel=$glevel"
+
+    schedule H/4 nbspgdwind -R gdwind-pr.rc -o wind_f$hh.gif \
+		-D "gdattim=f$hh"
+}
+
+foreach hh [list 48 54 60 72 96 108 120] {
+    schedule H nbspgdstream -R gdstream-us.rc -o stream-us_f$hh.gif \
+		-D "gdattim=f$hh" -D "glevel=$glevel"
+
+    schedule H nbspgdwind -R gdwind-us.rc -o wind-us_f$hh.gif -D "gdattim=f$hh"
+}

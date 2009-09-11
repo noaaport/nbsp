@@ -1,0 +1,63 @@
+#
+# $Id$
+#
+
+#
+# The contents of this file are merged in rssfilter-wfo.def. The file
+# is not used explcitly by the filter.
+#
+set rssstate(US,AK) "Alaska";
+set rssstate(US,AL) "Alabama";
+set rssstate(US,AR) "Arkansas";
+set rssstate(US,AZ) "Arizona";
+set rssstate(US,CA) "California";
+set rssstate(US,CO) "Colorado";
+set rssstate(US,CT) "Connecticut";
+set rssstate(US,DC) "Washington_DC";
+set rssstate(US,DE) "Delaware";
+set rssstate(US,FL) "Florida";
+set rssstate(US,GA) "Georgia";
+set rssstate(US,GU) "Guam";
+set rssstate(US,HI) "Hawaii";
+set rssstate(US,IA) "Iowa";
+set rssstate(US,ID) "Idaho";
+set rssstate(US,IL) "Illinois";
+set rssstate(US,IN) "Indiana";
+set rssstate(US,KS) "Kansas";
+set rssstate(US,KY) "Kentucky";
+set rssstate(US,LA) "Louisiana";
+set rssstate(US,MA) "Massachusetts";
+set rssstate(US,MD) "Maryland";
+set rssstate(US,ME) "Maine";
+set rssstate(US,MH) "Marshall_Islands";
+set rssstate(US,MI) "Michigan";
+set rssstate(US,MN) "Minnesota";
+set rssstate(US,MO) "Missouri";
+set rssstate(US,MS) "Mississippi";
+set rssstate(US,MT) "Montana";
+set rssstate(US,NC) "North_Carolina";
+set rssstate(US,ND) "North_Dakota";
+set rssstate(US,NE) "Nebraska";
+set rssstate(US,NH) "New_Hampshire";
+set rssstate(US,NJ) "New_Jersey";
+set rssstate(US,NM) "New_Mexico";
+set rssstate(US,NV) "Nevada";
+set rssstate(US,NY) "New_York";
+set rssstate(US,OH) "Ohio";
+set rssstate(US,OK) "Oklahoma";
+set rssstate(US,OR) "Oregon";
+set rssstate(US,PA) "Pennsylvania";
+set rssstate(US,PR) "Puerto_rico";
+set rssstate(US,RI) "Rhode_Island";
+set rssstate(US,SC) "South_Carolina";
+set rssstate(US,SD) "South_Dakota";
+set rssstate(US,TN) "Tennessee";
+set rssstate(US,TX) "Texas";
+set rssstate(US,UM) "Johnston_Wake_Xmas";
+set rssstate(US,UT) "Utah";
+set rssstate(US,VA) "Virginia";
+set rssstate(US,VT) "Vertmont";
+set rssstate(US,WA) "Washington";
+set rssstate(US,WI) "Wisconsin";
+set rssstate(US,WV) "West_Virginia";
+set rssstate(US,WY) "Wyoming";

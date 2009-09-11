@@ -1,0 +1,56 @@
+#
+# $Id$
+#
+
+The rc file is a tcl script is "sourced" by the nbspsatmap tool that is
+executed by the rstfilter for each radar data file received.
+The filter defines the following variables that the script can use:
+
+      gpmap(fmt)		(gif)
+      gpmap(outputfile)   	(default output file path name)
+      gpmap(devsize)		(default image size; e.g., "800;600")
+      gpmap(inputfile)		(full path of input file data file)
+      gpmap(wmoid)		(e.g., "tige01")
+
+The script can define additional variables, and at some point
+it must contain a portion of the form
+
+      set gpmap(script) {
+	      <gpmap commands here>
+      }
+
+The tool then feeds the gpmap(script) to gpmap by executing
+
+      puts $F [subst $gpmap(script)]
+
+where F is a handle to gpmap; i.e.,
+
+      set F [open "|gpmap_gif <options>" w];
+
+The "subst" command substitutes the values for the tcl variables in the
+script before sending it to gpmap.
+
+Finally, the "gpmap" scripts can contain another "post" script definition
+of the form
+
+set gpmap(post) {
+  file copy $gpmap(outputfile) /var/www/html/images
+}
+
+Any valid tcl commands can appear in this portion.
+Such code will be executed (via eval) as tcl code, after
+closing the pipe to gpmap.
+
+In the example above the final image file that gpmap produces is copied to the
+directory /var/www/html/images. Any valid tcl code can be included, and
+it can be used in particular for transfering the image files to
+other locations and web sites.
+
+Of course the above example is trivial, but a variation using, for example
+wget or more comprehensive tools like sitecopy, can be setup to transfer
+the file to a remote location.
+
+The reference material for gpmap (and the rc script) is in the User guide,
+
+	- Chap 4 - p. 111
+	- Chap 3 - p.  29

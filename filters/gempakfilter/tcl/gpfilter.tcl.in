@@ -1,0 +1,596 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "gpfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsputil;
+
+## The initialization of this filter.
+set initfile [file join $common(libdir) "gpfilter.init"];
+if {[file exists $initfile] == 0} {
+        puts "gpfilter disabled: $initfile not found.";
+        return 1;
+}
+source $initfile;
+
+# Variables
+set gpfilter(rcfiles)		[list];
+set gpfilter(ccbsaved)		$common(ccbsaved);
+set gpfilter(ccbsize)		$common(ccbsize);
+#
+set gpfilter(condition)		[list];
+set gpfilter(action)		[list];
+#
+set gpfilter(satdef_sourced)	0;
+
+if {[file exists $gpfilter(satdef)] == 1} {
+    source $gpfilter(satdef);
+    set gpfilter(satdef_sourced) 1;
+}
+
+# The main rc file is required
+if {[file exists $gpfilter(rc)] == 0} {
+    log_msg "Filter disabled: $gpfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set gpfilter(rcfiles) [filterlib_get_rcfiles [file tail $gpfilter(rc)] \
+	$gpfilter(localconfdirs) $gpfilter(rcdir) \
+	$gpfilter(prerc) $gpfilter(postrc)];
+
+# Load the rules sets
+source $gpfilter(rc);
+
+proc main {argc argv} {
+
+    global gpfilter;
+    global errorInfo;
+
+    cd $gpfilter(dec_datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global gpfilter;
+
+    filterlib_get_rcvars rc $finfo -dogrib;
+
+    # The gpfilter rules use these variables
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+    unset seconds;
+
+    set rc_status 1;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $gpfilter(condition) {
+        set actionlist [lindex $gpfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+proc filter_file {seq fpath savedir savename} {
+
+    global gpfilter;
+
+    if {[is_file_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    # The return status is not being used anywhere.
+    set status [filter_file_normal $seq $fpath $savedir $savename "-a"];
+
+    return $status;
+}
+
+proc filter_file_noappend {seq fpath savedir savename {pass_through 0}} {
+#
+# This function is also used by filter_rad. In that case it is called with
+# pass_through = 1 because the rad_regex is already checked. filter_rad
+# needs to know the return status.
+#
+    global gpfilter;
+    global filtersprogs;
+
+    if {$pass_through == 0} {
+	if {[is_file_rule_enabled $savedir] == 0} {
+	    return;
+	}
+    }
+
+    set status [filter_file_normal $seq $fpath $savedir $savename];
+
+    return $status;
+}
+
+proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
+
+    global gpfilter;
+    global filtersprogs;
+
+    cd $gpfilter(dec_datadir);
+    file mkdir $savedir;
+
+#    set opts $f_append;
+#    if {$gpfilter(ccbsaved) == 0} {
+#        append opts " -n";
+#    }
+
+    set status [catch {
+	if {$f_append eq "-a"} {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
+#	    filterlib_nbspfile $seq $fpath $savedir $savename "-a";
+#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+	} else {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+#	    filterlib_nbspfile $seq $fpath $savedir $savename;
+#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+	}
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    #
+    # The filter_rad function needs to know this.
+    #
+    return $status;
+}
+
+proc filter_file_compress {seq fpath savedir savename} {
+#
+# This function is no longer used - Tue Apr 28 20:26:10 AST 2009
+#
+    global gpfilter;
+    global filtersprogs;
+
+    if {[is_file_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    cd $gpfilter(dec_datadir);
+    file mkdir $savedir;
+
+    set opts "-z 9";
+    if {$gpfilter(ccbsaved) == 0} {
+	set opts "-z 9 -n";
+    }
+
+    set status [catch {
+	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
+	    $fpath $seq;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filter_rad {seq fpath savedir savename} {
+#
+# The only reason to use filter_rad instead of just filter_file_noappend
+# for radar files is to insert the entry in the data inventory.
+#
+    global gpfilter;
+
+    if {[is_rad_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    # Pass the pass_through flag
+    set status [filter_file_noappend $seq $fpath $savedir $savename 1];
+    if {$status == 0} {
+	set fpathout [file join $gpfilter(dec_datadir) $savedir $savename];
+	filter_rad_insert_inventory $savedir $fpathout;
+    }
+}
+
+proc filter_pipe_old {seq fpath pipe_name cmd_options savename} {
+
+    global gpfilter;
+
+    # The gempak decoders assume the files contain this header/footers
+    set gmpk_header_fmt "\001\r\r\n%03d \r\r\n"; 
+    set gmpk_trailer_str "\r\r\n\003"; 
+
+    # "savename" can be blank, which means that the decoder decides
+    # what name to use. In this case the gempak decoders assume that
+    # the current directory is gpfilter(dec_rootdir). 
+    # When "savename" is set, it is a name relative to $gpfilter(dec_datadir).
+    # if {$savename eq ""} {
+    # 	cd $gpfilter(dec_rootdir);	
+    # } else {
+    #	cd $gpfilter(dec_datadir)
+    # }
+    # But some decoders dump core, and it is best to use a common 
+    # working directory for all of them for cleaning up those.
+
+    if {[is_decoder_rule_enabled $pipe_name] == 0} {
+	return;
+    }
+
+    cd $gpfilter(dec_rootdir);
+
+    if {$savename ne ""} {
+	set fullsavename [file join $gpfilter(dec_datadir) $savename];
+    } else {
+	set fullsavename "";
+    }
+
+    set cmd_name [file join $gpfilter(dec_bindir) $pipe_name];
+    append cmd_name " " $cmd_options " " $fullsavename;
+
+    set status [catch {
+	set fout [open "|$cmd_name" w];
+	set fin  [open $fpath r];
+	fconfigure $fin -translation binary -encoding binary;
+	fconfigure $fout -translation binary -encoding binary;
+
+	puts -nonewline $fout [format $gmpk_header_fmt [expr $seq % 1000]]
+	if {$gpfilter(ccbsaved) == 1} {
+	    set ccb [read $fin $gpfilter(ccbsize)]; 	# this is discarded
+	}
+	puts -nonewline $fout [read $fin];
+	puts -nonewline $fout $gmpk_trailer_str;	
+    } errmsg];
+
+    if {[info exists fout]} {
+	close $fout;
+    }
+
+    if {[info exists fin]} {
+	close $fin;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+}
+
+proc filter_sat_unz {seq fpath} {
+
+# This function assumes that the input file (fpath) has been saved in
+# uncompressed form. It is to be used if the nbsp processor is configured
+# to uncompress the file frames on the fly and save it in uncompresed
+# form.
+
+    global gpfilter;
+    global filtersprogs;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+    set satdir $gpfilter(satdef,satdir);
+    set sattmpdir $gpfilter(satdef,sattmpdir);
+
+    cd $gpfilter(dec_datadir);
+    file mkdir $sattmpdir
+
+    set status [catch {
+        set params [exec $filtersprogs(nbspsat) -g -d $sattmpdir $fpath]
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2];
+	set channel [lindex $params 3];
+	set res [lindex $params 4];
+	set time [lindex $params 5];
+	set tmpname [lindex $params 6];
+
+	append res $gpfilter(satdef,tig_res_suffix);
+
+	# Convert the sector and channel numbers to names.
+	# Set it to default values in case there is no official name assigned.
+
+	if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
+    	    set tig_sector $gpfilter(satdef,tig_sector,$sector);
+	} else {
+	    append tig_sector "sector" $sector;
+	}
+
+	if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
+    	    set tig_channel $gpfilter(satdef,tig_channel,$channel);
+	} else {
+	    append tig_channel "channel" $channel;
+	}
+
+	set dir [file join $tig_sector $res $tig_channel];
+	set fname "";
+	append fname $tig_channel "_" $time;
+
+	# The mechanism to enable/disable individual types
+	set savedir [file join $satdir $dir];
+	if {[is_sat_rule_enabled $savedir] == 0} {
+	    return;
+	}
+
+	set status [catch {
+	  set pathout [file join $savedir $fname];
+	  file mkdir $savedir;
+	  file rename -force [file join $sattmpdir $tmpname] $pathout;
+	  filter_sat_insert_inventory $dir \
+	      [file join $gpfilter(dec_datadir) $pathout];
+	} errmsg];
+    }
+
+    if {$status != 0} {
+	log_msg "Could not process $fpath.";
+	log_msg $errmsg;
+    }
+}
+
+proc filter_sat {seq fpath} {
+
+# This function assumes that the input file (fpath) has been saved in
+# compressed form. It is to be used if the nbsp processor is configured
+# to save the file frames as they come, in compressed form.
+
+    global gpfilter;
+    global filtersprogs;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+    set satdir $gpfilter(satdef,satdir);
+
+    cd $gpfilter(dec_datadir);
+
+    # This command just extracts the information from the nesdis pdb
+    set status [catch {
+        set params [exec $filtersprogs(nbspsat) -i $fpath]
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2]
+	set channel [lindex $params 3]
+	set res [lindex $params 4]
+	set time [lindex $params 5]
+	set tmpname [lindex $params 6]
+
+	append res $gpfilter(satdef,tig_res_suffix);
+
+	# Convert the sector and channel numbers to names.
+	# Set it to default values in case there is no official name assigned.
+
+	if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
+    	    set tig_sector $gpfilter(satdef,tig_sector,$sector);
+	} else {
+	    append tig_sector "sector" $sector;
+	}
+
+	if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
+    	    set tig_channel $gpfilter(satdef,tig_channel,$channel);
+	} else {
+	    append tig_channel "channel" $channel;
+	}
+
+	set dir [file join $tig_sector $res $tig_channel];
+	set fname "";
+	append fname $tig_channel "_" $time;
+
+	# The mechanism to enable/disable individual types
+	set savedir [file join $satdir $dir];
+	if {[is_sat_rule_enabled $savedir] == 0} {
+	    return;
+	}
+
+        set status [catch {
+	  set pathout [file join $savedir $fname];
+	  file mkdir $savedir;
+          file copy -force $fpath $pathout;
+	  filter_sat_insert_inventory $dir \
+	      [file join $gpfilter(dec_datadir) $pathout];
+        } errmsg];
+    }
+
+    if {$status != 0} {
+	log_msg "Could not process $fpath.";
+	log_msg $errmsg;
+    }
+}
+
+proc filter_pipe {seq fpath pipe_name cmd_options savename} {
+
+    global gpfilter;
+    global filtersprogs;
+
+    if {[is_decoder_rule_enabled $pipe_name] == 0} {
+	return;
+    }
+
+    cd $gpfilter(dec_rootdir);
+
+    set cmd_name [file join $gpfilter(dec_bindir) $pipe_name];
+
+    if {$savename ne ""} {
+	set fullsavename [file join $gpfilter(dec_datadir) $savename];
+    } else {
+	set fullsavename "";
+    }
+
+    append cmd_name " " $cmd_options " " $fullsavename " > /dev/null";
+
+#    set opts "-g";
+#    if {$gpfilter(ccbsaved) == 0} {
+#        set opts "-g -n";
+#    }
+
+    set status [catch {
+	filterlib_cspool_nbsppipe $seq $fpath $cmd_name "-g";
+#	filterlib_nbsppipe $seq $fpath $cmd_name "-g";
+#       eval exec nbsppipe $opts -s $seq < $fpath | \
+#                $cmd_name $cmd_options $fullsavename > /dev/null;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg "Error piping $fpath to $pipe_name: $errmsg"; 
+    }
+}
+
+#
+# Functions to support the inventory
+#
+proc filter_insert_inventory {invsubdir savedir fpathout} {
+#
+# See the function in the rstfilter.lib for the meaning of the "savedir".
+#
+    global gpfilter;
+
+    # The gp invdir must exist
+    if {[file isdirectory $gpfilter(invdir)] == 0} {
+	log_msg "No $gpfilter(invdir)";
+	return;
+    }
+
+    # The inventory files are saved in hourly subdirs within
+    # gempak/<invsubdir>. E.g.,
+    # gempak/nextad/nids/<yyyymmddhh>/<inf_fname>
+    #
+    set parentdir [file join $gpfilter(invdir) $invsubdir \
+	[clock format [clock seconds] -format $gpfilter(invformat) -gmt true]];
+    file mkdir $parentdir;
+
+    set invfile_name [join [file split $savedir] "."];
+    set invfile [file join $parentdir $invfile_name];
+
+    filterlib_file_append $invfile $fpathout;
+}
+
+proc filter_rad_insert_inventory {savedir fpathout} {
+
+    global gpfilter;
+
+    if {$gpfilter(rad_inv_enable) == 0} {
+	return;
+    }
+
+    filter_insert_inventory $gpfilter(radinvsubdir) $savedir $fpathout;
+}
+
+proc filter_sat_insert_inventory {savedir fpathout} {
+
+    global gpfilter;
+
+    if {$gpfilter(sat_inv_enable) == 0} {
+	return;
+    }
+
+    filter_insert_inventory $gpfilter(satinvsubdir) $savedir $fpathout;
+}
+
+#
+# Auxiliary functions
+#
+
+proc is_decoder_rule_enabled {key} {
+#
+# The key is the decoder name (dcwarn, ...).
+#
+    global gpfilter;
+
+    set r 0;
+
+    if {($gpfilter(decoder_enable) == 1) && \
+	([filterlib_uwildmat $gpfilter(decoder_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_rad_rule_enabled {key} {
+#
+# For radar the key is the subdirectory name, e.g., nexrad/NIDS/JUA/N0R.
+#
+    global gpfilter;
+
+    set r 0;
+
+    if {($gpfilter(rad_enable) == 1) && \
+	([filterlib_uwildmat $gpfilter(rad_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_sat_rule_enabled {key} {
+#
+# For sat the key is "images/sat/<subdir>" (e.g., images/sat/...).
+#
+    global gpfilter;
+
+    set r 0;
+
+    if {($gpfilter(sat_enable) == 1) && \
+	([filterlib_uwildmat $gpfilter(sat_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_file_rule_enabled {key} {
+#
+# For sat the key is "nwx/spc/<subdir>" (e.g., nwx/spc/stahry)
+#
+    global gpfilter;
+
+    set r 0;
+
+    if {($gpfilter(file_enable) == 1) && \
+	([filterlib_uwildmat $gpfilter(file_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

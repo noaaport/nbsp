@@ -1,0 +1,82 @@
+#
+# $Id$
+#
+
+Instead of filling with comments the sample scripts, here are some
+explanations of the most common or useful features.
+-
+
+GENERAL -
+
+When a gs file is executed, the following variables are defined:
+
+	gsplot(ctlfile)
+	gsplot(ctlfname)
+	gsplot(model)
+	gsplot(grid)
+	gsplot(reftime)
+	gsplot(forecasttime)
+	gsplot(imgfile)
+	gsplot(outputdir)
+
+Taking an example, these have the values
+
+	/var/noaaport/data/grib/ctl/gfs/2009020918/gfs_213_2009020918_48h.ctl
+	gfs_213_2009020918_48h.ctl
+	2007090901
+	gfs
+	213
+	48h
+	
+The imgfile and output are blank unless they are are specified in
+the command line.
+
+In addition, in the nbspgribsched.rc file there can appear additional
+variables defined. For example,
+
+lappend schedule "H:grads/gs/tmpprs.gs:gfs/gfs_211_*_6h:gfs:level=3
+
+will define the variable
+
+	gsplot(M,level)
+
+with the value 3.
+
+The script nbspgribplotc reads one of the ".gs" files in each directory,
+by a executing the instruction
+
+   source <gsfile>
+
+The <gsfile> can contain additional tcl variable definitions, but
+at some point it must contain a portion similar to
+
+set gsplot(script) {
+
+    open $gsplot(ctlfile)
+
+    set gxout shaded
+    d prmslmsl
+    set gxout contour
+    d prmslmsl
+    draw title <title>
+    printim <outputfile>
+
+    quit
+}
+
+which will be piped to grads as [subst $gsplot(script)].
+-
+
+UPLOADING -
+
+Finally, the "gs" scripts can contain another "post" script definition
+of the form
+
+set gsplot(post) {
+  file copy $gsplot(outputdir)/prmslmsl-$gsplot(date)-$fcast.png \
+	/home/www/images/model
+}
+
+Any valid tcl commands can appear in this portion.
+Such code will be executed (via eval) as tcl code, after
+closing the pipe to GrADS.

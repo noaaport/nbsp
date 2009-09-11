@@ -1,0 +1,100 @@
+#!%TCLSH%
+#
+# $Id$
+#
+# Usage: gribfilter-ctlfiles < <grb_file_list>
+#
+# The file names in the list should be relative to that gribfilter(datadir);
+# i.e., like
+#
+# grb/<model>/<date>/<filename>
+#
+# This is a "helper" script for the gribfilter to support the generation of
+# ctl and idx files for GrADS. The generation of ctl files can take several
+# minutes and during that time the gribfilter waits while the nbspgribctl
+# program executes and therefore it does not read from the stdin pipe.
+# This is inefficient: when the filter is configured as standlone (not
+# work-crew) the nbsp filter server queue grows; in work-crew configuration
+# the manager reads the queue but the slaves do not read from the stdin
+# pipe from the manager.
+#
+# The motivation for having this helper script is to have the gribfilter
+# execute it in the background and continue processing.
+#
+# Apart from the gribfilter configuration variables, this script
+# needs the value of $gribfilter(dirtygrbfiles), which it gets as
+# a (space-separated) string in stdin.
+
+## The common grib tools initialization
+set initfile "/usr/local/libexec/nbsp/nbspgribtools.init";
+if {[file exists $initfile] == 0} {
+    puts "$initfile not found.";
+    return 1;
+}
+source $initfile;
+unset initfile;
+
+log_msg "Start creating control files.";
+
+cd $gribfilter(datadir);
+set dirtygrbfiles [read stdin];
+
+# XXX delete
+#set f [open "/var/noaaport/gribfilter.garbage" w];
+#foreach grb [split $dirtygrbfiles] {
+#	puts $f $grb;
+#}
+#close $f;
+
+log_msg "Got dirty grib files list.";
+
+foreach grbfile [split $dirtygrbfiles] {
+
+    if {($gribfilter(gradsctl_uwildpatt) != "") && \
+	([filterlib_uwildmat $gribfilter(gradsctl_uwildpatt) $grbfile] == 0)} {
+	continue;
+    }
+
+    log_msg "Processing $grbfile.";
+
+    # Get the relative path without the "grb" parent dir,
+    # and then the same without the extension. This assumes
+    # that the idx, ctl, ..., subdirectories are all at the same
+    # level.
+    set rpath [join [lreplace [split $grbfile "/"] 0 0] "/"];
+    set rfname [file rootname $rpath];
+
+    set ctlfile [file join $gribfilter(ctldatadir) \
+	    ${rfname}$gribfilter(ctlfext)];
+    set idxfile [file join $gribfilter(idxdatadir) \
+	    ${rfname}$gribfilter(idxfext)];
+    set pdeffile [file join $gribfilter(pdefdatadir) \
+	    ${rfname}$gribfilter(pdeffext)];
+
+    file mkdir [file dirname $ctlfile];
+    file mkdir [file dirname $idxfile];
+    file mkdir [file dirname $pdeffile];
+
+    # Use full paths
+    set grbfile [file join $gribfilter(datadir) $grbfile];
+    set ctlfile [file join $gribfilter(datadir) $ctlfile];
+    set idxfile [file join $gribfilter(datadir) $idxfile];
+    set pdeffile [file join $gribfilter(datadir) $pdeffile];
+
+    set status [catch {
+	exec nbspgribctl -c $ctlfile -i $idxfile -p $pdeffile $grbfile;
+    } errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+# Generate the catalogs of grb and ctl files for the gribrsh tools.
+log_msg "Creating cat files.";
+set status [catch {exec nbspgribcat} errmsg];
+
+if {$status != 0} {
+    log_msg $errmsg;
+}
+
+log_msg "Finished creating control files.";

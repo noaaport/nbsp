@@ -1,0 +1,41 @@
+$Id$
+
+QUICK_START.linux
+	
+- The rpm package installation will create the various directories
+needed, as described in the QUICK_START.0 guide, and enable
+the rstfilter and dafilter. To run with in this default mode no
+further configuration is needed. An hourly cleanup script and a log rotation
+script are run by the scheduler. The configuration file scheduler.conf
+can be edited if desired.
+
+- The package also installs a script in the init.d directory
+for automatic start/stop of the server. Thus, nbsp will start
+automatically when the system boots, and stop when it shutdown.
+Of course it can be started or stoped manually by executing
+
+	/etc/init.d/nbspd stop
+	/etc/init.d/nbspd start
+
+- The following packages are required:
+
+	db4-4.6
+	db4-utils
+	libpng-1.2
+	zlib-1.2
+	tcl-8.5
+	tcllib-1.10
+	tk
+	expect
+	netpbm-progs-10
+	gnuplot-4
+	tcp_wrappers-libs
+	sharutils
+
+The packages for db4, png, zlib, tcl, and tcllib are required by the daemon
+and various filters, and in addition the emwin server requires the
+programs from the netpbm package and the ploting facility of the metar module
+requires gnuplot. The sharutils package contains uudecode which is used
+by the nntp interface in the various filters.
+
+All of the above come in rpm packages.

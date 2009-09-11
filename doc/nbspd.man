@@ -1,0 +1,73 @@
+.\"
+.\" $Id$
+.\"
+.\" See LICENSE
+.\"
+.TH NBSPD 8 "30 NOVEMBER, 2007"
+.SH NAME
+nbspd \- Noaaport Broadcast System Processor
+.SH SYNOPSIS
+\fBnbspd\fR [-c \fIconfigfile\fR] [-C] [-fqs] [-D [-D]] [-V [-V [-V]]]
+
+.SH DESCRIPTION
+\fInbspd\fR is a daemon that processes files received
+via the Noaaport Broadcast System (NBS). It reads all the packets
+received on all four noaaport channels and,
+when all the fragments of a file are received,
+assembles all the fragments back into the original file and
+saves it in a spool directory. 
+In the default configuration all the files are saved,
+but a simple mechanism based on the use of regular expresions
+provides for filtering the files that are processed and saved.
+\fInbpsd\fR uses \fBsyslog\fR for reporting error conditions.
+ 
+\fInbspd\fR can use the default configuration file 
+\fI/usr/local/etc/nbsp/nbspd.conf\fR if that file exists, and an additional
+configuration file passed via the \fB[-c]\fR option. If the \fB[-c]\fR switch
+is given, the named file is read, and the settings are applied,
+after those in the default configuration file.
+A commented sample default configuration is provided which
+explains all of the configurable options.
+
+The other command-line options are for special purpose, rather than general,
+use. The \fB[-C]\fR option option causes the program to print its configuration
+and quit. One instance of the \fB[-D]\fR option runs the program in debug mode
+and two instances disables becomming a daemon. The \fB[-V]\fR option increases
+the verbosity level. The \fB[-f]\fR and \fB[-s]\fR options disable the
+filters and the network server, respectively. The \fB[-q]\fR option
+disables reading from the noaaport data stream, but the program
+continues to process any data that may have accumulated in the queues.
+
+\fBnbspd\fR accepts network client connections and it can distribute the files
+this way. In particular, it can distribute a subset of the files,
+packaged in an emwin format,
+to regular emwin clients. In addition, filters can be loaded
+to post-process all, or a subset of, the files as the received.
+The distribution contains a filter that saves the
+files in a GemPak compatible directory structure and in a format
+compatible with that package's GUI viewer tools. Another supplied
+filter saves the files in a format compatible with the Digital Atmosphere
+program for windows. Other filters are supplied with the distribution,
+and the program has many additional capabilities that are not mentioned here.
+Since these aspects are subject to revision and evolution,
+this man page does not explain how to enable and configure all the
+available features. A User Guide is published in the program's
+web site, \fBwww.noaaport.net\fR, and considerable information and instructions
+are given in the configuration files themselves and the files in the
+configuration directory.
+
+.LP
+.SS FILES
+/usr/local/etc/nbsp/
+.br
+/usr/local/share/doc/nbsp/
+.LP
+.SS VERSION
+1.5 - November 2007
+.SS AUTHOR 
+Jose F. Nieves
+.br
+nieves@ltp.upr.clu.edu
+.br
+Copyright 2005-2007
+.br

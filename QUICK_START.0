@@ -1,0 +1,191 @@
+$Id$
+
+QUICK_START.0
+
+These notes cover the instructions that are common to all the operating
+systems on which the program runs, and they are here for documentation
+purposes only. 
+
+The steps explained below for configuring nbsp are
+carried out automatically by the system packages installation tools,
+which are described in the individual QUICK_START.xxx files.
+
+If nbsp is installed from the packages, no further instructions
+beyond those given in the individual QUICK_START.xxx files
+are required to run in the default configuration.
+
+
+CONTENTS
+
+	1) Installation
+	2) Configuration
+	3) Filters
+	4) Web server
+	5) Periodic maintenance routines
+	6) Pre-requisites
+
+1) Installation  -
+
+- The packages are installable with the native tools for
+freebsd and linux. The package installs in /usr/local. The main program is
+"/usr/local/sbin/nbspd", and apart from the other various binaries
+and other files, it installs the directory
+
+	/usr/local/etc/nbsp
+
+that contains several configuration files that will be described below.
+
+- To complete the installation the following is required:
+
+ (i) create the directories
+
+	/var/noaaport/nbsp/spool
+	/var/noaaport/nbsp/db
+	/var/noaaport/nbsp/stats
+	/var/noaaport/nbsp/inv
+	/var/noaaport/nbsp/dev
+	/var/noaaport/nbsp/tmp
+	/var/noaaport/data/{nbsp,gempak,digatmos}
+	/var/log/noaaport
+
+Actually only the first three are strictly required, but the others will
+be required as well depending on which post-pocessors (filters)
+are installed. 
+
+The following are optional:
+
+ (ii) cp nbspd.conf-sample nbspd.conf
+       
+   and edit as desired. If this file (nbspd.conf) does not exist
+   the program will simply use the compiled in default values
+   for various parameters (such as the directories mentioned above).
+
+ (iii) For automatic start/stop at boot/shutdown time, a script
+   must be installed in the rc.d or init.d directory. The particulars
+   of this depends on the OS, and it is further explained in the
+   individual QUIACK_START files.
+
+At this point the program can be started and it should run.
+It should start to receive files and storing them under 
+
+	    /var/noaaport/nbsp/spool
+
+at a rate of about a thousand per minute.
+
+Without further configuration it will not do anything else. But if it fails
+up to this point, then something is really wrong somewhere.
+
+2) Configuration -
+
+The configuration files live in
+
+	/usr/local/etc/nbsp
+
+The main configuration file is 
+
+	nbspd.conf
+
+which can be created by just copying the nbspd.conf-sample included.
+While the other files there are also editable, they contain the marching
+orders for the various filters and are not meant to be edited,
+and there should be no need to edit them, under normal circumnstances. 
+
+The default nbspd.conf file has all the settings commented out,
+so it does nothing. It contains many comments indicating the use
+of the various settings, which can be enabled by uncommenting the
+appropriate lines. A better alternative to editing the nbspd.conf file
+itself, is to create a separate file
+
+	/usr/local/etc/nbsp/site/nbspd.conf
+
+and add the settings there. This latter file is automatically included
+(sourced) by nbspd.conf. The location of this local file can be changed
+by modifying the last sentences of nbspd.conf. The language of the
+configuration files is tcl.
+
+
+3) Filters -
+
+The most common configuration options are related to enabling the filters.
+The appropiate settings are indicated in the nbspd.conf file. Besides
+enabling them there an additional step is required. 
+
+Each filter is typically supported by several files. For our
+purposes now the important one is the run-control (rc) file. For
+example, for the gempak filter it is gempak.rc, for the rstfilter
+it is rstfilter.rc.  By default, the package installation does not
+install any of them. So, for each filter that is enabled in nbspd.conf,
+the corresponding rc file must created in the configuration directory.
+The nbsp distribution contains a sample rc file for each of the filters,
+so it is just a matter of copying them with the correct name. If a
+filter is enabled in nbspd.conf, but its rc file does not exist,
+the program will disable the filter when it runs.
+
+In order for the filters to save the processed files the corresponding
+data directories must exist. This has been taken care of, if
+you have created the "/var/noaaport/data" directory (and the subdirectories)
+indicated above. If the gempak filters are enabled, then the directory
+"/var/log/noaaport" must exist also. 
+
+4) Web Server
+
+The built-in web server listens on port 8015 by default; i.e.,
+in your web browser
+
+	http://localhost:8015
+
+or
+
+	http://<yourmachine>:8015
+
+The server is based on the tclhttpd library, and the the document
+root is installed in /var/noaaport/www. 
+
+
+5) Periodic routines
+
+Spool directory -
+The received files, stored in the spool directory, have a unique
+tag (sequence number) in their name so that newer files
+of any given product do not overwrite previous ones (within a long cycle).
+Therefore, if the spool directory is not cleanup periodically it will
+grow indefinitely. The nbsp package includes a sample script in the
+documentation directory, that is meant to be installed as a cron job
+to be run hourly for this purpose. The package installation may have
+installed that already, depending on the operating system. 
+
+Data files directories -
+The various filters write their files in the corresponding data directories
+and, without further intervention, they would grow without bounds. The
+data directories must therefore be examined periodically to remove
+older or obsolete files. The sample script mentioned above does this as well.
+
+Log files directory -
+In addition, some of the decoders write processing information to log
+files that are stored in /var/log/noaaport, that must be rotated or
+managed somehow. The documentation directory contains sample configuration
+files that can be included in the newsyslog or logrotate schemes in place
+in the host machine.
+
+6) Pre-requistes -
+
+The program is linked against the
+
+	tcl, db
+
+libraries, so they must be present in the system. In addition
+the operation of the filters depend on various external programs.
+In particular the following packages/libraries must be installed:
+
+	db4, tcl, tcllib, png, zlib, netpbm, gnuplot
+
+All the filters need tcl. The satellite decoder needs the png library,
+and the emwin-compatible server needs the programs of the netpbm package
+to convert the png images to jpg format. The nntp gateway and various tools
+interface requires tcllib, and the ploting facility of the metar module
+requires gnuplot.
+
+The gempak filter requires the gempak decoder programs,
+and they assume that gempak has been installed using the gpak package.
+Otherwise the file filters.conf must be consulted to set the
+correct location of the gempak decoders.

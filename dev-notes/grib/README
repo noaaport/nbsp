@@ -1,0 +1,32 @@
+Sat Feb  3 19:26:21 AST 2007 -
+
+- The file "gribtonc.entries" is the one from the "decoders" package
+  from unidata.
+
+- The file "grib.m4-gempak" is the original grib.m4 I constructed
+  out of the corresponding gempak file. It's mainly for documentation
+  purposes.
+
+- Combining what I guessed from this two, I built grib.m4-start
+  which I used as the starting point for the grib.m4 in the dafilter.
+
+- It seems that the file produced by the "gfs" rule cannot be read
+  by DA nor IDV. It seems that eta, ruc2, ecmwf are fine.
+
+- The file "GRIB.html" came from
+  http://weather.unisys.com/wxp/Appendices/Formats/GRIB.html
+
+- The file "appendixa.html" comes from
+  http://www.nco.ncep.noaa.gov/pmb/docs/on388/
+
+- The file UNPKGRIB.315.pdf comes from a nws site and contains
+  the grib2 file format. See also:
+	http://www.nws.noaa.gov/tdl/iwt/grib2/doc.htm
+	http://www.nws.noaa.gov/tdl/iwt/grib2/frameset_grib2.htm
+
+
+Sat Sep 15 09:20:09 AST 2007 -
+
+- The files model_summary.html and xr07_Center_ID_List.html were used
+  for constructing the model names in filters/filterlib/filtersgribid.rc
+

@@ -1,0 +1,53 @@
+#
+# $Id$
+#
+
+The "metarfilter" now contains a ploting module. It is used by
+the web interface to display the time series graphs of the
+temperature, dew point an humidity (the latter is calculated from
+the first two), and separately the pressure and wind speed.
+Simply clicking on any station name in the Metar section of the
+web interface will now display those graphs in adddition to the data.
+
+The templates for making the graphs are fully customizable
+by "the user". The "gnuplot" templates are named 
+
+	nbspmtrplotpre.g
+	nbspmtrplottemp.g
+	nbspmtrplotwind.g
+
+and they are installed in the "defaults" subdirectory of the nbsp
+configuration directory. They can be copied and modified and then
+saved in the "site" subdirectory. The ploting module will then use those
+and override the ones in the default directory.
+
+Moreover, separate templates can be set for particular stations
+if they are saved in the "metarplot/kkkk" subdirectory of "site".
+For example, to use a customized pressure template for tjsj, the template
+should be saved as
+
+	site/metarplot/tjsj/nbspmtrplotpre.g
+
+and similarly for the other two if desired (otherwise the defaults
+are used for the other two).
+
+Finally, the module comes with a set of command line tools to produce
+image files of the graphs. The simplest use is to execute
+
+	nbspmtrplot kkkk
+
+where kkkk is the station id (e.g., tjsj or kdfw). The command will
+produce three png files which are identical to those displayed
+by the web interface. The command uses the same templates as the web interface,
+and therefore the graphs can be customized as indicated above.
+
+The command
+
+	nbspmtrdat kkkk
+
+will produce just the data, which can be used for example to import in
+a more sophisticated ploting program.
+
+-
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Thu Jul 12 21:19:51 AST 2007

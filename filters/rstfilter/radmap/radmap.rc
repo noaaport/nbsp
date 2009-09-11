@@ -1,0 +1,89 @@
+#
+# $Id$
+#
+###########################################################################
+# This file can be edited as explained below. However, instead of editing
+# it directly, it is best to make a copy in "site/gpmap/rad/radmap.rc" and
+# edit that copy.
+#
+# This is a tcl script that is "sourced" by the nbspradmap tool that is
+# executed by the rstfilter for each radar data file received.
+# The filter defines the following variables that this script can use:
+#
+#	gpmap(fmt)		(gif)
+# 	gpmap(outputfile)   	(default output file path name)
+#	gpmap(devsize)		(default image size; e.g., "800;600")
+#	gpmap(inputfile)	(full path of input file data file)
+#	gpmap(awips)		(e.g., "n0rjua")
+#
+# This script can define additional gpmap() variables, and can redefine
+# the gpmap(outputfile) and gpmap(devsize) variables,
+# and at some point it must contain a portion of the form
+#
+#	set gpmap(script) {
+#		<gpmap commands here>
+#	}
+#
+# The commands can contain any of the gpmap() variables.
+#
+# The tool then feeds the gpmap(script) to gpmap by executing
+#
+# 	puts $F [subst $gpmap(script)]
+#
+# where F is a handle to gpmap; i.e.,
+#
+#	set F [open "|gpmap_gif <options>" w];
+#
+# The "subst" command substitutes the values for the tcl variables in the
+# script before sending it to gpmap.
+#
+# Finally, the "gpmap" scripts can contain another "post" script definition
+# of the form
+#
+# set gpmap(post) {
+#  file copy $gpmap(outputfile) /var/www/html/images
+# }
+#
+# Any valid tcl commands can appear in this portion.
+# Such code will be executed (via eval) as tcl code, after
+# closing the pipe to gpmap.
+#
+# In this example the final image file that gpmap produces is copied to the
+# directory /var/www/html/images. Any valid tcl code can be included, and
+# it can be used in particular for transfering the image files to
+# other locations and web sites.
+#
+# Of course the above example is trivial, but a variation using, for example
+# wget or more comprehensive tools like sitecopy, can be setup to transfer
+# the file to a remote location.
+###########################################################################
+#
+# These are the defaults, but give the calling script (rstfilter) the
+# chance to customize them. The gpmap(rad,xxx) settings below can be
+# pre-defined in the rstfilter configuration file if desired.
+#
+set _gpmap(mapfil) {states + county};
+set _gpmap(lut) {default};
+set _gpmap(latlon) {};
+set _gpmap(imcbar) 1;
+set _gpmap(map)    1;
+foreach _k [list mapfil lut latlon imcbar map] {
+    if {[info exists gpmap(rad,$_k)] == 0} {
+	set gpmap(rad,$_k) $_gpmap($_k);
+    }
+}
+
+set gpmap(script) {
+    device   = $gpmap(fmt)|$gpmap(outputfile)|$gpmap(devsize)
+    radfil   = $gpmap(inputfile)
+    proj     = rad
+    garea    = dset
+    \$mapfil = $gpmap(rad,mapfil)
+    lut      = $gpmap(rad,lut)
+    latlon   = $gpmap(rad,latlon)
+    imcbar   = $gpmap(rad,imcbar)
+    map      = $gpmap(rad,map)
+    r
+
+    e
+}

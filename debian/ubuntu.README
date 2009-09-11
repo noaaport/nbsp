@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+The debian package can be used in Ubuntu as well.
+
+The tcllib-1.8 that is included in Ubuntu is not compatible
+with nbsp. A compatible tcllib deb package will be available
+in the optional-packages section (soon).
+
+For the moment, create the directory /usr/local/share/tcltk
+(if it does not exist) and then unpack file tcllib-1.11-share.tgz and move
+the entire directory tcllib1.11 to /usr/local/share/tcltk.
+For example,
+
+	tar -xzf tcllib-1.11-share.tgz 	-C /usr/local/share/tcltk
+-

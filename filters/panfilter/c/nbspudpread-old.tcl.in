@@ -1,0 +1,37 @@
+#!%TCLSH%
+#
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+# This is meant to an example of a program that receives PAN messages
+# from the panfilter via udp on port 5000.
+#
+# See "nbspudpread.pl" for explanations. The difference between this one
+# and the perl version is that here the ip of the sending host is
+# contained in the "message".
+
+set f [open "|nbspudprecv 5000" r];
+
+while {[gets $f message] >= 0} {
+    # puts $message;
+
+    set mlist [split $message];
+
+    set remoteip [lindex $mlist 0];
+    set wmoid [lindex $mlist 1];
+    set wmostation [lindex $mlist 2];
+    set wmotime [lindex $mlist 3];
+    if {[llength $mlist] == 6} {
+	set awips [lindex $mlist 4];
+	set fname [lindex $mlist 5];
+    } else {
+	set awips "";
+	set fname [lindex $mlist 4];
+    }
+
+    puts "From $remoteip: $fname";
+#   exec "wget http://<server>:8015/_get/spool/$fname";
+}

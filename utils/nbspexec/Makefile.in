@@ -1,0 +1,31 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+TARGET =	nbspexec
+SOURCE =	nbspexec.c
+OBJECTS =	nbspexec.o
+ALLOBJECTS =	${OBJECTS}
+
+CFLAGS +=	-c -Wall
+
+INSTALL =       @INSTALL@
+
+all: ${TARGET}
+
+.c.o:
+	${CC} ${CFLAGS} $<
+
+${TARGET}: ${OBJECTS}
+	${CC} -o ${TARGET} ${ALLOBJECTS}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}
+
+clean:
+	rm -f *~ ${TARGET} ${OBJECTS} Makefile

@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+set outputfile $gsplot(imgfile);
+if {$outputfile eq ""} {
+    set outputfile stream-pr_$gsplot(reftime)_$gsplot(forecasttime).png;
+    if {$gsplot(outputdir) ne ""} {
+        set outputfile [file join $gsplot(outputdir) $outputfile];
+    }
+    # We check whether the file exists so that the scheduler can call
+    # this script every hour without worrying about recreating the file
+    # each time.
+    if {[file exists $outputfile]} {
+	return;
+    }
+}
+
+::grads::init;
+::grads::open $gsplot(ctlfile);
+
+::grads::exec set lon -85 -55;
+::grads::exec set lat 10 30;
+
+# semicolons must be hidden from tcl
+::grads::exec set gxout "stream";
+::grads::exec d "ugrdprs;vgrdprs;mag(ugrdprs,vgrdprs)";
+
+::grads::exec set gxout "grid";
+::grads::exec d skip(mag(ugrdprs,vgrdprs),2);
+
+::grads::exec draw title \
+	"Streams-PR $gsplot(model)/$gsplot(reftime)/$gsplot(forecasttime)";
+
+::grads::exec printim $outputfile;
+
+::grads::end;

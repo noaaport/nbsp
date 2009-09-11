@@ -1,0 +1,70 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLSOURCES =	inventory.tcl.in batch.tcl.in
+FILTERNAMES =	inventory batch
+FILTERINIT =    inventory.init
+TCLTARGET =	${FILTERNAMES}
+TOOLNAMES =	nbspstatplotdat nbspstatplot1 nbspstatplot nbspstatcounters \
+		nbspbatch
+SAMPLES =	inventory.conf-sample batch.conf-sample
+GPLOTSOURCES =	bytes.g fretrans.g fmiss.g ftrans.g
+GPLOTTARGET =	statplot-templates.tgz
+GPLOTPDIR =	gnuplot
+GPLOTDIR =	${GPLOTPDIR}/stat
+
+TARGET =	${TCLTARGET} ${SAMPLES} ${TOOLNAMES} ${GPLOTTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+inventory: inventory.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# inventory.tcl.in > inventory
+
+inventory.conf-sample: inventory.conf
+	cp inventory.conf inventory.conf-sample
+
+batch: batch.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# batch.tcl.in > batch
+
+batch.conf-sample: batch.conf
+	cp batch.conf batch.conf-sample
+
+nbspstatplotdat: nbspstatplotdat.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplotdat.tcl > nbspstatplotdat
+
+nbspstatplot1: nbspstatplot1.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplot1.tcl > nbspstatplot1
+
+nbspstatplot: nbspstatplot.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplot.tcl > nbspstatplot
+
+nbspstatcounters: nbspstatcounters.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstatcounters.tcl > nbspstatcounters
+
+nbspbatch: nbspbatch.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspbatch.tcl > nbspbatch
+
+${GPLOTTARGET}: ${GPLOTSOURCES}
+	rm -rf ${GPLOTDIR}
+	mkdir -p ${GPLOTDIR}
+	cp ${GPLOTSOURCES} ${GPLOTDIR}
+	tar -czf ${GPLOTTARGET} ${GPLOTDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${FILTERNAMES} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${GPLOTTARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${GPLOTPDIR}

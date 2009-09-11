@@ -1,0 +1,61 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	wsfilter.tcl
+TCLSOURCES =	wsfilter.tcl.in
+FILTERNAME =	wsfilter
+FILTERINIT =	wsfilter.init
+TOOLNAMES =	nbspws-metartomdf nbspws-metartomts nbspws-uatomdf \
+		nbspws-gribtomdf
+SAMPLES =	wsfilter.conf-sample wsfilter-metar-siteloc.def-sample \
+		wsfilter-upperair-siteloc.def-sample \
+		wsfilter-schedule.rc-sample
+
+TARGET =	${TCLTARGET} ${TOOLNAMES} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+wsfilter.tcl: wsfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# wsfilter.tcl.in > wsfilter.tcl
+
+wsfilter.conf-sample: wsfilter.conf
+	cp wsfilter.conf wsfilter.conf-sample
+
+wsfilter-schedule.rc-sample: wsfilter-schedule.rc
+	cp wsfilter-schedule.rc wsfilter-schedule.rc-sample
+
+wsfilter-metar-siteloc.def-sample: wsfilter-metar-siteloc.def
+	cp wsfilter-metar-siteloc.def wsfilter-metar-siteloc.def-sample
+
+wsfilter-upperair-siteloc.def-sample: wsfilter-upperair-siteloc.def
+	cp wsfilter-upperair-siteloc.def wsfilter-upperair-siteloc.def-sample
+
+nbspws-metartomdf: metartomdf.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# metartomdf.tcl > nbspws-metartomdf
+
+nbspws-metartomts: metartomts.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# metartomts.tcl > nbspws-metartomts
+
+nbspws-uatomdf: uatomdf.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# uatomdf.tcl > nbspws-uatomdf
+
+nbspws-gribtomdf: gribtomdf.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# gribtomdf.tcl > nbspws-gribtomdf
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${FILTERNAME}.tcl ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

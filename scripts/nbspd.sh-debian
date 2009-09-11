@@ -1,0 +1,48 @@
+#! /bin/sh
+# 
+# $Id$
+#
+# rc script for nbspd (debian)
+#
+### BEGIN INIT INFO
+# Provides:          nbsp
+# Required-Start:    $ALL
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Noaaport server
+### END INIT INFO
+
+NAME=nbsp
+DESC=nbsp
+DAEMON=/usr/local/sbin/${NAME}d
+PIDFILE=/var/run/$NAME/${NAME}d.pid
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+[ -x $DAEMON ] || exit 0
+
+# Include nbsp defaults if available
+if [ -f /etc/default/$NAME ] ; then
+	. /etc/default/$NAME
+fi
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
+	    -- $DAEMON_OPTS
+	echo "$NAME."
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $DAEMON
+	echo "$NAME."
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

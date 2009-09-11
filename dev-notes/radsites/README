@@ -1,0 +1,11 @@
+$Id$
+
+- radplaces.txt was extracted from radar_places.txt from Gibson Ridge.
+- radsites.txt was extracted from radstations.txt, which in turn
+  was extracted from the NWS prod.hdrs.html
+
+It is clear that the four-letter code used in radplaces.txt is the
+three-letter code for the site, with the same first letter of
+the corresponding station (office) pre-pended.
+The file s.awk, applied to radsites.txt, yields the four-letter
+code that coincides with the radplaces.txt list.

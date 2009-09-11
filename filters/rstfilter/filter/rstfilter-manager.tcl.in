@@ -1,0 +1,182 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "rstfilter-master disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+## The initialization of this filter.
+set initfile	"$common(libdir)/rstfilter.init";
+if {[file exists $initfile] == 0} {
+	puts "rstfilter-master disabled: $initfile not found.";
+	return 1;
+}
+source $initfile;
+
+if {[file exists $rstfilter(lib)] == 0} {
+    log_msg "Filter disabled: $rstfilter(lib) not found.";
+    return 1;
+}
+source $rstfilter(lib);
+
+#
+## variables of this filter
+#
+# rstfilter(slave,<type>,open) 0;
+# rstfilter(slave,<type>,enable) 1;
+# rstfilter(slave,<type>,F) (dynamically initialized before entering main)
+#
+foreach type $rstfilter(slave,types) { 
+    set rstfilter(slave,$type,open) 0;
+    set rstfilter(slave,$type,enable) 1;
+}
+set rstfilter(manager) 1;
+
+proc main {argc argv} {
+
+    global rstfilter;
+    global errorInfo;
+
+    cd $rstfilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	# If there was a write error, the functions close the connections.
+	# We check and try to reopen it.
+
+	foreach type $rstfilter(slave,types) {
+	    if {($rstfilter(slave,$type,enable) == 1) && \
+		($rstfilter(slave,$type,open) == 0)} {
+	        rstfilter_slave_open $type;
+	    }
+	}
+    }
+
+    foreach type $rstfilter(slave,types) {
+	rstfilter_slave_close $type;
+    }
+}
+
+proc process {finfo} {
+
+    global rstfilter;
+
+    filterlib_get_rcvars rc $finfo -nobody;
+
+    foreach type $rstfilter(slave,types) {
+	if {[filterlib_uwildmat $rstfilter(slave,$type,ure) $rc(fname)] && \
+	    ($rstfilter(slave,$type,enable) == 1)} {
+	    rstfilter_slave_write $type $finfo;
+	    break;
+	}
+    }
+}
+
+#
+# The rstfilter_slave functions
+#
+
+proc rstfilter_slave_open {type} {
+
+    global rstfilter;
+
+    set status [catch {
+	set rstfilter(slave,$type,F) [open "|$rstfilter(slave)" w];
+	fconfigure $rstfilter(slave,$type,F) -buffering line;
+    } errmsg];
+
+    if {$status == 0} {
+	set rstfilter(slave,$type,open) 1;
+    } else {
+	log_msg $errmsg
+    }
+}
+
+proc rstfilter_slave_close {type} {
+
+    global rstfilter;
+
+    if {$rstfilter(slave,$type,open) == 0} {
+	return;
+    }
+
+    set status [catch {close $rstfilter(slave,$type,F)} errmsg];
+    set rstfilter(slave,$type,open) 0;
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc rstfilter_slave_write {type msg} {
+
+    global rstfilter;
+    global errorInfo;
+
+    if {$rstfilter(slave,$type,open) == 0} {
+	log_msg "Connection to slave $type is closed.";
+	return;
+    }
+
+    set status [catch {puts $rstfilter(slave,$type,F) $msg} errmsg];
+    if {$status == 0} {
+	return;
+    }
+
+    # If there as a write error, close the connection and retry.
+    rstfilter_slave_close $type;
+    rstfilter_slave_open $type;
+    if {$rstfilter(slave,$type,open) == 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    set status [catch {puts $rstfilter(slave,$type,F) $msg} errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+	log_msg $errorInfo;
+	return;
+    }
+}
+
+#
+# Dynamic initialization
+#
+# Open the pipes
+# In case a connection cannot be establish, log an error and continue
+# but disable that type.
+foreach type $rstfilter(slave,types) { 
+    rstfilter_slave_open $type;
+    if {$rstfilter(slave,$type,open) == 0} {
+	log_msg "Disabling the $type dispatching.";
+	set rstfilter(slave,type,enable) 0;
+    }
+}
+
+main $argc $argv;

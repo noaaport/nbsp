@@ -1,0 +1,93 @@
+#
+# $Id$
+#
+Tclgrads is a separate package, written purely in Tcl, for executing
+Grads commands from a Tcl script. This file explains how to use tclgrads
+scripts with the grib data files processed by Nbsp.
+
+[Tclgrads packages can be downloaded from the ``opengrads.org''
+or ``noaaport.net'' web sites.]
+
+First the ``gribfilter'' must be enabled in the Nbsp configuration
+file ``features.conf'':
+
+set features(gribfilter) 1;
+
+Then in the ``gribfilter.conf'' configuration file, set
+
+set gribfilter(gradsctlenable)  1;
+
+With this setting the ``control'' files that are required by GrADS are
+generated automatically (the gribfilter.README in the nbsp distribution
+for more details of what happens behind the scenes.)
+
+The control files that Nbsp generates are in the directory
+
+	/var/noaaport/data/grib/ctl
+
+and then in subdirectories by model and run; for example, the file
+
+	/var/noaaport/data/grib/ctl/gfs/2008092006/gfs_211_2008092006_6h.ctl
+
+corresponds to a GFS run on 2008092006 (the gribfilter.README in the nbsp
+distribution for the naming conventions.)
+
+Example 1 -
+=======
+
+The following script will produce a temperature-wind plot from this file:
+==============================================================================
+#!/usr/local/bin/tclsh8.4
+
+package require grads;
+
+set ctl "/var/noaaport/data/grib/ctl/gfs/2008092006/gfs_211_2008092006_6h.ctl";
+::grads::init;
+
+::grads::open $ctl;
+
+::gradsu::display "skip(ugrdprs,3);skip(vgrdprs,3);tmpprs";
+::gradsu::draw "title Wind/Temp";
+::gradsu::printim uvt.png;
+
+::grads::end;
+==============================================================================
+
+Example 2 -
+=======
+
+The following slightly more complicated script will produce a similar plot
+for each file in the ``/var/noaaport/data/grib/ctl/gfs/2008092006''
+directory:
+==============================================================================
+#!/usr/local/bin/tclsh8.4
+
+package require grads;
+
+set dir "/var/noaaport/data/grib/ctl/gfs/2008092006";
+set flist [glob -directory $dir *.ctl];
+
+::grads::init;
+
+foreach f $flist {
+    ::grads::open $f;
+
+    ::gradsu::times times;
+    set date [lindex $times 1];
+
+    ::gradsu::display "skip(ugrdprs,3);skip(vgrdprs,3);tmpprs";
+    ::gradsu::draw "title Wind/Temp $date";
+    ::gradsu::printim uvt-$date.png;
+
+    ::gradsu::reinit;
+}
+
+::grads::end;
+==============================================================================
+
+Needless to say, each file contains the data for several variables and
+at various levels and many more plots can be generated from each file.
+But the idea is the same: the gribfilter takes care of generating
+the required GrADS control files, and the scripts just need to
+execute ``grads::open'' with the appropriate one.
+-

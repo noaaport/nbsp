@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+PKGNAME = nbsp
+
+# This is for manipulation by (rpm style) packaging tools
+PKGBUILDDIR =
+PKGCONFDIR =
+
+#
+# These directories are assumed to exist
+#
+PREFIX = @PREFIX@
+#
+DESTDIR = ${PKGBUILDDIR}/${PREFIX}
+BINDIR = ${DESTDIR}/bin
+SBINDIR = ${DESTDIR}/sbin
+CONFDIR = ${DESTDIR}/etc
+DOCDIR = ${DESTDIR}/share/doc
+MANDIR = ${DESTDIR}/man
+LIBEXECDIR = ${DESTDIR}/libexec
+
+MANEXT = 1
+MYMANDIR = ${MANDIR}/man${MANEXT}
+#
+# These directories must be created
+#
+MYDOCDIR = ${DOCDIR}/${PKGNAME}
+MYCONFDIR = ${CONFDIR}/${PKGNAME}${PKGCONFDIR}
+MYLIBEXECDIR = ${LIBEXECDIR}/${PKGNAME}
+RADMAPDOCDIR = ${MYDOCDIR}/radmap

@@ -1,0 +1,222 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "rstfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+# packages
+package require nbsputil;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+## The initialization of this filter.
+set initfile [file join $common(libdir) "rstfilter.init"];
+if {[file exists $initfile] == 0} {
+	puts "rstfilter disabled: $initfile not found.";
+	return 1;
+}
+source $initfile;
+
+# If (rad_enable) or (satmap_enable), or both, are set, the gempak environment
+# must exist for the nbspradmap and nbspsat tools.
+if {($rstfilter(rad_enable) == 1) || ($rstfilter(satmap_enable) == 1)} {
+    if {[file exists $rstfilter(gpenvfile)] == 0} {
+        log_msg "$rstfilter(gpenvfile) is needed for rad images and sat maps.";
+	return 1;
+    }
+    source $rstfilter(gpenvfile);
+}
+
+if {[file exists $rstfilter(lib)] == 0} {
+    log_msg "Filter disabled: $rstfilter(lib) not found.";
+    return 1;
+}
+source $rstfilter(lib);
+
+# The rc file is required
+if {[file exists $rstfilter(rc)] == 0} {
+    log_msg "Filter disabled: $rstfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set rstfilter(rcfiles) [filterlib_get_rcfiles [file tail $rstfilter(rc)] \
+        $rstfilter(localconfdirs) $rstfilter(rcdir) \
+	$rstfilter(prerc) $rstfilter(postrc)];
+
+# Load the rules sets
+source $rstfilter(rc);
+
+# Open the pipe to nntp if it is enabled
+# In case the connection cannot be establish, log an error
+# but continue and disable the nntp dispatching functionality.
+if {$rstfilter(nntp_enable) == 1} {
+    rstnntp_open;
+    if {$rstfilter(RSTNNTP_open) == 0} {
+	log_msg "Disabling the NNTP dispatching.";
+	set rstfilter(nntp_enable) 0;
+    }
+}
+
+# Same thing for rss
+if {$rstfilter(rss_enable) == 1} {
+    rss_open;
+    if {$rstfilter(RSS_open) == 0} {
+	log_msg "Disabling the RSS filter.";
+	set rstfilter(rss_enable) 0;
+    }
+}
+
+proc main {argc argv} {
+
+    global rstfilter;
+    global errorInfo;
+
+    cd $rstfilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	# If there was a write error, the functions close the nntp connection.
+	# We check and try to reopen it. 
+	if {($rstfilter(nntp_enable) == 1) && ([rstnntp_is_open] == 0)} {
+	    rstnntp_open;
+	}
+
+	# Same for rss
+	if {($rstfilter(rss_enable) == 1) && ([rss_is_open] == 0)} {
+	    rss_open;
+	}
+    }
+
+    rstnntp_close;
+    rss_close;
+}
+
+proc process {finfo} {
+
+    global rstfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+
+    # Initialize to no match found.
+    set rc_status 1;
+    set fpathout "";
+    set rc_output "";
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $rstfilter(condition) {
+        set actionlist [lindex $rstfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+
+    # If the file matched the filter, rc_status is set to 0, and the
+    # variable $rc_output is a tcl list that contains
+    # ($status $fpathout), where status is 0 if there were no errors
+    # and fpathout is the full path of the filtered output file.
+
+    set status 1;
+
+    if {$rc_status == 0} {
+	set status [lindex $rc_output 0];
+	set fpathout [lindex $rc_output 1];
+    }
+
+    # If there were processing errors there is no postprocessing to do.
+    # Otherwise define rc(fpathout) for the postprocessing condition/action
+    # rules.
+
+    if {$status != 0} {
+	return;
+    }
+
+    set rc(fpathout) $fpathout;
+    
+    if {($rstfilter(nntp_enable) == 1) || ($rstfilter(rss_enable) == 1)} {
+	set finfo [format "%u %d %d %d %d %s %s" \
+	    $rc(seq) $rc(type) $rc(cat) $rc(code) $rc(npchidx) \
+	    $rc(fname) $fpathout];
+
+	if {$rstfilter(nntp_enable) == 1} {
+	    rstnntp_send $finfo;
+	}
+
+	if {$rstfilter(rss_enable) == 1} {
+	    rss_send $finfo;
+	}
+    }
+
+    # Evaluate the post condition/action pairs.
+    set i 0;
+    foreach condlist $rstfilter(postcondition) {
+        set actionlist [lindex $rstfilter(postaction) $i];
+	set j 0;
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+#
+# Dynamic initialization
+#
+if {$rstfilter(satmap_rcfile_fpath) eq ""} {
+    set rstfilter(satmap_rcfile_fpath) \
+	[filterlib_find_conf $rstfilter(satmap_rcfile) \
+	$rstfilter(satmap_rcdirs) $rstfilter(satmap_rcsubdir)];
+}
+
+if {$rstfilter(radmap_rcfile_fpath) eq ""} {
+    set rstfilter(radmap_rcfile_fpath) \
+	[filterlib_find_conf $rstfilter(radmap_rcfile) \
+	$rstfilter(radmap_rcdirs) $rstfilter(radmap_rcsubdir)];
+}
+
+#
+# main
+#
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

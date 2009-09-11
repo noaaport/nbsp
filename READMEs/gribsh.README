@@ -1,0 +1,62 @@
+#
+# $Id$
+#
+
+Several "client" applications are now included as part of the gribfilter
+package. Among them,
+
+	nbspgribsh	(local)
+	nbspgribrsh	(remote)
+
+are the primary ones. They in turn call others, which can be used
+independently as well if desired. This short note explains the usage
+of the above two. Both are Tk scripts which do some minor
+bookeeping and eventuallly can call GrADS.
+
+nbspgribsh is meant to be used in the same machine in which
+nbsp is running. nbspgribrsh does similar work but contacts
+a remote machine running nbsp.
+
+nbspgribsh knows about the layout of the grib data directory.
+When invoked it populates a menu with the list of the grib control files
+that are configured in the gribfilter. The usage is very intuitive.
+Clicking on a file name in the menu displays the control information.
+Clicking the GrDAS button will open a GrADS console in a separate window
+where commands can be entered in the normal way to work on the file; e.g.,
+
+	d tmpprs
+	c
+	d rhprs
+	quit
+
+It is not necessary to close the GrADS console before opening
+another one. In this way, several GrADS console can be opened
+simultaneously to work on different files, side by side.
+
+nbspgribrsh on the other hand, contacts a remote machine for
+information about the grib files. If the machine in which nbsp
+is running is called "noaaport", then nbspgribrsh is invoked thus
+
+
+	nbspgribrsh http://noaaport:8015/grib
+
+Alternatively, the above url can be specified in the configuration
+file 
+
+	~/.nbsp/conf/nbspgribrsh.conf
+
+in the user's home directory. The main configuration file, with the same name,
+is located in /usr/local/etc/nbsp. Settings there are system-wide. The file
+nbspgribrsh.conf-user is a sample per-user configuration file.
+That file can just be copied to the directory ~/.nbsp/conf (and
+renamed nbspgribrsh.conf) and the relevant variable(s) can be set there; e.g.,
+
+	set nbspgribrsh(baseurl) http://noaaport:8015/grib
+
+nbspgribrsh presents a menu similar to the one decscribed
+above, except that the files are located in the remote computer.
+After selecting one the files from the menu,
+clicking the Download button will download the grib file.
+The GrADS (or Wgrib) button will also download the file, in addition
+it will create the control file, and then open the GrADS console
+in a separate window. The rest is similar to what is described above.

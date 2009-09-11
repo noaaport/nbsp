@@ -1,0 +1,49 @@
+#
+# $Id$
+#
+
+- When installing from a binary package (rpm or tbz),
+it will be configured with the
+
+	inventory
+	rstfilter
+	dafilter
+	metarfilter
+	gribfilter
+	http server
+
+enabled. To run with these default settings, no further steps are needed.
+To modify these, or to add other services (e.g., emwin server),
+check first the file "features.conf". For more fine-grained configuration
+and additional options check "nbspd.conf".
+
+- In the default configuration as above, the satellite images
+are produced without maps, and radar images are _not_ generated.
+To produce either satellite images with maps, or radar images,
+requires that gempak be installed, which can be done with the gpak
+package.
+
+If gempak is installed:
+
+  - Consult the file "filters.conf" to set the apropriate location of gempak.
+    (Not necessary if gempak was installed from the gpak package.)
+  - Then look for the following variables in "rstfilter.conf" to
+    produce satellite images with maps and radar images, respectively:
+
+	rstfilter(satoptionmap)
+	rstfilter(rad_enable)
+
+  - In addition the gpfilter can be enabled in "features.conf"
+    by setting the variable feature(gpfilter) in order to
+    process the data files and save them in a gempak-compatible
+    directory structure such that they can be used with the gempak programs.
+
+To run nbsp together with ldm (for example to have ldm get some data
+from another ldm server from the internet), see the ldmfilter.README file.
+
+There are a few other README files in the "dist" subdirectory. That
+subdirectory contains also the original copies of all the configuration
+files as a backup.
+
+-
+JFN

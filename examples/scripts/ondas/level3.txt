@@ -1,0 +1,156 @@
+------------------------------------------------------------------------
+
+            FOR DEVELOPERS WISHING TO USE LEVEL III DATA
+----------------------------------------------------------------
+
+Customers are provided a custom URL that is associated with their account.
+You should collect that URL from your user and use it as the BASE URL for
+all queries into the Allisonhouse service.
+
+An example URL might be:
+
+http://level3.allisonhouse.com/level3/billybob
+
+The first thing your application should do is query the Allisonhouse
+service for the data feed configuration file (config.cfg). Allisonhouse
+recommends you grab the config.cfg file everytime the user starts the
+program as our configuration, radar or product feeds may change.
+
+The url would be:
+
+http://level3.allisonhouse.com/level3/billybob/config.cfg
+
+The config file will tell your application everything you need to know
+to build the URL to grab data files.
+
+The file is in this format:
+
+;===========================================================
+; Example config file
+;
+;--------------------------------------------
+;  ListFile:  ffffff
+;
+; This statement tells which file contains the directory listing.
+; The file will contain just filenames, no file sizes. The filenames
+; have the date and time in them. The first 8 contiguous digits are
+; used for the date (yyyymmdd), the next 4 contiguous digits are the
+: time (hhmm). If no ListFile: statement is present, you should default
+; to "dir.list" for file name.
+;
+
+ListFile: dir.list
+
+;--------------------------------------------
+;  Site: SSSS
+;
+; These statements tell your app which radar sites are available on the
+; server.
+
+Site: KTLX
+Site: KFFC
+
+;--------------------------------------------
+;  Product: TTT  DDDDDDD
+;
+; These statements tell which products are available on the
+; server and how to find them. TTT is the three letter code for
+; a product and DDDDDD is the directory. Your app should look for SSS, sss,
+; SSSS, and ssss and replaces it with the radar site id. The case
+; of the S is preserved. For example, "SSS/N0R" for kffc is translated
+; to FFC/N0R while "sss/N0R" is translated as ffc/N0R.
+;
+
+Product: GSM   SSS/GSM
+Product: N0R   SSS/N0R
+Product: N1R   SSS/N1R
+Product: N2R   SSS/N2R
+Product: N3R   SSS/N3R
+Product: N0Z   SSS/N0Z
+Product: N0V   SSS/N0V
+Product: N1V   SSS/N1V
+Product: NCR   SSS/NCR
+Product: NET   SSS/NET
+Product: NVW   SSS/NVW
+Product: N0S   SSS/N0S
+Product: N1S   SSS/N1S
+Product: N2S   SSS/N2S
+Product: N3S   SSS/N3S
+Product: NVL   SSS/NVL
+Product: N1P   SSS/N1P
+Product: NTP   SSS/NTP
+;===========================================================
+
+Based on the config file above your application should be able to
+build a URL appropriately as well as provide an accurate 'pick list'
+for whatever radar stations are available.
+
+     *** NOTE ****
+Allisonhouse ONLY provides radar products. We do not provide individual
+storm attribute files, storm tracks, etc. Your application should obtain
+those from the NWS servers or parse them out of the raw radar data as
+you see fit.
+
+An example query:
+
+If the user requests NTP for the KFFC radar station you could use
+the example config file above to create a URL like so:
+
+http://level3.allisonhouse.com/level3/billybob/FFC/NTP/dir.list
+
+The 'dir.list' file will contain something like this:
+
+20050626_2145
+20050626_2155
+20050626_2205
+20050626_2214
+20050626_2224
+20050626_2234
+20050626_2244
+20050626_2253
+20050626_2303 
+
+You can take the last product in the list as the most recent data available
+and work backwards.
+
+So your initial data request would be:
+
+http://level3.allisonhouse.com/level3/billybob/FFC/NTP/20050626_2303
+
+You could then make subsequent 'archive' or 'backfill' requests like so:
+http://level3.allisonhouse.com/level3/billybob/FFC/NTP/20050626_2253
+http://level3.allisonhouse.com/level3/billybob/FFC/NTP/20050626_2244
+http://level3.allisonhouse.com/level3/billybob/FFC/NTP/20050626_2234
+
+          *** NOTE *** 
+Your application must support HTTP redirect using the "Location: [URL]" 
+construct in the HTTP header. We use this to load balance our servers. Any
+sane HTTP API will support this by default but you should be aware of it.
+
+Once you have the data you must then decompress using the zlib libraries
+as the data is in the original/raw format from the NWS, unlike the data
+on the NWS servers which has been decompressed already.
+
+You can use the ucnids.c program as sample code for how to decompress and
+strip the headers to create a data file in the same format as what is found
+on the NWS servers. The ucnids.c code uses the '-r' option to take
+Allisonhouse data and strip the headers and generate uncompressed output.
+Your application will need to do the same. (we did not write ucnids.c so we
+can not answer questions about it)
+
+Once decompressed the data can enter your program at the same point as
+the data found on the NWS servers.
+
+Allisonhouse does not develop RADAR viewing software and thus CAN NOT
+provide code help. Hopefully the above information is good enough to
+get you started.
+
+Please let me know when you think you are ready and I'll provide a
+developer account with which you can test your code for a few weeks.
+Please do not request a developer account if you do not already have
+a radar application built. At a minimum your application must fully support
+the NWS servers first before Allisonhouse will provide a developer account.
+
+Tyler Allison
+support@allisonhouse.com
+

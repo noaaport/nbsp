@@ -1,0 +1,46 @@
+#
+# $Id$
+#
+
+A master is enabled by setting one or both variables
+
+	set feature(nbs1server)         1
+	set feature(nbs2server)         1
+
+in "features.conf". No further steps are required for a machine to act
+as master.
+
+A more specialized master mode involves using
+a pure memory-based spool instead of the disk-based spool that is
+normally used. Such a mode is suitable for a setup in which
+one machine (the master) will act exclusively as an ingest machine
+without doing any processing itself, that will feed one or more
+processing machines that are configured as slaves.
+
+For configuring this specialized master mode, the variable
+
+	feature(spooltype)
+
+must be set appropriately in "features.conf". See also the file
+"mspoolbdb.README".
+
+NOTE:
+====
+One important consideration to take into account in a master-slave
+configuration is the latency of the connection between the two machines.
+Inside a LAN there is not much to worry about. The default settings
+have been chosen with that particular case in mind. But in a connection
+accross a WAN the latency can have various consequences, including
+the client queues growing and the connections being dropped.
+
+For the first problem the netfilter can be used to limit the number
+of products to send to the client. For the second problem, the parameters
+
+	client_write_timeout
+	slave_read_timeout
+
+can be used adjusted in ``nbspd.conf'' to control the timeout limits
+in the master and the slave, respectively.
+
+-
+JFN

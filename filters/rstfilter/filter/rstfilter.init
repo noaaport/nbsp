@@ -1,0 +1,135 @@
+#
+# $Id$
+#
+
+# This file is split from rstfilter.tcl because (some of the) the variables are
+# also used by the emwinfilter and rstfilter-master.
+set rstfilter(conf)	[file join $common(confdir) "rstfilter.conf"];
+set rstfilter(lib)	[file join $common(libdir) "rstfilter.lib"];
+set rstfilter(rc)	[file join $common(confdir) "rstfilter.rc"];
+set rstfilter(prerc)	[file join $common(confdir) "rstfilterpre.rc"];
+set rstfilter(postrc)	[file join $common(confdir) "rstfilterpost.rc"];
+set rstfilter(localconfdirs)    $common(localconfdirs);
+set rstfilter(rcdir)	[file join $common(rcdir) "rst"];
+set rstfilter(datadir)	[file join $common(datadir) "rst"];
+set rstfilter(tmpdir)	$common(tmpdir);
+#
+set rstfilter(invdir) [file join $common(datainvdir) "rst"];
+set rstfilter(txtinvsubdir) "txt";
+set rstfilter(radinvsubdir) "rad";
+set rstfilter(satinvsubdir) "sat";
+set rstfilter(invformat) $common(datainvformat);
+set rstfilter(txt_inv_enable) 1;
+set rstfilter(rad_inv_enable) 1;
+set rstfilter(sat_inv_enable) 1;
+# This is used by the ``filter_sat_img_insert_inventory'' function
+set rstfilter(sat_inv_image_types) {{"png" 0} {"gif" 0} {"jpg" 1}};
+#
+set rstfilter(txt_enable)	1;
+set rstfilter(txt_regex)	{.*};      # matched against subdirectory name
+#
+set rstfilter(sat_enable)	1;
+set rstfilter(sat_regex)	{.*};
+set rstfilter(sat_datext)	".gini";
+set rstfilter(sat_latest_enable)	1; # make link to latest gini and img
+set rstfilter(sat_latestname)	"latest";
+set rstfilter(satmap_enable)	0;	   # set to 1 to add map outlines
+set rstfilter(satmap_regex)	{.*};	   # to restrict for which tigexx
+set rstfilter(satmap_mapsize)	"800;600";
+set rstfilter(satmap_nopng)	0;         # set to 1 to keep only the gif
+set rstfilter(satmap_rcdirs)	$rstfilter(localconfdirs);
+set rstfilter(satmap_rcsubdir)  [file join "gpmap" "sat"];
+set rstfilter(satmap_rcfile)	"satmap.rc";
+set rstfilter(satmap_rcfile_fpath) ""; # initialized dynamically if not set
+
+#
+# The outputsize is specified as, e.g, "1024;768"
+# If it is "" then the original image size is used.
+# If nothing is specified, the default (800;600) is used.
+# Note that if "satmap_nopng" is set above, then emwin clients will get the gif
+# instead of the jpg.
+#
+set rstfilter(rad_enable)	0;
+set rstfilter(rad_regex)	{.*};
+set rstfilter(rad_latest_enable)	1; # make link to latest img
+set rstfilter(rad_latestname)	"latest";
+set rstfilter(rad_mapsize)	"800;600";
+set rstfilter(radmap_rcdirs)	$rstfilter(localconfdirs);
+set rstfilter(radmap_rcsubdir)	[file join "gpmap" "rad"];
+set rstfilter(radmap_rcfile)	"radmap.rc";
+set rstfilter(radmap_rcfile_fpath) ""; # initialized dynamically if not set
+
+# By default all the available individual images are included in the loop
+# file. In practice the "count" variable below should be set to a value
+# that excludes the oldest individual files (to avoid a clash in case the
+# hourly cleanup process is running and deleting those files).
+#
+# See rad-sat-loop.README for hints about the options; e.g. for endless loop
+# with a 2 second delay
+#
+#	set rstfilter(satloop_program_preoptions) {-l}
+#	set rstfilter(satloop_program_postoptions) {-d 200 #-1}
+#
+set rstfilter(satloop_enable)	0;
+set rstfilter(satloop_program)	"gifsicle";
+set rstfilter(satloop_program_preoptions)	{};
+set rstfilter(satloop_program_postoptions)	{};
+set rstfilter(satloop_count)	0;  # 0 means to include all images
+set rstfilter(satloop_regex)	{^tig(e02|e04|q02)};
+#
+set rstfilter(radloop_enable)	0;
+set rstfilter(radloop_program)	"gifsicle";
+set rstfilter(radloop_program_preoptions)	{};
+set rstfilter(radloop_program_postoptions)	{};
+set rstfilter(radloop_count)	0;  # 0 means to include all images
+set rstfilter(radloop_regex)	$rstfilter(rad_regex);
+
+# If the rst and/or emwin filters are generating radar images,
+# this library calls gpmap_gif, which needs the gempak environment variables,
+# and these variables are used by the relevant functions.
+# The gempak env file is also needed if the rstfilter(satmap_enable)
+# is set above.
+#
+set rstfilter(gpenvfile)	$gempak(envfile);
+set rstfilter(gpmap_gif) 	[file join $gempak(bindir) "gpmap_gif"];
+set rstfilter(radtmpdir)  	$common(tmpdir);
+
+# The rstnntp filter
+set rstfilter(nntp_enable)	0;
+set rstfilter(nntp)		[file join $common(libdir) "rstnntpfilter"];
+
+# The rss filter
+set rstfilter(rss_enable)	1;
+set rstfilter(rss)		[file join $common(libdir) "rssfilter"];
+
+# Work-crew configuration for rstfilter-master
+set rstfilter(slave) [file join $common(libdir) "rstfilter"];
+set rstfilter(slave,types) [list "rad" "sat" "default"];
+set rstfilter(slave,rad,ure) {_sdus[2357]};
+set rstfilter(slave,sat,ure) {_tig};
+set rstfilter(slave,default,ure) {.*};
+
+## The configuration file that override the defaults, if it exists.
+if {[file exists $rstfilter(conf)] == 1} {
+    source $rstfilter(conf);
+}
+
+# Variables
+set rstfilter(rcfiles) [list];
+set rstfilter(ccbsaved)	$common(ccbsaved);
+set rstfilter(ccbsize)	$common(ccbsize);
+set rstfilter(ccbwmoawipssize) \
+	[expr $common(ccbsize) + $common(wmoawips_size)];
+#
+set rstfilter(condition)	[list];
+set rstfilter(action)		[list];
+set rstfilter(postcondition)	[list];
+set rstfilter(postaction)	[list];
+#
+set rstfilter(RSTNNTP) "";
+set rstfilter(RSTNNTP_open) 0;
+#
+set rstfilter(RSS) "";
+set rstfilter(RSS_open) 0;
+#
+set rstfilter(manager) 0;

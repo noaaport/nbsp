@@ -1,0 +1,64 @@
+#
+# $Id$
+#
+
+# default configuration file
+set metarfilter(conf)	      [file join $common(confdir) "metarfilter.conf"];
+#
+set metarfilter(reportenable)	0;
+#
+set metarfilter(stationconf) [file join $common(confdir) \
+	"metarfilter-st.conf"];
+set metarfilter(icaodef)    [file join $common(confdir) \
+	"metarfilter-icao.def"];
+set metarfilter(datadir)	[file join $common(datadir) "metar"];
+set metarfilter(reportdir)	"txt";
+set metarfilter(stationdatadir)	"st";
+set metarfilter(collectivedatadir)	"cl";
+set metarfilter(reportfext)	".txt";
+set metarfilter(rawfext)	".csv";
+set metarfilter(rawfcount)	60;
+set metarfilter(FS)		",";
+set metarfilter(postfilter)	"";
+# These are settings to support MetarWeather
+set metarfilter(mwsupport) 1;
+set metarfilter(mwdir) "metarweather";
+set metarfilter(mwfcount) 60;
+set metarfilter(mwfext) ".metar";
+
+# Daily and hourly archives to support Weatherscope, enabled by default.
+# If enabled, than an entry must be included in the hourly conf file
+# (which is included in the default configuration).
+# The archives have the same format as the "metarweather" files, and
+# will have the same extension "metarfilter(rawfext)".
+set metarfilter(daily_arcv_enable) 1;
+set metarfilter(hourly_arcv_enable) 1;
+set metarfilter(arcv_dir) "archive";
+set metarfilter(daily_arcv_datadir) "daily";
+set metarfilter(hourly_arcv_datadir) "hourly";
+
+# These settings are used by the nbspmtrplot tool.
+# The xe0e0e0 makes a light gray background, and small is
+# the font size (tiny, small, medium, large) but tiny is not in
+# gnuplot-4.0 which is what centos-5.2 and debian-4.0 have).
+set metarfilter(plotfmt) "png";
+set metarfilter(plotfmtoptions) "small xe0e0e0";  # tiny xe0e0e0
+set metarfilter(plotdataext) ".dat";
+set metarfilter(plottemplatedirs) $common(localconfdirs);
+set metarfilter(plottemplatesubdir) [file join "gnuplot" "metar"];
+set metarfilter(plottemprc) "temp.g";
+set metarfilter(plotprerc) "pre.g";
+set metarfilter(plotwindrc) "wind.g";
+set metarfilter(plotnumpoints) 25;
+
+# Overrides in the configuration file.
+if {[file exists $metarfilter(conf)] == 1} {
+    source $metarfilter(conf);
+}
+
+#
+# Read the station collectives configuration file.
+#
+if {[file exists $metarfilter(stationconf)]} {
+    source $metarfilter(stationconf);
+}

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# so that FreeBSD runs it only once 
+name=$1
+key=$2
+[ "$key" = "PRE-INSTALL" ] && exit 0
+
+dirs="/usr/local/etc/nbsp/defaults
+/usr/local/etc/nbsp/site"
+
+for d in $dirs
+do
+  install -d -m 755 $d
+done
+
+#
+# configure default
+#
+confdir=/usr/local/etc/nbsp
+cd $confdir/dist
+for file in *-sample
+do
+  name=${file%%"-sample"}
+  cp $file ../$name
+done
+
+# for file in *-defaults
+# do
+#  name=${file%%"-defaults"}
+#  cp $file ../defaults/$name
+# done

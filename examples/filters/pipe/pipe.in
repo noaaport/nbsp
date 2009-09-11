@@ -1,0 +1,106 @@
+#!/usr/bin/perl
+#
+# $Id$
+#
+# Sample script for post-processing files by piping them to any number
+# of filters. 
+
+use File::Basename;
+use File::Path;
+use Sys::Syslog;
+use strict;
+
+our $gverbose = 0;
+
+sub main() {
+
+    my $line;
+    my ($seq, $type, $cat, $code, $fpath);
+    my ($fname, $dirname);
+
+    openlog "nbsp-pipe", "ndelay", "nowait", "user"; 
+    
+    while($line = <STDIN>){
+
+	chop($line);
+	($seq, $type, $cat, $code, $fpath) = split(/\s+/, $line);
+
+	$dirname = dirname($fpath);
+	$fname = basename($fpath);
+
+	process_product($seq, $fpath, $fname);
+    }
+
+    closelog;
+}
+
+sub process_product(){
+
+    my ($seq, $fpath, $fname) = @_;
+    my ($station, $wmoid, $awips, $notawips, $type);
+    my ($awips1, $awips2);
+    my $pipe_cmd;
+    my $pipe_options;
+
+    # The file name is of the form "tjsj_sdus52-ncrjua.4" 
+    # when there is an awips code, or "kwbc_ytqm52+grib.4".
+    # In some cases, the third component is absent as well.
+
+    if($fname =~ /-/){
+	$notawips = "";
+	($station, $wmoid, $awips, $type) = split(/[_.\-]/, $fname);
+	$awips1 = substr($awips, 0, 3);
+	$awips2 = substr($awips, 3);
+    }elsif($fname =~ /\+/){
+	$awips = "";
+	$awips1 = "";
+	$awips2 = "";
+	($station, $wmoid, $notawips, $type) = split(/[_+.\-]/, $fname);
+    }else{
+	$awips = "";
+	$awips1 = "";
+	$awips2 = "";
+	$notawips = "";
+	($station, $wmoid, $type) = split(/[_.]/, $fname);
+    }
+
+    @pipe.m4.out@
+}
+
+sub filter(){
+
+    my($seq, $fpath, $fname, $pipe_cmd, $pipe_options) = @_;
+    my $line;
+    my $subline;
+    my @body;
+    my $status;
+
+    if(open(FIN, $fpath)  == undef){
+	syslog("err", "Could not open $fpath: $!");
+	return;    
+    }
+
+    $status = open(FOUT, "|$pipe_cmd $pipe_options");
+
+    if($status == undef){
+	close(FIN);
+	syslog("err", "Could not open $pipe_cmd: $!");
+	return;
+    }
+
+    read(FIN, $line, 24);	# points past the 24 byte ccb header
+    $subline = <FIN>;		# rest of line1 (wmo)
+    @body = <FIN>;
+    print(FOUT $subline);
+    print(FOUT @body);
+
+    close(FIN);
+    close(FOUT);
+
+    if($gverbose == 1){
+	syslog("info", "Piping $fname to $pipe_cmd.");
+    }
+}
+
+main();
+

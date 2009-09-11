@@ -1,0 +1,567 @@
+[JFN - From Unisys - text version of text_summary.html]
+
+  NOAAPORT TEXT DATA
+
+*November 2001*
+
+
+    Analysis and Summary Data
+
+Filename: sum.wmo
+WMO header: A*
+*TT* 	*Explanation* 	*Code Form*
+AB 	Weather summaries 	TEXT
+AC 	Convective/Cyclone discussions 	TEXT
+AI 	Ice discussions 	FM 44 (ICEAN)
+AO 	Ozone discussions 	TEXT
+AR 	Radar discussions 	TEXT
+AS 	Surface discussions/analyses 	FM 45 (IAC), FM 46 (IAC FLEET), TEXT
+AT 	Satellite discussions 	FM 85 (SAREP)
+AU 	Upper air discussions 	FM 45 (IAC)
+AX 	Tropical and miscellaneous discussions 	TEXT
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+ABAK01 PANC  Alaska Weather Summary
+ABAK02 PANC  Alaska Temperature And Precipitation Summary
+ABAK32 PANC  Alaska Regional Weather Roundup
+ABCN01 KWBC  Canadian Temperature and Precipitation Table	
+ABIO10 PGTW  Significant Tropical Weather Advisory for Indian Ocean
+ABNA26 KWBC  Temperature/Weather for International Cities
+ABNT20 KMIA  Tropical Atlantic & Caribbean weather outlook
+ABPW10 PGTW  Significant Tropical WEather Advisory for Western Pacific Ocean
+ABPZ20 KMIA  Eastern Pacific tropical weather discussion
+ABUS21 ....  Temperature And Precipitation Table (twice daily)
+ABUS23 KWBC  Temperature/Weather for Western United States (hourly)
+ABUS24 KWBC  Temperature/Weather for Eastern United States (hourly)
+ABUS25 KWBC  Temperature/Weather for Central United States (hourly)
+ABUS30 ....  State Weather Summaries
+ABUS34 ....  Public Information Statement
+ABXX06 KWBC  Foreign Temperature And Weather Table
+ABXX07 KWBC  Latin American Temp And Weather Table
+ACPA40 PHFO  Tropical Weather Discussion Eastern Pacific
+ACPN50 PHFO  Tropical Weather Discussion Central Pacific
+ACPW40 PHFO  Tropical Weather Discussion Western Pacific
+ACUS01 KWNS  Convective Outlook...Day 1
+ACUS02 KMNS  Convective Outlook...Day 2
+ACUS03 KWNS  Convective Outlook...Day 3
+ADMN.. KWBC  Administrative Messages
+AEUS.. ....  Air Quality Index Reports
+AG.... ....  Marine Interpretation Message, Coastal and Buoy Wind Forecasts
+AGUS7. ....  Hydrometeorological Discussions
+ASHW40 PHFO  Hawaiian Islands Hourly Weather Roundup
+ASHW50 PHFO  Hawaii Temperature and Precipitation Summary
+ASUS1  KWBC  Surface Analysis, Frontal And Pressure System Locations
+ASUS4. ....  State Hourly Weather Roundups
+ASUS5. ....  State Temperature and Precipitation Table
+ASUS6. ....  Regional Temperature and Precipitation Summary
+ATHW40 ....  Hawaiian Islands Satellite Interpretation
+AWUS4. ....  Area Weather Summary
+AXNT20 KNHC  Tropical Weather Discussion, Atlantic & Caribbean
+AXPZ20 KNHC  Tropical Weather Discussion, Pacific
+AXUS4. ....  Miscellaneous Discussions
+AXXX01 KBOU  NOAA Solar and Geophysical Activity Summary
+AXXX02 KBOU  NOAA Solar Region Summary
+
+------------------------------------------------------------------------
+
+
+    Climatic Data
+
+Filename: cli.wmo
+WMO header: C*
+*TT* 	*Explanation* 	*Code Form*
+CA 	Climatic anomalies 	TEXT
+CE 	Monthly data - upper air 	FM 76 (CLIMAT TEMP SHIP)
+CH 	Monthly data - surface 	FM 72 (CLIMAT SHIP)
+CO 	Monthly data - ocean areas 	FM 73 (NACLI, CLINP, SPCLI, CLISA, INCLI)
+CS 	Monthly data - surface 	FM 71 (CLIMAT)
+CU 	Monthly data - upper air 	FM 75 (CLIMAT TEMP)
+
+**
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+CDAK4. PA..  Alaska Climate Report
+CDHW4. PHFO  Hawaii Climate Report
+CDUS27 KZ..  Climatic Data, DS Data
+CDUS4. ....  Climatic Report
+CS.... ....  CLIMAT Data
+CSUS01 ....  Monthly Climatic Summary
+CSUS02 ....  Daily Climatic Report
+CSUS03 ....  Miscellaneous Climatic Data
+CSXX.. KWBC  Monthly Mean Climatic Data
+CXAK3. PA..  Alaska SCD Data
+CXUS3. ....  US SCD Data 
+CXUS4. ....  US DSM Data
+CXUS6. ....  US SCD Data
+
+------------------------------------------------------------------------
+
+
+    Forecast Information
+
+Filename: for.wmo
+WMO header: F*
+*TT* 	*Explanation* 	*Code Form*
+FA 	Aviation forecasts 	FM 53 (ARFOR)
+FB 	Upper level windows and temperatures 	FM 50 (WINTEM)
+FC  	Aerodrome forecasts (VT < 12hr) 	FM 51 (TAF)
+FD 	Radiological trajectory 	FM 57 (RADOF)
+FE 	Extended forecasts 	TEXT
+FF 	Shipping forecasts 	FM 46 (IAC FLEET)
+FI 	Iceberg forecasts 	TEXT
+FJ 	Radio warning service 	TEXT
+FM 	Temperature extreme forecasts 	TEXT
+FO 	Model guidance forecasts 	Formatted TEXT
+FP 	Public forecasts 	TEXT
+FQ 	Other shipping forecasts 	TEXT
+FR 	Aviation route forecasts 	FM 54 (ROFOR)
+FS 	Surface forecasts 	FM 45 (IAC), FM 46 (IAC FLEET), TEXT
+FT 	Aerodrome forecasts (VT > 12hr) 	FM 51 (TAF)
+FU 	Upper air forecasts 	FM 45 (IAC)
+FW 	Winter sports forecasts 	TEXT
+FX 	Miscellaneous forecasts 	TEXT
+FZ 	Shipping area forecasts 	FM 61 (MAFOR)
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+FAAK0. PA..  Alaska Aviation Area Forecasts
+FAAK2. KZAN  Alaskan CWA
+FAHW31 PHFO  Hawaii Aviation Area Forecasts
+FAUS20 KZ..  US Aviation Area Forecasts (MIS)
+FAUS21 KZ..  US Aviation Area Forecasts (CWA)
+FAUS5  ....  Aviation Synopsis and VFR Clds/Wx
+FA.... ....  International Area Forecasts
+FB.... ....  Upper Air Wind and Temperature Forecasts (WINTEM Coded)
+FC.... ....  Terminal Aerodrome Forecasts (TAF Coded)
+FD.... ....  Winds Aloft Forecasts (Coded)
+FEAK2. KWNO  AVN Based Objective Guidance for Alaska
+FEAK3. KWNO  MRF MOS Guidance for Alaska
+FECN20 KWBC  AVN Statistical Max/Min Guidance for Canada
+FECN21 KWBC  MRF Statistical Max/Min Guidance for Canada
+FEUS2. KWNO  MRF MOS Guidance for US
+FEXC[4567]. KWBC  AVN Based Objective Guidance for Central US
+FEXE[456]. KWBC   AVN Based Objective Guidance for Eastern US
+FEXS[456]. KWBC   AVN Based Objective Guidance for Southern US
+FEXW[456]. KWBC   AVN Based Objective Guidance for Western US
+FGUS4. ....  River Stage Statements and Forecasts
+FGUS5. ....  River Forecasts, Daily River and Lake Summaries
+FGUS6. ....  River Flood Watch Summary
+FGUS71 KWBC  National Hydrological Summary
+FGUS8. ....  River Forecasts
+FI.... ....  Ice, Ice Hazard and Iceberg Forecasts
+FLUS4. ....  Public Area Forecasts, Selected City Forecasts
+FLUS8. ....  Metropolitan Area Forecasts
+FMCN3. CWAO  Canadian City Forecasts
+FNUS21 KWNS  Fire Weather Discussion Day 1
+FNUS22 KWNS  Fire Weather Discussion Day 2
+FNUS5. ....  Fire Weather Forecasts for US
+FNUS6. ....  Rangeland and Grassland Fire Danger Statement
+FNUS7. ....  Regional Dispersion Forecasts
+FNUS8. ....  Fire Danger Rating Forecasts
+FN.... ....  General Fire Forecasts
+FPAK04 PA..  Coded City Forecasts for Alaska
+FPAK20 PA..  State Forecast Discussion for Alaska
+FPAK5. PA..  Public Zone Forecasts for Alaska
+FPAK7. PA..  Short Term Forecasts for Alaska
+FPAU22 AMRF  Interstate Cities Forecast for Australia
+FPCA4. TJSJ  Coded City Forcasts for NE Caribbean
+FPCA5. TJSJ  Public Zone Forecasts for NE Caribbean
+FPCA6. TJSJ  State Forecasts for NE Caribbean
+FPCA7. TJSJ  Short Term Forecasts for NE Caribbean
+FPCN1. C...  Public Forecasts for Canada
+FPCN2. C...  Marine Forecasts for Canada
+FPCN5. C...  Extended Forecasts for Canada
+FPHW40 PHFO  Coded City Forecasts for Hawaii
+FPHW50 PHFO  Public Zone Forecasts for Hawaii
+FPHW60 PHFO  State Forecast for Hawaii
+FPHW70 PHFO  Short Term Forecasts for Hawaii
+FPUS1[023] KWNH  Travelers Forecast Table
+FPUS2[0123] KWNH Selected Cities Weather Summaries and Forecasts
+FPUS4. ....  Coded City Forecasts for US
+FPUS5. ....  Public Zone Forecasts for US
+FPUS6. ....  State Forecasts for US
+FPUS7. ....  Short Term Forecasts for US
+FPUS8. ....  Miscellaneous Forecasts for US
+FQAU.. A...  High Seas Forecasts for Australia
+FQGX40 KWBC  AVN Storm Surge Forecasts for Gulf of Mexico
+FQUS2. KWBC  NGM Based Storm Surge and Lake Wind Forecasts
+FRUS4. ....  Aviation Route Forecasts (TWEB)
+FSUS4. ....  Quantitative Precipitation Forecasts (QPF- SHEF Format)
+FVXX20 KWBC  Volcanic Ash Forecast
+FXCN2. CWAO  Ultraviolet Index for Canada
+FXUS01 KWBC  48 Hour Forecast Discussion 
+FXUS02 KWBC  Extended Forecast Discussion (3-7 Day)
+FXUS03 KWNH  Day 3 Forecast (Tabular Cities)
+FXUS04 KWBC  Quantitative Precipitation Discussion (Day 1)
+FXUS04 KWNH  Day 4 Forecast (Tabular Cities)
+FXUS05 KWNH  Day 5 Forecast (Tabular Cities)
+FXUS06 KWBC  Prognostic Discussions for 6-10 and 8-14 Day Outlooks
+FXUS06 KWNH  Day 6 Forecast (Tabular Cities)
+FXUS07 KWNH  Day 7 Forecast (Tabular Cities)
+FXUS10 KWNH  Model Diagnostic Discussion
+FXUS11 KWBC  Extended Forecast MRF MOS Temps
+FXUS5. ....  MVF Forecasts
+FXUS6. ....  Area Forecast Discussions
+FXUS7. ....  FWM Forecasts
+FXUS8. ....  VER Data
+FXXX04 KBOU  Daily Space Weather Values (Solar/Geomagnetic)
+FZUS5. ....  Coastal Marine Forecasts
+FZUS6. ....  Great Lakes Forecasts
+FZUS7. ....  Marine Weather Statements
+
+------------------------------------------------------------------------
+
+
+    Model Output Information
+
+Filename: mod.wmo
+WMO header: FE*, FO*
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+FEAK2. KWNO  AVN Based Objective Guidance for Alaska
+FEAK3. KWNO  MRF MOS Guidance for Alaska
+FECN2. KWBC  AVN Based Statistical Max/Min Guidance for Canada
+FEPA20 KWNO  MRF MOS Guidance for Pacific
+FEUS2. KWNO  MRF MOS Guidance for US
+FEXC[4567]. KWNO  AVN Based Objective Guidance for Central US
+FEXE[456]. KWNO   AVN Based Objective Guidance for Eastern US
+FEXS[456]. KWNO   AVN Based Objective Guidance for Southern US
+FEXW[456]. KWNO   AVN Based Objective Guidance for Western US
+FOAK2[0-4] KWNO   MRF Based Objective Guidance for Alaska
+FOAK2[5-9] KWNO   NGM MOS Guidance for Alaska
+FOAK3. KWNO  AVN MOS Guidance for Alaska
+FOCA51 KWNO  Output from NGM (Cities, Caribbean)
+FOCN7. KWNO  Output from NGM (Cities, Canada)
+FOGX77 KWNO  Output from NGM (Locations, Gulf of Mexico)
+FOHW50 KWNO  Output from NGM (Cities, Hawaii)
+FOUE[01]. KWNO    NGM MOS Guidance for Eastern US
+FOUE[68]. KWNO    Output from NGM for Eastern US
+FOUM0. KWNO  NGM MOS Guidance for Mid US
+FOUM[678]. KWNO   Output from NGM for Mid US
+FOUS11 KWBC  Probabilistic Heavy Snow and Icing Discussion
+FOUS12 KWNO  FTP Forecasts
+FOUS14 KWNO  NGM MOS Guidance
+FOUS2. KWNO  AVN MOS Guidance
+FOUS30 KWBC  Excessive Rainfall Potential Outlook
+FOUS33 KWNO  NGM MOS Max/Min Guidance
+FOUS4. KWNO  ETA FOUS Freezing Level and Relative Humidity Forecasts
+FOUS50 KWNO  Trajectory Forecasts
+FOUS5. ....  Digital Zone Forecasts
+FOUS[67]. KWNO    Output from ETA Model
+FOUS6. ....  County Flash Flood Guidance
+FOUS7. ....  Headwater Flash Flood Guidance
+FOUS8. ....  FTP Forecasts
+FOUS[89]. KWNO    Output from NGM Model
+FOUW[01]. KWNO    NGM MOS Guidance for Western US
+FOUW[78]. KWNO    Output from NGM Model for Western US
+FOXC[4567]. KWBC  MRF Based Objective Guidance for Central US
+FOXE[456]. KWBC   MRF Based Objective Guidance for Eastern US
+FOXS[456]. KWBC   MRF Based Objective Guidance for Southern US
+FOXW[456]. KWBC   MRF Based Objective Guidance for Western US
+FOXX.. KBOU  Geoalert for Solar Activity
+
+------------------------------------------------------------------------
+
+
+    Terminal Forecasts (TAFs)
+
+Filename: term.wmo
+WMO header: FC*, FT*
+
+------------------------------------------------------------------------
+
+
+    Hydrological Data
+
+Filename: rvr.wmo
+WMO header: R*
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+RWUS4. ....  River Flood Statements
+RRUS2. KZ..  SHEF Data
+RRUS.. KWOH  RRS Data
+RRUS4. ....  Daily Hydrological Observations
+RRUS5. ....  River Reports
+RRUS6. ....  RR6 Data
+RRUS7. ....  RR7 Data
+RRUS8. ....  Hydrological Observations
+
+------------------------------------------------------------------------
+
+
+    Surface Data
+
+Filename: sfc.wmo
+WMO header: S*
+*TT* 	*Explanation* 	*Code Form*
+SA 	Aviation routine reports 	FM 15 (METAR), SAO
+SB 	Radar reports (part A) 	FM 20 (RADOB)
+SC  	Radar reports (part B) 	FM 20 (RADOB)
+SD 	Radar reports (parts A & B) 	FM 20 (RADOB), Formatted TEXT
+SE 	Earthquake/Seismic reports 	Formatted TEXT
+SF 	Atmopsheric reports 	FM 81 (SFAZI), FM 82 (SFLOC), FM 83 (SFAZU)
+SG 	Radiological data reports 	FM 22 (RADREP)
+SI 	Intermediate synoptic hour reports 	FM12 (SYNOP), FM13 (SHIP)
+SM 	Main synoptic hour reports 	FM12 (SYNOP), FM13 (SHIP)
+SN 	Nonstandard synoptic reports 	FM12 (SYNOP), FM13 (SHIP)
+SO 	Oceanographic data 	TEXT
+SP 	Special aviation reports 	FM 16 (SPECI)
+SR 	Hydrological reports 	FM 67 (HYDRA)
+ST 	Sea ice reports 	TEXT
+SU 	Snow depth reports 	TEXT
+SV 	Lake ice reports 	TEXT
+SX 	Miscellaneous reports 	TEXT
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+SE.... ....  Seismic Data
+SF.... ....  Sferic and Lightning Data
+SHUS4. ....  Agricultural Observations
+SO.... ....  Water Level, Tidal Prediction Data (SHEF Coded)
+SXUS0. ....  Agricultural Weather Observations
+SXUS[2-8] KWOH    RRS Data
+SXUS4. ....  Miscellaneous Local Observations, COOP Reports
+SXUS70 KWAL  ????
+SXUS8. ....  Miscellaenous Marine Reports
+SXUS99 ....  Record Events
+SXXX41 KWAL  ????
+SXXX90 KWAL  ????
+
+------------------------------------------------------------------------
+
+
+    Surface Observations
+
+Filename: sao.wmo
+WMO header: SA*, SP*
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+SA.... ....  Regular METAR Observtions
+SP.... ....  Special METAR Observations
+
+------------------------------------------------------------------------
+
+
+    Synoptic Observations
+
+Filename: syn.wmo
+WMO header: SI*, SM*, SN*, SS*
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+SI.... ....  Intermediate Hour Synoptic Data
+SM.... ....  Main Hour Synoptic Data
+SN.... ....  Non-standard Syntopic Data
+SS.... ....  Other Synoptic Data
+
+------------------------------------------------------------------------
+
+
+    CMAN Observations
+
+Filename: cman.wmo
+WMO header: SXUS2[0123]
+
+------------------------------------------------------------------------
+
+
+    Radar Data
+
+Filename: rad.wmo
+WMO header: SDUS4* KWBC
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+SDUS4. KWBC  Manually Digitized Radar Data
+
+------------------------------------------------------------------------
+
+
+    Radar Coded Message Data
+
+Filename: rad.wmo
+WMO header: SDUS4* KWBC
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+SDUS4. ....  Radar Coded Message Data
+
+------------------------------------------------------------------------
+
+
+    Lightning Strike Data
+
+Filename: .nldn
+WMO header: SFUS41 KWBC
+------------------------------------------------------------------------
+
+
+    Satellite Data
+
+Filename: sat.wmo
+WMO header: T*
+*TT* 	*Explanation* 	*Code Form*
+TB 	Satellite orbit parameters 	Formatted TEXT
+TC 	Satellite cloud interpretations 	FM 85 (SAREP)
+TH  	Satellite derived upper air soundings 	FM 86 (SATEM)
+TI 	Satellite imagery 	NOAAPORT Satellite Format
+TR 	Clear radiance observations 	FM 87 (SARAD)
+TT 	Sea surface temperatures 	FM 88 (SATOB)
+TW 	Winds and cloud temperatures 	FM 88 (SATOB)
+TX 	Miscellaneous satellite reports 	TEXT
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+TBUS0. KWBC  APT and Geodetic Subpoint Predictions
+TCIO1. KWBC  Satellite Tropical Disturbance Summary
+TCUS[456]. KWBC   Satellite Derived Cloud Information
+TW.... ....  Satellite Wind Information (YYXX Coded)
+
+------------------------------------------------------------------------
+
+
+    Upper Air Data
+
+Filename: upa.wmo
+WMO header: U*
+*TT* 	*Explanation* 	*Code Form*
+UA 	Aircraft reports 	AIREP
+UB 	Aircraft reports 	AIREP
+UC  	Constant balloon data 	COLBA
+UD 	Aircraft reports 	FM 42 (AMDAR)
+UE 	Upper air temp data (part D) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UF 	Upper air temp data (part C, D) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM
+38 (TEMP MOBIL)
+UG 	Upper air wind data (part B) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UH 	Upper air wind data (part C) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UI 	Upper air wind data (part A, B) 	FM 32 (PILOT), FM 33 (PILOT SHIP),
+FM 34 (PILOT MOBIL)
+UK 	Upper air temp data (part B) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UL 	Upper air temp data (part C) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UM 	Upper air temp data (part A, B) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM
+38 (TEMP MOBIL)
+UN 	Rocketsonde reports 	FM 39 (ROCOB), FM 40 (ROCOB SHIP)
+UP 	Upper air wind data (part A) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UQ 	Upper air wind data (part D) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UR 	Aircraft recon reports 	RECCO
+US 	Upper air temp data (part A) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UT 	Aircraft reports 	FM 41 (CODAR)
+UX 	Miscellaneous upper air reports 	TEXT
+UY 	Upper air wind data (part C, D) 	FM 32 (PILOT), FM 33 (PILOT SHIP),
+FM 34 (PILOT MOBIL)
+UZ 	Dropsonde reports 	FM 37 (TEMP DROP)
+
+
+------------------------------------------------------------------------
+
+
+    Pilot Reports
+
+Filename: pirep.wmo
+WMO header: UA*, UB*
+------------------------------------------------------------------------
+
+
+    Severe Weather Information
+
+Filename: upa.wmo
+WMO header: W*
+*TT* 	*Explanation* 	*Code Form*
+WA 	Aviation AIRMETs 	TEXT
+WF
+	Tornado warnings
+	TEXT
+WG
+	Flood watches and warnings
+	TEXT
+WH  	Marine watches and warnings
+	TEXT
+WO
+	Miscellaneous watches and warnings
+	TEXT
+WT
+	Tropical advisories
+	TEXT
+WU
+	Severe thunderstorm warnings 	TEXT
+WW 	Special weather statements 	TEXT
+
+
+        Selected WMO Headers
+
+TTAAII CCCC  Explanation
+ACPA40 PHFO  Tropical Weather Discussions for Eastern Pacific
+ACPN50 PHFO  Tropical Weather Discussions for Central Pacific
+ACPW40 PHFO  Tropical Weather Discussions for Western Pacific
+ACUS01 KWNS  Convective Outlook Day 1
+ACUS02 KWNS  Convective Outlook Day 2
+ACUS03 KWNS  Convective Outlook Day 3
+WA.... ....  Aviation AIRMET, significant weather 
+WFUS5. ....  Tornado Warnings
+WGUS4. ....  Flood Watch Statement
+WGUS5. ....  Flash Flood Watch
+WGUS6. ....  Flash Flood Statement
+WGUS7. ....  Flood Statement
+WHUS5. ....  Special Marine Warning
+WOCN.. C...  Special Weather Statement for Canada
+WO.... ....  Miscellaneous Advisories
+WRUS5. ....  Flood Warnings ???
+WS.... ....  SIGMETs, Significant Weather Advisories
+WTIO21 PGTW  Tropical Advisories for Indian Ocean from Guam
+WTJP31 RJTD  Tropical Storm Warnings from Japan
+WTPH   RPLL  Tropical Storm Warnings from Philippines
+WTNT.. KNHC  Tropical Storm Advisories for Atlantic from Miami 
+WTPN31 PGTW  Tropical Storm Advisories from Guam
+WTPQ20 RJTD  Tropical Storm Advisories from Japan
+WTPZ.. KNHC  Tropical Storm Advisories for Eastern Pacific from Miami
+WTSS20 VHHH  Tropical Storm Warnings from Hong Kong
+WUUS5. ....  Severe Thunderstorm Warning
+WWCN.. C...  Severe Weather Bulletins for Canada
+WWUS30 ....  Local Storm Reports
+WWUS34 ....  Severe Weather Statement
+WWUS35 ....  Special Weather Statement
+WWUS40 KMKC  Severe Storm Watch Statements
+WWUS4. ....  Winter Weather Statement
+WWUS60 KMNS  Severe Storm Watch Status
+WWUS60 KMKC  Daily Storm Report Summaries ???
+WWUS7. ....  Non-precipitating Weather Statement
+WWUS8. ....  Hazardous Weather Statement, Red Flag Warning
+WWUS9. ....  Severe Storm Watches
+
+
+

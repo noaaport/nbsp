@@ -1,0 +1,38 @@
+#
+# $Id$
+#
+
+#
+# Example for sending the full file (F flag)
+#
+lappend subscribers {
+	smtp://nieves@ltp.upr.clu.edu
+	(svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0
+	F
+}
+
+#
+# Example for sending the summary (S flag)
+#
+lappend subscribers {
+	smtp://7877589734@cingularme.com
+	(svs|tor)_txz14[5-9],svr_vaz014,npw_txz25[2-7]
+	S
+}
+
+#
+# General form
+# 
+lappend subscribers {
+	<transport>://<destination>
+	<prodzone_list>
+	<flags>
+}
+
+#
+# Instead of, or in addition to, using the above syntax a flat file can be
+# used thus:
+#
+# Add a subscriber list from a flat file (see msgfilter-subscriber.txt-ex)
+#
+msgfilter_add_flat_file "/usr/local/etc/npemwin/site/msgfilter-subscribers.txt";

@@ -1,0 +1,270 @@
+$Id$
+
+- This is the 2nd release of the 1.8 version of the
+Noaaport Broadcast System Processor (nbsp). Packages, sources and
+documentation are available from
+
+    http://www.noaaport.net
+
+Packages for other operating systems or distributions not found there
+can be created upon request.
+
+New features in 1.8.r2 -
+
+1) The dafilter has an archive mode for long term archival of the data,
+   in addition to, or instead of, the usual mode. In that mode, the data
+   is saved in the directory "/var/noaaport/data/archive" and it is not
+   pruned by the periodic cleanup scripts.
+
+New features in 1.8 -
+
+1) The Weatherscope extension is now included in the distribution so that
+   the WS program is supported ``out of the box''.
+   (see weatherscope.README)
+2) Two new filters (uafilter, wsfilter) have been added to expand the support
+   for Weatherscope. The uafilter converts the upperair data to the mdf format
+   used by Weatherscope. The wsfilter converts model grib forecast data.
+   The program can now display hundreds of parameters from different models,
+   grids, levels and forecast time combinations.
+   (see weatherscope.README)
+3) New scheduler to support a schedule file per filter (used in the gribfilter
+   to create the plots via tclgrads and in the wsfilter to create the WS
+   data files from the forecast models).
+4) Many refinements to the memory-based-spool system for master/slave
+   configuration without a disk-based spool.
+   (see mspoolbdb.README and master-setup.README).
+
+Changes -
+
+- Revised nbspgribplot and scripts to use tclgrads.
+- A local copy of tclgrads is included with nbsp (gribfilter, wsfilter)
+- A local copy of tclupperair is included with nbsp (uafilter)
+- Several functions in the filterlib are being converted
+  to packages (nbsputil, errx).
+- New packages for the per-filter scheduler (mscheduler, hscheduler, scheduler)
+- A per-filter scheduler (nbspscheduler)
+  (used by the wsfilter and the gribfilter).
+  nbspexec to execute all the filters schedulers jobs in the background in an
+  independent environment.
+- New convention for grib file names. This caused revision of
+  all the auxiliary grib scripts (plot, ctl files, gribsh).
+- Revised the syntax of the gribfilter schedule file
+  (now called gribfilter-schedule.rc).
+- Changed all matchstop to match in the pipe.m4 decoders rule
+  in the dafilter (in analolgy with the gpfilter).
+- Added optional daily and hourly archives in metarfilter
+  (to add support for Weatherscope). Enabled by default.
+- Added uafilter and wsfilter to support Weatherscope.
+  Revised the Weatherscope extension
+  Added configuration files for the model forecasts data (via m4)
+- Weatherscope tcl files included as an extension.
+- Separate package for the WS client configuration files also included
+  in the doc directory.
+
+Nbsp includes the following features:
+
+o nbsp can work in "master" or "slave" mode. In master mode it can
+  accept connections from emwin (byteblaster) clients or other nbsp processes
+  running on other hosts (in the same or in a remote network).
+  A filter (netfilter) controls what hosts get what products by
+  means of fully configurable allow/deny policy rules.
+  More details in the netfilter.README and slave-setup.README files.
+  
+o In slave mode and get its feed either
+  from a master nbsp running on a different computer in the network,
+  or through an nntp (inn) feed.
+
+o In master-slave configurations, the master can be configured to
+  use a spool file system that resides entirely in memory
+  (using the Berkely DB library). (seer mspoolbdb.README).
+
+o A gateway interface has been implemented to distribute the files by
+  an NNTP server such as inn.
+
+o The text files are also available by RSS feeds that are accessible
+  through the built-in web server.
+
+o A gateway has been implemented to insert the files in an LDM product
+  for further processing and/or distribution by ldm.
+
+o There is a mechanism (the "panfilter") for sending PAN messages, that is,
+  notifying another computer or set of computers when particular product
+  files have been received.
+
+o It stores all the files it receives, from all noaaport channels
+  (in a user-defined directory). The names of the files saved
+  in the spool directory includes a time-stamp.
+
+o A complete inventory is kept of every file received, each minute,
+  during the last 24 hour period, as well as each file missed and each file
+  retransmitted during the same period. A fairly complete set of statistics
+  is produced from the inventory and they are made readily available
+  by the built-in web server for easy vieweing. A graphical summary
+  of the statistics is also produced in the web interface.
+  The inventory files (and the raw data files themselves) for the
+  are accessible from web server menu, and they can be downloaded by
+  http with any tool such as wget or curl from the corresponding url.
+  (See the panfilter.rc-ex file in the distribution for further details.)
+
+o The text files and satellite images are decoded without the
+  use of the gempak or any other external program, so that they 
+  can be stored in any publicly accesible location and viewed
+  with standard tools including a web browser.
+
+o nbsp can generate all the radar images.
+  For this, it requires GemPak to be installed since it uses some of
+  the maps and tools of that package.
+
+o The creation of the radar and satellite images use a template-based
+  system that is fully scriptable and customizable, and
+  it can create loop animation sequences of the images.
+
+o It can store the files in a GemPak-compatible format
+  and in a GemPak-style directory tree (with the root of the directory
+  being configurable). Thus, the files can be manipulated
+  by the tools and decoders, and also can be directly loaded into
+  the GemPak GUI viewers. A companion package "gpak" is
+  available to easy the installation and configuration of Gempak.
+
+o The files can be stored in a format that can be directly
+  imported by Digital Atmosphere and IDV. This includes
+  upperair, surface and other text data files, as well
+  as grib files.
+
+o A directory listing file "dir.list", in the format specified
+  in the so-called ONDAS draft
+  (http://nexrad.allisonhouse.com/support/developers/ondas.txt),
+  is maintained in each radar site subdirectory of the digatmos data directory.
+
+o It has a powerful mechanisms for processing the files received.
+  The ``post-processors'' can be written in any language.
+  This mechanism can also be used for implementing a complete
+  notification system.
+
+o The rstfilter has a facility for executing ``post rules'' after
+  the files have beeen processed and the satellite and radar images
+  have been created and saved. Among other things, this can be used to
+  move, copy or transfer the final data files or images
+  to a final local or remote destination.
+
+o The ``dafilter'' can save the radar data files such that they
+  can be loadad by the NCDC ``Weather Climate Tool'',
+  [http://www.ncdc.noaa.gov/oa/wct] (see da-wct.README).
+
+o Full support for Weatherscope
+  [http://climate.ok.gov/software] (See weatherscope.README)
+
+o The dafilter, rstfilter, gribfilter and gpfilter support a
+  ``work-crew'' configuration option for parallel processing.
+
+o The program uses a configuration file which allows to control
+  all essential aspects: which files are stored, which network clients
+  can connect, which files are redsitributed, various working directories, 
+  and many other details.
+ 
+  All efforts have been made to make it free of artificial limitations, 
+  so anywhere where there could be a choice, it has been made
+  a configurable option. The configuration file uses the tcl language, 
+  which makes it very flexible and powerful. But the program
+  runs "out of the box" without any special setting (in fact
+  even without the configuration file) with the built-in defaults. 
+
+o nbsp can run as an unpriviledged user and group, which  can be specified
+  in the configuration file.
+
+o The rpm version of the package installs the startup
+  script via chkconfig in the standard /etc/rc?.d locations.
+
+o It has a built-in web server, designed to display the various
+  statistics and variables that nbsp keeps to report its internal state.
+  It can also serve any kind of files in the usual way. The server is
+  built on top of the tclhttpd library. The server listens on port 8015.
+  From the same host it can be accessed as
+
+	http://localhost:8015,
+
+  and from another machine
+
+	http://<yournbspmachine>:8015
+
+  It can be disabled by editing the nbspd.conf file, and some options
+  specific to the web server can be set in the httpd.conf file.
+
+o Text files identified as administrative or urgent are tagged
+  as such and made immediately available for display through the
+  built-in web server.
+
+o A subset of the grib data files are processed and saved in the "digatmos"
+  data directory in a way that can be imported by both Digital Atmosphere
+  and IDV (assuming that the data directory is exported, for example
+  via samba). Further notes about using these programs are given
+  in the notes in
+
+	da-idv-grib.README
+
+o There is a separate filter to specifically process the grib
+  files, using GrADS. The ``gribfilter" will create the control
+  and index files used by GrADS, and it will run a set of scripts
+  to produce graphs involving the data at periodic intervals.
+  The image files are accessible (as well as the rest of the
+  grib-related files) from the buitl-in web interface. A web browser is
+  all the is required to view them. New scripts can be added, the
+  default ones can be edited and the running time and other options
+  are user-configurable. Further notes are in the file
+
+	grads-grib.README
+
+  There are several Tk "client" applications that serve as front-ends
+  to GrADS to work with the grib data files. Further details are in the
+
+	gribsh.README
+
+o A facility exists for transfering or uploading to remote sites
+  the grib model plots created by the gribfilter using GrADS.
+
+o Metar data files are processed to produce text reports, which
+  are readily accessible from the web interface of the built-in
+  web server. A facility is provided to define groups of stations
+  ("collectives") as a set with a unique name to track the observations
+  from that group as one unit. The Metar decoding library was
+  written from scratch purely in Tcl. The Metar reports display
+  the location (lat, lon, city) of the observation station.
+
+  There is direct support for the MetarWeather program for Windows.
+  The data from each station or collective is summarized in a directory
+  which can be exported via samba and the data files are immediately
+  accessible to the MetarWeather program. 
+
+  The metar observations data is displayed in graphical form
+  in the web interface. Plots are generated for the temperature,
+  dew point, relative humidity, pressure and wind speed for any
+  station. The Metar plots use the gd library via gnuplot.
+
+o A separate filter (trackfilter) specifically for tracking hurricanes.
+  The ``trackfilter'' extracts the hurricane data
+  from NHC bulletins, saves the data in a text file and creates
+  tracking plots of the corresponding hurricane. The data is saved in
+  an easy to read format that can be used with other programs if desired.
+
+o The radar data files that are saved in the "digatmos" data directory
+  can be written in uncompressed form, and in addition the ccb and/or
+  the wmo header can be removed. This is enabled by a configuration option
+  in the dafilter.conf file.
+
+o GRLevel3, Digital Atmosphere, Weatherscope and MetarWeather
+  are supported "out of the box". Further details are in the files
+
+	da-grlevel.README
+	metarweather.README
+	weatherscope.README
+
+o There is a ploting module for creating graphs of certain data, such as
+  the data from metar observations and the internal statistics data that
+  is maintained by nbspd. It is used in the web interface. Further details
+  are in the file
+
+	metarplot.README
+
+- 
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Sun Mar  8 21:38:53 AST 2009

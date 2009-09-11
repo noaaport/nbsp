@@ -1,0 +1,98 @@
+* 
+* $Id$
+*
+* usage: grads -blc "run <script_path> <map_path>
+*                    <hurricane_name> <data_file> <img_file>"
+*
+function main(args)
+mpath = subwrd(args, 1)
+name = subwrd(args, 2)
+fpath = subwrd(args, 3)
+imgfile = subwrd(args, 4)
+
+* Draw the map
+'run 'mpath
+
+marktype = 4
+marksize = 0.05
+lcolor = 3
+lstyle = 1
+lthick = 1
+
+'q dims'
+line = sublin(result, 2)
+lon1 = subwrd(line, 6)
+
+* Read all the values into subscripted variables.
+* read returns a code and the next line in the file,
+* concatenated into one string. sublin splits the string at \n.
+
+adv = 0
+ret = read(fpath)
+rc = sublin(ret, 1)
+while (rc = 0) 
+  adv = adv + 1
+  data = sublin(ret, 2)
+  type.adv = subwrd(data, 1)
+  date.adv = subwrd(data, 2)
+  lon.adv = subwrd(data, 3)
+  lat.adv = subwrd(data, 4)
+
+  if(lon.adv > 0)
+    lon.adv = lon.adv - 360
+  endif
+
+  ret = read(fpath)
+  rc = sublin(ret, 1)
+endwhile
+
+* The total number of records is the last value of adv.
+nrec = adv 
+
+* Date is printed only for forecast
+writedate = 0
+
+* Plotting
+'set line 'lcolor' 'lstyle' 'lthick
+'query w2xy 'lon.1' 'lat.1
+xprev = subwrd(result, 3) 
+yprev = subwrd(result, 6) 
+'draw mark 'marktype' 'xprev' 'yprev' 'marksize
+next = 2
+while (next <= nrec)
+  'query w2xy 'lon.next' 'lat.next
+  xnext = subwrd(result, 3)
+  ynext = subwrd(result, 6)
+  'draw line 'xprev' 'yprev' 'xnext' 'ynext
+  'draw mark 'marktype' 'xnext' 'ynext' 'marksize
+
+   if(writedate = 1)
+    'set string 7 l 1 60'
+    line.x = xnext
+    line.y = ynext + 0.1
+    'draw string 'line.x' 'line.y' 'date.next
+    'set string 1 l 1 0'
+  endif
+
+  next = next + 1
+  xprev = xnext
+  yprev = ynext
+
+  if (type.next = F)
+    writedate = 1
+    lcolor = 7
+    'set line 'lcolor' 'lstyle' 'lthick
+  endif
+
+endwhile
+
+* plot the title
+'set strsiz .25'
+'set string 1 l'
+'set string 1 r'
+'set strsiz .25'
+'draw string 10.5 8.00 'name
+'set string 1 l'
+
+'printim 'imgfile
+'quit'

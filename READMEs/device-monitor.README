@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+The Nbsp web server can display the status of devices that are
+monitored by the Npstats package. The devices show up by selecting
+the "Devices" item in the "Statistics" menu of the Nbsp web server
+main page.
+
+Configuring which devices to display is simple -
+
+- Install the Npstats package, and configure it with the devives that
+you wish to monitor.
+
+- In the nbsp main configuration directory, edit the "npstats.conf" file
+and add the devivces that you wish to display in the Nbsp web server pages.
+A (commented out) example of such an entry is given in that file.
+
+Example -
+
+If "etc/npstats/devices.conf" looks like
+
+set devices(devicelist) {
+    {
+        noaaportnet.linda
+        novra_s75
+        1001
+        {export 0 csvarchive 1}
+    }
+}
+
+then in "etc/nbsp/npstats.conf" add
+
+set _npstats(devices) {
+    {noaaportnet.linda novra_s75.tml}
+}
+
+# -
+# JFN
+# Thu Jul 23 18:34:24 AST 2009
+# -

@@ -1,0 +1,70 @@
+#
+# $Id$
+#
+
+# Application groups
+
+    # Digital Atmosphere et. al.
+    
+	[noaaport.appdata.da.surface
+	noaaport.appdata.da.syn
+	noaaport.appdata.da.ship
+	noaaport.appdata.da.nwx.spc.day1
+	noaaport.appdata.da.nwx.spc.day2
+	noaaport.appdata.da.nwx.spc.day3
+	noaaport.appdata.da.nwx.hpc.fronts]
+
+	noaaport.data.{surface,syn,ship,nwx.<subgroups>,...}  (from dafilter)
+	noaaport.data.{bufr,...}			      (not implemented)
+	noaaport.grib.{...}				      (below)
+
+# Satellite Images
+
+	noaaport.sat.img.{tigp,tigw,...}	(from rstfilter)
+	noaaport.sat.raw.{tigp,tigw,...}	(from nntpfilter)
+
+# Text bulletins
+
+	noaaport.misc.adm		# (from rstnntpfilter)
+	noaaport.txt.kkkk		# (from rstnntpfilter)
+	noaaport.txt.raw.kkkk		# (from nntpfilter - not enabled)
+	noaaport.emwin.{urgent,warnings,data,forecast,summary}.kkkk
+	noaaport.emwin.misc.adm
+	noaaport.emwin.{urgent,warnings,data,forecast,summary}
+
+# Radar Images
+
+	noaaport.rad.img.sss	(from rstfilter)
+	noaaport.rad.raw.sss	(from nntpfilter)
+
+# Grib
+
+	noaaport.grib.raw.kkkk		   (nntpfilter)	(not enabled)
+	noaaport.grib.model.<model><grid>  (gribfilter)	(not implemented)
+
+####
+#### Summary
+####
+
+## Station groups - 
+	
+	noaaport.txt.kkkk
+	noaaport.txt.raw.kkkk
+	noaaport.emwin.{urgent,warnings,data,forecast,summary}.kkkk
+	noaaport.rad.img.sss
+	noaaport.rad.raw.sss
+	noaaport.grib.raw.kkkk
+
+## Non-station groups -
+
+	noaaport.misc.adm
+	noaaport.data.*
+	noaaport.sat.img.*
+	noaaport.sat.raw.*
+	noaaport.emwin.misc.adm
+	noaaport.emwin.{urgent,warnings,data,forecast,summary}
+
+## Currently
+
+	data = all (same names as the subdirectories of data/digatmos)
+	sat = tiga, tigb, tige, tigf, tigh, tigi, tign, tigp, tigq, tigw

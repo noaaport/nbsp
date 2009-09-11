@@ -1,0 +1,136 @@
+#
+# $Id$
+#
+
+#        _____                                      _          _
+#       | ____| __  __   __ _   _ __ ___    _ __   | |   ___  | |
+#       |  _|   \ \/ /  / _` | | '_ ` _ \  | '_ \  | |  / _ \ | |
+#       | |___   >  <  | (_| | | | | | | | | |_) | | | |  __/ |_|
+#       |_____| /_/\_\  \__,_| |_| |_| |_| | .__/  |_|  \___| (_)
+
+# The two statements below allow to send everything
+# to everybody, and also prevent the rest of the rules being checked. 
+
+lappend cond {1}
+lappend action {
+  set allow(0) 1;
+  break;
+}
+
+# If you put your own rules below, you must comment those two statements.
+# If you put them in site/netfilter.rc you don't have to do anything here
+# because in that case this file is ignored.
+
+# Note that this filter does not control what computers are allowed
+# to connect to the nbsp process in your computer. It only controls
+# what products wil be sent to each connected computer. On the other hand,
+# nbsp is linked against "libwrap", the tcpwrapers library, and it uses
+# is to determine whether or not to accept a connection. Thus, the
+# /etc/hosts.allow file is used to control what clients can connect to nsbp,
+# and the netfilter is used to control what is sent to each of those clients.
+
+# Examples- 
+
+# At the time that the rules of this file are executed,
+#  the "rc" variables that are listed in the file "nbspfilter.rc-ex"
+# are defined here as well. The syntax for constructing the rules
+# using tcl is explained in that file, with the exception of using
+# the additional variables
+#
+#	allow(0)
+#	allow(<hostname>.<domain>)
+#
+# explained below. 
+
+#
+# Default rules
+#
+
+# Having this as the first rule will deny access by default to every
+# remote host, unless a specific allow(<remotehost>) variable
+# is later set to 1.
+#
+lappend cond {1}
+lappend action {
+  set allow(0) 0;
+}
+
+# This does the opposite, it will allow all by default unless a subsequent
+# allow(<remotehost>) is set 0.
+#
+lappend cond {1}
+lappend action {
+  set allow(0) 1;
+}
+
+# If the variable allow(0) is not set at all, it is the same
+# as if it were set to 0.
+
+#
+# Host-specific rules
+#
+
+# To send all messages containing the word URGENT to a remote host
+# named "caribe.noaaport.net"
+#
+lappend cond {
+  [regexp {URGENT} $rc(body)]
+}
+lappend action {
+  set allow(caribe.noaaport.net) 1;
+  break;
+}
+#
+# If the rule matched, the "break" statement prevents the
+# following rules from being executed. Without the break statement
+# the filter continues.
+
+# Instead of sending all those messages, to restrict them only to those
+# coming from the TJSJ station 
+#
+lappend cond {
+  [regexp {URGENT} $rc(body)] && [regexp {tjsj} $rc(station)]
+}
+lappend action {
+  set allow(caribe.noaaport.net) 1;
+}
+
+# The same, but all text files
+#
+lappend cond {
+  ($rc(txtflag) == 1) && [regexp {tjsj} $rc(station)]
+}
+lappend action {
+  set allow(caribe.noaaport.net) 1;
+}
+
+# To send all radar data files to two remote hosts
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set allow(ltp.upr.clu.edu) 1;
+  set allow(caribe.noaaport.net) 1;
+}
+
+# To send everything except the radar data files to two remote hosts
+#
+lappend cond {
+  ![regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set allow(ltp.upr.clu.edu) 1;
+  set allow(caribe.noaaport.net) 1;
+}
+
+# An equivalent way to accomplish the latter is to have "set allow(0) 1"
+# at the top and then
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set allow(ltp.upr.clu.edu) 0;
+  set allow(caribe.noaaport.net) 0;
+}

@@ -1,0 +1,148 @@
+#
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+
+proc get_grib_model_params {fpath station wmoid} {
+
+# Without errors, this function returns the list
+#
+# <gribedition> <model_name> <modelldm> <grid> <reference_time> \
+#   <center_number> <subcenter_number> <model_number> \
+#   <forecast_time_unit> <forecast_time_1> <forecast_time_2> \
+#   <time_ref_indicator>
+#
+# For grib2, <grid> is returned as 0 by nbspgrib2; this function
+# tries to get it from the wmoid. For grib1 it is taken (by nbspgrib)
+# from the file itself.
+#
+# For grib2, <forecast_time_2> and <time_ref_indicator> are returned as zero.
+#
+# From that we can construct a string of the form <modelldm>#<gridid>
+# for use in the ldmfilter (and in the gpfilter rules if needed).
+# I added the gridid part because some of the rules in pqact.conf use
+# the gridid. The "metadata" that ldm uses in the whole product name
+# is much more complicated; it is of the form
+#
+# grib/<center>/<model>/#<gridid>......
+#
+# But the pqact.conf rules are written like /mETA.*#225, and therefore
+# the simpler string we use (without the grid) is sufficient to catch the rule.
+
+    global filterslib;
+    global filtersprogs;
+    global filtersgribid;
+
+    # Return empty list if there are errors reading the file.
+    set gribparams [list];
+
+    set status [catch {
+	if {$filterslib(ccbsaved) == 1} {
+            set gribinfo [exec $filtersprogs(nbspgrib) -b -e $fpath];
+	} else {
+	    set gribinfo [exec $filtersprogs(nbspgrib) -b -n -e $fpath];
+	}
+    } errmsg];
+    
+    if {$status != 0} {
+	log_msg "Error processing $fpath.";
+	log_msg $errmsg;
+	return $gribparams;
+    }
+
+    set gribedition [lindex $gribinfo 0];
+    if {$gribedition == 2} {
+	set status [catch {
+	    if {$filterslib(ccbsaved) == 1} {
+		set gribinfo [exec $filtersprogs(nbspgrib2) -b -e $fpath];
+	    } else {
+		set gribinfo [exec $filtersprogs(nbspgrib2) -b -e -n $fpath];
+	    }
+	} errmsg];
+    }
+
+    if {$status != 0} {
+	log_msg "Error processing $fpath.";
+	log_msg $errmsg;
+	return $gribparams;
+    }
+
+    set gribedition [lindex $gribinfo 0];
+    if {($gribedition == 1) || ($gribedition == 2)} {
+        set center [lindex $gribinfo 1];
+	set subcenter [lindex $gribinfo 2];
+        set model [lindex $gribinfo 3];
+        set gridid [lindex $gribinfo 4];
+	set reftime [lindex $gribinfo 5];
+	set ftu [lindex $gribinfo 6];  # forecast time unit
+	set p1 [lindex $gribinfo 7];   # forecast time 1
+	set p2 [lindex $gribinfo 8];   # forecast time 2
+	set tri [lindex $gribinfo 9];  # time range indicator
+	# Translate the $ftu
+	if {[info exists filtersgribid(ftu,$ftu,$gribedition)]} {
+	    set ftu $filtersgribid(ftu,$ftu,$gribedition);
+	} else {
+	    set ftu $filtersgribid(ftu,unknown);
+	}
+    } else {
+	return [list $gribedition];
+    }
+
+    # For grib2 try to get the gridid from the wmoid.
+    if {($gribedition == 2) && ($gridid == "0")} {
+	set _g [get_gridid_from_wmoid $wmoid];
+	if {${_g} != "0"} {
+	    set gridid ${_g};
+	}
+	unset _g;
+    }
+
+    if {[info exists filtersgribid(model,$center,$station)]} {
+        set modelname $filtersgribid(model,$center,$station);
+    } elseif {[info exists filtersgribid(model,$center,$subcenter,$model)]} {
+        set modelname $filtersgribid(model,$center,$subcenter,$model);
+    } elseif {[info exists filtersgribid(model,$center,$model)]} {
+        set modelname $filtersgribid(model,$center,$model);
+    } elseif {[info exists filtersgribid(subc,$center,$subcenter)]} {
+        set modelname $filtersgribid(subc,$center,$subcenter);
+    } elseif {[info exists filtersgribid(subc,$center,$station)]} {
+        set modelname $filtersgribid(subc,$center,$station);
+    } else {
+	# Prepend a "k-" as an indicator that this is a "station" id.
+        set modelname "k-${station}";
+    }
+
+    if {[info exists filtersgribid(modelldm,$center,$model)]} {
+        set modelnameldm $filtersgribid(modelldm,$center,$model);
+    } elseif {[info exists filtersgribid(center,$center)]} {
+	append modelnameldm $filtersgribid(center,$center) "_" $model;
+    } else {
+	set modelnameldm "${center}_${model}";
+    }
+
+    set gribparams \
+	[list $gribedition $modelname $modelnameldm $gridid $reftime \
+		$center $subcenter $model \
+		$ftu $p1 $p2 $tri];
+
+    return $gribparams;
+}
+
+proc get_gridid_from_wmoid {wmoid} {
+
+    global filtersgribid;
+
+    if {[regexp {([lmyz]).(.)...} $wmoid s s1 s2]} {
+	if {[info exists filtersgribid(gridid,lmyz,$s2)]} {
+	    return $filtersgribid(gridid,lmyz,$s2);
+	}
+    } elseif {[regexp {([ho]).(.)...} $wmoid s s1 s2]} {
+	if {[info exists filtersgribid(gridid,$s1,$s2)]} {
+	    return $filtersgribid(gridid,$s1,$s2);
+	}
+    } else {
+	return 0;
+    }
+}

@@ -1,0 +1,289 @@
+#
+# $Id$
+#
+
+# This file contains the subset of US stations, taken from the file
+#
+#	rssfilter-st.def
+#
+# that also appear in the stations-npemwin.txt.
+# This file includes at the end the contents of the rssfilter-state.def file.
+
+# AK
+set rssstation(panc) "US, AK, Anchorage, 61-10N, 150-01W";
+set rssstation(pafc) "US, AK, Anchorag, 61-10N, 150-02W";
+set rssstation(pant) "US, AK, Annette Island, 55-02N, 131-34W";
+set rssstation(pabr) "US, AK, Barrow, 71-18N, 156-47W";
+set rssstation(pabe) "US, AK, Bethel, 60-47N, 161-48W";
+set rssstation(pacr) "US, AK, Circle, 65-50N, 144-04W";
+set rssstation(pacd) "US, AK, Cold Bay, 55-12N, 162-43W";
+set rssstation(pafg) "US, AK, Fairbanks, 64-48N, 147-53W";
+set rssstation(pajn) "US, AK, Juneau, 58-22N, 134-35W";
+set rssstation(pajk) "US, AK, Juneau, 58-22N, 134-34W";
+set rssstation(pakn) "US, AK, King Salmon, 58-41N, 156-39W";
+set rssstation(padq) "US, AK, Kodiak, 57-45N, 152-30W";
+set rssstation(paot) "US, AK, Kotzebue, 66-52N, 162-38W";
+set rssstation(pamc) "US, AK, Mcgrath, 62-58N, 155-37W";
+set rssstation(paom) "US, AK, Nome, 64-30N, 165-26W";
+set rssstation(paaq) "US, AK, Palmer, 61-36N, 149-05W";
+set rssstation(pasn) "US, AK, St paul Island, 57-09N, 170-13W";
+set rssstation(pavw) "US, AK, Valdez, 61-08N, 146-21W";
+set rssstation(paya) "US, AK, Yakutat, 59-31N, 139-40W";
+# AL
+set rssstation(kbmx) "US, AL, Brmnghm, 33-10N, 086-46W";
+set rssstation(kmob) "US, AL, Mobile, 30-41N, 088-15W";
+# AR
+set rssstation(klzk) "US, AR, N. Little Rock, 34-50N, 092-16W";
+# AZ
+set rssstation(kfgz) "US, AZ, Flagstaff, 35-13N, 111-49W";
+set rssstation(kpsr) "US, AZ, Phoenix, 33-26N, 112-01W";
+set rssstation(ktwc) "US, AZ, Tucson, 32-14N, 110-57W";
+# CA
+set rssstation(keka) "US, CA, Eureka, 40-48N, 124-10W";
+set rssstation(khnx) "US, CA, Hanford, 36-19N, 119-38W";
+set rssstation(klox) "US, CA, Los Angeles, 34-12N, 119-12W";
+set rssstation(ksto) "US, CA, Sacramento, 38-30N, 121-30W";
+set rssstation(krsa) "US, CA, Sacramento, 38-30N, 121-30W";
+set rssstation(ksgx) "US, CA, San Diego, 32-44N, 117-10W";
+# CO
+set rssstation(kals) "US, CO, Alamosa, 37-26N, 105-52W";
+set rssstation(kbou) "US, CO, Boulder, 40-00N, 105-20W";
+set rssstation(kcos) "US, CO, Colorado Springs, 38-49N, 104-43W";
+set rssstation(kgjt) "US, CO, Grand Junction, 39-07N, 108-31W";
+set rssstation(kpub) "US, CO, Pueblo, 38-17N, 104-30W";
+set rssstation(kstr) "US, CO, Stratton, 39-18N, 102-36W";
+# CT
+# DC
+set rssstation(kwbc) "US, DC, NWS Headquarters, 38-51N, 076-56W";
+# DE
+# FL
+set rssstation(kjax) "US, FL, Jacksonville, 30-30N, 081-41W";
+set rssstation(kkey) "US, FL, Key West, 24-33N, 081-47W";
+set rssstation(kmlb) "US, FL, Melbourne, 28-06N, 080-39W";
+set rssstation(kmfl) "US, FL, Miami, 25-45N, 080-22W";
+set rssstation(knhc) "US, FL, National Hurricane Center, 25-44N, 080-16W";
+set rssstation(ktae) "US, FL, Tallahassee, 30-24N, 084-20W";
+set rssstation(ktbw) "US, FL, Tampa Bay/, 27-42N, 082-24W";
+# GA
+set rssstation(kffc) "US, GA, Peachtree City, 33-21N, 084-34W";
+set rssstation(kalr) "US, GA, Atlanta, 33-22N, 084-34W";
+# GU
+set rssstation(pgum) "US, GU, Agana, 13-29N, 144-48E";
+# HI
+set rssstation(phfo) "US, HI, Honolulu, 21-19N, 157-55W";
+# IA
+set rssstation(kdvn) "US, IA, Davenport, 41-37N, 090-35W";
+set rssstation(kdmx) "US, IA, Johnston, 41-44N, 093-43W";
+# ID
+set rssstation(kboi) "US, ID, Boise, 43-34N, 116-14W";
+set rssstation(kpih) "US, ID, Pocatello, 42-55N, 112-34W";
+# IL
+set rssstation(kilx) "US, IL, Lincoln, 40-09N, 089-20W";
+set rssstation(klot) "US, IL, Romeoville, 41-37N, 088-06W";
+# IN
+set rssstation(kevv) "US, IN, Evansville, 38-03N, 087-31W";
+set rssstation(kind) "US, IN, Indianapolis, 39-43N, 086-17W";
+set rssstation(kiwx) "US, IN, North Webster, 41-22N, 085-42W";
+# KS
+set rssstation(kddc) "US, KS, Dodge City, 37-46N, 099-58W";
+set rssstation(kgld) "US, KS, Goodland, 39-22N, 101-42W";
+set rssstation(ktop) "US, KS, Topeka, 39-04N, 095-38W";
+set rssstation(kict) "US, KS, Wichita, 37-39N, 097-26W";
+# KY
+set rssstation(klmk) "US, KY, Louisville, 38-14N, 085-40W";
+set rssstation(kjkl) "US, KY, Noctor, 37-36N, 083-19W";
+set rssstation(kpah) "US, KY, Paducah, 37-04N, 088-46W";
+# LA
+set rssstation(klch) "US, LA, Lake Charles, 30-08N, 093-13W";
+set rssstation(kshv) "US, LA, Shreveport, 32-27N, 093-50W";
+set rssstation(klix) "US, LA, Slidell, 30-20N, 089-50W";
+set rssstation(korn) "US, LA, New Orleans, 30-15N, 089-46W";
+# MA
+set rssstation(kbox) "US, MA, Boston, 41-57N, 071-08W";
+set rssstation(ktar) "US, MA, Boston, 41-57N, 071-08W";
+# MD
+set rssstation(kwno) "US, MD, Camp Spring NCEP, 38-51N, 076-56W";
+set rssstation(kwnh) "US, MD, Camp Springs HPC, 38-51N, 076-56W";
+set rssstation(kwnm) "US, MD, Camp Springs MPC, 38-51N, 076-56W";
+set rssstation(kwnc) "US, MD, Camp Springs CPC, 38-51N, 076-56W";
+# ME
+set rssstation(kcar) "US, ME, Caribou, 46-52N, 068-01W";
+set rssstation(kgyx) "US, ME, Gray, 43-53N, 070-15W";
+# MH
+set rssstation(pkmj) "US, MH, Majuro, 07-05N, 171-16E";
+set rssstation(pkmr) "US, MH, Majuro, 07-05N, 171-12E";
+# MI
+set rssstation(kdtx) "US, MI, Detroit, 42-42N, 083-28W";
+set rssstation(kapx) "US, MI, Gaylord, 44-54N, 084-43W";
+set rssstation(kgrr) "US, MI, Grand Rapids, 42-53N, 085-31W";
+set rssstation(kmqt) "US, MI, Marquette, 46-32N, 087-34W";
+# MN
+set rssstation(kmpx) "US, MN, Chanhassen, 44-51N, 093-34W";
+set rssstation(kckn) "US, MN, Crookston, 47-51N, 096-37W";
+set rssstation(kdlh) "US, MN, Duluth, 46-51N, 092-12W";
+set rssstation(kmsr) "US, MN, Minneapolis, 44-51N, 093-34W";
+# MO
+set rssstation(kkrf) "US, MO, Kansas City, 38-49N, 094-16W";
+set rssstation(keax) "US, MO, Pleasant Hill, 38-49N, 094-16W";
+set rssstation(ksgf) "US, MO, Springfield, 37-14N, 093-23W";
+set rssstation(klsx) "US, MO, St Charles, 38-42N, 090-41W";
+# MS
+set rssstation(kjan) "US, MS, Jackson, 32-19N, 090-05W";
+# MT
+set rssstation(kbyz) "US, MT, Billings, 45-48N, 108-33W";
+set rssstation(kggw) "US, MT, Glasgow, 48-13N, 106-37W";
+set rssstation(ktfx) "US, MT, Great Falls, 47-28N, 111-23W";
+set rssstation(kmso) "US, MT, Missoula, 46-55N, 114-06W";
+# NC
+set rssstation(kmhx) "US, NC, Morehead, 34-47N, 076-53W";
+set rssstation(krah) "US, NC, Raleigh, 35-52N, 078-47W";
+set rssstation(kilm) "US, NC, Wilmington, 34-16N, 077-54W";
+# ND
+set rssstation(kbis) "US, ND, Bismarck, 46-46N, 100-45W";
+set rssstation(kfgf) "US, ND, Fargo, 46-54N, 096-48W";
+# NE
+set rssstation(kgid) "US, NE, Grand Island, 40-58N, 098-19W";
+set rssstation(klbf) "US, NE, North Platte, 41-07N, 100-40W";
+set rssstation(koax) "US, NE, Omaha, 41-19N, 096-22W";
+set rssstation(ktqe) "US, NE, Tekamah, 41-46N, 096-11W";
+# NH
+# NJ
+set rssstation(kphi) "US, NJ, Mt Holly, 40-01N, 074-49W";
+# NM
+set rssstation(kabq) "US, NM, Albuquerque, 35-03N, 106-37W";
+set rssstation(kepz) "US, NM, Santa Teresa, 31-52N, 106-42W";
+# NV
+set rssstation(klkn) "US, NV, Elko, 40-52N, 115-43W";
+set rssstation(kvef) "US, NV, Las Vegas, 36-05N, 115-10W";
+set rssstation(krev) "US, NV, Reno, 39-34N, 119-48W";
+# NY
+set rssstation(kaly) "US, NY, Albany, 42-45N, 073-48W";
+set rssstation(kbgm) "US, NY, Binghamton, 42-13N, 075-59W";
+set rssstation(kokx) "US, NY, Brookhaven, 40-52N, 072-52W";
+set rssstation(kbuf) "US, NY, Buffalo, 42-56N, 078-44W";
+# OH
+set rssstation(kcle) "US, OH, Cleveland, 41-25N, 081-51W";
+set rssstation(kiln) "US, OH, Wilmington, 39-26N, 083-48W";
+set rssstation(ktir) "US, OH, Wilmington, 39-25N, 083-49W";
+# OK
+set rssstation(koun) "US, OK, Norman, 35-13N, 097-27W";
+set rssstation(kwns) "US, OK, Norman SPC, 35-13N, 097-27W";
+set rssstation(ktsa) "US, OK, Tulsa, 36-12N, 095-54W";
+set rssstation(ktua) "US, OK, Tulsa, 36-09N, 095-51W";
+# OR
+set rssstation(kmfr) "US, OR, Medford, 42-23N, 122-52W";
+set rssstation(kpdt) "US, OR, Pendleton, 45-42N, 118-50W";
+set rssstation(kpqr) "US, OR, Portland, 45-36N, 122-36W";
+set rssstation(knmw) "US, OR, Astoria, 46-09N, 123-53W";
+# PA
+set rssstation(kpbz) "US, PA, Pitt, 40-32N, 080-13W";
+set rssstation(kctp) "US, PA, State Colleg, 40-51N, 077-51W";
+set rssstation(krha) "US, PA, State colleg/rfc, 40-51N, 077-51W";
+# PR
+set rssstation(tjsj) "US, PR, San Juan, 18-26N, 066-01W";
+# RI
+# SC
+set rssstation(kchs) "US, SC, Charleston, 32-54N, 080-02W";
+set rssstation(kcae) "US, SC, Columbia, 33-56N, 081-07W";
+set rssstation(kgsp) "US, SC, Greer, 34-54N, 082-13W";
+# SD
+set rssstation(kabr) "US, SD, Aberdeen, 45-27N, 098-25W";
+set rssstation(kunr) "US, SD, Rapid city/wfo, 44-04N, 103-12W";
+set rssstation(kfsd) "US, SD, Sioux falls, 43-35N, 096-45W";
+# TN
+set rssstation(kmeg) "US, TN, Memphis, 35-03N, 090-00W";
+set rssstation(kmrx) "US, TN, Morristown, 36-10N, 083-24W";
+set rssstation(kohx) "US, TN, Old Hickory, 36-15N, 086-34W";
+# TX
+set rssstation(kama) "US, TX, Amarillo, 35-13N, 101-42W";
+set rssstation(kbro) "US, TX, Brownsville, 25-54N, 097-26W";
+set rssstation(kcrp) "US, TX, Corpus Christi, 27-46N, 097-30W";
+set rssstation(kfwd) "US, TX, Fort Worth, 32-49N, 097-17W";
+set rssstation(kfwr) "US, TX, Fort Worth, 32-50N, 097-18W";
+set rssstation(khgx) "US, TX, Houston, 29-28N, 095-05W";
+set rssstation(klub) "US, TX, Lubbock, 33-39N, 101-49W";
+set rssstation(kmaf) "US, TX, Midland, 31-57N, 102-12W";
+set rssstation(kewx) "US, TX, New Braunfe, 29-42N, 098-02W";
+set rssstation(ksjt) "US, TX, San Angelo, 31-22N, 100-30W";
+# UM
+# UT
+set rssstation(kslc) "US, UT, Salt Lake City, 40-47N, 111-58W";
+# VA
+set rssstation(kngu) "US, VA, Norfolk, 36-55N, 076-16W";
+set rssstation(kakq) "US, VA, Norfolk, 36-59N, 077-00W";
+set rssstation(krnk) "US, VA, Roanoke, 37-12N, 080-24W";
+set rssstation(klwx) "US, VA, Sterling, 38-59N, 077-29W";
+set rssstation(kwal) "US, VA, Wallops Island, 37-56N, 075-28W";
+# VT
+set rssstation(kbtv) "US, VT, Burlington, 44-28N, 073-09W";
+# WA
+set rssstation(ksew) "US, WA, Seattle, 47-27N, 122-18W";
+set rssstation(kotx) "US, WA, Spokane, 47-41N, 117-38W";
+# WI
+set rssstation(kgrb) "US, WI, Ashwaubenon, 44-29N, 088-08W";
+set rssstation(karx) "US, WI, La Crosse, 43-49N, 091-11W";
+set rssstation(kmkx) "US, WI, Milwaukee, 42-58N, 088-33W";
+# WV
+set rssstation(krlx) "US, WV, Ruthdale, 38-19N, 081-43W";
+# WY
+set rssstation(kcys) "US, WY, Cheyenne, 41-09N, 104-49W";
+set rssstation(kriw) "US, WY, Riverton, 43-04N, 108-28W";
+set rssstation(kmtr) "US, WY, Meeteetse, 44-16N, 108-52W";
+#
+# State abbrv.
+#
+set rssstate(US,AK) "Alaska";
+set rssstate(US,AL) "Alabama";
+set rssstate(US,AR) "Arkansas";
+set rssstate(US,AZ) "Arizona";
+set rssstate(US,CA) "California";
+set rssstate(US,CO) "Colorado";
+set rssstate(US,CT) "Connecticut";
+set rssstate(US,DC) "Washington_DC";
+set rssstate(US,DE) "Delaware";
+set rssstate(US,FL) "Florida";
+set rssstate(US,GA) "Georgia";
+set rssstate(US,GU) "Guam";
+set rssstate(US,HI) "Hawaii";
+set rssstate(US,IA) "Iowa";
+set rssstate(US,ID) "Idaho";
+set rssstate(US,IL) "Illinois";
+set rssstate(US,IN) "Indiana";
+set rssstate(US,KS) "Kansas";
+set rssstate(US,KY) "Kentucky";
+set rssstate(US,LA) "Louisiana";
+set rssstate(US,MA) "Massachusetts";
+set rssstate(US,MD) "Maryland";
+set rssstate(US,ME) "Maine";
+set rssstate(US,MH) "Marshall_Islands";
+set rssstate(US,MI) "Michigan";
+set rssstate(US,MN) "Minnesota";
+set rssstate(US,MO) "Missouri";
+set rssstate(US,MS) "Mississippi";
+set rssstate(US,MT) "Montana";
+set rssstate(US,NC) "North_Carolina";
+set rssstate(US,ND) "North_Dakota";
+set rssstate(US,NE) "Nebraska";
+set rssstate(US,NH) "New_Hampshire";
+set rssstate(US,NJ) "New_Jersey";
+set rssstate(US,NM) "New_Mexico";
+set rssstate(US,NV) "Nevada";
+set rssstate(US,NY) "New_York";
+set rssstate(US,OH) "Ohio";
+set rssstate(US,OK) "Oklahoma";
+set rssstate(US,OR) "Oregon";
+set rssstate(US,PA) "Pennsylvania";
+set rssstate(US,PR) "Puerto_rico";
+set rssstate(US,RI) "Rhode_Island";
+set rssstate(US,SC) "South_Carolina";
+set rssstate(US,SD) "South_Dakota";
+set rssstate(US,TN) "Tennessee";
+set rssstate(US,TX) "Texas";
+set rssstate(US,UM) "Johnston_Wake_Xmas";
+set rssstate(US,UT) "Utah";
+set rssstate(US,VA) "Virginia";
+set rssstate(US,VT) "Vertmont";
+set rssstate(US,WA) "Washington";
+set rssstate(US,WI) "Wisconsin";
+set rssstate(US,WV) "West_Virginia";
+set rssstate(US,WY) "Wyoming";

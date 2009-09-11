@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# so that FreeBSD runs it only once (on POST-DEINSTALL)
+name=$1
+key=$2
+[ "$key" = "DEINSTALL" ] && exit 0
+
+cat <<EOF
+To deinstall completely this package, the directories
+
+/usr/local/etc/nbsp
+~/.nbsp
+
+may have to be removed manually.
+EOF

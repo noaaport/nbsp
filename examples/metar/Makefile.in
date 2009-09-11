@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+INSTALL =	@INSTALL@
+
+TARGET =	MasterStation.csv
+SOURCE =	master_station.csv
+
+all: ${TARGET}
+
+${TARGET}: ${SOURCE}
+	cp ${SOURCE} ${TARGET}
+
+install:
+	${INSTALL} -m 644 ${TARGET} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

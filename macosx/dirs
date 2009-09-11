@@ -1,0 +1,15 @@
+etc
+etc/rc.d
+etc/nbsp
+etc/nbsp/dist
+sbin
+bin
+libexec/nbsp
+libexec/nbsp/tclhttpd
+libexec/nbsp/tclhttpd/dist
+libexec/nbsp/tclhttpd/nbsp
+libexec/nbsp/tclhttpd/extensions
+libexec/nbsp/tclmetarlib
+share/doc/nbsp
+share/doc/nbsp/radmap
+man/man1

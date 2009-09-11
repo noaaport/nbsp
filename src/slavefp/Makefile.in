@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+
+OBJECTS = framep.o reader.o 
+HEADERS = slavefp.h framep.h
+
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+
+CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS}
+DEBUGFLAGS =	-g -DDEBUG
+#DEBUGFLAGS =	-DNDEBUG
+
+all: ${OBJECTS}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+clean:
+	rm -f *~ ${OBJECTS} Makefile
+
+install:

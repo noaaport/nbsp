@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+# This file contains configuration settings that are different for
+# the various operating systems.
+
+# See the note in nbspd.conf about the udp buffer limits in MacOSX
+#
+### set udprcvsize [expr 512 * 1024]

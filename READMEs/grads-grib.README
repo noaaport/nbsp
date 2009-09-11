@@ -1,0 +1,57 @@
+#
+# $Id$
+#
+
+nbsp has a "gribfilter" to process grib files. It can create the control
+and index files used by GrADS, and it will run a set of scripts
+to produce graphs involving the data. 
+
+What is needed -
+
+	1) GrADS and some associated software. The simplest way to proceed
+	for use with nbsp is to install the appropriate (rpm or bsd)
+	grads package (available from the ``noaaport.net'' site).
+
+	2) Enable the gribfilter in nbsp (he way to do it is to make the
+	relevant setting in the "features.conf" file in the nbsp configuration
+	directory) and the GrADS-related settings in ``gribfilter.conf''.
+	
+	3) Restart nbsp and wait. 
+
+What gives -
+
+	Without any further effort, nbsp will save the grib data files
+	in the /var/noaaport/data/grib directory, create the control
+	and index files used by GrADS and, every hour, run a set
+	of scripts to produce image files that display plots of the data
+	(using those control and index files).
+
+	The file ``gribnames.README'' explains the subdirectory and the
+	conventions used for the grib data files (in the directory
+	/var/noaaport/data/grib/grb).
+
+	The image files are created in /var/noaaport/data/grib/img,
+	and they accessible (as well as the rest of the grib-related files)
+	from the buitl-in web interface. A web browser is all that is required
+	to see them.
+
+What is happening -
+
+	The scripts invoke GrADS to do the actual work, and the default
+	scripts are stored in the "defaults/grads" subdirectory of
+	the nbsp configuration directory. The scripts can be edited
+	and new scripts can be added.
+
+	nbsp decides which scripts to run by reading "nbspgribsched.rc"
+	in the configuration directory. That file can be edited to
+	modify which scripts to run, add new scripts and the like.
+
+	There is much more that can be done than what is described here,
+	but reading "nbspgribsched.rc", and the scripts located in
+	"defaults/grads" will be a good start. The README file in that
+	directory and the "prmslmsl.gs" script contain additional
+	information and examples for transfering the images to
+	other locations, uploading to web sites and the technique of
+	intermixing tcl commands within GrADS scripts.
+	(See also tclgrads.README).
+-

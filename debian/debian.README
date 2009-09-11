@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+
+The nntpfilter uses "uudecode" and that is in the "sharutils"
+package.
+-

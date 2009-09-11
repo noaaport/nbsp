@@ -1,0 +1,29 @@
+#
+# $Id$
+#
+
+The dafilter can be configured with a "lite" set of rules, which
+are much less resource-consuming than the full rule set. The lite
+rule set is restricted to produce those data files that can be
+used by Digital Atmosphere, IDV and GrLevel3 programs:
+
+                 IDV: rad, grib, fronts
+            GrLevel3: rad, warnings
+  Digital Atmosphere: rad, grib, surface, syn, upperair, fronts, day1-3,
+                      hurricane/forecast
+
+This alternative set of rules is enabled by renaming the file
+
+	defaults/dafilter-lite.rc
+to
+	defaults/dafilter.rc
+
+(in the nbsp configuration directory) or by copying it to
+
+	site/dafilter.rc
+
+which is better.
+
+-
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Tue Aug  5 16:55:47 AST 2008

@@ -1,0 +1,44 @@
+$Id$
+
+QUICK_START.netbsd
+
+[Packages for NetBSD are not created routinely. Official (and supported)
+packages can be created upon request.]
+
+The (pkgsrc) packages for db4-4.4, png, zlib, tcl-8.4, and tcllib are required,
+and in addition the emwin server requires the programs from the netpbm package.
+At the moment of writing these are (only the first four are required
+for compilation and package creation)
+
+	db4-4.4.20
+	png-1.2.14	(use `make PREFER.zlib=pkgsrc')
+	zlib-1.2.3
+	tcl-8.4.14
+	tcllib-1.7_1
+	tclX
+	netpbm-10.26.25
+
+The base OS contains an older version of zlib which has one required
+function missing. The version from pkgsrc must be installed as indicated above.
+
+- The package installation will create the various directories
+needed, as described in the QUICK_START.0 guide, and enable
+the rstfilter and dafilter. To run with in this default mode no
+further configuration is needed. An hourly cron script is
+included in the doc directory but it must be installed manually.
+	
+The variable 
+
+	nbspd=1
+
+must be set in /etc/rc.conf for automatic
+start/stop at boot/shutdown time, and the startup script nbspd
+must be installed. The package will install such a script
+in /usr/local/etc/rc.d, and it can be called from /etc/rc.local
+with a line such as
+
+	[ -x /usr/local/etc/rc.d/nbspd ] && /usr/local/etc/rc.d/nbspd start
+
+An hourly cleanup script and a log rotation
+script are run by the scheduler. The configuration file scheduler.conf
+can be edited if desired.

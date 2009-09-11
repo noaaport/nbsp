@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	uafilter.tcl
+TCLSOURCES =	uafilter.tcl.in
+FILTERNAME =	uafilter
+FILTERINIT =	uafilter.init
+SAMPLES =	uafilter.conf-sample uafilter-siteloc.def-sample
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+uafilter.tcl: uafilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# uafilter.tcl.in > uafilter.tcl
+
+uafilter.conf-sample: uafilter.conf
+	cp uafilter.conf uafilter.conf-sample
+
+uafilter-siteloc.def-sample: uafilter-siteloc.def
+	cp uafilter-siteloc.def uafilter-siteloc.def-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${FILTERNAME}.tcl ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

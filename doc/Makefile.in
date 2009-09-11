@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL =       @INSTALL@
+
+LIC =	../LICENSE
+SRC =	nbspd.man
+TARGET = nbspd.${MANEXT}.gz
+
+all: ${TARGET}
+
+${TARGET}: ${SRC}
+	gzip -c ${SRC} > ${TARGET}
+
+install: all
+	${INSTALL} -m 0644 ${TARGET} ${MYMANDIR}
+	${INSTALL} -m 0644 ${LIC} ${MYDOCDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

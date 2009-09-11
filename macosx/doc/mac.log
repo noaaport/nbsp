@@ -1,0 +1,13 @@
+Dec 31 12:15:23 cpq nbspd[47]: Received terminate signal.
+Dec 31 12:15:27 cpq nbspd[47]: Finished reader 0.
+Dec 31 12:15:27 cpq nbspd[47]: Canceled reader 1.
+Dec 31 12:15:27 cpq nbspd[47]: Canceled reader 2.
+Dec 31 12:15:27 cpq nbspd[47]: Finished reader 3.
+Dec 31 12:15:29 cpq nbspd[47]: Finished filter server.
+Dec 31 12:15:29 cpq nbspd[47]: Finished processor.
+Dec 31 12:15:29 cpq tclhttpd[541]: Received request to quit.
+Dec 31 12:15:30 cpq nbspd[47]: Finished http server.
+Dec 31 12:15:30 cpq inventory[565]: Received request to quit.
+Dec 31 12:15:30 cpq rstfilter[572]: Received request to quit.
+Dec 31 12:15:43 cpq com.apple.launchd[1] (net.noaaport.nbspd[47]): Exit timeout 
+elapsed (20 seconds). Killing.

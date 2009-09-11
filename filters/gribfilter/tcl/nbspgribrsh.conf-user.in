@@ -1,0 +1,25 @@
+#
+# $Id$
+#
+# A copy of this file can be saved as
+#
+# 	~/.nbsp/conf/nbspgribrsh.conf
+#
+# and edited appropriately to override the system-wide settings.
+
+@USER_VARIABLES@
+## set nbspgribrsh(datadir) [file join $nbspgribrsh(homedir) data grib];
+## set nbspgribrsh(grbdatadir) "grb";
+## set nbspgribrsh(ctldatadir) "ctl";
+## set nbspgribrsh(idxdatadir) "idx";
+## set nbspgribrsh(catdatadir) "cat";
+
+## set nbspgribrsh(baseurl) "http://localhost:8015/grib";
+## set nbspgribrsh(grbbasedir) "grb";
+## set nbspgribrsh(ctlbasedir) "ctl";
+## set nbspgribrsh(catbasedir) "cat";
+## set nbspgribrsh(ctlcatalog) "ctl.cat";
+
+## set nbspgribrsh(grbfext) ".grb";
+## set nbspgribrsh(ctlfext) ".ctl";
+## set nbspgribrsh(idxfext) ".idx";

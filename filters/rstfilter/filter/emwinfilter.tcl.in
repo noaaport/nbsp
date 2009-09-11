@@ -1,0 +1,623 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "emwinfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsputil;
+
+# The defaults of this filter
+set emwinfilter(conf)	[file join $common(confdir) "emwinfilter.conf"];
+set emwinfilter(rc)	[file join $common(confdir) "emwinfilter.rc"];
+set emwinfilter(prerc)	[file join $common(confdir) "emwinfilterpre.rc"];
+set emwinfilter(postrc)	[file join $common(confdir) "emwinfilterpost.rc"];
+set emwinfilter(localconfdirs)	$common(localconfdirs);
+set emwinfilter(rcdir)       	[file join $common(rcdir) "emwin"];
+set emwinfilter(sat_enable)	1;
+set emwinfilter(sat_regex)	{.*};
+set emwinfilter(rad_enable)	0;
+set emwinfilter(rad_regex)	{.*};
+set emwinfilter(sat_imgfmt)	"jpg";
+set emwinfilter(nntp_enable) 0;
+set emwinfilter(rss_enable) 1;
+# 
+# The rc files for determining the name of the emwin file to use
+#
+set emwinfilter(lociddef) [file join $common(confdir) "emwinfilter-locid.def"];
+set emwinfilter(radiddef) [file join $common(confdir) "emwinfilter-radid.def"];
+set emwinfilter(unknown_state)	"us";
+#
+# Variables
+#
+## set emwinfilter(FIFO)
+set emwinfilter(FIFO_open)	0;
+set emwinfilter(fifo_fpath)     "";
+set emwinfilter(rcfiles)     	[list];
+set emwinfilter(condition)	[list];
+set emwinfilter(action)		[list];
+
+# The common (with the rstfilter) init variables
+#
+set initfile	[file join $common(libdir) "rstfilter.init"];
+if {[file exists $initfile] == 0} {
+	puts "rstfilter disabled: $initfile not found.";
+	return 1;
+}
+source $initfile;
+
+if {[file exists $emwinfilter(conf)] == 1} {
+    source $emwinfilter(conf);
+
+    if {$emwinfilter(rad_enable) == 1} {
+	set rstfilter(rad_enable) 1;
+    }
+
+    if {$emwinfilter(sat_enable) == 1} {
+	set rstfilter(sat_enable) 1;
+    }	    
+}
+
+# If the variable (rad_enable) or (satmap_enable), or both, are set,
+# the nbspradmap and nbspsatmap tools need the gempak env variables.
+# However, the emwinfilter runs in an interp within the server and
+# that would affect the PATH, among other things, of the server.
+# In addition, any other server filter (e.g., the netfilter)
+# resets the PATH when it reads the filters.conf file.
+# So the tools must load whatever they need.
+#
+# if {($rstfilter(rad_enable) == 1) || ($rstfilter(satmap_enable) == 1)} {
+#	set gpenvfile $rstfilter(gpenvfile);
+#    if {[file exists $gpenvfile] == 0} {
+#	    log_msg "$gpenvfile is needed for rad images and sat maps.";
+#	    return 1;
+#    }
+#    source $gpenvfile;
+# }
+
+## The rstfilter function library
+if {[file exists $rstfilter(lib)] == 0} {
+	log_msg "Filter disabled: $rstfilter(lib) not found.";
+	return 1;
+}
+source $rstfilter(lib);
+
+if {[file exists $rstfilter(rc)] == 0} {
+    log_msg "Filter disabled: $rstfilter(rc) not found.";
+    return 1;
+}
+
+if {[file exists $emwinfilter(rc)] == 0} {
+    log_msg "Filter disabled: $emwinfilter(rc) not found.";
+    return 1;
+}
+
+if {[file exists $emwinfilter(lociddef)] == 0} {
+    log_msg "Filter disabled: $emwinfilter(lociddef) not found.";
+    return 1;
+}
+source $emwinfilter(lociddef);
+
+if {[file exists $emwinfilter(radiddef)] == 0} {
+    log_msg "Filter disabled: $emwinfilter(radiddef) not found.";
+    return 1;
+}
+source $emwinfilter(radiddef);
+
+# Build the list of rc files for rstfilter
+set rstfilter(rcfiles) [filterlib_get_rcfiles [file tail $rstfilter(rc)] \
+    $rstfilter(localconfdirs) $rstfilter(rcdir) \
+    $rstfilter(prerc) $rstfilter(postrc)];
+
+# Build the list of rc files for this filter
+set emwinfilter(rcfiles) \
+    [filterlib_get_rcfiles [file tail $emwinfilter(rc)] \
+    $emwinfilter(localconfdirs) $emwinfilter(rcdir) \
+    $emwinfilter(prerc) $emwinfilter(postrc)];
+
+# Load the rules sets
+source $rstfilter(rc);
+source $emwinfilter(rc);
+
+# Open the pipe to nntp if it is enabled
+# In case the connection cannot be establish, log an error
+# but continue and disable the nntp dispatching functionality.
+if {$emwinfilter(nntp_enable) == 1} {
+    rstnntp_open;
+    if {[rstnntp_is_open] == 0} {
+	log_msg "Disabling the NNTP dispatching.";
+	set emwinfilter(nntp_enable) 0;
+    }
+}
+
+# Same thing for rss
+if {$emwinfilter(rss_enable) == 1} {
+    rss_open;
+    if {[rss_is_open] == 0} {
+	log_msg "Disabling the RSS filter.";
+	set emwinfilter(rss_enable) 0;
+    }
+}
+
+proc main {} {
+
+    global emwinfilter;
+    global errorInfo;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	# If there was a write error, the functions close the nntp connection.
+	# We check and try to reopen it.
+	if {($emwinfilter(nntp_enable) == 1) && ([rstnntp_is_open] == 0)} {
+	    rstnntp_open;
+	}
+
+	# Same for rss
+	if {($emwinfilter(rss_enable) == 1) && ([rss_is_open] == 0)} {
+	    rss_open;
+	}
+    }
+
+    rstnntp_close;
+    rss_close;
+}
+
+proc process {finfo} {
+
+    global rstfilter;
+    global emwinfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];	
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+
+    # Initialize to no match found
+    set rc_status 1;
+    set fpathout "";
+    set rc_output "";
+
+    # Send it to the rst filter
+    set i 0;		# counts the sets
+    foreach condlist $rstfilter(condition) {
+        set actionlist [lindex $rstfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+
+    # If the file matched the filter, rc_status is set to 0, and the
+    # variable $rc_output is a tcl list that contains
+    # ($status $fpathout), where status is 0 if there were no errors
+    # and fpathout is the full path of the filtered output file.
+
+    if {$rc_status == 0} {
+        set rc_status [lindex $rc_output 0];
+        set fpathout [lindex $rc_output 1];
+    }
+
+    # Define for the post condition/action rules
+    if {$rc_status == 0} {
+	set rc(fpathout) $fpathout;
+    }
+
+    # If it passed the rst filter, send it to the nntp dispatcher
+    if {($rc_status == 0) && \
+      (($emwinfilter(nntp_enable) == 1) || ($emwinfilter(rss_enable) == 1))} {
+	set finfo [format "%u %d %d %d %d %s %s" \
+	    $rc(seq) $rc(type) $rc(cat) $rc(code) $rc(npchidx) \
+	    $rc(fname) $fpathout];
+
+	if {$emwinfilter(nntp_enable) == 1} {
+	    rstnntp_send $finfo;
+	}
+
+	if {$emwinfilter(rss_enable) == 1} {
+	    rss_send $finfo;
+	}
+    }
+
+    # The post condition/action rules
+    if {$rc_status == 0} {
+	set i 0;
+	foreach condlist $rstfilter(postcondition) {
+	    set actionlist [lindex $rstfilter(postaction) $i];
+	    set j 0;
+	    foreach c $condlist {
+		set a [lindex $actionlist $j];
+		if {[expr $c]} {
+		    eval $a;
+		}
+		incr j;
+	    }
+	    incr i;
+	}
+    }
+
+    # If it passed the rst filter without errors, then pass it through the
+    # emwin rules to check that it should be retransmitted.
+
+    if {$rc_status == 0} {
+        set rc_status 1;
+	set i 0;		# counts the sets
+	foreach condlist $emwinfilter(condition) {
+	    set actionlist [lindex $emwinfilter(action) $i];
+	    set j 0;	# counts the rules with each set
+	    foreach c $condlist {
+		set a [lindex $actionlist $j];
+		if {[expr $c]} {
+		    eval $a;
+		}
+		incr j;
+	    }
+	    incr i;
+	}
+    }
+
+    # If it passed the emwin transmission rules, then convert the images to jpg
+
+    if {$rc_status == 0} {
+	set fpathout [cvt_to_jpg $fpathout];
+    }
+
+    set emwinfname "";
+    if {$rc_status == 0} {
+	set emwinfname [emwin_fname [file tail $fpathout]];
+	if {[string length $emwinfname] == 0} {
+	    set rc_status 1;
+	}
+    }
+
+    #
+    # do_emwinfilter_output $rc_status $fpathout $emwinfname;
+    #
+    output_emwininfo_binary $rc_status $fpathout $emwinfname;
+}
+
+#
+# The next three functions are used to construct the emwin file name. The
+# function get_locid depends on the definitions in the locid.rc file.
+# The only function that is called is emwin_fname() above.
+#
+proc get_locid id {
+
+    global locid;
+
+    if {[info exists locid($id)]} {
+	set state $locid($id);
+    } else {
+	set state "";
+    }
+
+    return $state;
+}
+
+proc get_radlocid id {
+
+    global emwinfilter;
+    global radid;
+
+    if {[info exists radid($id)]} {
+	set state $radid($id);
+    } else {
+	set state $emwinfilter(unknown_state);
+    }
+
+    return $state;
+}
+
+proc emwin_get_txt_state fname {
+    #
+    # Here fname is the root of the base name of the filtered file.
+    # For text files it is kkkk_ttaaii-xxxxxx (with varying number of x's).
+
+    global emwinfilter;
+
+    # wfo_id is the last three characters of kkkk
+    set wfo_id [string range $fname 1 3];
+
+    set fname_length [string length $fname];
+
+    if {$fname_length == 18} {
+	# then there are 6 x's. Get the last three.
+	set awips_id [string range $fname 15 17];
+    } else {
+	set awips_id "";
+    }
+
+    set ss [get_locid $wfo_id];
+    if {$ss == ""} {
+	if {$awips_id != ""} {
+	    set ss [get_locid $awips_id];
+	}
+    }
+
+    if {$ss == ""} {
+	set ss $emwinfilter(unknown_state);
+    }
+
+    return $ss;
+}
+
+proc emwin_fname fbasename {
+    #
+    # For emwin, the file name must be 8 characters followed by .TXT
+    # (or some similar extension). 
+    # The basename of the filtered text files is of the form
+    # kkkk_ttaaii-xxxxxx.<key>.yyy, with either 4,5 or 6 x's.
+    #
+    # example: 
+    #		tjsj_fpca42-ccfsju.082017_23123483.txt
+    #
+    # For sat and rad images, the name of the filtered files is 
+    # ttaaii_yyyymmdd_hhmm.[png|jpg|gif]. 
+    #
+    # examples:
+    #		tigi02_20060708_2130.jpg
+    #		n0rjua_20060708_2220.gif
+    #
+    # For text files, the emwin file name we construct
+    # is xxxxxxss (with 6 x's), where ss are the state initials of the
+    # station (plus the extension), or xxxkkkss (with less than 6 x's),
+    # where kkk are the last three letters of the kkkk station.
+    # For images, we write it as ttaaiiss.<ext>.
+
+    global emwinfilter;
+
+    # Get the root of the name and the extension (the extension includes the .)
+    scan $fbasename {%[^.]} fname;
+    set extension [file extension $fbasename];
+    set fname_length [string length $fname];
+    
+    if {$extension == ""} {
+	return "";
+    }
+
+    if {$extension != ".txt"} {
+	if {[regexp {^tig} $fname]} {
+	    set ss $emwinfilter(unknown_state);
+	} else {
+	    set ss [get_radlocid [string range $fname 3 5]];
+	}	
+	append emwinname [string range $fname 0 5] $ss $extension;
+    } else {
+	set ss [emwin_get_txt_state $fname];
+	set station "";
+	set wmoid "";
+	set awips "";
+	set awips1 "";
+	set awips2 "";
+	scan $fname {%[a-z0-9]_%[a-z0-9]-%[a-z0-9]} station wmoid awips;
+	set awips_length [string length $awips];
+	if {$awips_length < 3} {
+	    return "";
+	}
+	set awips1 [string range $awips 0 2];
+	set awips2 [string range $awips 3 end];
+
+	if {$awips_length == 6} {
+	    append emwinname $awips $ss $extension;
+	} else {
+	    append emwinname $awips1 [string range $station 1 3] $ss $extension;
+	}
+    }
+
+    return [string toupper $emwinname];
+}
+
+# This version used the tcl script nbspngtojpg. In cygwin, "exec" ing
+# a tcl script is problematic. So as a concesion we will use the new function
+# that calls the netpbm tools directly.
+proc cvt_to_jpg_old fpathin {
+
+    global emwinfilter;
+    global filtersprogs;
+
+    set fpathout $fpathin;
+    set extension [file extension $fpathin];
+    if {($extension == ".png") && ($emwinfilter(sat_imgfmt) == "jpg")} {
+	set status [catch {exec $filtersprogs(nbsppngcvt) $fpathin} msg];
+	if {$status == 0} {
+	    set fpathout $msg;
+	} else {
+	    log_msg $msg;
+	}
+    }	    
+
+    return $fpathout;    
+}
+
+proc cvt_to_jpg fpathin {
+#
+# The motivation here is to convert the png sat images to jpg. Note that
+# if the user is generating sat images with maps, and the png's are
+# not being generated by default, then this function does nothing.
+# Our approach will be to convert only png's to jpg. The user is responsible
+# for setting the rstfilter.conf such that the png's are generated even when
+# the satmap option is set.
+# If the format (extension minus the period) of the file is not png return.
+# Otherwise it is converted to jpg.
+
+    global emwinfilter;
+    global filtersprogs;
+
+    set fpathin_fmt [string range [file extension $fpathin] 1 end];
+
+    if {($emwinfilter(sat_imgfmt) ne "jpg") || ($fpathin_fmt ne "png")} {
+	return $fpathin;
+    }
+
+    set rootname [file rootname $fpathin];
+    append fpathout $rootname ".jpg";
+    set status [catch {exec $filtersprogs(pngtopnm) $fpathin \
+	    | $filtersprogs(pnmtojpeg) > $fpathout} msg];
+
+    if {$status != 0} {
+	log_msg $msg;
+	return $fpathin;
+    }
+
+    return $fpathout;    
+}
+
+# This function was originally used with the fifo for sending back the output
+# to the server.
+proc output_emwininfo {fout rc_status fpathout emwinfname} {
+
+    puts $fout $rc_status;
+    puts $fout $fpathout;
+    puts $fout $emwinfname;
+    flush $fout;
+}
+
+# This function was meant to be used if the fifo was opened via open()
+# and read() without fgets(). It is used in the current version.
+proc output_emwininfo_binary {rc_status fpathout emwinfname} {
+
+    global emwinfilter;
+
+    # The output is of the form 
+    #
+    #    <byte><2 bytes><2 bytes><fpathout><emwinfname>
+    #
+    # where 
+    #    the first byte is the status (0 passed, 1 did not pass),
+    #    the next two are 16 bit integers big endian order)
+    #    giving the size of the two strings that follow.
+    #
+    # The strings are output only if the status is 0.
+
+    if {$emwinfilter(FIFO_open) == 0} {
+	log_msg "Fifo is closed. Will try to reopen.";
+        set status [emwinfilter_fifo_open];
+	if {$status != 0} {
+	    return;
+	}
+    }
+ 
+    set fout $emwinfilter(FIFO);
+
+    set i1 [string length $fpathout];
+    set i2 [string length $emwinfname];
+
+    set status [catch {
+	puts -nonewline $fout [binary format "c" $rc_status];
+	if {$rc_status == 0} {
+	    puts -nonewline $fout [binary format "SS" $i1 $i2];
+	    puts -nonewline $fout $fpathout;
+	    puts -nonewline $fout $emwinfname;
+	}    	
+	flush $fout;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+	emwinfilter_fifo_close;
+    }
+}
+
+# This was the function used when this filter was not opened as a pipe
+# but evaluated as an "sfilter".
+proc do_emwinfilter_output {rc_status fpathout emwinfname} {
+    
+    global output_status output_fpathout output_emwinfname;
+
+    set output_status $rc_status;
+    set output_fpathout $fpathout;
+    set output_emwinfname $emwinfname;
+}
+
+# Functions to open/close the output fifo
+proc emwinfilter_fifo_open {} {
+
+    global emwinfilter;
+
+    set status [catch {
+    	set emwinfilter(FIFO) [open $emwinfilter(fifo_fpath) "w"];
+    } errmsg];
+    if {$status != 0} {
+	log_err $errmsg;
+	return 1;
+    }
+
+    set emwinfilter(FIFO_open) 1;
+
+    return 0;
+}
+
+proc emwinfilter_fifo_close {} {
+
+    global emwinfilter;
+
+    if {$emwinfilter(FIFO_open) == 1} {
+        close $emwinfilter(FIFO);
+        set emwinfilter(FIFO_open) 0;
+    }
+}
+
+#
+# Dynamic initialization
+#
+if {$rstfilter(satmap_rcfile_fpath) eq ""} {
+    set rstfilter(satmap_rcfile_fpath) \
+	[filterlib_find_conf $rstfilter(satmap_rcfile) \
+	$rstfilter(satmap_rcdirs) $rstfilter(satmap_rcsubdir)];
+}
+
+if {$rstfilter(radmap_rcfile_fpath) eq ""} {
+    set rstfilter(radmap_rcfile_fpath) \
+	[filterlib_find_conf $rstfilter(radmap_rcfile) \
+	$rstfilter(radmap_rcdirs) $rstfilter(radmap_rcsubdir)];
+}
+
+#
+# main
+#
+if {$argc != 1} {
+    log_msg "No fifo fpath given.";
+    return 1;
+}
+set emwinfilter(fifo_fpath) [lindex $argv 0];
+
+if {[emwinfilter_fifo_open] != 0} {
+    return 1;
+}
+
+filterlib_init;		# open the cpool if enabled
+main;
+filterlib_end;		# close the cpool if enabled
+emwinfilter_fifo_close;

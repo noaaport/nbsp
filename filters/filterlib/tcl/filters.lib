@@ -1,0 +1,791 @@
+#
+# $Id$
+#
+# This file contains common functions used by some filters.
+#
+# The functions here call the function log_msg from the
+# filterserr.lib, so that file must have been loaded
+# when these functions are used. In addition, this file requires
+#
+# package require fileutil;	# tcllib
+# package require cmdline;      # tcllib (used by filterlib_cspool_nbspfile)
+# package require cspoolbdb;    # spool cache lib
+#
+# This is done by the filters.init file.
+
+proc filterlib_init {} {
+
+    if {[::cspoolbdb::query_enable] == 0} {
+	return;
+    }
+
+    set status [catch {
+        ::cspoolbdb::open;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filterlib_end {} {
+
+    if {[::cspoolbdb::query_enable] == 0} {
+	return;
+    }
+
+    set status [catch {
+        ::cspoolbdb::close;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filterlib_get_rcfiles {rcfname confdirs rcdir prercfile postrcfile} {
+
+# Build the list of rules rc files. First the pre-rc file,
+# then the one in the site directory or default directory if the
+# site version does not exist (i.e., look in confdirs and retain only the
+# last one found) then any rc file in the $rcdir directory,
+# and finally the post rc file. 
+
+    set _rcfiles [list];
+    if {[file exists $prercfile] == 1} {
+	lappend _rcfiles $prercfile;
+    }
+
+    set _rc $rcfname;
+    set _localrc "";
+    foreach _d $confdirs {
+	if {[file exists ${_d}/${_rc}] == 1} {
+	    set _localrc ${_d}/${_rc};
+	}
+    }
+    if {${_localrc} != ""} {
+        lappend _rcfiles ${_localrc};
+    }
+    unset _d;
+    unset _rc;
+    unset _localrc;
+
+    if {[file isdirectory $rcdir] == 1} {
+	set _rcfiles [concat ${_rcfiles} [glob -nocomplain \
+		-directory $rcdir *.rc]];
+    }
+
+    if {[file exists $postrcfile] == 1} {
+	lappend _rcfiles $postrcfile;
+    }
+
+    return $_rcfiles;
+}
+
+proc filterlib_get_body_fs {fpath bodypartsize} {
+
+    set body "";
+    set status [catch {
+        set f [open $fpath r];
+        fconfigure $f -translation binary -encoding binary;
+        set body [read $f $bodypartsize];
+    } errmsg];
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+
+    if {[info exists f]} {
+	set status [catch {
+            close $f;
+	} errmsg];
+
+        if {$status != 0} {
+            log_msg $errmsg;
+        }
+    }
+
+    return $body;
+}
+
+proc filterlib_get_body_cspool {seqnum bodypartsize} {
+
+    set body "";
+
+    set status [catch {
+        set result [::cspoolbdb::read $seqnum $bodypartsize];
+    } errmsg];
+
+    if {$status != 0} {
+	if {[::cspoolbdb::query_code_notfound]} {
+	    if {[::cspoolbdb::query_verbose] >= 1} {
+		log_msg $errmsg;
+	    }
+	} elseif {[::cspoolbdb::query_code_error]} {
+	    log_msg $errmsg;
+	}
+
+	return "";
+    }
+
+    if {[::cspoolbdb::query_verbose] >= 2} {
+        log_msg "$seqnum found in cspool.";
+    }
+
+    set code [lindex $result 0];
+    set size [lindex $result 1];
+    set body [lindex $result 2];
+
+    return $body;
+}
+
+proc filterlib_get_body {fpath seqnum bodypartsize} {
+
+    if {[::cspoolbdb::query_enable] != 0} {
+        set body [filterlib_get_body_cspool $seqnum $bodypartsize];
+    } else {
+	set body [filterlib_get_body_fs $fpath $bodypartsize];
+    }
+
+    return $body;
+}
+	    
+proc filterlib_get_txtflag {body ccbsaved ccbsize} {
+
+    if {[string length $body] == 0} {
+        return 0;
+    }
+
+    set txtflag [regexp {^[[:graph:][:space:]]+$} $body];
+
+    # If the body contains non-text, and if the (txt) files are being saved
+    # with the ccb, then try again bypassing the first $ccbsize characters. 
+    if {($txtflag == 0) && ($ccbsaved == 1)} {
+        set txtflag [regexp {^[[:graph:][:space:]]+$} \
+                [string range $body $ccbsize end]];
+    }
+
+    return $txtflag;
+}
+
+proc filterlib_get_rcvars {rc_name finfo args} {
+#
+# The first argument is the name of the rc array.
+#
+# The flags in "args" are:
+#
+# -nobody  =>  do not extract the body of the file and the associated variables
+# -dogrib  =>  extract the rc(grib...) variables
+# -noccb   =>  ignore the ccb global settings and assume the file nas no ccb
+#
+# Undetermined variables are returned as "".
+#
+# The defaults are to extract the body, and not extract the grib variables.
+# The grib variables are not defined by default to avoid the overload of
+# having to do so even for the filters that do not need them. Those filters
+# that use them (dafilter, gpfilter, ldmfilter) should call this function
+# with -dogrib.
+#
+# The -nobody flag can be used, for example, by the rstnntpfilter, which
+# receives the already processed files (instead of the raw data files)
+# and therefore the information contained in the "body" is not relevant
+# when the files are image files (for example, the rc(WMOHEADER) variable
+# extracted as explained below is not meaningful). Other filters only require
+# the header information such as the metarfilter.
+# 
+# The rc(WMOHEADER) and rc(wmotime) are extracted from the body of the file.
+# The rc(WMOHEADER) is used by the ldmfilter; the rc(wmotime) is used
+# by the rst and emwin filter when producing the metar reports.
+#
+# The overall assumption is that the required meta-data abouf the file
+# is encoded in the finfo in one way or another. In the current
+# nbsp implementation this is contained in the fname and fpath (defaults.h).
+# 
+# When nbsp is configured with an in-memory spool, then the filter server
+# adds extra information after the fpath as a metadata string of the form
+# <data1>:<data2>:...:<datan>. At the moment this used to pass the file size
+# that the inventory filter (the only one that can run in that configuration)
+# uses.
+
+    upvar $rc_name rc;
+    global filterslib;
+
+    # The ccb... variables can be overriden by the function arguments
+    set bodypartsize $filterslib(bodypartsize);
+    set ccbsaved $filterslib(ccbsaved);
+    set ccbsize $filterslib(ccbsize);
+
+    # The default values of the flags
+    set dogrib 0;
+    set dobody 1;
+    set doccb 1;
+
+    # Initalize all keys
+    set rc(seq) "";
+    set rc(type) "";
+    set rc(cat) "";
+    set rc(code) "";
+    set rc(npchidx) "";
+    set rc(fname) "";
+    set rc(fpath) "";
+    set rc(metadata) "";
+    set rc(meta,fsize) "";
+    set rc(fpathout) "";	# initialized but not set by the library
+    set rc(fbasename) "";
+    set rc(station) "";
+    set rc(wmoid) "";
+    set rc(awips) "";
+    set rc(awips1) "";
+    set rc(awips2) "";
+    set rc(nawips) "";
+    set rc(wmotime) "";
+    set rc(WMOHEADER) "";
+    set rc(STATION) "";
+    set rc(WMOID) "";
+    set rc(AWIPS) "";
+    set rc(AWIPS1) "";
+    set rc(AWIPS2) "";
+    set rc(NAWIPS) "";
+    set rc(body) "";
+    set rc(txtflag) 0;
+    set rc(gribedition) 0;
+    set rc(gribstatus) 0;
+    set rc(gribcenternum) "";
+    set rc(gribsubcnum) "";
+    set rc(gribmodelnum) "";
+    set rc(gribmodel) "";
+    set rc(gribmodelldm) "";
+    set rc(gribgrid) 0;
+    set rc(gribmodelgridldm) "";
+    set rc(gribreftime) "";
+    set rc(gribymdh) "";
+    set rc(gribforecasttimeu) "";  # time unit (h, m, ...)
+    set rc(gribforecasttime1) "";
+    set rc(gribforecasttime2) "";
+    set rc(gribforecasttimeri) ""; # time range indicator
+    set rc(gribforecasttime)   ""; # our encoded combination of the above
+
+    set finfo_parts [split $finfo];
+    set rc(seq) [lindex $finfo_parts 0];
+    set rc(type) [lindex $finfo_parts 1];
+    set rc(cat) [lindex $finfo_parts 2];
+    set rc(code) [lindex $finfo_parts 3];
+    set rc(npchidx) [lindex $finfo_parts 4];
+    set rc(fname) [lindex $finfo_parts 5];
+    set rc(fpath) [lindex $finfo_parts 6];
+    set rc(fbasename) [file tail $rc(fpath)];
+    if {[llength $finfo_parts] == 8} {
+	set rc(metadata) [lindex $finfo_parts 7];
+	set metadata_parts [split $rc(metadata) ":"];
+	set rc(meta,fsize) [lindex $metadata_parts 0];
+    }
+
+    if {[regexp {\-} $rc(fname)] == 1} {
+	scan $rc(fname) {%[a-z0-9]_%[a-z0-9]-%[a-z0-9]} \
+		rc(station) rc(wmoid) rc(awips);
+	set rc(awips1) [string range $rc(awips) 0 2];
+	set rc(awips2) [string range $rc(awips) 3 end];
+    } elseif {[regexp {\+} $rc(fname)] == 1} {
+	scan $rc(fname) {%[a-z0-9]_%[a-z0-9]+%[a-z0-9]} \
+		rc(station) rc(wmoid) rc(nawips);
+    } else {
+	scan $rc(fname) {%[a-z0-9]_%[a-z0-9]} rc(station) rc(wmoid);
+    }
+
+    if {[string length $rc(station)] == 0} {
+	log_msg "$rc(fname) missing station id.";
+    }
+
+    if {[string length $rc(wmoid)] == 0} {
+	log_msg "$rc(fname) missing wmo id.";
+    }
+
+    set rc(STATION) [string toupper $rc(station)];
+    set rc(WMOID) [string toupper $rc(wmoid)];
+    set rc(AWIPS) [string toupper $rc(awips)];
+    set rc(AWIPS1) [string toupper $rc(awips1)];
+    set rc(AWIPS2) [string toupper $rc(awips2)];
+    set rc(NAWIPS) [string toupper $rc(nawips)];
+
+    # Decode fbasename. Our assumption is that the finfo will always
+    # contain all the required meta-data about the file, Currently that
+    # is contained in fname and fbasename (specified in defaults.h).
+    # We use now fbasename to get the wmotime.
+
+    if {[regexp {\.(\d{6})_\d+$} $rc(fbasename) match s1]} {
+	set rc(wmotime) $s1;
+	append rc(WMOHEADER) $rc(WMOID) " " $rc(STATION) " " $rc(wmotime);
+    }
+
+    foreach flag $args {
+	switch -- $flag {
+	    "-dogrib" {
+		set dogrib 1;
+	    }
+	    
+	    "-nobody" {
+		set dobody 0;
+	    }
+
+	    "-noccb" {
+		set doccb 0;
+		set ccbsaved 0;
+		set ccbsize 0;
+	    }
+	}
+    }
+
+    if {($dobody == 1) && \
+		([regexp $filterslib(ignorebody) $rc(fname)] == 0)} { 
+	set rc(body) [filterlib_get_body $rc(fpath) $rc(seq) $bodypartsize];
+	set rc(txtflag) [filterlib_get_txtflag $rc(body) $ccbsaved $ccbsize];
+    }
+
+    # If it is a grib file, get the model name.
+    if {($rc(nawips) == "grib") && ($dogrib == 1)} {
+    	set gribparams \
+		[get_grib_model_params $rc(fpath) $rc(station) $rc(wmoid)];
+	if {[llength $gribparams] == 0} {
+	    set rc(gribstatus) 1;
+	} else {
+	    set rc(gribedition) [lindex $gribparams 0];
+	    if {($rc(gribedition) == 1) || ($rc(gribedition) == 2)} {
+	        set rc(gribmodel) [lindex $gribparams 1];
+	        set rc(gribmodelldm) [lindex $gribparams 2];
+	        set rc(gribgrid) [lindex $gribparams 3];
+		set rc(gribreftime) [lindex $gribparams 4];
+		set rc(gribcenternum) [lindex $gribparams 5];
+		set rc(gribsubcnum) [lindex $gribparams 6];
+		set rc(gribmodelnum) [lindex $gribparams 7];
+		set rc(gribymdh) [string range $rc(gribreftime) 0 9];
+	        append rc(gribmodelgridldm) $rc(gribmodelldm) "#" $rc(gribgrid)
+		# The forecast time parameters
+    		set rc(gribforecasttimeu) [lindex $gribparams 8];
+    		set rc(gribforecasttime1) [lindex $gribparams 9];
+    		set rc(gribforecasttime2) [lindex $gribparams 10];
+    		set rc(gribforecasttimeri) [lindex $gribparams 11];
+	  	# Our encoded combination of the forecast time parameters
+		# for convenience in the rc file rules.
+		set rc(gribforecasttime) $rc(gribforecasttime2);
+		if {$rc(gribforecasttime2) == 0} {
+		    set rc(gribforecasttime) $rc(gribforecasttime1);
+		}
+		append rc(gribforecasttime) $rc(gribforecasttimeu);
+	    } else {
+		set rc(gribstatus) 1;
+	    }
+	}
+	unset gribparams;
+    }
+}
+
+proc filterlib_cmdfound cmdname {
+#
+# Returns 1 if the command is found by which, 0 otherwise.
+#
+    if {[catch {exec which $cmdname}] == 0} {
+        return 1;
+    }
+
+    return 0;
+}
+
+proc filterlib_stripcr {body} {
+
+    set lines [split $body "\n"];
+    foreach l $lines {
+	append r [string trimright $l] "\n";
+    }
+
+    return $r;
+}
+
+proc filterlib_find_conf {name dirs {subdir ""}} {
+#
+#   The first argument can be a basename, or a path. If the file is not
+#   found, the in the first case the function returns "",
+#   while in the second case it returns "$name".
+#
+    set fbasename [file tail $name];
+    if {$fbasename eq $name} {
+        set r "";
+    } else {
+	set r $name;
+    }
+
+    foreach d $dirs {
+	if {$subdir ne ""} {
+	    set f [file join $d $subdir $fbasename];
+	} else {
+	    set f [file join $d $fbasename];
+	}
+	if {[file exists $f]} {
+	    set r $f;
+	}
+    }
+
+    return $r;
+}
+
+proc filterlib_uwildmat {uwildregex str} {
+#
+# Behaves similarly to inn's uwildmat(), but uses re's rather than
+# glob style patters. Using only a pair of expressions, the second
+# one of which is negated, is equivalent to use an accept and then reject
+# pattern as described in nbspd.conf. This mechanism generalizes that.
+#
+    if {$uwildregex eq ""} {
+	return 0;
+    }
+
+    set pattlist [split $uwildregex ","];
+    set status 0;
+
+    foreach p $pattlist {
+	set v 1;
+	set reg [string trim $p];
+	if {[string range $reg 0 0] eq "!"} {
+	    set v 0;
+	    set reg [string range $reg 1 end];
+	}
+	if {[regexp -- $reg $str]} {
+	    set status $v;
+	}
+    }
+
+    return $status;
+}
+
+#
+# Extensions to the fileutil functions to add a newline automatically
+#
+proc filterlib_file_write {file data} {
+
+    if {[string range $data end end] ne "\n"} {
+	append data "\n";
+    }
+
+    ::fileutil::writeFile $file $data;
+}
+
+proc filterlib_file_append {file data} {
+
+    if {[string range $data end end] ne "\n"} {
+	append data "\n";
+    }
+
+    ::fileutil::appendToFile $file $data;
+}
+
+proc filterlib_file_cat {file} {
+
+    return [string trim [::fileutil::cat $file]];
+}
+
+#
+# Procedures to mimick the functionality of nbspfile
+#
+proc filterlib_nbspfile {seq inputfile outputdir outputfile args} {
+    #
+    # The args are flags:
+    #
+    # [-a] => append
+    # [-t] => do not add gmpk header and trailer
+    #
+
+    global filterslib;
+
+    set gmpk_header_fmt $filterslib(gmpk_header_fmt);
+    set gmpk_trailer_str $filterslib(gmpk_trailer_str);
+
+    # Get the flags
+    set f_append 0;
+    set f_nogmpk_header 0;
+    foreach flag $args {
+        switch -- $flag {
+            "-a" {
+                set f_append 1;
+            }
+            
+            "-t" {
+		set f_nogmpk_header 1;
+            }
+        }
+    }
+
+    if {$outputdir ne ""} {
+	set savepath [file join $outputdir $outputfile];
+    } else {
+	set savepath $outputfile;
+    }
+
+    set status [catch {
+	if {$f_append == 0} {
+	    set fout [open $savepath "w"];
+	} else {
+	    set fout [open $savepath "a"];
+	}
+        set fin  [open $inputfile r];
+        fconfigure $fin -translation binary -encoding binary;
+        fconfigure $fout -translation binary -encoding binary;
+
+        if {$filterslib(ccbsaved) == 1} {
+            set ccb [read $fin $filterslib(ccbsize)];     # this is discarded
+        }
+
+	if {$f_nogmpk_header == 0} {
+	    puts -nonewline $fout [format $gmpk_header_fmt [expr $seq % 1000]];
+	}
+
+        puts -nonewline $fout [read $fin];
+
+	if {$f_nogmpk_header == 0} {
+	    puts -nonewline $fout $gmpk_trailer_str;
+	}
+    } errmsg];
+
+    if {[info exists fin]} {
+        close $fin;
+    }
+    if {[info exists fout]} {
+        close $fout;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+}
+
+proc filterlib_nbsppipe {seq inputfile cmd_line args} {
+    #
+    # The args are flags:
+    #
+    # [-g] => add gmpk header and trailer
+    #
+    # $cmd_line is the full command line including options and arguments.
+
+    global filterslib;
+
+    set gmpk_header_fmt $filterslib(gmpk_header_fmt);
+    set gmpk_trailer_str $filterslib(gmpk_trailer_str);
+
+    # Get the flags
+    set f_addgmpk_header 0;
+    foreach flag $args {
+        switch -- $flag {
+            "-g" {
+                set f_addgmpk_header 1;
+            }
+        }
+    }
+
+    set status [catch {
+	set fout [open "|$cmd_line" "w"];
+	set fin  [open $inputfile "r"];
+	fconfigure $fin -translation binary -encoding binary;
+	fconfigure $fout -translation binary -encoding binary;
+
+        if {$filterslib(ccbsaved) == 1} {
+            set ccb [read $fin $filterslib(ccbsize)];     # this is discarded
+        }
+
+        if {$f_addgmpk_header == 1} {
+            puts -nonewline $fout [format $gmpk_header_fmt [expr $seq % 1000]];
+        }
+
+	puts -nonewline $fout [read $fin];
+        if {$f_addgmpk_header == 1} {
+	    puts -nonewline $fout $gmpk_trailer_str;
+	}
+    } errmsg];
+
+    if {[info exists fout]} {
+	close $fout;
+    }
+
+    if {[info exists fin]} {
+	close $fin;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+}
+
+# The main functions here are:
+#
+# proc filterlib_cspool_nbspfile {seq fpath savedir savename args}
+# proc filterlib_cspool_nbsppipe {seq fpath savedir savename args}
+#
+# They use the following helper function:
+#
+# Usage: filterlib_cspool_execpipe [-e <exec_cmd>] [-p <pipe_cmd>] <key>
+#
+# Without the "-p" option, the function outputs the content of the file
+# to stdout, otherwise it pipes the contents to the command given as the
+# argument to "-p" using the tcl open function.
+# If the <key> is not found in the db, then it will exec the <exec_cmd>.
+#
+proc filterlib_pipe {cmd body} {
+
+    set status [catch {
+	set F [open $cmd w];
+	fconfigure $F -translation binary -encoding binary;
+	puts -nonewline $F $body;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    if {[info exists F]} {
+	set status [catch {
+	    catch {close $F};
+	} errmsg];
+
+	if {$status != 0} {
+	    log_msg $errmsg;
+	}
+    }
+}
+
+proc filterlib_exec {cmd} {
+
+    global filterslib;
+
+    set status [catch {
+	if {$filterslib(background_processing) == 1} {
+	    eval exec $cmd &;
+	} else {
+	    eval exec $cmd;
+	}
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filterlib_cspool_execpipe {args} {
+
+    set usage {filterlib_cspool_execpipe [-e <cmd>] [-p <cmd>] <seq>};
+    set optlist {{e.arg ""} {p.arg ""}};
+    array set option [::cmdline::getoptions args $optlist $usage];
+    set argc [llength $args];
+
+    if {$argc == 0} {
+	log_msg $usage;
+	return;
+    }
+    set seq [lindex $args 0];
+
+    set status [catch {
+	set result [::cspoolbdb::read $seq];
+    } errmsg];
+
+    if {[::cspoolbdb::query_code_notfound]} {
+	if {[::cspoolbdb::query_verbose] != 0} {
+	    log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
+	}
+	if {$option(e) ne ""} {
+	    filterlib_exec $option(e);
+	}
+	return;
+    } elseif {[::cspoolbdb::query_code_error]} {
+	log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
+	if {$option(e) ne ""} {
+	    filterlib_exec $option(e);
+	}
+	return;
+    }
+    
+    set code [lindex $result 0];
+    set size [lindex $result 1];
+    set body [lindex $result 2];
+    
+    if {[::cspoolbdb::query_verbose] > 1} {
+	log_msg "filterlib_cspool_execpipe: $seq found in cspool.";
+    }
+    if {$option(p) eq ""} {
+	return $body;
+    } else {
+	filterlib_pipe $option(p) $body;
+    }
+}
+
+#
+# This function ends up calling nbspfile program.
+#
+proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
+    #
+    # The args are flags for nbspfile:
+    #
+    # [-a] => append
+
+    global filterslib;
+
+    set opts "";
+    if {[llength $args] != 0} {
+        append opts [join $args " "];
+    }
+
+    if {$filterslib(ccbsaved) == 0} {
+	append opts " -n";
+    }
+    append opts " -d " $savedir " -o " $savename " " $fpath " " $seq;
+
+    if {[::cspoolbdb::query_enable] == 0} {
+        set cmd "nbspfile";
+        append cmd " " $opts;
+        filterlib_exec $cmd;
+    } else {
+	set cmd "|nbspfile -i";
+	append cmd " " $opts;
+	filterlib_cspool_execpipe -p $cmd $seq;
+    }
+}
+
+#
+# Similar to the above, but calling nbsppipe with a pipeline to
+# another program (e.g., a gempak decoder).
+#
+proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
+    #
+    # The args are flags for nbsppipe:
+    #
+    # [-g] => instructs nbsppipe to add gempak header/footer
+    #
+    # pipe_cmd is the whole command line for the decoder program to which
+    # nbsppipe will pipe the data. So, when it has to read from the fs spool,
+    # we want to execute
+    #
+    # exec nbsppipe <options> < fpath | $pipe_cmd > /dev/null
+    #
+    # When the file is found in the cpool, we want to pipe the data to
+    #
+    # |nbsppipe <options> | $pipe_cmd > /dev/null
+    #
+    # As already mentioned, pipe_cmd will be a string of the form
+    #
+    # <pipe_program> <options and arguments>
+
+    global filterslib;
+
+    set opts "";
+    if {[llength $args] != 0} {
+        append opts " " [join $args " "];
+    }
+
+    if {$filterslib(ccbsaved) == 0} {
+	append opts " -n";
+    }
+
+    set cmd "";
+    if {[::cspoolbdb::query_enable] == 0} {
+        append cmd "nbsppipe" $opts " -s " $seq " < " $fpath " | " $pipe_cmd;
+	filterlib_exec $cmd;
+    } else {
+	append cmd "|nbsppipe" $opts " -s " $seq " | " $pipe_cmd;
+	filterlib_cspool_execpipe -p $cmd_pipe $seq;
+    }
+}

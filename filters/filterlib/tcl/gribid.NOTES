@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+1) OEBA88 KNWC (e.g. 2007120600__knwc_oba.grb)
+   (nbspgrib returns: 1 58 20 120 218 200712060000)
+   A 2004 notice from NWS states that OEBA88 and OESA88 from KNWC are
+   High Resolution Gridded Ice Graphic Analyses.
+   With the definition this file is saved as 2007120600_ice_oba.grb)

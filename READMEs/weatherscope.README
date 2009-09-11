@@ -1,0 +1,46 @@
+#
+# $Id$
+#
+Nbsp has full support for the Weatherscope (WS) application
+
+	http://climate.ok.gov/software
+
+The required tclhttpd library files are included in the distribution
+ready to go. In addtition, the set of configuration
+files that must be distributed to the clients are also
+included in the distribution in the file ``weatherscope-extension.tgz''
+in the documentation directory
+
+	<prefix>/share/doc/nbsp
+
+usually
+
+	/usr/local/share/doc/nbsp
+
+After unpacking that file, the files ws-server.INSTALL and ws-client.INSTALL
+contain the relevant instructions to complete the installation and
+distribution of the client configuration files.
+
+Nbsp supports WS with data from the following sources:
+
+	nids		(via the dafilter)
+	metar		(via the metarfilter + wsfilter)
+	upperair	(via the uafilter + wsfilter)
+	models (grib)	(via the gribfilter + wsfilter)
+
+The wsfilter is not enabled by default. The remaining step depends on whether
+or not GrADS is installed.
+
+1) GrADS installed -
+   - Enable the ``gradsctl_enable'' option in the gribfilter.conf file.
+   - Enable the wsfilter in features.conf
+
+     All the data types above will be avalable to WS
+
+2) GrADS not installed - (there will be no model data conversion)
+   - Remove the references to the model data in the wsfilter-schedule.conf
+     (or create a different file in the ``site'' directory)
+   - Enable the wsfilter in features.conf
+
+   The model data will not be available to WS.
+-

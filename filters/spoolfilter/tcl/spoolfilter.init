@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+# Default configuration setting for the spoolfilter. Must be read
+# after reading the default filters.init (by the filters) or
+# filters.conf (by the programs).
+
+set spoolfilter(conf)	[file join $common(confdir) "spoolfilter.conf"];
+set spoolfilter(datadir) [file join $common(archivedir) "spool"];
+set spoolfilter(datasubdir) "%Y%m%d";
+# set spoolfilter(datasubdir) "%u";		# day of week
+set spoolfilter(stripccb) 1;
+set spoolfilter(uwildregex) {.*};
+
+# The optional configuration file
+if {[file exists $spoolfilter(conf)] == 1} {
+    source $spoolfilter(conf);
+}

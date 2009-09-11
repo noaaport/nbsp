@@ -1,0 +1,15 @@
+$Id$
+
+The directories gpk-{file,pipe} are the original m4 implementations
+of the gempak filters. The directory gempak-filter is a 
+consolidation of both in one single filter.
+The directory "pipe" contains
+the m4 implementation for a general pipe tool.
+
+Fpr some reason that I don't understand, the separate gempak-file
+and gempak-pipe filters are more efficient  than the consolidated
+filter gempak-filter.
+
+- jfn
+
+

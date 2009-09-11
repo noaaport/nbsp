@@ -1,0 +1,136 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "spoolfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+#
+# Default configuration for this filter. The init file also reads
+# the optional configuration file(s).
+#
+set spool_init_file [file join $common(libdir) "spoolfilter.init"];
+if {[file exists $spool_init_file] == 0} {
+        log_msg "spoolfilter disabled: $spool_init_file not found.";
+        return 1;
+}
+source $spool_init_file;
+unset spool_init_file;
+#
+# variables
+#
+set spoolfilter(ccbsaved) $common(ccbsaved);
+set spoolfilter(ccbsize) $common(ccbsize);
+
+#
+# main
+#
+proc main {argc argv} {
+
+    global spoolfilter;
+    global errorInfo;
+
+    # The data directory
+    if {[file isdirectory $spoolfilter(datadir)] == 0} {
+	log_msg "$spoolfilter(datadir) does not exist.";
+	return 1;
+    }
+
+    # Move to its directory once and for all.
+    cd $spoolfilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global spoolfilter;
+
+    # There is no need to use the entire rc() variables since only
+    # the fpath is needed here.
+    set finfo_parts [split $finfo];
+    set fpath [lindex $finfo_parts 6];
+    set fname [lindex $finfo_parts 5];
+    set station [string range $fname 0 3];
+    set fbasename [file tail $fpath];
+
+    if {[accept_file $fname] == 0} {
+	return;
+    }
+
+    set parentdir $station;
+    if {$spoolfilter(datasubdir) ne ""} {
+        set parentdir [file join [clock format [clock seconds] \
+				-format $spoolfilter(datasubdir) -gmt true] \
+				$station];
+    }
+    set pathout [file join $parentdir $fbasename];
+    file mkdir $parentdir;
+
+    if {($spoolfilter(ccbsaved) == 1) && ($spoolfilter(stripccb) == 1)} {
+	set status [catch {
+	    set fin [open $fpath "r"];
+	    set fout [open $pathout "w"];
+	    fconfigure $fin -translation binary -encoding binary;
+	    fconfigure $fout -translation binary -encoding binary;
+	    read $fin $spoolfilter(ccbsize);	# discarded
+	    puts $fout [read $fin];
+	} errmsg];
+	if {[info exists fin]} {
+	    close $fin;
+	}
+	if {[info exists fout]} {
+	    close $fout;
+	}
+	if {$status != 0} {
+	    log_msg $errmsg;
+	}
+    } else {
+        file copy $fpath $pathout;
+    }
+}
+
+proc accept_file {fname} {
+
+    global spoolfilter;
+
+    if {[info exists spoolfilter(uwildregex)] == 0} {
+	set match_status 1;
+    } else {
+	set match_status [filterlib_uwildmat $spoolfilter(uwildregex) $fname];
+    }
+
+    return $match_status;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

@@ -1,0 +1,56 @@
+#
+# $Id$
+#
+# This is a template for a station rss.
+#
+# The script that processes the template defines the variables
+#
+# rss(channel,title)
+# rss(channel,desc)
+# rss(item,title)
+# rss(item,desc)
+# rss(item,fpath)
+# rss(item,fbasename)
+# rss(item,wmoid) rss(item,WMOID)
+# rss(item,station) rss(item,STATION)
+# rss(item,time)
+#
+# with the values extracted from the contents of the flat log file. In
+# addition the caller of the script may define additional rss() variables
+# by the [-D] option in the script. The rssfilter defines the variables
+#
+# rss(hostport)
+#
+# and the template itself can define additional rss() variables.
+# The convention is that the variables defined by the template are named
+# rss(txml,...).
+
+# Default date format
+set rss(txml,pubdate) [exec date -u];
+
+#
+# Template
+#
+set rss(txml,header) {<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/css'?>
+
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+<channel>
+	<title>$rss(channel,title)</title>
+	<description>$rss(channel,desc)</description>
+	<link>http://$rss(hostport)</link>
+}
+
+set rss(txml,footer) {
+</channel>
+</rss>
+}
+
+set rss(txml,item) {
+  <item>
+    <title>$rss(item,title)</title>
+    <description>$rss(item,desc) $rss(item,time)</description>
+    <link>http://$rss(hostport)/rst/txt/$rss(item,station)/$rss(item,fbasename)</link>
+  </item>
+}

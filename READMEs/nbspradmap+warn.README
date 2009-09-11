@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+The nbspradmap tools (see nbspradmap.README) can use the ability
+of the gempak programs to draw WWA area polygons with radar
+images as backgrounds. This functionality will show up in the web server,
+and it can be enabled as follows.
+
+1) The gpfilter must be enabled in 
+
+	features.conf
+
+   Since the dafilter and gpfilter both are resource consuming, it is
+   possible to make a "lite" gpfilter if it is to be used just for this
+   purpose: make the following settings in
+
+	site/gpfilter.conf
+
+   set gpfilter(rad_enable) 0;
+   set gpfilter(sat_enable) 0;
+   set gpfilter(file_enable) 0;
+   set gpfilter(decoder_regex) {^dcw|dcstorm|dcffa|dcffg|dcsvrl};
+
+2) Arrange for the "radmap-cities-warn.rc" to be used (instead of the
+   default "radmap.rc") by setting
+
+   set rstfilter(radmap_rcfile) "radmap-cities-warn.rc";
+
+   in the "rstfilter.conf" configuration file.
+
+-
+Wed Dec 31 15:32:38 AST 2008

@@ -1,0 +1,61 @@
+#
+# $Id$
+#
+nbspradmapc is a (tcl script) utility that will generate radar image files
+from the command line.
+
+In the simplest case it can be executed as
+
+	nbspradmapc <site> <type>
+
+for example,
+
+	nbspradmapc jua n0r
+
+and it will generate the radar image from the latest n0r data file for jua.
+
+It accepts a few command line options to modify the default settings, of
+which the most useful are the following.
+
+It can be called like
+
+	nbspradmapc -l <first>,<last> jua n0r
+
+to specify a range of files to process from the list of available files;
+for example
+
+	nbspradmapc -l 0,3 jua n0r
+
+will process the first (oldest) four files, while
+
+	nbspradmapc -l end-3,end jua n0r
+
+will process the last (most recent) four files.
+
+The "-r" option can be used to specify a different rc file instead
+of the default. The available rc files are
+
+	radmap-cities.rc
+	radmap-cities-warn.rc
+
+and may be others (see nbspradmap.README). Thus, for example
+
+	nbspradmapc -r radmap-cities.rc jua n0r
+
+will add the city names in the radar image.
+
+The use of "radmap-cities-warn.rc" requires enabling the gpfilter
+(at least the "lite" version as described in nbspradmap+warn.README).
+Once that requirement is satisfied, it can be called like
+
+	nbspradmapc -r radmap-cities-warn.rc jua n0r
+
+and, in addition to the cities, it will draw the warning area polygons
+using the radar image as background.
+
+The "-v" option will turn on verbose mode to give some feedback,
+which is specially useful when processing a list of files
+(via the "-l" option).
+
+-
+Wed Dec 31 15:32:38 AST 2008

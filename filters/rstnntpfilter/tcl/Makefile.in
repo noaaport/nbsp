@@ -1,0 +1,42 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	rstnntpfilter.tcl
+TCLSOURCES =	rstnntpfilter.tcl.in
+FILTERNAME =	rstnntpfilter
+M4SOURCES =	defs.m4 txt.m4 rad.m4 
+M4MAIN =	rstnntpfilter.m4
+M4TARGET =	rstnntpfilter.rc-defaults
+SAMPLES =	rstnntpfilter.conf-sample \
+		rstnntpfilter.rc-sample
+TARGET =	${TCLTARGET} ${M4TARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+${M4TARGET}: ${M4MAIN} ${M4SOURCES}
+	m4 ${M4MAIN} > ${M4TARGET}
+
+rstnntpfilter.conf-sample: rstnntpfilter.conf
+	cp rstnntpfilter.conf rstnntpfilter.conf-sample
+
+rstnntpfilter.rc-sample: rstnntpfilter.rc 
+	cp rstnntpfilter.rc rstnntpfilter.rc-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

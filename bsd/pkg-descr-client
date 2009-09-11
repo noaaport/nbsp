@@ -1,0 +1,12 @@
+This is a set of client programs for the Noaaport Broadcast System Processor.
+Nbsp receives the multicast transmission of a noaaport system attached
+to a local network, and processes and stores the received files.
+Facilities are provided for filtering and saving only those products
+of interest, postprocessing them in various ways, and
+redistributing the data to local or remote clients. The set of programs
+in this package allow to browse and display the grib files in either
+the local or remote computer running nbsp, using GrADS.
+
+
+ 
+

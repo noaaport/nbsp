@@ -1,0 +1,53 @@
+#
+# $Id$
+#
+
+The netfilter is not a separate filter like the other ones. It
+is part of the network server and it is executed automatically
+if the network server is enabled.
+
+Setting up a (nbsp master) server -
+
+To enable the network server, one or more of the following settings
+must be made in features.conf file:
+
+set feature(nbs1server)		1
+set feature(nbs2server)		1
+set feature(emwinserver)	1
+
+Any combination, including all three, can be enabled. The third setting
+enables the emwin protocol. In principle, any emwin client can connect
+(e.g., npemwin, perlemwin). The ``classical'' emwin programs for windows
+cannot do it as it has been explained in the www.noaaport.net web site.
+On the other hand, the modified (by Ray Weber and myself) version of
+the old ByteBlaster program that is available in that web site, works well.
+
+The nbs1server and nbs2server settings allow a remote machine,
+running an instance of nbsp in slave mode, to connect to this server.
+The nbs1server option is meant to be used by nbsp clients
+connecting from a different network, while the nbs2server
+is nbsp for clients in the same local network.
+See "slave-setup.README" for setting up a slave.
+
+The netfilter is used to setup allow/deny policies for each client
+on a per-product basis. The netfilter is used in the same way for any protocol.
+To start, copy the file
+
+	defaults/netfilter.rc
+
+to the site subdirectory and edit it following the examples in that file.
+
+Note that this filter does not control what computers are allowed
+to connect to the nbsp process in your computer. It only controls
+what products wil be sent to each connected computer. On the other hand,
+nbsp is linked against "libwrap", the tcpwrapers library, and it uses
+is to determine whether or not to accept a connection. Thus, the
+/etc/hosts.allow file is used to control what clients can connect to nsbp,
+and the netfilter is used to control what is sent to each of those clients.
+
+A master can be configured to use an in-memory spool for improved
+performance. The details of this setup are covered separately
+in mspoolbdb.README.
+
+-
+JFN

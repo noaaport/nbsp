@@ -1,0 +1,39 @@
+#
+# $Id$
+#
+
+set rssfilter(conf)	[file join $common(confdir) "rssfilter.conf"];
+set rssfilter(rc)	[file join $common(confdir) "rssfilter.rc"];
+set rssfilter(prerc)    "";
+set rssfilter(postrc)   "";
+set rssfilter(localconfdirs) $common(localconfdirs);
+set rssfilter(rcdir)	[file join $common(rcdir) "rss"];
+set rssfilter(datadir)  [file join $common(nbspdir) "rss"];
+#
+set rssfilter(channelprefix) "noaaport";
+set rssfilter(catsubdir) "cat";
+set rssfilter(catfext) ".log";
+#
+set rssfilter(xmlenable) 1;
+set rssfilter(xmlsubdir) "xml";
+set rssfilter(xmlfext) ".xml";
+set rssfilter(txmldirs) $rssfilter(localconfdirs);
+set rssfilter(txmlsubdir) "rss";
+set rssfilter(txmlfext) ".txml";
+append rssfilter(hostport) [info hostname] ":8015";
+set rssfilter(createbin) "nbsp-rsscreate";
+set rssfilter(def) [file join $common(confdir) "rssfilter.def"];
+set rssfilter(wfodef) [file join $common(confdir) "rssfilter-wfo.def"];
+set rssfilter(stationconf) [file join $common(confdir) "rssfilter-st.conf"];
+
+# Overrides in the configuration file. 
+if {[file exists $rssfilter(conf)] == 1} {
+    source $rssfilter(conf);
+}
+
+#
+# Read the station collectives configuration file.
+#
+if {[file exists $rssfilter(stationconf)]} {
+    source $rssfilter(stationconf);
+}

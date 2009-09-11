@@ -1,0 +1,233 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "inventory disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+#
+set inv_init_file [file join $common(libdir) inventory.init];
+if {[file exists $inv_init_file] == 0} {
+        log_msg "inventory disabled: $inv_init_file not found.";
+        return 1;
+}
+source $inv_init_file;
+unset inv_init_file;
+
+# variables
+set inventory(FP)	"";
+set inventory(FP_open) 0;
+set inventory(frootname)	"";
+#
+set inventory(chstats,frootname) "";
+set inventory(chstats,fpath) "";
+set inventory(chstats,fext) ".stats";
+# files and bytes counters
+set inventory(chstats,0,files) 0;
+set inventory(chstats,1,files) 0;
+set inventory(chstats,2,files) 0;
+set inventory(chstats,3,files) 0;
+set inventory(chstats,0,bytes) 0;
+set inventory(chstats,1,bytes) 0;
+set inventory(chstats,2,bytes) 0;
+set inventory(chstats,3,bytes) 0;
+set inventory(chstats,hhmm) \
+    [clock format [clock seconds] -gmt true -format "%H%M"];
+
+proc main {argc argv} {
+
+    global inventory;
+    global errorInfo;
+
+    # The inventory directory must exist
+    if {[file isdirectory $inventory(dir)] == 0} {
+	log_msg "$inventory(dir) does not exist.";
+	return 1;
+    }
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+
+    close_inv_file;
+}
+
+proc process {finfo} {
+
+    global inventory;
+
+    # The rc(body) and rc(txtflag) variables are not needed.
+    filterlib_get_rcvars rc $finfo -nobody;
+
+    if {$rc(meta,fsize) ne ""} {
+	set _fsize $rc(meta,fsize);
+    } elseif {[file exists $rc(fpath)]} {
+      set _fsize [file size $rc(fpath)];
+    } else {
+	set _fsize 0;
+    }
+    set _time [clock seconds];
+    set finfo [format "%u %u %d %d %d %d %u %s" \
+	${_time} $rc(seq) $rc(type) $rc(cat) $rc(code) $rc(npchidx) ${_fsize} \
+	$rc(fbasename)];
+
+    set invfrootname [clock format ${_time} -gmt true \
+			  -format $inventory(fnameformat)];
+    reopen_inv_file $invfrootname;
+    log_inv_file $finfo;
+
+    # Update the per-channel counters
+    set _v $inventory(chstats,$rc(npchidx),files);
+    set inventory(chstats,$rc(npchidx),files) [expr ${_v} + 1];
+    set _v $inventory(chstats,$rc(npchidx),bytes);
+    set inventory(chstats,$rc(npchidx),bytes) [expr ${_v} + ${_fsize}];
+}
+
+proc open_inv_file {invfrootname} {
+
+    global inventory;
+
+    set inventory(frootname) $invfrootname;
+    append fpath [file join $inventory(dir) $invfrootname] $inventory(fext);
+    
+    set status [catch {
+        set inventory(FP) [open $fpath w 0644];
+    } errmsg];
+
+    if {$status == 0} {
+	set inventory(FP_open) 1;
+    } else { 
+	log_msg $errmsg;
+    }
+}
+
+proc close_inv_file {} {
+
+    global inventory;
+
+    if {$inventory(FP_open) == 0} {
+	return 0;
+    }
+
+    set status [catch {close $inventory(FP)} errmsg];
+    set inventory(FP_open) 0;
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    channel_stats_log;
+
+    return $status;
+}
+
+proc reopen_inv_file {frootname} {
+
+    global inventory;
+    
+    if {[string equal $inventory(frootname) $frootname]} {
+	return;
+    }
+
+    set status [close_inv_file];
+    if {$status == 0} {
+	open_inv_file $frootname;
+    }
+}
+
+proc log_inv_file {finfo} {
+
+    global inventory;
+
+    if {$inventory(FP_open) == 0} {
+	return;
+    }
+
+    set status [catch {puts $inventory(FP) $finfo} errmsg];
+    
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc channel_stats_fileinit {hh} {
+
+    global inventory;
+
+    if {[string equal $inventory(chstats,frootname) $hh]} {
+	return;
+    }
+
+    set inventory(chstats,frootname) $hh;
+    set inventory(chstats,fpath) [file join $inventory(dir) $hh];
+    append inventory(chstats,fpath) $inventory(chstats,fext);
+    file delete $inventory(chstats,fpath);
+}
+
+proc channel_stats_log {} {
+
+    global inventory;
+
+    set hh [string range $inventory(chstats,hhmm) 0 1];
+    channel_stats_fileinit $hh;
+
+    set status [catch {
+	set fp [open $inventory(chstats,fpath) {WRONLY APPEND CREAT}];
+	puts $fp [format "%s %s %s %s %s %s %s %s %s" \
+	    $inventory(chstats,hhmm) \
+	    $inventory(chstats,0,files) $inventory(chstats,1,files) \
+	    $inventory(chstats,2,files) $inventory(chstats,3,files) \
+	    $inventory(chstats,0,bytes) $inventory(chstats,1,bytes) \
+	    $inventory(chstats,2,bytes) $inventory(chstats,3,bytes)];
+	close $fp;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    # Reinitialize
+    set inventory(chstats,0,files) 0;
+    set inventory(chstats,1,files) 0;
+    set inventory(chstats,2,files) 0;
+    set inventory(chstats,3,files) 0;
+    set inventory(chstats,0,bytes) 0;
+    set inventory(chstats,1,bytes) 0;
+    set inventory(chstats,2,bytes) 0;
+    set inventory(chstats,3,bytes) 0;
+
+    set hhmm [clock format [clock seconds] -gmt true -format "%H%M"];
+    set inventory(chstats,hhmm) $hhmm;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

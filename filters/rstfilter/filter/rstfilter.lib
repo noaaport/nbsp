@@ -1,0 +1,716 @@
+#
+# $Id$
+#
+
+# This file contains the common portion of the rstfilter functions
+# that are used also by the emwinfilter. This file requires
+# the filters.lib functions.
+
+# All the filter_xxxx functions return the list [status fpathout]
+# In the rstfilter these return values are not used, but
+# they are used by the emwinfilter.
+
+proc filter_text_old {fpath savedir} {
+
+    global rstfilter;
+
+    cd $rstfilter(datadir);
+    file mkdir $savedir;
+
+    set fname [file tail $fpath];
+    append savename $fname ".txt";
+    set fpathout [file join $rstfilter(datadir) $savedir $savename];	
+
+    set status [catch {
+	set fout [open $fpathout w];
+	set fin  [open $fpath r];
+	fconfigure $fin -translation binary -encoding binary;
+	fconfigure $fout -translation binary -encoding binary;
+
+	if {$rstfilter(ccbsaved) == 1} {
+	    read $fin $rstfilter(ccbsize); 	# this is discarded
+	}
+
+	puts -nonewline $fout [read $fin];
+	filter_text_insert_inventory $savedir $fpathout;
+    } errmsg];
+
+    if {[info exists fout]} {
+	close $fout;
+    }
+
+    if {[info exists fin]} {
+	close $fin;
+    }
+
+    set output [list $status $fpathout];
+ 
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+
+    return $output;
+}
+
+proc filter_text {fpath savedir} {
+
+    global rstfilter;
+    global filtersprogs;
+
+    cd $rstfilter(datadir);
+    file mkdir $savedir;
+
+    set fname [file tail $fpath];
+    append savename $fname ".txt";
+    set fpathout [file join $rstfilter(datadir) $savedir $savename];	
+
+    set opts "-t";
+    if {$rstfilter(ccbsaved) == 0} {
+	set opts "-t -n";
+    }
+
+    set status [catch {
+	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
+		$fpath;
+    } errmsg];
+
+    set output [list $status $fpathout];
+
+    if {$status != 0} {
+	# In case it was created
+	file delete [file join $savedir $savename];
+	log_msg $errmsg;
+    } else {
+	filter_text_insert_inventory $savedir $fpathout;
+    }
+
+    return $output;
+}
+
+proc filter_sat_unz {fpath savedir} {
+
+# This function assumes that the input file (fpath) has been saved in
+# uncompressed form. It is to be used if the nbsp processor is configured
+# to uncompress the file frames on the fly and then save it in uncompresed
+# form. Only the plain images are generated.
+
+    set output [filter_satplain $fpath $savedir];
+
+    return $output;
+}
+
+proc filter_sat {wmoid fpath imgsavedir datasavedir} {
+
+# This function assumes that the input file (fpath) has been saved in
+# compressed form. It is to be used if the nbsp processor is configured
+# to save the file frames as they come, in compressed form. In this
+# case, the uncompressed data file is saved as well, with the extension
+# given by $rstfilter(sat_datext).
+# The name of the uncompressed file is copied from the generated image file.
+
+    global rstfilter;
+    global filtersprogs;
+
+    set fname [file tail $fpath];
+    set datafpath [file join $rstfilter(datadir) $datasavedir $fname];
+
+    set status [catch {
+	cd $rstfilter(datadir);
+	file mkdir $datasavedir;	
+	exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+    } errmsg];
+
+    if {$status != 0} {
+	# In case the file was created
+	file delete $datafpath;
+        set output [list 1 ""];
+	log_msg $errmsg;
+
+ 	return $output;
+    }
+
+    if {($rstfilter(satmap_enable) == 1) && \
+	    [regexp $rstfilter(satmap_regex) $wmoid]} {
+	set output [filter_satmap $wmoid $fpath $imgsavedir];
+	set status [lindex $output 0];
+	if {$status != 0} {
+	    log_msg "Will try without map.";
+	}
+    }
+    # If the map option is unset, or if the map could not be
+    # generated, do the plain image.
+    if {($rstfilter(satmap_enable) == 0) || \
+	    ([regexp $rstfilter(satmap_regex) $wmoid] == 0) || \
+	    ($status != 0)} {
+	set output [filter_satplain $datafpath $imgsavedir];
+    }
+    #
+    # Rename the uncompressed data file to match the image file. E.g,
+    #
+    # knes_tigp01.070101_1414381 (raw, compressed)
+    # tigp01_20060307_0101.png   (image)
+    # tigp01_20060307_0101.gini  (uncompressed data)
+    #
+    set status [lindex $output 0];
+    set fpathout [lindex $output 1];
+
+    if {$status == 0} {
+	set frootname [file rootname [file tail $fpathout]];
+	append newdatafpath [file join [file dirname $datafpath] \
+	    $frootname] $rstfilter(sat_datext);
+	set status [catch {
+	    file rename -force $datafpath $newdatafpath;
+	} errmsg];
+    }
+
+    if {$status != 0} {
+	# filter_satplain and filter_satmap delete the image file in
+	# case of an error, but the data file must be deleted here.
+	file delete $datafpath;
+
+	return $output;
+    }
+
+    ## Insert both img and data files in sat inventory
+    filter_sat_img_insert_inventory $imgsavedir $fpathout;
+    filter_sat_insert_inventory $datasavedir $newdatafpath;
+
+    # Create the link to the latest
+    make_sat_latest $datasavedir [file tail $newdatafpath];
+    make_sat_latest $imgsavedir [file tail $fpathout];
+
+    return $output;
+}
+
+proc filter_satplain {fpath savedir} {
+#
+# The input file to this function is the one with uncompresed frames.
+#
+    global rstfilter;
+    global filtersprogs;
+
+    cd $rstfilter(datadir);
+    file mkdir $savedir;
+    set fname "";
+
+    set status [catch {
+	set params [exec $filtersprogs(nbspsat) -n -d $savedir $fpath];
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2]
+	set channel [lindex $params 3]
+	set res [lindex $params 4]
+	set time [lindex $params 5]
+	set fname [lindex $params 6]
+	set fpathout [file join $rstfilter(datadir) $savedir $fname];
+    } else {
+	# Delete the file in case nbspsat returned an error, but yet
+	# the file was created.
+    	set status1 [catch {
+	    set params [exec $filtersprogs(nbspsat) -i $fpath];
+	    set fname [lindex $params 6];
+	    file delete [file join $savedir $fname];
+    	} errmsg];
+
+	set fpathout "";
+    }	
+
+    set output [list $status $fpathout];
+
+    # If loops are being generated, produce a gif file as well.
+    if {($rstfilter(satloop_enable) == 1) && ($status == 0)} {
+      set status [catch {exec $filtersprogs(nbsppngcvt) -g $fpathout} errmsg];
+    }
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    return $output;
+}
+
+proc filter_satmap {wmoid fpath savedir} {
+#
+# The input file to this function is the one with the compresed frames.
+#
+    global rstfilter;
+    global filtersprogs;
+
+    cd $rstfilter(datadir);
+    file mkdir $savedir;
+    set fname "";
+
+    if {[file isdirectory $rstfilter(tmpdir)] == 1} {
+	cd $rstfilter(tmpdir);
+    }
+    set outdir [file join $rstfilter(datadir) $savedir];
+
+    # If the png file should be created pass [-p], and in that case
+    # if loops are requested, ask nbspsatmaprc to keep the gif file.
+    set pngopts "";
+    if {$rstfilter(satmap_nopng) == 0} {
+        set pngopts "-p";
+	if {$rstfilter(satloop_enable) == 1} {
+	    set pngopts "-p -k";
+        }
+    }
+
+    set rcfile $rstfilter(satmap_rcfile_fpath);
+
+    # Use eval to split pngopts, and then in this case must quote the
+    # rstfilter(satmap_mapsize) because it contains special (;) characters.
+    set status [catch {
+	set params [eval exec $filtersprogs(nbspsatmap) -b $pngopts \
+	-d $outdir -s \"$rstfilter(satmap_mapsize)\" -D wmoid=$wmoid \
+	$fpath $rcfile];
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2]
+	set channel [lindex $params 3]
+	set res [lindex $params 4]
+	set time [lindex $params 5]
+	set fname [lindex $params 6]
+
+	set fpathout [file join $outdir $fname];
+    } else {
+	# nbspsatmap deletes the file when it returns an error.
+	set fpathout "";
+    }
+
+    set output [list $status $fpathout];	
+
+#    In [-b] mode nbspsatmap logs its own message
+#    if {$status != 0} {
+#	log_msg $errmsg;
+#    }
+
+    return $output;
+}
+
+proc filter_rad {awips fpath savedir savename} {
+#
+# The awips is passed to nbspradmap (as a define) for the template use.
+#
+    global rstfilter;
+    global filtersprogs;
+
+    cd $rstfilter(datadir);
+    file mkdir $savedir;
+    set fpathout [file join $rstfilter(datadir) $savedir $savename];
+    if {[file isdirectory $rstfilter(tmpdir)] == 1} {
+        cd $rstfilter(tmpdir);
+    }
+    set status [nbspradmapproc $awips $fpath $fpathout];
+    set output [list $status $fpathout];
+
+    # nbspradmap (which is called by nbspradmapproc) does not create
+    # the file in case of an error, so the is no need to do:
+    #
+    # if {$status != 0} {
+    #	file delete $fpathout;
+    # }
+
+    if {$status == 0} {
+	filter_rad_insert_inventory $savedir $fpathout;
+	make_rad_latest $savedir [file tail $fpathout];
+    }
+
+    return $output;
+}
+
+proc nbspradmapproc {awips inputfile outputfile} {
+
+    global rstfilter;
+    global filtersprogs;
+
+    # Create the inputfile without the ccb.
+    set tmpfile $outputfile.tmp;
+
+    set status [catch {exec $filtersprogs(nbsppipe) \
+	-o $tmpfile $inputfile} errmsg];
+
+    set rcfile $rstfilter(radmap_rcfile_fpath);
+
+    if {$status == 0} {
+	set status [catch {exec $filtersprogs(nbspradmap) -b \
+	   -o $outputfile -s $rstfilter(rad_mapsize) -D awips=$awips \
+	   $tmpfile $rcfile} errmsg];
+    }
+
+    file delete $tmpfile;
+
+#    In [-b] mode nbspradmap logs its own message
+#    if {$status != 0} {
+#	log_msg $errmsg;
+#    }
+
+    return $status;
+}
+
+proc filter_radloop {savedir globpatt loopdir loopfilename} {
+
+    global rstfilter;
+
+    cd $rstfilter(datadir);
+
+    set flist [lsort [glob -nocomplain -directory $savedir $globpatt]];
+    set count [llength $flist];
+
+    if {$count == 0} {
+	return;
+    }
+
+    if {($rstfilter(radloop_count) > 0) && \
+	($rstfilter(radloop_count) < $count)} {
+      set flist [lrange $flist [expr $count - $rstfilter(radloop_count)] end];
+    }
+
+    file mkdir $loopdir;
+    set loopfileppath [file join $loopdir $loopfilename];
+
+    set status [catch {
+      eval exec $rstfilter(radloop_program) \
+	$rstfilter(radloop_program_preoptions) $flist \
+	$rstfilter(radloop_program_postoptions)  > $loopfileppath;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    } 
+}
+
+proc filter_satloop {savedir globpatt loopdir loopfilename} {
+
+    global rstfilter;
+
+    cd $rstfilter(datadir);
+
+    set flist [lsort [glob -nocomplain -directory $savedir $globpatt]];
+    set count [llength $flist];
+
+    if {$count == 0} {
+	return;
+    }
+
+    if {($rstfilter(satloop_count) > 0) && \
+	($rstfilter(satloop_count) < $count)} {
+      set flist [lrange $flist [expr $count - $rstfilter(satloop_count)] end];
+    }
+
+    file mkdir $loopdir;
+    set loopfileppath [file join $loopdir $loopfilename];
+
+    set status [catch {
+      eval exec $rstfilter(satloop_program) \
+	$rstfilter(satloop_program_preoptions) $flist \
+	$rstfilter(satloop_program_postoptions) > $loopfileppath;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+#
+# The rstnntp functions
+#
+
+proc rstnntp_open {} {
+
+    global rstfilter;
+
+    set status [catch {
+	set rstfilter(RSTNNTP) [open "|$rstfilter(nntp)" w];
+	fconfigure $rstfilter(RSTNNTP) -buffering line;
+    } errmsg];
+
+    if {$status == 0} {
+	set rstfilter(RSTNNTP_open) 1;
+    } else {
+	log_msg $errmsg
+    }
+}
+
+proc rstnntp_close {} {
+
+    global rstfilter;
+
+    if {$rstfilter(RSTNNTP_open) == 0} {
+	return;
+    }
+
+    set status [catch {close $rstfilter(RSTNNTP)} errmsg];
+    set rstfilter(RSTNNTP_open) 0;
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc rstnntp_is_open {} {
+
+    global rstfilter;
+
+    return $rstfilter(RSTNNTP_open);
+}
+
+proc rstnntp_send msg {
+
+    global rstfilter;
+    global errorInfo;
+
+    if {$rstfilter(RSTNNTP_open) == 0} {
+	log_msg "Connection to rstnntpfilter is closed.";
+	return;
+    }
+
+    set status [catch {puts $rstfilter(RSTNNTP) $msg} errmsg];
+    if {$status == 0} {
+	return;
+    }
+
+    # If there as a write error, close the connection and retry.
+    rstnntp_close;
+    rstnntp_open;
+    if {$rstfilter(RSTNNTP_open) == 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    set status [catch {puts $rstfilter(RSTNNTP) $msg} errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+	log_msg $errorInfo;
+	return;
+    }
+}
+
+#
+# Same thing for rss
+#
+
+proc rss_open {} {
+
+    global rstfilter;
+
+    set status [catch {
+	set rstfilter(RSS) [open "|$rstfilter(rss)" w];
+	fconfigure $rstfilter(RSS) -buffering line;
+    } errmsg];
+
+    if {$status == 0} {
+	set rstfilter(RSS_open) 1;
+    } else {
+	log_msg $errmsg
+    }
+}
+
+proc rss_close {} {
+
+    global rstfilter;
+
+    if {$rstfilter(RSS_open) == 0} {
+	return;
+    }
+
+    set status [catch {close $rstfilter(RSS)} errmsg];
+    set rstfilter(RSS_open) 0;
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc rss_is_open {} {
+
+    global rstfilter;
+
+    return $rstfilter(RSS_open);
+}
+
+proc rss_send msg {
+
+    global rstfilter;
+    global errorInfo;
+
+    if {$rstfilter(RSS_open) == 0} {
+	log_msg "Connection to rssfilter is closed.";
+	return;
+    }
+
+    set status [catch {puts $rstfilter(RSS) $msg} errmsg];
+    if {$status == 0} {
+	return;
+    }
+
+    # If there as a write error, close the connection and retry.
+    rss_close;
+    rss_open;
+    if {$rstfilter(RSS_open) == 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    set status [catch {puts $rstfilter(RSS) $msg} errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+	log_msg $errorInfo;
+	return;
+    }
+}
+
+#
+# Functions to make the link to the latest
+#
+
+proc make_latest {savedir savename latestname} {
+#
+# Create a link to the newest file.
+#
+    global rstfilter;
+
+    set currentdir [pwd];
+
+    set dirpath [file join $rstfilter(datadir) $savedir];
+    cd $dirpath;
+
+    set latest $savename;
+    set linkpath $latestname;
+    if {[file exists $latest] == 0} {
+ 	cd $currentdir;
+	return;
+    }
+
+    set status [catch {
+        file delete $linkpath;
+        # file link -symbolic $linkpath $latest;
+	exec ln -s $latest $linkpath;
+    } errmsg];
+
+    cd $currentdir;
+}
+
+proc make_sat_latest {savedir savename} {
+
+    global rstfilter;
+
+    if {$rstfilter(sat_latest_enable) == 0} {
+	return;
+    }
+
+    make_latest $savedir $savename $rstfilter(sat_latestname);
+}
+
+proc make_rad_latest {savedir savename} {
+
+    global rstfilter;
+
+    if {$rstfilter(rad_latest_enable) == 0} {
+	return;
+    }
+
+    make_latest $savedir $savename $rstfilter(rad_latestname);
+}
+
+#
+# Functions to support the inventory for the cleanup process
+#
+proc filter_insert_inventory {invsubdir savedir fpathout} {
+#
+# The "savedir" is the subdirectory where the data file was saved. It is
+# used here to construct a unique name for the inventory file so that all
+# the data files in a given subdirectory appear in the same inventory file.
+#
+    global rstfilter;
+
+    # The rst invdir must exist
+    if {[file isdirectory $rstfilter(invdir)] == 0} {
+	log_msg "No $rstfilter(invdir)";
+	return;
+    }
+
+    # The inventory files are saved in hourly subdirectories within
+    # rst/<invsubdir>; e.g.,
+    # rst/txt/<yyyymmddhh>/<inv_file>
+    #
+    set parentdir [file join $rstfilter(invdir) $invsubdir \
+      [clock format [clock seconds] -format $rstfilter(invformat) -gmt true]];
+    file mkdir $parentdir;
+
+    set invfile_name [join [file split $savedir] "."];
+    set invfile [file join $parentdir $invfile_name];
+
+    filterlib_file_append $invfile $fpathout;
+}
+
+proc filter_text_insert_inventory {savedir fpathout} {
+
+    global rstfilter;
+
+    if {$rstfilter(txt_inv_enable) == 0} {
+	return;
+    }
+    filter_insert_inventory $rstfilter(txtinvsubdir) $savedir $fpathout;
+}
+
+proc filter_rad_insert_inventory {savedir fpathout} {
+
+    global rstfilter;
+
+    if {$rstfilter(rad_inv_enable) == 0} {
+	return;
+    }
+    filter_insert_inventory $rstfilter(radinvsubdir) $savedir $fpathout;
+}
+
+proc filter_sat_insert_inventory {savedir fpathout} {
+
+    global rstfilter;
+
+    if {$rstfilter(sat_inv_enable) == 0} {
+	return;
+    }
+    filter_insert_inventory $rstfilter(satinvsubdir) $savedir $fpathout;
+}
+
+proc filter_sat_img_insert_inventory {savedir fpathout} {
+
+    global rstfilter;
+
+    if {$rstfilter(sat_inv_enable) == 0} {
+	return;
+    }
+
+    # At the time this function is called, either filter_satplain or
+    # filter_satmap will have run, and anyone could have created
+    # a png and/or gif file, depending on configuration options. Instead
+    # of keeping track of all the possible combinations in all possible
+    # places, here we could try to detect the presence of both images
+    # and insert them in the inventory if they are found. In addition,
+    # the emwinfilter will create a jpg file if it is running,
+    # and it cannot be the emwinfilter's responsibility to insert it because
+    # it would not know what inventory file to use. For this reason
+    # our strategy will be to insert all types unconditionally here.
+ 
+    set fpathout_rootname [file rootname $fpathout];
+
+    # $rstfilter(sat_inv_image_types) is a list, of which each element is a
+    # a two-item list if the form {image_type flag}. If the flag is 0, then
+    # before inserting the particular file type in the inventory the function
+    # checks if the file exists. If the flag is different from 0 then the
+    # file is inserted unconditionally. png and gif can be used with flag = 0,
+    # but jpg must be inserted unconditionally if the emwin filter is enabled
+    # because the file does not exist by the time this function is called.
+
+    foreach typelist $rstfilter(sat_inv_image_types) {
+	set fpath "";
+	set type [lindex $typelist 0];
+	set flag [lindex $typelist 1];
+	append fpath $fpathout_rootname "." $type;
+	if {$flag != 0} { 
+	    filter_insert_inventory $rstfilter(satinvsubdir) $savedir $fpath;
+	} elseif {[file exists $fpath]} {
+	    filter_insert_inventory $rstfilter(satinvsubdir) $savedir $fpath;
+	}
+    }
+}

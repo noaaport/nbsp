@@ -1,0 +1,38 @@
+#!/bin/sh
+# 
+# $Id$
+#
+# rc script for nbspd
+
+daemon=/usr/local/sbin/nbspd
+pidfile=/var/run/nbsp/nbspd.pid
+options=
+
+[ -x $daemon ] || exit 0
+
+case "$1" in
+  start)
+    echo Starting `basename $daemon ...`
+    $daemon $options
+    ;;
+  stop)
+    printf "%s" "Stoping `basename $daemon`"
+    # pkill -o `basename $daemon`
+    killall `basename $daemon`
+    i=0
+    while [ -f $pidfile ]
+    do
+      sleep 1
+      i=`expr $i + 1`
+      [ $i -eq 4 ] && { printf " %s" "."; i=0; }
+    done
+    echo
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+

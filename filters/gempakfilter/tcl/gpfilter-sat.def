@@ -1,0 +1,59 @@
+#
+# $Id$
+#
+set gpfilter(satdef,satdir)		[file join "images" "sat"];
+set gpfilter(satdef,sattmpdir)		"tmp";
+
+#
+# These definitions are also used by the ldmfilter
+#
+set gpfilter(satdef,tig_sector,0)	"NHEM-COMP";
+set gpfilter(satdef,tig_sector,1)	"EAST-CONUS";
+set gpfilter(satdef,tig_sector,2)	"WEST-CONUS";
+set gpfilter(satdef,tig_sector,3)	"AK-REGIONAL";
+set gpfilter(satdef,tig_sector,4)	"AK-NATIONAL";
+set gpfilter(satdef,tig_sector,5)	"HI-REGIONAL";
+set gpfilter(satdef,tig_sector,6)	"HI-NATIONAL";
+set gpfilter(satdef,tig_sector,7)	"PR-REGIONAL";
+set gpfilter(satdef,tig_sector,8)	"PR-NATIONAL";
+set gpfilter(satdef,tig_sector,9)	"SUPER-NATIONAL";
+set gpfilter(satdef,tig_sector,10)	"NHEM-MULTICOMP";
+
+set gpfilter(satdef,tig_channel,1)	"VIS";
+set gpfilter(satdef,tig_channel,2)	"3.9";
+set gpfilter(satdef,tig_channel,3)	"WV";
+set gpfilter(satdef,tig_channel,4)	"IR";
+set gpfilter(satdef,tig_channel,5)	"12.0";
+set gpfilter(satdef,tig_channel,6)	"13.3";
+set gpfilter(satdef,tig_channel,7)	"1.3";
+set gpfilter(satdef,tig_channel,16)	"LI";
+set gpfilter(satdef,tig_channel,17)	"PW";
+set gpfilter(satdef,tig_channel,18)	"SFC-T";
+set gpfilter(satdef,tig_channel,19)	"CAPE";
+set gpfilter(satdef,tig_channel,27)	"CTP";
+set gpfilter(satdef,tig_channel,28)	"CLD";
+set gpfilter(satdef,tig_channel,29)	"PRXX";
+set gpfilter(satdef,tig_channel,41)	"SOUND-14.71";
+set gpfilter(satdef,tig_channel,42)	"SOUND-14.37";
+set gpfilter(satdef,tig_channel,43)	"SOUND-14.06";
+set gpfilter(satdef,tig_channel,44)	"SOUND-13.64";
+set gpfilter(satdef,tig_channel,45)	"SOUND-13.37";
+set gpfilter(satdef,tig_channel,46)	"SOUND-12.66";
+set gpfilter(satdef,tig_channel,47)	"SOUND-12.02";
+set gpfilter(satdef,tig_channel,48)	"SOUND-11.03";
+set gpfilter(satdef,tig_channel,49)	"SOUND-9.71";
+set gpfilter(satdef,tig_channel,50)	"SOUND-7.43";
+set gpfilter(satdef,tig_channel,51)	"SOUND-7.02";
+set gpfilter(satdef,tig_channel,52)	"SOUND-6.51";
+set gpfilter(satdef,tig_channel,53)	"SOUND-4.57";
+set gpfilter(satdef,tig_channel,54)	"SOUND-4.52";
+set gpfilter(satdef,tig_channel,55)	"SOUND-4.45";
+set gpfilter(satdef,tig_channel,56)	"SOUND-4.13";
+set gpfilter(satdef,tig_channel,57)	"SOUND-3.98";
+set gpfilter(satdef,tig_channel,58)	"SOUND-3.74";
+set gpfilter(satdef,tig_channel,59)	"SOUND-VIS";
+set gpfilter(satdef,tig_channel,61)	"VIS";
+set gpfilter(satdef,tig_channel,63)	"3.74";
+set gpfilter(satdef,tig_channel,64)	"11.0";
+
+set gpfilter(satdef,tig_res_suffix)	"km";

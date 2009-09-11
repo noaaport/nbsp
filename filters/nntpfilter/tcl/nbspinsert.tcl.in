@@ -1,0 +1,175 @@
+#!%TCLSH%
+#
+# $Id$
+#
+#
+# Usage: nbspinsert -d [-f nbspinfifo] finfo < file
+#	 nbspinsert -i [-f nbspinfifo] finfo
+#	 nbspinsert [-f nbspinfifo] < file_with_finfolist
+# where 
+#
+# finfo = seq type cat code npchidx fname fpath
+#
+# In the first form, it will save the data in fpath, and then process the
+# file. In the second form, it assumes that the data is already in fpath.
+# The third form is like the second one, but it takes a list of finfo
+# on stdin (like a filter does).
+#
+# If [-f] is not given to specify the location of the nbspd.infifo file,
+# then the nbsp configuration files are read.
+#
+package require cmdline;
+
+set usage {
+nbspinsert -d [-f nbspinfifo] seq type cat code npchidx fname fpath < file
+nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath
+nbspinsert [-f nbspinfifo] < finfolist
+};
+
+set optlist {{i 0} {d 0} {f.arg ""}};
+array set option [::cmdline::getoptions argv $optlist $usage];
+set argc [llength $argv];
+
+if {$option(f) ne ""} {
+    set nbspinfifo $option(f);
+} else {
+    ## The common defaults
+    set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
+    if {[file exists ${_defaultsfile}] == 0} {
+	puts "${_defaultsfile} not found.";
+	return 1;
+    }
+    source ${_defaultsfile};
+    unset _defaultsfile;
+
+    # nbspd.init is needed for spool dir and nbspd.missing
+    set nbspd_init_file [file join $common(libdir) nbspd.init];
+    if {[file exists $nbspd_init_file] == 0} {
+	puts "$nbspd_init_file not found.";
+	return 1;
+    }
+    source $nbspd_init_file;
+    unset nbspd_init_file;
+
+    set nbspinfifo $nbspd(infeedfifo);
+}
+
+proc err s {
+
+    global argv0;
+
+    puts "$argv0: $s";
+    exit 1;
+}
+
+proc process {finfo nbspinfifo} {
+
+    global option;
+
+    if {$option(d) == 1} {
+        set status [save_fpath $finfo];
+	if {$status != 0} {
+	    return 1;
+    	}
+    }
+
+    sendtof $finfo $nbspinfifo;    
+}
+
+proc save_fpath {finfo} {
+
+    scan $finfo "%u %d %d %d %d %s %s" seq type cat code npchidx fname fpath;
+    set fbasename [file tail $fpath];
+    set fdirname [file dirname $fpath];
+    set station [string range $fname 0 3];
+    set spooldir [file dirname $fdirname];
+
+    if {[file isdirectory $spooldir] == 0} {
+	err "Directory $spooldir does not exist.";
+	return 1;
+    }
+
+    set status [catch {
+	if {[file isdirectory $fdirname] == 0} {
+	    file mkdir $fdirname;
+	}
+	fconfigure stdin -translation binary -encoding binary;
+	set fout [open $fpath w 0644];
+	fconfigure $fout -translation binary -encoding binary;
+	puts -nonewline $fout [read stdin];
+    } errmsg];
+
+    if {[info exists fout]} {
+	close $fout;
+    }
+
+    if {$status != 0} {
+	err $errmsg;
+	return 1;
+    }
+
+    return 0;
+}
+
+proc sendtof {finfo nbspinfifo} {
+
+   set status [catch {
+       set FIFO [open $nbspinfifo {WRONLY NONBLOCK}]
+       fconfigure $FIFO -translation binary -encoding binary;
+       set finfo_size [string length $finfo];
+       puts -nonewline $FIFO [binary format "I" $finfo_size];
+       puts $FIFO $finfo;
+   } errmsg];
+
+   if {[info exists FIFO]} {
+       close $FIFO;
+   }
+
+   if {$status != 0} {
+       err $errmsg;
+       return 1;
+   }
+}
+
+proc process_finfo_list {nbspinfifo} {
+
+    set status 0;
+
+    while {[gets stdin finfo] >= 0} {
+        if {$finfo eq ""} {
+	    continue;
+        }
+
+	set status [catch {process $finfo $nbspinfifo} errmsg];
+	if {$status != 0} {
+    	    err $errmsg;
+	}
+    }
+  
+    return $status;
+}
+
+#
+# main
+#
+if {($option(i) == 0) && ($option(d) == 0)} {
+    if {$argc != 0} {
+	err $usage;
+	return 1;
+    }
+    set status [process_finfo_list $nbspinfifo];
+    return $status;
+}
+
+# This is done if either [i] or [-d], or both, are given.
+if {$argc != 7} {
+    err $usage;
+    return 1;
+}
+
+set finfo [join $argv " "];
+
+set status [catch {process $finfo $nbspinfifo} errmsg];
+if {$status != 0} {
+    err $errmsg;
+}

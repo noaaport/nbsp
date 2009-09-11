@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# PROVIDE: nbspd
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+# $Id$
+
+# To enable, set "nbspd=1" in rc.conf and then add a line such as
+#
+# [ -x /usr/local/etc/rc.d/nbspd ] && /usr/local/etc/rc.d/nbspd start
+#
+# in /etc/rc.local
+
+name=nbspd
+command=/usr/local/sbin/${name}
+[ -z "$nbspd" ] && nbspd=0
+
+. /etc/rc.subr
+rcvar=`set_rcvar`
+load_rc_config $name
+run_rc_command "$1"

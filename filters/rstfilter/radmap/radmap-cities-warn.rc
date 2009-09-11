@@ -1,0 +1,56 @@
+#
+# $Id$
+#
+# This file is a variation of "radmap.rc" that includes the instruction for
+# ploting warnings, watches, ..., polygons in the 
+# radar images. For the explanations about the general usage of these
+# "rc" files see "radmap.rc", and for an example similar to this one
+# see radmap-cities.rc.
+###########################################################################
+#
+# These are the defaults, but give the calling script (rstfilter) the
+# chance to customize them. The gpmap(rad,xxx) settings below can be
+# pre-defined in the rstfilter configuration file if desired.
+#
+set _gpmap(mapfil) {states + county + cities};
+set _gpmap(lut) {default};
+set _gpmap(latlon) {};
+set _gpmap(imcbar) 1;
+set _gpmap(map)    1;
+set _gpmap(stnplt_options) {5/1|3/12/1.25/2};
+set _gpmap(stnplt_file) \
+	"/usr/local/etc/nbsp/defaults/gpmap/rad/radmap-cities.tbl";
+#
+set _gpmap(wstm)  {last||||yes};
+set _gpmap(watch) {last};
+set _gpmap(warn)  {last||||yes};
+set _gpmap(wou)   {last};
+set _gpmap(wcn)   {last};
+
+foreach _k [list mapfil lut latlon imcbar map stnplt_options stnplt_file \
+	wstm watch warn wou wcn] {
+    if {[info exists gpmap(rad,$_k)] == 0} {
+	set gpmap(rad,$_k) $_gpmap($_k);
+    }
+}
+
+set gpmap(script) {
+    device   = $gpmap(fmt)|$gpmap(outputfile)|$gpmap(devsize)
+    radfil   = $gpmap(inputfile)
+    proj     = rad
+    garea    = dset
+    \$mapfil = $gpmap(rad,mapfil)
+    lut      = $gpmap(rad,lut)
+    latlon   = $gpmap(rad,latlon)
+    imcbar   = $gpmap(rad,imcbar)
+    map      = $gpmap(rad,map)
+    stnplt   = $gpmap(rad,stnplt_options)|$gpmap(rad,stnplt_file)
+    wstm     = $gpmap(rad,wstm)
+    watch    = $gpmap(rad,watch)
+    warn     = $gpmap(rad,warn)
+    wou      = $gpmap(rad,wou)
+    wcn      = $gpmap(rad,wcn)
+    r
+
+    e
+}

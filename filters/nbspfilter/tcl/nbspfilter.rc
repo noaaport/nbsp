@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+# The main rc file (this file) reads the set of rules in all the files in the 
+# list $<prefix>filter(rcfiles). That list is: first the pre rc file, then
+# the one in the site directory, or the default directory if the
+# site version does not exist, then any rc file in the $rcdir directory,
+# and finally the post rc file; i.e.,
+#
+# the file named in $<prefix>filter(prerc).
+# site/<prefix>filter.rc or defaults/<prefix>filter.rc
+# rc.d/<prefix>/*.rc
+# the file named in $<prefix>filter(postrc).
+#
+# Each rc file contains a set of conditions and a correspondig
+# set of actions, ech of which is put in a list. Then all such
+# sets are put in a list of lists, stored in
+# the <prefix>filter(cond) and <prefix>filter(action) variables.
+#
+# The rc_status variable is set to 0 when a rule is matched.
+
+# Load all the sets of condition/action pairs.
+if {[llength $nbspfilter(rcfiles)] != 0} {
+    foreach _rc $nbspfilter(rcfiles) {
+        if {[file exists ${_rc}] == 1} {
+	    set cond [list];
+	    set action [list];
+            source ${_rc};
+	    lappend nbspfilter(condition) $cond;
+	    lappend nbspfilter(action) $action;
+        }
+    }
+    unset _rc;
+    unset cond;
+    unset action;
+}

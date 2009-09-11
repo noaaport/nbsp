@@ -1,0 +1,70 @@
+#
+# $Id$
+#
+
+## The defaults of this filter.
+set gpfilter(conf)	[file join $common(confdir) "gpfilter.conf"];
+#
+set gpfilter(rc)	[file join $common(confdir) "gpfilter.rc"];
+set gpfilter(prerc)	[file join $common(confdir) "gpfilterpre.rc"];
+set gpfilter(postrc)	[file join $common(confdir) "gpfilterpost.rc"];
+set gpfilter(localconfdirs)  	$common(localconfdirs);
+set gpfilter(rcdir)	[file join $common(rcdir) "gp"];
+set gpfilter(satdef)	[file join $common(confdir) "gpfilter-sat.def"];
+##
+set gpfilter(invdir)	[file join $common(datainvdir) "gempak"];
+set gpfilter(radinvsubdir) [file join "nexrad" "nids"];
+set gpfilter(satinvsubdir) [file join "images" "sat"];
+set gpfilter(invformat)	$common(datainvformat);
+set gpfilter(rad_inv_enable) 1;
+set gpfilter(sat_inv_enable) 1;
+
+# Work-crew configuration for dafilter-master
+set gpfilter(slave) [file join $common(libdir) "gpfilter"];
+set gpfilter(slave,types) [list "rad" "grib" "default"];
+set gpfilter(slave,rad,ure) {_sdus[2357]} ;
+set gpfilter(slave,grib,ure) {\+grib};
+set gpfilter(slave,default,ure) {.*};
+
+#
+# Decoders configuration
+#
+
+# The directory that contains the gempak decoders
+set gpfilter(dec_bindir)	$gempak(bindir);
+
+# The directory that contains "data/gempak" (i.e., in ldm it is /home/ldm)
+# and the data directory itself. The decoders assume a
+# "cd $gpfilter(dec_rootdir)", which is done in the function that invokes them.
+# If "dec_datadir" is modified here, then it must be modified also in
+# the Gemenviron files (or the gempak<shell>.conf files of gpak) and in
+# the gempak.env file.
+set gpfilter(dec_rootdir)	"/var/noaaport";
+set gpfilter(dec_datadir) [file join $gpfilter(dec_rootdir) "data" "gempak"];
+
+# The log directory for decoders
+set gpfilter(dec_logdir)	$filterserrlib(logdir);
+
+# These variables are needed by the gempak decoders
+set gpfilter(dec_GEMPAK)	[file join $gempak(homedir) "gempak"];
+set gpfilter(dec_GEMTBL)	[file join $gempak(homedir) "gempak" "tables"];
+
+# What to enable/disable
+set gpfilter(decoder_enable) 1;
+set gpfilter(decoder_regex) {.*};
+set gpfilter(rad_enable) 1;
+set gpfilter(rad_regex)  {.*};
+set gpfilter(sat_enable) 1;
+set gpfilter(sat_regex)  {.*};
+set gpfilter(file_enable) 1;
+set gpfilter(file_regex)  {.*};
+
+# The default configuration file of this filter
+if {[file exists $gpfilter(conf)] == 1} {
+    source $gpfilter(conf);
+}
+
+#
+# Variables
+#
+set gpfilter(manager) 0;

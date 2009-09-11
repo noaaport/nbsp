@@ -1,0 +1,13 @@
+Digital Atmosphere imports and displays:
+
+	land synoptic (WMO FM 12 SYNOP)
+	ship synoptic (WMO FM 13 SHIP)
+	METAR (WMO FM 15 METAR)
+	buoy (WMO FM 18 BUOY)
+	upper air (WMO FM 35 TEMP)
+	aircraft data report (ACARS) (WMO FM 42 AMDAR)
+	NMC frontal depiction transmission format (ASUS1 KWBC)
+	gridded binary (GRIB) (WMO FM 92-IX)
+	NEXRAD Level III (ICD 2620001) WSR-88D NEXRAD format
+	Australian AXF comma-delimited observational data and similar formats
+	NHC Hurricane Warning bulletins

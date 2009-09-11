@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+Setting up an nbsp slave -
+
+This assumes that an nbsp master server has been setup, let's say
+"nbsp.noaaport.net" (see "netfilter.README"). Then to setup a slave
+the following settings must appear in the site/nbspd.conf file:
+
+set feedmode   1
+set mastername "nbsp.noaaport.net"
+
+The other possibility is
+
+set feedmode   2
+set mastername "nbsp.noaaport.net"
+
+but this requires the following two additional steps:
+
+	(1) The master (nbsp.noaaport.net) must export by NSF the spool
+	directory "/var/noaaport/nbsp/spool".
+
+	(2) The slave must mount that directory and make it accessible.	If
+	it is mounted also as /var/noaaport/nbsp/spool" then nothing further
+	is needed. Otherwise, in nbspd.conf the setting of the variable
+
+	set spooldir        "/var/noaaport/nbsp/spool"
+
+	must be changed to reflect the actual mount point.
+
+
+See also the NOTE in ``master-setup.README''.
+
+
+-
+JFN

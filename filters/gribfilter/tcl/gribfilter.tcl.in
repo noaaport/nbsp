@@ -1,0 +1,311 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require cmdline;
+package require fileutil;
+
+set usage {gribfilter [-s]};
+set optlist {{s}};
+
+## The common defaults initialization
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "gribfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+#
+# packages are loaded in gribfilter.init
+#
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+set grib_init_file [file join $common(libdir) "gribfilter.init"];
+if {[file exists $grib_init_file] == 0} {
+    log_msg "gribfilter disabled: $grib_init_file not found.";
+    return 1;
+}
+source $grib_init_file;
+unset grib_init_file;
+
+#
+# variables
+#
+set gribfilter(rcfiles)		[list];
+set gribfilter(ccbsaved)	$common(ccbsaved);
+#
+set gribfilter(condition)	[list];
+set gribfilter(action)		[list];
+#
+# Default is to run as master unless "-s" is given.
+set gribfilter(option_s)	0;
+#
+# The variable gribfilter(dirtygrbfiles) keeps the list of grb files that
+# received data within the last hour; it is used by the function that
+# produces the ctl files.
+#
+set gribfilter(dirtygrbfiles)     [list];
+#
+set gribfilter(ctltime) 0;	# dynamic initialization below
+
+# The main rc file is required
+if {[file exists $gribfilter(rc)] == 0} {
+    log_msg "Filter disabled: $gribfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set gribfilter(rcfiles) [filterlib_get_rcfiles [file tail $gribfilter(rc)] \
+	$gribfilter(localconfdirs) $gribfilter(rcdir) \
+	$gribfilter(prerc) $gribfilter(postrc)];
+
+# Load the rules sets
+source $gribfilter(rc);
+
+#
+# Functions
+#
+proc main {argc argv} {
+
+    global gribfilter;
+    global errorInfo;
+
+    cd $gribfilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	::periodic::run;
+    }
+}
+
+proc process {finfo} {
+
+    global gribfilter;
+
+    filterlib_get_rcvars rc $finfo -dogrib;
+
+    # This filter handles only grib files.
+    if {[regexp {^grib} $rc(nawips)] == 0} {
+	return;
+    }
+
+    if {($rc(gribedition) != 1) && ($rc(gribedition) != 2)} {
+	return;
+    }
+
+    # If the library could not get some information from the grib file
+    # it sets gribstatus to 1.
+    if {$rc(gribstatus) != 0} {
+	log_msg "Not processing $rc(fpath)";
+	return;
+    } 
+
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+    set ym [clock format $seconds -gmt true -format "%Y%m"];
+    set yyyy [clock format $seconds -gmt true -format "%Y"];
+
+    set rc_status 1;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $gribfilter(condition) {
+        set actionlist [lindex $gribfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+proc filter_file {seq fpath savedir savename} {
+
+    global gribfilter;
+    global filtersprogs;
+
+    cd $gribfilter(datadir);
+    file mkdir $savedir;
+
+    set status [catch {
+	filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
+#	filterlib_nbspfile $seq $fpath $savedir $savename "-a";
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    } else {
+	set fpathout [file join $savedir $savename];
+	if {[lsearch -exact $gribfilter(dirtygrbfiles) $fpathout] == -1} {
+	    lappend gribfilter(dirtygrbfiles) $fpathout;
+	}
+    }
+}
+
+#
+# Functions to support the generation of ctl and idx files for GrADS
+#
+
+proc gribfilter_hourly_time_reset {} {
+#
+# This function returns the time corresponding to the next hour.
+#
+    set now [clock seconds];
+    scan [clock format $now -format "%M"] "%d" current_minute;
+    
+    return [expr $now - ($current_minute * 60) + 3600];
+}
+
+proc gribfilter_control_files_old {} {
+
+    global gribfilter;
+    
+    if {[llength $gribfilter(dirtygrbfiles)] == 0} {
+	# There are no modified files
+	return;
+    }
+    set dirtygrbfiles $gribfilter(dirtygrbfiles);
+    set gribfilter(dirtygrbfiles) [list];
+
+    cd $gribfilter(datadir);
+    log_msg "Start creating control files.";
+
+    foreach grbfile $dirtygrbfiles {
+	if {($gribfilter(gradsctl_uwildpatt) != "") && \
+	([filterlib_uwildmat $gribfilter(gradsctl_uwildpatt) $grbfile] == 0)} {
+	    continue;
+	}
+
+	# Get the relative path without the "grb" parent dir,
+	# and then the same without the extension. This assumes
+	# that the idx, ctl, ..., subdirectories are all at the same
+        # level.
+	set rfname [file rootname [::fileutil::stripN $grbfile 1]];
+
+	set ctlfile [file join $gribfilter(ctldatadir) \
+		${rfname}$gribfilter(ctlfext)];
+	set idxfile [file join $gribfilter(idxdatadir) \
+		${rfname}$gribfilter(idxfext)];
+	set pdeffile [file join $gribfilter(pdefdatadir) \
+		${rfname}$gribfilter(pdeffext)];
+
+	file mkdir [file dirname $ctlfile];
+	file mkdir [file dirname $idxfile];
+	file mkdir [file dirname $pdeffile];
+	
+	# Use full paths
+	set grbfile [file join $gribfilter(datadir) $grbfile];
+	set ctlfile [file join $gribfilter(datadir) $ctlfile];
+	set idxfile [file join $gribfilter(datadir) $idxfile];
+	set pdeffile [file join $gribfilter(datadir) $pdeffile];
+
+	set status [catch {
+	    exec nbspgribctl -c $ctlfile -i $idxfile -p $pdeffile $grbfile;
+	} errmsg];
+	if {$status != 0} {
+	    log_msg $errmsg;
+	}
+    }
+
+    # Generate the catalogs of grb and ctl files for the gribrsh tools.
+    set status [catch {exec nbspgribcat} errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    log_msg "Finished creating control files.";
+}
+
+proc gribfilter_control_files {} {
+#
+# This version of the function uses the gribfilter-ctlfiles helper script.
+# The gribfilter-ctlfiles script is executed in the background. In the
+# work-crew configuration, each slave executes an instance of this script.
+# It can happen that when it finishes, a defunct (zombie) process is left
+# for some time until the slave invokes exec again in one of the rc rules.
+# (That is not a problem in stand-alone mode where the same filter process all
+# the grib files). There is nothing we can do about this, since the filter
+# has no event loop, but waits until something comes from the stdin pipe.
+# The only alternative would be to not exec the gribfilter-ctlfiles in
+# the background from the slaves.
+#
+    global gribfilter;
+    
+    if {[llength $gribfilter(dirtygrbfiles)] == 0} {
+	# There are no modified files
+	return;
+    }
+    set dirtygrbfiles $gribfilter(dirtygrbfiles);
+    set gribfilter(dirtygrbfiles) [list];
+
+    # Assume that gribfilter-ctlfiles is in PATH
+    log_msg "Executing gribfilter-ctlfiles in the background.";
+    set status [catch {
+	set fp [open "|gribfilter-ctlfiles" w];
+	fconfigure $fp -buffering none -translation binary;
+	puts $fp [join $dirtygrbfiles " "];
+	fconfigure $fp -blocking 0;
+    } errmsg];
+
+    catch {close $fp};
+    log_msg "Closed pipe to gribfilter-ctlfiles.";
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+#
+# main
+#
+array set option [::cmdline::getoptions argv $optlist $usage];
+set argc [llength $argv];
+
+# Check if invoked as a slave worker
+if {$option(s) == 1} {
+    set gribfilter(option_s) 1;
+}
+
+# The job to create the ctl files
+if {$gribfilter(gradsctl_enable) == 1} {
+    ::periodic::register gribfilter_control_files "hourly";
+}
+
+# In work-crew mode the slaves do not run the scheduler
+if {$option(s) == 0} {
+    ::periodic::register \
+        gribfilter_run_scheduler $gribfilter(schedule_run_period);
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

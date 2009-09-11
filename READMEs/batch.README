@@ -1,0 +1,49 @@
+#
+# $Id$
+#
+
+The batch module has been implemented in both npemwin and nbsp. Since
+the usage is similar the explanations are not duplicated. The nbsp
+usage follows the basic explanations in npemwin. Some additional
+notes that complemenet this file are in the "exporter.README" file.
+
+Npemwin
+=======
+
+- Basic usage
+
+      ./npemwinbatch.tcl update -c noaaport.uprrp.edu:8016
+
+When run the first time, that simply retrieves the "current" inventory
+file, and then the files listed there.
+
+Aterwards, it downloads all the inventory files and data files listed on them,
+since the last time that it was executed.
+
+The script can be scheduled to run every minute, of every five or two minutes,
+whatever is convenient.
+
+- More advanved usage is shown in the example script npemwinbatch-ex.sh.
+  
+  That assumes
+
+  1) It is run by root, or a user that can write to /var/npemwin
+  2) Npemwin has been installed in the machine (the script will invoke
+  the postfilter to process the downloaded data files).
+
+  The npemwinbatch.sh script (or a variation of it) can be scheduled
+  periodically. It will download the data as above, and then process it
+  through the postfilter in the same way that the npemwin qrunner does.
+
+Nbsp
+====
+
+   nbspbatch update -e sdus -b $basedir -i batchq.1 diablo:8015
+   nbspbatch filter -p rstfilter -b $basedir -i batchq.1 -a -k
+   nbspbatch filter -p dafilter -b $basedir -i batchq.1 -a -k
+   nbspbatch filter -p gpfilter -b $basedir -i batchq.1 -a
+
+   nbspbatch update -e grib -b $basedir -i batchq.2 diablo:8015
+   nbspbatch filter -p gribfilter -b $basedir -i batchq.2 -a -k
+   nbspbatch filter -p dafilter -b $basedir -i batchq.2 -a -k
+   nbspbatch filter -p gpfilter -b $basedir -i batchq.2 -a

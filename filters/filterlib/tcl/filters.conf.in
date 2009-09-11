@@ -1,0 +1,168 @@
+#
+# $Id$
+#
+# This file contains common definitions for all the filters.
+# This file is required; the filters will not run without it.
+# The default location of this file is the directory "/usr/local/etc/nbsp".
+#
+# In addition, each filter has an individual conf file and an rc file. 
+# The individual conf file is optional, but the rc file is required.
+#
+# Fine tuning -
+#
+# Most of the settings below are directory (and a few other parameter)
+# definitions that hardly require modification except in special installations.
+# The "Fine-Tuning" section (at the end of this file) does contain some
+# parameters that could be useful set in some cases to improve the
+# performance of the filters.
+
+set common(filtersconf)   "filters.conf";
+#
+# Common directories
+#
+set common(confdir)	  "/usr/local/etc/nbsp"
+set common(localconfdirs) [list [file join $common(confdir) "defaults"] \
+				[file join $common(confdir) "site"]];
+set common(rcdir)	[file join $common(confdir) "rc.d"];
+set common(libdir)	"/usr/local/libexec/nbsp";
+set common(locallibdir)	[file join $common(libdir) "site"];
+set common(datadir)	"/var/noaaport/data";
+set common(archivedir)	"/var/noaaport/data/archive";
+set common(nbspdir)	"/var/noaaport/nbsp";
+set common(tmpdir)	[file join $common(nbspdir) "tmp"];
+set common(datainvdir)  [file join $common(datadir) "inv"];
+set common(datainvformat)  "%Y%m%d%H";  # format for hourly subdirs
+
+# Common functions used by some filters, and the global variables
+# used by them (ccbsize and wmoawips_size come from src/sbn.h).
+# (wmoawips_size is used by the dafilter and rstfilter when dealing
+# with radar files. The total ccb + wmo + ( BBB) + awips header is
+# 24 + 18 (+ 4) + 6 + 6 = 54 (58), including \r\r\n twice).
+#
+set common(filterslib)		[file join $common(libdir) "filters.lib"];
+set common(ccbsaved)		1;
+set common(ccbsize)		24;
+set common(wmoheadersize)	18;     # excluding the possible ( BBB)
+set common(wmoawips_size)	30;	# excluding the possible ( BBB)
+# These two are not used; they are here for documentation purposes
+set common(wmobbbheadersize)	22;     # including the possible ( BBB)
+set common(wmobbbawips_size)	34;     # including the possible ( BBB)
+#
+set filterslib(ccbsaved)	$common(ccbsaved);
+set filterslib(ccbsize)		$common(ccbsize);
+set filterslib(bodypartsize)	512;
+set filterslib(gmpk_header_fmt) "\001\r\r\n%03d \r\r\n"; 
+set filterslib(gmpk_trailer_str) "\r\r\n\003";
+set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
+
+# The error functions and their global variables.
+# By default the filters report errors using syslog.
+# Setting usesyslog to 0 will cause them to report to a logfile
+# in the directory defined below (the directory is not used if
+# usesyslog == 1). If errorInfo is set, then the filters print
+# debuging information using the tcl errorInfo variable.
+#
+set common(filterserrlib)       [file join $common(libdir) "filters-err.lib"];
+set common(debug)		0;
+set filterserrlib(usesyslog)	1;
+set filterserrlib(logdir)	"/var/log/noaaport";
+set filterserrlib(errorInfo)	$common(debug);
+
+# The library to extract information from the grib files
+# (used by the dafilter, gpfilter and ldmfilter).
+#
+set common(filtersgribidlib) [file join $common(libdir) "filters-gribid.lib"];
+set common(filtersgribiddef) [file join $common(confdir) "filters-gribid.def"];
+
+# Location of the external programs used by the filters.
+#
+set env(PATH)	 "%PATH%";
+append env(PATH) ":/usr/local/bin:/usr/local/sbin";
+append env(PATH) ":$common(libdir):$common(locallibdir)";
+#
+lappend auto_path $common(libdir) $common(locallibdir);
+#
+set common(nbspbindir)	"/usr/local/bin";
+set common(netpbmbindir) "%NETPBMBINDIR%";
+set common(innbindir) "%INNBINDIR%";
+
+# The paths to the external programs used by the filters are
+# collected in the array "filtersprogs".
+#
+set filtersprogs(pngtopnm)	$common(netpbmbindir)/pngtopnm;
+set filtersprogs(giftopnm)	$common(netpbmbindir)/giftopnm;
+set filtersprogs(pnmtojpeg)	$common(netpbmbindir)/pnmtojpeg;
+set filtersprogs(ppmtogif)	$common(netpbmbindir)/ppmtogif;
+set filtersprogs(pnmtopng)	$common(netpbmbindir)/pnmtopng;
+set filtersprogs(innsm)		$common(innbindir)/sm;
+#
+set filtersprogs(nbspfile)	$common(nbspbindir)/nbspfile;
+set filtersprogs(nbspunz)	$common(nbspbindir)/nbspunz;
+set filtersprogs(nbsppipe)	$common(nbspbindir)/nbsppipe;
+set filtersprogs(nbspgrib)	$common(nbspbindir)/nbspgrib;
+set filtersprogs(nbspgrib2)	$common(nbspbindir)/nbspgrib2;
+set filtersprogs(nbspsat)	$common(nbspbindir)/nbspsat;
+set filtersprogs(nbspsatmap)	$common(nbspbindir)/nbspsatmap;
+set filtersprogs(nbspradmap)	$common(nbspbindir)/nbspradmap;
+set filtersprogs(nbspnntpsend)	$common(nbspbindir)/nbspnntpsend;
+set filtersprogs(nbsppngcvt)	$common(nbspbindir)/nbsppngcvt;
+set filtersprogs(nbspdmtr)	$common(nbspbindir)/nbspdmtr;
+set filtersprogs(nbspmtrd)	$common(nbspbindir)/nbspmtrd;
+set filtersprogs(nbspmtrcsv)	$common(nbspbindir)/nbspmtrcsv;
+set filtersprogs(nbspmtr)	$common(nbspbindir)/nbspmtr;
+set filtersprogs(nbspmtrplot)	$common(nbspbindir)/nbspmtrplot;
+set filtersprogs(nbspstatplot)	$common(nbspbindir)/nbspstatplot;
+set filtersprogs(nbspstatplot1)	$common(nbspbindir)/nbspstatplot1;
+set filtersprogs(nbspstatplotdat) $common(nbspbindir)/nbspstatplotdat;
+set filtersprogs(nbspudpsend)	$common(nbspbindir)/nbspudpsend;
+
+# Gempak installation directory and bin directory of the decoders and tools.
+# The settings below correspond to a Gempak installation via the gpak package.
+# For a Gempak installation under /home the settings would be
+#
+## set gempak(homedir)	"/home/gempak/NAWIPS";
+## set gempak(bindir)	"/home/gempak/NAWIPS/os/%GPOSNAME%/bin";
+#
+# gempak(libdir) is not used but it is here for completeness.
+#
+set gempak(homedir)	"/usr/local/lib/gempak/NAWIPS";
+set gempak(bindir)	"/usr/local/lib/gempak/NAWIPS/os/%GPOSNAME%/bin";
+set gempak(libdir)	"/usr/local/lib/gempak/NAWIPS/os/%GPOSNAME%/lib";
+#
+# nbspradmap and nbspsatmap (of rstfilter) call gempak programs that must
+# run with the gempak env variables.
+set gempak(envfile)	[file join $common(confdir) "gempak.env"];
+
+#
+# Fine-Tuning
+#
+
+# The configuration file of the spool cache (cspool).
+#
+set common(cspoolbdbconf) [file join $common(confdir) "cspoolbdb.conf"];
+
+# If this variable to 1 the filters (using the functions in filters.lib) will
+# try to fire up as many processes in parallel as they can when they are
+# processing data files. It is generally a good idea to set it in
+# multiprocessor machines, but not recommended in uniprocessor ones.
+#
+set filterslib(background_processing) 0;
+
+#
+# Read the local overrides
+#
+if {[info exists source_filters_conf_defined]} {
+    return;
+}
+set source_filters_conf_defined 1;
+
+set _confname $common(filtersconf);
+foreach _d $common(localconfdirs) {
+    set _localconfname ${_d}/${_confname}
+    if {[file exists ${_localconfname}] == 1} {
+        source ${_localconfname};
+    }
+}
+unset _d;
+unset _confname;
+unset _localconfname;

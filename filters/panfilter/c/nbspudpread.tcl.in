@@ -1,0 +1,50 @@
+#!%TCLSH%
+#
+# Copyright (c) 2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+# This is meant to an example of a program that receives PAN messages
+# from the panfilter via udp on port 5000.
+#
+# It requires the tcludp package.
+#
+# See "nbspudpread.pl" for explanations.
+
+package require udp;
+
+proc read_message {f} {
+
+    set msg [read $f];
+
+    set peer [fconfigure $f -peer];
+    set remoteip [lindex $peer 0];
+
+    # puts $msg
+    set mlist [split $msg];
+
+    set wmoid [lindex $mlist 0];
+    set wmostation [lindex $mlist 1];
+    set wmotime [lindex $mlist 2];
+    if {[llength $mlist] == 5} {
+        set awips [lindex $mlist 3];
+        set fname [lindex $mlist 4];
+    } else {
+        set awips "";
+        set fname [lindex $mlist 3];
+    }
+
+    puts "From $remoteip: $wmoid $fname";
+#   exec "wget http://<server>:8015/_get/spool/$fname";
+}
+
+set s [udp_open 5000];
+fconfigure $s -buffering none -translation binary -encoding binary;
+
+fileevent $s readable [list read_message $s];
+set done 0;
+vwait done;
+
+close $s;

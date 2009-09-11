@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+# default configuration file
+set uafilter(conf) [file join $common(confdir) "uafilter.conf"];
+#
+set uafilter(sitelocdef) [file join $common(confdir) "uafilter-siteloc.def"];
+set uafilter(datadir)	[file join $common(datadir) "upperair"];
+set uafilter(postfilter) "";
+
+# Daily and hourly archives. Enabled by default.
+# If enabled, than an entry must be included in the hourly conf file.
+#
+set uafilter(daily_arcv_enable) 1;
+set uafilter(hourly_arcv_enable) 1;
+set uafilter(arcv_dir) "archive";
+set uafilter(daily_arcv_datadir) "daily";
+set uafilter(hourly_arcv_datadir) "hourly";
+set uafilter(arcv_fext) ".upperair";
+
+# Overrides in the configuration file.
+if {[file exists $uafilter(conf)] == 1} {
+    source $uafilter(conf);
+}
+
+#
+# Variables
+#
+
+# The regex that will be matched against the fname to filter
+# what the filter will process
+set uafilter(regex) {_u[efklms].{4}\+tt(aa|bb|cc|dd)};
+
+# The separator used with the "-s" option to the fm35 decoder.
+set uafilter(FS) ",";

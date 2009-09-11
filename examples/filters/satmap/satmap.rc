@@ -1,0 +1,21 @@
+MAP      = 1
+TITLE    = 1/-2/
+DEVICE   = ${devtype}|${outfile}|${devsize}
+SATFIL   = ${infile}
+RADFIL   = 
+PROJ     = sat
+GAREA    = dset
+CLEAR    = y
+PANEL    = 0
+TEXT     = 1.2/23/1/hw
+LATLON   = 0
+
+r
+
+e
+
+
+
+
+
+

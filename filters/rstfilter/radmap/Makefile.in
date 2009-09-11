@@ -1,0 +1,55 @@
+#
+# Copyright (c) 2005-2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET1 =     nbspradmap
+TCLSOURCES1 =    nbspradmap.tcl
+TCLTARGET2 =     nbspradmapl
+TCLSOURCES2 =    nbspradmapl.tcl
+TCLTARGET3 =     nbspradmapc
+TCLSOURCES3 =    nbspradmapc.tcl
+
+TMPLSOURCES =	radmap.rc \
+		radmap-cities.rc radmap-cities.tbl \
+		radmap-sites.rc radmap-sites.tbl \
+		radmap-cities-warn.rc
+TMPLTARGET =	radmap-templates.tgz
+TMPLPDIR =	gpmap
+TMPLDIR =	${TMPLPDIR}/rad
+
+TARGET =        ${TCLTARGET1} ${TCLTARGET2} ${TCLTARGET3} ${TMPLTARGET}
+
+TCLSH =         @TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}	
+
+install: all
+
+${TCLTARGET1}: ${TCLSOURCES1}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES1} > ${TCLTARGET1}
+
+${TCLTARGET2}: ${TCLSOURCES2}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES2} > ${TCLTARGET2}
+
+${TCLTARGET3}: ${TCLSOURCES3}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES3} > ${TCLTARGET3}
+
+${TMPLTARGET}: ${TMPLSOURCES}
+	rm -rf ${TMPLDIR}
+	mkdir -p ${TMPLDIR}
+	cp ${TMPLSOURCES} ${TMPLDIR}
+	tar -czf ${TMPLTARGET} ${TMPLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET1} ${TCLTARGET2} ${TCLTARGET3} ${BINDIR}
+	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}
+	rm -rf ${TMPLPDIR}

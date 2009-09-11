@@ -1,0 +1,133 @@
+#
+# $Id$
+#
+
+This file describes the alternatives to the default disk-based spool
+directory that holds the raw data files that are received and later
+sent to the filter and network server for processing and distribution.
+The file is divided in the following sections
+
+	Private memory based bdb spool
+	File-backed bdb spool cache    (not yet operational)
+	Shared memory bdb spool cache  (not yet operational)
+
+if you want to jump directly to anyone of them.
+
+Nbsp supports four spool configurations
+
+	- File system spool
+	- Private memory based bdb spool
+	- File-backed bdb spool cache
+	- Shared memory bdb spool cache
+
+Some configurations are more suitable than others for special purposes. For
+example, the "Memory based spool" is suitable for an ingest machine that
+will not do any processing itself, but will act as a master to one or more
+processing "slaves".
+
+The default mode is the first one in that list. The other three are explained
+below.
+
+Private memory based bdb spool -
+================================
+
+In a master-slave configuration involving two or more machines, the
+master can be configured such that the "spool directory" resides
+entirely in memory. The motivation behind this is to have the master machine
+dedicated to only receive the noaaport data and transfer it, by tcp,
+to the slaves, which will then execute the filters to build
+the data products. In this way the master machine is freed from
+the demands of the Nbsp filters and associated i/o disk requirements,
+which can be more efficient in minimizing the loss of the multicast packets.
+
+In this mode of operation, the master can only serve NBS1 type clients
+(not NBS2 nor emwin clients). In addition, the processing filters
+must disabled, because the spool resides in a memory sector that is
+private to the server and it is not accessible by the filters.
+
+The recommended way to enable the memory bdb spool is:
+
+1) Set the variable "feature(spooltype)" 
+
+	set feature(spooltype) 2
+
+in features.conf.
+
+2) Copy the files "dist/nbspd-mspoolbdb.conf-ex" to "site/nbspd.conf" and
+   "dist/netfilter-mspoolbdb.conf-ex" to "site/netfilter.conf", and follow
+    the instructions there.
+
+3) Note that any additional configuration settings that are needed
+   in individual setups must still be done either in the main nbspd.conf file
+   or in the "site/nbspd.conf" (for example, setting the interfaces, port
+   numbers, and so on).
+
+This method ensures a safe starting point to configure the master
+with the memory spool. The only filters that can be enabled are
+the inventory filter, and the netfilter which can be used by the
+network server to decide what products are sent to what slaves.
+The above steps enable these two filters properly, but the relevant
+lines in the file "nbspd-mspoolbdb.conf" (renamed "site/nbspd.conf")
+can be commented to disable them as well if desired.
+
+File-backed bdb spool cache - (not yet operational)
+=============================
+
+In the default configuration, Nbsp saves the raw data files
+in the spool directory, by default
+
+	/var/noaaport/nbsp/spool
+
+and then executes the filters and transfers the files to any network
+clients.
+
+Nbsp can be configured to use a file-backed bdb as a spool cache.
+This is enabled by setting
+
+	set feature(spooltype) 3
+
+in the features.conf file. The default parametes for the spool cache are 
+
+### set cspoolbdb_dbcache_mb	150;
+### set cspoolbdb_ndb		4;
+### set cspoolbdb_nslots	4;
+
+These define ndb = 4 databases, with each database configured such that it
+can hold the files received in about 3 minutes (150 MB).
+This requires 600 MB + 20% (overhead) of free memory, to hold a cache
+of 12 minutes of data. The "nslots = 4" parameter configure 4 reading buffers
+for retrieving the data from the db to send it to the nbs1 network clients.
+Since there is only one reader, the network server, nslots can be set to 1.
+
+The above settings enable the server side of the spool cache. In order for the
+filters to make us of it, the appropriate settings must made also
+in the file "cspoolbdb.conf" which is the configuration file for
+the filters library for interfacing with the spool cache. If the defaults
+settings are ok, all that is required is to enable the spool cache
+in that file by setting the variable "cspoolbdb_enable" to 1.
+
+NOTE: With these settings the cache can hold 18,000 files. If the load on
+      the machine is such that its filter queue grows larger than this value
+      frequently, then enabling the spool cache can make things worse.
+      The ideal situation is that the spool cache be large enough that it
+      can hold the same number of files that the filter queue may have at
+      any given time.
+
+Shared memory bdb spool cache - (not yet operational)
+===============================
+
+This is similar to File-backed bdb spool, but it resides entirely
+in memory and it is not file-backed. Howerver, in contrast to the
+private memory based spool described earlier, this one uses
+shared memory so that it is accessible by the filters as well.
+
+This configuration is enabled by setting
+
+	set feature(spooltype) 4
+
+In addition, in the cspoolbdb.conf file, the variable
+``cspoolbdb_mpool_nofile'' must be set to 1:
+
+	set cspoolbdb_mpool_nofile 1;
+-
+JFN

@@ -1,0 +1,54 @@
+#
+# $Id$
+#
+The rstfilter has a "postfilter" facility work on the final text files
+and images produced by the rstfilter.
+As an example consider a N0R radar data file such as from the "JUA" site,
+which the rstfilter saves as
+
+	/var/noaaport/nbsp/spool/tjsj/tjsj_sdus52-n0rjua.171950_97005331
+
+At the time that the normal rstfilter.rc rules are executed, the following
+variables are defined
+
+	rc(fpath) is the full path above
+	rc(fname)  tjsj_sdus52-n0rjua
+	rc(station) tjsj
+	rc(awips) n0rjua
+	rc(wmoid) sdus52
+
+and several others (see, e.g., nbspfilter.rc-ex). After the filter processes
+that file and creates the image, another variable 
+
+	rc(fpathout)
+
+is defined, that gives the full path of the file that contains the image,
+
+	/var/noaaport/data/nbsp/rad/jua/n0r/n0rjua_20080117_1950.gif
+
+The rules defined by constructs such as the one below are executed
+after the image has been created and the variable rc(fpathout) is set.
+
+lappend postcond {
+	[regexp {n0rjua} $rc(awips)]
+}
+lappend postaction {
+	fcopy $rc(fpathout) /home/www/images/radar/jua/n0r
+}
+
+This can be used to execute arbitrary code (or scripts via exec) to
+transfer the file to a web site or other sites.
+
+In summary, the standad rstfilter.rc rules constructed as
+
+lappend cond {
+	...
+}
+lappend action {
+	...
+}
+
+are executed before the final file has been created, and the variable
+rc(fpathout) is not yet defined. The rules with the ``postcond'' and
+``postaction'' keywords are executed after the final image or text file
+has been created, and the variable rc(fpathout) has ben defined.

@@ -1,0 +1,282 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require nntp;
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "nntpfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# default configuration file and rc script
+set nntpfilter(conf)	"$common(confdir)/nntpfilter.conf";
+set nntpfilter(rc)	"$common(confdir)/nntpfilter.rc";
+set nntpfilter(prerc)  "$common(confdir)/nntpfilterpre.rc";
+set nntpfilter(postrc)  "$common(confdir)/nntpfilterpost.rc";
+set nntpfilter(localconfdirs) $common(localconfdirs);
+set nntpfilter(rcdir)   "$common(rcdir)/nntp";
+set nntpfilter(rcfiles) [list];
+set nntpfilter(verbose)	0;
+set nntpfilter(from)	"nbspfeed@noaaport.net";
+set nntpfilter(server)	"news";
+set nntpfilter(groupprefix)	"noaaport";
+set nntpfilter(nbspheader)	"X-nbsp";
+#
+# The raw text products are no longer being sent, in favor of the
+# various groups in the da filter (Fri Dec 21 11:11:42 AST 2007).
+#
+set nntpfilter(txt_enable) 0;
+set nntpfilter(rad_enable) 1;
+set nntpfilter(sat_enable) 1;
+set nntpfilter(grib_enable) 0;
+set nntpfilter(txt_regex) {.*};   # match against fname
+set nntpfilter(rad_regex) {.*};   # match against awips
+set nntpfilter(sat_regex) {.*};   # match against wmoid
+set nntpfilter(grib_regex) {.*};   # match against fname
+
+#
+# variables
+#
+set nntpfilter(ccbsaved) $common(ccbsaved);
+#
+set nntpfilter(condition)	[list];
+set nntpfilter(action)		[list];
+#
+set gNNTP "";
+set gNNTP_openflag 0;
+
+if {[file exists $nntpfilter(conf)] == 1} {
+    source $nntpfilter(conf);
+}
+
+# The main rc file
+if {[file exists $nntpfilter(rc)] == 0} {
+    log_msg "Filter disabled: $nntpfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set nntpfilter(rcfiles) [filterlib_get_rcfiles [file tail $nntpfilter(rc)] \
+        $nntpfilter(localconfdirs) $nntpfilter(rcdir) \
+	$nntpfilter(prerc) $nntpfilter(postrc)];
+
+# Load the rules sets
+source $nntpfilter(rc);
+
+proc main {argc argv} {
+
+    global gNNTP_openflag;
+    global errorInfo;
+
+    # If the connection to inn fails, don't exit, but
+    # keep re-trying inside the loop. 
+    nntp_open;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	# If there was a write error, the functions close the nntp connection.
+	# We check and try to reopen it. 
+	if {$gNNTP_openflag == 0} {
+	    nntp_open;
+	}
+    }
+
+    nntp_close;
+}
+
+proc process {finfo} {
+
+    global nntpfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    set rc_status 1;
+    set rc_subgroup "";
+    set rc_stripccb 0;
+
+    # Process only whatever is enabled
+    if {$rc(txtflag)} {
+	if {!$nntpfilter(txt_enable) || \
+	    ![filterlib_uwildmat $nntpfilter(txt_regex) $rc(fname)]} {
+    	    
+	    return;
+    	}
+    } elseif {[regexp {^sdus[2357]} $rc(wmoid)]} {
+	if {!$nntpfilter(rad_enable) || \
+	    ![filterlib_uwildmat $nntpfilter(rad_regex) $rc(awips)]} {
+
+	    return;
+    	}
+    } elseif {[regexp {^tig} $rc(wmoid)]} {
+	if {!$nntpfilter(sat_enable) || \
+	    ![filterlib_uwildmat $nntpfilter(sat_regex) $rc(wmoid)]} {
+
+	    return;
+    	}
+    } elseif {[regexp {^grib} $rc(nawips)]} {
+	if {!$nntpfilter(grib_enable) || \
+	    ![filterlib_uwildmat $nntpfilter(grib_regex) $rc(fname)]} {
+
+	    return;
+    	}
+    } else {
+	return;
+    }
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $nntpfilter(condition) {
+        set actionlist [lindex $nntpfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+
+    if {$rc_status != 0} {
+	return;
+    }
+
+    append header "From: $nntpfilter(from)\n";
+    append header "Newsgroups: $nntpfilter(groupprefix).$rc_subgroup\n";
+    append header "Subject: $rc(fname)\n";
+    append header $nntpfilter(nbspheader) \
+	[format ": %u %d %d %d %d %s\n\n" \
+	$rc(seq) $rc(type) $rc(cat) $rc(code) $rc(npchidx) $rc(fbasename)];
+
+    if {($rc_stripccb == 1) && ($nntpfilter(ccbsaved) == 1)} {
+	filter_sendnntp_encode_stripccb $header $rc(fpath) $rc(seq);
+    } else {
+	filter_sendnntp_encode $header $rc(fpath);
+    }
+}
+
+proc filter_sendnntp_encode {header fpath} {
+
+    set fbasename [file tail $fpath];
+    set status [catch {
+	append content $header [exec uuencode $fpath $fbasename];
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    } else {
+        nntp_post $content;	
+    }
+}
+
+proc filter_sendnntp_encode_stripccb {header fpath seq} {
+
+# Using nbspfile has two effects: it strips the ccb header and
+# also inserts the gempak-compatible header and footer (which
+# DA also seems to like).
+
+    global nntpfilter;
+    global filtersprogs;
+
+    set fbasename [file tail $fpath];
+    set status [catch {
+      if {$nntpfilter(ccbsaved) == 1} {
+	append content $header \
+	  [exec $filtersprogs(nbspfile) $fpath $seq | uuencode $fbasename];
+	} else {
+	 append content $header \
+	  [exec $filtersprogs(nbspfile) -n $fpath $seq | uuencode $fbasename];
+	}	
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    } else {
+        nntp_post $content;	
+    }
+}
+
+proc nntp_open {} {
+
+    global nntpfilter;
+    global gNNTP gNNTP_openflag;
+
+    set status [catch {
+	set gNNTP [nntp::nntp $nntpfilter(server)];
+    } errmsg];
+
+    if {$status == 0} {
+	set gNNTP_openflag 1;
+    } else {
+	log_msg $errmsg;
+    }
+}
+
+proc nntp_close {} {
+
+    global gNNTP gNNTP_openflag;
+
+    if {$gNNTP_openflag == 1} {
+	set status [catch {$gNNTP quit} errmsg];
+	set gNNTP_openflag 0;
+    }
+}
+
+proc nntp_post msg {
+
+    global gNNTP gNNTP_openflag;
+
+    if {$gNNTP_openflag == 0} {
+	log_msg "NNTP connection is closed.";
+	return;
+    }
+
+    set status [catch {$gNNTP post $msg} errmsg];
+    if {$status == 0} {
+	return;
+    }
+
+    # If there as a write error, close the connection and retry.
+    nntp_close;
+    nntp_open;
+    if {$gNNTP_openflag == 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    set status [catch {$gNNTP post $msg} errmsg];
+    if {$status != 0} {
+	log_msg $errmsg;
+	nntp_close;
+    }
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

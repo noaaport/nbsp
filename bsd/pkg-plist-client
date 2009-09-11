@@ -1,0 +1,13 @@
+@owner root
+@group wheel
+bin/nbspgrib
+bin/nbspgrib2
+bin/nbspgribctl
+bin/nbspgradrsh
+bin/nbspgribrsh
+bin/nbspgribcat
+bin/nbspwgrib
+libexec/nbsp/nbspgribrsh.init
+etc/nbsp/dist/nbspgribrsh.conf-sample
+etc/nbsp/dist/nbspgribrsh.conf-user
+share/doc/nbsp/LICENSE

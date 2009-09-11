@@ -1,0 +1,8 @@
+cat <<__EOF__
+To deinstall completely this package, the directories
+
+/usr/local/etc/nbsp
+~/.nbsp
+
+may have to be removed manually.
+__EOF__

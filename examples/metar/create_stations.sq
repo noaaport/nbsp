@@ -1,0 +1,6 @@
+create table stations (
+	obstation varchar(4),
+	city text,
+	state varchar(2),
+	country text,
+	countrycode varchar(2));

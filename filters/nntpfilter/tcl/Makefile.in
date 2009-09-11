@@ -1,0 +1,58 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	nntpfilter.tcl nbspnntpsend.tcl nbspinnfeed.tcl nbspinsert.tcl
+TCLSOURCES =	nntpfilter.tcl.in nbspnntpsend.tcl.in \
+		nbspinnfeed.tcl.in nbspinsert.tcl.in
+M4SOURCES =	defs.m4 txt.m4 rad.m4 sat.m4 grib.m4
+M4MAIN =	nntpfilter.m4
+M4TARGET =	nntpfilter.rc-defaults
+SAMPLES =	nntpfilter.conf-sample \
+		nntpfilter.rc-sample \
+		nbspinnfeed.conf-sample
+TARGET =	${TCLTARGET} ${M4TARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+nntpfilter.tcl: nntpfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nntpfilter.tcl.in > nntpfilter.tcl
+
+nbspnntpsend.tcl: nbspnntpsend.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbspnntpsend.tcl.in > nbspnntpsend.tcl
+
+nbspinnfeed.tcl: nbspinnfeed.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbspinnfeed.tcl.in > nbspinnfeed.tcl
+
+nbspinsert.tcl: nbspinsert.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbspinsert.tcl.in > nbspinsert.tcl
+
+${M4TARGET}: ${M4MAIN} ${M4SOURCES}
+	m4 ${M4MAIN} > ${M4TARGET}
+
+nntpfilter.conf-sample: nntpfilter.conf
+	cp nntpfilter.conf nntpfilter.conf-sample
+
+nntpfilter.rc-sample: nntpfilter.rc 
+	cp nntpfilter.rc nntpfilter.rc-sample
+
+nbspinnfeed.conf-sample: nbspinnfeed.conf
+	cp nbspinnfeed.conf nbspinnfeed.conf-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 nntpfilter.tcl ${MYLIBEXECDIR}/nntpfilter
+	${INSTALL} -m 755 nbspnntpsend.tcl ${BINDIR}/nbspnntpsend
+	${INSTALL} -m 755 nbspinnfeed.tcl ${MYLIBEXECDIR}/nbspinnfeed
+	${INSTALL} -m 755 nbspinsert.tcl ${BINDIR}/nbspinsert
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

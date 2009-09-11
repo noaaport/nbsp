@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+
+The gribfilter is designed to work with GrADS, but it can be used also
+without it. In the latter case, the control files and the plots will
+not be generated, but all the data files will be collected and
+saved in
+
+	/var/noaaport/data/grib
+
+In the default installation the gribfilter is enabled, and the GrADS related
+features are disabled. What the gribfilter does with the grib data files
+is explained in ``gribnames.README''.
+
+When GrADS is installed the gribfilter has much more functionality.
+To use the gribfilter with GrADS, in the "gribfilter.conf" file
+(or in a copy of that file in the "site" subdirectory),
+the following settings must appear:
+
+set gribfilter(gradsctlenable)	1;
+set gribfilter(gradsplotsenable) 1;
+
+The additional features of the gribfilter with these settings are
+described in ``grads-grib.README''.
+
+The Tclgrads library, available as a separate package, can be used
+with the data files processed by the gribfilter to create plots
+easily from Tcl scripts. Examples illustrating the usage of the library
+are given in the file nbsp.README and the example scripts in the
+Tclgrads distribution, and in the ``samples'' section of the
+noaaport.net site.

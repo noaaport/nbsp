@@ -1,0 +1,29 @@
+#
+# $Id$
+#
+set outputfile $gsplot(imgfile);
+if {$outputfile eq ""} {
+    set outputfile msletmsl_$gsplot(reftime)_$gsplot(forecasttime).png;
+    if {$gsplot(outputdir) ne ""} {
+        set outputfile [file join $gsplot(outputdir) $outputfile];
+    }
+    # We check whether the file exists so that the scheduler can call
+    # this script every hour without worrying about recreating the file
+    # each time.
+    if {[file exists $outputfile]} {
+	return;
+    }
+}
+
+::grads::init;
+::grads::open $gsplot(ctlfile);
+
+::grads::exec set gxout shaded;
+::grads::exec d msletmsl;
+::grads::exec set gxout contour;
+::grads::exec d msletmsl;
+::grads::exec draw title Mean sea-level Press \
+	$gsplot(model)/$gsplot(reftime)/$gsplot(forecasttime);
+::grads::exec printim $outputfile;
+
+::grads::end;

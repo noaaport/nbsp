@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+
+set _nbspdconf "/usr/local/etc/nbsp/nbspd.conf";
+
+proc log_warnx m {
+
+    logger -t "nbspd.start" -p "user.err" $m;
+}
+
+proc log_errx m {
+
+    log_warnx $m;
+    exit 1;
+}
+
+proc log_info m {
+
+    logger -t "nbspd.start" -p "user.info" $m;
+}
+
+proc proc_start_innd {} {
+
+    exec "/usr/local/etc/rc.d/innd start";
+}
+
+proc proc_start_httpd {} {
+
+    exec "/usr/local/etc/rc.d/apache start";
+}
+
+if {[file exists ${_nbspdconf}] == 0} {
+    log_errx "${_nbspdconf} not found.";
+}
+source ${_nbspdconf};
+
+if {$feature(nntpfilter) == 1} {
+    proc_start_innd;
+}
+
+if {$feature(httpdserver) == 1} {
+    proc_start_httpd;
+}

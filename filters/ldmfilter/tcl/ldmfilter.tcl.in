@@ -1,0 +1,261 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "ldmfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# default configuration file and rc script
+set ldmfilter(conf)	"$common(confdir)/ldmfilter.conf";
+set ldmfilter(rc)	"$common(confdir)/ldmfilter.rc";
+set ldmfilter(prerc)	"$common(confdir)/ldmfilterpre.rc";
+set ldmfilter(postrc)	"$common(confdir)/ldmfilterpost.rc";
+set ldmfilter(rcdir)	"$common(rcdir)/ldm";
+set ldmfilter(localconfdirs) $common(localconfdirs);
+# The file for determining the name of the sat files
+set ldmfilter(satdef)     [file join $common(confdir) "gpfilter-sat.def"];
+set ldmfilter(useseqnumid) 0;
+#
+set ldmfilter(ldmpq)	"/var/ldm/ldm.pq";
+#
+set ldmfilter(feeds,WMO) 15;
+set ldmfilter(feeds,HDS) 4;
+set ldmfilter(feeds,NEXRAD) 134217728;
+set ldmfilter(feeds,NIMAGE) 2097152;
+set ldmfilter(feeds,NGRID) 8388608;
+#
+set ldmfilter(NIMAGE,unzflag) 0;
+#
+# Variables
+#
+set ldmfilter(rcfiles) [list];
+set ldmfilter(ccbsaved)		$common(ccbsaved);
+set ldmfilter(ccbsize)		$common(ccbsize);
+#
+set ldmfilter(condition)	[list];
+set ldmfilter(action)		[list];
+
+#
+# Read the default configuration file.
+#
+if {[file exists $ldmfilter(conf)] == 1} {
+    source $ldmfilter(conf);
+}
+
+# The main rc file is required
+if {[file exists $ldmfilter(rc)] == 0} {
+    log_msg "Filter disabled: $ldmfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set ldmfilter(rcfiles) [filterlib_get_rcfiles [file tail $ldmfilter(rc)] \
+        $ldmfilter(localconfdirs) $ldmfilter(rcdir) \
+	$ldmfilter(prerc) $ldmfilter(postrc)];
+
+# Load the rules sets
+source $ldmfilter(rc);
+
+proc main {argc argv} {
+
+    global errorInfo;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global ldmfilter;
+
+    filterlib_get_rcvars rc $finfo -dogrib;
+
+    # Initialize to no match.
+    # If rc_status is returned as zero, then it matched a rule.
+    # The variables 
+    #   rc_ldmfeed
+    #   rc_prodid
+    # contain the feedtype and prodid that should be used to insert
+    # the product in the ldm queue.
+
+    set rc_status 1;
+    set rc_ldmfeed "";
+    set rc_prodid "";
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $ldmfilter(condition) {
+        set actionlist [lindex $ldmfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+
+    if {$rc_status == 0} {
+	filter_ldmfeed $rc(seq) $rc(fpath) $rc_ldmfeed $rc_ldmprodid;
+    }
+}
+
+proc filter_ldmfeed {seq fpath feedtype prodid} {
+#
+# Here, ``feedtype'' is the name, such as NIMAGE.
+#
+    global ldmfilter;
+
+    # The satellite name can be empty in case of error from the
+    # mk_ldm_sat_prodid function.
+    if {$prodid eq ""} {
+	log_msg "Error sending $fpath: Empty prodid.";
+	return;
+    }
+
+    # This should not happen.
+    if {[info exists ldmfilter(feeds,$feedtype)] == 0} {
+	log_msg "Error sending $fpath: Undefined feed $feedtype.";
+	return;
+    }
+    set feed $ldmfilter(feeds,$feedtype);
+
+    # For satellite file, do not add header/trailer, and there is no ccb.
+    if {$feedtype eq "NIMAGE"} {
+	set opts "-n";
+    } else {
+	set opts "-g";
+	if {$ldmfilter(ccbsaved) == 1} {
+	    append opts " -c " $ldmfilter(ccbsize);
+	}
+    }
+ 
+    if {$ldmfilter(useseqnumid) == 1} {
+	append opts " -m";
+    }
+
+    # By default everything is sent as is
+    set unzflag 0;
+    if {[info exists ldmfilter($feedtype,unzflag)]} {
+	set unzflag $ldmfilter($feedtype,unzflag);
+    }
+
+    set pq $ldmfilter(ldmpq);
+    set status [catch {
+        # prodid contains blanks
+	if {$unzflag == 0} {
+	    eval exec nbsp2ldm \
+		$opts -q $pq -f $feed -p \"$prodid\" -s $seq $fpath;
+	} else {
+	    set fin [open "|nbspunz $fpath" r];
+	    fconfigure $fin -encoding binary -translation binary;
+	    set fdata [read $fin];
+	    close $fin;
+
+	    set fsize [string length $fdata];
+	    fconfigure stdout -encoding binary -translation binary;
+
+	    set fout [open "|nbsp2ldm $opts -q $pq -f $feed -p \"$prodid\" \
+		-s $seq -S $fsize" w];
+	    fconfigure $fout -encoding binary -translation binary;
+	    puts -nonewline $fout $fdata;
+	    close $fout;
+	}
+    } msg];
+
+    if {$status != 0} {
+        log_msg $msg;
+    }
+}
+
+proc mk_ldm_sat_prodid {fname fpath} {
+#
+# In case of error this function returns "", which must be checked in
+# the "filter_ldmfeed" function. The gpfilter would be needed if the
+# satdef file is sourced in the global scope.
+
+    global ldmfilter;
+#    global gpfilter;
+
+    if {[file exists $ldmfilter(satdef)] == 1} {
+        source $ldmfilter(satdef);
+    } else {
+        return "";
+    }
+
+    # This command just extracts the information from the nesdis pdb
+    set status [catch {
+        set params [exec nbspsat -i $fpath]
+    } errmsg];
+    
+    if {$status != 0} {
+	log_msg $errmsg;
+	return "";
+    }
+
+    set source [lindex $params 0]
+    set creating_entity [lindex $params 1]
+    set sector [lindex $params 2]
+    set channel [lindex $params 3]
+    set res [lindex $params 4]
+    set time [lindex $params 5]
+    set tmpname [lindex $params 6]
+
+    set datetime [split $time "_"];
+    set ymd [lindex $datetime 0];
+    set hm [lindex $datetime 1];
+
+    if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
+	set sector_name $gpfilter(satdef,tig_sector,$sector);
+    } else {
+	append sector_name "sector" $sector;
+    }
+    
+    if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
+	set channel_name $gpfilter(satdef,tig_channel,$channel);
+    } else {
+	append channel_name "channel" $channel;
+    }
+
+    set tig_res_suffix $gpfilter(satdef,tig_res_suffix);
+
+    # There are spaces here.
+    set prodid "satz/ch$source/$creating_entity/$channel_name/$ymd";
+    append prodid " $hm/$sector_name/${res}${tig_res_suffix}/";
+    append prodid " $fname";
+
+    return $prodid;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

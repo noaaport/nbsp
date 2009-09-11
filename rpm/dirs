@@ -1,0 +1,17 @@
+usr/local/etc
+usr/local/etc/nbsp
+usr/local/etc/nbsp/dist
+usr/local/sbin
+usr/local/bin
+usr/local/libexec/nbsp
+usr/local/libexec/nbsp/tclhttpd
+usr/local/libexec/nbsp/tclhttpd/dist
+usr/local/libexec/nbsp/tclhttpd/nbsp
+usr/local/libexec/nbsp/tclhttpd/extensions
+usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope
+usr/local/libexec/nbsp/tclgrads
+usr/local/libexec/nbsp/tclmetar
+usr/local/libexec/nbsp/tclupperair
+usr/local/man/man1
+usr/local/share/doc/nbsp
+usr/local/share/doc/nbsp/radmap

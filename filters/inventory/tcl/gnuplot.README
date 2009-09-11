@@ -1,0 +1,47 @@
+#
+# $Id$
+#
+When a gnuplot template is executed the following variables are defines:
+
+	gplot(output)
+	gplot(datafile)
+	gplot(fmtoptions)
+	gplot(fmt)
+
+The script nbspstatlot reads one of the ".g" files by a executing the
+instruction
+
+   source <templatefile>
+
+The <templatefile> can contain additional tcl variable definitions, but
+at some point it must contain a portion of the form
+
+set gnuplot(script) {
+
+    <gnuplot commands here>
+
+}
+
+It then feeds the gnuplot(script) to gnuplot by executing
+
+   puts $F [subst -nobackslahes $gnuplot(script)]
+
+where F is a file handle to gnuplot
+
+   set F [open "|gnuplot" w]
+
+The "subst" command substitutes the values for the tcl variables in the
+script before sending it to gnuplot. The script can also contain tcl
+commands within [ and ] brackets and they will be substituted by
+the result of the tcl command. (in order to pass literal brackets
+to gnuplot, they must be escaped with a backslash).
+
+Finally, the templates can contain another "post" script definition of the form
+
+set gnuplot(post) {
+	<any tcl command here>
+}
+
+Any valid tcl commands can appear in this portion.
+Such code will be executed (via eval) as tcl code, after
+closing the pipe to gnuplot.

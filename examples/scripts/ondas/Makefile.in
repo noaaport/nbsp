@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+INSTALL =	@INSTALL@
+
+TARGET =	grlevel3.cfg-sample
+SOURCE =	grlevel3.cfg
+
+SAMPLES =	${TARGET}
+
+all: ${SAMPLES}
+
+${TARGET}: ${SOURCE}
+	cp ${SOURCE} ${TARGET}
+
+install:
+	${INSTALL} -m 644 ${SAMPLES} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

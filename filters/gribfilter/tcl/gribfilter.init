@@ -1,0 +1,246 @@
+#
+# $Id$
+#
+package require nbsputil;
+package require periodic;
+
+# This file is split from gribfilter.tcl because some of the variables
+# are also used by the cmd-line tools, the gribfilter and the
+# gribfilter-manager.
+#
+set gribfilter(conf)	[file join $common(confdir) "gribfilter.conf"];
+#
+set gribfilter(rc)	[file join $common(confdir) "gribfilter.rc"];
+set gribfilter(prerc)	[file join $common(confdir) "gribfilterpre.rc"];
+set gribfilter(postrc)	[file join $common(confdir) "gribfilterpost.rc"];
+set gribfilter(localconfdirs)	$common(localconfdirs);
+set gribfilter(rcdir)		[file join $common(rcdir) "grib"];
+set gribfilter(datadir)		[file join $common(datadir) "grib"];
+set gribfilter(grbdatadir)	"grb";
+set gribfilter(ctldatadir)	"ctl";
+set gribfilter(idxdatadir)	"idx";
+set gribfilter(pdefdatadir)	"pdef";
+set gribfilter(imgdatadir)	"img";
+set gribfilter(catalogdir)	"cat";
+set gribfilter(gridsdatadir)	"grids";
+set gribfilter(grbfext)		".grb";
+set gribfilter(ctlfext)		".ctl";
+set gribfilter(idxfext)		".idx";
+set gribfilter(pdeffext)	".pdef";
+set gribfilter(grbcatalog)	"grb.cat";
+set gribfilter(ctlcatalog)	"ctl.cat";
+set gribfilter(gridsmodels_uwildpatt) {gefs|gfs|mrf|nam|ruc};
+set gribfilter(gradsctl_enable)	0;
+set gribfilter(gradsctl_uwildpatt) {ecmwf|gfs|mrf|nam|ruc,!\.grb2,
+	!gfs_[26][1-4](_|\.)};
+set gribfilter(scheduler_enable) 0;
+set gribfilter(schedule) [file join $common(confdir) \
+	"gribfilter-schedule.rc"];
+set gribfilter(schedule_run_period) "minutely";       # run every minute
+
+#
+# These settings are used by the various tools
+# nbspgribplotc and nbspgribplots
+#
+set gribfilter(imgfext)		".png";
+set gribfilter(gsdirlist)	$common(localconfdirs);
+# nbspgradsh
+set gribfilter(gradsprompt)	"ga*";
+
+# Work-crew configuration for gribfilter-manager
+set gribfilter(slave) [file join $common(libdir) "gribfilter"];
+set gribfilter(slave,types) [list "gfs" "nam" "ruc" "default"];
+set gribfilter(slave,gfs,ure) {^kwbc} ;
+set gribfilter(slave,nam,ure) {^kwbe};
+set gribfilter(slave,ruc,ure) {^kwbg};
+set gribfilter(slave,default,ure) {.*};
+
+## The configuration file that override the defaults, if it exists.
+if {[file exists $gribfilter(conf)] == 1} {
+    source $gribfilter(conf);
+}
+
+#
+# Variables
+#
+# gribfilter(manager) is set to 1 in the manager (if enabled), or
+# 0 in the slave or when running standlone.
+#
+set gribfilter(manager)		0;
+
+proc gribfilter_run_scheduler {} {
+#
+# Run the scheduler every minute (Generate the GrADS plots).
+# Only the master (in work-crew mode) or the stand-alone filter run
+# the scheduler.
+#
+    global gribfilter;
+
+    if {$gribfilter(scheduler_enable) == 0} {
+	return;
+    }
+
+    cd $gribfilter(datadir);
+    file mkdir $gribfilter(imgdatadir);
+    set savedir [pwd];
+    cd $gribfilter(imgdatadir);
+    ::periodic::scheduler $gribfilter(schedule);
+    cd $savedir;
+}
+
+#############################################################################
+#
+# proc gribfilter_wait_unused {} {
+#
+# #
+# # An alternative that does not require tclx is
+# #
+# #  catch {exec true}
+# #
+#     set status [catch {
+# 	set wait_status [wait -nohang -pgroup];
+#     } errmsg];
+# 
+#     if {($status == 0) && ([llength $wait_status] != 0)} {
+# 	if {([lindex $wait_status 1] ne "EXIT") ||
+# 	    ([lindex $wait_status 2] != 0)} {
+# 	    log_msg "Child exited: [join $wait_status " "]";
+# 	}
+#     }
+# }
+# 
+# proc exec_nbspgribsched_unused {} {
+#
+# # This function executes nbspgribsched without waiting for it, and
+# # without calling exec in the background. The exec & in debian-4.2
+# # is not working for some reason:
+# #
+# #    exec nbspgribsched -b -f $gribfilter(schedfile) &;
+# #
+# # It seems that nbspgribplotc kills the gribfilter
+# # (ps -ef reports "defunct" for the gribfilter some time
+# # after launching nbapgribplotc). Maybe some interaction with expect
+# # (nbspgribplotc, called by nbspgribsched, uses tclgrads which uses expect).
+# #  348 ?        00:00:00 gribfilter <defunct>
+# # 4489 ?        00:00:00 nbspgribsched
+# #
+# # The problem started when we began to use the tclgrads in the nbspgribplotc
+# # scripts instead of calling grads directly as before. I believe it is
+# # due to some interaction in the handling of file handles between
+# # exec and expect. Although this function works, I finaly decided
+# # to implement and use the "nbspexec" program for this purpose
+# # (executing jobs in the background from scripts).
+###
+# # Mar  3 00:10:17 proliant gribfilter: Creating the grib plots in the \
+# #                                      background.
+# # Mar  3 00:10:17 proliant gribfilter: Executing nbspgribsched.
+# # Mar  3 00:10:17 proliant gribfilter: Spawned nbspgribsched.
+# # Mar  3 00:10:17 proliant nbspgribsched: Started creating plots.
+# # Mar  3 00:10:33 proliant nbspgribsched: Finished creating plots.
+# # Mar  3 00:10:34 proliant nbspd: Could not write to \
+# #                                 /usr/local/libexec/nbsp/gribfilter. \
+# #                                 Socket operation on non-socket
+# # Mar  3 00:10:34 proliant nbspd: Removing /usr/local/libexec/nbsp/gribfilter
+# #############################################################################
+# 
+#     global gribfilter;
+# 
+#     set schedule [exec cat $gribfilter(schedfile)];
+#     
+#     log_msg "Opening pipe to nbspgribsched.";
+# 
+#     set status [catch {
+# 	::nbsputil::pwrite_nonblock $schedule nbspgribsched -b;
+#     } errmsg];
+# 
+#     log_msg "Closed pipe to nbspgribsched.";
+# 
+#     if {$status != 0} {
+# 	log_msg $errmsg;
+#     }
+# }
+############################################################################
+
+#
+# Three functions for dealing with the grib file names
+#
+
+# The next _two_ functions are used to construct the default file name.
+# Some of the optional programs (e.g., catalog, plot)
+# assume this particular file name convention, so if this convention
+# is modified, then the _third_ function (used by those tools) must
+# me revised accordingly.
+#
+# These functions can be overriden in the gribfilter.conf file(s)
+# by the usual mechanism
+#
+# rename <function> <function>.orig
+#
+# and then rewriting the new function with the same name.
+
+proc gribfilter_make_default_name {rc_array_name f_flag {modelname ""}} {
+    #
+    # "modelname" is put as an argument because some rules use a special
+    # value. If f_flag is 1, the forecast time is included in the name;
+    # otherwise it is not.
+    #
+    upvar 1 $rc_array_name rc;
+
+    if {$modelname eq ""} {
+	set modelname $rc(gribmodel);
+    }
+
+    set fname "";
+    append fname $modelname "_" $rc(gribgrid) "_" $rc(gribymdh);
+    if {$f_flag == 1} {
+	append fname "_" $rc(gribforecasttime);
+    }
+    append fname [gribfilter_make_default_ext $rc(gribedition)];
+
+    return $fname;
+}
+
+proc gribfilter_make_default_ext {gribedition} {
+
+    global gribfilter;
+
+    set fext $gribfilter(grbfext);
+    if {$gribedition != 1} {
+	append fext $gribedition;
+    }
+
+    return $fext;
+}
+
+proc gribfilter_break_default_name {fname} {
+    #
+    # This function breaks the default name into its parts and returns
+    # them as a list in the following order:
+    #
+    # <model> <grid> <reftime> <forecast_time>
+    #
+    # Here the argument <fname> must be the file name without the extension.
+
+    set fname_parts [split $fname "_"];
+
+    # This part must be changed if the function gribfilter_make_default_name
+    # above is modified.
+    #
+    set model [lindex $fname_parts 0];
+    set grid [lindex $fname_parts 1];
+    set reftime [lindex $fname_parts 2];
+    set ftime [lindex $fname_parts 3];
+
+    return [list $model $grid $reftime $ftime];
+}
+
+proc gribfilter_join_default_name {model grid reftime forecast_time} {
+    #
+    # This function does the opposite of the above.
+    #
+    # Returns the <fname> without the extension. 
+
+    set fname_parts [list $model $grid $reftime $forecast_time];
+    
+    return [join $fname_parts "_"];
+}

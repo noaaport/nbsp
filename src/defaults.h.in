@@ -1,0 +1,488 @@
+/*
+ * Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ *
+ * See LICENSE
+ *
+ * $Id$
+ */
+#ifndef DEFAULTS_H
+#define DEFAULTS_H
+
+#include <syslog.h>
+#include "const.h"
+
+/*
+ * Some of the settings defined here are also used in the main
+ * configuration files used by he filters "filters.conf".
+ * That to file should be checked anytime this file is modified.
+ */
+
+#define DAEMON_NAME		"nbspd"
+
+#define NBSP_USER		NULL
+#define NBSP_GROUP		NULL
+
+#define DEFAULT_UMASK		022
+
+/* syslog */
+#define SYSLOG_IDENT		DAEMON_NAME
+#define SYSLOG_OPTS		LOG_CONS
+#define SYSLOG_FACILITY		LOG_USER
+#define CONFIGFILE		"%MYCONFDIR%/nbspd.conf"
+
+/* 
+ * Almost all of the settings below can be modified in the runtime
+ * configuration file.
+ */
+#define NPCAST_NUM_CHANNELS	4
+#define MULTICASTIP		"224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4"
+#define MULTICASTPORT		"1201 1202 1203 1204"
+
+/* 
+ * The global multicast ip's for each noaaport channel, and global port.
+ * (Assigned by IANA) They are not being used at this moment (10mar2008).
+ */
+#define GLOBALMULTICASTIP "224.0.23.55 224.0.23.56 224.0.23.57 224.0.23.58"
+#define GLOBALMULTICASTPORT "2210"
+
+/*
+ * By default, the interface to use is chosen by the kernel. In
+ * a multihomed machine, the interface to use can be specified either by
+ * its ip address or by its name in the run-time configuration file.
+ */
+#define NBSP_IFNAME	NULL
+#define NBSP_IFIP	NULL
+
+/* 
+ * In FreeBSD the default is around 41 KB and the maximum 221 KB.
+ * (net.inet.udp.recvspace: 42080)
+ * In linux the default is around 109 KB and the maximum 255 KB.
+ * In MacOSX the default is 262 KB and the maximum around 7450 KB.
+ * In windows the default can be as low as 8 KB, so a setting
+ * such as this is more reasonable:
+ *
+ * #define UDP_RCV_SIZE (128 * 1024)
+ *
+ * A setting of -1 uses the OS default. This can be overriden in the
+ * runtime configuration file.
+ */
+#define UDP_RCV_SIZE		-1
+
+/*
+ * These (tcl) scripts are evaluated by the nbspd daemon itself
+ * as the last step during the initalization and shutdown phase, respectively.
+ */
+#define START_SCRIPT	"%MYLIBEXECDIR%/nbspd-start.tcl"
+#define STOP_SCRIPT	"%MYLIBEXECDIR%/nbspd-stop.tcl"
+
+/* The scheduler is run every minute */
+#define SCHEDULER	"%MYLIBEXECDIR%/scheduler"
+
+/*
+ * The default spool method is the flat-file fs configuration (const.h).
+ */
+#define SPOOLTYPE_DEFAULT SPOOLTYPE_FS
+/* 
+ * Where the unpacked and assembled (but unfiltered) products are
+ * stored before passing them through the filters.
+ */
+#define NBSP_SPOOL_DIR		"/var/noaaport/nbsp/spool"
+/*
+ * The default number of slots in the spooldb (the array struct that
+ * keeps track of the number of files saved in the spool directory).
+ * If this specified as zero in the configuration file, the mechanism
+ * is disabled and the spool directory grows indefinitely (in this case
+ * the cleanup script must take care of deleting old files in the spool
+ * directory.) Otherwise, the program will silently limit it to be
+ * no less than SPOOLDB_SLOTS_MIN. The third parameter is the file
+ * used to save (or load) the spooldb when nbsp stops (or starts).
+ * (The value of SPOOLDB_SLOTS influences QUEUE_MAXSIZE_HARD below.)
+ */
+#define SPOOLDB_SLOTS		262144		/* 2048*128 */
+#define SPOOLDB_SLOTS_MIN	1024
+#define SPOOLDB_FNAME		"/var/noaaport/nbsp/db/spool.db"
+
+/*
+ * Default parameters for the shared memory bdb spool (cspool)
+ *
+ * Ndb = 4         (12 minutes)
+ * dbcache_mb = 150 (each one)
+ * Nslots = 4	   (buffer slots for reading)
+ * maxsize_per128 = 96 (max grow size as a fraction of 128)
+ *
+ * There are Ndb = 4 databases, with each database configured such
+ * that it can hold the files received in about 3 minutes (150 MB).
+ * This requires 600 MB + 20% (overhead) of free memory, to hold a cache of
+ * 12 minutes of data. The "Nslots = 4" parameter configure 4 reading buffers
+ * for retrieving the data from the db to send it to the nbs1 network clients.
+ * Since there is only one reader, the network server, Nslots can set to 1.
+ * Each db is not allowed to grow larger than (maxsize_per128/128) in order
+ * to reserve some of the allocated memory for the system. The default is
+ * 96/128 or 75%.
+ *
+ * NOTE: If these values are changed, the same changes must be made in
+ *       the file cspoolbdb.conf that is sourced by the readers of the cspool.
+ */
+#define CSPOOLBDB_DIR		"/var/noaaport/nbsp/cspool"
+#define CSPOOLBDB_NAME		"cspooldb"
+#define CSPOOLBDB_DBMODE	0644
+#define CSPOOLBDB_DBCACHE_MB	150
+#define CSPOOLBDB_NDB		4
+#define CSPOOLBDB_NSLOTS	4
+#define CSPOOLBDB_MAXSIZE_PER128 96
+
+/*
+ * Default parameters for the private memory bdb spool (mspool).
+ * The meaning of the parameters is similar to the cspool, but the memory
+ * based spool has some additional restrictions.
+ *
+ * Ndb = 4         (4 minutes)
+ * dbcache_mb = 50 (each one)
+ * nmax = 1500     (each one)
+ * Nslots = 4	   (buffer slots for reading)
+ * dbmaxsize_per128 = 96  
+ *
+ * There are Ndb = 4 databases, with each database configured such
+ * that it can hold the files received in about one minute (50 MB).
+ * This requires 200 MB + 20% (overhead) of free memory, to hold a backlog
+ * of 4 minutes of data. The "Nslots = 4" parameter configure 4 reading buffers
+ * for retrieving the data from the db to send it to the nbs1 network clients.
+ * Since there is only one reader, the network server, Nslots can set to 1.
+ * The maxsize_per128 variable has the same meaning as in the mspool above.
+ */
+#define MSPOOLBDB_DBCACHE_MB	50
+#define MSPOOLBDB_NDB		4
+#define MSPOOLBDB_NSLOTS	4
+#define MSPOOLBDB_MAXSIZE_PER128 96
+
+/*
+ * For writing the output of dbstats (for both the cspool or mspool).
+ */
+#define MSPOOLBDB_DBSTATS_LOGFILE "/var/noaaport/nbsp/stats/nbspd.mdbstats"
+#define MSPOOLBDB_DBSTATS_LOGPERIOD_SECS 60
+
+/* Directory for putting the fifos and external filters */
+#define NBSP_FILTER_DEVDIR	"/var/noaaport/nbsp/dev"
+
+/* Default filters */
+#define FILTERSERVER_ENABLE	1
+#define FILTERLIST_SEP_CHARS	": \t"
+#define NBSP_SYSFILTERLIST	"%MYLIBEXECDIR%/inventory\
+				%MYLIBEXECDIR%/rstfilter\
+				%MYLIBEXECDIR%/dafilter\
+				%MYLIBEXECDIR%/metarfilter\
+				%MYLIBEXECDIR%/uafilter\
+				%MYLIBEXECDIR%/wsfilter\
+				%MYLIBEXECDIR%/gribfilter"
+
+/* The filter used by the emwin server */
+#define NBSP_EMWINFILTER	"%MYLIBEXECDIR%/emwinfilter"
+#define NBSP_EMWINFILTER_FIFO   "/var/run/nbsp/emwinfilter.fifo"
+#define NBSP_EMWINFILTER_READ_SECS 30
+
+/*
+ * Setting this variable to 0 causes the emwin server to run the emwin filter
+ * (and hence the rstfilter) only when there are emwin connections.
+ * Otherwise, it is run always, even if there are no emwin connections.
+ * (This variable is used only if the emwin server is enabled.)
+ */
+#define EMWINFILTER_ALWAYS	1
+
+/* 
+ * The allow/deny rules filter for network (including emwin) clients.
+ * The second variable is the default value if the filter is not found.
+ * (It is not a configuration variable, but that rule can be changed
+ * in the runtime rc file.)
+ */
+#define NBSP_NETFILTER_ENABLE   1
+#define NBSP_NETFILTER		"%MYLIBEXECDIR%/netfilter"
+#define NETFILTER_ALLOW_DEFAULT 0
+
+/* Whether the httpd server should be enabled, the tclhttpd script and fifo */
+#define NBSP_HTTPD_ENABLE	1
+#define NBSP_TCLHTTPD		"%MYLIBEXECDIR%/httpd"
+#define NBSP_TCLHTTPD_FIFO	"/var/run/nbsp/tclhttpd.fifo"
+
+/* pid file */
+#define NBSP_PIDFILE		"/var/run/nbsp/nbspd.pid"
+
+/* status (statistics) file(s) */
+#define NBSP_STATUSFILE		"/var/noaaport/nbsp/stats/nbspd.status"
+#define NBSP_MISSINGLOGFILE	"/var/noaaport/nbsp/stats/nbspd.missing"
+#define NBSP_RTXLOGFILE		"/var/noaaport/nbsp/stats/nbspd.rtx"
+#define NBSP_QSTATELOGFILE	"/var/noaaport/nbsp/stats/nbspd.qstate"
+#define NBSP_QDBSTATSLOGFILE	"/var/noaaport/nbsp/stats/nbspd.qdbstats"
+#define NBSP_SERVERSTATE_FILE	"/var/noaaport/nbsp/stats/nbspd.server"
+#define NBSP_SERVERACTIVE_FILE	"/var/noaaport/nbsp/stats/nbspd.active"
+#define NBSP_SERVERTHREADS_FILE	"/var/noaaport/nbsp/stats/nbspd.sthreads"
+#define NBSP_FILTERSERVER_STATEFILE "/var/noaaport/nbsp/stats/nbspd.filter"
+
+/* fifo for queues state info */
+#define NBSP_QSTATEFIFO		"/var/run/nbsp/nbspd.fifo"
+#define NBSP_QSTATEFIFO_MODE	 0640
+
+/* log file for the output of dbstats */
+#define NBSP_QDBSTATSLOGFILE    "/var/noaaport/nbsp/stats/nbspd.qdbstats"
+
+/* creation modes for the product files and their subdirs */
+#define FILE_PRODUCT_MODE	0644
+#define SUBDIR_PRODUCT_MODE	0755
+
+/* By default, if a ccb is present it is saved */
+#define SAVE_FRAME_FMT		SAVEFORMAT_WITH_CCB
+
+/*
+ * Whether the daemon should spawn the built-in server and which one(s).
+ * (Values in const.h and appdata.h.)
+ */
+#define SERVER_TYPE	BUILTIN_SERVER_NONE
+
+/*
+ * For server functions
+ *
+ * The officially assigned port by IANA is
+ *
+ * noaaport        2210/tcp   NOAAPORT Broadcast Network
+ * noaaport        2210/udp   NOAAPORT Broadcast Network
+ */
+#define SERVER_NAME		NULL
+#define SERVER_PORT             "2210"
+#define SERVER_LISTEN_BACKLOG   5
+#define SERVER_MAXCLIENTS	-1	/* no limit */
+#define SERVER_SO_SNDBUF	-1	/* default */
+
+/* 
+ * After a net client connects it must identify its protocol. If has not
+ * done so after this time limit (in seconds) the protocol is set to 
+ * the default (assumed to be emwin).
+ */
+#define SERVER_CLIENTID_TIMEOUT_SECS	5
+
+/* How often to recollect the statistics (in seconds). */
+#define NBSP_STATS_LOG_PERIOD	60	/* 1 min */
+
+/* How often to write the state of the queues (in seconds). */
+#define QSTATE_LOG_PERIOD	60	/* 1 min */
+
+/*
+ * How often to write the state of the server conections (in seconds).
+ * Also used to write the filter server status.
+ */
+#define SERVERSTATE_LOG_PERIOD	60
+
+/* 
+ * How often to write the server threads statistics (in terms of the
+ * number products processes).
+ */
+#define SERVERTHREADS_LOG_FREQ		100
+
+/* 
+ * Readers' timeout waiting for broadcasts (in seconds). It is also the
+ * the time that the inn slave waits for the start of a packet in the infifo.
+ */
+#define BROADCAST_READ_TIMEOUT_SECS	120
+
+/* logger and filter timeout writing to the fifos (filters) */
+#define FIFO_WRITE_TIMEOUT_MSECS	500
+
+/* server timeout writing to network clients and how many more times to try */
+#define CLIENT_WRITE_TIMEOUT_MSECS	1000
+#define CLIENT_WRITE_TIMEOUT_RETRY	2
+
+/*
+ * filter and server, and server-threads and filter-threads timeout waiting
+ * for queue ready.
+ */
+#define SERVERS_QUEUE_READ_TIMEOUT_MSECS	1000
+#define STHREADS_QUEUE_READ_TIMEOUT_MSECS	10000
+
+/* processor thread timeout waiting for complete product in pctl */
+#define PROCESSOR_PCTL_READ_TIMEOUT_MSECS	1000
+
+/* main loop sleep interval */
+#define MAINLOOP_SLEEP_SECS	5
+
+/* 
+ * The blocksize parameter for the products memfiles and the minimum
+ * initial size of the memfile pool. The blocksize should be something
+ * like the average size of a frame, and the minimum size should be such
+ * that most of the products transmitted fit in it.
+ * Since they are runtime configurable, set lower limits for them (checked
+ * in conf.c.in).
+ */
+#define MEMFILE_BLOCKSIZE		2048
+#define MEMFILE_MINSIZE			1048576	      /* 1024 KB */
+#define MEMFILE_BLOCKSIZE_LIMIT		512	      
+#define MEMFILE_MINSIZE_LIMIT		1024
+
+/* 
+ * Configuration for db queues.
+ *
+ * The home directory for db queues, the memory cache size,
+ * the size of the extents used to hold pages in the queue db,
+ * and mode of db files.
+ * Assuming a rate of 1 MB/sec, or 60 MB/min, a cache of 64 MB can hold
+ * a backlog of about one minute, or about 1000 files (in the pctlmf.db).
+ * On the other hand, each entry in the q0,q1 and network queues takes
+ * around 1KB combined, which amounts to 1 MB for each 1000 files, or each 
+ * minute, of backlog. Ideally, the DBCACHE_MB should probably be set to a
+ * value several times times this default (e.g., cache 1 GB and extent 256).
+ * The page size is not set explicitly. It is chosen 4KB, or 8KB or similar,
+ * depending on the blocksize used by the OS. 
+ */
+#define QUEUE_DBHOME			"/var/noaaport/nbsp/db"
+#define QUEUE_DBCACHE_MB		256
+#define QUEUE_DBEXTENT_SIZE		128
+#define DBFILE_MODE			0644
+
+/*
+ * The processors queue file names, and the (base) name of the db files
+ * of the filter and network server queues.
+ */
+#define PCTL_DBFNAME			"pctl.db"
+#define PCTLMF_DBFNAME			"pctlmf.db"
+#define QDB_DBFNAME			"q"
+
+/* 
+ * Maximum filter and server queue sizes.
+ * The soft value does not limit the size of the queue, but if it
+ * grows larger than this it will begin to report it.
+ * The hard value places a maximum value on the size of the queue.
+ * The numbers here refer to the maximum number of elements in the
+ * queue (not the byte size).  Each element in the filter and server
+ * queue occupies around 20 + strlen(full path name) bytes of memory
+ * (around 84 bytes). In the pctldb, around 204 + strlen(fpath), or 264 total.
+ * 
+ * A setting of zero disables the limits. Note that QUEUE_MAXSIZE_HARD cannot
+ * be larger than SPOOLDB_SLOTS (above), since otherwise these queues
+ * would then contain files that have been deleted already from the spool db,
+ * and therefore the filters (and server) would not find them.
+ * So, QUEUE_MAXSIZE_HARD should not be zero unless SPOOLDB_SLOTS
+ * is also set to zero.
+ */
+#define QUEUE_MAXSIZE_SOFT		16384
+#define QUEUE_MAXSIZE_HARD		(SPOOLDB_SLOTS/2)
+/* How often any soft or hard limit excess (see above) is reported. */
+#define QUEUE_REPQUOTA_PERIOD_SECS	60
+
+/*
+ * These numbers operate similar to the soft and hard
+ * quotas for the DB queues. The second pair of numbers are given
+ * in terms of the memory of the pctl (the sizes are in mb), and
+ * both pairs are used.
+ */
+#define PCTL_MAXSIZE_SOFT		2048
+#define PCTL_MAXSIZE_HARD		0
+#define PCTL_MAXMEM_SOFT_MB		128
+#define PCTL_MAXMEM_HARD_MB		256
+
+/* 
+ * The network client db queues. They are all in-memory. Each entry in
+ * each queue is around 100 bytes (the packetinfo or emwininfo struct).
+ * A cache of 1 MB for each queue is enough to hold ten thousand entries.
+ */
+#define CLIENT_QUEUE_MAXSIZE_SOFT	1024
+#define CLIENT_QUEUE_MAXSIZE_HARD	2048
+#define CLIENT_QUEUE_DBCACHE_MB		1
+
+/*
+ * The rtxdb database file, used to keep track of retransmissions.
+ * If the file name is NULL, the database is
+ * created without a backing file. The parameter NBSP_RTXDB_SLOTS is
+ * actually ignored except if it is set to zero in which case
+ * the database is disabled; in this case all the retransmissions
+ * are processed or rejected depending on NBSP_RTXDB_DEFAULT_PROCESS.
+ * The database is truncated every "NBSP_RTXDB_TRUNCATE_MINUTES" minutes.
+ */
+#define NBSP_RTXDB_DBFNAME			NULL	/* or "nbsp.db" */
+#define NBSP_RTXDB_SLOTS			12000
+#define NBSP_RTXDB_TRUNCATE_MINUTES		10
+#define NBSP_RTXDB_DEFAULT_PROCESS		1
+
+/*
+ * The MAX_LOAD_AVE is compared against the first number returned by
+ * getloadavg. If the latter exceeds the former then the high load
+ * flag is raised and the readers are throttled (sleep) for the time
+ * given in MAX_LOAD_AVE_SLEEP_SECS, until the load becomes less than
+ * MAX_LOAD_AVE_SOFT. For one-cpu machines, setting MAX_LOAD_AVE_HARD = 4
+ * is reasonable, or MAX_LOAD_AVE_HARD = 6 for and for two-cpu's. Then
+ * MAX_LOAD_AVE_SOFT can be set to (MAX_LOAD_AVE_HARD - 1).
+ *
+ * In addition, if MAX_LOAD_AVE_SOFT is set, then when it is reached
+ * the retransimssion index is checked. If it exceeds the value given by
+ * MAX_LOAD_RTX_INDEX, then the retransmissions will be rejected until
+ * the index becomes smaller.  The retransmission index is measured
+ * as the number of retransmissions per 1000 products received.
+ *
+ * Of course, if the machine is overloaded one possible solution
+ * is to reduce the number of filters that are enabled.
+ * But this mechanism can be useful in those
+ * situations in which there are too many retransmissions.
+ *
+ * A zero of MAX_LOAD_AVE_HARD or MAX_LOAD_AVE_SOFT disables the
+ * corresponding check, and that is the default setting. It can be
+ * enabled in the run-time configuration file.
+ */
+#define MAX_LOAD_AVE_HARD		0
+/* #define MAX_LOAD_AVE_SOFT		(MAX_LOAD_AVE_HARD - 1) */
+#define MAX_LOAD_AVE_SOFT		0
+#define MAX_LOAD_AVE_SLEEP_SECS		30
+#define MAX_LOAD_AVE_PERIOD_SECS	30
+#define MAX_LOAD_RTX_INDEX		250
+
+/*
+ * This section sets parameters when nbsp runs as a slave (slave.c,h).
+ * The default is to run as a master. 
+ */
+#define FEEDMODE_MASTER		0	/* slave values in slave.h */
+#define SLAVE_MASTERNAME	NULL
+#define SLAVE_MASTERPORT	SERVER_PORT
+#define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
+#define SLAVE_INPUT_FIFO_MODE	0660
+#define SLAVE_INPUT_FIFO_GRP	"news"
+#define SLAVE_READ_TIMEOUT_SECS	10
+#define SLAVE_READ_TIMEOUT_RETRY 2
+#define SLAVE_REOPEN_TIMEOUT_SECS 2
+#define SLAVE_SO_RCVBUF		-1
+
+#define DEFAULT_FEEDMODE	FEEDMODE_MASTER
+
+/* 
+ * The default accept RE is NULL, so everything is accepted
+ * for processing and distribution, subject to the RE's below.
+ * These are all uwildregex expressions.
+ */
+#define PATT_ACCEPT		NULL
+
+/* RE's for what the processor sends to the filter queue */
+#define FILTERQ_PATT_ACCEPT	NULL
+
+/* RE's for what the processor sends to the server queue */
+#define SERVERQ_PATT_ACCEPT	NULL
+
+/* RE's for filtering what the server distributes. */
+#define NBS1_PATT_ACCEPT	NULL
+#define NBS2_PATT_ACCEPT	NULL
+#define EMWIN_PATT_ACCEPT	NULL
+
+/* 
+ * RE's for saving files in compressed form (if they are trasnmitted
+ * compressed; e.g. radar data. The RE is matched against the file name.)
+ * For example, a setting like
+ * 
+ * #define SAVEZ_PATT_ACCEPT	"_(sdus[2357]|tig)"
+ *
+ * will save the radar and satellite files in compressed form and uncompress
+ * the rest. The setting below saves everything compressed.
+ */ 
+#define SAVEZ_PATT_ACCEPT	NULL
+
+/*
+ * RE's for what gets inserted in the db of received files (rtxdb) for
+ * keeping track of retransmissions. By default everything is kept,
+ * which implies that no retransmissions are reprocessed if the
+ * original files were received well.
+ */
+#define RTXDB_PATT_ACCEPT	NULL
+	
+#endif

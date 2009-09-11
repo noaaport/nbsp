@@ -1,0 +1,132 @@
+#
+# $Id$
+#
+
+# This is the configuration file for the hourly script.
+# It deletes files in the specified directories that are
+# older than the specified time or based on a retention count.
+#
+# This file is searched for first in the main configuration directory, then
+# in the defaults and finally the site subdirectory. All the three files are
+# read, and the last configuration line for each given <dir> is used.
+#
+# Therefore, any "defaults" and/or "site" versions of this file need to
+# contain only the lines that override the defaults set in this file
+# and not a copy of this entire file.
+#
+# The lines are of one of the following two the forms:
+#
+# <timespec>:<dir>:<expression>
+# <timespec>:<dir>:<exclude subdirs>:<expression>
+#
+# In the first form, `find' is applied to <dir>. In the second form, `find'
+# is applied to the subdirectories of <dir>, excluding the subdirectories
+# whose names match the regular expression <exclude subdirs>.
+#
+# <expression> is the time specification expression that is passed to find,
+# or an option string that can have two forms.
+#
+# The first form is -c <count> [-d] [-e <excludelist>] indicating
+# a retention count and optionally a regexp specifying file names to
+# exclude from the deletion list. For example, alternative specifications
+# for the digatmos/nexrad directory could be
+#
+# H/2:/var/noaaport/data/digatmos/nexrad/nids: -mtime +4h
+# H/2:/var/noaaport/data/digatmos/nexrad/nids: -c 60 -e latest|.+\.list
+#
+# A retention count can be specified only if the files in the directory
+# and its subdirectories are saved with a date-time based name so that
+# they sort according to their age.
+#
+# If the "-d" is given, then the subdirectories of <dir> are treated as files
+# instead of being processed recursively. This is useful, for example, when
+# when <dir> has subdirectories with names like 20090223 20090224.
+#
+# The second form of <expression> is "-i <options>", where the -i indicates
+# that the directory <dir> contains inventory files rather than the data files
+# themselves. The <options> are passed to find to get the inventory files
+# that meet the criteria. Then the inventory files are read one by one
+# and all the files referenced in them are deleted, and finally the inventory
+# file itself is deleted. Therefore an alternative specification for the
+# digamots/nexrad directory is
+#
+# H/2:/var/noaaport/data/inv/digatmos/nexrad/nids: -i -mmin +240
+#
+#
+# The time specification is one of
+#
+# H		=> run every hour
+# H=ll|mm|nn	=> run at the hours in the list
+# H/n		=> run if the remainder of the (current hour)/n is zero. 
+#
+# D=ddhh|d'd'h'h'|...	=> run at the days of the month and hours in the list.
+#			   Here the dd is between 01-31.
+# Dhh|h'h'|.../n	=> run if the remainder of (current day of month)/n
+#			   is zero and the current hour is in the list.
+#			
+# W=dhh|d'h'h'|...	=> run at the days of the week and hours in the list.
+#			   Here the d is between 0-6 with 0 = sunday.
+# Whh|h'h'|.../n	=> run if the remainder of (current day of week)/n
+#			   is zero and the current hour is in the list.
+#
+# Examples
+#
+# H/3  => run at 0, 3, 6, ...
+# H=03|09|18|23  => run at 03, 09, 18 and 23.
+# W=523 => run on fridays at 11 pm
+# D=0101 => run on the first of the month at 1 am.
+# D03|21/2  => run every other day at 3 am and 9 pm.
+
+# NOTE:  In different versions of`find', the argument
+# of the mtime option differs in interpretation. For example, in linux, 
+# -mtime +1 will keep files that are younger than two days, and delete those
+# that are older. To delete files that are older than 1 day, it must
+# be specified as -mtime +0.
+
+# Delete processed files in the data directory.
+# Note that the "digatmos/{hurricane,enso}" subdirectory is excluded;
+# "data/track" is not included;
+# The metarfilter takes care of itself so "data/metar" is not included.
+# The metar/upperair/ws archives are enabled by default; the setting below
+# allows seven days of daily and hourly archives.
+#
+H/5:/var/noaaport/data/inv/rst/txt: -i -mtime +1
+H/2:/var/noaaport/data/inv/rst/rad: -i -mmin +240     
+H:/var/noaaport/data/inv/rst/sat: -i -mmin +240
+#
+H/6:/var/noaaport/data/digatmos:nexrad|sat|aloft|hurricane|enso: -mtime +1
+H/2:/var/noaaport/data/inv/digatmos/nexrad/nids: -i -mmin +240
+H/6:/var/noaaport/data/inv/digatmos/sat/gini: -i -mtime +0
+H/6:/var/noaaport/data/inv/digatmos/aloft: -mmin +360
+#
+H/5:/var/noaaport/data/gempak:nexrad|images: -mtime +0
+H/2:/var/noaaport/data/inv/gempak/nexrad/nids: -i -mmin +240
+H:/var/noaaport/data/inv/gempak/images/sat: -i -mmin +240
+#
+H/6:/var/noaaport/data/grib: -mtime +0
+#
+H=02:/var/noaaport/data/metar/archive: -c 7 -d
+H=02:/var/noaaport/data/upperair/archive: -c 7 -d
+H=02:/var/noaaport/data/weatherscope: -c 7 -d
+
+# Keep a week of the old www logfiles
+H=01:/var/noaaport/www/log: -mtime +6
+
+# Delete files in the spool directory (see below)
+#
+H=23:/var/noaaport/nbsp/spool: -mtime +0
+
+# If the parameter "spooldbslots" is not zero in the nbspd.conf file
+# (the default is not zero), then the spool directory is managed
+# by nbsp itself.
+# However, in case of errors it is possible that a file may not be
+# deleted when it should. While rare, this is posible.
+# Therefore, as a precaution, the spool directory is here checked
+# once a day (at 23:00), for such possible leftover files.
+#
+# If the "spooldbslots" parameter is set to zero then the following settings
+# or something similar could be used or a completely independent scheme
+# should be implemented.
+#
+### H:/var/noaaport/nbsp/spool: -mmin +720
+### H:/var/noaaport/nbsp/spool: -mmin +240 -name *sdus*

@@ -1,0 +1,25 @@
+$Id$
+
+The files in this directory, except this one, come from the radmap
+subdirectory in the gempak source distribution. nbsp uses the radmap
+program for the radar image generation, and radmap requires these data files
+as well as some other data files that are installed as part of the gempak
+package.
+
+In the default configuration, nbsp assumes that gempak is installed
+as
+
+	/home/gempak/{bin,comet,doc,gempak,...}
+
+and the radmap subdirectory is installed as
+
+	/home/gempak/gempak/radmap
+
+next to the 
+
+	climo, data, ...
+
+subdirectories.
+
+- Jose F Nieves
+ 

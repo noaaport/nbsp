@@ -1,0 +1,149 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require nntp;
+
+set usage "nbspnntpsend <server> <from> <newsgroup> <subject> <fpath> <uflag>";
+
+proc err s {
+
+    global argv0;
+
+    puts "$argv0: $s";
+    cleanup;
+    exit 1;
+}
+
+proc stripcr {body} {
+#
+# This is a copy of the function defined in the filter library.
+#
+    set lines [split $body "\n"];
+    foreach l $lines {
+	append r [string trimright $l] "\n";
+    }
+
+    return $r;
+}
+
+proc cleanup {} {
+
+    global gNNTP_openflag;
+
+   if {$gNNTP_openflag == 1} {
+	nntp_close;
+    }
+}
+
+proc nntp_open {server} {
+
+    global gNNTP gNNTP_openflag;
+
+    set status [catch {
+        set gNNTP [nntp::nntp $server];
+    } errmsg];
+
+    if {$status != 0} {
+        err $errmsg;
+    }
+
+    set gNNTP_openflag 1;
+}
+
+proc nntp_close {} {
+
+    global gNNTP gNNTP_openflag;
+
+    if {$gNNTP_openflag == 1} {
+	set status [catch {$gNNTP quit} errmsg];
+	set gNNTP_openflag 0;
+
+	if {$status != 0} {
+            err $errmsg;
+	}
+    }
+}
+
+proc nntp_post msg {
+
+    global gNNTP;
+
+    set status [catch {$gNNTP post $msg} errmsg];
+    if {$status != 0} {
+        err $errmsg;
+    }
+}
+
+proc make_nntp_header {from newsgroups subject} {
+
+    append header "From: $from\n";
+    append header "Newsgroups: $newsgroups\n";
+    append header "Subject: $subject\n\n";
+
+    return $header;
+}
+
+proc nntp_send_plain {from newsgroups subject fpath} {
+
+    set header [make_nntp_header $from $newsgroups $subject];
+    set status [catch {
+        set F [open $fpath r];
+        fconfigure $F -translation binary -encoding binary;
+        append content $header [stripcr [read $F]];
+        close $F;
+    } errmsg];
+
+    if {$status != 0} {
+        err $errmsg;
+    } else {
+        nntp_post $content;     
+    }
+}
+
+proc nntp_send_encode {from newsgroups subject fpath} {
+
+    set header [make_nntp_header $from $newsgroups $subject];
+    set fbasename [file tail $fpath];
+    set status [catch {
+        append content $header [exec uuencode $fpath $fbasename];
+    } errmsg];
+
+    if {$status != 0} {
+        err $errmsg;
+    } else {
+        nntp_post $content;     
+    }
+}
+
+#
+# main
+#
+
+# variables
+set gNNTP "";
+set gNNTP_openflag 0;
+
+# arguments
+if {($argc < 5) || ($argc > 6)} {
+    err $usage;
+}
+set gserver [lindex $argv 0];
+set gfrom   [lindex $argv 1];
+set gnewsgroups [lindex $argv 2];
+set gsubject [lindex $argv 3];
+set gfpath [lindex $argv 4];
+set guflag 0;
+if {$argc == 6} {
+    set guflag [lindex $argv 5];
+}
+
+nntp_open $gserver;
+
+if {$guflag == 0} {
+    nntp_send_plain $gfrom $gnewsgroups $gsubject $gfpath;
+} else {
+    nntp_send_encode $gfrom $gnewsgroups $gsubject $gfpath;
+}
+
+nntp_close;

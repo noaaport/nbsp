@@ -1,0 +1,199 @@
+#!/usr/bin/perl
+#
+# $Id$
+#
+# Sample script for storing files in a gempak-like directory tree. 
+# This file can be placed in the nbsp dev directory, and then a HUP
+# signal to nbspd (if it already running) to load it. The only
+# configurable option is the location of the root of the tree
+# specified in the variable "$gdatadir" below.  
+
+use File::Basename;
+use File::Path;
+use Compress::Zlib;
+use Sys::Syslog;
+use strict;
+
+our $gempak_datadir = "/var/noaaport/gempak";
+our $gdatadir = "$gempak_datadir/data";
+our $gtabledir = "$gempak_datadir/tables";
+our $glogdir = "$gempak_datadir/logs";
+our $gdecdir = "/home/gempak/bin";
+our $gdecoders_rootdir = "/var/noaaport";
+
+our $gverbose = 1;
+our $glogfile = 0;
+
+our $gmpk_header_fmt = "\001\r\r\n%03d \r\r\n"; 
+our $gmpk_trailer_str = "\r\r\n\003"; 
+
+sub main() {
+
+    my $line;
+    my ($seq, $type, $cat, $code, $fpath);
+    my ($fname, $dirname);
+
+    openlog "gpk-pipe", "ndelay", "nowait", "user"; 
+    
+    chdir($gdecoders_rootdir);
+
+    if($glogfile == 1){
+	if(open(STDOUT, ">/var/noaaport/gempak-filter.log") == undef){
+	    syslog("err", "Could not open logfile. $!");
+	    $glogfile = 0;
+	}
+    }
+
+    while($line = <STDIN>){
+
+	if($glogfile == 1){
+	    print $line;
+	}
+
+	chop($line);
+	($seq, $type, $cat, $code, $fpath) = split(/\s+/, $line);
+
+	$dirname = dirname($fpath);
+	$fname = basename($fpath);
+
+	process_product($seq, $fpath, $fname);
+    }
+
+    if($glogfile == 1){
+	close(STDOUT);
+    }
+
+    closelog;
+}
+
+sub process_product(){
+
+    my ($seq, $fpath, $fname) = @_;
+    my ($station, $wmoid, $awips, $notawips, $type);
+    my ($awips1, $awips2);
+    my @time;
+    my $ymdh;
+    my $ymd_hm;
+    my $pipe_cmd;
+    my $pipe_options;
+    my $savename;
+    my $f_compress = 0;
+    my $status;
+
+    # The file name is of the form "tjsj_sdus52-ncrjua.4" 
+    # when there is an awips code, or "kwbc_ytqm52+grib.4".
+    # In some cases, the third component is absent as well.
+
+    if($fname =~ /-/){
+	$notawips = "";
+	($station, $wmoid, $awips, $type) = split(/[_.\-]/, $fname);
+	$awips1 = substr($awips, 0, 3);
+	$awips2 = substr($awips, 3);
+    }elsif($fname =~ /\+/){
+	$awips = "";
+	$awips1 = "";
+	$awips2 = "";
+	($station, $wmoid, $notawips, $type) = split(/[_+.\-]/, $fname);
+    }else{
+	$awips = "";
+	$awips1 = "";
+	$awips2 = "";
+	$notawips = "";
+	($station, $wmoid, $type) = split(/[_.]/, $fname);
+    }
+
+    @time = gmtime();
+    $time[5] += 1900;
+    $time[4] += 1;
+    $ymdh = sprintf("%d%02d%02d%02d", $time[5], $time[4], $time[3], $time[2]); 
+    $ymd_hm = sprintf("%d%02d%02d_%02d%02d", 
+		      $time[5], $time[4], $time[3], $time[2], $time[1]); 
+
+    @gp.pl@
+}
+
+sub filter(){
+
+    my($seq, $fpath, $fname,
+       $pipe_cmd, $pipe_options, $savename, $f_compress) = @_;
+    my $status;
+    my $line1;
+    my $line2;
+    my $subline1;
+    my @body;
+    my $body;
+    my $cbody;
+    my $framenumber;
+    my $size;
+
+    if($savename ne ""){
+	$savename = "$gdatadir/$savename";
+    }
+
+    if(open(FIN, $fpath)  == undef){
+	syslog("err", "Could not open $fpath: $!");
+	return;    
+    }
+
+    $status = open(FOUT, "|$pipe_cmd $pipe_options $savename");
+
+    if($status == undef){
+	close(FIN);
+	syslog("err", "Could not open $pipe_cmd: $!");
+	return;
+    }
+
+    printf(FOUT $gmpk_header_fmt, $seq % 1000);
+    if($f_compress == 1){
+	if($gverbose == 1){
+	    syslog("info", "Compressing $fpath.");
+	}
+
+	# For gempak compatibility, the entire product must be split
+	# in 4000 bytes frames (as in the raw noaaport), then compress
+	# each frame individually, and then catenate the compressed
+	# frames. That is prepended with the wmo and awips header 
+	# (from the the first and second lines of the original uncompressed
+	# file). Furthermore, the frames must be compressed with level 9
+	# and with the compress() function, not with ->deflate.
+
+	# The first line (ccb) contains binary characters and may have
+	# a '\n', so do not use <FIN> to read that entire line.
+
+	read(FIN, $line1, 24);		# points past the 24 byte ccb header
+	$subline1 = <FIN>;		# rest of line1 (wmo)
+	$size = 24 + length($subline1);
+	$line1 = "$line1$subline1";	# full line1
+	print(FOUT $subline1);
+	$line2 = <FIN>;
+	$size += length($line2);
+	print(FOUT $line2);
+	$framenumber = 0;
+	while(read(FIN, $body, 4000 - $size) > 0){
+	    if($framenumber == 0){
+		++$framenumber;
+		$size = 0;	# read full 4000 bytes for other frames
+		$body = join("", $line1, $line2, $body);
+	    }
+	    $cbody = compress($body, 9);
+	    print(FOUT $cbody);
+	}
+    }else{
+	read(FIN, $line1, 24);		# points past the 24 byte ccb header
+	$subline1 = <FIN>;		# rest of line1 (wmo)
+	@body = <FIN>;
+	print(FOUT $subline1);
+	print(FOUT @body);
+    }
+    printf(FOUT $gmpk_trailer_str);
+
+    close(FIN);
+    close(FOUT);
+
+    if($gverbose == 1){
+	syslog("info", "Piping $fname to $pipe_cmd.");
+    }
+}
+
+main();
+

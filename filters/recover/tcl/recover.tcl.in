@@ -1,0 +1,173 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require fileutil;
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "recover disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+#
+set recover_init_file [file join $common(libdir) "recover.init"];
+if {[file exists $recover_init_file] == 0} {
+        log_msg "recover disabled: $recover_init_file not found.";
+        return 1;
+}
+source $recover_init_file;
+unset recover_init_file;
+
+# nbspd.init is needed for spool and infedfifo
+set nbspd_init_file [file join $common(libdir) "nbspd.init"];
+if {[file exists $nbspd_init_file] == 0} {
+        log_msg "$nbspd_init_file not found.";
+        return 1;
+}
+source $nbspd_init_file;
+unset nbspd_init_file;
+
+# variables
+append recover(_baseurl) "http://" $recover(backuphostport) "/_get/spool";
+set recover(_spooldir) $nbspd(spooldir);
+set recover(_infeedfifo) $nbspd(infeedfifo);
+
+proc main {argc argv} {
+
+    global recover;
+    global errorInfo;
+
+    # The recover directory must exist
+    if {[file isdirectory $recover(dir)] == 0} {
+	log_msg "$recover(dir) does not exist.";
+	return 1;
+    }
+
+    # The spool directory must exist
+    if {[file isdirectory $recover(_spooldir)] == 0} {
+	log_msg "$recover(_spooldir) does not exist.";
+	return 1;
+    }
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin missingfinfo] >= 0} {
+	if {$missingfinfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $missingfinfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $missingfinfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {missingfinfo} {
+
+    global recover;
+
+    set _rclist [split $missingfinfo];
+    set rc(unixtime) [lindex ${_rclist} 0];
+    set rc(seq) [lindex ${_rclist} 1];
+    set rc(type) [lindex ${_rclist} 2];
+    set rc(cat) [lindex ${_rclist} 3];
+    set rc(code) [lindex ${_rclist} 4];
+    set rc(npchidx) [lindex ${_rclist} 5];
+    set rc(fbasename) [lindex ${_rclist} 6];
+    set rc(fname) [file rootname $rc(fbasename)];
+    set rc(station) [string range $rc(fname) 0 3];
+
+    file mkdir [file join $recover(_spooldir) $rc(station)];
+    set local_path [file join $recover(_spooldir) $rc(station) $rc(fbasename)];
+    
+    set url_path $recover(_baseurl);
+    append url_path "/" $rc(fbasename);
+
+    set status [proc_curl $local_path $url_path];
+    if {$status == 0} {
+	set flag "R";
+	log_msg "Recovered $rc(fbasename)";
+    } else {
+	set flag "U";
+	log_msg "Cannot recover $rc(fbasename)";
+    }
+
+    set logfname [clock format [clock seconds] \
+	    -gmt true -format $recover(fnameformat)];
+    set logfile [file join $recover(dir) $logfname];
+    set logdata $missingfinfo;
+    append logdata " " $flag "\n";
+    ::fileutil::appendToFile -translation binary -encoding binary \
+	    $logfile $logdata;
+
+    # If the file could be recovered it is then sent to the infeed fifo
+    # and/or the filters.
+
+    if {$status != 0} {
+	return $status;
+    }
+
+    if {$recover(infeed_enable) == 0} {
+	return 0;
+    }
+
+    # nbspinsert knows where to look for the nbs infeed fifo, but
+    # passing it here with [-f] option prevents nbspinsert from having
+    # to read the nbsp configuration files.
+    set status [catch {
+	exec nbspinsert -i -f $recover(_infeedfifo) \
+		$rc(seq) $rc(type) $rc(cat) $rc(code) $rc(npchidx) \
+		$rc(fname) $local_path;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }	
+
+    return $status;
+}
+
+proc proc_curl {local_path url_path} {
+
+    global recover;
+
+    set status 0;
+    set count 0;
+
+    while {$count <= $recover(curl_retries)} {
+        set status [catch {
+            eval exec curl $recover(curl_options) \
+		 -m $recover(curl_timeout) -o $local_path $url_path;
+        } errmsg];
+
+        if {$status == 0} {
+            break;
+        }
+        incr count;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+
+    return $status;
+}
+
+main $argc $argv

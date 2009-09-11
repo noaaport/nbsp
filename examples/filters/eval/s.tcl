@@ -1,0 +1,1 @@
+set emwinfname "cwasjupr.txt";

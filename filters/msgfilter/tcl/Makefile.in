@@ -1,0 +1,46 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	msgfilter.tcl
+TCLSOURCES =	msgfilter.tcl.in
+FILTERNAME =	msgfilter
+RCSOURCE =	msgfilter.rc
+EXAMPLES =	msgfilter.rc-ex msgfilter-subscribers.txt-ex
+TARGET =	${TCLTARGET} ${SAMPLES}
+SAMPLES =	msgfilter.conf-sample \
+		msgfilter.rc-sample \
+		msgfilter-prodcodes.def-sample \
+		msgfilter-ugczones.def-sample
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+msgfilter.conf-sample: msgfilter.conf
+	cp msgfilter.conf msgfilter.conf-sample
+
+msgfilter.rc-sample: msgfilter.rc 
+	cp msgfilter.rc msgfilter.rc-sample
+
+msgfilter-prodcodes.def-sample: msgfilter-prodcodes.def
+	cp msgfilter-prodcodes.def msgfilter-prodcodes.def-sample
+
+msgfilter-ugczones.def-sample: msgfilter-ugczones.def
+	cp msgfilter-ugczones.def msgfilter-ugczones.def-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${EXAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

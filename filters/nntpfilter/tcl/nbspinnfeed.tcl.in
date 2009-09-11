@@ -1,0 +1,248 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+# This script should be installed in the inn configuration file "newsfeeds"
+# by the line
+#
+# nbspinnfeed:noaaport.raw.*:Tc:/usr/local/libexec/nbsp/nbspinnfeed
+#
+# Note that this is not the same as (see man newsfeeds)
+#
+# nbspinnfeed:noaaport.raw.*:Tp:/usr/local/libexec/nbsp/nbspinnfeed %s
+
+## The common defaults
+set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
+if {[file exists ${_defaultsfile}] == 0} {
+    puts "${_defaultsfile} not found.";
+    return 1;
+}
+source ${_defaultsfile};
+unset _defaultsfile;
+
+# nbspd.init is needed for spool dir and nbspd.missing
+set nbspd_init_file [file join $common(libdir) nbspd.init];
+if {[file exists $nbspd_init_file] == 0} {
+    puts "$nbspd_init_file not found.";
+    return 1;
+}
+source $nbspd_init_file;
+unset nbspd_init_file;
+
+# default configuration
+set nbspinnfeedconf	[file join $common(confdir) "nbspinnfeed.conf"];
+set nbspinnfeedconfdirs	$common(localconfdirs);
+set spooldir		$nbspd(spooldir);
+set nbspinfifo		$nbspd(infeedfifo);
+set innsm		$filterprogs(innsm);
+# This can be modified in the configuration file
+set nbspinnfeedrc	[file join $common(confdir) "nbspinnfeed.rc"];
+set subdirsmode		0755;
+
+# global variables
+set FIFO "";
+set FIFO_open 0;
+
+# The default configuration file of this script
+if {[file exists $nbspinnfeedconf] == 1} {
+    source $nbspinnfeedconf;
+}
+
+proc log_err s {
+
+    global argv0;
+
+    set name [file tail $argv0];
+    append msg $name ": " [clock format [clock seconds]] ": " $s; 
+
+    exec logger -t $name $s;
+    puts stderr $msg;
+}
+
+proc open_fifo {} {
+
+   global nbspinfifo FIFO FIFO_open;
+
+   if {[file exists $nbspinfifo] == 0} {
+       log_err "$nbspinfifo not found.";
+       return 1;
+   }
+
+   set status [catch {
+       set FIFO [open $nbspinfifo {WRONLY NONBLOCK}]
+   } errmsg];
+
+   if {$status == 0} {
+	fconfigure $FIFO -translation binary -encoding binary;
+	set FIFO_open 1;
+   } else {
+       log_err $errmsg;
+   }
+
+   return $status;
+}
+
+proc close_fifo {} {
+
+   global FIFO FIFO_open;
+
+   if {$FIFO_open == 0} {
+	return;
+    }
+
+    set status [catch {close $FIFO} errmsg];
+    if {$status != 0} {
+        log_err $errmsg;
+    }
+    set FIFO_open 0;
+}
+
+proc getfinfo {fin header} {
+
+    set finfo "";
+    while {[gets $fin nbspheader] > 0} {
+	if {[regexp "$header: (.*)" $nbspheader match finfo]} {
+	    break;
+	}
+    }
+
+    return $finfo;
+}
+
+proc process {token} {
+
+    global innsm spooldir subdirsmode;
+
+    set status [catch {
+	set fin [open "|$innsm -H $token" r];
+	fconfigure $fin -translation binary -encoding binary;
+    } errmsg];
+    
+    if {$status != 0} {
+	log_err $errmsg;
+	return 1;
+    }
+	
+    set finfo [getfinfo $fin "X-nbsp"];
+    #
+    # Close the pipe but catch (and ignore) the "error" that is generated
+    # by closing the pipe, when we find the header we are after,
+    # before reading all the input that the -H option to sm sends to us.
+    #
+    catch {close $fin};
+
+    if {$finfo == ""} {
+	log_err "No header found.";
+	return 1;
+    }
+
+    scan $finfo "%u %d %d %d %d %s" seq type cat code npchidx fbasename;
+    set fname [file rootname $fbasename];
+    set station [string range $fname 0 3];
+    set fdirname [file join $spooldir $station];
+    set fpath [file join $fdirname $fbasename];
+
+    set rc_status [filter $fname];
+    if {$rc_status != 0} {
+	return 0;
+    }
+
+    if {[file isdirectory $spooldir] == 0} {
+	log_err "Directory $spooldir does not exist.";
+	return 1;
+    }
+
+    if {[file isdirectory $fdirname] == 0} {
+	file mkdir $fdirname;
+	file attributes $fdirname -permissions $subdirsmode;
+    }
+
+    set status [catch {
+	exec $innsm $token | uudecode -o $fpath;
+    } errmsg];
+
+    if {$status != 0} {
+	log_err $errmsg;
+	return 1;
+    }
+
+    set finfo [format "%u %d %d %d %d %s %s" \
+	$seq $type $cat $code $npchidx $fname $fpath];    
+    sendtof $finfo
+}
+
+proc sendtof {finfo} {
+
+    global FIFO;
+
+    set finfo_size [string length $finfo];
+    puts -nonewline $FIFO [binary format "I" $finfo_size];
+    puts $FIFO $finfo;
+    flush $FIFO;
+}
+
+proc filter {fname} {
+
+    global nbspinnfeedrc;
+
+    if {[file exists $nbspinnfeedrc] == 0} {
+	return 0;
+    }
+
+    # Initalize all keys
+    set station "";
+    set wmoid "";
+    set awips "";
+    set awips1 "";
+    set awips2 "";
+    set nawips "";
+
+    if {[regexp {\-} $fname] == 1} {
+	scan $fname {%[a-z0-9]_%[a-z0-9]-%[a-z0-9]} station wmoid awips;
+	set awips1 [string range $awips 0 2];
+	set awips2 [string range $awips 3 end];
+    } elseif {[regexp {\+} $fname] == 1} {
+	scan $fname {%[a-z0-9]_%[a-z0-9]+%[a-z0-9]} station wmoid nawips;
+    } else {
+	scan $fname {%[a-z0-9]_%[a-z0-9]} station wmoid;
+    }
+
+    set rc_status 0;
+    source $nbspinnfeedrc;
+
+    return $rc_status;
+}
+
+
+proc main {argc argv} {
+
+   global errorInfo;
+
+   set status [open_fifo];
+
+   if {$status != 0} {
+       return 1;
+   }
+
+   # gets returns -1 on eof.
+   while {[gets stdin token] >= 0} {
+       if {$token == ""} {
+	   log_err "Received request to quit.";
+	   break;
+       }
+
+       set status [catch {process $token} errmsg];
+       if {$status == 1} {
+	   log_err "Error processing $token";
+	   log_err $errmsg;
+	   log_err $errorInfo;
+
+	   break;
+       }
+   }
+
+   close_fifo;
+}
+
+main $argc $argv;

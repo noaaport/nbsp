@@ -1,0 +1,33 @@
+#
+# $Id$
+#
+The "panfilter" ("pan" stands for Product Arrival Notification and it is
+a term borrowed from the Unisys prodman manual), is one mecahnism
+for notifying another computer or computers when a particular file
+is received. The main motivation for enabling this in nbsp is to
+support a setup in which one or several computers wait for a message
+indicating that a particular product file has been received and saved
+in the spool directory by nbsp, so they can go and get it for
+further special processing. The nbsp computer can export by NFS, http
+or other means the spool directory, and the client computers
+can read just the file or request it by http or whatever has been
+set up.
+
+There can be various forms of notification, but at the moment the only
+one implemented is a UDP transmission. The panfilter has an "rc"
+file "panfilter.rc" where the rules for deciding what files to send
+and to whom are defined. When a given file is received and it matches
+a rule, the panfilter sends the client computer(s) a message
+containing the wmo header, the awips id if it is in the file, and
+the name of the file. With that information the client computer
+can construct the appropriate path or url to get the file and do what it
+wants with it.
+
+The file "panfilter.rc-ex" contains more detailed explanations and examples,
+and the files "nbspudpread.pl" and "nbspudpread.tcl"
+(in the nbsp documentation directory "/usr/local/share/doc")
+are two simple udp reader examples. 
+
+-
+Jose F Nieves
+Wed Jul 18 22:00:40 AST 2007

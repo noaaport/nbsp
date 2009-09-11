@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+# This is the main rc file. It is setp up to read the set of "subscribers" from
+# the following files
+#
+# site/msgfilter.rc
+# rc.d/msg/*.rc
+#
+# The lists should be put in any of those files.
+#
+# See the files
+#
+#   msgfilter.rc-ex
+#   msgfilter-subscriber.txt-ex
+#
+# for examples, and the msgfilter.README for explanations.
+
+# Load all the subscribers
+if {[llength $msgfilter(rcfiles)] != 0} {
+    foreach _rc $msgfilter(rcfiles) {
+        if {[file exists ${_rc}] == 1} {
+	    set subscribers [list];
+            source ${_rc};
+	    lappend msgfilter(subscribers) $subscribers;
+        }
+    }
+    unset _rc;
+    unset subscribers;
+}

@@ -1,0 +1,39 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	panfilter.tcl
+TCLSOURCES =	panfilter.tcl.in
+FILTERNAME =	panfilter
+RCSOURCE =	panfilter.rc
+SAMPLES =	panfilter.conf-sample \
+		panfilter.rc-sample
+TARGET =	${TCLTARGET} ${SAMPLES}
+EXAMPLE =	panfilter.rc-ex
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+panfilter.conf-sample: panfilter.conf
+	cp panfilter.conf panfilter.conf-sample
+
+panfilter.rc-sample: panfilter.rc 
+	cp panfilter.rc panfilter.rc-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${EXAMPLE} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

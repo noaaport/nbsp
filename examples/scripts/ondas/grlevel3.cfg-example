@@ -1,0 +1,26 @@
+ListFile: dir.list
+
+Product: N0R   NIDS/SSS/N0R
+Product: N0Z   NIDS/SSS/N0Z
+Product: N0V   NIDS/SSS/N0V
+Product: NCR   NIDS/SSS/NCR
+Product: N0S   NIDS/SSS/N0S
+Product: N1R   NIDS/SSS/N1R
+Product: N2R   NIDS/SSS/N2R
+Product: N3R   NIDS/SSS/N3R
+Product: N1V   NIDS/SSS/N1V
+Product: NET   NIDS/SSS/NET
+Product: NVW   NIDS/SSS/NVW
+Product: N1S   NIDS/SSS/N1S
+Product: N2S   NIDS/SSS/N2S
+Product: N3S   NIDS/SSS/N3S
+Product: NVL   NIDS/SSS/NVL
+Product: NTP   NIDS/SSS/NTP
+Product: N1P   NIDS/SSS/N1P
+
+Site: KFDR
+Site: KTLX
+Site: KDYX
+Site: KLBB
+Site: KAMA
+Site: KFWS

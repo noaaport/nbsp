@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+As of version 1.6.r9, some filters can spawn multiple copies of themselves
+to work in parallel. This "work-crew" configuration is currently supported
+by the
+
+	dafilter
+	rstfilter
+	gpfilter
+	gribfilter
+
+This configuration is enabled by setting the appropriate variables
+in the ``features.conf'' file to 2; e.g.,
+
+	set feature(dafilter)  2;
+
+The default is 1, which only spawns one instance of the filter as
+before.
+
+(Note the enabling the emwin server disables the working crew setting
+of the rstfilter.)
+-

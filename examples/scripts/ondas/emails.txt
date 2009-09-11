@@ -1,0 +1,162 @@
+Date:    Sat, 06 Dec 2008 09:49:25 EST
+To:      "'Jose F. Nieves'" <nieves@ltp.upr.clu.edu>
+cc:      "'Bill Harris'" <savoy9020@texoma.net>,
+	 "'Tyler Allison'" <tyler@allisonhouse.com>
+From:    <admin@grlevelx.com>
+Subject: RE: ondas specification
+
+Return-Path: admin@grlevelx.com
+Delivery-Date: Sat Dec  6 10:49:36 2008
+Return-Path: <admin@grlevelx.com>
+X-Spam-Checker-Version: SpamAssassin 3.2.3 (2007-08-08) on ltp.upr.clu.edu
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=failed
+	 version=3.2.3
+References: <200812052259.mB5Mxuok009128@ltp.upr.clu.edu>
+MIME-Version: 1.0
+X-Mailer: Microsoft Office Outlook 11
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.5579
+In-Reply-To: <200812052259.mB5Mxuok009128@ltp.upr.clu.edu>
+Thread-Index: AclXLTKMf3hHxP/6Rm2g7BEtWo0oeAAgvxcg
+X-Spam-Seen: Yes
+Status:  O
+
+I'm CC'ing Tyler Allison on this reply since he maintains the spec on his
+server.
+
+The ONDAS spec is valid and is the protocol used in my GRLevel3 program.
+Here are the answers to your specific questions:
+
+1) GRLevel3 does not use config.cfg. It looks for grlevel3.cfg. 
+
+2) I don't know if Digital Atmosphere follows the ONDAS spec or not. It
+isn't a Gibson Ridge Software program.
+
+3) Yes, there needs to be a file/script in each radar product subdirectory
+that lists the files in that directory. GRLevel3 needs that in order to know
+what is contained in the directory. The default is "dir.list". You can
+change that name by putting a "ListFile: xxxxx" statement in your
+grlevel3.cfg. GRLevel3 will append "xxxxx" to the product subdirectory in
+the URL when making the directory listing URL. For example, "ListFile:
+dir.php" would execute the dir.php script on your server to get a listing. 
+
+4) I don't know what other programs are compatible with the ONDAS spec.
+
+
+The ONDAS spec is designed to work with the standard directory structure
+produced by an LDM feed.
+
+Let me know if you have other questions or need clarification on any of the
+answers.
+
+Mike Gibson
+Gibson Ridge Software, LLC
+
+
+-----Original Message-----
+From: Jose F. Nieves [mailto:nieves@ltp.upr.clu.edu] 
+Sent: Friday, December 05, 2008 6:00 PM
+To: admin@grlevelx.com
+Cc: Bill Harris
+Subject: ondas specification
+
+Mike, Tim
+
+I have some questions about the
+
+  OPEN NEXRAD DATA ACCESS SPECIFICATION -- ONDAS/1.0-DRAFT
+
+of which you are co-author. Of course the first one is whether that document
+is still relevant, in the sense that it is supported by the various client
+applications that you may be aware of.
+
+But the specific questions are:
+
+1) In the grlevel? programs, is that file recognized with the
+
+   config.cfg
+
+or does it have to be named something else?
+
+2) Does "Digital Atmosphere" use that file?
+
+3) As I understand, there has to be a  "dir.list" file in each data
+subdirectory, listing the files in that subdirectory. 
+It seems that there is no provision for it to point to a cgi script that
+would compute that listing and return the result. Is this interpretation
+correct, or is it possible to have the dir.list with a base url that is
+different from the data subdirectory?
+
+4) Is it known what client programs are compliant with that specification?
+
+Thanks for your help
+
+Jose F Nieves
+
+-----------------------------------------------------------------------------
+
+(Message inbox:53)
+Date:    Sat, 06 Dec 2008 09:28:29 CST
+To:      admin@grlevelx.com
+cc:      "'Jose F. Nieves'" <nieves@ltp.upr.clu.edu>,
+	 "'Bill Harris'" <savoy9020@texoma.net>
+From:    "Tyler Allison" <tyler@allisonhouse.com>
+Subject: RE: ondas specification
+
+Return-Path: tyler@allisonhouse.com
+Delivery-Date: Sat Dec  6 11:28:33 2008
+Return-Path: <tyler@allisonhouse.com>
+X-Spam-Checker-Version: SpamAssassin 3.2.3 (2007-08-08) on ltp.upr.clu.edu
+X-Spam-Level: 
+X-Spam-Status: No, score=0.0 required=5.0 tests=none autolearn=failed
+	 version=3.2.3
+In-Reply-To: <B3A50778E4754037A907812E3F66ED44@GRLevelX9400>
+References: <200812052259.mB5Mxuok009128@ltp.upr.clu.edu>
+	 <B3A50778E4754037A907812E3F66ED44@GRLevelX9400>
+User-Agent: SquirrelMail/1.4.13
+MIME-Version: 1.0
+X-Priority: 3 (Normal)
+Importance: Normal
+X-Spam-Seen: Yes
+Status:  O
+
+part       text/plain                1513
+[7mPress <return> to show content...[27m> 1) GRLevel3 does not use config.cfg. It looks for grlevel3.cfg.
+
+Actually I believe GR3 looks for grlevel3.cfg first and then config.cfg if
+it can't be found. This is a hold over from when Mike and I were working
+on the spec and it was GR specific at the time.
+
+>
+> 2) I don't know if Digital Atmosphere follows the ONDAS spec or not. It
+> isn't a Gibson Ridge Software program.
+
+It does. You would need to talk to Tim Vasquez for more details.
+
+> 3) Yes, there needs to be a file/script in each radar product subdirectory
+> that lists the files in that directory. GRLevel3 needs that in order to
+> know
+> what is contained in the directory. The default is "dir.list". You can
+> change that name by putting a "ListFile: xxxxx" statement in your
+> grlevel3.cfg. GRLevel3 will append "xxxxx" to the product subdirectory in
+> the URL when making the directory listing URL. For example, "ListFile:
+> dir.php" would execute the dir.php script on your server to get a listing.
+
+Folks running servers do one of two things.
+
+1. They generate the dir.list file utilizing a script that generates the
+file using the 'ls' command every time a new file comes down the LDM pipe
+2. They utilize Apache's ReWrite construct to "catch" all requests for
+dir.list and "rewrite" the url to a PHP script to generate the file
+listing on the fly (this is what AllisonHouse does)
+
+> 4) I don't know what other programs are compatible with the ONDAS spec.
+
+Gibson Ridge
+Storm Lab
+Digital Atmosphere
+Several non-public software
+
+-Tyler
+
+

@@ -1,0 +1,135 @@
+#
+# $Id$
+#
+
+# This file contains some examples of the kind of rules that can be saved in a
+# a file named "panfilter.rc" in the "site" subdirectory of the
+# nbsp configuration directory.
+#
+# In addition, the file nbspudpread.pl (in the nbsp documentation directory)
+# illustrates how an udp reader application can be written.
+#
+# Below we will assume that the receiver machines are listening on port 5000.
+
+# Examples -
+
+# To send all the radar data files to a machine named "caribe.noaaport.net"
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set udp(status) 0;
+  set udp(host) caribe.noaaport.net:5000;
+
+  break;
+}
+
+# To send only the radar files from a particular site
+#
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)] && ($rc(station) == "tjsj")
+}
+lappend action {
+  set udp(status) 0;
+  set udp(host) caribe.noaaport.net:5000;
+
+  break;
+}
+
+# To send the same thing to two machines 
+# (For more machines just add more <machine>:<port> pairs inside
+# the overall {} as below),
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set udp(status) 0;
+  set udp(host) {
+	caribe.noaaport.net:5000
+	tropical.noaaport.net:5000
+  };
+
+  break;
+}
+
+# To send all the data files from the TJSJ station to a particular
+# machine
+#
+lappend cond {
+  ($rc(station) == "tjsj")
+}
+lappend action {
+  set udp(status) 0;
+  set udp(host) diablo.noaaport.net:5000;
+
+  break;
+}
+
+# In many cases one sets up only one rule for each type of file received.
+# The "break" statement above enforces that. But there are cases
+# in which it is necessary that the file is processed in two or more
+# rules. Then the "break" statement must be omitted and the udp(host)
+# must be set as follows. (In the example below the file will be sent to
+# "caribe" and "tropical" because it is an sdus file, and to "diablo"
+# because it comes from TJSJ.
+#
+lappend cond {
+  [regexp {^sdus} $rc(wmoid)]
+}
+lappend action {
+  set udp(status) 0;
+  set udp(host) {caribe.noaaport.net:5000 tropical.noaaport.net:5000};
+}
+
+lappend cond {
+  ($rc(station) == "tjsj")
+}
+lappend action {
+  set udp(status) 0;
+  lappend udp(host) diablo.noaaport.net:5000;
+}
+
+# Explanations -
+#
+# The way to tell the filter that a file needs to be processed is to set
+# the two variables
+#
+#	udp(status)
+#	udp(host)
+#
+# as illustrated in the examples. Setting the udp(status) to 0
+# indicates that a rule matched. In that case the filter will
+# look at the list of host/port pairs in the udp(host) variable
+# and send the message to all those hosts. Technically, udp(host)
+# is a tcl list whose elements are the host:port pairs.
+#
+# The rules are based on the values of various rc variables that are
+# defined by the time the rules are evaluated . The file nbspfilter.rc-ex
+# has an explanation of the variables available to build the rules
+# as illustrated above.
+#
+# The "message" that the filter sends to the host has the
+# the following structure:
+#
+# <wmo header> <awipsid> <file name>
+#
+# Thus when the awipsid is present in the file, the string has 5 elements
+# separated by one space. When there is no awipsid, the string contains
+# only 4 elements separated by a space.
+#
+# The <file name> is the basename of the file. Depending on how
+# the spool directory is exported the receiving computer should
+# build from that the appropriate path or url to read or request the file.
+#
+# The file can be requested via the built-in web server from either one
+# the following url:
+#
+# http://<nbsphost>:8015/spool/<station>/<file name>
+# http://<nbsphost>:8015/_get/spool/<file name>
+#
+# where <nbsphost> is the computer running nbsp, <file name> is the
+# file basename that was received in the PAN message, and <station> is
+# the WFO name from the <wmo header>.

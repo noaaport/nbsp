@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+# GFS model on Lambert conformal CONUS grid replacing 
+HDS	^Y.Q... KWB. (..)(..).*(/mAVN)
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_avn.grb
+
+# ETA model on Lambert conformal CONUS grid
+HDS	^Y.Q... KWB. (..)(..).*/mETA
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_eta.grb
+
+# NGM model on Lambert conformal CONUS grid
+HDS	^Y.Q... KWB. (..)(..).*/mNGM
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_ngm.grb
+
+# RUC model on Lambert conformal CONUS grid
+HDS	^[YZ].Q... KWB. (..)(..).*/mRUC
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_ruc.grb
+
+# RUC2 model on Lambert conformal CONUS grid
+HDS	^Y.W... KWB. (..)(..).*/mRUC2
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_ruc2.grb
+
+# ECMWF model on global 2.5 x 2.5 degree grid
+HDS	^H.[A-L]... ECMF (..)(..)
+	FILE	data/digatmos/model/grib/(\1:yyyy)(\1:mm)\1\2_ecmwf.grb
+

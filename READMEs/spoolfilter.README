@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+The nbspd daemon saves the files temporarily in the spool directory
+
+	/var/noaaport/nbsp/spool
+
+before sending them to the various filters for processing. The retention
+time in that spool directory is short (a couple of hours in the default
+configuration) so, in effect the raw data files do not live too long
+in the system.
+
+The ``spoolfilter'' is designed for those situations that require
+the raw data files to be kept around for longer periods. The spoolfilter
+simply saves a copy of each raw data file in a directory tree that is rooted
+at
+
+	/var/noaaport/data/spool/files
+
+called the "secondary" spool directory. In the default configuration,
+the spoolfilter creates subdirectories named like 20080521 (yyyymmdd)
+and saves all the files of a given day in the corresponding
+subdirectory. Therefore, every raw data file is permanently retained,
+unless some further action (outside of nbsp) is taken.
+
+The spoolfilter is not enabled by default, but it can enabled in the
+``features.conf'' file. The above scheme in terms of the full days date
+can be modified in the spoolfilters.conf file to, for example,
+use only the day of the month or day of the week.
+
+The spoolfilter should not be enabled without planning ahead. It requires
+significant io disk resources. Moreover, there is no default mechanism
+installed to purge old files from the secondary spool directory.
+If that is desired, it must be implemented outside of nbsp.
+-

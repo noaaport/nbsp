@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+The rss feeds are generated within the rstfilter and the relevant
+settings apear in "rstfilter.conf". There is very little
+to configure there except disabling the functionality.
+
+The mechanism is based on a template system and the template
+files are in the subdirectory "defaults/rss" in the main configuration
+directory.

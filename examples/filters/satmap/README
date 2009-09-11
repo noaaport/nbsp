@@ -1,0 +1,10 @@
+Sun Jun 12 20:11:13 AST 2005
+
+Usage:
+	./satmap.tcl knes_tigp02.1 
+
+The file satmap.rc is the script for the gempak "gpmap" tool.
+
+The reference material for gmap (and the rc script) is in the User guide,
+	- Chap 4 - p. 114
+	- Chap 3 - p.  29

@@ -1,0 +1,59 @@
+(Message noaaport:345)
+
+Date:    Mon, 05 Dec 2005 05:21:30 EST
+To:      "'Jose F. Nieves'" <nieves@ltp.upr.clu.edu>
+From:    "Rob Dale" <rdale@skywatch.org>
+Subject: RE: Update 
+
+Return-Path: rdale@skywatch.org
+Delivery-Date: Mon Dec  5 06:21:44 2005
+Return-Path: <rdale@skywatch.org>
+Organization: Skywatch Services
+MIME-Version: 1.0
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook, Build 10.0.6626
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.2180
+In-Reply-To: <200512050135.jB51ZTpF019058@ltp.upr.clu.edu>
+Importance: Normal
+X-AntiAbuse: This header was added to track abuse, please include it with any a
+     ***buse report
+X-AntiAbuse: Primary Hostname - server351.server-center.net
+X-AntiAbuse: Original Domain - ltp.upr.clu.edu
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - skywatch.org
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Scanned-By: MIMEDefang 2.44
+X-MIME-Autoconverted: from quoted-printable to 8bit by ltp.upr.clu.edu id jB5AL
+     ***isj029059
+X-Spam-Checker-Version: SpamAssassin 2.64 (2004-01-11) on ltp.upr.clu.edu
+X-Spam-Level: 
+X-Spam-Status: No, hits=0.0 required=5.0 tests=none autolearn=no version=2.64
+X-Spam-subject: No
+Status:  O
+
+> Are you refering to the number that appears in the "begin" 
+> line? That is the original sequence number of the product.
+
+Let's use an example - I'll run a news article through uudecode and the end
+result is: koax_saus43-mtrbff.80763213
+
+I have to send the following to LDM with that product:
+
+pqinsert -f IDS -p "SAUS43 KOAK 050643 /pMTRBFF" koax_saus43-mtrbff.80763213
+
+05 = Dec 5th
+0643 = UTC time
+
+If there's a way that DDHHMM could be put into the filename from your side,
+it would result in the exact product time being saved with the info.
+Otherwise I'd have to use the current date/time, which may not always match.
+I don't think it's a big deal if you can't easily add that to the filename
+before you process it.
+
+I'll check out multisuck.
+
+ - Rob
+

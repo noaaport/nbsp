@@ -1,0 +1,249 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+        puts "rssfilter disabled: $filters_init_file not found.";
+        return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+        return 1;
+}
+unset filters_init_status;
+
+package require nbsputil;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+#
+set init_file [file join $common(libdir) "rssfilter.init"];
+if {[file exists $init_file] == 0} {
+        log_msg "rssfilter disabled: $init_file not found.";
+        return 1;
+}
+source $init_file;
+unset init_file;
+
+#
+# variables
+#
+set rssfilter(rcfiles) 		[list];
+set rssfilter(condition)	[list];
+set rssfilter(action)		[list];
+
+if {[array exists rsscollective] == 0} {
+    log_msg "No collectives defined. Disabling rssfilter.";
+    return 1;
+}
+
+if {[file exists $rssfilter(rc)] == 0} {
+    log_msg "Filter disabled: $rssfilter(rc) not found.";
+    return 1;
+}
+
+if {($rssfilter(xmlenable) == 1) && ([file exists $rssfilter(def)] == 0)} {
+    log_msg "Filter disabled: $rssfilter(def) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set rssfilter(rcfiles) [filterlib_get_rcfiles [file tail $rssfilter(rc)] \
+        $rssfilter(localconfdirs) $rssfilter(rcdir) \
+        $rssfilter(prerc) $rssfilter(postrc)];
+
+# Load the rules sets
+source $rssfilter(rc);
+
+proc main {} {
+
+    global rssfilter;
+    global errorInfo;
+
+    # The rss directory must exist
+    if {[file isdirectory $rssfilter(datadir)] == 0} {
+	log_msg "$rssfilter(datadir) does not exist.";
+	return 1;
+    }
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global rssfilter;
+    global rsscollective;
+
+    # This filter acts on the files with the ccb already stripped; e.g.,
+    # output from the rstfilter => pass "-noccb" flag.
+
+    filterlib_get_rcvars rc $finfo -noccb;
+
+    # A file is processed if the station appears in the collectives
+    # definition.
+    set _station_defined 0;
+    foreach cname [array names rsscollective] {
+	if {($rsscollective($cname) != "") && \
+            [regexp $rsscollective($cname) $rc(station)]} {
+                set _station_defined 1;
+	}
+    }
+    if {${_station_defined} == 0} {
+	return;
+    }
+
+    set rc_status 1;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $rssfilter(condition) {
+        set actionlist [lindex $rssfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+proc send_rss {arglist} {
+#
+# The arguments are:
+#
+#    subchannel channeldesc rsstemplate \
+#    station wmoid wmotime awips fname fpath
+#
+# They are passed as a list to deal with the fact that channeldesc and header
+# can contain blanks.
+
+    global rssfilter;
+    global errorInfo;
+
+    if {[file isdirectory $rssfilter(datadir)] == 0} {
+        log_msg "$rssfilter(datadir) not found.";
+        return;
+    }
+
+    set subchannel [lindex $arglist 0];
+    set channeldesc [lindex $arglist 1];
+    set rsstemplate [lindex $arglist 2];
+    set station [lindex $arglist 3];
+    set wmoid [lindex $arglist 4];
+    set wmotime [lindex $arglist 5];
+    set awips [lindex $arglist 6];
+    set fname [lindex $arglist 7];
+    set fpath [lindex $arglist 8];
+
+    set header [join [list $wmoid $station $wmotime] " "];
+    set prodname $awips;
+    if {$prodname eq ""} {
+	set prodname $fname;
+    }
+
+    append cat_frootname \
+         $rssfilter(channelprefix) "." $subchannel $rssfilter(catfext);
+    set cat_dir [file join $rssfilter(datadir) $rssfilter(catsubdir)];
+    file mkdir $cat_dir;
+    set cat_fpath [file join $cat_dir $cat_frootname];
+
+    set _now [clock seconds];
+    set pinfo  [format "%d %s %s %s" ${_now} $prodname $header $fpath];
+
+    # Now go through the (old) list, delete the old product,
+    # then deleting each file that no longer exists and adding the new one.
+    set cat_plist [list];
+    set cat_plist_new [list];
+    if {[file exists $cat_fpath]} {
+	set cat_plist [split [filterlib_file_cat $cat_fpath] "\n"];
+	set index [lsearch $cat_plist *$prodname*];
+	if {$index >= 0} {
+	    set cat_plist [lreplace $cat_plist $index $index];
+	}
+     }
+    foreach p $cat_plist {
+	set p_parts [split $p];
+	set p_path [lindex $p_parts 5];
+	if {[file exists $p_path]} {
+	    lappend cat_plist_new $p;
+	}
+    }
+    lappend cat_plist_new $pinfo;
+    set cat_body [join $cat_plist_new "\n"];
+
+    set status [catch {
+	filterlib_file_write $cat_fpath $cat_body;
+    } errmsg];
+
+    if {$status != 0} {
+        log_msg $errmsg;
+#	log_msg $errorInfo;
+	return;
+    }
+
+    if {$rssfilter(xmlenable) == 1} {
+	make_xml $cat_body $subchannel $channeldesc $rsstemplate;
+    }
+}
+
+proc make_xml {cat_body subchannel channeldesc rsstemplate} {
+
+    global rssfilter;
+    global errorInfo;
+
+    append channeltitle $rssfilter(channelprefix) "." $subchannel;
+
+    append xml_frootname $channeltitle $rssfilter(xmlfext);
+    set xml_dir [file join $rssfilter(datadir) $rssfilter(xmlsubdir)];
+    file mkdir $xml_dir;
+    set xml_fpath [file join $xml_dir $xml_frootname];
+
+    # Look for the template in rssfilter(txmldirs) and use the last one
+    append txml_fbasename $rsstemplate $rssfilter(txmlfext);
+    set txml_fpath [filterlib_find_conf \
+	$txml_fbasename $rssfilter(txmldirs) $rssfilter(txmlsubdir)];
+    if {$txml_fpath eq ""} {
+	log_msg "$txml_fbasename not found.";
+	return;
+    }
+
+    set status [catch {
+	::nbsputil::pwrite_block $cat_body \
+	    $rssfilter(createbin) -o $xml_fpath \
+	    -D hostport=$rssfilter(hostport) \
+	    $channeltitle $channeldesc $rssfilter(def) $txml_fpath;
+    } errmsg];
+    
+    if {$status != 0} {
+	log_msg $errmsg;
+	return;
+    }
+}
+
+filterlib_init;		# open the cpool if enabled
+main
+filterlib_end;		# close the cpool if enabled

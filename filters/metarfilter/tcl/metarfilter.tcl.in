@@ -1,0 +1,428 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "metarfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsputil;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+set metar_init_file [file join $common(libdir) "metarfilter.init"];
+if {[file exists $metar_init_file] == 0} {
+	log_msg "metarfilter disabled: $metar_init_file not found.";
+	return 1;
+}
+source $metar_init_file;
+unset metar_init_file;
+
+if {[array exists collective] == 0} {
+    log_msg "No collectives defined. Disabling metarfilter.";
+    return 1;
+}
+
+proc main {argc argv} {
+
+    global metarfilter;
+    global errorInfo;
+
+    # The metar data directory must exist
+    if {[file isdirectory $metarfilter(datadir)] == 0} {
+	log_msg "$metarfilter(datadir) does not exist.";
+	return 1;
+    }
+
+    cd $metarfilter(datadir);
+	
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    filterlib_get_rcvars rc $finfo -nobody;
+
+    if {[regexp {^s[ap]} $rc(wmoid)]} {
+	save_rawdata rc;
+    }
+}
+
+proc save_rawdata_old_unused {rc_name} {
+
+    upvar $rc_name rc;
+    global metarfilter;
+    global collective;
+
+    set fpath $rc(fpath);
+    set wmotime $rc(wmotime);
+
+    # Extract all the data from the file in a csv format. Then convert
+    # to a list of lines, and process each line. A station is processed
+    # if exists in at least one collective. In that case, the raw data
+    # is saved in the stations directory, a copy is saved in every collective
+    # directory to which the station belongs, and a report is produced.
+    # The filenames of the raw data for each station are the receipt time,
+    # including the year and month, followed by the extension.
+
+    set rawdata [exec nbspmtrcsv $metarfilter(FS) $fpath];
+    set rawdata_list [split $rawdata "\n"];
+    set rawdata_list_length [llength $rawdata_list];
+
+    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set rawfname [clock format $seconds -gmt true -format "%Y%m%d%H%M"];
+    append rawfname $metarfilter(rawfext);	    
+
+    set i 0;
+    while {$i < $rawdata_list_length} {
+	set csvrecord [lindex $rawdata_list $i];
+	incr i;
+
+	# The obdata is the last element of the record, and the type is
+	# the next to last (that is what nbspmtrcsv does).
+	# We extract from it the obstation and obtime (including the Z). 
+
+	set csvlist [split $csvrecord $metarfilter(FS)];
+	set obdata [lindex $csvlist end];
+	set obdata_type [join [lrange $csvlist end-1 end]];
+	set OBSTATION [string range $obdata 0 3];
+	set obstation [string tolower $OBSTATION];
+	set obtime [string range $obdata 5 11];
+	
+	set _obstation_defined 0;
+	
+	# Look in all colectives to which this station belongs.
+	# Since regexp matches if the pattern is empty, we check that the
+	# pattern is not empty.
+    	foreach cname [array names collective] {
+	    if {($collective($cname) ne "") && \
+		 ([regexp $collective($cname) $OBSTATION] \
+		|| [regexp $collective($cname) $obstation])} {
+
+	        set _obstation_defined 1;
+
+		# Save a copy in the collective.
+	        set savesubdir \
+		    [file join $metarfilter(collectivedatadir) $cname];
+	        file mkdir $savesubdir;
+		set _fname $obstation;
+	        append _fname $metarfilter(rawfext);
+	        exec echo $csvrecord > $savesubdir/${_fname};
+
+		# Save the raw data in the subdirectory $cname
+		# in the stations directory.
+		set savesubdir \
+		    [file join $metarfilter(stationdatadir) $cname $obstation];
+		file mkdir $savesubdir;
+		exec echo $csvrecord > $savesubdir/$rawfname
+
+		# Save the obdata in the summary data file for
+		# the MetarWeather utility and such
+		if {$metarfilter(mwsupport) == 1} {
+		    save_obdata_station_summary $cname $obstation $obdata;
+		    save_obdata_collective_summary $cname $obstation $obdata;
+		}
+
+	        # Make the text report, but only if it is enabled in the
+		# configuration file.
+		if {$metarfilter(reportenable) == 1} {
+
+		    # nbspmtrd expects the obdata 
+		    # (preceeded by the type) not the full csv record.
+		    # Only the last report is kept.
+		    set _fname $obstation;
+		    append _fname $metarfilter(reportfext);
+
+		    set savesubdir [file join $metarfilter(reportdir) $cname];
+		    file mkdir $savesubdir;
+		    exec echo "File: $fpath\n" > $savesubdir/${_fname};
+		    set status [catch {
+			exec nbspmtrd -e $obdata_type >> $savesubdir/${_fname}
+		    } errmsg];
+
+		    if {$status != 0} {
+			file delete $savesubdir/${_fname};
+			log_msg $errmsg;
+		    }
+		}
+	    }
+	}
+
+	if {${_obstation_defined} == 0} {
+	    continue;
+	} 
+
+	# Call the post (user) filter if it is has been defined.
+	if {[file executable $metarfilter(postfilter)]} {
+	    set status [catch {exec $metarfilter(postfilter) $obdata} errmsg];
+	    if {$status != 0} {
+		log_msg $errmsg;
+	    }
+	}
+    }
+}
+
+proc save_rawdata {rc_name} {
+
+    upvar $rc_name rc;
+    global metarfilter;
+    global collective;
+
+    set fpath $rc(fpath);
+    set wmotime $rc(wmotime);
+
+    # Extract all the data from the file in a csv format. Then convert
+    # to a list of lines, and process each line. A station is processed
+    # if exists in at least one collective. In that case, the raw data
+    # is saved in the stations directory, a copy is saved in every collective
+    # directory to which the station belongs, and a report is produced.
+    # The filenames of the raw data is the station name followed by the
+    # extension, and only the last $metarfilter(rawfcount) are kept.
+
+    set rawdata [exec nbspmtrcsv $metarfilter(FS) $fpath];
+    set rawdata_list [split $rawdata "\n"];
+
+    foreach csvrecord $rawdata_list {
+
+	# The obdata is the last element of the record, and the type is
+	# the next to last (that is what nbspmtrcsv does).
+	# We extract from it the obstation and obtime (including the Z). 
+
+	set csvlist [split $csvrecord $metarfilter(FS)];
+	set obdata [lindex $csvlist end];
+	set obdata_type [join [lrange $csvlist end-1 end]];
+	set OBSTATION [string range $obdata 0 3];
+	set obstation [string tolower $OBSTATION];
+	set obtime [string range $obdata 5 11];
+	
+	set _obstation_defined 0;
+	
+	# Look in all colectives to which this station belongs.
+	# Since regexp matches if the pattern is empty, we check that the
+	# pattern is not empty.
+    	foreach cname [array names collective] {
+	    if {($collective($cname) ne "") && \
+		 ([regexp $collective($cname) $OBSTATION] \
+		|| [regexp $collective($cname) $obstation])} {
+
+	        set _obstation_defined 1;
+
+		# Save a copy in the collective.
+	        set savesubdir \
+		    [file join $metarfilter(collectivedatadir) $cname];
+	        file mkdir $savesubdir;
+		set _fname $obstation;
+	        append _fname $metarfilter(rawfext);
+	        filterlib_file_write \
+			[file join $savesubdir ${_fname}] $csvrecord;
+
+		# Save the raw data in the subdirectory $cname
+		# in the file ${obstation}.csv. Only keep
+		# $metarfilter(rawfcount) entries.
+
+		set savesubdir \
+		    [file join $metarfilter(stationdatadir) $cname];
+		file mkdir $savesubdir;
+    		set rawppath [file join $savesubdir $obstation];
+		append rawppath $metarfilter(rawfext);
+
+		if {[file exists $rawppath] == 0} {
+		    filterlib_file_write $rawppath $csvrecord;
+	   	} else {
+		    set csvreclist [split [filterlib_file_cat $rawppath] "\n"];
+   		    set lastcsvrecord [lindex $csvreclist 0];
+    		    if {[string compare $lastcsvrecord $csvrecord] != 0} {
+			set csvreclist [linsert $csvreclist 0 $csvrecord];
+			if {[llength $csvreclist] > $metarfilter(rawfcount)} {
+	    		    set csvreclist [lreplace $csvreclist \
+				$metarfilter(rawfcount) end];
+			}
+			::fileutil::writeFile \
+				$rawppath [join $csvreclist "\n"];
+    		    }
+		}
+
+		# Save the obdata in the summary data file for
+		# the MetarWeather utility and applications (e.g., web)
+		if {$metarfilter(mwsupport) == 1} {
+		    save_obdata_station_summary $cname $obstation $obdata;
+		    save_obdata_collective_summary $cname $obstation $obdata;
+		}
+
+		# Save the obdata in the daily/hourly archives, if enabled
+		if {$metarfilter(daily_arcv_enable) == 1} {
+		    save_obdata_station_daily_arcv \
+			$cname $wmotime $obstation $obdata;
+		}
+
+		if {$metarfilter(hourly_arcv_enable) == 1} {
+		    save_obdata_station_hourly_arcv \
+			$cname $wmotime $obstation $obdata;
+		}
+
+	        # Make the text report, but only if it is enabled in the
+		# configuration file.
+		if {$metarfilter(reportenable) == 1} {
+
+		    # nbspmtrd expects the obdata 
+		    # (preceeded by the type) not the full csv record.
+		    # Only the last report is kept.
+		    set _fname $obstation;
+		    append _fname $metarfilter(reportfext);
+
+		    set savesubdir [file join $metarfilter(reportdir) $cname];
+		    file mkdir $savesubdir;
+		    ::fileutil::writeFile \
+			$savesubdir/${_fname} "File: $fpath\n";
+		    set status [catch {
+			exec nbspmtrd -e $obdata_type >> $savesubdir/${_fname}
+		    } errmsg];
+
+		    if {$status != 0} {
+			file delete $savesubdir/${_fname};
+			log_msg $errmsg;
+		    }
+		}
+	    }
+	}
+
+	if {${_obstation_defined} == 0} {
+	    continue;
+	} 
+
+	# Call the post (user) filter if it is has been defined.
+	if {[file executable $metarfilter(postfilter)]} {
+	    set status [catch {exec $metarfilter(postfilter) $obdata} errmsg];
+	    if {$status != 0} {
+		log_msg $errmsg;
+	    }
+	}
+    }
+}
+
+proc save_obdata_station_summary {cname obstation obdata} {
+
+    global metarfilter;
+    global collective
+
+    set savesubdir [file join $metarfilter(mwdir) $cname];
+    set summaryfname $obstation;
+    append summaryfname $metarfilter(mwfext);
+    set summaryfile [file join $savesubdir $summaryfname];
+    if {[file exists $summaryfile] == 0} {
+        file mkdir $savesubdir;
+	filterlib_file_write $summaryfile $obdata;
+	return;
+    }
+
+    set summarylist [split [filterlib_file_cat $summaryfile] "\n"];
+    set lastobdata [lindex $summarylist 0];
+    if {[string compare $lastobdata $obdata] != 0} {
+	set summarylist [linsert $summarylist 0 $obdata];
+	if {[llength $summarylist] > $metarfilter(mwfcount)} {
+	    set summarylist [lreplace $summarylist $metarfilter(mwfcount) end];
+	}
+	filterlib_file_write $summaryfile [join $summarylist "\n"];
+    }    
+}
+
+proc save_obdata_collective_summary {cname obstation obdata} {
+
+    global metarfilter;
+    global collective
+
+    set savesubdir [file join $metarfilter(mwdir) $cname];
+    set summaryfname $cname;
+    append summaryfname $metarfilter(mwfext);
+    set summaryfile [file join $savesubdir $summaryfname];
+    if {[file exists $summaryfile] == 0} {
+        file mkdir $savesubdir;
+	filterlib_file_write $summaryfile $obdata;
+	return;
+    }
+
+    set summarylist [split [filterlib_file_cat $summaryfile] "\n"];
+    set i 0;
+    foreach summary $summarylist {
+	set STATION [string range $summary 0 3];
+	set station [string tolower $STATION];
+	if {[string compare $station $obstation] == 0} {
+	    set summarylist [lreplace $summarylist $i $i];
+	    break;
+        }
+	incr i;
+    }
+    set summarylist [linsert $summarylist 0 $obdata];
+    filterlib_file_write $summaryfile [join $summarylist "\n"];
+}
+
+proc save_obdata_station_daily_arcv {cname wmotime obstation obdata} {
+
+    global metarfilter;
+    global collective
+
+    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+  
+    set arcvfname ${obstation}_${ymd};
+    append arcvfname $metarfilter(mwfext);
+
+    set savesubdir [file join $metarfilter(arcv_dir) $ymd \
+	$metarfilter(daily_arcv_datadir) $cname];
+    file mkdir $savesubdir;
+
+    set arcvfile [file join $savesubdir $arcvfname];
+    filterlib_file_append $arcvfile $obdata;
+}
+
+proc save_obdata_station_hourly_arcv {cname wmotime obstation obdata} {
+
+    global metarfilter;
+    global collective
+
+    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+  
+    set arcvfname $ymdh;
+    append arcvfname $metarfilter(mwfext);
+
+    set savesubdir [file join $metarfilter(arcv_dir) $ymd \
+	$metarfilter(hourly_arcv_datadir)];
+    file mkdir $savesubdir;
+
+    set arcvfile [file join $savesubdir $arcvfname];
+    filterlib_file_append $arcvfile $obdata;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

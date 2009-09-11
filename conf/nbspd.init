@@ -1,0 +1,47 @@
+#
+# $Id$
+#
+
+# This file is not read by the nbspd daemon. It contains those settings
+# of the nbspd configuration that are used by some of the filters and/or
+# programs (.e.g, tclhttpd, some tools of the inventory and recover filters).
+# If the values in "defaults.h" are changed, then this file must be modified
+# accordingly.
+
+interp create slave;
+slave eval {
+    # The defaults according to "defaults.h"
+    set tclhttpdfifo	"/var/run/nbsp/tclhttpd.fifo";
+    set statusfile	"/var/noaaport/nbsp/stats/nbspd.status";
+    set missinglogfile	"/var/noaaport/nbsp/stats/nbspd.missing";
+    set rtxlogfile	"/var/noaaport/nbsp/stats/nbspd.rtx";
+    set qstatelogfile	"/var/noaaport/nbsp/stats/nbspd.qstate";
+    set qdbstatslogfile	"/var/noaaport/nbsp/stats/nbspd.qdbstats";
+    set mspoolbdb_dbstats_logfile "/var/noaaport/nbsp/stats/nbspd.mdbstats";
+    set serveractivefile "/var/noaaport/nbsp/stats/nbspd.active"    
+
+    set spooldir	"/var/noaaport/nbsp/spool";
+    set infeedfifo	"/var/run/nbsp/infeed.fifo"
+
+    # The optional configuration file
+    set _conf "/usr/local/etc/nbsp/nbspd.conf";
+    if {[file exists ${_conf}]} {
+	source ${_conf};
+    }
+    unset _conf;
+}
+
+set nbspd(tclhttpdfifo)		[slave eval {return $tclhttpdfifo}];
+set nbspd(statusfile)		[slave eval {return $statusfile}];
+set nbspd(missinglogfile)	[slave eval {return $missinglogfile}];
+set nbspd(rtxlogfile)		[slave eval {return $rtxlogfile}];
+set nbspd(qstatelogfile)	[slave eval {return $qstatelogfile}];
+set nbspd(qdbstatslogfile)	[slave eval {return $qdbstatslogfile}];
+set nbspd(mspoolbdb_dbstats_logfile) \
+                            [slave eval {return $mspoolbdb_dbstats_logfile}];
+set nbspd(serveractivefile)	[slave eval {return $serveractivefile}];
+
+set nbspd(spooldir)		[slave eval {return $spooldir}];
+set nbspd(infeedfifo)		[slave eval {return $infeedfifo}];
+
+interp delete slave;

@@ -1,0 +1,23 @@
+#
+# deinstall optional files
+#
+rcdir=/etc/init.d
+logrotatedir=/etc/logrotate.d
+
+if [ -n "`which chkconfig`" ]
+then
+	chkconfig --del nbspd
+elif [ -n "`which update-rc.d`" ]
+then
+	update-rc.d -f nbspd remove
+fi
+
+cat <<__EOF__
+To deinstall completely this package, the directories
+
+/var/noaaport
+/var/log/noaaport
+/usr/local/etc/nbsp
+
+may have to be removed manually.
+__EOF__

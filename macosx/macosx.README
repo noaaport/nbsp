@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+The tcllib-1.8 that is included in MacOSX is not compatible
+with nbsp. A package for tcllib-1.10 is available
+in the optional-packages section.
+
+Some of the filters use the following external programs and/or libraries
+that are not included in MaxOSX.:
+
+	- gnuplot
+	- netpbm
+	- libpng
+
+While the nbsp daemon will run without them, some functionality of the
+filters will be missing. Packages of these for MacOSX are available
+from the Fink Project site
+
+	www.finkproject.org
+-

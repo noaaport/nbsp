@@ -1,0 +1,234 @@
+#
+# $Id$
+#
+
+# This is not a working file. It is a documentation file with some
+# background information and a few sample rule/action instructions
+# to illustrate the syntax and possible uses of a real nbspfilter.rc file.
+
+#
+# - Background information
+#
+
+# The main script script is written in tcl, so this file must be written
+# in that same language. This file is ``sourced'' by the main script by
+# an instruction
+#
+#	source /usr/local/etc/nbsp/nbspfilter.rc
+#
+# This instructions loads a set of condition/action pairs contained
+# in the file, which are evaluated for each file that is received.
+# The condition/action pairs take the following form (more examples below)
+# For example, a condition/action pair such as
+#
+#	lappend cond {
+#   	  [regexp {URGENT} $rc(body)]
+#	}
+# 	lappend action {
+#   	  exec echo $rc(fpath) >> /var/noaaport/urgent.log
+# 	}
+#
+# and they are evaluated by code equivalent to the following
+#
+#	if {[expr $condition]} {
+#	    eval $action
+#	}
+#
+#
+# NOTE: This file is not sourced each time a file is received. The file
+#       is sourced once, and then the "rules" are kept in memory and
+#       they are evaluated for each file received.
+# 
+# At the time the rules are evaluated, the following variables are visible
+# and can be used in this script:
+#
+#
+#	rc(seq), rc(type), rc(cat), rc(code) (see below)
+#	rc(fpath) = full path of the file
+#	rc(fname) = basename without the seqnumber key
+#	rc(fbasename) = basename of the file
+#	rc(txtflag) = 1 if text file, 0 otherwise
+#	rc(body) = first 512 (configurable in filters.conf) bytes if the file
+#	rc(station), rc(wmoheader), rc(wmoid), rc(awips), rc(nawips)
+#	rc(awips1), rc(awips2),
+#
+# The first four, refer to the sbn sequence number, type, category and
+# code of the file, as classified by the noaaport broadcast system. They are
+# included for completeness in case they are needed for some particular
+# purpose, but we will not use them.
+#
+# The last seven are the keywords extracted from the first and second
+# lines of the file, and converted to lower case. The analogous
+# variables
+#
+#	rc(STATION), rc(WMOHEADER), rc(WMOID), rc(AWIPS), rc(NAWIPS)
+#	rc(AWIPS1), rc(AWIPS2)
+#
+# contain the uppercase values.
+#
+# For example, a file that has been saved as
+#
+# 	/var/noaaport/nbsp/spool/tjsj/tjsj_wgca82-flssju.<seqnumkey>
+#
+# which contains
+#
+#	WGCA82 TJSJ 022135
+#	FLSSJU
+#
+# in the first two lines
+#
+# then
+#	$rc(fpath) =  /var/noaaport/nbsp/spool/tjsj/tjsj_wgca82-flssju.<key>
+#	$rc(fname) = tjsj_wgca82-flssju
+#	$rc(fbasename) = tjsj_wgca82-flssju.<key>
+#	$rc(station) = tjsj
+#	$rc(wmoid) = wgca82
+#	$rc(awips) = flssju
+#	$rc(nawips) = ""
+#	$rc(awips1) = fls
+#	$rc(awips2) = sju 
+#
+# A different example is a file saved as
+#
+#	/var/noaaport/nbsp/spool/knes/knes_zega98+grib.769436
+#
+# The first line of this file has a standard wmo header but the second one
+# has the word GRIB followed by binary data:
+#
+# ZEGA98 KNES 200357
+# GRIB ...
+#
+# In this case, the variable $rc(awips) is "", $rc(nawips) is set to "grib":
+#
+#	$rc(fpath) =  /var/noaaport/nbsp/spool/knes/knes_zega98+grib.<key>
+#	$rc(fname) = knes_zega98+grib
+#	$rc(fbasename) = knes_zega98+grib.<key>
+#	$rc(station) = knes
+#	$rc(wmoid) = zega98
+#	$rc(awips) = $rc(awips1) = $rc(awips2) = ""
+#	$rc(nawips) = grib 
+#
+# In general, the $rc(fname) variable (the root file name) is of the form
+#
+#	$rc(station)_$rc(wmoid)-$rc(awips)
+#
+# when there is an awips line, or
+#
+#	$rc(station)_$rc(wmoid)+$rc(nawips)
+#
+# otherwise (a minus or a plus sign separating the last component,
+# respectively). For some files both $rc(awips) and $rc(nawips) are "";
+# e.g.,
+# 	/var/noaaport/nbsp/spool/KNES/knes_tige05.<key>
+
+#
+# - Examples
+#
+
+# To save all messages containing the word URGENT in a directory
+# "/var/noaaport/data/URGENT"
+#
+lappend cond {
+  [regexp {URGENT} $rc(body)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) > /var/noaaport/data/URGENT/$rc(fname);
+  break;
+}
+
+# To email all such messages to nieves@cariberesearch.com, with the subject
+# URGENT
+#
+lappend {
+  [regexp {URGENT} $rc(body)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s URGENT nieves@cariberesearch.com;
+  break;
+}
+
+# Instead of sending all those messages, to restrict them only to those
+# coming from the TJSJ station 
+#
+lappend cond {
+  [regexp {URGENT} $rc(body)] && [regexp {tjsj} $rc(station)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s "URGENT TJSJ" nieves@cariberesearch.com;
+  break;
+}
+
+# The same, but all text files
+#
+lappend cond {
+  ($rc(txtflag) == 1) && [regexp {tjsj} $rc(station)]
+}
+lapend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s "TJSJ" nieves@cariberesearch.com;
+  break;
+}
+
+# The regular expression argument to the regexp function can be
+# much more complicated. For example, this will send by email almost
+# all the weather text bulletins from TJSJ:
+#
+lappend cond {
+  [regexp {^tjsj_(f[glnopxz]ca[457]2)|(a[sw]ca[468]2)|(c[dsx]ca[456]2)|(w[gh]ca[578]2)} $rc(fname)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s "URGENT $rc(wmoid)" nieves@cariberesearch.com;
+  break;
+}
+
+# This will write a one line entry in a logfile, for each file received
+#
+lappend cond {1}
+lappend action {
+  set rcvtime [clock format [clock seconds]];
+  exec echo $rc(fname) $rcvtime > /var/noaaport/list.log;
+}
+
+# Note that the keyword ``break'' prevents processing subsequent rules
+# when a rule is found to match. If that keyword is omitted then
+# the subsequent rules are processed as well (until a rule with the ``break''
+# keyword matches).
+# For example, these will save all the
+# URGENT files _and_ also email the files from TJSJ
+#
+lappend cond {
+  [regexp {URGENT} $rc(body)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) > /var/noaaport/data/URGENT/$rc(fname);
+}
+
+lappend cond {
+  [regexp {tjtj} $rc(station)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s URGENT nieves@cariberesearch.com;
+  break;
+}
+# 
+# If the break keyword were added in the first rule, then the
+# URGENT files from TJSJ would not reach the second rule and would
+# not be emailed.
+
+# The next rule will catch and email the administrative messages
+# to the user "noaaportadmin"
+#
+lappend cond {
+[regexp {^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^46789]|nous9[^7])} $rc(wmoid)] && [regexp {(kwno|kwbc|kncf)_nous[4678]} $rc(fname)]
+}
+lappend action {
+  set rc_status 0;
+  exec nbsppipe $rc(fpath) | mail -s ADM noaaportadmin
+  break;
+}

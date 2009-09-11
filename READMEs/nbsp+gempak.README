@@ -1,0 +1,13 @@
+#
+# $Id$
+#
+To use Gempak with nbsp -
+
+1) Install nbsp as usual
+2) Install gempak from the tbz or rpm package.
+3) Enable the gempak filter of nbsp by seting
+
+	set feature(gpfilter) 1
+
+in the file "/usr/local/etc/nbsp/features.conf".
+-

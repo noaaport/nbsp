@@ -1,0 +1,11 @@
+Tue Apr 26 19:21:42 AST 2005
+
+These are the scripts and programs I used to understand
+how the nexrad products are stored for gempak:
+
+They must be split in 4000 bytes frames, compressed individually,
+and then catenated together in one file. Then the wmo + awips
+headers are put in the first and second line.
+
+-
+

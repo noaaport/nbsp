@@ -1,0 +1,70 @@
+#
+# Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	rssfilter.tcl nbsp-rsscreate.tcl
+TCLSOURCES =	rssfilter.tcl.in nbsp-rsscreate.tcl.in rssfilter.init
+M4SOURCES =	defs.m4 txt.m4 img.m4 rssfilter.m4
+M4MAIN =	rssfilter.m4
+M4TARGET =	rssfilter.rc-defaults
+SAMPLES =	rssfilter.conf-sample \
+		rssfilter-st.conf-sample \
+		rssfilter.rc-sample \
+		rssfilter.def-sample \
+		rssfilter-wfo.def-sample
+TXMLSOURCES =	st.txml img.txml
+TXMLTARGET =	rsstxml-templates.tgz
+TXMLDIR =	rss
+
+TARGET =	${TCLTARGET} ${M4TARGET} ${SAMPLES} ${TXMLTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+rssfilter.tcl: rssfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# rssfilter.tcl.in > rssfilter.tcl
+
+nbsp-rsscreate.tcl: nbsp-rsscreate.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbsp-rsscreate.tcl.in \
+		> nbsp-rsscreate.tcl
+
+${M4TARGET}: ${M4MAIN} ${M4SOURCES}
+	m4 ${M4MAIN} > ${M4TARGET}
+
+rssfilter.conf-sample: rssfilter.conf
+	cp rssfilter.conf rssfilter.conf-sample
+
+rssfilter-st.conf-sample: rssfilter-st.conf
+	cp rssfilter-st.conf rssfilter-st.conf-sample
+
+rssfilter.rc-sample: rssfilter.rc 
+	cp rssfilter.rc rssfilter.rc-sample
+
+rssfilter-wfo.def-sample: rssfilter-wfo.def
+	cp rssfilter-wfo.def rssfilter-wfo.def-sample
+
+rssfilter.def-sample: rssfilter.def
+	cp rssfilter.def rssfilter.def-sample
+
+${TXMLTARGET}: ${TXMLSOURCES}
+	rm -rf ${TXMLDIR}
+	mkdir ${TXMLDIR}
+	cp ${TXMLSOURCES} ${TXMLDIR}
+	tar -czf ${TXMLTARGET} ${TXMLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 rssfilter.tcl ${MYLIBEXECDIR}/rssfilter
+	${INSTALL} -m 755 rssfilter.init ${MYLIBEXECDIR}
+	${INSTALL} -m 755 nbsp-rsscreate.tcl ${BINDIR}/nbsp-rsscreate
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${TXMLDIR}

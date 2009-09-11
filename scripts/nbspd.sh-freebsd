@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# $Id$
+#
+# PROVIDE: nbspd
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+#
+. /etc/rc.subr
+
+#
+# To enable, set "nbspd_enable=1" in rc.conf or rc.conf.local
+#
+name=nbspd
+command=/usr/local/sbin/${name}
+[ -z "$nbspd_enable" ] && nbspd_enable=0
+
+rcvar=`set_rcvar`
+load_rc_config $name
+run_rc_command "$1"

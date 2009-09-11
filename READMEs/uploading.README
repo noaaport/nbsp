@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+Nbsp has a facility for uploading to a remote location (e.g., a web site),
+or copying to a different directory, the text files, radar images and
+satellite images created by the rstfilter, and the images created
+by the gribfilter using GrADS.
+
+The transfer or uploading of the text files, radar and satellite images
+is accomplished by adding condition/action rules to rstfilter.rc files,
+as explained in the ``rstpostfilter.README'' file. For the grib model
+images the instructions are given in the README file that accompanies
+the GrADS example scripts in "defaults/grads" in the nbsp
+configuration directory  (look for ``UPLOADING'' within that file),
+and in the file ``grads-tcl.README''.
+-
+Fri Jan 18 00:17:27 AST 2008

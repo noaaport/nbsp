@@ -1,0 +1,21 @@
+To start the nbspd daemon automatically out of the local rc.d directory,
+set the variable
+
+nbspd_enable=1
+
+in /etc/rc.conf.local.
+
+The configuration files are installed in /usr/local/etc/nbsp.
+
+The installation process should have created various directories
+under /var/noaaport, and already enabled the rstfilter and dafilter.
+In addition the web server is enabled by default, and can be
+accesed as
+	
+	http://localhost:8015
+or
+	http://<hostname>:8015
+
+The program will run in this default installation without further
+configuration.
+--

@@ -1,0 +1,60 @@
+#
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+SOURCES = nbspudpsend.c nbspudprecv.c
+OBJECTS = nbspudpsend.o nbspudprecv.o
+HEADERS = ${NBSPHEADERS}
+NBSPSOURCES = mcast.c
+NBSPOBJECTS = mcast.o
+NBSPHEADERS = mcast.h
+NBSPSRCDIR =	../../../src
+ALLOBJECTS = ${OBJECTS} ${NBSPOBJECTS}
+PROGRAMS =	nbspudpsend nbspudprecv
+EXAMPLES =	nbspudpread.pl nbspudpread.tcl
+TARGET =	${PROGRAMS} nbspudpread.tcl nbspudpsend.tcl
+
+TCLSH =		@TCLSH@
+INSTALL =       @INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+
+CFLAGS +=	${DEBUGFLAGS} -c ${CCWFLAGS}
+DEBUGFLAGS =	-g
+#DEBUGFLAGS =	-DNDEBUG
+
+all: ${TARGET}
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+nbspudpsend: nbspudpsend.o ${NBSPOBJECTS}
+	${CC} -o nbspudpsend nbspudpsend.o ${NBSPOBJECTS}
+
+nbspudprecv: nbspudprecv.o ${NBSPOBJECTS}
+	${CC} -o nbspudprecv nbspudprecv.o ${NBSPOBJECTS}
+
+nbspudpread.tcl: nbspudpread.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbspudpread.tcl.in  > nbspudpread.tcl
+
+nbspudpsend.tcl: nbspudpsend.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbspudpsend.tcl.in  > nbspudpsend.tcl
+
+mcast.c: ${NBSPSRCDIR}/mcast.c
+	cp ${NBSPSRCDIR}/mcast.c .
+
+mcast.h: ${NBSPSRCDIR}/mcast.h
+	cp ${NBSPSRCDIR}/mcast.h .
+
+install:
+	${INSTALL} -m 755 ${PROGRAMS} ${BINDIR}
+	${INSTALL} -m 644 ${EXAMPLES} ${MYDOCDIR}
+
+clean:
+	rm -f *~ ${TARGET} ${NBSPSOURCES} ${NBSPHEADERS} \
+		${ALLOBJECTS} Makefile 

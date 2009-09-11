@@ -1,0 +1,74 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	metarfilter.tcl
+TCLSOURCES =	metarfilter.tcl.in
+FILTERNAME =	metarfilter
+FILTERINIT =	metarfilter.init
+TOOLNAMES =	nbspmtr nbspmtrcsv nbspmtrcsvd \
+		nbspmtrplot nbspmtrplot1 nbspmtrplotdat
+SAMPLES =	metarfilter.conf-sample \
+		metarfilter-st.conf-sample metarfilter-icao.def-sample
+GPLOTSOURCES =	temp.g pre.g wind.g
+GPLOTPDIR =	gnuplot
+GPLOTDIR =	${GPLOTPDIR}/metar
+GPLOTTARGET =	metarplot-templates.tgz
+
+TARGET =	${TCLTARGET} ${TOOLNAMES} ${SAMPLES} ${GPLOTTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+metarfilter.tcl: metarfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# metarfilter.tcl.in > metarfilter.tcl
+
+metarfilter.conf-sample: metarfilter.conf
+	cp metarfilter.conf metarfilter.conf-sample
+
+metarfilter-st.conf-sample: metarfilter-st.conf
+	cp metarfilter-st.conf metarfilter-st.conf-sample
+
+metarfilter-icao.def-sample: metarfilter-icao.def
+	cp metarfilter-icao.def metarfilter-icao.def-sample
+
+nbspmtr: nbspmtr.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspmtr.tcl > nbspmtr
+
+nbspmtrcsv: nbspmtrcsv.tcl
+	sed -e /%TCLSH%/s##${TCLSH}#  nbspmtrcsv.tcl > nbspmtrcsv
+
+nbspmtrcsvd: nbspmtrcsvd.tcl
+	sed -e /%TCLSH%/s##${TCLSH}#  nbspmtrcsvd.tcl > nbspmtrcsvd
+
+nbspmtrplot: nbspmtrplot.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspmtrplot.tcl > nbspmtrplot
+
+nbspmtrplot1: nbspmtrplot1.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspmtrplot1.tcl > nbspmtrplot1
+
+nbspmtrplotdat: nbspmtrplotdat.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspmtrplotdat.tcl > nbspmtrplotdat
+
+${GPLOTTARGET}: ${GPLOTSOURCES}
+	rm -rf ${GPLOTDIR}
+	mkdir -p ${GPLOTDIR}
+	cp ${GPLOTSOURCES} ${GPLOTDIR}
+	tar -czf ${GPLOTTARGET} ${GPLOTDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${FILTERNAME}.tcl ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${GPLOTTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${GPLOTPDIR}

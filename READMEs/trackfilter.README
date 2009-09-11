@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+The ``trackfilter'' collects the data from the NHC bulletins
+and plots the tracks and forecasts of each hurricane.
+It is enabled by setting
+
+set feature(trackfilter) 1
+
+in the ``features.conf'' file. It uses GrADS to draw the plot and
+therefore that package must have been installed. If GrADS is not
+installed, the plot can be disabled by setting
+
+set trackfilter(grads_enable)        0;
+
+in ``trackfilter.conf''. In those case the filter only collects
+the data and saves in the data files in the ``/var/noaaport/data/track''
+directory that can be used with other programs if desired.
+
+The data and the plots are accesible from the web interface.
+-

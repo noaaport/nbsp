@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+# All in one line (always end in ';')
+smtp://7877589734@att.net (svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0 S;
+
+# Split accross several lines
+smtp://nieves@noaaport.net
+	(svs|tor)_txz14[5-9],svr_vaz014,npw_txz25[2-7]
+	F;
+
+# I want them all
+smtp://nieves@ltp.upr.clu.edu ._. F;
+
+# Only summaries for all warnings everywhere
+smtp://nieves@ltp.upr.clu.edu
+	(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)_.
+	S;
+
+# General form
+#
+# In one line (always end in a ';')
+#
+## <transport>://<destination> <prodzone_spec> <flags>;
+#
+# Split accross several lines
+#
+## <transport>://<destination>
+##   <prodzone_spec>
+##   <flags>;

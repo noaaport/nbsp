@@ -1,0 +1,61 @@
+#
+# $Id$
+#
+# tcl script for setting the env variables for some of the filters that
+# use some of the gempak tools. This taken from the Gemenviron[.cshrc] file.
+
+#
+# These should be set according to the gempak installation
+#
+set env(NAWIPS)		/home/gempak
+set env(GEMDATA)	/home/gempak/gempak/data
+##set env(GEMDATA)	/var/noaaport/data/gempak
+
+#
+# Standard gempak installations should not need modifications below
+#
+set env(NA_OS)		freebsd
+
+set env(GEMEXE)	$env(NAWIPS)/bin/$env(NA_OS)
+set env(GEMLIB)	$env(NAWIPS)/lib/$env(NA_OS)
+
+set env(GEMPAK)		$env(NAWIPS)/gempak
+set env(GEMPAKHOME)	$env(NAWIPS)/gempak
+set env(GARPHOME)	$env(NAWIPS)/comet/garp
+set env(GARP_PATH)	$env(GARPHOME)/config
+set env(CONFIGDIR)	$env(NAWIPS)/config
+set env(GEMPDF)	$env(GEMPAK)/pdf
+set env(GEMTBL)	$env(GEMPAK)/tables
+set env(GEMERR)	$env(GEMPAK)/error
+set env(GEMHLP)	$env(GEMPAK)/help
+set env(GEMMAPS)	$env(GEMPAK)/maps
+set env(GEMNTS)	$env(GEMPAK)/nts
+set env(GEMPARM)	$env(GEMPAK)/parm
+set env(GEMPTXT)	$env(GEMPAK)/txt/programs
+set env(GEMGTXT)	$env(GEMPAK)/txt/gemlib
+set env(NMAP_RESTORE)	$env(GEMNTS)/nmap/restore
+set env(MEL_BUFR)	$env(GEMPAK)/source/melbufr
+set env(MEL_BUFR_TABLES)	$env(GEMPAK)/tables/melbufr
+set env(SCRIPTS_EXE)	$env(NAWIPS)/bin/scripts
+set env(PATH)	$env(PATH):$env(GEMEXE):$env(SCRIPTS_EXE)
+set env(OBS)	$env(GEMDATA)
+set env(NTRANS_META)	$env(GEMDATA)/meta
+set env(TEXT_DATA)	$env(GEMDATA)/nwx
+set env(AFOS_ALARMS)	$env(GEMDATA)/alarms/
+set env(SAT)	$env(GEMDATA)/images/sat
+set env(RAD)	$env(GEMDATA)/nexrad
+set env(GOES8)	$env(SAT)/GOES-8
+set env(GOES9)	$env(SAT)/GOES-9
+set env(MODEL)	$env(GEMDATA)/model
+set env(HDS)	$env(MODEL)
+set env(MODEL_SND)	$env(GEMDATA)/modsnd/gempak/bufr/model
+set env(MODEL_SFC)	$env(GEMDATA)/modsnd/gempak/bufr/model
+set env(SAO)	$env(GEMDATA)/surface
+set env(UPA)	$env(GEMDATA)/upperair
+set env(NLDN)	$env(GEMDATA)/nldn
+set env(TORN_WARN)	$env(TEXT_DATA)/watch_warn/TOR
+set env(TSTRM_WARN)	$env(TEXT_DATA)/watch_warn/SVR
+set env(TEXT_WARN)	$env(TEXT_DATA)/watch_warn
+set env(RBKGPH)	$env(GEMDATA)/redbook
+set env(SPDATA)	$env(GEMDATA)
+set env(GRPHGD)	$env(GEMPAK)

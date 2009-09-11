@@ -1,0 +1,665 @@
+#!%TCLSH%
+#
+# $Id$
+#
+package require cmdline;
+
+set usage {dafilter [-s]};
+set optlist {{s}};
+
+## The common defaults initialization
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "dafilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+# packages
+package require nbsputil;	# nbsputil::date
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+## The initialization of this filter.
+set initfile [file join $common(libdir) "dafilter.init"];
+if {[file exists $initfile] == 0} {
+        puts "dafilter disabled: $initfile not found.";
+        return 1;
+}
+source $initfile;
+
+#
+# Variables of this filter
+#
+set dafilter(rcfiles)		[list];
+set dafilter(ccbsaved)		$common(ccbsaved);
+set dafilter(ccbsize)		$common(ccbsize);
+set dafilter(ccbwmoawipssize) [expr $common(ccbsize) + $common(wmoawips_size)];
+#
+set dafilter(condition)		[list];
+set dafilter(action)		[list];
+#
+# Default is to run as master unless "-s" is given.
+set dafilter(option_s)		0;
+#
+# If the archive is enabled this is reset according to the current
+# (wmo header) date.
+set dafilter(archive_subdir) "";
+
+# The main rc file is required
+if {[file exists $dafilter(rc)] == 0} {
+    log_msg "Filter disabled: $dafilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set dafilter(rcfiles) [filterlib_get_rcfiles [file tail $dafilter(rc)] \
+	$dafilter(localconfdirs) $dafilter(rcdir) \
+	$dafilter(prerc) $dafilter(postrc)];
+
+# Load the rules sets
+source $dafilter(rc);
+
+#
+# Functions
+#
+proc main {argc argv} {
+
+    global dafilter;
+    global errorInfo;
+
+    cd $dafilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	dafilter_periodic;
+    }
+}
+
+proc process {finfo} {
+
+    global dafilter;
+
+    if {([info exists dafilter(grib_enable)] == 0) || \
+	($dafilter(grib_enable) == 1)} {
+        filterlib_get_rcvars rc $finfo -dogrib;
+    } else {
+	filterlib_get_rcvars rc $finfo;
+    }
+
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+
+    if {$dafilter(archive_enable) != 0} {
+	set dafilter(archive_subdir) [clock format $seconds -format \
+		$dafilter(archive_subdir_fmt) -gmt true];
+    }
+
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+    set ymdhm [clock format $seconds -gmt true -format "%Y%m%d%H%M"];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+    set ym [clock format $seconds -gmt true -format "%Y%m"];
+    set yyyy [clock format $seconds -gmt true -format "%Y"];
+    unset seconds;
+
+    set rc_status 1;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $dafilter(condition) {
+        set actionlist [lindex $dafilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+proc filter_file {seq fpath savedir savename {pass_through 0}} {
+#
+# This function is also called from the filter_grib function, and there
+# it is called with pass_through = 1 because the grib regex has already
+# being checked.
+#
+    global dafilter;
+
+    if {$pass_through == 0} {
+        if {[is_file_rule_enabled $savedir] == 0} {
+	    return;
+        }
+    }
+
+    if {$dafilter(archive_enable) != 2} {
+	filter_file_normal $seq $fpath $savedir $savename "-a";
+    }
+
+    if {$dafilter(archive_enable) != 0} {
+	filter_file_archive $seq $fpath $savedir $savename "-a";
+    }
+}
+
+proc filter_file_noappend {seq fpath savedir savename} {
+
+    global dafilter;
+    global filtersprogs;
+
+    if {[is_file_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    if {$dafilter(archive_enable) != 2} {
+	filter_file_normal $seq $fpath $savedir $savename;
+    }
+
+    if {$dafilter(archive_enable) != 0} {
+	filter_file_archive $seq $fpath $savedir $savename;
+    }
+}
+
+proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
+#
+# This is the ordinary method for saving the files under the "data" directory.
+# This function is caled by filter_file and filter_file_noappend.
+#
+    global dafilter;
+
+    cd $dafilter(datadir);
+    file mkdir $savedir;
+
+#    set opts $f_append;
+#    if {$dafilter(ccbsaved) == 0} {
+#        append opts " -n";
+#    }
+
+    set status [catch {
+	if {$f_append eq "-a"} {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
+#	    filterlib_nbspfile $seq $fpath $savedir $savename "-a";
+#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+	} else {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+#	    filterlib_nbspfile $seq $fpath $savedir $savename;
+#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+ 	}
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filter_file_archive {seq fpath savedir savename {f_append ""}} {
+#
+# This function is called by filter_file and filter_file_noappend.
+#
+    global dafilter;
+
+    cd $dafilter(archivedir);
+
+    set archive_savedir [file join $dafilter(archive_subdir) $savedir];
+    file mkdir $archive_savedir;
+
+    set status [catch {
+      if {$f_append eq "-a"} {
+        filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename "-a";
+      } else {
+	filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename;
+      }
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    cd $dafilter(datadir);
+}
+
+proc filter_file_compress {seq fpath savedir savename} {
+#
+# This is no longer used (Tue Sep 23 21:03:18 AST 2008)
+#
+    global dafilter;
+    global filtersprogs;
+
+    if {[is_file_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    cd $dafilter(datadir);
+    file mkdir $savedir;
+
+    set opts "-z 9";
+    if {$dafilter(ccbsaved) == 0} {
+	set opts "-z 9 -n";
+    }
+
+    set status [catch {
+	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
+		$fpath $seq;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
+
+    global dafilter;
+    global filtersprogs;
+
+    if {[is_rad_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    cd $dafilter(datadir);
+    file mkdir $savedir;
+
+    set status [catch {
+	if {$unzflag != 0} {
+	    if {$dafilter(radstripheader) == 1} {
+		set opts "-c $dafilter(ccbsize)";
+	    } elseif {$dafilter(radstripheader) == 2} {
+		set opts "-c $dafilter(ccbwmoawipssize)";
+	    } else {
+		set opts "";
+	    }
+	    eval exec $filtersprogs(nbspunz) $opts $fpath > \
+			[file join $savedir $savename];
+	} else {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+#	    filterlib_nbspfile $seq $fpath $savedir $savename;
+	}
+    } errmsg];
+
+    if {$status != 0} {
+	# In case the file was created
+	file delete [file join $savedir $savename];
+	log_msg $errmsg;
+
+	return;
+    }
+
+    filter_rad_insert_inventory $savedir \
+    	[file join $dafilter(datadir) $savedir $savename];
+
+    # Create the link to the latest
+    make_rad_latest $savedir $savename;
+
+    # Create he directory listing
+    make_rad_dirlist $savedir;
+}
+
+proc filter_rad {seq fpath savedir savename} {
+
+    filter_rad_unzflag $seq $fpath $savedir $savename 0;
+}
+
+proc filter_rad_unz {seq fpath savedir savename} {
+
+    filter_rad_unzflag $seq $fpath $savedir $savename 1;
+}
+
+proc filter_sat {fpath datasavedir prefix} {
+#
+# This function optionally uncompresses the file, and renames it according
+# to the way the image files are saved by the rst filter.
+#
+    global dafilter;
+    global filtersprogs;
+
+    if {[is_sat_rule_enabled $datasavedir] == 0} {
+	return;
+    }
+
+    cd $dafilter(datadir);
+    file mkdir $datasavedir;	
+
+    set satdatext $dafilter(satdatext);
+    set satprefixsep $dafilter(satprefixsep);
+
+    set fname [file tail $fpath];
+    set datafpath [file join $dafilter(datadir) $datasavedir $fname];
+
+    set status [catch {
+	if {$dafilter(satuncompress) == 0} {
+	    file copy -force $fpath $datafpath;
+	} else {
+	    exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	}
+    } errmsg];
+
+    if {$status == 0} {
+	set output [filter_sat_info $datafpath];
+	#
+	# Rename the uncompressed data file to match the image (which
+	# this filter does not produce). E.g,
+	#
+	# knes_tigp01.070101_1414381 (raw, compressed)
+	# tigp01_20060307_0101.png   (image)
+	# tigp01_20060307_0101.gini  (optionally uncompressed data)
+	#
+	set status [lindex $output 0];
+	set datetime [lindex $output 1];
+    }
+
+    if {$status == 0} {
+	set status [catch {
+    	    set newdatafpath [file join [file dirname $datafpath] \
+		${prefix}${satprefixsep}${datetime}${satdatext}];
+    	    file rename -force $datafpath $newdatafpath;
+    	} errmsg];
+    }
+
+    if {$status != 0} {
+	file delete $datafpath;
+	log_msg $errmsg;
+
+	return;
+    }
+
+    filter_sat_insert_inventory $datasavedir $newdatafpath;
+
+    # Create the link to the latest
+    make_sat_latest $datasavedir [file tail $newdatafpath];
+}
+
+proc filter_sat_info {fpath} {
+
+    global filtersprogs;
+
+    set status [catch {
+	set params [exec $filtersprogs(nbspsat) -i $fpath];
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2]
+	set channel [lindex $params 3]
+	set res [lindex $params 4]
+	set time [lindex $params 5]
+    } else {
+	set time "";
+     }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+
+    set output [list $status $time];
+
+    return $output;
+}
+
+proc filter_grib {seq fpath savedir savename} {
+
+    global filtersprogs;
+
+    if {[is_grib_rule_enabled $savedir] == 0} {
+	return;
+    }
+
+    # Pass the pass_through flag set since the regex has been checked here.
+    filter_file $seq $fpath $savedir $savename 1;
+}
+
+#
+# Function to support the directory listing
+#
+proc make_rad_dirlist {dir} {
+
+    global dafilter;
+
+    if {$dafilter(rad_dirlist_enable) == 0} {
+	return;
+    }
+
+    set dirpath [file join $dafilter(datadir) $dir];
+    set dirlistpath [file join $dirpath $dafilter(rad_dirlistname)];
+    set filelist [lsort \
+	[glob -nocomplain -tails -directory $dirpath "*"]];
+
+    # Delete the <latest> and <dir list> files. 
+    foreach f [list $dafilter(rad_dirlistname) $dafilter(rad_latestname)] {
+	set i [lsearch -sorted -exact $filelist $f];
+	if {$i >= 0} {
+	    set filelist [lreplace $filelist $i $i];
+	}
+    }
+
+    set status [catch {
+        set F [open $dirlistpath w 0644];
+	puts $F [join $filelist "\n"];
+    } errmsg];
+    if {[info exists F]} {
+    	close $F;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+}
+
+proc make_rad_latest {savedir savename} {
+
+    global dafilter;
+
+    if {$dafilter(rad_latest_enable) == 0} {
+	return;
+    }
+
+    make_latest $savedir $savename $dafilter(rad_latestname);
+}
+
+proc make_sat_latest {savedir savename} {
+
+    global dafilter;
+
+    if {$dafilter(sat_latest_enable) == 0} {
+	return;
+    }
+
+    make_latest $savedir $savename $dafilter(sat_latestname);
+}
+
+proc make_latest {savedir savename latestname} {
+#
+# Create a link to the newest file (this is for applications like DA, IDV).
+#
+    global dafilter;
+
+    set currentdir [pwd];
+
+    set dirpath [file join $dafilter(datadir) $savedir];
+    cd $dirpath;
+
+    set latest $savename;
+    set linkpath $latestname;
+    if {[file exists $latest] == 0} {
+ 	cd $currentdir;
+	return;
+    }
+
+    set status [catch {
+        file delete $linkpath;
+        # file link -symbolic $linkpath $latest;
+	exec ln -s $latest $linkpath;
+    } errmsg];
+
+    cd $currentdir;
+}
+
+#
+# The functions to support the nntp gateway are dafilter.init
+#
+
+#
+# Functions to support the inventory
+#
+
+proc filter_insert_inventory {invsubdir savedir fpathout} {
+# 
+# See the function with this same name in the rstfilter.lib for the meaning
+# of the "savedir" argument.
+#
+    global dafilter;
+
+    # The da invdir must exist
+    if {[file isdirectory $dafilter(invdir)] == 0} {
+	log_msg "No $dafilter(invdir)";
+	return;
+    }
+
+    # The inventory files are saved in hourly subdirs within
+    # digatmos/<invsubdir>. E.g.,
+    # digatmos/nextad/nids/<yyyymmddhh>/nexrad.nids.mhx.ncr
+    #
+    set parentdir [file join $dafilter(invdir) $invsubdir \
+	[clock format [clock seconds] -format $dafilter(invformat) -gmt true]];
+    file mkdir $parentdir;
+
+    set invfile_name [join [file split $savedir] "."]
+    set invfile [file join $parentdir $invfile_name];
+
+    filterlib_file_append $invfile $fpathout;
+}
+
+proc filter_rad_insert_inventory {savedir fpathout} {
+
+    global dafilter;
+
+    if {$dafilter(rad_inv_enable) == 0} {
+	return;
+    }
+
+    filter_insert_inventory $dafilter(radinvsubdir) $savedir $fpathout;
+}
+
+proc filter_sat_insert_inventory {savedir fpathout} {
+
+    global dafilter;
+
+    if {$dafilter(sat_inv_enable) == 0} {
+	return;
+    }
+
+    filter_insert_inventory $dafilter(satinvsubdir) $savedir $fpathout;
+}
+
+proc dafilter_periodic {} {
+#
+# The hourly function to send the files to the news server.
+# (Disabled if running as a worker slave.)
+
+    global dafilter;
+
+    if {$dafilter(option_s) == 0} {
+	dafilter_nntp;
+    }
+}
+
+#
+# Auxiliary functions to support enabling/disabling rules individually
+#
+
+proc is_grib_rule_enabled {key} {
+#
+# The key is the subdirectory name
+#
+    global dafilter;
+
+    set r 0;
+
+    if {($dafilter(grib_enable) == 1) && \
+	([filterlib_uwildmat $dafilter(grib_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_rad_rule_enabled {key} {
+#
+# For radar the key is the subdirectory name, e.g., nexrad/nids/jua/n0r.
+#
+    global dafilter;
+
+    set r 0;
+
+    if {($dafilter(rad_enable) == 1) && \
+	([filterlib_uwildmat $dafilter(rad_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_sat_rule_enabled {key} {
+#
+# For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+#
+    global dafilter;
+
+    set r 0;
+
+    if {($dafilter(sat_enable) == 1) && \
+	([filterlib_uwildmat $dafilter(sat_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+proc is_file_rule_enabled {key} {
+#
+# For file the key is like "nwx/spc/<subdir>" (e.g., nwx/spc/stahry)
+#
+    global dafilter;
+
+    set r 0;
+
+    if {($dafilter(file_enable) == 1) && \
+	([filterlib_uwildmat $dafilter(file_regex) $key] == 1)} {
+	set r 1;
+    }
+
+    return $r;
+}
+
+#
+# main
+#
+array set option [::cmdline::getoptions argv $optlist $usage];
+set argc [llength $argv];
+
+# Check if invoked as a slave worker
+if {$option(s) == 1} {
+    set dafilter(option_s) 1;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

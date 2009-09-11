@@ -1,0 +1,35 @@
+#
+# $Id$
+#
+
+# Various filters and programs have a configuration parameter to
+# restrict what they process. For example, the rstfilter has the variable
+#
+#	rstfilter(rad_regex)
+#
+# to restrict the products for the radar images are generated. In the simplest
+# cases, that variable can be a regular expression such as
+#
+# 	set rstfilter(rad_regex) {^n0r}
+#	set rstfilter(rad_regex) {^n0r(jua|lix)}
+#
+# However, in general the expression within the brackets (the "uwildregex")
+# is a comma-separated list of regular expressions, anyone of wich can
+# be negated (i.e., the expression starts with an exclamation sign), for
+# example
+#
+#	 set rstfilter(rad_regex) {^n0r,.*jua,!.*lix}
+#
+# The algorithm works as follows. If the variable is not set, then everything
+# is accepted. If it is set but empty (i.e., set to {}), then nothing is
+# accepted. Otherwise, each pattern in the list is tried, from left to
+# right. If no match is found, the file is rejected. Otherwise, the file
+# is accepted if and only if the right-most pattern that matched was
+# not negated. The special string ".*", is a match-all pattern.
+# Thus, in the last example above, all products from "jua" are accepted,
+# as well as all "n0r" products from any station, except klix for which
+# everything is rejected.
+#
+# The same scheme applies to other similar variables involving regular
+# expressions, for example for the satellite images, and the
+# radar and satellite image loops.

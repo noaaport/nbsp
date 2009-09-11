@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+INSTALL =	@INSTALL@
+
+TARGET =	emwin_accept-sample
+SOURCE =	emwin_accept.in
+
+SAMPLES =	${TARGET} emwin-nbspd.conf-sample
+
+all: ${SAMPLES}
+
+${TARGET}: ${SOURCE}
+	awk -f cv.awk < ${SOURCE} > ${TARGET}
+
+#install:
+#	${INSTALL} -m 644 ${SAMPLES} ${MYDOCDIR}
+
+install:
+
+clean:
+	rm -f *~ Makefile ${TARGET}

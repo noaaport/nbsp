@@ -1,0 +1,25 @@
+#
+# $Id$
+#
+@MAKEFILEINC@
+
+INSTALL =	@INSTALL@
+
+TARGET =	gempakfilter.pl-sample
+SOURCES =	gempakfilter.pl
+
+all: ${TARGET}
+
+gempakfilter.pl-sample: gempakfilter.pl
+	cp gempakfilter.pl gempakfilter.pl-sample
+
+gempakfilter.pl:
+	cd gempak-filter; make; make install
+
+install:
+	${INSTALL} -m 644 ${TARGET} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}
+
+

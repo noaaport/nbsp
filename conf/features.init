@@ -1,0 +1,94 @@
+#
+# $Id$
+#
+
+# Define defaults
+set feature(filterserver) 1
+set feature(inventory) 1
+set feature(spoolfilter) 0
+set feature(rstfilter) 1
+set feature(dafilter) 1
+set feature(metarfilter) 1
+set feature(uafilter) 1
+set feature(wsfilter) 0
+set feature(gribfilter) 1
+set feature(panfilter) 0
+set feature(msgfilter) 0
+set feature(trackfilter) 0
+set feature(nntpfilter) 0
+set feature(gpfilter) 0
+set feature(ldmfilter) 0
+set feature(nbspfilter) 0
+
+set feature(netfilter)		1
+set feature(nbs1server)		0
+set feature(nbs2server)		0
+set feature(emwinserver)	0
+set feature(httpdserver)	1
+
+set feature(spooltype)		1
+
+# Read the local overrides
+if {[info exists _featuresconf]} {
+    foreach _f ${_featuresconf} {
+        if {[file exists ${_f}]} {
+    	    source ${_f};
+	}
+    }
+}
+unset _f;
+
+#
+# Configure
+#
+if {$feature(netfilter) == 1} {
+    set netfilter_enable 1;
+} else {
+    set netfilter_enable 0;
+}
+if {$feature(nbs1server) == 1} {
+    set servertype 1;
+} else {
+    set servertype 0;
+}
+if {$feature(nbs2server) == 1} {
+    incr servertype 2;
+}
+if {$feature(emwinserver) == 1} {
+    set feature(rstfilter) 0;
+    incr servertype 4;
+}
+
+if {$feature(httpdserver) == 1} {
+    set httpd_enable 1;
+} else {
+    set httpd_enable 0;
+}
+
+if {$feature(filterserver) == 1} {
+    set filterserver_enable 1;
+} else {
+    set filterserver_enable 0;
+}
+
+set filterlist [list];
+if {$feature(inventory) == 1} {
+    lappend filterlist	"/usr/local/libexec/nbsp/inventory";
+}
+foreach k [list spool rst da metar ua ws grib pan msg track nntp gp ldm nbsp] {
+    if {[info exists feature(${k}filter)] == 0} {
+	continue;
+    } elseif {($feature(${k}filter) == 1)} {
+        lappend filterlist  "/usr/local/libexec/nbsp/${k}filter";
+    } elseif {($feature(${k}filter) == 2)} {
+        lappend filterlist  "/usr/local/libexec/nbsp/${k}filter-manager";
+    }
+}
+set filterlist [join $filterlist " "];
+
+set spooltype $feature(spooltype);
+if {$spooltype >= 2} {
+    set servertype 1;
+    set filterserver_enable 0;
+    set netfilter_enable 0;
+}

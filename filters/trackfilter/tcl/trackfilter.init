@@ -1,0 +1,62 @@
+#
+# $Id$
+#
+
+## The defaults of this filter.
+set trackfilter(conf)	[file join $common(confdir) "trackfilter.conf"];
+set trackfilter(localconfdirs)	$common(localconfdirs);
+set trackfilter(datadir)	[file join $common(datadir) "track"];
+set trackfilter(trackfilesdir)	"tcm";
+set trackfilter(trackdatadir)	"data";
+set trackfilter(trackimgdir)	"img";
+#
+set trackfilter(tcmfext)	".tcm";
+set trackfilter(datafext)	".data";
+set trackfilter(imgfext)	".png";
+#
+# The track plot requires GrADS. If the variable trackfilter(grads_post_script)
+# is defined, it should point to a script that will be executed as
+#
+# exec $trackfilter(grads_post_script) <path_to_image_file>
+#
+set trackfilter(grads_enable)	1;
+set trackfilter(grads_post_script) "";
+#
+# Options used by nbsptrackplot
+#
+# This a subdirectory of any of the localconfdirs to look for the templates.
+# The last one found is used.
+#
+set trackfilter(scriptssubdir) [file join "grads" "track"];
+#
+# The default main and map scripts are named "track-${region}.grads" and
+# "track-${region}.grads", respectively.
+# Custom scripts can be enabled by placing in them in the site subdirectory,
+# or by changing the prefix below, or by setting the variables
+#
+#    set trackfilter(grads_track_script,<region>)
+#    set trackfilter(grads_track_script,<name>)
+#    set trackfilter(grads_map_script,<region>)
+#    set trackfilter(grads_map_script,<name>)
+#
+# where <region> is at,ep,..., and <name> is the storm name.
+#
+set trackfilter(grads_track_script_prefix)  "track-";
+set trackfilter(grads_track_script_suffix)  ".grads";
+set trackfilter(grads_map_script_prefix)  "map-";
+set trackfilter(grads_map_script_suffix)  ".grads";
+#
+# variables
+set trackfilter(scriptsdirs) [list];
+
+# The default configuration file of this filter
+if {[file exists $trackfilter(conf)] == 1} {
+    source $trackfilter(conf);
+}
+
+# Update the list of the scripts directories.
+foreach _d $trackfilter(localconfdirs) {
+   lappend trackfilter(scriptsdirs) \
+	[file join ${_d} $trackfilter(scriptssubdir)];
+}
+unset _d;

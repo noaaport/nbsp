@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+The directory
+
+	/usr/local/etc/nbsp
+
+contains the main configuration file "nbspd.conf" for the program,
+the main configuration file for each of the filters, and other
+files required files. After the program or a filter reads its
+configuration file xxx.conf, they look for the files
+
+	defaults/xxx.conf
+	site/xxx.conf
+
+and if they exist they will be read, in that order. Latter settings
+override previous ones. 
+
+Every nbsp package is distributed with an identical set of confguration
+files. The purpose of the "defaults" subdirectory is to be able to distribute
+nbsp packages pre-configured for a particular purpose. The corresponding
+configuration files are placed in that subdirectory.
+
+The "site" subdirectory is always distributed empty, and this is
+where the configuration files that contain the local modifications
+should be placed.
+
+When installed from a package, the software is already configured to run
+with some default features (e.g., rstfilter and dafilter).
+The file "CONFIGURING" has some hints for modifying the default
+configuration, and detailed explanations appear in the configuration
+files themselves.
+
+The subdirectory "dist" has the original copies of all the configuration
+files as a backup.

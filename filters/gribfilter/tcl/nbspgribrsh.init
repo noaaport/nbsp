@@ -1,0 +1,58 @@
+#
+# $Id$
+#
+# This file is read by nbspgribrsh and nbspgradrsh
+
+#
+# functions
+#
+proc errx {s} {
+        
+    global argv0;
+
+    set progname [file tail $argv0];
+    puts "$progname: Error: $s";
+    exit 1;
+}
+    
+#
+# System defaults
+#
+set nbspgribrsh(localconfdirs) [list "/usr/local/etc/nbsp/defaults" \
+	"/usr/local/etc/nbsp/site"];
+# The datadir must exist; the grb, ctl, cat  subdirectories are created.
+# datadir, baseurl, ctlcatalog, conffile can be overriden by the cmd-line.
+set nbspgribrsh(default_homedir) [file join $env(HOME) ".nbsp"];
+set nbspgribrsh(homedir) $nbspgribrsh(default_homedir);
+set nbspgribrsh(userconfdir) "conf";
+set nbspgribrsh(userconf) [file join \
+	$nbspgribrsh(homedir) $nbspgribrsh(userconfdir) "nbspgribrsh.conf"];
+set nbspgribrsh(gradsprompt) "ga*";
+
+#
+# User defaults
+#
+set nbspgribrsh(datadir) [file join $nbspgribrsh(homedir) data grib];
+set nbspgribrsh(grbdatadir) "grb";
+set nbspgribrsh(ctldatadir) "ctl";
+set nbspgribrsh(idxdatadir) "idx";
+set nbspgribrsh(catdatadir) "cat";
+
+set nbspgribrsh(baseurl) "http://localhost:8015/grib";
+set nbspgribrsh(grbbasedir) "grb";
+set nbspgribrsh(ctlbasedir) "ctl";
+set nbspgribrsh(catbasedir) "cat";
+set nbspgribrsh(ctlcatalog) "ctl.cat";
+
+set nbspgribrsh(grbfext) ".grb";
+set nbspgribrsh(ctlfext) ".ctl";
+set nbspgribrsh(idxfext) ".idx";
+
+#
+# Read the configuration file and override with cmd-line arguments
+#
+set _defaults "/usr/local/etc/nbsp/nbspgribrsh.conf";
+if {[file exists ${_defaults}]} {
+    source ${_defaults};
+}
+unset _defaults;

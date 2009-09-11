@@ -1,0 +1,48 @@
+#
+# $Id$
+#
+include ../Makefile.inc
+include ../VERSION
+include pkginfo.mk
+
+package_version = ${version}_${package_build}
+package_name = ${name}-${package_version}
+package_out = ${package_name}.${package_ext}
+package_file = ${package_name}.${package_file_ext}
+
+default: build
+
+../Makefile: ../Makefile.in
+	cd ..; ./configure.sh
+
+build: ../Makefile
+	cd ..; ${MAKE}
+
+install: build
+	rm -rf pkg
+	install -d pkg/root/${PREFIX}
+	install -d pkg/resources
+	dirslist=`pwd`/dirs; \
+	cd pkg/root/${PREFIX}; \
+	install -d `cat $$dirslist`
+	cd ..; ${MAKE} PKGBUILDDIR=`pwd`/macosx/pkg/root \
+	PKGCONFDIR=/dist install
+
+package: install
+	install -m 0755 pkg-postinstall pkg/resources/postflight
+	install -m 0644 pkg-comment pkg/resources/Welcome.txt
+	install -m 0644 ../LICENSE pkg/resources/License.txt
+	install -m 0644 pkg-display pkg/resources/ReadMe.txt
+	rm -rf ${package_out} ${package_file}
+	packagemaker -r pkg/root \
+		     -e pkg/resources \
+		     -i ${package_id} \
+		     -n ${package_version} \
+		     -t ${package_name} \
+		     -o ${package_out}
+	hdiutil create -srcfolder ${package_out} ${package_file}
+
+clean:
+	rm -f *~
+	rm -rf pkg ${package_out} ${package_file}
+	cd ..; ${MAKE} clean

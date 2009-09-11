@@ -1,0 +1,163 @@
+#
+# $Id$
+#
+
+# This script is not run by tclsh. It is run directly by the network server.
+# Therefore, any global variables defined by tclsh are no longer available
+# automatically; they must be defined either here or by the server
+# (via Tcl_Link). The variables defined by the server are:
+#
+#	input, command, output_status [output_fpathout, output_emwinfame]
+#
+# (the last two are not used by this filter).
+# The variable $command is 0,1,2 meaning init, exec, end.
+# The server rertieves the other variables [i.e., allow]
+# that it wants using Tcl_GetVar.
+# The error function library uses argv0 and this one we define here:
+#
+set argv0 "netfilter";
+
+# Initialize every time the filter is entered in case of error.
+set output_status 1;
+
+#
+# This portion is executed when the server requests the filter to end
+#
+if {$command == 2} {
+
+    filterlib_end;		# close the cpool if enabled
+
+    # Let the server know there were no errors.
+    set output_status 0;
+    
+    return 0;
+}
+
+#
+# This is the part of the script that is executed repeatedly.
+#
+if {$command == 1} {
+
+    main $input;
+    set output_status 0;
+
+    return 0;
+}
+
+#
+# The rest is the init portion and function definitions, executed
+# when $conmmand == 0.
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "$argv0 disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+#
+filterlib_init;		# open the cpool if enabled
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# default configuration
+set netfilter(conf)	[file join $common(confdir) "netfilter.conf"];
+set netfilter(rc)	[file join $common(confdir) "netfilter.rc"];
+set netfilter(rcdir)	[file join $common(rcdir) "net"];
+set netfilter(lib)	[file join $common(libdir) "netfilter.lib"];
+set netfilter(localconfdirs) $common(localconfdirs);
+set netfilter(prerc)  [file join $common(confdir) "netfilterpre.rc"];
+set netfilter(postrc)  [file join $common(confdir) "netfilterpost.rc"];
+#
+set netfilter(dobody) 1;
+#
+set netfilter(allowdefault) 0;  # default for allow(0)
+#
+# Variables
+#
+set netfilter(rcfiles) [list];
+set netfilter(condition)	[list];
+set netfilter(action)		[list];
+
+#
+# Read the optional configuration file.
+#
+if {[file exists $netfilter(conf)] == 1} {
+    source $netfilter(conf);
+}
+
+# The main rc file is required
+if {[file exists $netfilter(rc)] == 0} {
+    log_msg "Filter disabled: $netfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set netfilter(rcfiles) [filterlib_get_rcfiles [file tail $netfilter(rc)] \
+        $netfilter(localconfdirs) $netfilter(rcdir) \
+	$netfilter(prerc) $netfilter(postrc)];
+
+# Load the rules sets
+source $netfilter(rc);
+
+# Let the server know that the initialization was completed.
+set output_status 0;
+
+#
+# Function definitions
+#
+proc main {finfo} {
+
+    global errorInfo;
+
+    set status [catch {process $finfo} errmsg];
+    if {$status != 0} {
+	log_msg "Error processing $finfo";
+	log_msg $errmsg;
+	log_msg $errorInfo;
+    }
+}
+
+proc process {finfo} {
+# 
+# The common library defined all rc variables except rc(allow)
+# which is initialized explicitly here.
+#
+    global netfilter;
+    global allow;
+
+    if {$netfilter(dobody) == 1} {
+        filterlib_get_rcvars rc $finfo;
+    } else {
+        filterlib_get_rcvars rc $finfo -nobody;
+    }
+
+    set rc_status 1;
+
+    # The allow() array must be cleared in order to erase the settings
+    # from the previous run that matched.
+    if {[array exists allow]} {
+        array unset allow;
+    }
+    set allow(0) $netfilter(allowdefault);
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $netfilter(condition) {
+        set actionlist [lindex $netfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}

@@ -1,0 +1,56 @@
+#
+# $Id$
+#
+
+Subdirectory names -
+
+The subdirectory names used to save the grib files follow mostly
+the conventions used in the Gempak "gribkey.tbl" file,
+complemented with the information in the "ON388" document, and
+by the convention used in the Gempak "pqact.gempak". In short,
+when the <station> part of the wmo header uniquely identifes a standard
+model name, it is used. Otherwise, if the <center> is 7,8,9 (ncep),
+then the name associated with the <model number> or with the <subcenter>
+is used. Otherwise the name of the <center> is used.
+
+File names -
+
+There are two sets of files saved by the gribfilter in the directories
+
+	/var/noaaport/data/grib/grb
+	/var/noaaport/data/grib/grids
+
+In the "grb" directory the individual file names are of the form
+
+	<modelname>_<grid>_<yyyymmddhh>_<forecast period>.grb
+
+such as, for example
+
+	gfs_211_2007100812_6h.grb
+
+where <yyyymmddhh> is the reference time in the grib file, and 6h
+is the forecast period. The names in the "grids" directory do not
+contain the forecast period, e.g.,
+	
+	gfs_211_2007100812.grb
+
+The <modelname> part is in most cases one of the standard models such as gfs,
+nam, ruc, or of the form
+
+	<subcenter>-<model number>
+
+as in
+
+	awc-190_2007102619_0h.grb
+	awc-191_2007102619_2h.grb
+
+For analysis and/or forecasts the files can be combined as needed.
+For example,
+
+	cat 2007100812_gfs_211_*.grb > 2007100812_gfs_211.grb
+
+will pick up all the forecast times for that particular model and grid.
+
+The files in the "grids" directory are precisely these combinations
+in which all the individual files of a given model run are combined
+into one large file mimcking the above step.

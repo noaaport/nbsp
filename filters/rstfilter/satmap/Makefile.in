@@ -1,0 +1,39 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	nbspsatmap
+TCLSOURCES =	nbspsatmap.tcl
+TMPLSOURCES =	satmap.rc
+TMPLTARGET =	satmap-templates.tgz
+TMPLPDIR =	gpmap
+TMPLDIR =	${TMPLPDIR}/sat
+
+TARGET =	${TCLTARGET} ${SAMPLES} ${TMPLTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+${TMPLTARGET}: ${TMPLSOURCES}
+	rm -rf ${TMPLDIR}
+	mkdir -p ${TMPLDIR}
+	cp ${TMPLSOURCES} ${TMPLDIR}
+	tar -czf ${TMPLTARGET} ${TMPLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${TMPLPDIR}

@@ -1,0 +1,35 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	spoolfilter.tcl
+TCLSOURCES =	spoolfilter.tcl.in
+FILTERNAME =	spoolfilter
+FILTERINIT =    spoolfilter.init
+SAMPLES =	spoolfilter.conf-sample
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+spoolfilter.conf-sample: spoolfilter.conf
+	cp spoolfilter.conf spoolfilter.conf-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

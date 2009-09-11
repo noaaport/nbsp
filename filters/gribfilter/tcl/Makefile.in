@@ -1,0 +1,123 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	gribfilter.tcl
+TCLSOURCES =	gribfilter.tcl.in
+FILTERNAME =	gribfilter
+FILTERINIT =    gribfilter.init
+TOOLSINIT =	nbspgribtools.init nbspgribrsh.init
+M4SOURCES =	defs.m4 grib.m4 grids.m4
+M4MAIN =	rc.m4
+M4TARGET =	gribfilter.rc-defaults
+SAMPLES =	gribfilter.conf-sample gribfilter.rc-sample \
+		gribfilter-schedule.rc-sample \
+		nbspgribrsh.conf-sample nbspgribrsh.conf-user
+TMPLDIR =	grads
+TMPLTARGET =	grib-templates.tgz
+TOOLS =		nbspgribctl nbspgribctlfiles nbspgribplot nbspgribplotc \
+		nbspwgrib \
+		nbspgradsh nbspgradrsh nbspgribsh nbspgribrsh nbspgribcat \
+
+
+TCLTARGET-MGR =	gribfilter-manager.tcl
+TCLSOURCES-MGR = gribfilter-manager.tcl.in
+FILTERNAME-MGR = gribfilter-manager
+
+TCLTARGET-CTLFILES = gribfilter-ctlfiles.tcl
+TCLSOURCES-CTLFILES = gribfilter-ctlfiles.tcl.in
+FILTERNAME-CTLFILES = gribfilter-ctlfiles
+
+TARGET =	${TCLTARGET} ${TCLTARGET-MGR} ${TCLTARGET-CTLFILES} \
+		${M4TARGET} ${SAMPLES} ${TMPLTARGET} ${TOOLS}
+
+TCLSH =		@TCLSH@
+WISH =		@WISH@
+EXPECT =	@EXPECT@
+INSTALL =	@INSTALL@
+OSNAME =	@OSNAME@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+${M4TARGET}: ${M4MAIN} ${M4SOURCES}
+	m4 ${M4MAIN} > ${M4TARGET}
+
+${TCLTARGET-MGR}: ${TCLSOURCES-MGR}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES-MGR} > ${TCLTARGET-MGR}
+
+${TCLTARGET-CTLFILES}: ${TCLSOURCES-CTLFILES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES-CTLFILES} > \
+	${TCLTARGET-CTLFILES}
+
+gribfilter.conf-sample: gribfilter.conf
+	cp gribfilter.conf gribfilter.conf-sample
+
+gribfilter.rc-sample: gribfilter.rc 
+	cp gribfilter.rc gribfilter.rc-sample
+
+gribfilter-schedule.rc-sample: gribfilter-schedule.rc 
+	cp gribfilter-schedule.rc gribfilter-schedule.rc-sample
+
+nbspgribctl: nbspgribctl.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgribctl.tcl > nbspgribctl
+
+nbspgribctlfiles: nbspgribctlfiles.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgribctlfiles.tcl > nbspgribctlfiles
+
+nbspgribplot: nbspgribplot.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgribplot.tcl > nbspgribplot
+
+nbspgribplotc: nbspgribplotc.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgribplotc.tcl > nbspgribplotc
+
+nbspgradsh: nbspgradsh.tcl
+	sed -e /%EXPECT%/s##${EXPECT}# nbspgradsh.tcl > nbspgradsh
+
+nbspgradrsh: nbspgradrsh.tcl
+	sed -e /%EXPECT%/s##${EXPECT}# nbspgradrsh.tcl > nbspgradrsh
+
+nbspgribsh: nbspgribsh.tcl
+	sed -e /%WISH%/s##${WISH}# nbspgribsh.tcl > nbspgribsh
+
+nbspgribrsh: nbspgribrsh.tcl
+	sed -e /%WISH%/s##${WISH}# nbspgribrsh.tcl > nbspgribrsh
+
+nbspgribrsh.conf-sample: nbspgribrsh.conf nbspgribrsh.conf-user.in
+	sed -e '/@NBSPGRIBSRHUSER@/r nbspgribrsh.conf-user.in' \
+		nbspgribrsh.conf > nbspgribrsh.conf.tmp
+	sed -e '/@NBSPGRIBSRHUSER@/,/@USER_VARIABLES@/d' \
+		nbspgribrsh.conf.tmp > nbspgribrsh.conf-sample
+	rm nbspgribrsh.conf.tmp
+
+nbspgribrsh.conf-user: nbspgribrsh.conf-user.in
+	sed -e '/@USER_VARIABLES@/d' nbspgribrsh.conf-user.in \
+		> nbspgribrsh.conf-user
+
+nbspwgrib: nbspwgrib.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspwgrib.tcl > nbspwgrib
+
+nbspgribcat: nbspgribcat.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgribcat.tcl > nbspgribcat
+
+${TMPLTARGET}:
+	tar -c --exclude '*CVS*' -z -f ${TMPLTARGET} ${TMPLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${TOOLSINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TCLTARGET-MGR} ${MYLIBEXECDIR}/${FILTERNAME-MGR}
+	${INSTALL} -m 755 ${TCLTARGET-CTLFILES} \
+		${MYLIBEXECDIR}/${FILTERNAME-CTLFILES}
+	${INSTALL} -m 755 ${TOOLS} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

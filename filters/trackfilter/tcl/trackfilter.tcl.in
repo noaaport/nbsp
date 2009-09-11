@@ -1,0 +1,179 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults initialization
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "trackfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsputil;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+set track_init_file [file join $common(libdir) "trackfilter.init"];
+if {[file exists $track_init_file] == 0} {
+        log_msg "trackfilter disabled: $track_init_file not found.";
+        return 1;
+}
+source $track_init_file;
+unset track_init_file;
+#
+# variables
+#
+set trackfilter(ccbsaved)	$common(ccbsaved);
+
+#
+# Functions
+#
+proc trackfilterlib_name {body} {
+
+    set name "";
+
+    if {[regexp {\s(\S+) FORECAST/ADVISORY NUMBER\s+(\d+)} $body s s1 s2]} {
+	set name [string tolower $s1];
+	set advnumber $s2;
+    }
+
+    return $name;
+}
+
+proc main {argc argv} {
+
+    global trackfilter;
+    global errorInfo;
+
+    # cd to the main data directory once and for all
+    if {[file isdirectory $trackfilter(datadir)] == 0} {
+	log_msg "$trackfilter(datadir) not found.";
+	return 1;
+    }
+    cd $trackfilter(datadir);
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global trackfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+    set ym [clock format $seconds -gmt true -format "%Y%m"];
+    set yyyy [clock format $seconds -gmt true -format "%Y"];
+
+    if {($rc(awips) eq "") || \
+	([regexp {^tcm(.{2})(\d)} $rc(awips) s region index] == 0)} {
+	return;
+    }
+
+    set name [trackfilterlib_name $rc(body)];
+    if {$name eq ""} {
+	log_msg "Cannot determine name in $rc(fpath)";
+	return;
+    }
+    set tcmsavedir [file join $trackfilter(trackfilesdir) $region];
+    set tcmsavename ${yyyy}.${name}$trackfilter(tcmfext);
+    set tcmsavepath [file join $tcmsavedir $tcmsavename];
+    set status [save_file $rc(seq) $rc(fpath) $tcmsavedir $tcmsavename];
+
+    if {$status != 0} {
+	return;
+    }
+
+    # Update the tracking data
+    set datasavepath [file join $trackfilter(trackdatadir) \
+	$region ${yyyy}.${name}$trackfilter(datafext)];
+    set status [catch {
+	# nbsptrackdata uses ::fileutil::writeFile, which creates
+	# the parent directories.
+	exec nbsptrackdata -o $datasavepath $tcmsavepath;
+    } errmsg];
+    
+    if {$status != 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    # Update the tracking plot
+    if {$trackfilter(grads_enable) == 0} {
+	return;
+    }
+
+    set imgsavepath [file join $trackfilter(trackimgdir) \
+	$region ${yyyy}.${name}$trackfilter(imgfext)];
+    file mkdir [file dirname $imgsavepath];
+    
+    set status [catch {
+        exec nbsptrackplot -o $imgsavepath -r $region $name;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg "Cannot create track plot for $name: $errmsg";
+    } elseif {$trackfilter(grads_post_script) ne ""} {
+	set status [catch {
+	    exec $trackfilter(grads_post_script) $imgsavepath;
+	} errmsg];
+	if {$status != 0} {
+	    log_msg $errmsg;
+	}
+    }
+}
+
+proc save_file {seq fpath savedir savename} {
+
+    global trackfilter;
+
+    file mkdir $savedir;
+
+    # Don't add the gempak header and footer [-t]
+    set opts "-a -t";
+    if {$trackfilter(ccbsaved) == 0} {
+	set opts "-a -t -n";
+    }
+
+    set status [catch {
+        eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    return $status;
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

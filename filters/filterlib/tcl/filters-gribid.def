@@ -1,0 +1,366 @@
+#
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+
+# This file has the names of the models that the gribfilter uses
+# when saving the grib data files in the grib/grb directory.
+# Although this file can be edited, the local overrides and/or additions
+# should be put instead in the "site" subdirectory.
+#
+# The routines first look to see if a "model" name is defined using the
+# following, in order:
+# 	<center>,<station>
+#	<center>,<subcenter>,<model number>
+#	<center>,<model>
+# If it is not found, then it uses tries to find the name of the
+# subcenter using
+#	<center>,<subcenter>
+#	<center>,<station>
+# and if it is not found it uses the <station> as the name, prepended by
+# an underscore.
+#
+# The names are taken from
+# ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 08/13/2007),
+#  and
+# 	http://www.weather.gov/datamgmt/x_ref/xr07_Center_ID_List.html
+# See also:
+#	pqact.gempak
+#	gempak/tables/grid/gribkey.tbl
+#	gempak/tables/grid/ncepsubcenters.tbl
+#
+##set filtersgribid(model,7,kwba) ""; # Reserved for Future Use
+##set filtersgribid(model,7,kwbb) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbc) "gfs"; # Global Forecast System Model
+set filtersgribid(model,7,kwbd) "dgex"; # Downscaled GFS using NAM eXt. DGEX)
+set filtersgribid(model,7,kwbe) "nam"; # North American Mesoscale (NAM) Model
+set filtersgribid(model,7,kwbf) "ngm"; # Nested Grid Model (NGM)
+set filtersgribid(model,7,kwbg) "ruc"; # Rapid Update Cycle
+set filtersgribid(model,7,kwbh) "mrf"; # Medium Range Forecast (MRF)
+set filtersgribid(model,7,kwbi) "sst"; # Sea Surface Temperature Analysis
+set filtersgribid(model,7,kwbj) "wind-wave"; # Wind-Wave Forecast Models
+set filtersgribid(model,7,kwbk) "gefs"; # Global Ensemble Forecast System
+set filtersgribid(model,7,kwbl) "sref"; # Short Range (regional) Ensemble Fcast
+set filtersgribid(model,7,kwbm) "ocean"; # Ocean Models
+##set filtersgribid(model,7,kwbn) ""; # Used by NDFD Program
+set filtersgribid(model,7,kwbo) "merge"; # Merge of Models
+set filtersgribid(model,7,kwbp) "aqm-air"; # EPA/CMAQ
+set filtersgribid(model,7,kwbq) "gmos"; # from gmosheaders.pdf 
+set filtersgribid(model,7,kwbr) "rtma"; # Real Time Mesoscale Analysis of Error
+##set filtersgribid(model,7,kwbs) ""; # Reserved for Future Use
+##set filtersgribid(model,7,kwbt) ""; # Reserved for Future Us
+##set filtersgribid(model,7,kwbu) ""; # Reserved for Future Use
+##set filtersgribid(model,7,kwbv) ""; # Reserved for Future Use
+##set filtersgribid(model,7,kwbw) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbx) "ecmwf"; # ECMWF
+##set filtersgribid(model,7,kwby) ""; # Reserved for Future Use
+##set filtersgribid(model,7,kwbz) ""; # Refer to GRIB PDS
+
+# Indexed by <center>,<subcenter>,<model>
+set filtersgribid(model,8,65535,0) "ndfd";	# from gribkey.tbl
+set filtersgribid(model,8,0,0) "radar";		# from gribkey.tbl
+
+# Indexed by <center>,<model>
+# (From ON388 - Table A, gribkey.tbl,nohrsc_product_identifier.pdf)
+set filtersgribid(model,7,180) "qpf";
+set filtersgribid(model,7,181) "rfc-qpf";
+set filtersgribid(model,7,182) "rfc-qpe";
+#
+# rfc's - Without the definitions below the rfc's will create directories
+# with the station name. Their center is 9 and the subcenters and the subcenter
+# numbers are:
+#   kfwr=162, korn=154, krha=155, kalr=105, kkrf=156, kmsr=157,
+#   ktir=160, ktua=150, ktar=158, krsa=153, knes=170
+# The definitions below are indexed by the center(9) and the model number.
+#
+set filtersgribid(model,9,151) "ffg";	# gribkey.tbl
+set filtersgribid(model,9,152) "rfc";	# test run
+set filtersgribid(model,9,159) "rfc";	# ""
+set filtersgribid(model,9,160) "rfc";	# ""
+set filtersgribid(model,9,161) "rfc";	# ""
+set filtersgribid(model,9,171) "rfc";	# ""
+set filtersgribid(model,9,180) "rfc";	# qpf in gribkey.tbl
+set filtersgribid(model,9,190) "rfc";	# ""
+set filtersgribid(model,9,185) "nohrsc"; # gribkey.tbl, nohrsc_product_identifier.pdf
+#
+set filtersgribid(model,58,120) "ice";	# See gribid.NOTES (note 1)
+#
+set filtersgribid(model,74,15) "ukm"; # from gribkey.tbl
+set filtersgribid(model,74,19) "ukm"; # from gribkey.tbl
+set filtersgribid(model,74,44) "ukm"; # from gribkey.tbl
+set filtersgribid(model,74,45) "ukm"; # from gribkey.tbl
+set filtersgribid(model,74,89) "ukmw"; # from gribkey.tbl
+# ecmwf changes model id often (gribkey.tbl)
+#set filtersgribid(model,98,129) "ecmwf"; 
+set filtersgribid(model,98,130) "ecmwf"; # runtime test
+set filtersgribid(model,161,99) "nssl";	# center 161
+
+# Subcenters indexed by <center>,<station> (only for center == 7)
+set filtersgribid(subc,7,kwne) "emc";	#
+set filtersgribid(subc,7,kwnh) "hpc";	#
+set filtersgribid(subc,7,kwnm) "mpc";	#
+set filtersgribid(subc,7,kwnc) "cpc";	#
+set filtersgribid(subc,7,kkci) "awc";	# 
+set filtersgribid(subc,7,kwns) "spc";	#
+set filtersgribid(subc,7,knhc) "nhc";	#
+set filtersgribid(subc,7,knes) "nesdis"; #
+
+# Subcenters indexed by <center>,<subcenter> (only for center == 7)
+set filtersgribid(subc,7,1) "rean";	# NCEP Re-analysis Project
+set filtersgribid(subc,7,2) "ens";	# NCEP Ensemble Products
+set filtersgribid(subc,7,3) "ncep";	# NCEP Central Operations
+set filtersgribid(subc,7,4) "emc";	# Enviromental Modeling Center
+set filtersgribid(subc,7,5) "hpc";	# Hydrometeorological Pred Center
+set filtersgribid(subc,7,6) "mpc";	# Marine Prediction Center
+set filtersgribid(subc,7,7) "cpc";	# Climate Prediction Center
+set filtersgribid(subc,7,8) "awc";	# Aviation Weather Center
+set filtersgribid(subc,7,9) "spc";	# Storm Pred Center
+set filtersgribid(subc,7,10) "nhc";	# Tropical Pred Center (tpc)
+set filtersgribid(subc,7,11) "tdl";     # NWS Techniques Development Laboratory
+set filtersgribid(subc,7,12) "nesdis";	#
+set filtersgribid(subc,7,13) "faa";	# FAA 
+set filtersgribid(subc,7,14) "nwsmdl";  # NWS Met Dev Lab
+
+# These are taken from gribid.c in the noaaport-1.2.0 package. They
+# are used only to construct the key that is sent to pqinsert in the ldmfilter.
+set filtersgribid(modelldm,7,2) "uvi";
+set filtersgribid(modelldm,7,3) "trans_disp";
+set filtersgribid(modelldm,7,4) "smoke";
+set filtersgribid(modelldm,7,5) "sat";
+set filtersgribid(modelldm,7,10) "now";
+set filtersgribid(modelldm,7,19) "lfm";
+set filtersgribid(modelldm,7,25) "sno";
+set filtersgribid(modelldm,7,30) "forecaster";
+set filtersgribid(modelldm,7,39) "ngm";
+set filtersgribid(modelldm,7,42) "goi_gfs";
+set filtersgribid(modelldm,7,43) "goi_fnl";
+set filtersgribid(modelldm,7,44) "sst";
+set filtersgribid(modelldm,7,45) "ocn";
+set filtersgribid(modelldm,7,46) "hycom_global";
+set filtersgribid(modelldm,7,47) "hycom_npac";
+set filtersgribid(modelldm,7,48) "hycom_natl";
+set filtersgribid(modelldm,7,53) "lfm4";
+set filtersgribid(modelldm,7,64) "roi";
+set filtersgribid(modelldm,7,68) "spec_80_gfs";
+set filtersgribid(modelldm,7,69) "spec_80_mrf";
+set filtersgribid(modelldm,7,70) "qlm";
+set filtersgribid(modelldm,7,73) "fog";
+set filtersgribid(modelldm,7,74) "wwmex";
+set filtersgribid(modelldm,7,75) "wwak";
+set filtersgribid(modelldm,7,76) "bmrf";
+set filtersgribid(modelldm,7,77) "gfs";
+set filtersgribid(modelldm,7,78) "mrf";
+set filtersgribid(modelldm,7,79) "backup";
+set filtersgribid(modelldm,7,80) "spec62mrf";
+set filtersgribid(modelldm,7,81) "ssigfs";
+set filtersgribid(modelldm,7,82) "ssifnl";
+set filtersgribid(modelldm,7,84) "nam_84";
+set filtersgribid(modelldm,7,86) "ruc";
+set filtersgribid(modelldm,7,87) "ensmb";
+set filtersgribid(modelldm,7,88) "nww3";
+set filtersgribid(modelldm,7,89) "nmm_89";
+set filtersgribid(modelldm,7,94) "mrf";
+set filtersgribid(modelldm,7,96) "gfs";
+set filtersgribid(modelldm,7,98) "cfs";
+set filtersgribid(modelldm,7,99) "test_id";
+set filtersgribid(modelldm,7,100) "rsas";
+set filtersgribid(modelldm,7,101) "rsas";
+set filtersgribid(modelldm,7,105) "ruc2";
+set filtersgribid(modelldm,7,108) "lamp";
+set filtersgribid(modelldm,7,109) "rtma";
+set filtersgribid(modelldm,7,110) "nam_110";
+set filtersgribid(modelldm,7,111) "nam_111";
+set filtersgribid(modelldm,7,112) "wrf_nmm";
+set filtersgribid(modelldm,7,113) "sref_113";
+set filtersgribid(modelldm,7,115) "dgex_115";
+set filtersgribid(modelldm,7,116) "wrf_em";
+set filtersgribid(modelldm,7,120) "ice_120";
+set filtersgribid(modelldm,7,121) "nww_121";
+set filtersgribid(modelldm,7,122) "nww_122";
+set filtersgribid(modelldm,7,123) "nww_123";
+set filtersgribid(modelldm,7,124) "nww_124";
+set filtersgribid(modelldm,7,125) "nww_125";
+set filtersgribid(modelldm,7,126) "seaice";
+set filtersgribid(modelldm,7,127) "lakeice";
+set filtersgribid(modelldm,7,128) "gocn";
+set filtersgribid(modelldm,7,129) "godas";
+set filtersgribid(modelldm,7,130) "merge";
+set filtersgribid(modelldm,7,140) "narr";
+set filtersgribid(modelldm,7,141) "ldafs";
+set filtersgribid(modelldm,7,150) "rfs";
+set filtersgribid(modelldm,7,151) "ffgs";
+set filtersgribid(modelldm,7,152) "rad2";
+set filtersgribid(modelldm,7,153) "rad3";
+set filtersgribid(modelldm,7,180) "ncep_qpf";
+set filtersgribid(modelldm,7,181) "rfc_qpf";
+set filtersgribid(modelldm,7,182) "rfc_qpe";
+set filtersgribid(modelldm,7,183) "ndfd";
+set filtersgribid(modelldm,7,190) "awc_ncwd";
+set filtersgribid(modelldm,7,191) "awc_cip";
+set filtersgribid(modelldm,7,192) "awc_anl";
+set filtersgribid(modelldm,7,193) "awc_fcst";
+set filtersgribid(modelldm,7,195) "cdas2";
+set filtersgribid(modelldm,7,196) "cdas2";
+set filtersgribid(modelldm,7,197) "cdas";
+set filtersgribid(modelldm,7,198) "cdas";
+set filtersgribid(modelldm,7,200) "cpc";
+set filtersgribid(modelldm,7,201) "cpc";
+set filtersgribid(modelldm,7,210) "epa_aq";
+set filtersgribid(modelldm,7,211) "epa_aq";
+set filtersgribid(modelldm,7,215) "spc_mfp";
+set filtersgribid(modelldm,7,220) "ncep_opc";
+set filtersgribid(modelldm,54,36) "gem";
+set filtersgribid(modelldm,59,105) "ruc2";
+
+set filtersgribid(center,7) "ncep";
+set filtersgribid(center,8) "nwstg";
+set filtersgribid(center,9) "nws";
+set filtersgribid(center,52) "nhc";
+set filtersgribid(center,54) "cms";
+set filtersgribid(center,58) "fnoc";
+set filtersgribid(center,59) "fsl";
+set filtersgribid(center,60) "ncar";
+set filtersgribid(center,74) "ukm";
+set filtersgribid(center,98) "ecmwf";
+set filtersgribid(center,161) "nssl";
+
+# Grid numbers - Writing a wmoid as <t1><t2><a1><a2><ii>, these are
+# the definitions according to the <t1> and <a1>; i.e.,
+#
+# filtersgribid(gridid,h,g)
+#
+# means <t1> = h and <a1> = g. In entries like filtersgribid(gridid,lmyz,g)
+# below, it means the value holds for any of <t1> = l,m,y,z.
+# (Taken from appendix A of ON388)
+set filtersgribid(gridid,h,a) "21";
+set filtersgribid(gridid,o,a) "228";
+set filtersgribid(gridid,lmyz,a) "381";
+set filtersgribid(gridid,h,b) "22";
+set filtersgribid(gridid,o,b) "218";
+set filtersgribid(gridid,lmyz,b) "218";
+set filtersgribid(gridid,h,c) "23";
+set filtersgribid(gridid,o,c) "219";
+set filtersgribid(gridid,lmyz,c) "175";
+set filtersgribid(gridid,h,d) "24";
+set filtersgribid(gridid,o,d) "220";
+set filtersgribid(gridid,lmyz,d) "130";
+set filtersgribid(gridid,h,e) "25";
+set filtersgribid(gridid,o,e) "221";
+set filtersgribid(gridid,lmyz,e) "185";
+set filtersgribid(gridid,h,f) "26";
+set filtersgribid(gridid,o,f) "229";
+set filtersgribid(gridid,lmyz,f) "186";
+set filtersgribid(gridid,h,g) "50";
+set filtersgribid(gridid,o,g) "230";
+set filtersgribid(gridid,lmyz,g) "160";
+set filtersgribid(gridid,h,h) "0";
+set filtersgribid(gridid,o,h) "231";
+set filtersgribid(gridid,lmyz,h) "213";
+set filtersgribid(gridid,h,i) "37";
+set filtersgribid(gridid,o,i) "232";
+set filtersgribid(gridid,lmyz,i) "202";
+set filtersgribid(gridid,h,j) "38";
+set filtersgribid(gridid,o,j) "233";
+set filtersgribid(gridid,lmyz,j) "203";
+set filtersgribid(gridid,h,k) "39";
+set filtersgribid(gridid,o,k) "234";
+set filtersgribid(gridid,lmyz,k) "204";
+set filtersgribid(gridid,h,l) "40";
+set filtersgribid(gridid,o,l) "235";
+set filtersgribid(gridid,lmyz,l) "205";
+set filtersgribid(gridid,h,m) "41";
+set filtersgribid(gridid,o,m) "238";
+set filtersgribid(gridid,lmyz,m) "227";
+set filtersgribid(gridid,h,n) "42";
+set filtersgribid(gridid,o,n) "239";
+set filtersgribid(gridid,lmyz,n) "207";
+set filtersgribid(gridid,h,o) "43";
+set filtersgribid(gridid,o,o) "244";
+set filtersgribid(gridid,lmyz,o) "254";
+set filtersgribid(gridid,h,p) "44";
+set filtersgribid(gridid,o,p) "251";
+set filtersgribid(gridid,lmyz,p) "237";
+set filtersgribid(gridid,h,q) "0";
+set filtersgribid(gridid,o,q) "253";
+set filtersgribid(gridid,lmyz,q) "211";
+set filtersgribid(gridid,h,r) "0";
+set filtersgribid(gridid,o,r) "212";
+set filtersgribid(gridid,lmyz,r) "212";
+set filtersgribid(gridid,h,s) "0";
+set filtersgribid(gridid,o,s) "253";
+set filtersgribid(gridid,lmyz,s) "242";
+set filtersgribid(gridid,h,t) "61";
+set filtersgribid(gridid,o,t) "214";
+set filtersgribid(gridid,lmyz,t) "161";
+set filtersgribid(gridid,h,u) "62";
+set filtersgribid(gridid,o,u) "215";
+set filtersgribid(gridid,lmyz,u) "215";
+set filtersgribid(gridid,h,v) "63";
+set filtersgribid(gridid,o,v) "216";
+set filtersgribid(gridid,lmyz,v) "216";
+set filtersgribid(gridid,h,w) "64";
+set filtersgribid(gridid,o,w) "173";
+set filtersgribid(gridid,lmyz,w) "236";
+set filtersgribid(gridid,h,x) "0";
+set filtersgribid(gridid,o,x) "0";
+set filtersgribid(gridid,lmyz,x) "243";
+set filtersgribid(gridid,h,y) "0";
+set filtersgribid(gridid,o,y) "0";
+set filtersgribid(gridid,lmyz,y) "217";
+set filtersgribid(gridid,h,z) "0";
+set filtersgribid(gridid,o,z) "0";
+set filtersgribid(gridid,lmyz,z) "0";
+
+# The forecast time units. They are not exactly the same for grib 1 and 2,
+# so we have two sets.
+set filtersgribid(ftu,0,1) "M";  # minute
+set filtersgribid(ftu,1,1) "h";
+set filtersgribid(ftu,2,1) "d";
+set filtersgribid(ftu,3,1) "m";  # month
+set filtersgribid(ftu,4,1) "y";
+set filtersgribid(ftu,5,1) "d10"; # ten days
+set filtersgribid(ftu,6,1) "y30";
+set filtersgribid(ftu,7,1) "y100";
+set filtersgribid(ftu,10,1) "h3";  # three hours
+set filtersgribid(ftu,11,1) "h6";
+set filtersgribid(ftu,12,1) "h12";
+set filtersgribid(ftu,13,1) "M15"; # quarter of an hour
+set filtersgribid(ftu,14,1) "M30";
+set filtersgribid(ftu,254,1) "s";
+#
+set filtersgribid(ftu,0,2) "M";  # minute
+set filtersgribid(ftu,1,2) "h";
+set filtersgribid(ftu,2,2) "d";
+set filtersgribid(ftu,3,2) "m";  # month
+set filtersgribid(ftu,4,2) "y";
+set filtersgribid(ftu,5,2) "d10"; # ten days
+set filtersgribid(ftu,6,2) "y30";
+set filtersgribid(ftu,7,2) "y100";
+set filtersgribid(ftu,10,2) "h3";  # three hours
+set filtersgribid(ftu,11,2) "h6";
+set filtersgribid(ftu,12,2) "h12";
+set filtersgribid(ftu,13,2) "s"; # quarter of an hour
+#
+set filtersgribid(ftu,unknown) "x";
+
+#
+# Read the local overrides and/or additions
+#
+set _confname "filtersgribid.rc";
+
+if {[info exists source_filtersgribid_defined]} {
+    return;
+}
+set source_filtersgribid_defined 1;
+
+foreach _d $common(localconfdirs) {
+    set _localconfname ${_d}/${_confname}
+    if {[file exists ${_localconfname}] == 1} {
+        source ${_localconfname};
+    }
+}
+unset _d;
+unset _confname;
+unset _localconfname;

@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+To use nbsp with inn (news server) -
+
+1) Install nbsp as usual
+2) Install inn.
+3) Install the nbsp-news package.
+
+That will enable the distribution of
+
+	- text bulletins
+	- images (radar and satellite)
+	- text data files (e.g., metar reports and others)
+
+No further steps are required.
+
+The raw data files of the radar and satellite images can also be
+distributed by setting
+
+		set features(nntpfilter) 1
+
+in the "features.conf" file.
+-

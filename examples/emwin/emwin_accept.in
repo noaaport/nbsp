@@ -1,0 +1,152 @@
+#
+# From windat.htm. Those that we don't want are commented.
+# I have added some at the end as "local additions".
+# 
+# Process with:
+#              ./cv.pl < emwin_accept.in > emwin_accept
+#
+ADM            Administrative Message 
+AFD            Area Forecast Discussion
+AIR            Upper Air (Data)
+APT            Polar Orbiter Images
+ASH            Volcanic/FIRE Warnings and reports
+AWS            Area Weather Summary
+CEM            Civil Emergency Message          
+CFW            Coastal Flood Warning             
+CHT            Charts DIFAX/WEFAX
+CLI            Climate Reports - Daily
+CLM            Climate Reports - Monthly
+#CMP            Composite Images(CMPALLUS.GIF)
+#CMP            Compressed Files (CMPMxxxx.ZAG)
+CWF            Coastal Waters Forecast
+DY1            Day One Convective Outlook
+DY2            Day Two Convective Outlook
+ELN            El Nino images
+EMA            Emergency manager activation msg.
+EML            Email (wireless)
+EPH            Ephemeris data for satellite orbits   
+EQR            Earthquake Data
+ESF            Flood Potential
+ESS            Water Supply Forecast
+FAA            Aviation Reports (Pilot briefs) 
+FEE            Feedback to all users
+FFA            Flash Flood Warning
+FFS            Flash Flood Statement  
+FFW            Flash Flood Warning     
+FLN            National Flood Summary
+FLW            Flood Warning                     
+FWF            Fire Weather Forecast
+GLF            Great Lakes Forecast
+GLO            Great Lake Outlook
+GLS            Great Lakes Summary
+#GMS            GMS Satellite Images
+#GO9            GOES 9 Satellite Images
+#G10            GOES 10 Satellite Images
+#GPH            Graphic Files (AFOS Graphics)
+HAA            Hurricane Probabilities Atlantic
+HAD            Hurricane Discussion Atlantic
+HAF            Hurricane Forecast Advisory Atlantic
+HAM            Hurricane NCEP Model Comparison Atlantic
+HAP            Hurricane Public Advisory Atlantic
+HAS            Hurricane Monthly Summary Atlantic
+HAT            NCEP Tropical Discussion Atlantic
+HAW            Tropical Weather Outlook Atlantic
+HEA            Hurricane Probabilities East Pacific
+HED            Hurricane Discussion East Pacific
+HEF            Hurricane Forecast Advisory East Pacific
+HEM            Hurricane NCEP Model Comparison East Pacific
+HEP            Hurricane Public Advisory East Pacific
+HES            Hurricane Monthly Summary East Pacific
+HET            NCEP Tropical Discussion East Pacific
+HEW            Tropical Weather Outlook East Pacific
+HFF            High Seas Forecast             
+HLS            Hurricane Local Statement        
+HNA            Hurricane Probabilities North Pacific
+HND            Hurricane Discussion North Pacific
+HNF            Hurricane Forecast Advisory North Pacific
+HNM            Hurricane NCEP Model Comparison North Pacific
+HNP            Hurricane Public Advisory North Pacific
+HNS            Hurricane Monthly Summary North Pacific
+HNT            NCEP Tropical Discussion North Pacific
+HNW            Tropical Weather Outlook North Pacific
+HSA            Hurricane Probabilities South Pacific
+HSD            Hurricane Discussion South Pacific
+HSF             Hurricane Forecast Advisory South Pacific
+HSM            Hurricane NCEP Model Comparison South Pacific
+HSP            Hurricane Public Advisory South Pacific
+HST            NCEP Tropical Discussion South Pacific
+HSS            Hurricane Monthly Summary South Pacific
+HSW            Tropical Weather Outlook South Pacific
+HWA            Hurricane Probabilities West Pacific
+HWD            Hurricane Discussion West Pacific
+HWF            Hurricane Forecast Advisory West Pacific
+HWM            Hurricane NCEP Model Comparison West Pacific
+HWP            Hurricane Public Advisory West Pacific
+HWS            Hurricane Monthly Summary West Pacific
+HWT            Hurricane NCEP Tropical Discussion West Pacific
+HWU            Hazardous Weather Update
+HWW            Tropical Weather Outlook West Pacific
+HTM            HTML Documents
+ICE            Ice Statement
+#IMG            General Images (IMGALLUS.GIF)
+INT            International Overviews
+LGT            Lightning Images
+LSH            Lake Shore Forecast
+LSR            Local Storm Report
+MET            Meteosat Images
+MIS            Miscellaneous Products
+MOD            Model Run Images
+MWS            Marine Weather Statement         
+NAH            Agriculture Products (Intn'l /National)
+NSH            Near Shore Forecast 
+NOW            NOWcasts (Short Term Forecast)
+NPW            Non-precipitation Warning/Watch/Advisory        
+OFF            Offshore Forecast
+OMR            Other/Offshore Marine Reports
+PAA            Pager Messages 
+PNS            Public Information Statements
+PRO            Propagation Reports
+PSR            Post Storm Report                
+RAD            Radar Images (RADALLUS.GIF)
+REC            Recreation Forecasts
+RER            Record Event Reports
+RFW            Red Flag Warning (Fire Warning)                
+RVA            River Summary                              
+RVR            River Forecast
+RVS            River Statement
+RWS            Regional Weather Summary
+SAH            Surface Observations (Data)
+SAO            SAORCMUS.TXT Contains RCM's
+SAW            Selected Area Watches  
+SCS            Selected cities (scs11-scs14)
+SEL            Watch areas
+SES            Seismic/Earthquake Images
+SFP            State Forecast
+SHP            Live Ship Reports
+SIX            8 to 14 – day outlook
+SLS            Areal update
+SKY            SKYWARN Activation Message
+SMW            Special Marine Warning           
+SPS            Special Weather Statement        
+STP            State Temp & Precip Reports
+SUM            State Weather Summary
+SVR            Severe Thunderstorm Warning        
+SVS            Severe Weather Statement          
+SWO            Severe Weather Outlook
+SWR            State Weather Roundup
+SWX            Space Weather (solar activity)
+SYS            System messages
+TAF            Aviation Terminal Forecasts/airports
+TID            Tide Data
+TOR            Tornado Warning                  
+TRK            Tracking Files (storm tracks)
+TSU            Tsunami                          
+TVL            Travelers Forecasts
+UVI            National Ultra-Violet index
+WSW            Winter Storm Warning/Watch/Advisory
+WWA            Weather Watch
+ZFP            Zone Forecast
+#
+# local additions
+#
+WOU            New watch area definition. (Fri Apr 22 16:05:48 AST 2005)

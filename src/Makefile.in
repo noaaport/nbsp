@@ -1,0 +1,144 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+LIBSUBDIRS =	libtclconf libconnth libqdb libspoolbdb
+SRCSUBDIRS =	slavenbs slavefp slavein
+CLEANSUBDIRS =	${LIBSUBDIRS} ${SRCSUBDIRS}
+
+INSOURCES =	conf.c.in defaults.h.in
+INOBJECTS =	conf.c defaults.h
+
+SOURCES =	main.c access.c appdata.c \
+		conf.c dbenv.c dbstats.c emwin.c err.c efile.c exec.c \
+		file.c filters.c framep.c init.c load.c mfile.c mcast.c \
+		nbs1s.c nbs1r.c nbspmspoolbdb.c \
+		nbsp.c nbspq.c nbspre.c npcast.c \
+		pack.c packfp.c packfpu.c pctl.c pctldb.c pctlmfdb.c per.c \
+		pid.c pw.c rtxdb.c ertxdb.c qstate.c \
+		ure.c readn.c reader.c sbn.c slave.c \
+		signal.c stats.c serverc.c serverm.c serverf.c \
+		strsplit.c spooldb.c spooltype.c sfilter.c solaris.c \
+		util.c unz.c \
+		slavenbs/framep.c slavenbs/reader.c \
+		slavefp/framep.c slavefp/reader.c \
+		slavein/framep.c slavein/reader.c \
+		tclhttpd.c httpd.c tclevalfile.c \
+		pfilter.c \
+		oscompat.c
+
+OBJECTS =	main.o access.o appdata.o \
+		conf.o dbenv.o dbstats.o emwin.o err.o efile.o exec.o \
+		file.o filters.o framep.o init.o load.o mfile.o mcast.o \
+		nbs1s.o nbs1r.o nbspmspoolbdb.o \
+		nbsp.o nbspq.o nbspre.o npcast.o \
+		pack.o packfp.o packfpu.o pctl.o pctldb.o pctlmfdb.o per.o \
+		pid.o pw.o rtxdb.o ertxdb.o qstate.o \
+		ure.o readn.o reader.o sbn.o slave.o \
+		signal.o stats.o serverc.o serverm.o serverf.o \
+		strsplit.o spooldb.o spooltype.o sfilter.o solaris.o \
+		util.o unz.o \
+		slavenbs/framep.o slavenbs/reader.o \
+		slavefp/framep.o slavefp/reader.o \
+		slavein/framep.o slavein/reader.o \
+		tclhttpd.o httpd.o tclevalfile.o \
+		pfilter.o \
+		oscompat.o
+
+HEADERS =	config.h const.h common.h defaults.h globals.h \
+		access.h appdata.h \
+		conf.h dbenv.h dbstats.h emwin.h err.h efile.h exec.h \
+		file.h filters.h framep.h init.h load.h mfile.h mcast.h \
+		nbs1.h nbsp.h nbspmspoolbdb.h \
+		nbspq.h nbspre.h npcast.h \
+		pack.h packfpc.h packfp.h packfpu.h pctl.h per.h pid.h \
+		pw.h rtxdb.h qstate.h ure.h readn.h reader.h sbn.h slave.h \
+		signal.h stats.h server.h server_priv.h strsplit.h spooldb.h \
+		spooltype.h sfilter.h solaris.h \
+		unz.h util.h \
+		slavenbs/slavenbs.h \
+		slavefp/slavefp.h \
+		slavein/slavein.h \
+		tclhttpd.h httpd.h tclevalfile.h \
+		pfilter.h \
+		oscompat.h
+
+TOOLOBJECTS =	readn.o util.o file.o nbs1r.o pack.o
+ALLOBJECTS =	nbspmon.o rnbspmon.o rnbspmon1.o nbspstate.o ${OBJECTS} \
+		${INOBJECTS}
+
+DAEMON =	nbspd
+TOOLS =		nbspmon rnbspmon rnbspmon1 nbspstate
+
+TARGET =	${DAEMON} ${TOOLS}
+
+LIBOBJECTS =	libtclconf/tclconf.o
+
+INCDIRS =       @INCDIRS@
+LIBDIRS =       @LIBDIRS@
+LIBS =          @LIBS@
+INSTALL =       @INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+DEFINES =       @DEFINES@
+DEBUGFLAFGS =
+
+DEBUGFLAGS +=	-DDEBUG
+#DEBUGFLAGS +=	-g -ggdb
+#DEBUGFLAGS =	-DNDEBUG
+
+CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS} ${INCDIRS}
+LDFLAGS +=	${LIBDIRS} ${LIBS}
+
+all: ${TARGET}
+
+lib:
+	for dir in ${LIBSUBDIRS}; do \
+	(cd $$dir; ${MAKE}) \
+	done
+
+${DAEMON}: ${OBJECTS} lib
+	${CC} -o $@ ${OBJECTS} ${LIBOBJECTS} ${LDFLAGS}
+
+nbspmon: nbspmon.o ${TOOLOBJECTS}
+	${CC} -o $@ nbspmon.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
+
+rnbspmon: rnbspmon.o ${TOOLOBJECTS}
+	${CC} -o $@ rnbspmon.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses  -lconn
+
+rnbspmon1: rnbspmon1.o ${TOOLOBJECTS}
+	${CC} -o $@ rnbspmon1.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
+
+nbspstate: nbspstate.o ${TOOLOBJECTS}
+	${CC} -o $@ nbspstate.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} -o $*.o $< 
+
+oscompat.o: oscompat.c oscompat.h
+	${CC} ${CFLAGS} ${DEFINES} -o $*.o $< 
+
+conf.c: conf.c.in
+	awk -f conf.awk conf.c.in > conf.c
+
+defaults.h: defaults.h.in
+	sed -e "/%MYCONFDIR%/ s||${MYCONFDIR}|g" \
+	-e "/%MYLIBEXECDIR%/ s||${MYLIBEXECDIR}|g" \
+	defaults.h.in > defaults.h
+
+install:
+	${INSTALL} -m 755 ${DAEMON} ${SBINDIR}
+	for dir in ${LIBSUBDIRS}; do \
+	(cd $$dir; ${MAKE} install) \
+	done
+
+clean:
+	rm -f *~ ${ALLOBJECTS} ${TARGET} Makefile
+	for dir in ${CLEANSUBDIRS}; do \
+	(cd $$dir; ${MAKE} clean) \
+	done

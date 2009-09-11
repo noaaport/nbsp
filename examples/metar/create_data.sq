@@ -1,0 +1,11 @@
+create table data (
+	obstation varchar(4),
+	wmostation varchar(4),
+	country varchar(2),
+	rcvtime integer,
+	wmotime varchar(6),
+	obtime varchar(7),
+	obday varchar(2),
+	obhour varchar(2),
+	obtype varchar(1),
+	data text);

@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+# The definitions here should appear without spaces around the '='
+# sign, so that the file can be read by either make or sh.
+#
+# d = development
+# p = prerelase (release candidate)
+# r = release
+name=nbsp
+nameclient=nbspclient
+branch=1.8
+releaselevel=r
+releasenumber=2
+version=${branch}.${releaselevel}${releasenumber}

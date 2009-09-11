@@ -1,0 +1,58 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	trackfilter.tcl
+TCLSOURCES =	trackfilter.tcl.in
+FILTERNAME =	trackfilter
+FILTERINIT =    trackfilter.init
+SAMPLES =	trackfilter.conf-sample
+TMPLDIR =       grads
+TMPLTARGET =    track-templates.tgz
+TMPLSOURCES =	grads/track/map-at.grads \
+		grads/track/map.ctl \
+		grads/track/map.grb \
+		grads/track/map.idx \
+		grads/track/track-at.grads \
+		grads/track/track-cp.grads \
+		grads/track/track-ep.grads \
+		grads/track/map-cp.grads \
+		grads/track/map-ep.grads \
+		grads/track/map-at-small.grads
+
+TOOLS =		nbsptrackdata nbsptrackplot
+TARGET =	${TCLTARGET} ${SAMPLES} ${TMPLTARGET} ${TOOLS}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+trackfilter.conf-sample: trackfilter.conf
+	cp trackfilter.conf trackfilter.conf-sample
+
+nbsptrackdata: nbsptrackdata.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbsptrackdata.tcl > nbsptrackdata
+
+nbsptrackplot: nbsptrackplot.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbsptrackplot.tcl > nbsptrackplot
+
+${TMPLTARGET}: ${TMPLSOURCES}
+	tar -c --exclude '*CVS*' -z -f ${TMPLTARGET} ${TMPLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TOOLS} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

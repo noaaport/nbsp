@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+# This script is executed by the nbspd daemon as the last step in its
+# cleanup function, just before exiting.

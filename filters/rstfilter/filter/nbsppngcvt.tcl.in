@@ -1,0 +1,76 @@
+#!%TCLSH%
+#
+# $Id$
+#
+###########################################################################
+# usage: nbsppngcvt [-g] file.png
+#
+# The program writes the name of the output file (file.jpg) to stdout,
+# or an error message in case of an error. The program returns an exit code 
+# of 0 if there were no errors, or 1 otherwise. With the [-g] option
+# the conversion is to gif.
+#
+# The netpbm tools pngtopnm, pnmtojpeg and ppmtogif are required.
+#
+# This file is distributed with nbsp.
+###########################################################################
+package require cmdline;
+
+set usage {nbsppngcvt [-g] <file.png>};
+set optlist {{g 0}};
+
+array set option [::cmdline::getoptions argv $optlist $usage];
+
+proc errx s {
+
+    global argv0;
+
+    set p [file tail $argv0];
+    puts stderr "$p: $s";
+    exit 1;
+}
+
+## The common defaults file (this script uses netpbm programs)
+set defaultsfile "/usr/local/etc/nbsp/filters.conf";
+if {[file exists $defaultsfile] == 0} {
+    errx "$defaultsfile not found.";
+    return 1;
+}
+source $defaultsfile;
+
+## Defaults for this filter.
+set jpgextension ".jpg";
+set gifextension ".gif";
+
+#
+# main
+#
+if {$argc == 0} {
+    errx $usage;
+} else {
+    set fpath [lindex $argv 0];
+}
+
+set rootname [file rootname $fpath];
+if {$option(g) == 0} {
+    append fpathout $rootname $jpgextension;
+    set prog2 $filtersprogs(pnmtojpeg);
+} else {
+    append fpathout $rootname $gifextension;
+    set prog2 $filtersprogs(ppmtogif);
+}
+set prog1 $filtersprogs(pngtopnm);
+
+set status [catch {exec $prog1 $fpath | $prog2 > $fpathout} errmsg];
+
+# ppmtogif writes to stderr by default. So we don't check
+# the status but whether or not the output file was produced.
+if {[file exists $fpathout] == 0} {
+    set status 1;
+    puts $errmsg;
+} else {
+    set status 0;
+    puts $fpathout;
+} 
+
+return $status;

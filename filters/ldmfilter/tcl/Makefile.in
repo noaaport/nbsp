@@ -1,0 +1,48 @@
+#
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	ldmfilter.tcl
+TCLSOURCES =	ldmfilter.tcl.in
+FILTERNAME =	ldmfilter
+M4SOURCES =     defs.m4 rc.m4
+M4MAIN =	ldmfilter.m4
+M4TARGET =      ldmfilter.rc-defaults
+SAMPLES =       ldmfilter.conf-sample ldmfilter.rc-sample
+NBSP2LDMDIR =	nbsp2ldm
+NBSP2LDMTGZ =	nbsp2ldm.tgz
+TARGET =        ${TCLTARGET} ${M4TARGET} ${SAMPLES} ${NBSP2LDMTGZ}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+${M4TARGET}: ${M4MAIN} ${M4SOURCES}
+	m4 ${M4MAIN} > ${M4TARGET}
+
+${NBSP2LDMTGZ}:
+	cd ..; tar -czf ${NBSP2LDMTGZ} ${NBSP2LDMDIR}
+	mv ../${NBSP2LDMTGZ} .
+
+ldmfilter.conf-sample: ldmfilter.conf
+	cp ldmfilter.conf ldmfilter.conf-sample
+
+ldmfilter.rc-sample: ldmfilter.rc 
+	cp ldmfilter.rc ldmfilter.rc-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${NBSP2LDMTGZ} ${MYDOCDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

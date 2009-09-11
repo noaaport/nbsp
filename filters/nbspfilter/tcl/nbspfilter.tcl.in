@@ -1,0 +1,105 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+	puts "nbspfilter disabled: $filters_init_file not found.";
+	return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+# default configuration
+set nbspfilter(conf)	[file join $common(confdir) "nbspfilter.conf"];
+set nbspfilter(rc)	[file join $common(confdir) "nbspfilter.rc"];
+set nbspfilter(rcdir)	[file join $common(rcdir) "nbsp"];
+set nbspfilter(lib)	[file join $common(libdir) "nbspfilter.lib"];
+set nbspfilter(rcfiles) [list];
+set nbspfilter(localconfdirs) $common(localconfdirs);
+set nbspfilter(prerc)  [file join $common(confdir) "nbspfilterpre.rc"];
+set nbspfilter(postrc)  [file join $common(confdir) "nbspfilterpost.rc"];
+#
+# Variables
+#
+set nbspfilter(condition)		[list];
+set nbspfilter(action)		[list];
+
+#
+# Read the optional configuration file.
+#
+if {[file exists $nbspfilter(conf)] == 1} {
+    source $nbspfilter(conf);
+}
+
+# The main rc file is required
+if {[file exists $nbspfilter(rc)] == 0} {
+    log_msg "Filter disabled: $nbspfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set nbspfilter(rcfiles) [filterlib_get_rcfiles [file tail $nbspfilter(rc)] \
+        $nbspfilter(localconfdirs) $nbspfilter(rcdir) \
+	$nbspfilter(prerc) $nbspfilter(postrc)];
+
+# Load the rules sets
+source $nbspfilter(rc);
+
+proc main {argc argv} {
+
+    global errorInfo;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status != 0} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global nbspfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    set rc_status 1;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set i 0;		# counts the sets
+    foreach condlist $nbspfilter(condition) {
+        set actionlist [lindex $nbspfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+}
+
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

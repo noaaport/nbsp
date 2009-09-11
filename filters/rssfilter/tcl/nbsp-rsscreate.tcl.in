@@ -1,0 +1,140 @@
+#!%TCLSH%
+#
+# $Id$
+#
+# Usage: rsscreate [-o outputfile] [-f inputfile] [-D defines]
+#	<channel> <description> <definitionsfile> <tmplfile>
+#
+# If [-f] is not given, input is taken from stdin. The input is assumed to
+# be the contents of a catalog log file. The argument of [-D] is a
+# comma-separated list of variables-value pairs; e.g.,
+#
+# -D station=tjsj,desc=warnings,...
+#
+# Then the variables rss(station) and rss(desc) will be defined
+# to "tjsj" and "warnings" respectively. The rssfilter uses this to define
+# the variable rss(hostport) that the default templates use.
+#
+package require cmdline;
+
+set usage {rsscreate [-f inputfile] [-o outputfile] [-D defines]
+    <channel> <description> <defsfile> <tmplfile>};
+set optlist {{f.arg ""} {o.arg ""} {D.arg ""}};
+
+array set option [::cmdline::getoptions argv $optlist $usage];
+
+proc err s {
+
+    global argv0;
+
+    puts "$argv0: $s";
+    exit 1;
+}
+
+proc source_template {txmlfile} {
+#
+# Source the template inside a function so that the template does
+# not change the script environment.
+#
+    global rss;
+
+    source $txmlfile;
+}
+
+#
+# main
+#
+set status 0;
+
+set argc [llength $argv];
+if {$argc != 4} {
+    puts $usage;
+    exit 1;
+} else {
+    set rss(channel,title) [lindex $argv 0];
+    set rss(channel,desc) [lindex $argv 1];
+    set option(defsfile) [lindex $argv 2];
+    set option(tmplfile) [lindex $argv 3];
+}
+
+if {$option(f) ne ""} {
+    set status [catch {
+	set cat_plist [split [exec cat $option(f)] "\n"];
+    } errmsg];
+
+    if {$status != 0} {
+	err $errmsg;
+    }
+} else {
+    set cat_plist [split [exec cat] "\n"];
+}
+
+# Definitions
+if {$option(D) ne ""} {
+    set Dlist [split $option(D) ","];
+    foreach pair $Dlist {
+	set p [split $pair "="];
+	set var [lindex $p 0];
+	set val [lindex $p 1];
+	set rss($var) $val;
+    }
+}
+
+set status [catch {
+    source $option(defsfile);
+    source_template $option(tmplfile);
+} errmsg];
+if {$status != 0} {
+    err $errmsg;
+}
+
+set xml_body "";
+append xml_body [subst $rss(txml,header)];
+
+foreach p $cat_plist {
+    set parts [split $p];
+    set rss(item,title) [lindex $parts 1];
+    set rss(item,wmoid) [lindex $parts 2];
+    set rss(item,station) [lindex $parts 3];
+    set rss(item,time) [lindex $parts 4];
+    set rss(item,fpath) [lindex $parts 5];
+    set rss(item,fbasename) [file tail $rss(item,fpath)];
+    set rss(item,WMOID) [string toupper $rss(item,wmoid)];
+    set rss(item,STATION) [string toupper $rss(item,station)];
+
+    # The rssdef(prod,desc,...) variables are loaded from the "defines" file.
+    set awips1 [string range $rss(item,title) 0 2];
+    if {[info exists rssdef(prod,desc,$awips1)]} {
+	set rss(item,desc) $rssdef(prod,desc,$awips1);
+    } elseif {[regexp {^n} $rss(item,wmoid)]} {
+	# Special case (administrative messages)
+	set rss(item,desc) $rssdef(prod,desc,adm);
+    } elseif {$rss(item,wmoid) ne "-"} {
+	set rss(item,desc) $rss(item,WMOID);
+	append rss(item,desc) " " $rss(item,STATION);
+    } else {
+        set rss(item,desc) $rssdef(prod,desc,unknown);
+#
+#	exec echo "$rss(item,title) $rss(item,station)" >> \
+#		"/var/noaaport/nbsp/rss/unknown.log";
+#
+    }
+
+    append xml_body [subst $rss(txml,item)];
+}
+
+append xml_body [subst $rss(txml,footer)];
+
+if {$option(o) ne ""} {
+    set status [catch {
+    	set f [open $option(o) w 0644];
+	fconfigure $f -translation binary -encoding binary;
+    	puts $f $xml_body;
+ 	close $f;
+    } errmsg];
+    if {$status != 0} {
+        err $errmsg;
+    }
+} else {
+    puts $xml_body;
+}

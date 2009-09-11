@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+
+# This is the configuration file for the start/stop scripts.
+# Each script is executed once, and this file is ``sourced'' (as a tcl script)
+# both times.
+#
+# The start/stop script looks for the file named "startstop.conf" first in the
+# "site" subdirectory, then the "defaults" subdirectory and finally
+# in the main directory, and uses the first one that it finds.
+#
+#
+# When this script is run, PATH is set to
+#
+# 	PATH=$PATH:/usr/local/{bin,sbin,libexec/nbsp,libexec/nbsp/site}:
+
+#
+# Default Configuration
+#
+set nbspconfdir /usr/local/etc/nbsp;
+set nbsplogdir /var/log/nbsp;
+set nbspcspooldir /var/noaaport/nbsp/cspool;
+
+# Execute the start cleanup script
+lappend start {
+  exec nbspcleanup $nbspconfdir/start-cleanup.conf >& \
+	$nbsplogdir/start-cleanup.log
+}
+
+# Start with a clean cspool
+lappend start {
+  foreach f [glob -dir $nbspcspooldir -nocomplain *] {
+    file delete $f;
+  }
+}
+
+#
+# local additions
+#

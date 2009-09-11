@@ -1,0 +1,76 @@
+#
+# $Id$
+#
+
+# This is the configuration file for the scheduler. The scheduler
+# is executed every minute, and this file is ``sourced'' (as a tcl script)
+# each time.
+#
+# The scheduler looks for the file named "scheduler.conf" first in the
+# main configuration directory, then the "defaults" subdirectory and finally
+# in the "site" subdirectory, and uses the last one that it finds.
+#
+# The schedule file contains lines of the form
+#
+# schedule <timespec> <program> <options>
+#
+# where <options> may be blank. ``schedule'' is a function that
+# evaluates the <timespec> and, if it matches the current time, then
+# the <program> <options> portion is collected in a list that in the end
+# pased to eval exec for execution.
+#
+# When this script is run, PATH is set to
+#
+# 	PATH=$PATH:/usr/local/{bin,sbin,libexec/nbsp,libexec/nbsp/site}:
+#
+# <timespec> is a time specification in one of the following forms:
+#
+# M		=> run <program> every minute
+# M=ll|mm|nn	=> run at the minutes in the list (e.g., 00, 15, 30, 45)
+# M/n		=> run if the remainder of the (current minute)/n is zero. 
+#
+# H=hhmm|h'h'm'm'|...	=> run at the hours and minutes in the list.
+# Hmm|m'm'|.../n	=> run if the remainder of (current hour)/n is zero
+#                          and if the current minute is in the list
+#
+# D=ddhhmm|d'd'h'h'm'm'|... => run at the days of the month
+#                              and hours and minutes in the list.
+#			       Here the dd is between 01-31.
+# Dhhmm|h'h'm'm'|.../n	=> run if the remainder of (current day of month)/n
+#			   is zero and the current hour and minute are
+#			   in the list.
+#			
+# W=dhhmm|d'h'h'm'm'|... => run at the days of the week and hours and minutes
+#                           in the list.
+#			    Here the d is between 0-6 with 0 = sunday.
+# Whhmm|h'h'm'm'|.../n	=> run if the remainder of (current day of week)/n
+#			   is zero and the current hour and minute are
+#                          in the list.
+#
+# Examples
+#
+# M      => run every minute
+# M/4    => run every four minutes
+# M=03|09|18|23  => run at minutes 03, 09, 18 and 23.
+# H00/3  => run every three hours: 0, 3, 6, ...
+# H=0300|0900|1800|2355  => run at 03, 09, 18 and 23:55
+# W=52300 => run on fridays at 11 pm
+# D=010100 => run on the first day of the month at 1 am.
+# D0300|2100/2  => run every other day at 3 am and 9 pm.
+
+#
+# Default Configuration
+#
+set nbspconfdir /usr/local/etc/nbsp
+set nbsplogdir /var/log/nbsp
+
+#
+# Each program is executed in the background so that no one blocks the others.
+#
+
+# Execute the hourly cleanup script (one minute after the hour)
+schedule H01/1 nbspcleanup hourly-cleanup.conf >& \
+    $nbsplogdir/hourly-cleanup.log &
+
+# Log file rotation
+schedule H01/1 logrotate $nbspconfdir/logrotate.conf &

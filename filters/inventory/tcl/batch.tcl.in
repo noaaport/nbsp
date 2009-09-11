@@ -1,0 +1,52 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
+if {[file exists ${_defaultsfile}] == 0} {
+    puts "${_defaultsfile} not found.";
+    return 1;
+}
+source ${_defaultsfile};
+unset _defaultsfile;
+
+# Default configuration setting for the batch processing tool. Must be read
+# after reading the default filters.conf.
+
+set batch(conf)	[file join $common(confdir) "batch.conf"];
+set batch(masterhostport)	"noaaport:8015";
+set batch(infeed_enable) 	1;
+set batch(regex)		{};	# empty implies all (by nbspbatch)
+
+# The optional configuration file
+if {[file exists $batch(conf)] == 1} {
+    source $batch(conf);
+}
+
+# variables
+set batch(_basedir) $common(nbspdir);
+set batch(nbspget_updateoptions) [list \
+				"-b" $batch(_basedir) \
+				"-e" $batch(regex) \
+				$batch(masterhostport);
+				];
+set batch(nbspget_filteroptions) [list "-b" $batch(_basedir) "-a"];
+
+#
+# main
+#
+set status [catch {
+    eval exec nbspbatch update $batch(nbspget_updateoptions);
+} msg];
+puts $msg;
+
+if {$batch(infeed_enable) == 0} {
+    return 0;
+}
+
+set status [catch {
+    eval exec nbspbatch filter $batch(nbspget_filteroptions);
+} msg];
+puts $msg;

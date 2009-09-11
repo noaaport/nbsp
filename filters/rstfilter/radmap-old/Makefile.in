@@ -1,0 +1,22 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@MAKEFILEINC@
+
+RADMAPFILES =	aschipona.nws asclakes.ncp cities.rad \
+		gempak_nids.tbl hipona.nws lakes.ncp \
+		radmap.README nbsp.README
+
+INSTALL =	@INSTALL@
+
+all:
+
+install: all
+	${INSTALL} -m 644 ${RADMAPFILES} ${RADMAPDOCDIR}
+
+clean:
+	rm -f *~ Makefile

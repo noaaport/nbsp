@@ -1,0 +1,12 @@
+*
+* $Id$
+*
+
+'open /usr/local/etc/nbsp/defaults/grads/track/map.ctl'
+
+'set lon -110 -15'
+'set lat 0 60'
+'set clevs 1.5'
+'set ccols 0 15'
+'set gxout shaded'
+'d LANDsfc'

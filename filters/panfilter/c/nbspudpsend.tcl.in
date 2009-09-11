@@ -1,0 +1,31 @@
+#!%TCLSH%
+#
+# Copyright (c) 2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+# This is meant to an example for sending PAN messages in pure tcl,
+# using the tcludp package. The function can be used in the panfilter
+# and elminate the need to use nbspudpsend (or replace that program by
+# this script).
+
+package require udp;
+
+set usage {nbspudpsend <host> <port> <str>};
+
+if {$argc != 3} {
+    puts $usage;
+    exit 1;
+}
+set host [lindex $argv 0];
+set port [lindex $argv 1];
+set msg [lindex $argv 2];
+
+set s [udp_open];
+fconfigure $s -buffering none -translation binary -encoding binary \
+    -remote [list $host $port];
+
+puts -nonewline $s $msg;
+close $s;

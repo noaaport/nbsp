@@ -1,0 +1,85 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	rstfilter.tcl rstfilter-manager.tcl \
+		emwinfilter.tcl nbsppngcvt.tcl
+TCLSOURCES =	rstfilter.tcl.in rstfilter-manager.in \
+		emwinfilter.tcl.in nbsppngcvt.tcl.in \
+		rstfilter.lib rstfilter.init
+FILTERNAMES =	rstfilter rstfilter-manager emwinfilter nbsppngcvt \
+		rstfilter.lib
+RSTM4SOURCES =	defs.m4 txt.m4 sat.m4 rad.m4
+RSTM4TARGET =	rstfilter.rc-defaults
+RSTM4MAIN =	rstfilter.m4
+EMWINM4SOURCES = emdefs.m4 emtxt.m4 emsat.m4 emrad.m4
+EMWINM4TARGET =	emwinfilter.rc-defaults
+EMWINM4MAIN =	emwinfilter.m4
+SAMPLES =	rstfilter.conf-sample \
+		rstfilter.rc-sample \
+		emwinfilter.conf-sample \
+		emwinfilter.rc-sample \
+		emwinfilter-locid.def-sample \
+		emwinfilter-radid.def-sample
+
+M4TARGET =	${RSTM4TARGET} ${EMWINM4TARGET}
+TARGET =	${TCLTARGET} ${SAMPLES} ${M4TARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+rstfilter.tcl: rstfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# rstfilter.tcl.in > rstfilter.tcl
+
+rstfilter-manager.tcl: rstfilter-manager.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# rstfilter-manager.tcl.in > \
+		rstfilter-manager.tcl
+
+emwinfilter.tcl: emwinfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# emwinfilter.tcl.in > emwinfilter.tcl
+
+nbsppngcvt.tcl: nbsppngcvt.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbsppngcvt.tcl.in > nbsppngcvt.tcl
+
+rstfilter.conf-sample: rstfilter.conf
+	cp rstfilter.conf rstfilter.conf-sample
+
+${RSTM4TARGET}: ${RSTM4SOURCES}
+	m4 ${RSTM4MAIN} > ${RSTM4TARGET}
+
+rstfilter.rc-sample: rstfilter.rc
+	cp rstfilter.rc rstfilter.rc-sample
+
+emwinfilter.conf-sample: emwinfilter.conf
+	cp emwinfilter.conf emwinfilter.conf-sample
+
+${EMWINM4TARGET}: ${EMWINM4SOURCES}
+	m4 ${EMWINM4MAIN} > ${EMWINM4TARGET}
+
+emwinfilter.rc-sample: emwinfilter.rc
+	cp emwinfilter.rc emwinfilter.rc-sample
+
+emwinfilter-locid.def-sample: emwinfilter-locid.def
+	cp emwinfilter-locid.def emwinfilter-locid.def-sample
+
+emwinfilter-radid.def-sample: emwinfilter-radid.def
+	cp emwinfilter-radid.def emwinfilter-radid.def-sample	
+
+install: ${TARGET}
+	${INSTALL} -m 755 rstfilter.tcl ${MYLIBEXECDIR}/rstfilter
+	${INSTALL} -m 755 rstfilter-manager.tcl \
+		${MYLIBEXECDIR}/rstfilter-manager
+	${INSTALL} -m 755 emwinfilter.tcl ${MYLIBEXECDIR}/emwinfilter
+	${INSTALL} -m 644 rstfilter.lib rstfilter.init ${MYLIBEXECDIR}
+	${INSTALL} -m 755 nbsppngcvt.tcl ${BINDIR}/nbsppngcvt
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

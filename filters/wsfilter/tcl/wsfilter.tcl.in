@@ -1,0 +1,97 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "uafilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+    return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsputil;
+package require periodic;
+
+set ws_init_file [file join $common(libdir) "wsfilter.init"];
+if {[file exists $ws_init_file] == 0} {
+    log_msg "wsfilter disabled: $ws_init_file not found.";
+    return 1;
+}
+source $ws_init_file;
+unset ws_init_file;
+
+proc main {argc argv} {
+
+    global wsfilter;
+    global errorInfo;
+
+    # The wsfilter data directory must exist
+    if {[file isdirectory $wsfilter(ws_datadir)] == 0} {
+	log_msg "$wsfilter(ws_datadir) does not exist.";
+	return 1;
+    }
+
+    cd $wsfilter(ws_datadir);
+	
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    # This filter does not process anything real-time.
+    # filterlib_get_rcvars rc $finfo -nobody;
+
+    set status [catch {
+	::periodic::run;	# Run the registered periodic functions
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc wsfilter_run_schedule {} {
+
+    global wsfilter;
+
+    ::periodic::scheduler $wsfilter(schedule);
+}
+
+#
+# Dynamic initialization
+#
+
+# Register the scheduler to run ever minute
+::periodic::register wsfilter_run_schedule $wsfilter(schedule_run_period);
+
+#
+# main
+#
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

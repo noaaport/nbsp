@@ -1,0 +1,111 @@
+<http://www.nws.noaa.gov/tg/rpccds.html#contents>weather.gov
+<http://www.nws.noaa.gov/> 
+
+NOAA logo - Select to go to the NOAA homepage <http://www.noaa.gov/>
+		 
+NWS logo - select to go to NWS homepage <http://www.nws.noaa.gov/>
+
+	NWS Home <http://nws.noaa.gov>	
+News <http://www.nws.noaa.gov/pa/>
+	
+Organization <http://www.nws.noaa.gov/organization.html>
+	
+Search  
+
+	 	
+
+NWS Home Page <http://weather.gov/> > NWS Org
+<http://www.nws.noaa.gov/organization.html> > Office of Operational
+Systems <http://www.nws.noaa.gov/oos/> > NOAAPORT Home Page
+<http://www.nws.noaa.gov/noaaport/html/noaaport.shtml>
+
+
+      NOAAPORT Data Format
+
+*/NOAAPORT/* Broadcast System (NBS) uses the concept of encapsulation
+and the International Standards Organization (ISO) Open Systems
+Interconnection (OSI) reference model to define its data transmission
+format. The OSI reference model uses a seven-layer model to abstract the
+necessary functionality for communications between computer systems. The
+seven-layer model as shown contains the Physical Layer, Data-Link Layer,
+Network Layer, Transport Layer, Session Layer, Presentation Layer, and
+Application Layer.
+
+The OSI reference model does not dictate the use of all layers for every
+application. Rather, it encourages application developers to use the
+functionality that is appropriate for their specific application. The
+NBS uses only four layers: the physical layer, the data link layer
+<datalink.shtml>, transport layer <transprt.shtml> and presentation
+layer <presntn.shtml>.
+
+
+OSI Reference Model vs. NOAAPORT diagram
+
+
+The diagram illustrates the NBS architecture using the classic OSI
+layers. This architecture uses a simplex broadcast scheme in which the
+communications between layers is in one direction only, broadcast to
+receiver. As a result, there is no flow control. The NBS uses high-level
+data-link control (HDLC) framing for the Data-Link Layer and the
+PRC-developed SBN protocol for the Transport Layer. The Presentation
+Layer incorporates the World Meteorological Association (WMO)/NESDIS
+headers for NESDIS products and the Communications Control Block
+(CCB)/WMO headers for NWSTG products.
+
+As the individual products are packaged for transmission, they are
+enveloped by the headers of the Presentation, Transportation, and Link
+protocol layers used by the NBS. As shown the products are first wrapped
+in their corresponding Presentation Layer headers according to product
+type. The NESDIS products use the WMO and NESDIS headers, and the NWSTG
+products use the CCB/WMO headers. The first frame of a NESDIS product
+contains only header information, while the succeeding frames contain
+only the image data. Each frame of information contains one or more scan
+lines of image data, which are approximately 5,120 bytes. Summing the
+header data and the image data results in a NESDIS frame that can
+contain up to 5,152 bytes. The first frame of an NWSTG product contains
+the CCB/WMO header and product data. Succeeding frames contain only the
+product data, with each NWSTG frame containing up to 4,000 bytes of
+product data.
+
+The next layer is the Transport Layer, which places the SBN protocol
+headers around the product/image data and Presentation Layer headers.
+The first frame of each distinct product of this layer contains the
+frame-level header (FH), a product-definition header (PDH), an AWIPS
+product-specific header (PSH), and the appropriate source data.
+Subsequent frames of the same product contain the FH, the PDH, and the
+appropriate source data.
+
+The Transport Layer also contains several layers of sequence numbers.
+The first level sequences the frames, allowing the protocol to recognize
+lost frames. The next level sequences the products, which allows the
+protocol to recognize lost or damaged products. The final level of
+sequencing is used in reassembling the product. The sequence numbers do
+not provide flow control. Their purpose is strictly error control.
+
+The final layer before the data are converted to a radio frequency
+signal and uplinked to the satellite is the Data-Link Layer. In this
+layer, the "data" created by the Transport and Presentation Layers are
+enveloped by an HDLC frame and stamped for error control with a frame
+check sequence Cyclical Redundancy Check (CRC)-16.
+
+
+[Signal Characteristics <np_rf.shtml>]
+
+
+
+
+
+
+Link to firstgov.gov <http://firstgov.gov>
+
+   
+------------------------------------------------------------------------
+National Weather Service <http://www.nws.noaa.gov>
+Office of Operational Systems <http://www.nws.noaa.gov/oos> (OPS2)
+1325 East West Highway
+Silver Spring, MD 20910
+Last modified: February 1, 2006
+Email Web Master <mailto:toni.remy@noaa.gov> 	Disclaimer
+<http://www.nws.noaa.gov/disclaimer.html>
+	Privacy Policy <http://weather.gov/privacy.php>
+

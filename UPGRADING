@@ -1,0 +1,17 @@
+#
+# $Id$
+#
+UPGRADE NOTES -
+
+1) Starting with this update (1.6.r7), the "hourly-cleanup.conf" uses
+a slightly different syntax than before. If you have made modifications
+to that file, be sure to incorporate them in the new version.
+
+2) When upgrading to a new version of nbsp, it may be necessary sometimes to
+delete all the files in the directories
+
+	/var/noaaport/nbsp/db
+	/var/noaaport/nbsp/spool
+
+This is not usually needed. It depends on whether nbsp is using a new version
+of the Berkeley DB software and/or a different file format.

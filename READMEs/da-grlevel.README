@@ -1,0 +1,34 @@
+#
+# $Id$
+#
+
+In this version GRLevel3 and Digital Atmosphere are supported "out of the box".
+nbsp already had support for both, but it required some manual configuration,
+and in particular it involved setting up a web server, but it now uses
+the built-in web server and no addition configuration is necessary.
+
+For GRlevel3, the url to use for radar data is
+
+	http://<hostname>:8015/digatmos/nexrad
+
+and for the warnings
+
+	http://<hostname>:8015/digatmos/warnings
+
+where <hostname> should be replaced with the correct name of the
+nbsp computer. (An ip address can be used as well.)
+
+For Digital Atmosphere, under the menu
+
+	Internet -> Retrieve Data -> Add Site
+
+the url to use is, for example,
+
+	http://<hostname>:8015/digatmos/surface/20@Y@M@D@H.sao
+
+and similarly for the other directories with the other data files
+that DA can use.
+
+-
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Tue May 29 20:19:19 AST 2007

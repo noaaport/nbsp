@@ -1,0 +1,34 @@
+#
+# $Id$
+#
+# This file is a variation of "radmap.rc" that includes the instruction for
+# ploting the adar sites in the radar images. For the explanations
+# about the general usage of these "rc" files see "radmap.rc".
+# This file has one additional command in the
+# gpmap script for ploting the radar sites names that are defined contained
+# in the "radmap-sites.tbl" file.
+#
+# In order to use this file instead of the default "radmap.rc", either
+# rename this file to "radmap.rc", or copy this file to
+# "site/gpmap/rad/radmap.rc", or redefine the variable
+# "rstfilter(radmap_rcfile)" in "rstfilter.conf".
+###########################################################################
+
+set gpmap(sitesfile) \
+	"/usr/local/etc/nbsp/defaults/gpmap/rad/radmap-sites.tbl";
+
+set gpmap(script) {
+    device   = $gpmap(fmt)|$gpmap(outputfile)|$gpmap(devsize)
+    radfil   = $gpmap(inputfile)
+    proj     = rad
+    garea    = dset
+    \$mapfil = states + county
+    lut      = default
+    latlon   = 0
+    imcbar   = 1
+    map      = 1
+    stnplt   = 5/1|3/12/1.25/2|$gpmap(sitesfile)
+    r
+
+    e
+}

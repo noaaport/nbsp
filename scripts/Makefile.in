@@ -1,0 +1,52 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+TCLSH =         @TCLSH@
+INSTALL =	@INSTALL@
+NBSPDSH =	@NBSPDSH@
+HOURLYCONF =	@HOURLYCONF@
+STARTCLEANCONF = @STARTCLEANCONF@
+STARTSTOPRC = 	@STARTSTOPRC@
+
+SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
+		startstop.rc-sample
+BINTOOLS =	nbspcleanup nbspversion
+LIBTOOLS =	startstop
+LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
+DOCS =		nbspd.sh-sample
+TARGET = 	${SAMPLES} ${BINTOOLS} ${LIBTOOLS} ${DOCS}
+
+all: ${TARGET}
+
+nbspd.sh-sample: ${NBSPDSH}
+	cp ${NBSPDSH} nbspd.sh-sample
+
+hourly-cleanup.conf-sample: ${HOURLYCONF}
+	cp ${HOURLYCONF} hourly-cleanup.conf-sample
+
+nbspcleanup: nbspcleanup.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcleanup.tcl > nbspcleanup
+
+nbspversion: nbspversion.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspversion.tcl > nbspversion
+
+startstop: startstop.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop
+
+start-cleanup.conf-sample: ${STARTCLEANCONF}
+	cp ${STARTCLEANCONF} start-cleanup.conf-sample
+
+startstop.rc-sample: ${STARTSTOPRC}
+	cp ${STARTSTOPRC} startstop.rc-sample
+
+install:
+	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 0644 ${DOCS} ${MYDOCDIR}
+	${INSTALL} -m 0755 ${BINTOOLS} ${BINDIR}
+	${INSTALL} -m 0755 ${LIBTOOLS} ${MYLIBEXECDIR}
+	${INSTALL} -m 0644 ${LIBFILES} ${MYLIBEXECDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

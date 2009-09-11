@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+
+# This is the configuration file for the start cleanup script.
+# The inventory directory must not contain files older han 24 hours.
+#
+H:/var/noaaport/nbsp/inv: -mmin +1380

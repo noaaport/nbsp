@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# so that FreeBSD runs it only once (on POST-DEINSTALL)
+name=$1
+key=$2
+[ "$key" = "DEINSTALL" ] && exit 0
+
+[ -f /usr/local/etc/rc.d/nbspd ] && rm /usr/local/etc/rc.d/nbspd
+
+cat <<EOF
+To deinstall completely this package, the directories
+
+/usr/local/etc/nbsp
+/usr/local/share/doc/nbsp
+/usr/local/libexec/nbsp
+/var/noaaport
+/var/log/noaaport
+
+may have to be removed manually.
+EOF

@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+
+MetarWeather is a nice program for Windows, free,
+available from www.nirsoft.net (in the ``Utilities'' section).
+The metar data from each station or collective is summarized and saved
+in a file in the ``metarweather'' subdirectory of the noaaport data directory
+and any of those files can simply be opened in MetarWeather
+(assuming that the noaaport data directory is exported via samba).
+
+Then from the MetarWeather program, the data is obtained by opening
+the files that are in the subdirectory
+
+	metar/metarweather
+
+If a collective file is opened (for example Louisiana/Louisiana.txt),
+then the last report from all the stations of the Lousiana collective
+are displayed. If a particular station file is opened, then the last
+reports from that station are displayed.
+
+-
+Jose
+Wed Jun 27 20:03:19 AST 2007
