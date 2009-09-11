@@ -10,5 +10,7 @@ tar -xzf $tgzfile
 . $name/VERSION
 
 cd $name
+cp -R build/debian .
 dpkg-buildpackage -rfakeroot
-cp ../${name}_${version}*.deb debian
+cp ../${name}_${version}*.deb build/debian
+rm -rf debian
