@@ -1,8 +1,8 @@
 #
 # $Id$
 #
-include ../Makefile.inc
-include ../VERSION
+include ../../Makefile.inc
+include ../../VERSION
 include pkginfo.mk
 
 pkg_version = ${version}-${package_build}
@@ -19,11 +19,11 @@ pkg_file_client = ${nameclient}-${pkg_version}.${arch}.rpm
 
 default: build
 
-build: ../Makefile
-	cd ..; ${MAKE}
+build: ../../Makefile
+	cd ../..; ${MAKE}
 
-../Makefile: ../Makefile.in
-	cd ..; ./configure.sh
+../../Makefile: ../../Makefile.in
+	cd ../..; ./configure.sh
 
 ${specfile}: pkginfo.mk postinstall Makefile
 	@(echo "Summary : ${Summary}"; \
@@ -50,7 +50,7 @@ install: build
 	rm -r -f pkg
 	install -d pkg
 	cd pkg  && install -d `cat ../dirs`
-	cd ..; ${MAKE} PKGBUILDDIR=${BuildRoot} PKGCONFDIR=/dist install
+	cd ../..; ${MAKE} PKGBUILDDIR=${BuildRoot} PKGCONFDIR=/dist install
 
 package: ${specfile}
 	rpmbuild -bb ${specfile}
@@ -59,4 +59,4 @@ package: ${specfile}
 
 clean:
 	rm -f -r pkg *~ ${specfile}
-	cd ..; ${MAKE} clean
+	cd ../..; ${MAKE} clean

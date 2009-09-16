@@ -2,16 +2,17 @@
 # $Id$
 #
 
+MAINDIR = ../..
 PKGMAKEFILE = Makefile.pkg
-MAKEDEPS = ../Makefile.inc ../Makefile
+MAKEDEPS = ${MAINDIR}/Makefile.inc ${MAINDIR}/Makefile
 
 default: build
 
-../Makefile: ../Makefile.in
-	cd ..; ./configure.sh
+${MAINDIR}/Makefile: ${MAINDIR}/Makefile.in
+	cd ${MAINDIR}; ./configure.sh
 
-../Makefile.inc: ../Makefile.inc.in
-	cd ..; ./configure.sh
+${MAINDIR}/Makefile.inc: ${MAINDIR}/Makefile.inc.in
+	cd ${MAINDIR}; ./configure.sh
 
 build: ${MAKEDEPS}
 	${MAKE} -f ${PKGMAKEFILE} build
