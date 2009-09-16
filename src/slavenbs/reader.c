@@ -15,32 +15,31 @@
 #include "slavenbs.h"
 #include "framep.h"
 
-static void *slavenbs_main(void *arg);
-static int slavenbs_loop(void);
+int slavenet_init_nbs1(struct slave_element_st *
+		       slave __attribute__ ((unused))){
 
-int spawn_slavenbs(void){
+  /*
+   * Nothing to do.
+   */
 
-  int status = 0;
-
-  status = spawn_slave_thread(slavenbs_main);
-
-  return(status);
+  return(0);
 }
 
-static void *slavenbs_main(void *arg __attribute__((unused))){
+void slavenet_cleanup_nbs1(struct slave_element_st *
+			   slave __attribute__ ((unused))){
 
-  int status = 0;
+  /*
+   * Nothing to do.
+   */
 
-  while(get_quit_flag() == 0){
-    status = slavenbs_loop();
-  }
-
-  return(NULL);
+  return;
 }
 
-static int slavenbs_loop(void){
+int slavenet_loop_nbs1(struct slave_element_st *slave){
   /*
    * After a reading error, it is best to close and reopen the connection.
+   * This function returns 1 when there is such an error, or 2 when
+   * there is a processig error, or 0 when there are no errors.
    */
   int status = 0;
   int cancel_state;
@@ -48,48 +47,40 @@ static int slavenbs_loop(void){
 
   pthread_testcancel();
 
-  /*
-   * If the slave_fd is -1 it means that the socket was closed
-   * due to a reading error. It could be a real error, or the server
-   * not sending anything within the timeout limit and the like.
-   * We wait some time and try to reopen it.
-   */
-  if(g.slave_fd == -1){
-    log_errx("Lost connection to %s. Trying again.", g.mastername);
-    sleep((unsigned int)g.slave_reopen_timeout_s);
-    status = slave_reopen();
-  }
-
-  if(status != 0)
-    return(status);
-
-  status = recv_nbs_packet(g.slave_fd, &nbs,
-			   (unsigned int)g.slave_read_timeout_s,
-			   g.slave_read_timeout_retry);
+  status = recv_nbs_packet(slave->slave_fd, &nbs,
+			   (unsigned int)slave->options.slave_read_timeout_s,
+			   slave->options.slave_read_timeout_retry);
   /*
    * At present there is only one reader in the slave.
    */
   nbs.slavenbs_reader_index = 0;
 
   if(status == -1)
-    log_err2("Error reading from master", g.mastername);
+    log_err2("Error reading from master", slave->mastername);
   else if(status == -2)
-    log_errx("Timed out receiving from %s", g.mastername);
+    log_errx("Timed out receiving from %s", slave->mastername);
   else if(status == -3)
-    log_info("Connection closed receiving from %s", g.mastername);
+    log_info("Connection closed receiving from %s", slave->mastername);
   else if(status == 1)
-    log_info("Timed out or connection closed reading from %s", g.mastername);
+    log_info("Timed out or connection closed reading from %s",
+	     slave->mastername);
   else if(status == 2)
-    log_errx("Corrupt packet reading from %s", g.mastername);
+    log_errx("Corrupt packet reading from %s", slave->mastername);
 
+  /*
+   * If there is an error at this stage, the application should close
+   * the connection and try to reopen it. Return 1 in this case.
+   */
   if(status != 0)
-    (void)slave_close();
+    return(1);
 
-  if(status == 0){
-    (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
-    status = slavenbsproc(&nbs);
-    (void)pthread_setcancelstate(cancel_state, &cancel_state);
-  }
+  (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
+  status = slavenbsproc(&nbs);
+  (void)pthread_setcancelstate(cancel_state, &cancel_state);
 
-  return(status);
+  /* The application should not close the connection in this case. */
+  if(status != 0)
+    return(2);
+
+  return(0);
 }

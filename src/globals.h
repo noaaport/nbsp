@@ -17,6 +17,7 @@
 #include "ure.h"
 #include "pctl.h"
 #include "stats.h"
+#include "slavet.h"
 #include "defaults.h"
 
 struct nbsp_globals {
@@ -137,14 +138,13 @@ struct nbsp_globals {
   int max_load_ave_sleep_secs;	/* for how long */
   int max_load_ave_period_secs;	/* how often to check */
   int max_load_rtx_index;	/* max retrans. accepted in high load cond. */
-  int feedmode;			/* master or slave */
-  char *mastername;		/* master host for slave net mode */
-  char *masterport;
+  int feedmode;			/* master, net slave, input fifo */
+  char *masterservers;		/* master hosts list for net slave mode */
   int slave_read_timeout_s;	/* timeout when slave reads from master */
   int slave_read_timeout_retry;
   int slave_reopen_timeout_s;	/* sleep secs before reopening connection */
   int slave_so_rcvbuf;
-  char *infifo;			/* input fifo for slave input mode */
+  char *infifo;			/* fifo name for input feed mode */
   mode_t infifo_mode;
   char *infifo_grp;
   /* Regexps for file name pattern matching */
@@ -193,8 +193,8 @@ struct nbsp_globals {
   struct uwildregex_st *rtxdb_regex;
   struct conn_table_st *ct;	/* libconn2 table */
   int server_fd;		/* fd to accept network connections */
-  int slave_fd;			/* fd to use in slave mode */
-  int num_slavenbs_readers;	/* At present slaves spawn only one reader */ 
+  int fifo_fd;			/* fd to use for input fifo mode */
+  struct slave_table_st *slavet; /* masterservers table for net slave mode */
   int qstatefifo_fd;		/* fifo for sending internal queues state */
   void *qstatefifo_buffer;
   int qstatefifo_buffer_size;

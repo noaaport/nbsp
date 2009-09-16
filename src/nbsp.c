@@ -58,7 +58,7 @@ static int pce_savecbdb_memfile(struct pctl_element_st *pce,
 static struct memfile_st *reopen_nbspproc_memfile(void);
 static void nbsp_periodic(void);
 static int init_packetinfo_packet_pool(void);
-static void destroy_packetinfo_packet_pool(void);
+static void cleanup_packetinfo_packet_pool(void);
 static int e_export_product(struct pctl_element_st *pce);
 static void rtxdb_flag_filter(struct pctl_element_st *pce);
 static void log_missing(struct pctl_element_st *pce);
@@ -93,7 +93,7 @@ static int get_rtxdb_truncate_flag(void);
 
 static int init_packetinfo_packet_pool(void){
 
-  if(nbsfp_packetinfo_init_pool(&gpacketinfo) != 0){
+  if(nbsfp_packetinfo_init(&gpacketinfo) != 0){
     log_err("Cannot initalize the processor packetinfo memory pool.");
     return(-1);
   }
@@ -101,9 +101,9 @@ static int init_packetinfo_packet_pool(void){
   return(0);
 }
 
-static void destroy_packetinfo_packet_pool(void){
+static void cleanup_packetinfo_packet_pool(void){
 
-  nbsfp_packetinfo_destroy_pool(&gpacketinfo);
+  nbsfp_packetinfo_cleanup(&gpacketinfo);
 }
 
 int spawn_nbsproc(void){
@@ -166,7 +166,9 @@ static void *processor_thread_main(void *data __attribute__((unused))){
     status = nbsproc_loop();
   }
 
-  pthread_cleanup_pop(1);
+  /*
+   * The cleanup functions are called by pthread_cleanup_push.
+   */
 
   return(NULL);
 }
@@ -193,7 +195,7 @@ static int open_nbsproc(void){
 
 static void close_nbsproc(void *arg __attribute__((unused))){
 
-  destroy_packetinfo_packet_pool();
+  cleanup_packetinfo_packet_pool();
   nbsp_spooldb_close();
 }
 
@@ -215,7 +217,11 @@ static int nbsproc_loop(void){
 int init_pctl(void){
   /*
    * This function initalizes the product control list, used by
-   * the processor thread and readers.
+   * the processor thread and readers (noaaport and nbs1 slaves).
+   * This function must be called _after_ the slave table (slavet.c)
+   * is created so that the number of readers is already known. This
+   * is done in main.c by calling init_feed() before init_queues().
+   * Those two functions are defined in init.c.
    */
   int status = 0;
   struct pctl_st *pctl;
@@ -240,15 +246,19 @@ int init_pctl(void){
   param.mf_softlimit_mb = g.pctl_maxmem_soft;
   param.mf_hardlimit_mb = g.pctl_maxmem_hard;
 
-  if(feedmode_master_enabled())
+  if(feedmode_noaaport_enabled())
     num_active_channels = NPCAST_NUM_CHANNELS;
-  else{
+
+  if(feedmode_masterservers_enabled()){
     /*
-     * Only the nbs1 (fdata) slave uses the pctl, but we will create
-     * and open it unconditionally. Otherwise the queue status reporting
-     * functions have to check the slave mode to decide what to do.
+     * Only the nbs1 (fdata) slave use the pctl. Even if there are no
+     * nbs1 readers we open it with one (unused) channel anyway;
+     * otherwise the queue status reporting
+     * functions have to check if there are nbs1 readers to decide what to do.
      */
-    num_active_channels = g.num_slavenbs_readers;
+    num_active_channels = 1;
+    if(g.slavet->num_slavenbs_readers != 0)
+      num_active_channels = g.slavet->num_slavenbs_readers;
   }
 
   pctl = epctl_open(num_active_channels, &param);

@@ -8,6 +8,10 @@
 #ifndef SLAVEIN_H
 #define SLAVEIN_H
 
-int spawn_slavein(void);
+#include "../slavet.h"
+
+int slavein_init(struct slave_element_st *slave);
+void slavein_cleanup(struct slave_element_st *slave);
+int slavein_loop(struct slave_element_st *slave);
 
 #endif

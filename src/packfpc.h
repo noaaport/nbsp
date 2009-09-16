@@ -45,7 +45,14 @@ struct packet_info_st {
  * for processing. In this way they avoid having the qdb_rcv function
  * allocate space everytime.
  */
-int nbsfp_packetinfo_init_pool(struct packet_info_st *packetinfo);
-void nbsfp_packetinfo_destroy_pool(struct packet_info_st *packetinfo);
+int nbsfp_packetinfo_init(struct packet_info_st *packetinfo);
+void nbsfp_packetinfo_cleanup(struct packet_info_st *packetinfo);
+
+/*
+ * These functions have a similar purpose and they are used by the slave
+ * threads (nbs2 and infeed). They allocate memory for the packetinfo itself.
+ */
+int nbsfp_packetinfo_create(struct packet_info_st **packetinfo);
+void nbsfp_packetinfo_destroy(struct packet_info_st *packetinfo);
 
 #endif

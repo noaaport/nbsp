@@ -44,7 +44,7 @@ int nbsfp_pack_fpath(struct packet_info_st *packetinfo,
    *  inside the packet and not a separate malloced storage.
    *
    *  It is assumed that the calling function has allocated space
-   *  of the precise size, by calling ``nbsfp_packetinfo_init_pool()''.
+   *  of the precise size, by calling ``nbsfp_packetinfo_init()''.
    */ 
   int status;
   char *data;
@@ -103,7 +103,7 @@ int const_fpath_packet_maxsize(void){
   return(maxsize);
 }
 
-int nbsfp_packetinfo_init_pool(struct packet_info_st *packetinfo){
+int nbsfp_packetinfo_init(struct packet_info_st *packetinfo){
 
   int size;
 
@@ -117,13 +117,37 @@ int nbsfp_packetinfo_init_pool(struct packet_info_st *packetinfo){
   return(0);
 }
 
-void nbsfp_packetinfo_destroy_pool(struct packet_info_st *packetinfo){
+void nbsfp_packetinfo_cleanup(struct packet_info_st *packetinfo){
 
   if(packetinfo->packet != NULL)
     free(packetinfo->packet);
 
   packetinfo->packet = NULL;
   packetinfo->packet_size = 0;
+}
+
+int nbsfp_packetinfo_create(struct packet_info_st **packetinfo){
+
+  struct packet_info_st *p;
+
+  p = malloc(sizeof(struct packet_info_st));
+  if(p == NULL)
+    return(-1);
+
+  if(nbsfp_packetinfo_init(p) != 0){
+    free(p);
+    return(-1);
+  }
+
+  *packetinfo = p;
+
+  return(0);
+}
+
+void nbsfp_packetinfo_destroy(struct packet_info_st *packetinfo){
+
+  nbsfp_packetinfo_cleanup(packetinfo);
+  free(packetinfo);
 }
 
 /*

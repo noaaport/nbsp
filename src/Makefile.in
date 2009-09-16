@@ -21,9 +21,10 @@ SOURCES =	main.c access.c appdata.c \
 		nbsp.c nbspq.c nbspre.c npcast.c \
 		pack.c packfp.c packfpu.c pctl.c pctldb.c pctlmfdb.c per.c \
 		pid.c pw.c rtxdb.c ertxdb.c qstate.c \
-		ure.c readn.c reader.c sbn.c slave.c \
+		ure.c readn.c reader.c sbn.c \
 		signal.c stats.c serverc.c serverm.c serverf.c \
 		strsplit.c spooldb.c spooltype.c sfilter.c solaris.c \
+		stoi.c slavet.c slave.c slave_net.c slave_in.c \
 		util.c unz.c \
 		slavenbs/framep.c slavenbs/reader.c \
 		slavefp/framep.c slavefp/reader.c \
@@ -39,9 +40,10 @@ OBJECTS =	main.o access.o appdata.o \
 		nbsp.o nbspq.o nbspre.o npcast.o \
 		pack.o packfp.o packfpu.o pctl.o pctldb.o pctlmfdb.o per.o \
 		pid.o pw.o rtxdb.o ertxdb.o qstate.o \
-		ure.o readn.o reader.o sbn.o slave.o \
+		ure.o readn.o reader.o sbn.o \
 		signal.o stats.o serverc.o serverm.o serverf.o \
 		strsplit.o spooldb.o spooltype.o sfilter.o solaris.o \
+		stoi.o slavet.o slave.o slave_net.o slave_in.o \
 		util.o unz.o \
 		slavenbs/framep.o slavenbs/reader.o \
 		slavefp/framep.o slavefp/reader.o \
@@ -57,9 +59,10 @@ HEADERS =	config.h const.h common.h defaults.h globals.h \
 		nbs1.h nbsp.h nbspmspoolbdb.h \
 		nbspq.h nbspre.h npcast.h \
 		pack.h packfpc.h packfp.h packfpu.h pctl.h per.h pid.h \
-		pw.h rtxdb.h qstate.h ure.h readn.h reader.h sbn.h slave.h \
+		pw.h rtxdb.h qstate.h ure.h readn.h reader.h sbn.h \
 		signal.h stats.h server.h server_priv.h strsplit.h spooldb.h \
 		spooltype.h sfilter.h solaris.h \
+		stoi.h slavet.h slave.h slave_priv.h \
 		unz.h util.h \
 		slavenbs/slavenbs.h \
 		slavefp/slavefp.h \

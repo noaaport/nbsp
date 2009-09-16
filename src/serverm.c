@@ -73,7 +73,7 @@ static int open_server_filters(void);
 static void close_server_filters(void);
 
 static int init_unpack_packet_pool(void);
-static void destroy_unpack_packet_pool(void);
+static void cleanup_unpack_packet_pool(void);
 
 static int create_server_thread(void);
 static void *server_main(void*);
@@ -144,7 +144,7 @@ static void close_server(void *arg __attribute__ ((unused))){
 
   close_server_filters();
   close_server_conn();
-  destroy_unpack_packet_pool();
+  cleanup_unpack_packet_pool();
 }
 
 static int create_server_thread(void){
@@ -195,7 +195,9 @@ static void *server_main(void *data __attribute__((unused))){
     status = server_loop();
   }
 
-  pthread_cleanup_pop(1);
+  /*
+   * The cleanup functions are called by pthread_cleanup_push.
+   */
 
   return(NULL);
 }
@@ -397,7 +399,7 @@ static void close_server_filters(void){
 
 static int init_unpack_packet_pool(void){
 
-  if(nbsfp_packetinfo_init_pool(&gpacketinfo) != 0){
+  if(nbsfp_packetinfo_init(&gpacketinfo) != 0){
     log_err("Cannot initalize the server packetinfo memory pool.");
     return(-1);
   }
@@ -405,9 +407,9 @@ static int init_unpack_packet_pool(void){
   return(0);
 }
 
-static void destroy_unpack_packet_pool(void){
+static void cleanup_unpack_packet_pool(void){
 
-  nbsfp_packetinfo_destroy_pool(&gpacketinfo);
+  nbsfp_packetinfo_cleanup(&gpacketinfo);
 }
 
 static int process_server_queue(void){

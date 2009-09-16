@@ -42,7 +42,8 @@
 #include "init.h"
 
 static int e_np_open(void);
-static void close_feed(void);
+static void e_np_close(void);
+static void close_feeds(void);
 static void close_queues(void);
 static void close_mspool(void);
 
@@ -183,8 +184,7 @@ void init_globals(void){
   g.max_load_rtx_index = MAX_LOAD_RTX_INDEX;
 
   g.feedmode = DEFAULT_FEEDMODE;
-  g.mastername = SLAVE_MASTERNAME;
-  g.masterport = SLAVE_MASTERPORT;
+  g.masterservers = SLAVE_MASTERSERVERS;
   g.slave_read_timeout_s = SLAVE_READ_TIMEOUT_SECS;
   g.slave_read_timeout_retry = SLAVE_READ_TIMEOUT_RETRY;
   g.slave_reopen_timeout_s = SLAVE_REOPEN_TIMEOUT_SECS;
@@ -237,8 +237,8 @@ void init_globals(void){
   g.rtxdb_regex = NULL;
   g.ct = NULL;
   g.server_fd = -1;
-  g.num_slavenbs_readers = 1;
-  g.slave_fd = -1;
+  g.fifo_fd = -1;
+  g.slavet = NULL;
   g.qstatefifo_fd = -1;
   g.qstatefifo_buffer = NULL;
   g.qstatefifo_buffer_size = 0;
@@ -258,19 +258,20 @@ void cleanup(void){
   kill_httpd_server();
   kill_reader_threads();
   kill_filter_thread();
-  kill_slave_thread();
+  kill_slave_threads();
   kill_server_thread();
   kill_processor_thread();
 
   /*
    * The feeds (noaaport or slave) are "opened" in main (init_feeds)
-   * and therefore they must be closed here. The server and filter threads
-   * initialize themselves, and therefore close themselves by calling
+   * and therefore they must be closed here. The processor, server and filter
+   * threads initialize themselves, and therefore close themselves by calling
+   *
    * close_nbsproc();
    * close_server();
    * close_filter_server();
    */
-  close_feed();
+  close_feeds();
   close_queues();
   close_mspool();
 
@@ -371,14 +372,23 @@ static int e_np_open(void){
   else if(status != 0)
     log_errx("Multicast channel configuration error.");
   else
-    log_verbose(1, "%s", "Multicast channels opened.");
+    log_info("Opened noaaport multicast channels.");
 
   return(status);
+}
+
+static void e_np_close(void){
+
+  np_close();
+
+  log_info("Closed noaaport multicast channels.");
 }
 
 int init_queues(void){
   /*
    * Initialize all the queues before starting any processing thread.
+   * This fucnction must be called after initializing the feeds (see
+   * init_feeds() below).
    */
   int status = 0;
 
@@ -433,37 +443,48 @@ static void close_queues(void){
   nbsp_close_dbenv();   /* Close dbenv after all db queues are closed. */
 }
 
-int init_feed(void){
-
+int init_feeds(void){
+  /*
+   * This function creates the slave table and therefore, if there are
+   * slave nbs readers, it determines how many pctl readers there are.
+   * The number of pctl readers is required for initializing the pctl
+   * (see init_pctl() in nbsp.c) and therefore this function init_feed()
+   * must be called before the the function that initializes the pctl
+   * init_queues().
+   */
   int status = 0;
 
-  if(feedmode_master_enabled())
+  if(feedmode_noaaport_enabled())
     status = e_np_open();
 
   if(status == 0){
+    /*
+     * The slave table must initialized if there are slaves either
+     * network slaves or input fifo(s).
+     */
     if(feedmode_slave_enabled())
-      status = slave_open();
+      status = init_slavet();
   }
 
   return(status);
 }
 
-static void close_feed(void){
+static void close_feeds(void){
 
-  np_close();		/* noaaport connection */
-  slave_close();	/* slave connection */
+  e_np_close();		/* noaaport connections */
+  cleanup_slavet();	/* net slave table */
 }
 
-int spawn_feed(void){
+int spawn_feeds(void){
 
   int status = 0;
     
-  if(feedmode_master_enabled())
+  if(feedmode_noaaport_enabled())
     status = spawn_readers();
 
   if(status == 0){
     if(feedmode_slave_enabled())
-    status = spawn_slave();
+      status = spawn_slave_threads();
   }
 
   return(status);
@@ -474,9 +495,12 @@ int spawn_processor(void){
   int status = 0;
 
   /*
-   * The fpath (nbs2) and infeed slaves do not need the processor.
+   * The fpath (nbs2) and infeed slaves do not need the processor;
+   * only the noaaport and nbs1 readers need it. By the time this
+   * function is called, the slave table must have been initialized
+   * so that the number of nbs1 readers has been determined.
    */
-  if(feedmode_master_enabled() || feedmode_slavenet_nbs1_enabled())
+  if(feedmode_noaaport_enabled() || feedmode_slave_nbs1_enabled())
     status = spawn_nbsproc();
 
   return(status);

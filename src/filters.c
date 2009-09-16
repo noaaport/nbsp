@@ -55,7 +55,7 @@ static int filter_loop(void);
 static int process_filter_queue(void);
 
 static int init_unpack_packet_pool(void);
-static void destroy_unpack_packet_pool(void);
+static void cleanup_unpack_packet_pool(void);
 
 static int e_get_filters(void);
 static int e_reload_filters(void);
@@ -118,7 +118,7 @@ static int open_filter_server(void){
 static void close_filter_server(void *arg __attribute__ ((unused))){
 
     kill_filter_list();
-    destroy_unpack_packet_pool();
+    cleanup_unpack_packet_pool();
 }
 
 void kill_filter_thread(void){
@@ -201,7 +201,9 @@ static void *filter_main(void *data __attribute__ ((unused))){
     status = filter_loop();
   }
 
-  pthread_cleanup_pop(1);
+  /*
+   * The cleanup functions are called by pthread_cleanup_push.
+   */
 
   return(NULL);
 }
@@ -309,7 +311,7 @@ static void kill_filter_list(void){
 
 static int init_unpack_packet_pool(void){
 
-  if(nbsfp_packetinfo_init_pool(&gpacketinfo) != 0){
+  if(nbsfp_packetinfo_init(&gpacketinfo) != 0){
     log_err("Cannot initalize the filter packetinfo memory pool.");
     return(-1);
   }
@@ -317,9 +319,9 @@ static int init_unpack_packet_pool(void){
   return(0);
 }
 
-static void destroy_unpack_packet_pool(void){
+static void cleanup_unpack_packet_pool(void){
 
-  nbsfp_packetinfo_destroy_pool(&gpacketinfo);
+  nbsfp_packetinfo_cleanup(&gpacketinfo);
 }
 
 static int get_reload_filters_flag(void){

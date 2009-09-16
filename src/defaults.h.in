@@ -431,12 +431,21 @@
 #define MAX_LOAD_RTX_INDEX		250
 
 /*
- * This section sets parameters when nbsp runs as a slave (slave.c,h).
- * The default is to run as a master. 
+ * This section sets the parameters for the various feed modes. Any
+ * combination of feeds can be set. The default is to enable only the
+ * noaaport (multicast) feed. If the FEEDMODE_MASTERSERVERS is included
+ * in DEFAULT_FEEDMODE, then the SLAVE_MASTERSERVERS is used (and it
+ * must be set). The syntax is a string of the form
+ *
+ * <protocol>,<server>,<port>:<protocol>,<server>,<port>:...
+ *
+ * SLAVE_MASTERSERVERS = "1,noaaport.uprrp.edu,2210:1,feed.noaaport.net:2210"
  */
-#define FEEDMODE_MASTER		0	/* slave values in slave.h */
-#define SLAVE_MASTERNAME	NULL
-#define SLAVE_MASTERPORT	SERVER_PORT
+#define FEEDMODE_NOAAPORT	1
+#define FEEDMODE_MASTERSERVERS	2
+#define FEEDMODE_INPUTFIFO	4
+
+#define SLAVE_MASTERSERVERS	NULL
 #define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
 #define SLAVE_INPUT_FIFO_MODE	0660
 #define SLAVE_INPUT_FIFO_GRP	"news"
@@ -445,7 +454,10 @@
 #define SLAVE_REOPEN_TIMEOUT_SECS 2
 #define SLAVE_SO_RCVBUF		-1
 
-#define DEFAULT_FEEDMODE	FEEDMODE_MASTER
+/*
+ * #define DEFAULT_FEEDMODE	(FEEDMODE_NOAAPORT | FEEDMODE_INPUTFIFO)
+ */
+#define DEFAULT_FEEDMODE	FEEDMODE_NOAAPORT
 
 /* 
  * The default accept RE is NULL, so everything is accepted

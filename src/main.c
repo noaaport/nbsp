@@ -139,8 +139,11 @@ int main(int argc, char **argv){
   if(status == 0)
     status = init_qstate_fifo();
 
+  /*
+   * The feeds must be initialized before the queues (see init.c).
+   */
   if(status == 0)
-    status = init_feed();
+    status = init_feeds();
 
   /*
    * Initialize all shared spools and queues before any threads are started.
@@ -182,7 +185,7 @@ int main(int argc, char **argv){
     status = drop_privs();
 
   if((status == 0) && (g.option_disable_readers == 0))
-    status = spawn_feed();
+    status = spawn_feeds();
 
   /*
    * If there are initialization errors, ask all threads to quit.

@@ -146,7 +146,9 @@ static void *client_thread_main(void *arg){
       log_err("pthread_setcancelstate() returning error in serverc.c.");
   }
 
-  pthread_cleanup_pop(1);
+  /*
+   * The cleanup functions are called by pthread_cleanup_push.
+   */
 
   return(NULL);
 }

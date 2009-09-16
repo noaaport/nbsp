@@ -15,20 +15,21 @@
 #include "../signal.h"
 #include "../globals.h"
 #include "../util.h"
-#include "../packfp.h"	/* init, destroy packetinfo */
+#include "../packfp.h"	/* init, cleanup packetinfo */
 #include "../pctl.h"
 #include "../file.h"
 #include "slavein.h"
 #include "framep.h"
 
 /*
- * static variables
+ * private thread info (stoted in the info field of the slave_element_st)
  */
-static struct packet_info_st gpacketinfo = {0, 0, 0, 0, 0,
-					    NULL, NULL, NULL, 0};
-static struct pctl_element_st *gpce = NULL;
-static char *gbuffer = NULL;
-static int gbuffer_size = 0;
+struct slavein_info_st {
+  struct packet_info_st *packetinfo;
+  struct pctl_element_st *pce;
+  char *buffer;
+  int buffer_size;
+};
 
 /*
  * NOTE: The file information read from the fifo is stored in the
@@ -40,116 +41,134 @@ static int gbuffer_size = 0;
  * psh_product_code, fname, fpath.
  */
 
-static int init_slavein(void);
-static void *slavein_main(void *arg);
-static int slavein_loop(void);
-static int recv_in_packet(void);
+static int slavein_info_create(struct slavein_info_st **slavein_info);
+static void slavein_info_destroy(struct slavein_info_st *slavein_info);
+static int recv_in_packet(struct slave_element_st *slave);
 
-int spawn_slavein(void){
-
-  int status = 0;
-
-  status = init_slavein();
-
-  if(status == 0)
-    status = spawn_slave_thread(slavein_main);
-
-  return(status);
-}
-
-static void *slavein_main(void *arg __attribute__((unused))){
-
-  int status = 0;
-
-  while(get_quit_flag() == 0){
-    status = slavein_loop();
-  }
-
-  nbsfp_packetinfo_destroy_pool(&gpacketinfo);
-  if(gpce != NULL){
-    free(gpce);
-    gpce = NULL;
-  }
-
-  if(gbuffer != NULL){
-    free(gbuffer);
-    gbuffer = NULL;
-  }
-
-  return(NULL);
-}
-
-static int slavein_loop(void){
-  /*
-   * After a reading error, it is best to close and reopen the fifo.
-   */
-  int status = 0;
-  int cancel_state;
-
-  pthread_testcancel();
-
-  if(g.slave_fd == -1){
-    log_errx("Reopening %s.", g.infifo);
-    status = slave_reopen();
-  }
-
-  if(status != 0)
-    return(status);
-
-  status = recv_in_packet();
-
-  if(status == -1)
-    log_err2("Error reading from", g.infifo);
-  else if(status == -2)
-    log_info("No input from %s", g.infifo);
-  else if(status == 1)
-    log_errx("Timed out while reading from %s", g.infifo);
-  else if(status >= 2)
-    log_errx("Corrupt packet error [%d] reading from %s", status, g.infifo);
-
-  /*
-   * We close the input fifo on an error. If there has not been any
-   * input, we don't close since that is not a real error; the inn feed script
-   * may also be waiting for data.
-   */ 
-  if((status != 0) && (status != -2))
-    (void)slave_close();
-
-  if(status == 0){
-    (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
-    status = slaveinproc(&gpacketinfo);
-    (void)pthread_setcancelstate(cancel_state, &cancel_state);
-  }
-
-  return(status);
-}
-
-static int init_slavein(void){
+static int slavein_info_create(struct slavein_info_st **slavein_info){
 
   int pce_size;
+  struct pctl_element_st *pce;
+  struct packet_info_st *packetinfo;
+  struct slavein_info_st *p;
+  
+  p = malloc(sizeof(struct slavein_info_st));
+  if(p == NULL){
+    log_err("Cannot initalize the the slavein info.");
+    return(-1);
+  }
+
+  p->packetinfo = NULL;
+  p->pce = NULL;
+  p->buffer = NULL;
+  p->buffer_size = 0;
 
   /*
    * Initialize the pce, but without the memory file since it will
    * not be needed.
    */
   pce_size = const_pce_size();
-  if((gpce = malloc(pce_size)) == NULL){
-    log_err("Cannot initalize the receive pce.");
+  if((pce = malloc(pce_size)) == NULL){
+    free(p);
+    log_err("Cannot initalize slavein the receive pce.");
     return(-1);
   }
-  gpce->fpath_size = const_fpath_maxsize() + 1;
+  pce->fpath_size = const_fpath_maxsize() + 1;
 
-  if(nbsfp_packetinfo_init_pool(&gpacketinfo) != 0){
-    free(gpce);
-    gpce = NULL;
-    log_err("Cannot initalize the receive packetinfo memory pool.");
+  if(nbsfp_packetinfo_create(&packetinfo) != 0){
+    free(pce);
+    free(p);
+    log_err("Cannot initalize the slavein packetinfo.");
     return(-1);
   }
   
+  p->packetinfo = packetinfo;
+  p->pce = pce;
+  *slavein_info = p;  
+
   return(0);
 }
 
-static int recv_in_packet(void){
+static void slavein_info_destroy(struct slavein_info_st *slavein_info){
+
+  if(slavein_info->packetinfo != NULL)
+    nbsfp_packetinfo_destroy(slavein_info->packetinfo);
+
+  if(slavein_info->pce != NULL)
+    free(slavein_info->pce);
+
+  if(slavein_info->buffer != NULL)
+    free(slavein_info->buffer);
+
+  free(slavein_info);
+}
+
+int slavein_init(struct slave_element_st *slave){
+
+  struct slavein_info_st *p;
+  int status;
+
+  status = slavein_info_create(&p);
+  if(status == 0)
+    slave->info = (void*)p;
+
+  return(status);
+}
+
+void slavein_cleanup(struct slave_element_st *slave){
+
+  if(slave->info == NULL)
+    return;
+
+  slavein_info_destroy((struct slavein_info_st*)slave->info);
+  slave->info = NULL;
+}
+
+int slavein_loop(struct slave_element_st *slave){
+  /*
+   * After a reading error, it is best to close and reopen the fifo.
+   * This function returns 1 when there is such an error, or 2 when
+   * there is a processig error, or 0 when there are no errors.
+   */
+  int status = 0;
+  int cancel_state;
+
+  pthread_testcancel();
+
+  status = recv_in_packet(slave);
+
+  if(status == -1)
+    log_err2("Error reading from", slave->infifo);
+  else if(status == -2)
+    log_info("Timed out watiting to read from %s", slave->infifo);
+  else if(status == 1)
+    log_info("Bad input from %s", slave->infifo);
+  else if(status >= 2)
+    log_errx("Corrupt packet error [%d] reading from %s",
+	     status, slave->infifo);
+
+  /*
+   * We close the input fifo on an error. If there has not been any
+   * input, we don't close since that is not a real error.
+   */ 
+  if(status != 0){
+    if(status == -2)
+      return(0);
+    else
+      return(1);
+  }
+
+  (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
+  status = slaveinproc(((struct slavein_info_st*)slave->info)->packetinfo);
+  (void)pthread_setcancelstate(cancel_state, &cancel_state);
+
+  if(status != 0)
+    return(2);
+  
+  return(status);
+}
+
+static int recv_in_packet(struct slave_element_st *slave){
   /*
    * The format of the packet received from the fifo is a file info
    * string with the format
@@ -169,12 +188,13 @@ static int recv_in_packet(void){
   int fpath_len;
   int fname_len;
   int fbasename_len;
+  struct slavein_info_st *slavein_info = (struct slavein_info_st*)slave->info;
 
-  n = readn(g.slave_fd, finfo_size_buf, 4,
-	    (unsigned int)g.broadcast_read_timeout_s, 0);
+  n = readn(slave->slave_fd, finfo_size_buf, 4,
+	    (unsigned int)slave->options.slave_read_timeout_s, 0);
   if(n == -1)
-    status = -1;
-  else if(status == -2)
+    status = -1;	/* real reading error */
+  else if(n == -2)
     status = -2;	/* timed out before anything could be read */
   else if(n != 4)
     status = 1;
@@ -183,21 +203,21 @@ static int recv_in_packet(void){
     return(status);
 
   finfo_size = unpack_uint32(finfo_size_buf, 0);
-  if(gbuffer_size < finfo_size + 1){
-    if(gbuffer != NULL)
-      free(gbuffer);
+  if(slavein_info->buffer_size < finfo_size + 1){
+    if(slavein_info->buffer != NULL)
+      free(slavein_info->buffer);
     
-    gbuffer_size = finfo_size + 1;
-    gbuffer = malloc(gbuffer_size);
+    slavein_info->buffer_size = finfo_size + 1;
+    slavein_info->buffer = malloc(slavein_info->buffer_size);
   }
 
-  if(gbuffer == NULL){
-    gbuffer_size = 0;
+  if(slavein_info->buffer == NULL){
+    slavein_info->buffer_size = 0;
     return(-1);
   }
 
-  n = readn(g.slave_fd, gbuffer, finfo_size + 1,
-	    (unsigned int)g.slave_read_timeout_s, 0);
+  n = readn(slave->slave_fd, slavein_info->buffer, finfo_size + 1,
+	    (unsigned int)slave->options.slave_read_timeout_s, 0);
   if(n == -1)
     status = -1;
   else if(n != finfo_size + 1)
@@ -206,27 +226,29 @@ static int recv_in_packet(void){
   if(status != 0)
     return(status);
 
-  if(gbuffer[finfo_size] != '\n')
+  if(slavein_info->buffer[finfo_size] != '\n')
     return(2);
 
-  gbuffer[finfo_size] = '\0';
+  slavein_info->buffer[finfo_size] = '\0';
 
-  if(sscanf(gbuffer, "%u %d %d %d %d",
-	    &gpce->seq_number, &gpce->psh_product_type,
-	    &gpce->psh_product_category, &gpce->psh_product_code,
-	    &gpce->np_channel_index) != 5){
+  if(sscanf(slavein_info->buffer, "%u %d %d %d %d",
+	    &(slavein_info->pce)->seq_number,
+	    &(slavein_info->pce)->psh_product_type,
+	    &(slavein_info->pce)->psh_product_category,
+	    &(slavein_info->pce)->psh_product_code,
+	    &(slavein_info->pce)->np_channel_index) != 5){
     return(3);
   }
 
   /*
    * fpath starts after the last blank.
    */
-  fpath = strrchr(gbuffer, ' ');
+  fpath = strrchr(slavein_info->buffer, ' ');
   if(fpath == NULL)
     return(4);
 
   *fpath = '\0';	/* now fname starts after the last blank as well */
-  fname = strrchr(gbuffer, ' ');
+  fname = strrchr(slavein_info->buffer, ' ');
   if(fname == NULL)
     return(5);
 
@@ -234,15 +256,15 @@ static int recv_in_packet(void){
   ++fname;
 
   fpath_len = strlen(fpath);
-  if(fpath_len + 1 > gpce->fpath_size)
+  if(fpath_len + 1 > (slavein_info->pce)->fpath_size)
     return(6);
 
-  strncpy(gpce->fpath, fpath, fpath_len + 1);
+  strncpy((slavein_info->pce)->fpath, fpath, fpath_len + 1);
 
   /*
    * Find the start of the basename.
    */
-  fbasename = findbasename(gpce->fpath);
+  fbasename = findbasename((slavein_info->pce)->fpath);
   if(fbasename == NULL)
     return(7);
 
@@ -250,16 +272,16 @@ static int recv_in_packet(void){
   if(fbasename_len > FBASENAME_SIZE)
     return(8);
 
-  strncpy(gpce->fbasename, fbasename, FBASENAME_SIZE + 1);
+  strncpy((slavein_info->pce)->fbasename, fbasename, FBASENAME_SIZE + 1);
 
   fname_len = strlen(fname);
   if(fname_len > FNAME_SIZE)
     return(9);
 
-  strncpy(gpce->fname, fname, FNAME_SIZE + 1);
+  strncpy((slavein_info->pce)->fname, fname, FNAME_SIZE + 1);
 
   if(status == 0)
-    status = nbsfp_pack_fpath(&gpacketinfo, gpce);
+    status = nbsfp_pack_fpath(slavein_info->packetinfo, slavein_info->pce);
 
   return(status);
 }

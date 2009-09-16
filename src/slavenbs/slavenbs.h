@@ -8,6 +8,10 @@
 #ifndef SLAVENBS_H
 #define SLAVENBS_H
 
-int spawn_slavenbs(void);
+#include "../slavet.h"
+
+int slavenet_init_nbs1(struct slave_element_st *slave);
+void slavenet_cleanup_nbs1(struct slave_element_st *slave);
+int slavenet_loop_nbs1(struct slave_element_st *slave);
 
 #endif

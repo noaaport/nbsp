@@ -319,11 +319,8 @@
 #define CONFOPT_FEEDMODE		@counter@
 #define DEFVAL_FEEDMODE			DEFAULT_FEEDMODE
 
-#define CONFOPT_SLAVE_MASTERNAME	@counter@
-#define DEFVAL_SLAVE_MASTERNAME		SLAVE_MASTERNAME
-
-#define CONFOPT_SLAVE_MASTERPORT	@counter@
-#define DEFVAL_SLAVE_MASTERPORT		SLAVE_MASTERPORT
+#define CONFOPT_SLAVE_MASTERSERVERS	@counter@
+#define DEFVAL_SLAVE_MASTERSERVERS	SLAVE_MASTERSERVERS
 
 #define CONFOPT_SLAVE_READ_TIMEOUT	@counter@
 #define DEFVAL_SLAVE_READ_TIMEOUT	SLAVE_READ_TIMEOUT_SECS
@@ -528,8 +525,7 @@ static struct confoption_st confoptions[] = {
   {"loadmaxrtx", CONFOPT_MAX_LOAD_RTX_INDEX, TCL_LINK_INT, NULL,
 	DEFVAL_MAX_LOAD_RTX_INDEX},
   {"feedmode", CONFOPT_FEEDMODE, TCL_LINK_INT, NULL, DEFVAL_FEEDMODE},
-  {"mastername", CONFOPT_SLAVE_MASTERNAME, TCL_LINK_STRING, NULL, 0},
-  {"masterport", CONFOPT_SLAVE_MASTERPORT,TCL_LINK_STRING, NULL, 0},
+  {"masterservers", CONFOPT_SLAVE_MASTERSERVERS, TCL_LINK_STRING, NULL, 0},
   {"slave_read_timeout", CONFOPT_SLAVE_READ_TIMEOUT, TCL_LINK_INT, NULL,
 	DEFVAL_SLAVE_READ_TIMEOUT},
   {"slave_read_timeout_retry", CONFOPT_SLAVE_READ_TIMEOUT_RETRY, TCL_LINK_INT,
@@ -701,8 +697,7 @@ int configure(void){
   setoptval(&g.max_load_rtx_index, confoptions, CONFOPT_MAX_LOAD_RTX_INDEX);
 
   setoptval(&g.feedmode, confoptions, CONFOPT_FEEDMODE);
-  setoptval(&g.mastername, confoptions, CONFOPT_SLAVE_MASTERNAME);
-  setoptval(&g.masterport, confoptions, CONFOPT_SLAVE_MASTERPORT);
+  setoptval(&g.masterservers, confoptions, CONFOPT_SLAVE_MASTERSERVERS);
   setoptval(&g.slave_read_timeout_s, confoptions, CONFOPT_SLAVE_READ_TIMEOUT);
   setoptval(&g.slave_read_timeout_retry, confoptions,
 	CONFOPT_SLAVE_READ_TIMEOUT_RETRY);
@@ -854,8 +849,7 @@ void print_confoptions(void){
   fprintf(stdout, "loadmaxrtx %d\n", g.max_load_rtx_index);
 
   fprintf(stdout, "feedmode %d\n", g.feedmode);
-  fprintf_str(stdout, fmt, "mastername", g.mastername);
-  fprintf_str(stdout, fmt, "masterport", g.masterport);
+  fprintf_str(stdout, fmt, "masterservers", g.masterservers);
   fprintf(stdout, "slave_read_timeout %d\n", g.slave_read_timeout_s);
   fprintf(stdout, "slave_read_timeout_retry %d\n", g.slave_read_timeout_retry);
   fprintf(stdout, "slave_reopen_timeout %d\n", g.slave_reopen_timeout_s);
@@ -1001,9 +995,8 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.max_load_ave_sleep_secs, 0, "loadavesleep");
   VALIDATE_PARAM_L(g.max_load_ave_period_secs, 0, "loadaveperiod");
   VALIDATE_PARAM_L(g.max_load_rtx_index, 0, "loadmaxrtx");
-  VALIDATE_PARAM_L(g.feedmode, 0, "feedmode");
-  /* char* g.mastername can be NULL or empty */
-  VALIDATE_STR(g.masterport, "masterport");
+  VALIDATE_PARAM_L(g.feedmode, 1, "feedmode");
+  /* char* g.masterservers can be NULL or empty */
   VALIDATE_PARAM_L(g.slave_read_timeout_s, 0, "slave_read_timeout");
   VALIDATE_PARAM_L(g.slave_read_timeout_retry, 0, "slave_read_timeout_retry");
   VALIDATE_PARAM_L(g.slave_reopen_timeout_s, 0, "slave_reopen_timeout");
