@@ -127,11 +127,8 @@
 #define CONFOPT_HTTPD_ENABLE		@counter@
 #define DEFVAL_HTTPD_ENABLE		NBSP_HTTPD_ENABLE
 
-#define CONFOPT_TCLHTTPD		@counter@
-#define DFEVAL_TCLHTTPPD		NBSP_TCLHTTPD
-
-#define CONFOPT_TCLHTTPD_FIFO		@counter@
-#define DFEVAL_TCLHTTPPDFIFO		NBSP_TCLHTTPD_FIFO
+#define CONFOPT_HTTPD			@counter@
+#define DFEVAL_HTTPPD			NBSP_HTTPD
 
 #define CONFOPT_PIDFILE			@counter@
 #define DEFVAL_PIDFILE			NBSP_PIDFILE
@@ -424,8 +421,7 @@ static struct confoption_st confoptions[] = {
   {"netfilter", CONFOPT_NETFILTER, TCL_LINK_STRING, NULL, 0},
   {"httpd_enable", CONFOPT_HTTPD_ENABLE, TCL_LINK_INT, NULL,
 	DEFVAL_HTTPD_ENABLE},
-  {"tclhttpd", CONFOPT_TCLHTTPD, TCL_LINK_STRING, NULL, 0},
-  {"tclhttpd_fifo", CONFOPT_TCLHTTPD_FIFO, TCL_LINK_STRING, NULL, 0},
+  {"httpd", CONFOPT_HTTPD, TCL_LINK_STRING, NULL, 0},
   {"pidfile", CONFOPT_PIDFILE, TCL_LINK_STRING, NULL, 0},
   {"statusfile", CONFOPT_STATUSFILE, TCL_LINK_STRING, NULL, 0},
   {"missinglogfile", CONFOPT_MISSINGLOGFILE, TCL_LINK_STRING, NULL, 0},
@@ -609,8 +605,7 @@ int configure(void){
   setoptval(&g.netfilter_enable, confoptions, CONFOPT_NETFILTER_ENABLE);
   setoptval(&g.netfilter, confoptions, CONFOPT_NETFILTER);
   setoptval(&g.httpd_enable, confoptions, CONFOPT_HTTPD_ENABLE);
-  setoptval(&g.tclhttpd, confoptions, CONFOPT_TCLHTTPD);
-  setoptval(&g.tclhttpd_fifo, confoptions, CONFOPT_TCLHTTPD_FIFO);
+  setoptval(&g.httpd, confoptions, CONFOPT_HTTPD);
   setoptval(&g.pidfile, confoptions, CONFOPT_PIDFILE);
   setoptval(&g.statusfile, confoptions, CONFOPT_STATUSFILE);
   setoptval(&g.missinglogfile, confoptions, CONFOPT_MISSINGLOGFILE);
@@ -770,8 +765,7 @@ void print_confoptions(void){
   fprintf(stdout, "netfilter_enable %d\n", g.netfilter_enable); 
   fprintf_str(stdout, fmt, "netfilter", g.netfilter);
   fprintf(stdout, "httpd_enable %d\n", g.httpd_enable); 
-  fprintf_str(stdout, fmt, "tclhttpd", g.tclhttpd);
-  fprintf_str(stdout, fmt, "tclhttpd_fifo", g.tclhttpd_fifo);
+  fprintf_str(stdout, fmt, "httpd", g.httpd);
   fprintf_str(stdout, fmt, "pidfile", g.pidfile);
   fprintf_str(stdout, fmt, "statusfile", g.statusfile);
   fprintf_str(stdout, fmt, "missinglogfile", g.missinglogfile);
@@ -922,8 +916,7 @@ int validate_configuration(void){
   VALIDATE_PARAMETER(g.netfilter_enable, 0, 1, "netfilter_enable");
   /* char* netfilter can be NULL or empty */
   VALIDATE_PARAMETER(g.httpd_enable, 0, 1, "httpd_enable");
-  VALIDATE_STR(g.tclhttpd, "tclhttpd");
-  VALIDATE_STR(g.tclhttpd_fifo, "tclhttpd_fifo");
+  VALIDATE_STR(g.httpd, "httpd");
   VALIDATE_STR(g.pidfile, "pidfile");
   VALIDATE_STR(g.statusfile, "statusfile");
   VALIDATE_STR(g.missinglogfile, "missinglogfile");

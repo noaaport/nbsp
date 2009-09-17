@@ -108,8 +108,7 @@ void init_globals(void){
   g.netfilter_enable = NBSP_NETFILTER_ENABLE;
   g.netfilter = NBSP_NETFILTER;
   g.httpd_enable = NBSP_HTTPD_ENABLE;
-  g.tclhttpd = NBSP_TCLHTTPD;
-  g.tclhttpd_fifo = NBSP_TCLHTTPD_FIFO;
+  g.httpd = NBSP_HTTPD;
   g.pidfile = NBSP_PIDFILE;
   g.statusfile = NBSP_STATUSFILE;
   g.missinglogfile = NBSP_MISSINGLOGFILE;
@@ -213,7 +212,7 @@ void init_globals(void){
   g.spooldb = NULL;
   g.cspoolbdb = NULL;
   g.mspoolbdb = NULL;
-  g.httpd = NULL;
+  g.httpdfp = NULL;
   nbspstats_init();
   /* pthread_t server_thread_id */
   /* pthread_t filter_thread_id */

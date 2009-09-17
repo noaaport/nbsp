@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
  *
  * See LICENSE
  *
  * $Id$
  */
-#ifndef HTTPD_H
-#define HTTPD_H
+#ifndef NBSP_HTTPD_H
+#define NBSP_HTTPD_H
 
-int spawn_httpd_server(void);
-void kill_httpd_server(void);
-
+int spawn_httpd_server();
+void kill_httpd_server();
+ 
 #endif

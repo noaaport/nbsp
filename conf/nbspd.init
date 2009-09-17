@@ -11,7 +11,6 @@
 interp create slave;
 slave eval {
     # The defaults according to "defaults.h"
-    set tclhttpdfifo	"/var/run/nbsp/tclhttpd.fifo";
     set statusfile	"/var/noaaport/nbsp/stats/nbspd.status";
     set missinglogfile	"/var/noaaport/nbsp/stats/nbspd.missing";
     set rtxlogfile	"/var/noaaport/nbsp/stats/nbspd.rtx";
@@ -31,7 +30,6 @@ slave eval {
     unset _conf;
 }
 
-set nbspd(tclhttpdfifo)		[slave eval {return $tclhttpdfifo}];
 set nbspd(statusfile)		[slave eval {return $statusfile}];
 set nbspd(missinglogfile)	[slave eval {return $missinglogfile}];
 set nbspd(rtxlogfile)		[slave eval {return $rtxlogfile}];

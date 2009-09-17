@@ -72,8 +72,7 @@ struct nbsp_globals {
   int netfilter_enable;
   char *netfilter;
   int httpd_enable;
-  char *tclhttpd;		/* tclhttpd script */
-  char *tclhttpd_fifo;		/* fifo for nbsp -> httpd communicatiobn */
+  char *httpd;			/* tclhttpd script */
   char *pidfile;
   char *statusfile;		/* statistics summary */
   char *missinglogfile;		/* missed products */
@@ -171,7 +170,7 @@ struct nbsp_globals {
   struct spooldb_st *spooldb;	/* the spool directory bookeeping array */
   struct mspoolbdb_st *cspoolbdb; /* bsd spool cache */
   struct mspoolbdb_st *mspoolbdb; /* in-memory bdb spool */
-  struct tclhttpd_st *httpd;	/* http server */
+  FILE *httpdfp;
   struct nbsp_stats_st nbspstats;
   pthread_t filter_thread_id;
   pthread_t server_thread_id;

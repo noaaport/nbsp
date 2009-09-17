@@ -29,7 +29,7 @@ SOURCES =	main.c access.c appdata.c \
 		slavenbs/framep.c slavenbs/reader.c \
 		slavefp/framep.c slavefp/reader.c \
 		slavein/framep.c slavein/reader.c \
-		tclhttpd.c httpd.c tclevalfile.c \
+		httpd.c tclevalfile.c \
 		pfilter.c \
 		oscompat.c
 
@@ -48,7 +48,7 @@ OBJECTS =	main.o access.o appdata.o \
 		slavenbs/framep.o slavenbs/reader.o \
 		slavefp/framep.o slavefp/reader.o \
 		slavein/framep.o slavein/reader.o \
-		tclhttpd.o httpd.o tclevalfile.o \
+		httpd.o tclevalfile.o \
 		pfilter.o \
 		oscompat.o
 
@@ -67,7 +67,7 @@ HEADERS =	config.h const.h common.h defaults.h globals.h \
 		slavenbs/slavenbs.h \
 		slavefp/slavefp.h \
 		slavein/slavein.h \
-		tclhttpd.h httpd.h tclevalfile.h \
+		httpd.h tclevalfile.h \
 		pfilter.h \
 		oscompat.h
 

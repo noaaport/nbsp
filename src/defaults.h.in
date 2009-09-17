@@ -198,10 +198,9 @@
 #define NBSP_NETFILTER		"%MYLIBEXECDIR%/netfilter"
 #define NETFILTER_ALLOW_DEFAULT 0
 
-/* Whether the httpd server should be enabled, the tclhttpd script and fifo */
+/* Whether the httpd server should be enabled, and the tclhttpd script */
 #define NBSP_HTTPD_ENABLE	1
-#define NBSP_TCLHTTPD		"%MYLIBEXECDIR%/httpd"
-#define NBSP_TCLHTTPD_FIFO	"/var/run/nbsp/tclhttpd.fifo"
+#define NBSP_HTTPD		"%MYLIBEXECDIR%/httpd"
 
 /* pid file */
 #define NBSP_PIDFILE		"/var/run/nbsp/nbspd.pid"

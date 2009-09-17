@@ -1,42 +1,63 @@
 /*
- * Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
  *
  * See LICENSE
  *
  * $Id$
  */
+#include <unistd.h>
+#include <errno.h>
+#include <stdio.h>
 #include "err.h"
 #include "util.h"
 #include "globals.h"
-#include "tclhttpd.h"
-#include "httpd.h"
 
-#define TCLHTTPD_FORK
+static int httpd_open(void);
+static void httpd_close(void);
 
 int spawn_httpd_server(void){
 
-  int status = 0;
-
-#ifdef TCLHTTPD_FORK
-  g.httpd = tclhttpd_open(g.tclhttpd, g.tclhttpd_fifo);
-#else
-  g.httpd = tclhttpd_open(g.tclhttpd);
-#endif
-
-  if(g.httpd == NULL){
-    log_err("Error creating the httpd server.");
-    status = -1;
-  }else
-    log_info("Spawned the http server.");
-
-  return(status);
+  return(httpd_open());
 }
 
 void kill_httpd_server(void){
 
-  if(g.httpd == NULL)
+  httpd_close();
+}
+
+static int httpd_open(void){
+
+  if(valid_str(g.httpd) == 0){
+    log_errx("No httpd defined.");
+    return(1);
+  }
+
+  g.httpdfp = popen(g.httpd, "w");
+  if(g.httpdfp != NULL){
+    if(fprintf(g.httpdfp, "%s\n", "init") < 0){
+      (void)pclose(g.httpdfp);
+      g.httpdfp = NULL;
+    }
+  }
+
+  if(g.httpdfp == NULL){
+    log_err("Could not start httpd server.");
+    return(-1);
+  }else
+    log_info("Started httpd.");
+
+  return(0);
+}
+
+static void httpd_close(void){
+
+  if(g.httpdfp == NULL)
     return;
 
-  tclhttpd_close(g.httpd);
-  g.httpd = NULL;
+  if(pclose(g.httpdfp) == -1)
+    log_err("Error closing httpd server.");
+  else
+    log_info("Stoped httpd.");
+
+  g.httpdfp = NULL;
 }
