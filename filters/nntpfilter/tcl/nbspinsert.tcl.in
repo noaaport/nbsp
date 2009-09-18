@@ -3,17 +3,19 @@
 # $Id$
 #
 #
-# Usage: nbspinsert -d [-f nbspinfifo] finfo < file
-#	 nbspinsert -i [-f nbspinfifo] finfo
+# Usage: nbspinsert -i [-f nbspinfifo] finfo < file
+#	 nbspinsert [-f nbspinfifo] finfo
 #	 nbspinsert [-f nbspinfifo] < file_with_finfolist
-# where 
+# where
 #
 # finfo = seq type cat code npchidx fname fpath
 #
 # In the first form, it will save the data in fpath, and then process the
 # file. In the second form, it assumes that the data is already in fpath.
 # The third form is like the second one, but it takes a list of finfo
-# on stdin (like a filter does).
+# on stdin (like a filter does). In all cases, the fpath should be a
+# "spool file" path, that is, a path to a file in the spool directory with
+# the usual convention used by nbsp.
 #
 # If [-f] is not given to specify the location of the nbspd.infifo file,
 # then the nbsp configuration files are read.
@@ -26,7 +28,7 @@ nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath
 nbspinsert [-f nbspinfifo] < finfolist
 };
 
-set optlist {{i 0} {d 0} {f.arg ""}};
+set optlist {i {f.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
@@ -66,7 +68,7 @@ proc process {finfo nbspinfifo} {
 
     global option;
 
-    if {$option(d) == 1} {
+    if {$option(i) == 1} {
         set status [save_fpath $finfo];
 	if {$status != 0} {
 	    return 1;
@@ -81,7 +83,6 @@ proc save_fpath {finfo} {
     scan $finfo "%u %d %d %d %d %s %s" seq type cat code npchidx fname fpath;
     set fbasename [file tail $fpath];
     set fdirname [file dirname $fpath];
-    set station [string range $fname 0 3];
     set spooldir [file dirname $fdirname];
 
     if {[file isdirectory $spooldir] == 0} {
@@ -94,7 +95,7 @@ proc save_fpath {finfo} {
 	    file mkdir $fdirname;
 	}
 	fconfigure stdin -translation binary -encoding binary;
-	set fout [open $fpath w 0644];
+	set fout [open $fpath w];
 	fconfigure $fout -translation binary -encoding binary;
 	puts -nonewline $fout [read stdin];
     } errmsg];
@@ -112,6 +113,11 @@ proc save_fpath {finfo} {
 }
 
 proc sendtof {finfo nbspinfifo} {
+
+   if {[llength [split $finfo]] != 7} {
+	err "Not enough arguments: $finfo.";
+	return 1;
+   }
 
    set status [catch {
        set FIFO [open $nbspinfifo {WRONLY NONBLOCK}]
@@ -152,19 +158,9 @@ proc process_finfo_list {nbspinfifo} {
 #
 # main
 #
-if {($option(i) == 0) && ($option(d) == 0)} {
-    if {$argc != 0} {
-	err $usage;
-	return 1;
-    }
+if {$argc == 0} {
     set status [process_finfo_list $nbspinfifo];
     return $status;
-}
-
-# This is done if either [i] or [-d], or both, are given.
-if {$argc != 7} {
-    err $usage;
-    return 1;
 }
 
 set finfo [join $argv " "];
