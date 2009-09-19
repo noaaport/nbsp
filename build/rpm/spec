@@ -247,8 +247,7 @@ make clean
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample
 /usr/local/share/doc/nbsp/macosx-launchd.plist-sample
-/usr/local/share/doc/nbsp/grlevel3.cfg-sample
-/usr/local/share/doc/nbsp/MasterStation.csv
+/usr/local/share/doc/nbsp/level3.cfg-sample
 /usr/local/share/doc/nbsp/nbspudpread.pl
 /usr/local/share/doc/nbsp/nbspudpread.tcl
 /usr/local/etc/nbsp/dist/httpd.conf-sample

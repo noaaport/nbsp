@@ -2,10 +2,8 @@
 
 . configure.inc
 
-config_dirs="conf src utils scripts doc filters tclhttpd \
-    examples/emwin \
-    examples/scripts/ondas \
-    examples/metar \
+config_dirs="conf src utils scripts doc filters \
+    tclhttpd \
     tclgrads/ext/nbsp \
     tclmetar/dc/nbsp \
     tclupperair/dc/nbsp"

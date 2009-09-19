@@ -3,7 +3,7 @@
 # I have added some at the end as "local additions".
 # 
 # Process with:
-#              ./cv.pl < emwin_accept.in > emwin_accept
+#               awk -f cv.awk < emwin_accept.in > emwin_accept
 #
 ADM            Administrative Message 
 AFD            Area Forecast Discussion

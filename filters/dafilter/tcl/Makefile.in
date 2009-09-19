@@ -30,8 +30,10 @@ M4TARGET =	dafilter.rc-defaults
 M4MAIN-LITE =	dafilter-lite.m4
 M4TARGET-LITE =	dafilter-lite.rc-defaults
 SAMPLES =	dafilter.conf-sample dafilter.rc-sample
+DOCSAMPLES =	level3.cfg-sample
 TARGET =	${TCLTARGET} ${TCLTARGET-INIT} ${TCLTARGET-MGR} \
-		${TOOLNAMES} ${SAMPLES} ${M4TARGET} ${M4TARGET-LITE} 
+		${TOOLNAMES} ${M4TARGET} ${M4TARGET-LITE} \
+		${SAMPLES} ${DOCSAMPLES}
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 OSNAME =	@OSNAME@
@@ -65,6 +67,9 @@ dafilter.conf-sample: dafilter.conf
 dafilter.rc-sample: dafilter.rc 
 	cp dafilter.rc dafilter.rc-sample
 
+level3.cfg-sample: level3.cfg
+	cp level3.cfg level3.cfg-sample
+
 nbspaloftcsv: nbspaloftcsv.tcl
 	 sed -e /%TCLSH%/s##${TCLSH}# nbspaloftcsv.tcl > nbspaloftcsv
 
@@ -74,6 +79,7 @@ install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET-MGR} ${MYLIBEXECDIR}/${FILTERNAME-MGR}
 	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${M4TARGET-LITE} ${MYCONFDIR}
+	${INSTALL} -m 644 ${DOCSAMPLES} ${MYDOCDIR}
 
 clean:
 	rm -f *~ ${TARGET} ${TCLTMPSED} Makefile

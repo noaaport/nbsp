@@ -64,7 +64,7 @@ rcdir=/usr/local/etc/rc.d
 nexraddir=/var/noaaport/data/digatmos/nexrad
 
 install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
-install -m 0644 $docdir/grlevel3.cfg-sample $nexraddir/grlevel3.cfg
+install -m 0644 $docdir/level3.cfg-sample $nexraddir/grlevel3.cfg
 ln -f -s $nexraddir/grlevel3.cfg $nexraddir/config.cfg
 
 #

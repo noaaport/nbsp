@@ -7,7 +7,7 @@ tcllibs="tclgrads tclmetar tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 
-exclude="build dev-notes examples/filters"
+exclude="build dev-notes examples"
 tmpdir=tmp
 
 # read name and version

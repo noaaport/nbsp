@@ -220,8 +220,7 @@ man/man1/nbspd.1.gz
 share/doc/nbsp/LICENSE
 share/doc/nbsp/nbspd.sh-sample
 share/doc/nbsp/macosx-launchd.plist-sample
-share/doc/nbsp/grlevel3.cfg-sample
-share/doc/nbsp/MasterStation.csv
+share/doc/nbsp/level3.cfg-sample
 share/doc/nbsp/nbspudpread.pl
 share/doc/nbsp/nbspudpread.tcl
 etc/nbsp/dist/httpd.conf-sample

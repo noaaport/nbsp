@@ -13,8 +13,10 @@ all: ${TARGET}
 ${TARGET}: ${SOURCE}
 	cp ${SOURCE} ${TARGET}
 
+#install:
+#	${INSTALL} -m 644 ${TARGET} ${MYDOCDIR}
+
 install:
-	${INSTALL} -m 644 ${TARGET} ${MYDOCDIR}
 
 clean:
 	rm -f *~ Makefile ${TARGET}

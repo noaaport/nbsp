@@ -8,7 +8,7 @@ INSTALL =	@INSTALL@
 TARGET =	emwin_accept-sample
 SOURCE =	emwin_accept.in
 
-SAMPLES =	${TARGET} emwin-nbspd.conf-sample
+SAMPLES =	${TARGET}
 
 all: ${SAMPLES}
 
