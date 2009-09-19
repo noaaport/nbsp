@@ -21,7 +21,6 @@ SHAREDSOURCES = strsplit.c
 SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h const.h io.h config.h ${SHAREDHEADERS}
 TARGET = nbspfile nbspsat nbspunz nbspz nbsppipe nbspgrib nbspgrib2 nbspcat
-OBSOLETE = nbsprad nbspnids nbspradsw
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -72,15 +71,6 @@ nbspgrib2: nbspgrib2.o ${COMMONOBJECTS}
 
 nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 	${CC} -o nbspcat nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS} ${LDFLAGS}
-
-nbsprad: nbsprad.o ${COMMONOBJECTS}
-	${CC} -o nbsprad nbsprad.o ${COMMONOBJECTS} ${LDFLAGS}
-
-nbspradsw: nbspradsw.o ${COMMONOBJECTS}
-	${CC} -o nbspradsw nbspradsw.o ${COMMONOBJECTS} ${LDFLAGS}
-
-nbspnids: nbspnids.o err.o
-	${CC} -o nbspnids nbspnids.o err.o
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}
