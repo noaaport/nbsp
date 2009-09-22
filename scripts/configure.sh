@@ -8,6 +8,7 @@ sed \
     -e "/@INSTALL@/ s||$INSTALL|" \
     -e "/@TCLSH@/ s||$TCLSH|" \
     -e "/@NBSPDSH@/s||$NBSPDSH|" \
+    -e "/@NBSPCLEANUP@/s||$NBSPCLEANUP|" \
     -e "/@HOURLYCONF@/s||$HOURLYCONF|" \
     -e "/@STARTCLEANCONF@/s||$STARTCLEANCONF|" \
     -e "/@STARTSTOPRC@/s||$STARTSTOPRC|" \

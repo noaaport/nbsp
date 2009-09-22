@@ -8,6 +8,7 @@
 #ifndef SLAVET_H
 #define SLAVET_H
 
+#include <time.h>
 #include <sys/stat.h>	/* mode_t */
 #include <pthread.h>
 
@@ -25,10 +26,24 @@
 struct slave_options_st {
   mode_t infifo_mode;
   char *infifo_grp;
+  char *slavestatsfile;
   int slave_read_timeout_s;     /* timeout when slave reads from master */
   int slave_read_timeout_retry;
   int slave_reopen_timeout_s;   /* sleep secs before reopening connection */
   int slave_so_rcvbuf;
+  int slave_stats_logperiod_secs;
+};
+
+struct slave_stats_st {
+  unsigned int connect_errors;
+  time_t ctime;                 /* last connection time */
+  unsigned int errors_ctime;    /* since connection time to reset time */
+  unsigned int packets_ctime;
+  double bytes_ctime;
+  time_t rtime;                 /* time of last reset */
+  unsigned int errors_rtime;    /* errors since reset time */
+  unsigned int packets_rtime;   /* packets received since reset time */
+  double bytes_rtime;
 };
 
 /*
@@ -52,6 +67,7 @@ struct slave_element_st {
   int slave_fd;			/* managed by each slave thread */
   int slavenbs_reader_index;    /* see comment below */
   void *info;                   /* packetinfo memory pool for nbs2 slaves */
+  struct slave_stats_st stats;
 };
 
 /*
@@ -69,5 +85,17 @@ int slave_table_create(struct slave_table_st **slavet,
 		       char *s,
 		       struct slave_options_st *defaults);
 void slave_table_destroy(struct slave_table_st *slavet);
+
+/*
+ * stats functions -
+ */
+void slave_stats_init(struct slave_element_st *slave);
+void slave_stats_connect(struct slave_element_st *slave);
+void slave_stats_reset(struct slave_element_st *slave);
+void slave_stats_update_errors(struct slave_element_st *slave);
+void slave_stats_update_connect_errors(struct slave_element_st *slave);
+void slave_stats_update_packets(struct slave_element_st *slave,
+				size_t packet_size);
+void slave_stats_report(struct slave_element_st *slave);
 
 #endif

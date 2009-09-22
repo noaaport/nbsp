@@ -84,6 +84,7 @@ struct nbsp_globals {
   char *serveractivefile;	/* server active client connections */
   char *serverthreadsfile;	/* server threads stats */
   char *filterserver_statefile;
+  char *slavestatsfile;		/* the slave threads stats logfile */
   mode_t qstatefifo_mode;
   mode_t product_mode;
   mode_t subdir_product_mode;	/* mode of subdirs where produtcs are saved */
@@ -143,6 +144,7 @@ struct nbsp_globals {
   int slave_read_timeout_retry;
   int slave_reopen_timeout_s;	/* sleep secs before reopening connection */
   int slave_so_rcvbuf;
+  int slave_stats_logperiod_secs;
   char *infifo;			/* fifo name for input feed mode */
   mode_t infifo_mode;
   char *infifo_grp;

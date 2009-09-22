@@ -51,9 +51,9 @@ int slavenet_loop_nbs1(struct slave_element_st *slave){
 			   (unsigned int)slave->options.slave_read_timeout_s,
 			   slave->options.slave_read_timeout_retry);
   /*
-   * At present there is only one reader in the slave.
+   * Set this thread's channel into the pctl table.
    */
-  nbs.slavenbs_reader_index = 0;
+  nbs.slavenbs_reader_index = slave->slavenbs_reader_index;
 
   if(status == -1)
     log_err2("Error reading from master", slave->mastername);
@@ -71,16 +71,23 @@ int slavenet_loop_nbs1(struct slave_element_st *slave){
    * If there is an error at this stage, the application should close
    * the connection and try to reopen it. Return 1 in this case.
    */
-  if(status != 0)
+  if(status != 0){
+    slave_stats_update_connect_errors(slave);
     return(1);
+  }
 
   (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
   status = slavenbsproc(&nbs);
   (void)pthread_setcancelstate(cancel_state, &cancel_state);
 
   /* The application should not close the connection in this case. */
-  if(status != 0)
+  if(status != 0){
+    slave_stats_update_errors(slave);
     return(2);
+  }
+
+  slave_stats_update_packets(slave, nbs.packet_size);
+  slave_stats_report(slave);
 
   return(0);
 }

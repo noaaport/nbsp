@@ -163,6 +163,9 @@
 #define CONFOPT_FILTERSERVER_STATEFILE	@counter@
 #define DEFVAL_FILTERSERVER_STATEFILE	NBSP_FILTERSERVER_STATEFILE;
 
+#define CONFOPT_SLAVESTATSFILE		@counter@
+#define DEFVAL_SLAVESTATSFILE		NBSP_SLAVESTATSFILE;
+
 #define CONFOPT_QSTATEFIFOMODE		@counter@
 #define DEFVAL_QSTATEFIFOMODE		NBSP_QSTATEFIFO_MODE
 
@@ -331,6 +334,9 @@
 #define CONFOPT_SLAVE_SO_RCVBUF		@counter@
 #define DEFVAL_SLAVE_SO_RCVBUF		SLAVE_SO_RCVBUF
 
+#define CONFOPT_SLAVE_STATS_LOGPERIOD_SECS	@counter@
+#define DEFVAL_SLAVE_STATS_LOGPERIOD_SECS	SLAVE_STATS_LOGPERIOD_SECS
+
 #define CONFOPT_SLAVE_INFIFO		@counter@
 #define DEFVAL_SLAVE_INFIFO		SLAVE_INPUT_FIFO
 
@@ -434,6 +440,7 @@ static struct confoption_st confoptions[] = {
   {"serverthreadsfile", CONFOPT_SERVERTHREADSFILE, TCL_LINK_STRING, NULL, 0},
   {"filterserver_statefile", CONFOPT_FILTERSERVER_STATEFILE, TCL_LINK_STRING,
 	NULL, 0},
+  {"slavestatsfile", CONFOPT_SLAVESTATSFILE, TCL_LINK_STRING, NULL, 0},
   {"qstatefifomode", CONFOPT_QSTATEFIFOMODE, TCL_LINK_INT, NULL,
 	DEFVAL_QSTATEFIFOMODE},
   {"productmode", CONFOPT_PRODUCTMODE, TCL_LINK_INT, NULL, DEFVAL_PRODUCTMODE},
@@ -530,6 +537,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_SLAVE_REOPEN_TIMEOUT},
   {"slave_so_rcvbuf", CONFOPT_SLAVE_SO_RCVBUF, TCL_LINK_INT, NULL,
 	DEFVAL_SLAVE_SO_RCVBUF},
+  {"slave_stats_logperiod_secs", CONFOPT_SLAVE_STATS_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SLAVE_STATS_LOGPERIOD_SECS},
   {"infeedfifo", CONFOPT_SLAVE_INFIFO, TCL_LINK_STRING, NULL, 0},
   {"infeedfifomode", CONFOPT_SLAVE_INFIFOMODE, TCL_LINK_INT, NULL,
 	DEFVAL_SLAVE_INFIFOMODE},
@@ -618,6 +627,7 @@ int configure(void){
   setoptval(&g.serverthreadsfile, confoptions, CONFOPT_SERVERTHREADSFILE);
   setoptval(&g.filterserver_statefile, confoptions,
 	CONFOPT_FILTERSERVER_STATEFILE);
+  setoptval(&g.slavestatsfile, confoptions, CONFOPT_SLAVESTATSFILE);
   setoptval(&g.qstatefifo_mode, confoptions, CONFOPT_QSTATEFIFOMODE);
   setoptval(&g.product_mode, confoptions, CONFOPT_PRODUCTMODE);
   setoptval(&g.subdir_product_mode, confoptions, CONFOPT_SUBDIRMODE);
@@ -699,6 +709,8 @@ int configure(void){
   setoptval(&g.slave_reopen_timeout_s, confoptions,
 	CONFOPT_SLAVE_REOPEN_TIMEOUT);
   setoptval(&g.slave_so_rcvbuf, confoptions, CONFOPT_SLAVE_SO_RCVBUF);
+  setoptval(&g.slave_stats_logperiod_secs, confoptions,
+	CONFOPT_SLAVE_STATS_LOGPERIOD_SECS);
 
   setoptval(&g.infifo, confoptions, CONFOPT_SLAVE_INFIFO);
   setoptval(&g.infifo_mode, confoptions, CONFOPT_SLAVE_INFIFOMODE);
@@ -777,6 +789,7 @@ void print_confoptions(void){
   fprintf_str(stdout, fmt, "serveractivefile", g.serveractivefile);
   fprintf_str(stdout, fmt, "serverthreadsfile", g.serverthreadsfile);
   fprintf_str(stdout, fmt, "filterserver_statefile", g.filterserver_statefile);
+  fprintf_str(stdout, fmt, "slavestatsfile", g.slavestatsfile);
   fprintf(stdout, "qstatefifo_mode %o\n", g.qstatefifo_mode);
   fprintf(stdout, "productmode %o\n", g.product_mode);
   fprintf(stdout, "subdirmode %o\n", g.subdir_product_mode);
@@ -848,6 +861,8 @@ void print_confoptions(void){
   fprintf(stdout, "slave_read_timeout_retry %d\n", g.slave_read_timeout_retry);
   fprintf(stdout, "slave_reopen_timeout %d\n", g.slave_reopen_timeout_s);
   fprintf(stdout, "slave_so_rcvbuf %d\n", g.slave_so_rcvbuf);
+  fprintf(stdout, "slave_stats_logperiod_secs %d\n",
+	g.slave_stats_logperiod_secs);
 
   fprintf_str(stdout, fmt, "infeedfifo", g.infifo);
   fprintf_str(stdout, fmt, "infeedfifogrp", g.infifo_grp);
@@ -928,6 +943,8 @@ int validate_configuration(void){
   VALIDATE_STR(g.serveractivefile, "serveractivefile");
   VALIDATE_STR(g.serverthreadsfile, "serverthreadsfile");
   VALIDATE_STR(g.filterserver_statefile, "filterserver_statefile");
+  VALIDATE_STR(g.slavestatsfile, "slavestatsfile");
+
   /* mode_t qstatefifo_mode, product_mode, subdir_product_mode type */
   VALIDATE_PARAM_L(g.saveframefmt, 0, "saveframefmt");
 
@@ -978,7 +995,7 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.pctl_maxmem_hard, 0, "pctlmaxmemhard");
   VALIDATE_PARAM_L(g.client_queue_maxsize_soft, 0, "cllientqueuemaxsoft");
   VALIDATE_PARAM_L(g.client_queue_maxsize_hard, 0, "clientqueuemaxhard");
-  VALIDATE_PARAM_L(g.client_queue_dbcache_mb, 0, "clientqueuedbcachemb"); 
+  VALIDATE_PARAM_L(g.client_queue_dbcache_mb, 0, "clientqueuedbcachemb");
   /* char* rtxdb_dbfname can be NULL or empty */
   /* unsigned int rtxdb_slots type and can be zero */
   VALIDATE_PARAM_L(g.rtxdb_truncate_minutes, 1, "rtxdb_truncate_minutes");
@@ -994,6 +1011,9 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.slave_read_timeout_retry, 0, "slave_read_timeout_retry");
   VALIDATE_PARAM_L(g.slave_reopen_timeout_s, 0, "slave_reopen_timeout");
   VALIDATE_PARAM_L(g.slave_so_rcvbuf, -1, "slave_so_rcvbuf");
+  VALIDATE_PARAM_L(g.slave_stats_logperiod_secs, 0,
+	"slave_stats_logperiod_secs");
+
   VALIDATE_STR(g.infifo, "infeedfifo");
   /* mode_t infifo_mode type */
   VALIDATE_STR(g.infifo_grp, "infeedfifogrp");

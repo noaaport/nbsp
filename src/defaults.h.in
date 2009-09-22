@@ -215,6 +215,7 @@
 #define NBSP_SERVERACTIVE_FILE	"/var/noaaport/nbsp/stats/nbspd.active"
 #define NBSP_SERVERTHREADS_FILE	"/var/noaaport/nbsp/stats/nbspd.sthreads"
 #define NBSP_FILTERSERVER_STATEFILE "/var/noaaport/nbsp/stats/nbspd.filter"
+#define NBSP_SLAVESTATSFILE	"/var/noaaport/nbsp/stats/nbspd.slavestats"
 
 /* fifo for queues state info */
 #define NBSP_QSTATEFIFO		"/var/run/nbsp/nbspd.fifo"
@@ -271,15 +272,14 @@
 
 /* 
  * How often to write the server threads statistics (in terms of the
- * number products processes).
+ * number of products processed).
  */
 #define SERVERTHREADS_LOG_FREQ		100
 
 /* 
- * Readers' timeout waiting for broadcasts (in seconds). It is also the
- * the time that the inn slave waits for the start of a packet in the infifo.
+ * Readers' timeout waiting for broadcasts (in seconds). 
  */
-#define BROADCAST_READ_TIMEOUT_SECS	120
+#define BROADCAST_READ_TIMEOUT_SECS	60
 
 /* logger and filter timeout writing to the fifos (filters) */
 #define FIFO_WRITE_TIMEOUT_MSECS	500
@@ -452,6 +452,7 @@
 #define SLAVE_READ_TIMEOUT_RETRY 2
 #define SLAVE_REOPEN_TIMEOUT_SECS 2
 #define SLAVE_SO_RCVBUF		-1
+#define SLAVE_STATS_LOGPERIOD_SECS 60
 
 /*
  * #define DEFAULT_FEEDMODE	(FEEDMODE_NOAAPORT | FEEDMODE_INPUTFIFO)

@@ -120,6 +120,7 @@ void init_globals(void){
   g.serveractivefile = NBSP_SERVERACTIVE_FILE;
   g.serverthreadsfile = NBSP_SERVERTHREADS_FILE;
   g.filterserver_statefile = NBSP_FILTERSERVER_STATEFILE;
+  g.slavestatsfile = NBSP_SLAVESTATSFILE;
   g.qstatefifo_mode = NBSP_QSTATEFIFO_MODE;
   g.product_mode = FILE_PRODUCT_MODE;
   g.subdir_product_mode = SUBDIR_PRODUCT_MODE;
@@ -188,6 +189,7 @@ void init_globals(void){
   g.slave_read_timeout_retry = SLAVE_READ_TIMEOUT_RETRY;
   g.slave_reopen_timeout_s = SLAVE_REOPEN_TIMEOUT_SECS;
   g.slave_so_rcvbuf = SLAVE_SO_RCVBUF;
+  g.slave_stats_logperiod_secs = SLAVE_STATS_LOGPERIOD_SECS;
   g.infifo = SLAVE_INPUT_FIFO;
   g.infifo_mode = SLAVE_INPUT_FIFO_MODE;
   g.infifo_grp = SLAVE_INPUT_FIFO_GRP;

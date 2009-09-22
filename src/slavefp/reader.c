@@ -87,15 +87,23 @@ int slavenet_loop_nbs2(struct slave_element_st *slave){
    * If there is an error at this stage, the application should close
    * the connection and try to reopen it.
    */
-  if(status != 0)
+  if(status != 0){
+    slave_stats_update_connect_errors(slave);
     return(1);
+  }
 
   (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
   status = slavefpproc((struct packet_info_st*)slave->info);
   (void)pthread_setcancelstate(cancel_state, &cancel_state);
 
-  if(status != 0)
+  if(status != 0){
+    slave_stats_update_errors(slave);
     return(2);
+  }
+
+  slave_stats_update_packets(slave,
+	      ((struct packet_info_st*)slave->info)->packet_size);
+  slave_stats_report(slave);
 
   return(status);
 }

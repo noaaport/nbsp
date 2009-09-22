@@ -251,7 +251,7 @@ int init_pctl(void){
 
   if(feedmode_masterservers_enabled()){
     /*
-     * Only the nbs1 (fdata) slave use the pctl. Even if there are no
+     * Only the nbs1 (fdata) slaves use the pctl. Even if there are no
      * nbs1 readers we open it with one (unused) channel anyway;
      * otherwise the queue status reporting
      * functions have to check if there are nbs1 readers to decide what to do.

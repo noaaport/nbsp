@@ -6,6 +6,7 @@
 TCLSH =         @TCLSH@
 INSTALL =	@INSTALL@
 NBSPDSH =	@NBSPDSH@
+NBSPCLEANUP =	@NBSPCLEANUP@
 HOURLYCONF =	@HOURLYCONF@
 STARTCLEANCONF = @STARTCLEANCONF@
 STARTSTOPRC = 	@STARTSTOPRC@
@@ -26,8 +27,8 @@ nbspd.sh-sample: ${NBSPDSH}
 hourly-cleanup.conf-sample: ${HOURLYCONF}
 	cp ${HOURLYCONF} hourly-cleanup.conf-sample
 
-nbspcleanup: nbspcleanup.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspcleanup.tcl > nbspcleanup
+nbspcleanup: ${NBSPCLEANUP}
+	sed -e /%TCLSH%/s##${TCLSH}# ${NBSPCLEANUP} > nbspcleanup
 
 nbspversion: nbspversion.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspversion.tcl > nbspversion

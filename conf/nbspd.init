@@ -18,6 +18,7 @@ slave eval {
     set qdbstatslogfile	"/var/noaaport/nbsp/stats/nbspd.qdbstats";
     set mspoolbdb_dbstats_logfile "/var/noaaport/nbsp/stats/nbspd.mdbstats";
     set serveractivefile "/var/noaaport/nbsp/stats/nbspd.active"    
+    set slavestatsfile "/var/noaaport/nbsp/stats/nbspd.slavestats";
 
     set spooldir	"/var/noaaport/nbsp/spool";
     set infeedfifo	"/var/run/nbsp/infeed.fifo"
@@ -38,6 +39,7 @@ set nbspd(qdbstatslogfile)	[slave eval {return $qdbstatslogfile}];
 set nbspd(mspoolbdb_dbstats_logfile) \
                             [slave eval {return $mspoolbdb_dbstats_logfile}];
 set nbspd(serveractivefile)	[slave eval {return $serveractivefile}];
+set nbspd(slavestatsfile)       [slave eval {return $slavestatsfile}];
 
 set nbspd(spooldir)		[slave eval {return $spooldir}];
 set nbspd(infeedfifo)		[slave eval {return $infeedfifo}];

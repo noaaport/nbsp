@@ -119,7 +119,9 @@ static void *slavenet_main(void *arg){
    * it is a temporary situation and try to reopen the connection in
    * the loop.
    */
-  if(status == 2){
+  if(status == 0)
+    slave_stats_connect(slave);
+  else if(status == 2){
     set_quit_flag();
     return(NULL);
   }
@@ -134,6 +136,8 @@ static void *slavenet_main(void *arg){
     if(slave->slave_fd == -1){
       log_errx("Lost connection to %s. Trying again.", slave->mastername);
       status = slavenet_reopen(slave);
+      if(slave->slave_fd != -1)
+	slave_stats_connect(slave);
     }
 
     if(slave->slave_fd != -1){

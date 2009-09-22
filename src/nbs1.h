@@ -65,7 +65,8 @@ struct nbs1_packet_st {
    * These variables are not used for transmission - they are used
    * by the receiving (slave) functions.
    * nbs->block points to the block data, past the envelope and header.
-   * At present there is only one reader in the slave. 
+   * slavenbs_reader_index is set to the slave threads reader index into
+   * the pctl.
    */
   char *block;
   int slavenbs_reader_index;

@@ -22,7 +22,7 @@
 #include "framep.h"
 
 /*
- * private thread info (stoted in the info field of the slave_element_st)
+ * private thread info (stored in the info field of the slave_element_st)
  */
 struct slavein_info_st {
   struct packet_info_st *packetinfo;
@@ -154,16 +154,24 @@ int slavein_loop(struct slave_element_st *slave){
   if(status != 0){
     if(status == -2)
       return(0);
-    else
+    else{
+      slave_stats_update_connect_errors(slave);
       return(1);
+    }
   }
 
   (void)pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
   status = slaveinproc(((struct slavein_info_st*)slave->info)->packetinfo);
   (void)pthread_setcancelstate(cancel_state, &cancel_state);
 
-  if(status != 0)
+  if(status != 0){
+    slave_stats_update_errors(slave);
     return(2);
+  }
+
+  slave_stats_update_packets(slave,
+	(((struct slavein_info_st*)slave->info)->packetinfo)->packet_size);
+  slave_stats_report(slave);
   
   return(status);
 }

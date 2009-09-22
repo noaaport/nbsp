@@ -9,6 +9,8 @@
 #include <err.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <inttypes.h>	/* PRIuMAX */
 #include "err.h"
 #include "strsplit.h"
 #include "defaults.h"	/* NPCAST_NUM_CHANNELS */
@@ -39,12 +41,15 @@ static void slave_table_free(struct slave_table_st *slavet);
  */
 static void slave_element_init(struct slave_element_st *slave){
 
-  /* Initialize the dynamic variables */
+  /*
+   * Initialize the dynamic variables
+   */
   slave->f_slave_thread_created = 0;
   /* slave->slave_thread_id */
   slave->slave_fd = -1;
   slave->slavenbs_reader_index = -1;
   slave->info = NULL;
+  slave_stats_init(slave);
 }
 
 static int slave_element_configure(struct slave_element_st *slave,
@@ -183,14 +188,24 @@ static int slave_element_configure_options(struct slave_element_st *slave,
   if(slave->options.infifo_grp == NULL)
     return(-1);
 
+  slave->options.slavestatsfile = malloc(strlen(options->slavestatsfile) + 1);
+  if(slave->options.slavestatsfile == NULL){
+    free(slave->options.infifo_grp);
+    return(-1);
+  }
+
   slave->options.infifo_mode = options->infifo_mode;
   strncpy(slave->options.infifo_grp, options->infifo_grp,
 	  strlen(options->infifo_grp) + 1);
+  strncpy(slave->options.slavestatsfile, options->slavestatsfile,
+	  strlen(options->slavestatsfile) + 1);
   slave->options.slave_read_timeout_s = options->slave_read_timeout_s;
   slave->options.slave_read_timeout_retry = 
     options->slave_read_timeout_retry;
   slave->options.slave_reopen_timeout_s = options->slave_reopen_timeout_s;
   slave->options.slave_so_rcvbuf = options->slave_so_rcvbuf;
+  slave->options.slave_stats_logperiod_secs =
+    options->slave_stats_logperiod_secs;
 
   return(0);
 }
@@ -200,6 +215,11 @@ static void slave_element_release_options(struct slave_element_st *slave){
   if(slave->options.infifo_grp != NULL){
     free(slave->options.infifo_grp);
     slave->options.infifo_grp = NULL;
+  }
+
+  if(slave->options.slavestatsfile != NULL){
+    free(slave->options.slavestatsfile);
+    slave->options.slavestatsfile = NULL;
   }
 }
 
@@ -319,4 +339,101 @@ void slave_table_destroy(struct slave_table_st *slavet){
     slave_element_release(&slavet->slave[i]);
 
   slave_table_free(slavet);
+}
+
+/*
+ * slave->stats functions
+ */
+void slave_stats_init(struct slave_element_st *slave){
+
+  slave->stats.connect_errors = 0;
+  slave->stats.ctime = 0;
+  slave->stats.errors_ctime = 0;
+  slave->stats.packets_ctime = 0;
+  slave->stats.bytes_ctime = 0.0;
+  slave->stats.rtime = 0;
+  slave->stats.errors_rtime = 0;
+  slave->stats.packets_rtime = 0;
+  slave->stats.bytes_rtime = 0.0;
+}
+
+void slave_stats_connect(struct slave_element_st *slave){
+
+  slave->stats.ctime = time(NULL);
+  slave->stats.errors_ctime = 0;
+  slave->stats.packets_ctime = 0;
+  slave->stats.bytes_ctime = 0.0;
+}
+
+void slave_stats_reset(struct slave_element_st *slave){
+
+  slave->stats.rtime = time(NULL);
+  slave->stats.errors_rtime = 0;
+  slave->stats.packets_rtime = 0;
+  slave->stats.bytes_rtime = 0.0;
+}
+
+void slave_stats_update_packets(struct slave_element_st *slave,
+				size_t packet_size){
+
+  ++slave->stats.packets_rtime;
+  slave->stats.bytes_rtime += (double)packet_size;
+
+  ++slave->stats.packets_ctime;
+  slave->stats.bytes_ctime += (double)packet_size;
+}
+
+void slave_stats_update_errors(struct slave_element_st *slave){
+
+  ++slave->stats.errors_rtime;
+  ++slave->stats.errors_ctime;
+}
+
+void slave_stats_update_connect_errors(struct slave_element_st *slave){
+
+  ++slave->stats.connect_errors;
+}
+
+void slave_stats_report(struct slave_element_st *slave){
+  /*
+   * This is a utility function for the slave threads.
+   * If the threads use the same file for logging, they must synchronize
+   * the access, or leave it to fopen().
+   * This function is called by slave_stats_update_packets().
+   */
+  time_t now;
+  FILE *f;
+
+  now = time(NULL);
+  if(now < slave->stats.rtime + 
+     (time_t)slave->options.slave_stats_logperiod_secs){
+    return;
+  }
+
+  if(slave->options.slavestatsfile == NULL)
+    return;
+
+  f = fopen(slave->options.slavestatsfile, "a");
+  if(f == NULL){
+    log_err_open(slave->options.slavestatsfile);
+    return;
+  }
+
+  /*  now = time(NULL); */
+  fprintf(f, "%s %s" " %" PRIuMAX " %u" " %" PRIuMAX " %u %u %.1g"
+	  " %" PRIuMAX " %u %u %.1g\n",
+	  slave->mastername, slave->masterport,
+	  (uintmax_t)now,
+	  slave->stats.connect_errors,
+	  (uintmax_t)slave->stats.ctime,
+	  slave->stats.errors_ctime,
+	  slave->stats.packets_ctime,
+	  slave->stats.bytes_ctime,
+	  (uintmax_t)slave->stats.rtime,
+	  slave->stats.errors_rtime,
+	  slave->stats.packets_rtime,
+	  slave->stats.bytes_rtime);
+
+  fclose(f);
+  slave_stats_reset(slave);
 }
