@@ -72,7 +72,7 @@ int slavenet_loop_nbs2(struct slave_element_st *slave){
 
   status = recv_fp_packet(slave->slave_fd,
 			  (struct packet_info_st*)slave->info,
-			  (unsigned int)slave->options.slave_read_timeout_s,
+			  (unsigned int)slave->options.slave_read_timeout_secs,
 			  slave->options.slave_read_timeout_retry);
 
   if(status == -1){

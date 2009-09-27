@@ -240,7 +240,7 @@ static int slavenet_open(struct slave_element_st *slave){
 
   /* Wait at most the same amount allowed to read from the master */
   n = writen(slave->slave_fd, nbs_str, strlen(nbs_str),
-	     (unsigned int)slave->options.slave_read_timeout_s, 0);
+	     (unsigned int)slave->options.slave_read_timeout_secs, 0);
   if(n == -1){
     status = -1;
     log_err2("Cannot communicate with", slave->mastername);
@@ -296,7 +296,7 @@ static int slavenet_reopen(struct slave_element_st *slave){
     status = slavenet_open(slave);
 
   if(status != 0)
-    sleep((unsigned int)slave->options.slave_reopen_timeout_s);
+    sleep((unsigned int)slave->options.slave_reopen_timeout_secs);
 
   return(status);
 }

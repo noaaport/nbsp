@@ -74,12 +74,16 @@ static int estart_activepce(struct nbs1_packet_st *nbs){
 	     nbs->seq_number, nbs->slavenbs_reader_index);
     
     update_stats_products_missed();
+    if(esend_pctl_activepce(g.pctl, nbs->slavenbs_reader_index) != 0){
+      log_errx("Could not add %u to processor queue.", nbs->seq_number);
+    }
     close_pctl_activepce(g.pctl, nbs->slavenbs_reader_index);
     pce = open_pctl_activepce(g.pctl, nbs->slavenbs_reader_index);
   }
 
   assert(pce != NULL);
 
+  pce->f_complete = 0;
   pce->num_fragments = nbs->num_blocks;
   pce->recv_fragments = 0;   /* this is updated by update_control_element */
   pce->seq_number = nbs->seq_number;

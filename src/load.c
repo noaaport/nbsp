@@ -21,8 +21,8 @@ void verify_load_ave_condition(void){
   int n;
   int current_load_avg;
 
-  g.f_max_load_ave = 0;
-  g.f_max_load_rtx = 0;
+  g.f_loadave_max = 0;
+  g.f_loadave_max_rtx = 0;
 
   n = getloadavg(loadavg, 3);
   if(n == -1){
@@ -31,14 +31,14 @@ void verify_load_ave_condition(void){
   }
   current_load_avg = (int)loadavg[0];
 
-  if((g.max_load_ave_soft > 0) && (current_load_avg >= g.max_load_ave_soft))
-    g.f_max_load_ave = 1;
+  if((g.loadave_max_soft > 0) && (current_load_avg >= g.loadave_max_soft))
+    g.f_loadave_max = 1;
 
-  if((g.max_load_ave_hard > 0) && (current_load_avg >= g.max_load_ave_hard))
-    g.f_max_load_ave = 2;
+  if((g.loadave_max_hard > 0) && (current_load_avg >= g.loadave_max_hard))
+    g.f_loadave_max = 2;
 
-  if((g.f_max_load_ave > 0) && (g.max_load_rtx_index > 0) &&
-     (nbspstats_get_rtx_index() >= (unsigned int)g.max_load_rtx_index)){
-    g.f_max_load_rtx = 1;
+  if((g.f_loadave_max > 0) && (g.loadave_max_rtx_index > 0) &&
+     (nbspstats_get_rtx_index() >= (unsigned int)g.loadave_max_rtx_index)){
+    g.f_loadave_max_rtx = 1;
   }
 }

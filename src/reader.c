@@ -58,7 +58,7 @@ void kill_reader_threads(void){
    * This "joins" the reader threads. Normally they quit
    * in their loop when they check the quit flag. But if a reader
    * is waiting on a channel without data, it can wait for the
-   * g.brodcast_read_timeout_s timeout and that may be too long.
+   * g.brodcast_read_timeout_secs timeout and that may be too long.
    * Therefore we "cancel" them. It is possible that some of them
    * have already quit by the time we send them the cancelation request,
    * and in that case pthread_cancel returns ESRCH. To avoid that they
@@ -156,7 +156,7 @@ static int loop_channel(int channel_index){
   n = recvfrom_channel_nowait(channel_index, sbnf->rawdata, SBN_FRAME_SIZE);
   if(n <= 0)
     n = recvfrom_channel_timed(channel_index, sbnf->rawdata, SBN_FRAME_SIZE,
-			       g.broadcast_read_timeout_s);
+			       g.broadcast_read_timeout_secs);
 
   if(n == -1){
     log_err2u("Error reading from noaaport channel", 
@@ -179,9 +179,9 @@ static int loop_channel(int channel_index){
 
 static void load_ave_cond_sleep(int channel_index){
 
-  if(g.f_max_load_ave == 2){
+  if(g.f_loadave_max == 2){
     log_warnx("High load condition. Sleeping reader %d.", channel_index);
-    sleep(g.max_load_ave_sleep_secs);
+    sleep(g.loadave_max_sleep_secs);
     log_warnx("Waking up reader %d.", channel_index);
   }
 }

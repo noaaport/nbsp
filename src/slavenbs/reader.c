@@ -48,8 +48,8 @@ int slavenet_loop_nbs1(struct slave_element_st *slave){
   pthread_testcancel();
 
   status = recv_nbs_packet(slave->slave_fd, &nbs,
-			   (unsigned int)slave->options.slave_read_timeout_s,
-			   slave->options.slave_read_timeout_retry);
+		(unsigned int)slave->options.slave_read_timeout_secs,
+		slave->options.slave_read_timeout_retry);
   /*
    * Set this thread's channel into the pctl table.
    */

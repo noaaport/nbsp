@@ -46,6 +46,12 @@ static int emwin_retransmit_packet(struct conn_element_st *ce,
 static int nbs_retransmit_packet(struct conn_element_st *ce,
 				 struct nbs1_packet_st *nbs);
 
+static int send_client(struct conn_element_st *ce,
+		       void *data, uint32_t data_size);
+static int send_client1(struct conn_element_st *ce,
+			void *data, uint32_t data_size);
+static int wait_client_reconnection(struct conn_element_st *ce);
+
 int client_thread_create(struct conn_element_st *ce, pthread_t *t_id){
   /*
    * This function is what is passed to conn_element_init4().
@@ -166,7 +172,6 @@ static void loop(struct conn_element_st *ce){
   int timeout_ms = g.sthreads_queue_read_timeout_ms;
   void *data = NULL;
   uint32_t data_size;
-  int protocol;
 
   /*
    * The nbs1 and nbs2 threads receive the packetinfo->packet while
@@ -182,25 +187,12 @@ static void loop(struct conn_element_st *ce){
   if(status != 0)
     return;
 
-  /*
-   * Find out what type of client this thread is serving and dispatch
-   * accordingly.
-   */
-  protocol = get_client_protocol_byce(ce);
-  if(protocol == PROTOCOL_NBS1)
-    status = send_nbs1_client(ce, data, data_size);
-  else if(protocol == PROTOCOL_NBS2)
-    status = send_nbs2_client(ce, data, data_size);
-  else if(protocol == PROTOCOL_EMWIN)
-    status = send_emwin_client(ce, (struct emwin_queue_info_st*)data,
-			       data_size);
-  else {
-    log_errx("Server client thread running with unknown client protocol.");
-    return;
-  }
+  status = send_client(ce, data, data_size);
 
-  if(status != 0)
+  if(status != 0){
     conn_stats_update_errors(&ce->cs);
+    conn_element_set_exit_flag(ce);
+  }
 }
 
 static void cleanup(void *arg){
@@ -242,7 +234,8 @@ static void cleanup(void *arg){
 
 static void periodic(struct conn_element_st *ce){
   /*
-   * When the number of products given in the variable g.serverthreads_logfreq
+   * When the number of products given in the variable
+   *	g.serverthreads_logperiod_count
    * have been processed, this function will write the stats summary since
    * the last time that it was called.
    *
@@ -263,7 +256,7 @@ static void periodic(struct conn_element_st *ce){
     return;
   }
 
-  status = conn_element_report_cstats(ce, g.serverthreads_logfreq,
+  status = conn_element_report_cstats(ce, g.serverthreads_logperiod_count,
 				      g.serverthreadsfile);
   if(status != 0)
     log_err_write(g.serverthreadsfile);
@@ -328,11 +321,15 @@ static int emwin_retransmit_packet(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * We will exit the thread to force the client
-     * to reopen the connection since there is no other way to
-     * resynchronize the server and client.
+     * Set the connection_status flag to force the main thread to
+     * close the connection and the client to reopen it since there
+     * is no other way to resynchronize the server and client. If
+     * there is an error (mutex) trying to traise the flag, then
+     * we try to exit the client thread entirely.
      */
-    conn_element_set_exit_flag(ce);
+    conn_element_set_fd(ce, -1);
+    if(conn_element_set_connection_status(ce, -1) != 0)
+      conn_element_set_exit_flag(ce);
   } else 
     conn_stats_update_packets(&ce->cs, ep->packet_size);
 
@@ -437,11 +434,15 @@ static int nbs_retransmit_packet(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * We will exit the thread to force the client
-     * to reopen the connection since there is no other way to
-     * resynchronize the server and client.
+     * Set the connection_status flag to force the main thread to
+     * close the connection and the client to reopen it since there
+     * is no other way to resynchronize the server and client. If
+     * there is an error (mutex) trying to traise the flag, then
+     * we try to exit the client thread entirely.
      */
-    conn_element_set_exit_flag(ce);
+    conn_element_set_fd(ce, -1);
+    if(conn_element_set_connection_status(ce, -1) != 0)
+      conn_element_set_exit_flag(ce);
   } else
     conn_stats_update_packets(&ce->cs, nbs->packet_size);
 
@@ -482,16 +483,117 @@ static int send_nbs2_client(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * We will exit the thread to force the client
-     * to reopen the connection since there is no other way to
-     * resynchronize the server and client.
+     * Set the connection_status flag to force the main thread to
+     * close the connection and the client to reopen it since there
+     * is no other way to resynchronize the server and client. If
+     * there is an error (mutex) trying to traise the flag, then
+     * we try to exit the client thread entirely.
      */
-    conn_element_set_exit_flag(ce);
+    conn_element_set_fd(ce, -1);
+    if(conn_element_set_connection_status(ce, -1) != 0)
+      conn_element_set_exit_flag(ce);
   } else
     conn_stats_update_packets(&ce->cs, (size_t)packet_size);
 
   if((status == 0) && (g.f_debug != 0))
     log_msg(LOG_DEBUG, "Transmit OK to client %s", nameorip);  
+
+  return(status);
+}
+
+/*
+ * These are the functions to support the persistence of the client's
+ * thread state when the connection_status flag is raised and a reconnection
+ * is being waited for.
+ */
+static int wait_client_reconnection(struct conn_element_st *ce){
+  /*
+   * This function should be called if ce->fd is -1. The function sleeps
+   * for ce->reconnect_wait_sleep_secs, and checks if the connection
+   * was reopened. It returns the value of the flag:
+   *
+   * 0 => connection is not closed (reopened)
+   * 1 => connection is closed
+   * -1 => error from conn_element_get_closed_connection_flag() (mutex error)
+   */
+  int connection_status;
+  int fd;
+  char *nameorip;
+
+  sleep(ce->reconnect_wait_sleep_secs);
+  connection_status = conn_element_get_connection_status(ce, &fd);
+  if(connection_status == 0){
+    ce->fd = fd;
+    nameorip = conn_element_get_nameorip(ce);
+    log_info("Reconnected client %s.", nameorip); 
+  }
+
+  return(connection_status);
+}
+
+static int send_client1(struct conn_element_st *ce,
+			void *data, uint32_t data_size){
+  int protocol;
+  int status = 0;
+
+  /*
+   * Find out what type of client this thread is serving and dispatch
+   * accordingly.
+   */
+  protocol = get_client_protocol_byce(ce);
+
+  if(protocol == PROTOCOL_NBS1)
+    status = send_nbs1_client(ce, data, data_size);
+  else if(protocol == PROTOCOL_NBS2)
+    status = send_nbs2_client(ce, data, data_size);
+  else if(protocol == PROTOCOL_EMWIN)
+    status = send_emwin_client(ce, (struct emwin_queue_info_st*)data,
+			       data_size);
+  else {
+    log_errx("Server client thread running with unknown client protocol.");
+    return(1);
+  }
+
+  if(status != 0)
+    conn_stats_update_errors(&ce->cs);
+
+  return(status);
+}
+
+static int send_client(struct conn_element_st *ce,
+			void *data, uint32_t data_size){
+
+  int status = 0;
+  int fd;
+  int count = 0;
+
+  do {
+    fd = conn_element_get_fd(ce);
+    if(fd != -1)
+      status = send_client1(ce, data, data_size);
+
+    if(fd != -1)
+      return(status);
+
+    /* fd == -1 */
+    status = wait_client_reconnection(ce);
+
+    if(status != 0)
+      ++count;
+
+  } while((count <= ce->reconnect_wait_sleep_retry) &&
+	  (get_quit_flag() == 0) &&
+	  (conn_element_get_exit_flag(ce) == 0));
+
+  /*
+   * If we are here then the connection had to be closed by one of the
+   * send_xxx_client(), and the client has not reconnected within
+   * the time limit set by the reconnect_wait_sleep_secs and
+   * reconnect_wait_sleep_retry options.
+   *
+   * The caller should set the finished flag so that the thread exits
+   * and the main thread deletes this entry.
+   */
 
   return(status);
 }

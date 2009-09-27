@@ -94,8 +94,9 @@
 #define CONFOPT_MSPOOLBDB_DBSTATS_LOGFILE @counter@
 #define DEFVAL_MSPOOLBDB_DBSTATS_LOGFILE MSPOOLBDB_DBSTATS_LOGFILE
 
-#define CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD @counter@
-#define DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD MSPOOLBDB_DBSTATS_LOGPERIOD_SECS
+#define CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS @counter@
+#define DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS \
+	MSPOOLBDB_DBSTATS_LOGPERIOD_SECS
 
 #define CONFOPT_DEVDIR			@counter@
 #define DEFVAL_DEVDIR			NBSP_FILTER_DEVDIR
@@ -112,8 +113,9 @@
 #define CONFOPT_EMWINFILTER_FIFO	@counter@
 #define DEFVAL_EMWINFILTER_FIFO		NBSP_EMWINFILTER_FIFO
 
-#define CONFOPT_EMWINFILTER_READ_SECS	@counter@
-#define DEFVAL_EMWINFILTER_READ_SECS	NBSP_EMWINFILTER_READ_SECS
+#define CONFOPT_EMWINFILTER_READ_TIMEOUT_SECS	@counter@
+#define DEFVAL_EMWINFILTER_READ_TIMEOUT_SECS	\
+	NBSP_EMWINFILTER_READ_TIMEOUT_SECS
 
 #define CONFOPT_EMWINFILTER_ALWAYS	@counter@
 #define DEFVAL_EMWINFILTER_ALWAYS	EMWINFILTER_ALWAYS
@@ -178,17 +180,17 @@
 #define CONFOPT_SAVEFRAMEFMT		@counter@
 #define DEFVAL_SAVEFRAMEFMT		SAVE_FRAME_FMT
 
-#define CONFOPT_STATSPERIOD		@counter@
-#define DEFVAL_STATSPERIOD		NBSP_STATS_LOG_PERIOD
+#define CONFOPT_STATS_LOGPERIOD_SECS	@counter@
+#define DEFVAL_STATS_LOGPERIOD_SECS	NBSP_STATS_LOGPERIOD_SECS
 
-#define CONFOPT_QSTATELOGPERIOD		@counter@
-#define DEFVAL_QSTATELOGPERIOD		QSTATE_LOG_PERIOD
+#define CONFOPT_QSTATE_LOGPERIOD_SECS	@counter@
+#define DEFVAL_QSTATE_LOGPERIOD_SECS	QSTATE_LOGPERIOD_SECS
 
-#define CONFOPT_SERVERSTATELOGPERIOD	@counter@
-#define DEFVAL_SERVERSTATELOGPERIOD	SERVERSTATE_LOG_PERIOD
+#define CONFOPT_SERVERSTATE_LOGPERIOD_SECS	@counter@
+#define DEFVAL_SERVERSTATE_LOGPERIOD_SECS	SERVERSTATE_LOGPERIOD_SECS
 
-#define CONFOPT_SERVERTHREADSLOGFREQ	@counter@
-#define DEFVAL_SERVERTHREADSLOGFREQ	SERVERTHREADS_LOG_FREQ
+#define CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT	@counter@
+#define DEFVAL_SERVERTHREADS_LOGPERIOD_COUNT	SERVERTHREADS_LOGPERIOD_COUNT
 
 #define CONFOPT_SERVERTYPE		@counter@
 #define DEFVAL_SERVERTYPE		SERVER_TYPE
@@ -205,32 +207,40 @@
 #define CONFOPT_SERVER_SO_SNDBUF	@counter@
 #define DEFVAL_SERVER_SO_SNDBUF		SERVER_SO_SNDBUF
 
-#define CONFOPT_SERVER_CLIENTID_TIMEOUT	@counter@
-#define DEFVAL_SERVER_CLIENTID_TIMEOUT	SERVER_CLIENTID_TIMEOUT_SECS
+#define CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS	@counter@
+#define DEFVAL_SERVER_CLIENTID_TIMEOUT_SECS	SERVER_CLIENTID_TIMEOUT_SECS
 
-#define CONFOPT_BROADCAST_READ_TIMEOUT	@counter@
-#define DEFVAL_BROADCAST_READ_TIMEOUT   BROADCAST_READ_TIMEOUT_SECS
+#define CONFOPT_BROADCAST_READ_TIMEOUT_SECS	@counter@
+#define DEFVAL_BROADCAST_READ_TIMEOUT_SECS   BROADCAST_READ_TIMEOUT_SECS
 
-#define CONFOPT_FIFO_WRITE_TIMEOUT	@counter@
-#define DEFVAL_FIFO_WRITE_TIMEOUT	FIFO_WRITE_TIMEOUT_MSECS
+#define CONFOPT_FIFO_WRITE_TIMEOUT_MS	@counter@
+#define DEFVAL_FIFO_WRITE_TIMEOUT_MS	FIFO_WRITE_TIMEOUT_MS
 
-#define CONFOPT_CLIENT_WRITE_TIMEOUT	@counter@
-#define DEFVAL_CLIENT_WRITE_TIMEOUT	CLIENT_WRITE_TIMEOUT_MSECS
+#define CONFOPT_CLIENT_WRITE_TIMEOUT_MS	@counter@
+#define DEFVAL_CLIENT_WRITE_TIMEOUT_MS	CLIENT_WRITE_TIMEOUT_MS
 
-#define CONFOPT_CLIENT_WRITE_TIMEOUT_RETRY @counter@
-#define DEFVAL_CLIENT_WRITE_TIMEOUT_RETRY CLIENT_WRITE_TIMEOUT_RETRY
+#define CONFOPT_CLIENT_WRITE_TIMEOUT_RETRY	@counter@
+#define DEFVAL_CLIENT_WRITE_TIMEOUT_RETRY	CLIENT_WRITE_TIMEOUT_RETRY
+
+#define CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_SECS	@counter@
+#define DEFVAL_CLIENT_RECONNECT_WAIT_SLEEP_SECS	\
+	CLIENT_RECONNECT_WAIT_SLEEP_SECS
+
+#define CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_RETRY	@counter@
+#define DEFVAL_CLIENT_RECONNECT_WAIT_SLEEP_RETRY \
+	CLIENT_RECONNECT_WAIT_SLEEP_RETRY
 
 #define CONFOPT_CLIENT_OPTIONS		@counter@
 #define DEFVAL_CLIENT_OPTIONS		NULL
 
-#define CONFOPT_SERVERS_QUEUE_READ_TIMEOUT @counter@
-#define DEFVAL_SERVERS_QUEUE_READ_TIMEOUT SERVERS_QUEUE_READ_TIMEOUT_MSECS
+#define CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS @counter@
+#define DEFVAL_SERVERS_QUEUE_READ_TIMEOUT_MS SERVERS_QUEUE_READ_TIMEOUT_MS
 
-#define CONFOPT_STHREADS_QUEUE_READ_TIMEOUT	@counter@
-#define DEFVAL_STHREADS_QUEUE_READ_TIMEOUT STHREADS_QUEUE_READ_TIMEOUT_MSECS
+#define CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS	@counter@
+#define DEFVAL_STHREADS_QUEUE_READ_TIMEOUT_MS STHREADS_QUEUE_READ_TIMEOUT_MS
 
-#define CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT @counter@
-#define DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT PROCESSOR_PCTL_READ_TIMEOUT_MSECS
+#define CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS @counter@
+#define DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT_MS PROCESSOR_PCTL_READ_TIMEOUT_MS
 
 #define CONFOPT_MEMFILE_BLOCKSIZE	@counter@
 #define DEFVAL_MEMFILE_BLOCKSIZE	MEMFILE_BLOCKSIZE
@@ -265,8 +275,8 @@
 #define CONFOPT_QUEUE_MAXSIZE_HARD	@counter@
 #define DEFVAL_QUEUE_MAXSIZE_HARD	QUEUE_MAXSIZE_HARD
 
-#define CONFOPT_QUEUE_REPQUOTA_PERIOD	@counter@
-#define DEFVAL_QUEUE_REPQUOTA_PERIOD	QUEUE_REPQUOTA_PERIOD_SECS
+#define CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS	@counter@
+#define DEFVAL_QUEUE_QUOTA_LOGPERIOD_SECS	QUEUE_QUOTA_LOGPERIOD_SECS
 
 #define CONFOPT_PCTLMAXSIZE_SOFT	@counter@
 #define DEFVAL_PCTLMAXSIZE_SOFT		PCTL_MAXSIZE_SOFT
@@ -301,20 +311,20 @@
 #define CONFOPT_NBSP_RTXDB_DEFAULT_PROCESS	@counter@
 #define DEFVAL_NBSP_RTXDB_DEFAULT_PROCESS	NBSP_RTXDB_DEFAULT_PROCESS
 
-#define CONFOPT_MAX_LOAD_AVE_HARD	@counter@
-#define DEFVAL_MAX_LOAD_AVE_HARD	MAX_LOAD_AVE_HARD
+#define CONFOPT_LOADAVE_MAX_HARD	@counter@
+#define DEFVAL_LOADAVE_MAX_HARD		LOADAVE_MAX_HARD
 
-#define CONFOPT_MAX_LOAD_AVE_SOFT	@counter@
-#define DEFVAL_MAX_LOAD_AVE_SOFT	MAX_LOAD_AVE_SOFT
+#define CONFOPT_LOADAVE_MAX_SOFT	@counter@
+#define DEFVAL_LOADAVE_MAX_SOFT		LOADAVE_MAX_SOFT
 
-#define CONFOPT_MAX_LOAD_AVE_SLEEP_SECS	@counter@
-#define DEFVAL_MAX_LOAD_AVE_SLEEP_SECS	MAX_LOAD_AVE_SLEEP_SECS
+#define CONFOPT_LOADAVE_MAX_SLEEP_SECS	@counter@
+#define DEFVAL_LOADAVE_MAX_SLEEP_SECS	LOADAVE_MAX_SLEEP_SECS
 
-#define CONFOPT_MAX_LOAD_AVE_PERIOD_SECS @counter@
-#define DEFVAL_MAX_LOAD_AVE_PERIOD_SECS	MAX_LOAD_AVE_PERIOD_SECS
+#define CONFOPT_LOADAVE_CHECKPERIOD_SECS @counter@
+#define DEFVAL_LOADAVE_CHECKPERIOD_SECS	LOADAVE_CHECKPERIOD_SECS
 
-#define CONFOPT_MAX_LOAD_RTX_INDEX	@counter@
-#define DEFVAL_MAX_LOAD_RTX_INDEX	MAX_LOAD_RTX_INDEX
+#define CONFOPT_LOADAVE_MAX_RTX_INDEX	@counter@
+#define DEFVAL_LOADAVE_MAX_RTX_INDEX	LOADAVE_MAX_RTX_INDEX
 
 #define CONFOPT_FEEDMODE		@counter@
 #define DEFVAL_FEEDMODE			DEFAULT_FEEDMODE
@@ -322,14 +332,14 @@
 #define CONFOPT_SLAVE_MASTERSERVERS	@counter@
 #define DEFVAL_SLAVE_MASTERSERVERS	SLAVE_MASTERSERVERS
 
-#define CONFOPT_SLAVE_READ_TIMEOUT	@counter@
-#define DEFVAL_SLAVE_READ_TIMEOUT	SLAVE_READ_TIMEOUT_SECS
+#define CONFOPT_SLAVE_READ_TIMEOUT_SECS	@counter@
+#define DEFVAL_SLAVE_READ_TIMEOUT_SECS	SLAVE_READ_TIMEOUT_SECS
 
 #define CONFOPT_SLAVE_READ_TIMEOUT_RETRY @counter@
 #define DEFVAL_SLAVE_READ_TIMEOUT_RETRY	SLAVE_READ_TIMEOUT_RETRY
 
-#define CONFOPT_SLAVE_REOPEN_TIMEOUT	@counter@
-#define DEFVAL_SLAVE_REOPEN_TIMEOUT	SLAVE_REOPEN_TIMEOUT_SECS
+#define CONFOPT_SLAVE_REOPEN_TIMEOUT_SECS	@counter@
+#define DEFVAL_SLAVE_REOPEN_TIMEOUT_SECS	SLAVE_REOPEN_TIMEOUT_SECS
 
 #define CONFOPT_SLAVE_SO_RCVBUF		@counter@
 #define DEFVAL_SLAVE_SO_RCVBUF		SLAVE_SO_RCVBUF
@@ -410,16 +420,17 @@ static struct confoption_st confoptions[] = {
 	TCL_LINK_INT, NULL, DEFVAL_MSPOOLBDB_MAXSIZE_PER128},
   {"mspoolbdb_dbstats_logfile", CONFOPT_MSPOOLBDB_DBSTATS_LOGFILE,
 	TCL_LINK_STRING, NULL, 0},
-  {"mspoolbdb_dbstats_logperiod", CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD,
-	TCL_LINK_INT, NULL, DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD},
+  {"mspoolbdb_dbstats_logperiod_secs",
+	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS},
   {"devdir", CONFOPT_DEVDIR, TCL_LINK_STRING, NULL, 0},
   {"filterserver_enable", CONFOPT_FILTERSERVER_ENABLE, TCL_LINK_INT, NULL,
 	DEFVAL_FILTERSERVER_ENABLE},
   {"filterlist", CONFOPT_SYSFILTERLIST, TCL_LINK_STRING, NULL, 0},
   {"emwinfilter", CONFOPT_EMWINFILTER, TCL_LINK_STRING, NULL, 0},
   {"emwinfilter_fifo", CONFOPT_EMWINFILTER_FIFO, TCL_LINK_STRING, NULL, 0},
-  {"emwinfilter_timeout", CONFOPT_EMWINFILTER_READ_SECS,
-	TCL_LINK_INT, NULL, DEFVAL_EMWINFILTER_READ_SECS},
+  {"emwinfilter_read_timeout_secs", CONFOPT_EMWINFILTER_READ_TIMEOUT_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_EMWINFILTER_READ_TIMEOUT_SECS},
   {"emwinfilter_always", CONFOPT_EMWINFILTER_ALWAYS, TCL_LINK_INT, NULL,
 	DEFVAL_EMWINFILTER_ALWAYS},
   {"netfilter_enable", CONFOPT_NETFILTER_ENABLE, TCL_LINK_INT, NULL,
@@ -447,14 +458,14 @@ static struct confoption_st confoptions[] = {
   {"subdirmode", CONFOPT_SUBDIRMODE, TCL_LINK_INT, NULL, DEFVAL_SUBDIRMODE},
   {"saveframefmt", CONFOPT_SAVEFRAMEFMT, TCL_LINK_INT, NULL,
 	DEFVAL_SAVEFRAMEFMT},
-  {"nbspstats_logperiod", CONFOPT_STATSPERIOD, TCL_LINK_INT, NULL,
-	DEFVAL_STATSPERIOD},
-  {"qstate_logperiod", CONFOPT_QSTATELOGPERIOD, TCL_LINK_INT, NULL,
-	DEFVAL_QSTATELOGPERIOD},
-  {"serverstate_logperiod", CONFOPT_SERVERSTATELOGPERIOD, TCL_LINK_INT,
-	NULL, DEFVAL_SERVERSTATELOGPERIOD},
-  {"serverthreads_logfreq", CONFOPT_SERVERTHREADSLOGFREQ, TCL_LINK_INT,
-	NULL, DEFVAL_SERVERTHREADSLOGFREQ},
+  {"nbspstats_logperiod_secs", CONFOPT_STATS_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_STATS_LOGPERIOD_SECS},
+  {"qstate_logperiod_secs", CONFOPT_QSTATE_LOGPERIOD_SECS, TCL_LINK_INT, NULL,
+	DEFVAL_QSTATE_LOGPERIOD_SECS},
+  {"serverstate_logperiod_secs", CONFOPT_SERVERSTATE_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SERVERSTATE_LOGPERIOD_SECS},
+  {"serverthreads_logperiod_count", CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT,
+	TCL_LINK_INT, NULL, DEFVAL_SERVERTHREADS_LOGPERIOD_COUNT},
   {"servertype", CONFOPT_SERVERTYPE, TCL_LINK_INT, NULL, DEFVAL_SERVERTYPE},
   {"servername", CONFOPT_SERVERNAME, TCL_LINK_STRING, NULL, 0},
   {"serverport", CONFOPT_SERVERPORT, TCL_LINK_STRING, NULL, 0},
@@ -462,23 +473,29 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_SERVER_MAXCLIENTS},
   {"server_so_sndbuf", CONFOPT_SERVER_SO_SNDBUF, TCL_LINK_INT, NULL,
 	DEFVAL_SERVER_SO_SNDBUF},
-  {"server_clientid_timeout", CONFOPT_SERVER_CLIENTID_TIMEOUT,
-	TCL_LINK_INT, NULL, DEFVAL_SERVER_CLIENTID_TIMEOUT},
-  {"broadcast_read_timeout", CONFOPT_BROADCAST_READ_TIMEOUT, TCL_LINK_INT,
-	NULL, DEFVAL_BROADCAST_READ_TIMEOUT},
-  {"fifo_write_timeout", CONFOPT_FIFO_WRITE_TIMEOUT, TCL_LINK_INT, NULL,
-	DEFVAL_FIFO_WRITE_TIMEOUT},
-  {"client_write_timeout", CONFOPT_CLIENT_WRITE_TIMEOUT, TCL_LINK_INT, NULL,
-	DEFVAL_CLIENT_WRITE_TIMEOUT},
+  {"server_clientid_timeout_secs", CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SERVER_CLIENTID_TIMEOUT_SECS},
+  {"broadcast_read_timeout_secs", CONFOPT_BROADCAST_READ_TIMEOUT_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_BROADCAST_READ_TIMEOUT_SECS},
+  {"fifo_write_timeout_ms", CONFOPT_FIFO_WRITE_TIMEOUT_MS, TCL_LINK_INT, NULL,
+	DEFVAL_FIFO_WRITE_TIMEOUT_MS},
+  {"client_write_timeout_ms", CONFOPT_CLIENT_WRITE_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_CLIENT_WRITE_TIMEOUT_MS},
   {"client_write_timeout_retry", CONFOPT_CLIENT_WRITE_TIMEOUT_RETRY,
 	TCL_LINK_INT, NULL, DEFVAL_CLIENT_WRITE_TIMEOUT_RETRY},
+  {"client_reconnect_wait_sleep_secs",
+	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_CLIENT_RECONNECT_WAIT_SLEEP_SECS},
+  {"client_reconnect_wait_sleep_retry",
+	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_RETRY,
+	TCL_LINK_INT, NULL, DEFVAL_CLIENT_RECONNECT_WAIT_SLEEP_RETRY},
   {"clientoptions", CONFOPT_CLIENT_OPTIONS, TCL_LINK_STRING, NULL, 0},
-  {"servers_queue_read_timeout", CONFOPT_SERVERS_QUEUE_READ_TIMEOUT,
-	TCL_LINK_INT, NULL, DEFVAL_SERVERS_QUEUE_READ_TIMEOUT},
-  {"sthreads_queue_read_timeout", CONFOPT_STHREADS_QUEUE_READ_TIMEOUT,
-	TCL_LINK_INT, NULL, DEFVAL_STHREADS_QUEUE_READ_TIMEOUT},
-  {"processor_pctl_read_timeout", CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT,
-	TCL_LINK_INT, NULL, DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT},
+  {"servers_queue_read_timeout_ms", CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_SERVERS_QUEUE_READ_TIMEOUT_MS},
+  {"sthreads_queue_read_timeout_ms", CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_STHREADS_QUEUE_READ_TIMEOUT_MS},
+  {"processor_pctl_read_timeout_ms", CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT_MS},
   {"memfileblocksize", CONFOPT_MEMFILE_BLOCKSIZE, TCL_LINK_INT, NULL,
 	DEFVAL_MEMFILE_BLOCKSIZE},
   {"memfileminsize", CONFOPT_MEMFILE_MINSIZE, TCL_LINK_INT, NULL,
@@ -494,8 +511,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_QUEUE_MAXSIZE_SOFT},
   {"queuemaxhard", CONFOPT_QUEUE_MAXSIZE_HARD, TCL_LINK_INT, NULL,
 	DEFVAL_QUEUE_MAXSIZE_HARD},
-  {"qrepquotaperiod", CONFOPT_QUEUE_REPQUOTA_PERIOD, TCL_LINK_INT, NULL,
-	DEFVAL_QUEUE_REPQUOTA_PERIOD},
+  {"queue_quota_logperiod_secs", CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_QUEUE_QUOTA_LOGPERIOD_SECS},
   {"pctlmaxsoft", CONFOPT_PCTLMAXSIZE_SOFT, TCL_LINK_INT, NULL,
 	DEFVAL_PCTLMAXSIZE_SOFT},
   {"pctlmaxhard", CONFOPT_PCTLMAXSIZE_HARD, TCL_LINK_INT, NULL,
@@ -517,24 +534,24 @@ static struct confoption_st confoptions[] = {
 	TCL_LINK_INT, NULL, DEFVAL_NBSP_RTXDB_TRUNCATE_MINUTES},
   {"rtxdb_default_process", CONFOPT_NBSP_RTXDB_DEFAULT_PROCESS,
 	TCL_LINK_INT, NULL, DEFVAL_NBSP_RTXDB_DEFAULT_PROCESS},
-  {"loadavemaxhard", CONFOPT_MAX_LOAD_AVE_HARD, TCL_LINK_INT, NULL,
-	DEFVAL_MAX_LOAD_AVE_HARD},
-  {"loadavemaxsoft", CONFOPT_MAX_LOAD_AVE_SOFT, TCL_LINK_INT, NULL,
-	DEFVAL_MAX_LOAD_AVE_SOFT},
-  {"loadavesleep", CONFOPT_MAX_LOAD_AVE_SLEEP_SECS, TCL_LINK_INT, NULL,
-	DEFVAL_MAX_LOAD_AVE_SLEEP_SECS},
-  {"loadaveperiod", CONFOPT_MAX_LOAD_AVE_PERIOD_SECS, TCL_LINK_INT, NULL,
-	DEFVAL_MAX_LOAD_AVE_PERIOD_SECS},
-  {"loadmaxrtx", CONFOPT_MAX_LOAD_RTX_INDEX, TCL_LINK_INT, NULL,
-	DEFVAL_MAX_LOAD_RTX_INDEX},
+  {"loadave_max_hard", CONFOPT_LOADAVE_MAX_HARD, TCL_LINK_INT, NULL,
+	DEFVAL_LOADAVE_MAX_HARD},
+  {"loadave_max_soft", CONFOPT_LOADAVE_MAX_SOFT, TCL_LINK_INT, NULL,
+	DEFVAL_LOADAVE_MAX_SOFT},
+  {"loadave_max_sleep_secs", CONFOPT_LOADAVE_MAX_SLEEP_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_LOADAVE_MAX_SLEEP_SECS},
+  {"loadave_checkperiod_secs", CONFOPT_LOADAVE_CHECKPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_LOADAVE_CHECKPERIOD_SECS},
+  {"loadave_max_rtx_index", CONFOPT_LOADAVE_MAX_RTX_INDEX, TCL_LINK_INT, NULL,
+	DEFVAL_LOADAVE_MAX_RTX_INDEX},
   {"feedmode", CONFOPT_FEEDMODE, TCL_LINK_INT, NULL, DEFVAL_FEEDMODE},
   {"masterservers", CONFOPT_SLAVE_MASTERSERVERS, TCL_LINK_STRING, NULL, 0},
-  {"slave_read_timeout", CONFOPT_SLAVE_READ_TIMEOUT, TCL_LINK_INT, NULL,
-	DEFVAL_SLAVE_READ_TIMEOUT},
+  {"slave_read_timeout_secs", CONFOPT_SLAVE_READ_TIMEOUT_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SLAVE_READ_TIMEOUT_SECS},
   {"slave_read_timeout_retry", CONFOPT_SLAVE_READ_TIMEOUT_RETRY, TCL_LINK_INT,
 	NULL, DEFVAL_SLAVE_READ_TIMEOUT_RETRY},
-  {"slave_reopen_timeout", CONFOPT_SLAVE_REOPEN_TIMEOUT, TCL_LINK_INT, NULL,
-	DEFVAL_SLAVE_REOPEN_TIMEOUT},
+  {"slave_reopen_timeout_secs", CONFOPT_SLAVE_REOPEN_TIMEOUT_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SLAVE_REOPEN_TIMEOUT_SECS},
   {"slave_so_rcvbuf", CONFOPT_SLAVE_SO_RCVBUF, TCL_LINK_INT, NULL,
 	DEFVAL_SLAVE_SO_RCVBUF},
   {"slave_stats_logperiod_secs", CONFOPT_SLAVE_STATS_LOGPERIOD_SECS,
@@ -601,15 +618,15 @@ int configure(void){
 	CONFOPT_MSPOOLBDB_MAXSIZE_PER128);
   setoptval(&g.mspoolbdb_dbstats_logfile, confoptions,
 	CONFOPT_MSPOOLBDB_DBSTATS_LOGFILE);
-  setoptval(&g.mspoolbdb_dbstats_logperiod_s, confoptions,
-	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD);
+  setoptval(&g.mspoolbdb_dbstats_logperiod_secs, confoptions,
+	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS);
   setoptval(&g.filterdevdir, confoptions, CONFOPT_DEVDIR);
   setoptval(&g.filterserver_enable, confoptions, CONFOPT_FILTERSERVER_ENABLE);
   setoptval(&g.sysfilterlist, confoptions, CONFOPT_SYSFILTERLIST);
   setoptval(&g.emwinfilter, confoptions, CONFOPT_EMWINFILTER);
   setoptval(&g.emwinfilter_fifo, confoptions, CONFOPT_EMWINFILTER_FIFO);
-  setoptval(&g.emwinfilter_timeout_s, confoptions,
-	CONFOPT_EMWINFILTER_READ_SECS);
+  setoptval(&g.emwinfilter_read_timeout_secs, confoptions,
+	CONFOPT_EMWINFILTER_READ_TIMEOUT_SECS);
   setoptval(&g.emwinfilter_always, confoptions, CONFOPT_EMWINFILTER_ALWAYS);
   setoptval(&g.netfilter_enable, confoptions, CONFOPT_NETFILTER_ENABLE);
   setoptval(&g.netfilter, confoptions, CONFOPT_NETFILTER);
@@ -632,33 +649,40 @@ int configure(void){
   setoptval(&g.product_mode, confoptions, CONFOPT_PRODUCTMODE);
   setoptval(&g.subdir_product_mode, confoptions, CONFOPT_SUBDIRMODE);
   setoptval(&g.saveframefmt, confoptions, CONFOPT_SAVEFRAMEFMT);
-  setoptval(&g.nbspstats_logperiod_s, confoptions, CONFOPT_STATSPERIOD);
-  setoptval(&g.qstate_logperiod_s, confoptions, CONFOPT_QSTATELOGPERIOD);
-  setoptval(&g.serverstate_logperiod_s, confoptions,
-	CONFOPT_SERVERSTATELOGPERIOD);
-  setoptval(&g.serverthreads_logfreq, confoptions,
-	CONFOPT_SERVERTHREADSLOGFREQ);
+  setoptval(&g.nbspstats_logperiod_secs, confoptions,
+	CONFOPT_STATS_LOGPERIOD_SECS);
+  setoptval(&g.qstate_logperiod_secs, confoptions,
+	CONFOPT_QSTATE_LOGPERIOD_SECS);
+  setoptval(&g.serverstate_logperiod_secs, confoptions,
+	CONFOPT_SERVERSTATE_LOGPERIOD_SECS);
+  setoptval(&g.serverthreads_logperiod_count, confoptions,
+	CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT);
   setoptval(&g.servertype, confoptions, CONFOPT_SERVERTYPE);
   setoptval(&g.servername, confoptions, CONFOPT_SERVERNAME);
   setoptval(&g.serverport, confoptions, CONFOPT_SERVERPORT);
   setoptval(&g.server_maxclients, confoptions, CONFOPT_SERVER_MAXCLIENTS);
   setoptval(&g.server_so_sndbuf, confoptions, CONFOPT_SERVER_SO_SNDBUF);
-  setoptval(&g.server_clientid_timeout_s, confoptions,
-	CONFOPT_SERVER_CLIENTID_TIMEOUT);
-  setoptval(&g.broadcast_read_timeout_s, confoptions,
-	CONFOPT_BROADCAST_READ_TIMEOUT);
-  setoptval(&g.fifo_write_timeout_ms, confoptions, CONFOPT_FIFO_WRITE_TIMEOUT);
+  setoptval(&g.server_clientid_timeout_secs, confoptions,
+	CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS);
+  setoptval(&g.broadcast_read_timeout_secs, confoptions,
+	CONFOPT_BROADCAST_READ_TIMEOUT_SECS);
+  setoptval(&g.fifo_write_timeout_ms, confoptions,
+	CONFOPT_FIFO_WRITE_TIMEOUT_MS);
   setoptval(&g.client_write_timeout_ms, confoptions,
-	CONFOPT_CLIENT_WRITE_TIMEOUT);
+	CONFOPT_CLIENT_WRITE_TIMEOUT_MS);
   setoptval(&g.client_write_timeout_retry, confoptions,
 	CONFOPT_CLIENT_WRITE_TIMEOUT_RETRY);
+  setoptval(&g.client_reconnect_wait_sleep_secs, confoptions,
+	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_SECS);
+  setoptval(&g.client_reconnect_wait_sleep_retry, confoptions,
+	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_RETRY);
   setoptval(&g.clientoptions, confoptions, CONFOPT_CLIENT_OPTIONS);
   setoptval(&g.servers_queue_read_timeout_ms, confoptions,
-	CONFOPT_SERVERS_QUEUE_READ_TIMEOUT);
+	CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS);
   setoptval(&g.sthreads_queue_read_timeout_ms, confoptions,
-	CONFOPT_STHREADS_QUEUE_READ_TIMEOUT);
+	CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS);
   setoptval(&g.processor_pctl_read_timeout_ms, confoptions,
-	CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT);
+	CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS);
 
   setoptval(&g.memfile_blocksize, confoptions, CONFOPT_MEMFILE_BLOCKSIZE);
   setoptval(&g.memfile_minsize, confoptions, CONFOPT_MEMFILE_MINSIZE);
@@ -673,8 +697,8 @@ int configure(void){
 
   setoptval(&g.queue_maxsize_soft, confoptions, CONFOPT_QUEUE_MAXSIZE_SOFT);
   setoptval(&g.queue_maxsize_hard, confoptions, CONFOPT_QUEUE_MAXSIZE_HARD);
-  setoptval(&g.queue_repquota_period_s, confoptions,
-	CONFOPT_QUEUE_REPQUOTA_PERIOD);
+  setoptval(&g.queue_quota_logperiod_secs, confoptions,
+	CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS);
 
   setoptval(&g.pctl_maxsize_soft, confoptions, CONFOPT_PCTLMAXSIZE_SOFT);
   setoptval(&g.pctl_maxsize_hard, confoptions, CONFOPT_PCTLMAXSIZE_HARD);
@@ -695,19 +719,23 @@ int configure(void){
   setoptval(&g.rtxdb_default_process, confoptions,
 	CONFOPT_NBSP_RTXDB_DEFAULT_PROCESS);
 
-  setoptval(&g.max_load_ave_hard, confoptions, CONFOPT_MAX_LOAD_AVE_HARD);
-  setoptval(&g.max_load_ave_soft, confoptions, CONFOPT_MAX_LOAD_AVE_SOFT);
-  setoptval(&g.max_load_ave_sleep_secs, confoptions, CONFOPT_MAX_LOAD_AVE_SLEEP_SECS);
-  setoptval(&g.max_load_ave_period_secs, confoptions, CONFOPT_MAX_LOAD_AVE_PERIOD_SECS);
-  setoptval(&g.max_load_rtx_index, confoptions, CONFOPT_MAX_LOAD_RTX_INDEX);
+  setoptval(&g.loadave_max_hard, confoptions, CONFOPT_LOADAVE_MAX_HARD);
+  setoptval(&g.loadave_max_soft, confoptions, CONFOPT_LOADAVE_MAX_SOFT);
+  setoptval(&g.loadave_max_sleep_secs, confoptions,
+	CONFOPT_LOADAVE_MAX_SLEEP_SECS);
+  setoptval(&g.loadave_checkperiod_secs, confoptions,
+	CONFOPT_LOADAVE_CHECKPERIOD_SECS);
+  setoptval(&g.loadave_max_rtx_index, confoptions,
+	CONFOPT_LOADAVE_MAX_RTX_INDEX);
 
   setoptval(&g.feedmode, confoptions, CONFOPT_FEEDMODE);
   setoptval(&g.masterservers, confoptions, CONFOPT_SLAVE_MASTERSERVERS);
-  setoptval(&g.slave_read_timeout_s, confoptions, CONFOPT_SLAVE_READ_TIMEOUT);
+  setoptval(&g.slave_read_timeout_secs, confoptions,
+	CONFOPT_SLAVE_READ_TIMEOUT_SECS);
   setoptval(&g.slave_read_timeout_retry, confoptions,
 	CONFOPT_SLAVE_READ_TIMEOUT_RETRY);
-  setoptval(&g.slave_reopen_timeout_s, confoptions,
-	CONFOPT_SLAVE_REOPEN_TIMEOUT);
+  setoptval(&g.slave_reopen_timeout_secs, confoptions,
+	CONFOPT_SLAVE_REOPEN_TIMEOUT_SECS);
   setoptval(&g.slave_so_rcvbuf, confoptions, CONFOPT_SLAVE_SO_RCVBUF);
   setoptval(&g.slave_stats_logperiod_secs, confoptions,
 	CONFOPT_SLAVE_STATS_LOGPERIOD_SECS);
@@ -765,14 +793,15 @@ void print_confoptions(void){
   fprintf(stdout, "mspoolbdb_maxsize_per128 %u\n", g.mspoolbdb_maxsize_per128);
   fprintf_str(stdout, fmt, "mspoolbdb_dbstats_logfile",
 	g.mspoolbdb_dbstats_logfile);
-  fprintf(stdout, "mspoolbdb_dbstats_logperiod " "%" PRIuMAX "\n",
-	(uintmax_t)g.mspoolbdb_dbstats_logperiod_s);
+  fprintf(stdout, "mspoolbdb_dbstats_logperiod_secs " "%" PRIuMAX "\n",
+	(uintmax_t)g.mspoolbdb_dbstats_logperiod_secs);
   fprintf_str(stdout, fmt, "filterdevdir", g.filterdevdir);
   fprintf(stdout, "filterserver_enable %d\n", g.filterserver_enable); 
   fprintf_str(stdout, fmt, "sysfilterlist", g.sysfilterlist);
   fprintf_str(stdout, fmt, "emwinfilter", g.emwinfilter);
   fprintf_str(stdout, fmt, "emwinfilter_fifo", g.emwinfilter_fifo);
-  fprintf(stdout, "emwinfilter_timeout %d\n", g.emwinfilter_timeout_s);
+  fprintf(stdout, "emwinfilter_read_timeout_secs %d\n",
+	g.emwinfilter_read_timeout_secs);
   fprintf(stdout, "emwinfilter_always %d\n", g.emwinfilter_always);
   fprintf(stdout, "netfilter_enable %d\n", g.netfilter_enable); 
   fprintf_str(stdout, fmt, "netfilter", g.netfilter);
@@ -794,28 +823,35 @@ void print_confoptions(void){
   fprintf(stdout, "productmode %o\n", g.product_mode);
   fprintf(stdout, "subdirmode %o\n", g.subdir_product_mode);
   fprintf(stdout, "saveframefmt %d\n", g.saveframefmt);
-  fprintf(stdout, "nbspstats_logperiod " "%" PRIuMAX "\n",
-	(uintmax_t)g.nbspstats_logperiod_s);
-  fprintf(stdout, "qstate_logperiod " "%" PRIuMAX "\n",
-	(uintmax_t)g.qstate_logperiod_s);
-  fprintf(stdout, "serverstate_logperiod " "%" PRIuMAX "\n",
-	(uintmax_t)g.serverstate_logperiod_s);
-  fprintf(stdout, "serverthreads_logfreq " "%d\n", g.serverthreads_logfreq);
+  fprintf(stdout, "nbspstats_logperiod_secs " "%" PRIuMAX "\n",
+	(uintmax_t)g.nbspstats_logperiod_secs);
+  fprintf(stdout, "qstate_logperiod_secs " "%" PRIuMAX "\n",
+	(uintmax_t)g.qstate_logperiod_secs);
+  fprintf(stdout, "serverstate_logperiod_secs " "%" PRIuMAX "\n",
+	(uintmax_t)g.serverstate_logperiod_secs);
+  fprintf(stdout, "serverthreads_logperiod_count " "%d\n",
+	g.serverthreads_logperiod_count);
   fprintf(stdout, "servertype %d\n", g.servertype);
   fprintf_str(stdout, fmt, "servername", g.servername);
   fprintf_str(stdout, fmt, "serverport", g.serverport);
   fprintf(stdout, "server_maxclients %d\n", g.server_maxclients);
   fprintf(stdout, "server_so_sndbuf %d\n", g.server_so_sndbuf);
-  fprintf(stdout, "server_clientid_timeout %d\n", g.server_clientid_timeout_s);
-  fprintf(stdout, "broadcast_read_timeout %d\n", g.broadcast_read_timeout_s);
-  fprintf(stdout, "fifo_write_timeout %d\n", g.fifo_write_timeout_ms);
-  fprintf(stdout, "client_write_timeout %d\n", g.client_write_timeout_ms);
+  fprintf(stdout, "server_clientid_timeout_secs %d\n",
+	g.server_clientid_timeout_secs);
+  fprintf(stdout, "broadcast_read_timeout_secs %d\n",
+	g.broadcast_read_timeout_secs);
+  fprintf(stdout, "fifo_write_timeout_ms %d\n", g.fifo_write_timeout_ms);
+  fprintf(stdout, "client_write_timeout_ms %d\n", g.client_write_timeout_ms);
   fprintf(stdout, "client_write_timeout_retry %d\n",
 	g.client_write_timeout_retry);
+  fprintf(stdout, "client_reconnect_wait_sleep_secs %d\n",
+	g.client_reconnect_wait_sleep_secs);
+  fprintf(stdout, "client_reconnect_wait_sleep_retry %d\n",
+	g.client_reconnect_wait_sleep_retry);
   fprintf_str(stdout, fmt, "clientoptions", g.clientoptions);
-  fprintf(stdout, "servers_queue_read_timeout %d\n",
+  fprintf(stdout, "servers_queue_read_timeout_ms %d\n",
 	g.servers_queue_read_timeout_ms);
-  fprintf(stdout, "sthreads_queue_read_timeout %d\n",
+  fprintf(stdout, "sthreads_queue_read_timeout_ms %d\n",
 	g.sthreads_queue_read_timeout_ms);
   fprintf(stdout, "processor_pctl_read_timeout %d\n",
 	g.processor_pctl_read_timeout_ms);
@@ -833,7 +869,8 @@ void print_confoptions(void){
 
   fprintf(stdout, "queuemaxsizesoft %d\n", g.queue_maxsize_soft);
   fprintf(stdout, "queuemaxsizehard %d\n", g.queue_maxsize_hard);
-  fprintf(stdout, "qrepquotaperiod %d\n", g.queue_repquota_period_s);
+  fprintf(stdout, "queue_quota_logperiod)secs %d\n",
+	g.queue_quota_logperiod_secs);
 
   fprintf(stdout, "pctlmaxsoft %d\n", g.pctl_maxsize_soft);
   fprintf(stdout, "pctlmaxhard %d\n", g.pctl_maxsize_hard);
@@ -849,17 +886,18 @@ void print_confoptions(void){
   fprintf(stdout, "rtxdb_truncate_minutes %u\n", g.rtxdb_truncate_minutes);
   fprintf(stdout, "rtxdb_default_process %u\n", g.rtxdb_default_process);
 
-  fprintf(stdout, "loadavemaxhard %d\n", g.max_load_ave_hard);
-  fprintf(stdout, "loadavemaxsoft %d\n", g.max_load_ave_soft);
-  fprintf(stdout, "loadavesleep %d\n", g.max_load_ave_sleep_secs);
-  fprintf(stdout, "loadaveperiod %d\n", g.max_load_ave_period_secs);
-  fprintf(stdout, "loadmaxrtx %d\n", g.max_load_rtx_index);
+  fprintf(stdout, "loadave_max_hard %d\n", g.loadave_max_hard);
+  fprintf(stdout, "loadave_max_soft %d\n", g.loadave_max_soft);
+  fprintf(stdout, "loadave_max_sleep_secs %d\n", g.loadave_max_sleep_secs);
+  fprintf(stdout, "loadave_checkperiod_secs %d\n", g.loadave_checkperiod_secs);
+  fprintf(stdout, "loadave_max_rtx_index %d\n", g.loadave_max_rtx_index);
 
   fprintf(stdout, "feedmode %d\n", g.feedmode);
   fprintf_str(stdout, fmt, "masterservers", g.masterservers);
-  fprintf(stdout, "slave_read_timeout %d\n", g.slave_read_timeout_s);
+  fprintf(stdout, "slave_read_timeout_secs %d\n", g.slave_read_timeout_secs);
   fprintf(stdout, "slave_read_timeout_retry %d\n", g.slave_read_timeout_retry);
-  fprintf(stdout, "slave_reopen_timeout %d\n", g.slave_reopen_timeout_s);
+  fprintf(stdout, "slave_reopen_timeout_secs %d\n",
+	g.slave_reopen_timeout_secs);
   fprintf(stdout, "slave_so_rcvbuf %d\n", g.slave_so_rcvbuf);
   fprintf(stdout, "slave_stats_logperiod_secs %d\n",
 	g.slave_stats_logperiod_secs);
@@ -921,12 +959,13 @@ int validate_configuration(void){
   VALIDATE_PARAM_H(g.mspoolbdb_maxsize_per128, 128,
 	"mspoolbdb_maxsize_per128");
   VALIDATE_STR(g.mspoolbdb_dbstats_logfile, "mspoolbdb_dbstats_logfile");
-  VALIDATE_PARAM_L(g.mspoolbdb_dbstats_logperiod_s, 0,
-	"mspoolbdb_dbstats_logperiod");
+  VALIDATE_PARAM_L(g.mspoolbdb_dbstats_logperiod_secs, 0,
+	"mspoolbdb_dbstats_logperiod_secs");
   VALIDATE_STR(g.filterdevdir, "filterdevdir");
   VALIDATE_PARAMETER(g.filterserver_enable, 0, 1, "filterserver_enable");
   /* char* sysfilterlist, emwinfilter, emwinfilter_fifo can be NULL/empty */
-  VALIDATE_PARAM_L(g.emwinfilter_timeout_s, 0, "emwinfilter_timeout");
+  VALIDATE_PARAM_L(g.emwinfilter_read_timeout_secs, 0,
+	"emwinfilter_read_timeout_secs");
   VALIDATE_PARAMETER(g.emwinfilter_always, 0, 1, "emwinfilter_always");
   VALIDATE_PARAMETER(g.netfilter_enable, 0, 1, "netfilter_enable");
   /* char* netfilter can be NULL or empty */
@@ -954,26 +993,34 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.server_listen_backlog, 1, "server_listen_backlog");
   VALIDATE_PARAM_L(g.server_maxclients, -1, "server_maxclients");
   VALIDATE_PARAM_L(g.server_so_sndbuf, -1, "server_so_sndbuf");
-  VALIDATE_PARAM_L(g.server_clientid_timeout_s, 1, "server_clientid_timeout");
+  VALIDATE_PARAM_L(g.server_clientid_timeout_secs, 1,
+	"server_clientid_timeout_secs");
 
-  VALIDATE_PARAM_L(g.nbspstats_logperiod_s, 0, "nbspstats_logperiod");
-  VALIDATE_PARAM_L(g.qstate_logperiod_s, 0, "qstate_logperiod");
-  VALIDATE_PARAM_L(g.serverstate_logperiod_s, 0, "serverstate_logperiod");
-  VALIDATE_PARAM_L(g.serverthreads_logfreq, 0, "serverthreads_logfreq");
+  VALIDATE_PARAM_L(g.nbspstats_logperiod_secs, 0, "nbspstats_logperiod_secs");
+  VALIDATE_PARAM_L(g.qstate_logperiod_secs, 0, "qstate_logperiod_secs");
+  VALIDATE_PARAM_L(g.serverstate_logperiod_secs, 0,
+	"serverstate_logperiod_secs");
+  VALIDATE_PARAM_L(g.serverthreads_logperiod_count, 0,
+	"serverthreads_logperiod_count");
 
-  VALIDATE_PARAM_L(g.broadcast_read_timeout_s, 0, "broadcast_read_timeout");
-  VALIDATE_PARAM_L(g.fifo_write_timeout_ms, 0, "fifo_write_timeout");
-  VALIDATE_PARAM_L(g.client_write_timeout_ms, 0, "client_write_timeout");
+  VALIDATE_PARAM_L(g.broadcast_read_timeout_secs, 0,
+	"broadcast_read_timeout_secs");
+  VALIDATE_PARAM_L(g.fifo_write_timeout_ms, 0, "fifo_write_timeout_ms");
+  VALIDATE_PARAM_L(g.client_write_timeout_ms, 0, "client_write_timeout_ms");
   VALIDATE_PARAM_L(g.client_write_timeout_retry, 0,
 	"client_write_timeout_retry");
+  VALIDATE_PARAM_L(g.client_reconnect_wait_sleep_secs, 0,
+	"client_reconnect_wait_sleep_secs");
+  VALIDATE_PARAM_L(g.client_reconnect_wait_sleep_retry, 0,
+	"client_reconnect_wait_sleep_retry");
 
   /* char* g.clientoptions can be NULL or empty */
   VALIDATE_PARAM_L(g.servers_queue_read_timeout_ms, 0,
-	"servers_queue_read_timeout");
+	"servers_queue_read_timeout_ms");
   VALIDATE_PARAM_L(g.sthreads_queue_read_timeout_ms, 0,
-	"sthreads_queue_read_timeout");
+	"sthreads_queue_read_timeout_ms");
   VALIDATE_PARAM_L(g.processor_pctl_read_timeout_ms, 0,
-	"processor_pctl_read_timeout");
+	"processor_pctl_read_timeout_ms");
   VALIDATE_PARAM_L(g.memfile_blocksize, MEMFILE_BLOCKSIZE_LIMIT,
 		   "memfileblocksize");
   VALIDATE_PARAM_L(g.memfile_minsize, MEMFILE_MINSIZE_LIMIT, "memfileminsize");
@@ -988,7 +1035,8 @@ int validate_configuration(void){
    */
   VALIDATE_PARAM_L(g.queue_maxsize_soft, 0, "queuemaxsoft");
   VALIDATE_PARAM_L(g.queue_maxsize_hard, 0, "queuemaxhard");
-  VALIDATE_PARAM_L(g.queue_repquota_period_s, 0, "qrepquotaperiod");
+  VALIDATE_PARAM_L(g.queue_quota_logperiod_secs, 0,
+	"queue_quota_logperiod_secs");
   VALIDATE_PARAM_L(g.pctl_maxsize_soft, 0, "pctlmaxsoft");
   VALIDATE_PARAM_L(g.pctl_maxsize_hard, 0, "pctlmaxhard");
   VALIDATE_PARAM_L(g.pctl_maxmem_soft, 0, "pctlmaxmemsoft");
@@ -1000,16 +1048,17 @@ int validate_configuration(void){
   /* unsigned int rtxdb_slots type and can be zero */
   VALIDATE_PARAM_L(g.rtxdb_truncate_minutes, 1, "rtxdb_truncate_minutes");
   VALIDATE_PARAM_L(g.rtxdb_default_process, 0, "rtxdb_default_process");
-  VALIDATE_PARAM_L(g.max_load_ave_hard, 0, "loadavemaxhard");
-  VALIDATE_PARAM_L(g.max_load_ave_soft, 0, "loadavemaxsoft");
-  VALIDATE_PARAM_L(g.max_load_ave_sleep_secs, 0, "loadavesleep");
-  VALIDATE_PARAM_L(g.max_load_ave_period_secs, 0, "loadaveperiod");
-  VALIDATE_PARAM_L(g.max_load_rtx_index, 0, "loadmaxrtx");
+  VALIDATE_PARAM_L(g.loadave_max_hard, 0, "loadave_max_hard");
+  VALIDATE_PARAM_L(g.loadave_max_soft, 0, "loadave_max_soft");
+  VALIDATE_PARAM_L(g.loadave_max_sleep_secs, 0, "loadave_max_sleep_secs");
+  VALIDATE_PARAM_L(g.loadave_checkperiod_secs, 0, "loadave_checkperiod_secs");
+  VALIDATE_PARAM_L(g.loadave_max_rtx_index, 0, "loadave_max_rtx_index");
   VALIDATE_PARAM_L(g.feedmode, 1, "feedmode");
   /* char* g.masterservers can be NULL or empty */
-  VALIDATE_PARAM_L(g.slave_read_timeout_s, 0, "slave_read_timeout");
+  VALIDATE_PARAM_L(g.slave_read_timeout_secs, 0, "slave_read_timeout_secs");
   VALIDATE_PARAM_L(g.slave_read_timeout_retry, 0, "slave_read_timeout_retry");
-  VALIDATE_PARAM_L(g.slave_reopen_timeout_s, 0, "slave_reopen_timeout");
+  VALIDATE_PARAM_L(g.slave_reopen_timeout_secs, 0,
+	"slave_reopen_timeout_secs");
   VALIDATE_PARAM_L(g.slave_so_rcvbuf, -1, "slave_so_rcvbuf");
   VALIDATE_PARAM_L(g.slave_stats_logperiod_secs, 0,
 	"slave_stats_logperiod_secs");

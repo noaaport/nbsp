@@ -97,7 +97,10 @@ int get_client_protocol(struct conn_table_st *ct, int i){
 }
 
 static int set_client_protocol(struct conn_table_st *ct, int i, int protocol){
-
+  /*
+   * This function calls conn_table_set_element_appdata() which does
+   * the same job as conn_element_init2().
+   */
   struct appdata_st *p;
   size_t n;
   int status = 0;

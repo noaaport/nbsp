@@ -377,7 +377,7 @@ static int start_activepce(struct sbn_frame *sbnf){
     * and the high load retransmissions index, and proceed accordingly.
     * (See load.c)
     */
-    if(g.f_max_load_rtx == 1){
+    if(g.f_loadave_max_rtx == 1){
       log_warnx("Rejecting %s due to high load retransmission index.",
 		pce->fname);
       status = 4;

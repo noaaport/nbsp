@@ -95,9 +95,9 @@ int init_slavet(void){
   defaults.infifo_mode = g.infifo_mode;
   defaults.infifo_grp = g.infifo_grp;
   defaults.slavestatsfile = g.slavestatsfile;
-  defaults.slave_read_timeout_s = g.slave_read_timeout_s;
+  defaults.slave_read_timeout_secs = g.slave_read_timeout_secs;
   defaults.slave_read_timeout_retry = g.slave_read_timeout_retry;
-  defaults.slave_reopen_timeout_s = g.slave_reopen_timeout_s;
+  defaults.slave_reopen_timeout_secs = g.slave_reopen_timeout_secs;
   defaults.slave_so_rcvbuf = g.slave_so_rcvbuf;
   defaults.slave_stats_logperiod_secs = g.slave_stats_logperiod_secs;
 

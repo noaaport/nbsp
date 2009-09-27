@@ -199,7 +199,7 @@ static int recv_in_packet(struct slave_element_st *slave){
   struct slavein_info_st *slavein_info = (struct slavein_info_st*)slave->info;
 
   n = readn(slave->slave_fd, finfo_size_buf, 4,
-	    (unsigned int)slave->options.slave_read_timeout_s, 0);
+	    (unsigned int)slave->options.slave_read_timeout_secs, 0);
   if(n == -1)
     status = -1;	/* real reading error */
   else if(n == -2)
@@ -225,7 +225,7 @@ static int recv_in_packet(struct slave_element_st *slave){
   }
 
   n = readn(slave->slave_fd, slavein_info->buffer, finfo_size + 1,
-	    (unsigned int)slave->options.slave_read_timeout_s, 0);
+	    (unsigned int)slave->options.slave_read_timeout_secs, 0);
   if(n == -1)
     status = -1;
   else if(n != finfo_size + 1)

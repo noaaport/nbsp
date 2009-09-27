@@ -81,6 +81,7 @@ static int server_loop(void);
 static void process_connections(void);
 static void process_unidentified_connections(void);
 static void process_finished_connections(void);
+static void process_dirty_connections(void);
 static int process_server_queue(void);
 static int handle_client(struct conn_table_st *ct, int i);
 static void handle_client_hup(struct conn_table_st *ct, int i, int condition);
@@ -294,10 +295,12 @@ static int init_server_conn(void){
 
   /* 
    * This server does not (yet) have a control socket. The server entry
-   * is added with pid = 0, ip = NULL, name = NULL, and timeout 0.
+   * is added with pid = 0, ip = NULL, name = NULL,
+   * and the options (timeout, reconnect_sleep, reconnect_retry) 0.
    */
-  status = conn_table_add_element(g.ct, g.server_fd, CONN_TYPE_SERVER_NET,
-				  0, NULL, NULL, 0);
+  status = conn_table_add_element(g.ct, g.server_fd,
+				  CONN_TYPE_SERVER_NET, 0, NULL, NULL,
+				  0, 0, 0);
 
   if(status != 0)
     log_err("Cannot init server.");
@@ -559,9 +562,12 @@ static void process_connections(void){
   clientopts.nonblock = 1;
   clientopts.cloexec = 1;
   clientopts.write_timeout_ms = g.client_write_timeout_ms;
+  clientopts.reconnect_wait_sleep_secs = g.client_reconnect_wait_sleep_secs;
+  clientopts.reconnect_wait_sleep_retry = g.client_reconnect_wait_sleep_retry;
 
   process_finished_connections();
   process_unidentified_connections();
+  process_dirty_connections();
   spawn_client_threads();
 
   status = poll_loop_nowait(g.ct, &clientopts);
@@ -593,7 +599,7 @@ static void process_unidentified_connections(void){
     ctime = conn_table_get_element_ctime(g.ct, i);
 
     if((protocol == PROTOCOL_UNKNOWN) &&
-       (now > ctime + g.server_clientid_timeout_s)){
+       (now > ctime + g.server_clientid_timeout_secs)){
 
       log_info("Client %d [%s] not identified within time limit.",
 	       i, nameorip);
@@ -625,6 +631,39 @@ static void process_finished_connections(void){
     log_info("Removing finished client %d from table.", i);
     poll_kill_client_connection(g.ct, i);
     numentries = conn_table_get_numentries(g.ct);
+  }
+}
+
+static void process_dirty_connections(void){
+  /*
+   * Loop through the table and look for any entry for which the
+   * connection_status flag has been set (by the client thread when
+   * a write error is received). What this function does is to close
+   * the socket and set the pfd[i] to -1. This is done only for
+   * threads that have ben created and have not finished.
+   */
+  int i;
+  int numentries;
+  int connection_status;
+  char *nameorip;
+
+  numentries = conn_table_get_numentries(g.ct);
+
+  for(i = 0; i < numentries; ++i){
+    if(conn_element_isnetclient_running(&g.ct->ce[i]) == 0)
+      continue;
+
+    connection_status = conn_element_get_connection_status(&g.ct->ce[i], NULL);
+    if(connection_status == 0)
+      continue;
+
+    nameorip = conn_table_get_element_nameorip(g.ct, i);
+    if(g.ct->pfd[i].fd != -1){
+      if(close(g.ct->pfd[i].fd) == 0){
+	log_info("Closing dirty client connection: %s", nameorip);
+	g.ct->pfd[i].fd = -1;
+      }
+    }
   }
 }
 
@@ -1044,7 +1083,7 @@ static int open_emwin_filter(void){
 
   gemwinfilterp = pfilter_open_wr(g.emwinfilter,
 				  g.emwinfilter_fifo,
-				  g.emwinfilter_timeout_s);
+				  g.emwinfilter_read_timeout_secs);
   if(gemwinfilterp == NULL){
     return(-1);
   }

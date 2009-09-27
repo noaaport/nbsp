@@ -83,15 +83,15 @@ void init_periodic(void){
    * If the default periods above are changed by the configuration file
    * we use that instead.
    */
-  gevents[EVENT_REPT_PCTL_QUOTA].period = g.queue_repquota_period_s;
-  gevents[EVENT_REPT_QDB_QUOTA].period = g.queue_repquota_period_s;
-  gevents[EVENT_LOG_QSTATE].period = g.qstate_logperiod_s;
-  gevents[EVENT_UPDATE_NBSP_STATS].period = g.nbspstats_logperiod_s;
-  gevents[EVENT_SERVER_STATE].period = g.serverstate_logperiod_s;
-  gevents[EVENT_FILTERSERVER_STATE].period = g.serverstate_logperiod_s;
-  gevents[EVENT_LOADAVE_COND].period = g.max_load_ave_period_secs;
+  gevents[EVENT_REPT_PCTL_QUOTA].period = g.queue_quota_logperiod_secs;
+  gevents[EVENT_REPT_QDB_QUOTA].period = g.queue_quota_logperiod_secs;
+  gevents[EVENT_LOG_QSTATE].period = g.qstate_logperiod_secs;
+  gevents[EVENT_UPDATE_NBSP_STATS].period = g.nbspstats_logperiod_secs;
+  gevents[EVENT_SERVER_STATE].period = g.serverstate_logperiod_secs;
+  gevents[EVENT_FILTERSERVER_STATE].period = g.serverstate_logperiod_secs;
+  gevents[EVENT_LOADAVE_COND].period = g.loadave_checkperiod_secs;
   gevents[EVENT_RTXDB_TRUNCATE].period = g.rtxdb_truncate_minutes * 60;
-  gevents[EVENT_MSPOOLBDB_DBSTATS].period = g.mspoolbdb_dbstats_logperiod_s;
+  gevents[EVENT_MSPOOLBDB_DBSTATS].period = g.mspoolbdb_dbstats_logperiod_secs;
 
   now = time(NULL);
   minute_now = current_minute(now);

@@ -17,19 +17,24 @@
  * of the network slave threads. The input is a "masterservers" string
  * of the form
  *
- * <protocol>,<server>,<port>:<protocol>,<server>,<port>:...
+ * <protocol>,<server>,<port>,<options>:<protocol>,<server>,<port>,<options>:..
  *
+ * There are five options (the int's in slave_options_st below). Network
+ * slaves have eight fields, infifo's have only seven (no port).
  */
-#define SLAVE_STRING_SEP1 ":"
+#define SLAVE_STRING_SEP1 ": \t\n"
 #define SLAVE_STRING_SEP2 ","
+
+#define SLAVE_NET_STRING_FIELDS 8
+#define SLAVE_IN_STRING_FIELDS 7
 
 struct slave_options_st {
   mode_t infifo_mode;
   char *infifo_grp;
   char *slavestatsfile;
-  int slave_read_timeout_s;     /* timeout when slave reads from master */
+  int slave_read_timeout_secs;     /* timeout when slave reads from master */
   int slave_read_timeout_retry;
-  int slave_reopen_timeout_s;   /* sleep secs before reopening connection */
+  int slave_reopen_timeout_secs;   /* sleep secs before reopening connection */
   int slave_so_rcvbuf;
   int slave_stats_logperiod_secs;
 };

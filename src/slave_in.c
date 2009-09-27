@@ -229,7 +229,7 @@ static int slavein_reopen(struct slave_element_st *slave){
     status = slavein_open(slave);
 
   if(status != 0)
-    sleep((unsigned int)slave->options.slave_reopen_timeout_s);
+    sleep((unsigned int)slave->options.slave_reopen_timeout_secs);
 
   return(status);
 }

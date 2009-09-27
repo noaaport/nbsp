@@ -61,13 +61,13 @@ struct nbsp_globals {
   int mspoolbdb_nslots;		/* buffer slots for reading (server) */
   unsigned int mspoolbdb_maxsize_per128; /* maxsize as a fraction of 128 */
   char *mspoolbdb_dbstats_logfile;   /* file to write the mspoolbdb dbstats */
-  time_t mspoolbdb_dbstats_logperiod_s;
+  time_t mspoolbdb_dbstats_logperiod_secs;
   char *filterdevdir;		/* directory for external filters and fifos */
   int filterserver_enable;
   char *sysfilterlist;		/* list of filters distributed with program */
   char *emwinfilter;
   char *emwinfilter_fifo;
-  int emwinfilter_timeout_s;	/* reading timeout (in secs) */
+  int emwinfilter_read_timeout_secs;	/* reading timeout (in secs) */
   int emwinfilter_always;
   int netfilter_enable;
   char *netfilter;
@@ -95,15 +95,17 @@ struct nbsp_globals {
   int server_listen_backlog;
   int server_maxclients;
   int server_so_sndbuf;
-  int server_clientid_timeout_s; /* limit for net client to identify itself */
-  time_t nbspstats_logperiod_s;
-  time_t qstate_logperiod_s;	/* how often to log the state of the queues */
-  time_t serverstate_logperiod_s; /* how often to log the server state */
-  int serverthreads_logfreq;	/* frequency to log stats by server threads */
-  int broadcast_read_timeout_s;	/* readers timeout waiting for broadcast */
-  int fifo_write_timeout_ms;	/* filter server timeout writing to fifos */
-  int client_write_timeout_ms;	/* net server timeout writing to clients */
+  int server_clientid_timeout_secs; /* net client limit to identify itself */
+  time_t nbspstats_logperiod_secs;
+  time_t qstate_logperiod_secs;	/* how often to log the state of the queues */
+  time_t serverstate_logperiod_secs; /* how often to log the server state */
+  int serverthreads_logperiod_count; /* how often to log the server threads */
+  int broadcast_read_timeout_secs;  /* readers timeout waiting for broadcast */
+  int fifo_write_timeout_ms;	   /* filter server timeout writing to fifos */
+  int client_write_timeout_ms;  /* net server timeout writing to clients */
   int client_write_timeout_retry;
+  int client_reconnect_wait_sleep_secs;
+  int client_reconnect_wait_sleep_retry;
   char *clientoptions;		/* per-host client options */
   int servers_queue_read_timeout_ms; /* servers timeout reading from queues */
   int sthreads_queue_read_timeout_ms; /* same for servers' threads */
@@ -121,7 +123,7 @@ struct nbsp_globals {
   /* db configuration */
   int queue_maxsize_soft;	/* maximum size (soft) of servers queues */
   int queue_maxsize_hard;	/* same but hard */
-  int queue_repquota_period_s;
+  int queue_quota_logperiod_secs;
   int pctl_maxsize_soft;	/* maximum sizes of pctl queue */
   int pctl_maxsize_hard;
   int pctl_maxmem_soft;		/* mem limits for pctlmfdb queue (in mb) */
@@ -133,16 +135,16 @@ struct nbsp_globals {
   unsigned int rtxdb_slots;	/* number of slots in rtxdb */
   unsigned int rtxdb_truncate_minutes;
   int rtxdb_default_process;	/* default action if rtxdb is disabled */
-  int max_load_ave_hard;	/* when readers will be throttled */
-  int max_load_ave_soft;
-  int max_load_ave_sleep_secs;	/* for how long */
-  int max_load_ave_period_secs;	/* how often to check */
-  int max_load_rtx_index;	/* max retrans. accepted in high load cond. */
+  int loadave_max_hard;		/* when readers will be throttled */
+  int loadave_max_soft;
+  int loadave_max_sleep_secs;	/* for how long */
+  int loadave_checkperiod_secs;	/* how often to check */
+  int loadave_max_rtx_index;	/* max retrans. accepted in high load cond. */
   int feedmode;			/* master, net slave, input fifo */
   char *masterservers;		/* master hosts list for net slave mode */
-  int slave_read_timeout_s;	/* timeout when slave reads from master */
+  int slave_read_timeout_secs;	/* timeout when slave reads from master */
   int slave_read_timeout_retry;
-  int slave_reopen_timeout_s;	/* sleep secs before reopening connection */
+  int slave_reopen_timeout_secs; /* sleep secs before reopening connection */
   int slave_so_rcvbuf;
   int slave_stats_logperiod_secs;
   char *infifo;			/* fifo name for input feed mode */
@@ -206,8 +208,8 @@ struct nbsp_globals {
   int f_debug;			/* debug mode set */
   int f_ndaemon;		/* don't become daemon */
   int f_verbose;		/* mostly for debuging */
-  int f_max_load_ave;		/* flag set by calling getloadavg */
-  int f_max_load_rtx;		/* flag set by calling getrtxindex and load */
+  int f_loadave_max;		/* flag set by calling getloadavg */
+  int f_loadave_max_rtx;	/* flag set by calling getrtxindex and load */
 } g;
 
 

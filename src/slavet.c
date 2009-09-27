@@ -23,15 +23,19 @@ static int slave_element_configure(struct slave_element_st *slave,
 				   char *s,
 				   struct slave_options_st *defaults);
 static int slave_element_configure2(struct slave_element_st *slave,
-				   int slavetype,
-				   char *mastername,
-				   char *masterport,
-				   char *infifo,
-				   struct slave_options_st *defaults);
+				    int slavetype,
+				    char *mastername,
+				    char *masterport,
+				    char *infifo,
+				    char **options_argv,
+				    struct slave_options_st *defaults);
 static void slave_element_release(struct slave_element_st *slave);
 static int slave_element_configure_options(struct slave_element_st *slave,
 					   struct slave_options_st *options);
 static void slave_element_release_options(struct slave_element_st *slave);
+static int slave_element_override_options(struct slave_element_st *slave,
+					  char **options_argv);
+
 
 static int slave_table_alloc(struct slave_table_st **slavet, int numslaves);
 static void slave_table_free(struct slave_table_st *slavet);
@@ -61,10 +65,11 @@ static int slave_element_configure(struct slave_element_st *slave,
   char *mastername;
   char *masterport;
   char *infifo;
+  char **options_argv = NULL;    /* the numeric options, if given in "s" */
     
   ssplit = strsplit_create(s, SLAVE_STRING_SEP2, STRSPLIT_FLAG_INCEMPTY);
   if(ssplit == NULL){
-    warn("strsplit_create()");
+    log_err("strsplit_create()");
     return(-1);
   }
 
@@ -79,20 +84,24 @@ static int slave_element_configure(struct slave_element_st *slave,
   }
 
   if(slavetype == SLAVETYPE_INFIFO){
-    if(ssplit->argc != 2){
+    if((ssplit->argc != 2) && (ssplit->argc != SLAVE_IN_STRING_FIELDS)){
       log_errx("Invalid configuration string for SLAVETYPE_INFIFO: %s", s);
       status = 1;
       goto End;
     }
     infifo =  ssplit->argv[1];
+    if(ssplit->argc > 2)
+      options_argv = ssplit->argv + 2;
   } else {
-    if(ssplit->argc != 3){
+    if((ssplit->argc != 3) && (ssplit->argc != SLAVE_NET_STRING_FIELDS)){
       log_errx("Invalid configuration string for SLAVETYPE_NBS: %s", s);
       status = 1;
       goto End;
     }
     mastername = ssplit->argv[1];
     masterport = ssplit->argv[2];
+    if(ssplit->argc > 3)
+      options_argv = ssplit->argv + 3;
   }
 
   status = slave_element_configure2(slave,
@@ -100,6 +109,7 @@ static int slave_element_configure(struct slave_element_st *slave,
 				    mastername,
 				    masterport,
 				    infifo,
+				    options_argv,
 				    defaults);
  End:
   
@@ -114,6 +124,7 @@ static int slave_element_configure2(struct slave_element_st *slave,
 				    char *mastername,
 				    char *masterport,
 				    char *infifo,
+				    char **options_argv,
 				    struct slave_options_st *defaults){
 
   if(slavetype == SLAVETYPE_INFIFO){
@@ -124,7 +135,7 @@ static int slave_element_configure2(struct slave_element_st *slave,
     }
 
     if((slave->infifo = malloc(strlen(infifo) + 1)) == NULL){
-      warn("Cannot allocate memory for slave->infifo.");
+      log_err("Cannot allocate memory for slave->infifo.");
       return(-1);
     }
 
@@ -139,12 +150,12 @@ static int slave_element_configure2(struct slave_element_st *slave,
       return(1);
 
     if((slave->mastername = malloc(strlen(mastername) + 1)) == NULL){
-      warn("Cannot allocate memory for slave->mastername");
+      log_err("Cannot allocate memory for slave->mastername");
       return(-1);
     }
 
     if((slave->masterport = malloc(strlen(masterport) + 1)) == NULL){
-      warn("Cannot allocate memory for slave->masterport.");
+      log_err("Cannot allocate memory for slave->masterport.");
       free(slave->mastername);
       return(-1);
     }
@@ -158,10 +169,20 @@ static int slave_element_configure2(struct slave_element_st *slave,
     return(1);
   }
 
+  /* Configure the options with the defaults */
   if(slave_element_configure_options(slave, defaults) != 0){
-    warn("Cannot allocate memory for slave->options.");
+    log_err("Cannot allocate memory for slave->options.");
     slave_element_release(slave);
     return(-1);
+  }
+
+  /* Configure the options with the individual overrides in options_argv */ 
+  if(options_argv != NULL){
+    if(slave_element_override_options(slave, options_argv) != 0){
+      log_err("Cannot override options.");
+      slave_element_release(slave);
+      return(-1);
+    }
   }
 
   return(0);
@@ -199,10 +220,11 @@ static int slave_element_configure_options(struct slave_element_st *slave,
 	  strlen(options->infifo_grp) + 1);
   strncpy(slave->options.slavestatsfile, options->slavestatsfile,
 	  strlen(options->slavestatsfile) + 1);
-  slave->options.slave_read_timeout_s = options->slave_read_timeout_s;
+  slave->options.slave_read_timeout_secs = options->slave_read_timeout_secs;
   slave->options.slave_read_timeout_retry = 
     options->slave_read_timeout_retry;
-  slave->options.slave_reopen_timeout_s = options->slave_reopen_timeout_s;
+  slave->options.slave_reopen_timeout_secs =
+    options->slave_reopen_timeout_secs;
   slave->options.slave_so_rcvbuf = options->slave_so_rcvbuf;
   slave->options.slave_stats_logperiod_secs =
     options->slave_stats_logperiod_secs;
@@ -223,6 +245,44 @@ static void slave_element_release_options(struct slave_element_st *slave){
   }
 }
 
+static int slave_element_override_options(struct slave_element_st *slave,
+					  char **options_argv){
+  /*
+   * Here options_argv is an array of pointers to the strings that
+   * appear in the <options> section of the masterservers specification.
+   * For example, if
+   *
+   * <options> = 10,2,2,-1,60
+   *
+   * then the options_argv points to the strings "10", "2", ... respectively.
+   * Our job here is to extract the values, keeping in mind that some of
+   * them could be empty (i.e., the string 10,,,-1,60 is valid.
+   */
+  int v;
+
+  if(strto_int(options_argv[0], &v) == 0){
+    slave->options.slave_read_timeout_secs = v;
+  }
+
+  if(strto_int(options_argv[1], &v) == 0){
+    slave->options.slave_read_timeout_retry = v;
+  }
+
+  if(strto_int(options_argv[2], &v) == 0){
+    slave->options.slave_reopen_timeout_secs = v;
+  }
+
+  if(strto_int(options_argv[3], &v) == 0){
+    slave->options.slave_so_rcvbuf = v;
+  }
+
+  if(strto_int(options_argv[4], &v) == 0){
+    slave->options.slave_stats_logperiod_secs = v;
+  }
+
+  return(0);
+}
+
 static int slave_table_alloc(struct slave_table_st **slavet, int numslaves){
 
   int status = 0;
@@ -237,13 +297,13 @@ static int slave_table_alloc(struct slave_table_st **slavet, int numslaves){
 
   slavetp = malloc(sizeof(struct slave_table_st));
   if(slavetp == NULL){
-    warn("Cannot allocate memory for slavetp."); 
+    log_err("Cannot allocate memory for slavetp."); 
     return(-1);
   }
 
   slave = calloc(numslaves, sizeof(struct slave_element_st));
   if(slave == NULL){
-    warn("Cannot allocate memory for slave."); 
+    log_err("Cannot allocate memory for slave."); 
     free(slavetp);
     return(-1);
   }
@@ -271,31 +331,69 @@ static void slave_table_free(struct slave_table_st *slavet){
 }
 
 int slave_table_create(struct slave_table_st **slavet,
-			  char *s,
+			  char *masterservers,
 			  struct slave_options_st *defaults){
-  int status = 0;
+  /*
+   * The masterservers entries can be separated by ': \t\n'. Then the
+   * individual parameters for each entry are separated by ','. This
+   * is defined in slavet.h.
+   */
   struct slave_table_st *slavetp = NULL;
-  struct strsplit_st *ssplit;
+  int status = 0;
+  char *masterservers_copy = NULL;
+  int masterservers_size;
+  char *p, *q;		/* pointers for strsep */
+  int numslaves = 0;
   int i;
 
-  ssplit = strsplit_create(s, SLAVE_STRING_SEP1, STRSPLIT_FLAG_INCEMPTY);
-  if(ssplit == NULL){
-    warn("Error from strsplit_create().");
-    return(-1);
+  masterservers_size = strlen(masterservers);
+  masterservers_copy = malloc(masterservers_size + 1);
+  if(masterservers_copy == NULL){
+    log_err("Cannot create masterservers_copy.");
+    return(-1);    
   }
 
-  /* ssplit->argc is the number of slaves to create */
-  status = slave_table_alloc(&slavetp, ssplit->argc);
+  strncpy(masterservers_copy, masterservers, masterservers_size + 1);
+
+  /* First count the number of slaves */
+  q = masterservers_copy;
+  while(q != NULL){
+    p = strsep(&q, SLAVE_STRING_SEP1);
+    if(p[0] != '\0')
+      ++numslaves;
+  }
+  
+  if(numslaves == 0){
+    free(masterservers_copy);
+    log_errx("Invalid value of masterservers: %s.", masterservers);
+    return(1);
+  }
+
+  status = slave_table_alloc(&slavetp, numslaves);
   if(status != 0)
     goto End;
 
-  for(i = 0; i < slavetp->numslaves; ++i){
-    slave_element_init(&slavetp->slave[i]);
-    status = slave_element_configure(&slavetp->slave[i],
-				     ssplit->argv[i],
-				     defaults);
-    if(status != 0)
-      goto End;
+  /* Start again */
+  strncpy(masterservers_copy, masterservers, masterservers_size + 1);
+  q = masterservers_copy;
+  i = 0;
+  while(q != NULL){
+    p = strsep(&q, SLAVE_STRING_SEP1);
+    if(p[0] != '\0'){
+      if(i == slavetp->numslaves){
+	status = 1;
+	log_errx("Incorrect allocation of slavet.");
+	goto End;
+      }
+      slave_element_init(&slavetp->slave[i]);
+      status = slave_element_configure(&slavetp->slave[i],
+				       p,
+				       defaults);
+      if(status != 0)
+	goto End;
+
+      ++i;
+    }
   }
 
   /*
@@ -317,7 +415,9 @@ int slave_table_create(struct slave_table_st **slavet,
 
  End:
 
-  strsplit_delete(ssplit);
+  if(masterservers_copy != NULL)
+    free(masterservers_copy);
+
   if(status != 0){
     if(slavetp != NULL)
       slave_table_destroy(slavetp);

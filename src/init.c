@@ -96,14 +96,14 @@ void init_globals(void){
   g.mspoolbdb_maxsize_per128 = MSPOOLBDB_MAXSIZE_PER128;
 
   g.mspoolbdb_dbstats_logfile = MSPOOLBDB_DBSTATS_LOGFILE;
-  g.mspoolbdb_dbstats_logperiod_s = MSPOOLBDB_DBSTATS_LOGPERIOD_SECS;
+  g.mspoolbdb_dbstats_logperiod_secs = MSPOOLBDB_DBSTATS_LOGPERIOD_SECS;
 
   g.filterdevdir = NBSP_FILTER_DEVDIR;
   g.filterserver_enable = FILTERSERVER_ENABLE;
   g.sysfilterlist = NBSP_SYSFILTERLIST;
   g.emwinfilter = NBSP_EMWINFILTER;
   g.emwinfilter_fifo = NBSP_EMWINFILTER_FIFO;
-  g.emwinfilter_timeout_s = NBSP_EMWINFILTER_READ_SECS;
+  g.emwinfilter_read_timeout_secs = NBSP_EMWINFILTER_READ_TIMEOUT_SECS;
   g.emwinfilter_always = EMWINFILTER_ALWAYS;
   g.netfilter_enable = NBSP_NETFILTER_ENABLE;
   g.netfilter = NBSP_NETFILTER;
@@ -132,20 +132,22 @@ void init_globals(void){
   g.server_listen_backlog = SERVER_LISTEN_BACKLOG;
   g.server_maxclients = SERVER_MAXCLIENTS;
   g.server_so_sndbuf = SERVER_SO_SNDBUF;
-  g.server_clientid_timeout_s = SERVER_CLIENTID_TIMEOUT_SECS;
+  g.server_clientid_timeout_secs = SERVER_CLIENTID_TIMEOUT_SECS;
 
-  g.nbspstats_logperiod_s = NBSP_STATS_LOG_PERIOD;
-  g.qstate_logperiod_s = QSTATE_LOG_PERIOD;
-  g.serverstate_logperiod_s = SERVERSTATE_LOG_PERIOD;
-  g.serverthreads_logfreq = SERVERTHREADS_LOG_FREQ;
-  g.broadcast_read_timeout_s = BROADCAST_READ_TIMEOUT_SECS;
-  g.fifo_write_timeout_ms = FIFO_WRITE_TIMEOUT_MSECS;
-  g.client_write_timeout_ms = CLIENT_WRITE_TIMEOUT_MSECS;
+  g.nbspstats_logperiod_secs = NBSP_STATS_LOGPERIOD_SECS;
+  g.qstate_logperiod_secs = QSTATE_LOGPERIOD_SECS;
+  g.serverstate_logperiod_secs = SERVERSTATE_LOGPERIOD_SECS;
+  g.serverthreads_logperiod_count = SERVERTHREADS_LOGPERIOD_COUNT;
+  g.broadcast_read_timeout_secs = BROADCAST_READ_TIMEOUT_SECS;
+  g.fifo_write_timeout_ms = FIFO_WRITE_TIMEOUT_MS;
+  g.client_write_timeout_ms = CLIENT_WRITE_TIMEOUT_MS;
   g.client_write_timeout_retry = CLIENT_WRITE_TIMEOUT_RETRY;
+  g.client_reconnect_wait_sleep_secs = CLIENT_RECONNECT_WAIT_SLEEP_SECS;
+  g.client_reconnect_wait_sleep_retry = CLIENT_RECONNECT_WAIT_SLEEP_RETRY;
   g.clientoptions = NULL;
-  g.servers_queue_read_timeout_ms = SERVERS_QUEUE_READ_TIMEOUT_MSECS;
-  g.sthreads_queue_read_timeout_ms = STHREADS_QUEUE_READ_TIMEOUT_MSECS;
-  g.processor_pctl_read_timeout_ms = PROCESSOR_PCTL_READ_TIMEOUT_MSECS;
+  g.servers_queue_read_timeout_ms = SERVERS_QUEUE_READ_TIMEOUT_MS;
+  g.sthreads_queue_read_timeout_ms = STHREADS_QUEUE_READ_TIMEOUT_MS;
+  g.processor_pctl_read_timeout_ms = PROCESSOR_PCTL_READ_TIMEOUT_MS;
 
   g.memfile_blocksize = MEMFILE_BLOCKSIZE;
   g.memfile_minsize = MEMFILE_MINSIZE;
@@ -161,7 +163,7 @@ void init_globals(void){
 
   g.queue_maxsize_soft = QUEUE_MAXSIZE_SOFT;
   g.queue_maxsize_hard = QUEUE_MAXSIZE_HARD;
-  g.queue_repquota_period_s = QUEUE_REPQUOTA_PERIOD_SECS;
+  g.queue_quota_logperiod_secs = QUEUE_QUOTA_LOGPERIOD_SECS;
 
   g.pctl_maxsize_soft = PCTL_MAXSIZE_SOFT;
   g.pctl_maxsize_hard = PCTL_MAXSIZE_HARD;
@@ -177,17 +179,17 @@ void init_globals(void){
   g.rtxdb_truncate_minutes = NBSP_RTXDB_TRUNCATE_MINUTES;
   g.rtxdb_default_process = NBSP_RTXDB_DEFAULT_PROCESS;
 
-  g.max_load_ave_hard = MAX_LOAD_AVE_HARD;
-  g.max_load_ave_soft = MAX_LOAD_AVE_SOFT;
-  g.max_load_ave_sleep_secs = MAX_LOAD_AVE_SLEEP_SECS;
-  g.max_load_ave_period_secs = MAX_LOAD_AVE_PERIOD_SECS;
-  g.max_load_rtx_index = MAX_LOAD_RTX_INDEX;
+  g.loadave_max_hard = LOADAVE_MAX_HARD;
+  g.loadave_max_soft = LOADAVE_MAX_SOFT;
+  g.loadave_max_sleep_secs = LOADAVE_MAX_SLEEP_SECS;
+  g.loadave_checkperiod_secs = LOADAVE_CHECKPERIOD_SECS;
+  g.loadave_max_rtx_index = LOADAVE_MAX_RTX_INDEX;
 
   g.feedmode = DEFAULT_FEEDMODE;
   g.masterservers = SLAVE_MASTERSERVERS;
-  g.slave_read_timeout_s = SLAVE_READ_TIMEOUT_SECS;
+  g.slave_read_timeout_secs = SLAVE_READ_TIMEOUT_SECS;
   g.slave_read_timeout_retry = SLAVE_READ_TIMEOUT_RETRY;
-  g.slave_reopen_timeout_s = SLAVE_REOPEN_TIMEOUT_SECS;
+  g.slave_reopen_timeout_secs = SLAVE_REOPEN_TIMEOUT_SECS;
   g.slave_so_rcvbuf = SLAVE_SO_RCVBUF;
   g.slave_stats_logperiod_secs = SLAVE_STATS_LOGPERIOD_SECS;
   g.infifo = SLAVE_INPUT_FIFO;
@@ -250,8 +252,8 @@ void init_globals(void){
   g.f_debug = 0;
   g.f_ndaemon = 0;
   g.f_verbose = 0;
-  g.f_max_load_ave = 0;
-  g.f_max_load_rtx = 0;
+  g.f_loadave_max = 0;
+  g.f_loadave_max_rtx = 0;
 }
 
 void cleanup(void){

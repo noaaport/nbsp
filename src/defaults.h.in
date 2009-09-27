@@ -178,7 +178,7 @@
 /* The filter used by the emwin server */
 #define NBSP_EMWINFILTER	"%MYLIBEXECDIR%/emwinfilter"
 #define NBSP_EMWINFILTER_FIFO   "/var/run/nbsp/emwinfilter.fifo"
-#define NBSP_EMWINFILTER_READ_SECS 30
+#define NBSP_EMWINFILTER_READ_TIMEOUT_SECS 30
 
 /*
  * Setting this variable to 0 causes the emwin server to run the emwin filter
@@ -259,22 +259,22 @@
 #define SERVER_CLIENTID_TIMEOUT_SECS	5
 
 /* How often to recollect the statistics (in seconds). */
-#define NBSP_STATS_LOG_PERIOD	60	/* 1 min */
+#define NBSP_STATS_LOGPERIOD_SECS	60	/* 1 min */
 
 /* How often to write the state of the queues (in seconds). */
-#define QSTATE_LOG_PERIOD	60	/* 1 min */
+#define QSTATE_LOGPERIOD_SECS	60	/* 1 min */
 
 /*
  * How often to write the state of the server conections (in seconds).
  * Also used to write the filter server status.
  */
-#define SERVERSTATE_LOG_PERIOD	60
+#define SERVERSTATE_LOGPERIOD_SECS	60
 
 /* 
  * How often to write the server threads statistics (in terms of the
  * number of products processed).
  */
-#define SERVERTHREADS_LOG_FREQ		100
+#define SERVERTHREADS_LOGPERIOD_COUNT		100
 
 /* 
  * Readers' timeout waiting for broadcasts (in seconds). 
@@ -282,21 +282,28 @@
 #define BROADCAST_READ_TIMEOUT_SECS	60
 
 /* logger and filter timeout writing to the fifos (filters) */
-#define FIFO_WRITE_TIMEOUT_MSECS	500
+#define FIFO_WRITE_TIMEOUT_MS	500
 
 /* server timeout writing to network clients and how many more times to try */
-#define CLIENT_WRITE_TIMEOUT_MSECS	1000
+#define CLIENT_WRITE_TIMEOUT_MS		1000
 #define CLIENT_WRITE_TIMEOUT_RETRY	2
+
+/*
+ * Server's threads sleep time waiting for network clients to reconnect,
+ * and how many times to check.
+ */
+#define CLIENT_RECONNECT_WAIT_SLEEP_SECS	5
+#define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	6
 
 /*
  * filter and server, and server-threads and filter-threads timeout waiting
  * for queue ready.
  */
-#define SERVERS_QUEUE_READ_TIMEOUT_MSECS	1000
-#define STHREADS_QUEUE_READ_TIMEOUT_MSECS	10000
+#define SERVERS_QUEUE_READ_TIMEOUT_MS	1000
+#define STHREADS_QUEUE_READ_TIMEOUT_MS	10000
 
 /* processor thread timeout waiting for complete product in pctl */
-#define PROCESSOR_PCTL_READ_TIMEOUT_MSECS	1000
+#define PROCESSOR_PCTL_READ_TIMEOUT_MS	1000
 
 /* main loop sleep interval */
 #define MAINLOOP_SLEEP_SECS	5
@@ -362,7 +369,7 @@
 #define QUEUE_MAXSIZE_SOFT		16384
 #define QUEUE_MAXSIZE_HARD		(SPOOLDB_SLOTS/2)
 /* How often any soft or hard limit excess (see above) is reported. */
-#define QUEUE_REPQUOTA_PERIOD_SECS	60
+#define QUEUE_QUOTA_LOGPERIOD_SECS	60
 
 /*
  * These numbers operate similar to the soft and hard
@@ -422,12 +429,12 @@
  * corresponding check, and that is the default setting. It can be
  * enabled in the run-time configuration file.
  */
-#define MAX_LOAD_AVE_HARD		0
-/* #define MAX_LOAD_AVE_SOFT		(MAX_LOAD_AVE_HARD - 1) */
-#define MAX_LOAD_AVE_SOFT		0
-#define MAX_LOAD_AVE_SLEEP_SECS		30
-#define MAX_LOAD_AVE_PERIOD_SECS	30
-#define MAX_LOAD_RTX_INDEX		250
+#define LOADAVE_MAX_HARD		0
+/* #define LOADAVE_MAX_SOFT		(LOADAVE_MAX_HARD - 1) */
+#define LOADAVE_MAX_SOFT		0
+#define LOADAVE_MAX_SLEEP_SECS		30
+#define LOADAVE_CHECKPERIOD_SECS	30
+#define LOADAVE_MAX_RTX_INDEX		250
 
 /*
  * This section sets the parameters for the various feed modes. Any
@@ -436,9 +443,24 @@
  * in DEFAULT_FEEDMODE, then the SLAVE_MASTERSERVERS is used (and it
  * must be set). The syntax is a string of the form
  *
- * <protocol>,<server>,<port>:<protocol>,<server>,<port>:...
+ * <protocol>,<server>,<port>[,<options>]:...
  *
- * SLAVE_MASTERSERVERS = "1,noaaport.uprrp.edu,2210:1,feed.noaaport.net:2210"
+ * where the <options> is optional and specify the values for
+ *
+ * SLAVE_READ_TIMEOUT_SECS
+ * SLAVE_READ_TIMEOUT_RETRY
+ * SLAVE_REOPEN_TIMEOUT_SECS
+ * SLAVE_SO_RCVBUF
+ * SLAVE_STATS_LOGPERIOD_SECS
+ *
+ * for example 10,2,2,-1,60. Empty or non-numeric values use the default
+ * values given below.
+ *
+ * SLAVE_MASTERSERVERS =  "1,noaaport.uprrp.edu,2210:\
+ *                         1,feed.noaaport.net,2210,600,,,,120:\
+ *                         1,feed.noaaport.net,2212,600,x,x,x,180\"
+ *
+ * The separator(s) of the master specifications is anyone of ': \t\n'.
  */
 #define FEEDMODE_NOAAPORT	1
 #define FEEDMODE_MASTERSERVERS	2
