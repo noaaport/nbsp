@@ -306,13 +306,15 @@ static int emwin_retransmit_packet(struct conn_element_st *ce,
   int fd;
   char *nameorip;
   int timeout_ms;
+  int retry;
   int status = 0;
 
   fd = conn_element_get_fd(ce);
   nameorip = conn_element_get_nameorip(ce);
   timeout_ms = conn_element_get_write_timeout_ms(ce);
+  retry = conn_element_get_write_timeout_retry(ce);
 
-  status = send_emwin_packet(fd, ep, timeout_ms, g.client_write_timeout_retry);
+  status = send_emwin_packet(fd, ep, timeout_ms, retry);
   if(status == -1)
     log_err2("Cannot transmit to client", nameorip);
   else if(status == 1)
@@ -418,13 +420,15 @@ static int nbs_retransmit_packet(struct conn_element_st *ce,
   int fd;
   char *nameorip;
   int timeout_ms;
+  int retry;
   int status = 0;
 
   fd = conn_element_get_fd(ce);
   nameorip = conn_element_get_nameorip(ce);
   timeout_ms = conn_element_get_write_timeout_ms(ce);
+  retry = conn_element_get_write_timeout_retry(ce);
 
-  status = send_nbs_packet(fd, nbs, timeout_ms, g.client_write_timeout_retry);
+  status = send_nbs_packet(fd, nbs, timeout_ms, retry);
   if(status == -1){
     log_err2("Cannot transmit to client", nameorip);
   } else if(status > 0) {
@@ -464,7 +468,7 @@ static int send_nbs2_client(struct conn_element_st *ce,
   fd = conn_element_get_fd(ce);
   nameorip = conn_element_get_nameorip(ce);
   timeout_ms = conn_element_get_write_timeout_ms(ce);
-  retry = g.client_write_timeout_retry;
+  retry = conn_element_get_write_timeout_retry(ce);
 
   n = writem(fd, packet, (size_t)packet_size, (unsigned int)timeout_ms, retry);
 

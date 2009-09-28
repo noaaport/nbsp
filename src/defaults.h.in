@@ -284,6 +284,10 @@
 /* logger and filter timeout writing to the fifos (filters) */
 #define FIFO_WRITE_TIMEOUT_MS	500
 
+/*
+ * The next four parameters can be set in the runtime configuration file
+ * on a per-host basis. The values here are the defaults.
+ */
 /* server timeout writing to network clients and how many more times to try */
 #define CLIENT_WRITE_TIMEOUT_MS		1000
 #define CLIENT_WRITE_TIMEOUT_RETRY	2

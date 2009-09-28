@@ -37,8 +37,8 @@
 #include "server.h"
 #include "server_priv.h"
 
-/* This is used in lookup_client_write_timeout_ms() */
-#define CLIENTOPTION_SEP_CHAR ':'
+/* This is used in lookup_client_options() */
+#define CLIENTOPTION_SEP_CHAR ','
 
 /*
  * The server provides its own allocation for the packetinfo->packet
@@ -97,7 +97,8 @@ static int open_emwin_filter(void);
 static int match_client_protocol(struct conn_table_st *ct, int i);
 
 static void spawn_client_threads(void);
-static int lookup_client_write_timeout_ms(char *clientoptions, char *client);
+static void lookup_client_options(struct conn_element_st *ce,
+				  char *clientoptions);
 
 int spawn_server(void){
   /*
@@ -296,11 +297,12 @@ static int init_server_conn(void){
   /* 
    * This server does not (yet) have a control socket. The server entry
    * is added with pid = 0, ip = NULL, name = NULL,
-   * and the options (timeout, reconnect_sleep, reconnect_retry) 0.
+   * and the options (timeout_ms, timeout_retry, reconnect_sleep,
+   * reconnect_retry) 0.
    */
   status = conn_table_add_element(g.ct, g.server_fd,
 				  CONN_TYPE_SERVER_NET, 0, NULL, NULL,
-				  0, 0, 0);
+				  0, 0, 0, 0);
 
   if(status != 0)
     log_err("Cannot init server.");
@@ -562,6 +564,7 @@ static void process_connections(void){
   clientopts.nonblock = 1;
   clientopts.cloexec = 1;
   clientopts.write_timeout_ms = g.client_write_timeout_ms;
+  clientopts.write_timeout_retry = g.client_write_timeout_retry;
   clientopts.reconnect_wait_sleep_secs = g.client_reconnect_wait_sleep_secs;
   clientopts.reconnect_wait_sleep_retry = g.client_reconnect_wait_sleep_retry;
 
@@ -1124,7 +1127,6 @@ static void spawn_client_threads(void){
   int status;
   int dberror = 0;
   char *nameorip;
-  int timeout;
   int i;
 
   /*
@@ -1156,15 +1158,12 @@ static void spawn_client_threads(void){
     }
    
     /*
-     * The write timeout has already been initialized by init1 to the
+     * The write options has already been initialized by init1 to the
      * global value. Here we look to see if there is a per-client setting
      * for this client.
      */
-    if(valid_str(g.clientoptions)){
-      timeout = lookup_client_write_timeout_ms(g.clientoptions, nameorip);
-      if(timeout > 0)
-	conn_element_set_write_timeout_ms(&g.ct->ce[i], timeout);
-    }
+    if(valid_str(g.clientoptions))
+      lookup_client_options(&g.ct->ce[i], g.clientoptions);
 
     status = allow_filter_init(&g.ct->ce[i]);
     if(status == 0){
@@ -1187,30 +1186,55 @@ static void spawn_client_threads(void){
   }
 }
 
-static int lookup_client_write_timeout_ms(char *clientoptions, char *client){
+static void lookup_client_options(struct conn_element_st *ce,
+				 char *clientoptions){
   /*
    * Looks in the per-host client option string to see if the client
-   * appears are then get the write timeout that was configured for this
-   * client.
+   * appears, and then override those that were configured for this client.
    */
+  char *nameorip;
   char *p;
-  int timeout = -1;
+  int val;
+  int a[4];
+  int count = 0;
 
   assert(clientoptions != NULL);
 
-  p = strstr(clientoptions, client);
+  nameorip = conn_element_get_nameorip(ce);
+  p = strstr(clientoptions, nameorip);
   if(p == NULL)
-    return(-1);
+    return;
 
-  /* Client found */
-  p = strchr(p, CLIENTOPTION_SEP_CHAR);
-  if(p == NULL)
-    return(-2);
+  /*
+   * Client found.
+   */
 
-  /* Option found */
-  ++p;
-  if(sscanf(p, "%d", &timeout) != 1)
-    return(-3);
+  /*
+   * The strategy is to initialize the a[] with the current (default) values
+   * of the ce, then fill the a[] with the overrides, and finally copy the a[]
+   * back to the ce.
+   */ 
+  a[0] = ce->write_timeout_ms;
+  a[1] = ce->write_timeout_retry;
+  a[2] = ce->reconnect_wait_sleep_secs;
+  a[3] = ce->reconnect_wait_sleep_retry;
 
-  return(timeout);
+  while(p != NULL){
+    /*
+     * Find the separating character and point to the next parameter.
+     */
+    p = strchr(p, CLIENTOPTION_SEP_CHAR);
+    if(p != NULL){
+      ++p;
+      if(sscanf(p, "%d", &val) == 1)
+	a[count] = val;
+      
+      ++count;
+    }
+  }
+
+  ce->write_timeout_ms = a[0];
+  ce->write_timeout_retry = a[1];
+  ce->reconnect_wait_sleep_secs = a[2];
+  ce->reconnect_wait_sleep_retry = a[3];
 }
