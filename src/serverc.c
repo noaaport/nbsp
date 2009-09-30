@@ -524,11 +524,14 @@ static int wait_client_reconnection(struct conn_element_st *ce){
   int fd;
   char *nameorip;
 
+  nameorip = conn_element_get_nameorip(ce);
+  log_info("Waiting for reconnection from client %s.", nameorip); 
+
   sleep(ce->reconnect_wait_sleep_secs);
+
   connection_status = conn_element_get_connection_status(ce, &fd);
   if(connection_status == 0){
-    ce->fd = fd;
-    nameorip = conn_element_get_nameorip(ce);
+    conn_element_set_fd(ce, fd);
     log_info("Reconnected client %s.", nameorip); 
   }
 
@@ -568,15 +571,13 @@ static int send_client(struct conn_element_st *ce,
 			void *data, uint32_t data_size){
 
   int status = 0;
-  int fd;
   int count = 0;
 
   do {
-    fd = conn_element_get_fd(ce);
-    if(fd != -1)
+    if(conn_element_get_fd(ce) != -1)
       status = send_client1(ce, data, data_size);
 
-    if(fd != -1)
+    if(conn_element_get_fd(ce) != -1)
       return(status);
 
     /* fd == -1 */

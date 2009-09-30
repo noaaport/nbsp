@@ -297,7 +297,7 @@
  * and how many times to check.
  */
 #define CLIENT_RECONNECT_WAIT_SLEEP_SECS	5
-#define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	6
+#define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	12
 
 /*
  * filter and server, and server-threads and filter-threads timeout waiting

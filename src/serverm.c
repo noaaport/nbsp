@@ -663,7 +663,7 @@ static void process_dirty_connections(void){
     nameorip = conn_table_get_element_nameorip(g.ct, i);
     if(g.ct->pfd[i].fd != -1){
       if(close(g.ct->pfd[i].fd) == 0){
-	log_info("Closing dirty client connection: %s", nameorip);
+	log_info("Closing bad client connection: %s", nameorip);
 	g.ct->pfd[i].fd = -1;
       }
     }
