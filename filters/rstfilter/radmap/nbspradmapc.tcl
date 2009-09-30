@@ -20,8 +20,8 @@ package require cmdline;
 
 set usage {nbspradmapc [-d <output_subdir>] [-f <fext>] [-l <first,last>]
     [-n <nids_subdir>] [-r <rcfile>] [-R <rcfile_path>] [-v] <site> <type>};
-set optlist {{d.arg ""} {f.arg ".nids"} {l.arg "end,end"} {n.arg ""}
-    {r.arg ""} {R.arg ""} {v 0}};
+set optlist {v {d.arg ""} {f.arg ".nids"} {l.arg "end,end"} {n.arg ""}
+    {r.arg ""} {R.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 
 if {$option(n) eq ""} {

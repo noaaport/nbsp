@@ -28,7 +28,7 @@ package require cmdline;
 
 set usage {nbspsatmap [-b] [-g gmap_gif] [-k] [-l] [-q] [-d outputdir] [-p]
     [-s outputsize] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]};
-set optlist {{b 0} {g.arg "gpmap_gif"} {k 0} {l 0} {q 0} {d.arg ""} {p 0}
+set optlist {b k l p q {g.arg "gpmap_gif"} {d.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
