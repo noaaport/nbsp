@@ -644,6 +644,10 @@ static void process_dirty_connections(void){
    * a write error is received). What this function does is to close
    * the socket and set the pfd[i] to -1. This is done only for
    * threads that have ben created and have not finished.
+   *
+   * The unlocked version of conn_element_get_connection_status_un() is used
+   * since the worst that can happen is that a client that has already
+   * disconected is not detected, but it will be detected in the next loop.
    */
   int i;
   int numentries;
@@ -656,7 +660,7 @@ static void process_dirty_connections(void){
     if(conn_element_isnetclient_running(&g.ct->ce[i]) == 0)
       continue;
 
-    connection_status = conn_element_get_connection_status(&g.ct->ce[i], NULL);
+    connection_status =  conn_element_get_connection_status_un(&g.ct->ce[i]);
     if(connection_status == 0)
       continue;
 

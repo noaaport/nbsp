@@ -20,8 +20,8 @@
 
 /*
  * This program assumes that the input file is the uncompressed gini data
- * file. Only when it is invoked with [-i] to just extract the relevant info
- * it can take wither the compressed or uncompresed file as imput.
+ * file. Only when it is invoked with [-i] to just extract the relevant info,
+ * it can take either the compressed or uncompresed file as input.
  */
 
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */

@@ -13,7 +13,7 @@
 #	gpmap(fmt)		(gif)
 # 	gpmap(outputfile)   	(default output file path name)
 #	gpmap(devsize)		(default image size; e.g., "800;600")
-#	gpmap(inputfile)	(full path of input file data file)
+#	gpmap(inputfile)	(full path of input data file)
 #	gpmap(awips)		(e.g., "n0rjua")
 #
 # This script can define additional gpmap() variables, and can redefine

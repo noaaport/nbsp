@@ -347,6 +347,9 @@
 #define CONFOPT_SLAVE_STATS_LOGPERIOD_SECS	@counter@
 #define DEFVAL_SLAVE_STATS_LOGPERIOD_SECS	SLAVE_STATS_LOGPERIOD_SECS
 
+#define CONFOPT_SLAVE_REJECT_DUPLICATES		@counter@
+#define DEFVAL_SLAVE_REJECT_DUPLICATES		SLAVE_REJECT_DUPLICATES
+
 #define CONFOPT_SLAVE_INFIFO		@counter@
 #define DEFVAL_SLAVE_INFIFO		SLAVE_INPUT_FIFO
 
@@ -556,6 +559,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_SLAVE_SO_RCVBUF},
   {"slave_stats_logperiod_secs", CONFOPT_SLAVE_STATS_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SLAVE_STATS_LOGPERIOD_SECS},
+  {"slave_reject_duplicates", CONFOPT_SLAVE_REJECT_DUPLICATES,
+	TCL_LINK_INT, NULL, DEFVAL_SLAVE_REJECT_DUPLICATES},
   {"infeedfifo", CONFOPT_SLAVE_INFIFO, TCL_LINK_STRING, NULL, 0},
   {"infeedfifomode", CONFOPT_SLAVE_INFIFOMODE, TCL_LINK_INT, NULL,
 	DEFVAL_SLAVE_INFIFOMODE},
@@ -739,6 +744,8 @@ int configure(void){
   setoptval(&g.slave_so_rcvbuf, confoptions, CONFOPT_SLAVE_SO_RCVBUF);
   setoptval(&g.slave_stats_logperiod_secs, confoptions,
 	CONFOPT_SLAVE_STATS_LOGPERIOD_SECS);
+  setoptval(&g.slave_reject_duplicates, confoptions,
+	CONFOPT_SLAVE_REJECT_DUPLICATES);
 
   setoptval(&g.infifo, confoptions, CONFOPT_SLAVE_INFIFO);
   setoptval(&g.infifo_mode, confoptions, CONFOPT_SLAVE_INFIFOMODE);
@@ -901,6 +908,7 @@ void print_confoptions(void){
   fprintf(stdout, "slave_so_rcvbuf %d\n", g.slave_so_rcvbuf);
   fprintf(stdout, "slave_stats_logperiod_secs %d\n",
 	g.slave_stats_logperiod_secs);
+  fprintf(stdout, "slave_reject_duplicates %d\n", g.slave_reject_duplicates);
 
   fprintf_str(stdout, fmt, "infeedfifo", g.infifo);
   fprintf_str(stdout, fmt, "infeedfifogrp", g.infifo_grp);
@@ -1062,6 +1070,8 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.slave_so_rcvbuf, -1, "slave_so_rcvbuf");
   VALIDATE_PARAM_L(g.slave_stats_logperiod_secs, 0,
 	"slave_stats_logperiod_secs");
+  VALIDATE_PARAM_L(g.slave_reject_duplicates, 0,
+	"slave_reject_duplicates");
 
   VALIDATE_STR(g.infifo, "infeedfifo");
   /* mode_t infifo_mode type */

@@ -39,7 +39,7 @@ int slavenet_loop_nbs1(struct slave_element_st *slave){
   /*
    * After a reading error, it is best to close and reopen the connection.
    * This function returns 1 when there is such an error, or 2 when
-   * there is a processig error, or 0 when there are no errors.
+   * there is a processing error, or 0 when there are no errors.
    */
   int status = 0;
   int cancel_state;
@@ -80,14 +80,21 @@ int slavenet_loop_nbs1(struct slave_element_st *slave){
   status = slavenbsproc(&nbs);
   (void)pthread_setcancelstate(cancel_state, &cancel_state);
 
-  /* The application should not close the connection in this case. */
-  if(status != 0){
+  /*
+   * The application should not close the connection in this case if there
+   * is an error here. If the status == 2 it means the file is not being
+   * processed (rejected by filter or duplicate policy).
+   */
+  if((status == -1) || (status == 1)){
+    /*
+     * Processing error
+     */
     slave_stats_update_errors(slave);
     return(2);
+  }else if(status == 0){
+    slave_stats_update_packets(slave, nbs.packet_size);
+    slave_stats_report(slave);
   }
-
-  slave_stats_update_packets(slave, nbs.packet_size);
-  slave_stats_report(slave);
 
   return(0);
 }

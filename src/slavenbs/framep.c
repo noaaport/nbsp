@@ -11,6 +11,7 @@
 #include "../globals.h"
 #include "../oscompat.h"
 #include "../err.h"
+#include "../file.h"
 #include "../pctl.h"
 #include "../stats.h"
 #include "../nbspre.h"
@@ -31,7 +32,14 @@ static void cvt_to_uc(char *s);
 static int msave_nbs_block(struct nbs1_packet_st *nbs);
 
 int slavenbsproc(struct nbs1_packet_st *nbs){
-
+  /*
+   * This finction returns the same codes as the various xxx_activepce()
+   * functions:
+   * -1 => some processing (system) error
+   *  0 => no error
+   *  1 => the product is being ignored
+   *  2 => some processing error
+   */
   int status = 0;
 
   update_stats_frames_received(nbs->packet_size);
@@ -55,11 +63,12 @@ static int estart_activepce(struct nbs1_packet_st *nbs){
    *
    * Returns:
    *	 0 => no errors
-   *	-1 => memory error 
-   *     1 => bad wmo header
-   *	 2 => fname queue key size is not large enough (configuration error).
-   *	 3 => full path name of product too long
-   *     4 => file rejected by filter
+   *     1 => file rejected by (regex) filter, or
+   *	      file exists (rejected by ``slave_reject_duplicates'' option).
+   *     2 => error from split_fbasename():
+   *	      bad wmo header
+   *	      fname queue key size is not large enough (configuration error)
+   *	      full path name of product too long
    */
   int status = 0;
   struct pctl_element_st *pce;
@@ -132,15 +141,15 @@ static int estart_activepce(struct nbs1_packet_st *nbs){
 
   /*
    * Extract pce->fname, pce->wmo_id, pce->wmo_station,
-   * pce->wmo_time, pce->wmo_awips, pce->wmo_notawips
-   * and also build fpath.
+   * pce->wmo_time, pce->wmo_awips, pce->wmo_notawips.
+   * This function also builds pce->fpath.
    */
   status = split_fbasename(pce);
 
   if(status != 0){
     log_errx("Could not add element to control list. Bad fbasename %s.",
 	     pce->fbasename);
-    status = 1;
+    status = 2;
     goto end;
   }
 
@@ -150,9 +159,16 @@ static int estart_activepce(struct nbs1_packet_st *nbs){
      * as a cautionary measure.
      */
     update_stats_products_rejected();
-    log_verbose(3, "Rejected: %s.", pce->fname);
+    log_verbose(3, "Rejected by regex: %s.", pce->fname);
 
-    status = 4;
+    status = 1;
+    goto end;
+  }
+
+  if((g.slave_reject_duplicates == 1) && (file_exists(pce->fpath) == 0)){
+    log_info("Ignored duplicate: %s.", pce->fbasename);
+
+    status = 1;
     goto end;
   }
 
@@ -171,7 +187,7 @@ static int estart_activepce(struct nbs1_packet_st *nbs){
 
   if(status != 0){
     close_pctl_activepce(g.pctl, nbs->slavenbs_reader_index);
-    if(status != 4)
+    if(status != 1)
       update_stats_products_missed();
   }
 
@@ -189,6 +205,7 @@ static int eupdate_activepce(struct nbs1_packet_st *nbs){
    * -1 a memory or write error msave_nbs_block
    */
   int status = 0;
+  struct pctl_element_st *pce;
 
   /*
    * This function updates the frame counter, checking that the received
@@ -207,8 +224,6 @@ static int eupdate_activepce(struct nbs1_packet_st *nbs){
     log_verbose(3, "PROGRESS: %u is not active.", nbs->seq_number);
     return(1);
   }else if(status == 2){
-    struct pctl_element_st *pce;
-
     pce = get_pctl_activepce(g.pctl, nbs->slavenbs_reader_index,
 			     nbs->seq_number);
     if(pce != NULL){
@@ -235,8 +250,16 @@ static int eupdate_activepce(struct nbs1_packet_st *nbs){
 }
 
 static int eend_activepce(struct nbs1_packet_st *nbs){
-
+  /*
+   * Returns:
+   *
+   *  0
+   *  1 => product is being ignored
+   *  2 => incomplete product
+   * -1 => error inserting product in pctl
+   */
   int status = 0;
+  struct pctl_element_st *pce;
 
   /*
    * Get the sequence number of the active pce and check that it is
@@ -253,10 +276,16 @@ static int eend_activepce(struct nbs1_packet_st *nbs){
     log_verbose(3, "END: Incomplete frames received for %u on %d.",
 		nbs->seq_number, nbs->slavenbs_reader_index);
   }else{
-    update_stats_products_completed();
-    status = esend_pctl_activepce(g.pctl, nbs->slavenbs_reader_index);
-    if(status != 0){
-      log_errx("Could not add %u to processor queue.", nbs->seq_number);
+    pce = get_pctl_activepce(g.pctl, nbs->slavenbs_reader_index,
+			     nbs->seq_number);
+    if(file_exists(pce->fpath) == 0){
+      log_info("Discarding duplicate: %s.", pce->fpath);
+    }else{
+      update_stats_products_completed();
+      if(esend_pctl_activepce(g.pctl, nbs->slavenbs_reader_index) != 0){
+	status = -1;
+	log_errx("Could not add %u to processor queue.", nbs->seq_number);
+      }
     }
   }
 

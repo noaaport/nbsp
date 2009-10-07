@@ -5,8 +5,8 @@
  *
  * $Id$
  */
-#ifndef NBS_H
-#define NBS_H
+#ifndef NBS1_H
+#define NBS1_H
 
 #include <sys/types.h>
 #include "const.h"
@@ -31,8 +31,8 @@
  * byte[5-8] - uint32 - file block size (how much more to read)
  * byte[9- ] -        - start of data
  *
- * - The uint32 values are stored with the first byte the most significant
- *   digits, last byte the least significant one.
+ * - The uint32 values are stored with the the most significant digit in
+ *   the first byte, the least significant digit in the last byte.
  *
  * - It is guaranteed that, before and after decompression, the data is never
  *   larger than the constant NBS1_BLOCK_SIZE.

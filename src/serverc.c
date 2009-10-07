@@ -581,14 +581,15 @@ static int send_client(struct conn_element_st *ce,
       return(status);
 
     /* fd == -1 */
-    status = wait_client_reconnection(ce);
+    if(count == ce->reconnect_wait_sleep_retry)
+      break;
+    else
+      status = wait_client_reconnection(ce);
 
     if(status != 0)
       ++count;
 
-  } while((count <= ce->reconnect_wait_sleep_retry) &&
-	  (get_quit_flag() == 0) &&
-	  (conn_element_get_exit_flag(ce) == 0));
+  } while((get_quit_flag() == 0) && (conn_element_get_exit_flag(ce) == 0));
 
   /*
    * If we are here then the connection had to be closed by one of the

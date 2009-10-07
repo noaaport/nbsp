@@ -44,8 +44,10 @@ static char *ginputfname = NULL;
 static char *goutputfname = NULL;
 static int opt_background = 0;
 static int opt_skipcount = 0;	/* optionally strip ccb, wmo, ... or any */
+static int opt_nframes = 0;     /* process only this number of frames */
 static int gframenumber = 0;
-static char *usage = "nbspunz [-b] [-c skipcount] [-o output] fname";
+static char *usage = "nbspunz [-b] [-c skipcount] [-n nframes]"
+                     " [-o output] fname";
 
 static void cleanup(void){
 
@@ -161,6 +163,9 @@ static int process_frames(struct memfile_st *mf,
 
   while((zs.avail_in > 0) && (status == 0)){
     status = process_frame(mf, &zs, &zstatus);
+    ++gframenumber;
+    if(gframenumber == opt_nframes)
+      break;
 
     if((status == 0) && (zstatus == Z_STREAM_END)){
       save_avail_in = zs.avail_in;
@@ -214,10 +219,8 @@ static int process_frame(struct memfile_st *mf, z_stream *zs, int *zstatus){
    * The default is write the entire frame, but the first frame is stripped
    * the number of bytes specifies by the [-c] option.
    */
-  if(gframenumber == 0)
+  if((gframenumber == 0) && (opt_skipcount > 0))
     skip = opt_skipcount;
-
-  ++gframenumber;
 
   if((zs->next_in[0] != ZBYTE0) || (zs->next_in[1] != ZBYTE1)){
     if((n = write_memfile(mf, zs->next_in, zs->avail_in)) == -1)
@@ -300,7 +303,7 @@ static int parse_args(int argc, char ** argv){
 
   int status = 0;
   int c;
-  char *optstr = "bc:o:";
+  char *optstr = "bc:n:o:";
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
@@ -310,7 +313,13 @@ static int parse_args(int argc, char ** argv){
     case 'c':
       status = strto_int(optarg, &opt_skipcount);
       if(status == 1){
-	log_errx(1, "Illegal argument to [-c] option.");
+	log_errx(1, "Invalid argument to [-c] option.");
+      }
+      break;
+    case 'n':
+      status = strto_int(optarg, &opt_nframes);
+      if(status == 1){
+	log_errx(1, "Invalid argument to [-n] option.");
       }
       break;
     case 'o':

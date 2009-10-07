@@ -176,6 +176,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 #
 # -nobody  =>  do not extract the body of the file and the associated variables
 # -dogrib  =>  extract the rc(grib...) variables
+# -dorad   =>  extract the radar info variables
 # -noccb   =>  ignore the ccb global settings and assume the file nas no ccb
 #
 # Undetermined variables are returned as "".
@@ -185,6 +186,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # having to do so even for the filters that do not need them. Those filters
 # that use them (dafilter, gpfilter, ldmfilter) should call this function
 # with -dogrib.
+#
+# The radar info variables are extracted using nbspradinfo.
 #
 # The -nobody flag can be used, for example, by the rstnntpfilter, which
 # receives the already processed files (instead of the raw data files)
@@ -217,6 +220,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     # The default values of the flags
     set dogrib 0;
+    set dorad 0;
     set dobody 1;
     set doccb 1;
 
@@ -264,6 +268,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(gribforecasttime2) "";
     set rc(gribforecasttimeri) ""; # time range indicator
     set rc(gribforecasttime)   ""; # our encoded combination of the above
+    set rc(radlat) "";
+    set rc(radlon) "";
+    set rc(radheight) "";
+    set rc(radseconds) "";
+    set rc(radmode) "";
+    set rc(radcode) "";
 
     set finfo_parts [split $finfo];
     set rc(seq) [lindex $finfo_parts 0];
@@ -322,6 +332,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    "-dogrib" {
 		set dogrib 1;
 	    }
+
+	    "-dorad" {
+		set dorad 1;
+	    }
 	    
 	    "-nobody" {
 		set dobody 0;
@@ -341,8 +355,34 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	set rc(txtflag) [filterlib_get_txtflag $rc(body) $ccbsaved $ccbsize];
     }
 
+    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
+	# We process here only those that we are sure that are transmitted
+	# compressed. There are others (e.g., dsp) that sometimes are
+	# transmitted compresed and sometimes not. If (when) we know
+	# for sure those that are uncompressed, then we can put
+	# and else clause to process those as well.
+	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
+	    set radinfo_status [catch {
+	        set radinfo [split \
+        	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
+			$rc(fpath) | nbspradinfo -b]];
+	    } errmsg];
+        } else {
+	    set radinfo_status 1;
+        }
+
+	if {$radinfo_status == 0} {
+	    set rc(radlat) [lindex $radinfo 0];
+	    set rc(radlon) [lindex $radinfo 1];
+	    set rc(radheight) [lindex $radinfo 2];
+	    set rc(radseconds) [lindex $radinfo 3];
+	    set rc(radmode) [lindex $radinfo 4];
+	    set rc(radcode) [lindex $radinfo 5];
+	}
+    }
+
     # If it is a grib file, get the model name.
-    if {($rc(nawips) == "grib") && ($dogrib == 1)} {
+    if {($rc(nawips) eq "grib") && ($dogrib == 1)} {
     	set gribparams \
 		[get_grib_model_params $rc(fpath) $rc(station) $rc(wmoid)];
 	if {[llength $gribparams] == 0} {

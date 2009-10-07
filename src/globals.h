@@ -147,6 +147,7 @@ struct nbsp_globals {
   int slave_reopen_timeout_secs; /* sleep secs before reopening connection */
   int slave_so_rcvbuf;
   int slave_stats_logperiod_secs;
+  int slave_reject_duplicates;
   char *infifo;			/* fifo name for input feed mode */
   mode_t infifo_mode;
   char *infifo_grp;

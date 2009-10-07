@@ -471,14 +471,23 @@
 #define FEEDMODE_INPUTFIFO	4
 
 #define SLAVE_MASTERSERVERS	NULL
-#define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
-#define SLAVE_INPUT_FIFO_MODE	0660
-#define SLAVE_INPUT_FIFO_GRP	"news"
+
 #define SLAVE_READ_TIMEOUT_SECS	10
 #define SLAVE_READ_TIMEOUT_RETRY 2
 #define SLAVE_REOPEN_TIMEOUT_SECS 2
 #define SLAVE_SO_RCVBUF		-1
 #define SLAVE_STATS_LOGPERIOD_SECS 60
+/*
+ * When a slave reads from multiple masters, it is possible that it will
+ * receive duplicates of the same file, depending on what each master
+ * is configured to send. This option can be used to enable the detection
+ * (and rejection) of such duplicates, and it is set by default.
+ */
+#define SLAVE_REJECT_DUPLICATES 1
+
+#define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
+#define SLAVE_INPUT_FIFO_MODE	0660
+#define SLAVE_INPUT_FIFO_GRP	"news"
 
 /*
  * #define DEFAULT_FEEDMODE	(FEEDMODE_NOAAPORT | FEEDMODE_INPUTFIFO)

@@ -8,19 +8,18 @@
 @include@ @q@../../../Makefile.inc@q@
 
 SOURCES = nbspfile.c nbspsat.c nbspunz.c nbspz.c nbsppipe.c \
-	nbspgrib.c nbspgrib2.c nbspcat.c \
-	nbsprad.c nbspnids.c nbspradsw.c \
+	nbspgrib.c nbspgrib2.c nbspcat.c nbspradinfo.c \
 	err.c util.c unz.c mfile.c io.c
 COMMONOBJECTS = err.o util.o unz.o io.o
 ALLOBJECTS = nbspfile.o nbspsat.o nbspunz.o nbspz.o nbsppipe.o \
-	nbspgrib.o nbspgrib2.o nbspcat.o \
-	nbsprad.o nbspnids.o nbspradsw.o \
+	nbspgrib.o nbspgrib2.o nbspcat.o nbspradinfo.o \
 	${COMMONOBJECTS} ${SHAREDOBJECTS} mfile.o
 SHAREDHEADERS = common.h strsplit.h
 SHAREDSOURCES = strsplit.c
 SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h const.h io.h config.h ${SHAREDHEADERS}
-TARGET = nbspfile nbspsat nbspunz nbspz nbsppipe nbspgrib nbspgrib2 nbspcat
+TARGET = nbspfile nbspsat nbspunz nbspz nbsppipe nbspgrib nbspgrib2 nbspcat \
+	nbspradinfo
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -71,6 +70,9 @@ nbspgrib2: nbspgrib2.o ${COMMONOBJECTS}
 
 nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 	${CC} -o nbspcat nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS} ${LDFLAGS}
+
+nbspradinfo: nbspradinfo.o ${COMMONOBJECTS}
+	${CC} -o nbspradinfo nbspradinfo.o ${COMMONOBJECTS} ${LDFLAGS}
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}

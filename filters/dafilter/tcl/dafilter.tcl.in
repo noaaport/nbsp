@@ -99,14 +99,31 @@ proc process {finfo} {
 
     global dafilter;
 
+    set _cmd [list filterlib_get_rcvars rc $finfo];
+
+    # If grib is enable, extract the rc(gribxxx) parameters
     if {([info exists dafilter(grib_enable)] == 0) || \
 	($dafilter(grib_enable) == 1)} {
-        filterlib_get_rcvars rc $finfo -dogrib;
-    } else {
-	filterlib_get_rcvars rc $finfo;
+	lappend _cmd "-dogrib";
     }
 
-    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    # If rad is enable, extract the rc(radxxx) parameters
+    if {([info exists dafilter(rad_enable)] == 0) || \
+	($dafilter(rad_enable) == 1)} {
+	lappend _cmd "-dorad";
+    }
+
+    eval ${_cmd};
+
+    # If it is a nids file, then use the true time instead of the wmo.
+    # This is done (in filters.lib) only for a set of the nids, and therefore
+    # we check that the rc(radxxx) variable is defined.
+
+    if {$rc(radseconds) ne ""} {
+	set seconds $rc(radseconds);
+    } else {
+        set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    }
 
     if {$dafilter(archive_enable) != 0} {
 	set dafilter(archive_subdir) [clock format $seconds -format \

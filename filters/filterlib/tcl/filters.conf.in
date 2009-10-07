@@ -36,7 +36,9 @@ set common(datainvformat)  "%Y%m%d%H";  # format for hourly subdirs
 # Common functions used by some filters, and the global variables
 # used by them (ccbsize and wmoawips_size come from src/sbn.h).
 # (wmoawips_size is used by the dafilter and rstfilter when dealing
-# with radar files. The total ccb + wmo + ( BBB) + awips header is
+# with radar files. The radheadersize is used by the filterlib (dafilter)
+# to extract the radar info from the nids data file.
+# The total ccb + wmo + ( BBB) + awips header is
 # 24 + 18 (+ 4) + 6 + 6 = 54 (58), including \r\r\n twice).
 #
 set common(filterslib)		[file join $common(libdir) "filters.lib"];
@@ -44,16 +46,21 @@ set common(ccbsaved)		1;
 set common(ccbsize)		24;
 set common(wmoheadersize)	18;     # excluding the possible ( BBB)
 set common(wmoawips_size)	30;	# excluding the possible ( BBB)
+set common(totalheadersize)  [expr $common(ccbsize) + $common(wmoawips_size)];
 # These two are not used; they are here for documentation purposes
 set common(wmobbbheadersize)	22;     # including the possible ( BBB)
 set common(wmobbbawips_size)	34;     # including the possible ( BBB)
 #
 set filterslib(ccbsaved)	$common(ccbsaved);
 set filterslib(ccbsize)		$common(ccbsize);
+set filterslib(totalheadersize) $common(totalheadersize);
 set filterslib(bodypartsize)	512;
 set filterslib(gmpk_header_fmt) "\001\r\r\n%03d \r\r\n"; 
 set filterslib(gmpk_trailer_str) "\r\r\n\003";
 set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
+# Which nids for nbspradinfo must be piped through nbspunz first
+# (It is matched against awips1)
+set filterslib(doradinfounz)	{^n([^m]|m[^d])|^tr};
 
 # The error functions and their global variables.
 # By default the filters report errors using syslog.

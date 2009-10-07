@@ -31,6 +31,7 @@ make clean
 /usr/local/bin/nbspcleanup
 /usr/local/bin/nbspversion
 /usr/local/bin/nbspsat
+/usr/local/bin/nbspradinfo
 /usr/local/bin/nbspcat
 /usr/local/bin/nbspfile
 /usr/local/bin/nbspunz

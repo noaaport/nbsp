@@ -192,6 +192,7 @@ void init_globals(void){
   g.slave_reopen_timeout_secs = SLAVE_REOPEN_TIMEOUT_SECS;
   g.slave_so_rcvbuf = SLAVE_SO_RCVBUF;
   g.slave_stats_logperiod_secs = SLAVE_STATS_LOGPERIOD_SECS;
+  g.slave_reject_duplicates = SLAVE_REJECT_DUPLICATES;
   g.infifo = SLAVE_INPUT_FIFO;
   g.infifo_mode = SLAVE_INPUT_FIFO_MODE;
   g.infifo_grp = SLAVE_INPUT_FIFO_GRP;
