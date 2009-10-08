@@ -31,11 +31,18 @@ lappend action {
 
 # Examples- 
 
+# The rules are evaluated for each product and for each client.
 # At the time that the rules of this file are executed,
-#  the "rc" variables that are listed in the file "nbspfilter.rc-ex"
-# are defined here as well. The syntax for constructing the rules
-# using tcl is explained in that file, with the exception of using
-# the additional variables
+# the "rc" variables that are listed in the file "nbspfilter.rc-ex"
+# are defined here as well. In addition, the following two variables
+#
+# serverinfo(clientname)
+# serverinfo(clientip)
+#
+# are defined and they are set to the client's fqdn name and ip, respectively.
+# 
+# The syntax for constructing the rules using tcl is explained in that file,
+# with the exception of using the additional variables
 #
 #	allow(0)
 #	allow(<hostname>.<domain>)
@@ -65,6 +72,16 @@ lappend action {
 
 # If the variable allow(0) is not set at all, it is the same
 # as if it were set to 0.
+
+# This is a way to allow, by default, all the computers
+# from a given domain (e.g., noaaport.net)
+#
+lappend cond {
+  [regexp {\.noaaport.net$} $serverinfo(clientname)]
+}
+lappend action {
+  set allow(0) 1;
+}
 
 #
 # Host-specific rules
@@ -134,3 +151,4 @@ lappend action {
   set allow(ltp.upr.clu.edu) 0;
   set allow(caribe.noaaport.net) 0;
 }
+

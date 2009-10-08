@@ -125,11 +125,14 @@ proc main {finfo} {
 
 proc process {finfo} {
 # 
-# The common library defined all rc variables except rc(allow)
-# which is initialized explicitly here.
+# The common library defines all rc variables. The allow array is defined here
+# and declared global so that the server can retrieve the values.
+# The serverinfo is a  set of variables defined by the server that can be
+# used in the rules, such as serverinfo(clientname).
 #
     global netfilter;
     global allow;
+    global serverinfo;
 
     if {$netfilter(dobody) == 1} {
         filterlib_get_rcvars rc $finfo;

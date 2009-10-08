@@ -18,39 +18,52 @@
 #include "sfilter.h"
 #include "server_priv.h"
 
-#define VAR_DEFAULT	"allow(0)"
-#define VAR_FMT		"allow(%s)"
-#define VAR_ADD_SIZE	7		/* strlen("allow()") */
-static char *s_var_default = NULL;	/* see allocation below */
+/*
+ * We will use Tcl_GetVar2 and Tcl_SetVar2 which use separate arguments
+ * for the array name and the index. Since the arguments are scalar variables,
+ * then in contrast to Tcl_GetVar and Tcl_SetVar, they do not modify the
+ * arguments and we can leave them as static strings.
+ */
+#define ALLOW_VARNAME			"allow"
+#define ALLOW_DEFAULT_INDEX		"0"
+#define SERVERINFO_VARNAME		"serverinfo"
+#define SERVERINFO_CLIENTNAME_INDEX	"clientname"
+#define SERVERINFO_CLIENTIP_INDEX	"clientip"
+#define SERVERINFO_CLIENT_EMPTYVAL	""
 
 /*
- * var_ip and var_name are the variables that the filter must
- * set, and whose values we will try to get here.
+ * The server sets the serverinfo() variables, that the filter can use.
+ * The filter must set the the variables
+ *
+ * allow(192.168.2.7)
+ * allow(noaaport.uprrp.edu)
+ *
+ * and we here try to get their values or the default allow(0).
  */
+
 struct allow_filter_st {
-  int allow;
-  char *var_ip;		/* e.g., allow(192.168.2.7) */
-  char *var_name;	/* e.g., allow(noaaport.uprrp.edu) */
+  int allow;	/* the result of the allow variable for each client */
 };
 
 static void free_filterdata(void *p);
-static int tcl_get_int(Tcl_Interp *interp, char *varname, int *val);
-
 static void allow_filter_set_flag(struct conn_element_st *ce, int flag);
-static char *allow_filter_get_varip(struct conn_element_st *ce);
-static char *allow_filter_get_varname(struct conn_element_st *ce);
+static int tcl_get_allow_val(Tcl_Interp *interp, char *index, int *val);
+static int tcl_set_serverinfo(Tcl_Interp *interp, char *index, char *val);
 
-static int tcl_get_int(Tcl_Interp *interp, char *varname, int *val){
+static int tcl_get_allow_val(Tcl_Interp *interp, char *index, int *val){
   /*
+   * allow_index should the hostname or hostip of the client. This function
+   * returns the value of allow(<hostname>) or allow(<hostip>). 
+   * 
    * Returns
    *
-   * 1 if the variable could not be fetched.
-   * 0 otherwise
+   * 0 if the variable could be fetched.
+   * 1 otherwise
    */
   const char *result;
   int status = 0;
 
-  result = Tcl_GetVar(interp, varname, 0);
+  result = Tcl_GetVar2(interp, ALLOW_VARNAME, index, 0);
   if(result == NULL)
     status = 1;
 
@@ -61,15 +74,36 @@ static int tcl_get_int(Tcl_Interp *interp, char *varname, int *val){
 
   return(status);
 }
-  
+
+static int tcl_set_serverinfo(Tcl_Interp *interp, char *index, char *val){
+  /*
+   * index is either "clientname" or "clientip" and
+   * val should the hostname or hostip of the client,
+   * respectively.
+   * 
+   * Returns
+   *
+   * 0 if the variable could be set.
+   * 1 otherwise
+   */
+  const char *result;
+  int status = 0;
+
+  result = Tcl_SetVar2(interp, SERVERINFO_VARNAME, index, val, 0);
+  if(result == NULL)
+    status = 1;
+
+  return(status);
+}
+
 int exec_net_filter(struct sfilterp_st *sfilterp, struct conn_table_st *ct){
   /*
    * The job of this function is to Tcl_EvalFile the netfilter
    * and fillup the allow variable for each ce in the table using the 
    * variable's values defined by the rc file of the filter.
    */
-  char *var_name;
-  char *var_ip;
+  char *name;
+  char *ip;
   int numentries;
   int isnetclient;
   int f_thread_created;
@@ -80,32 +114,6 @@ int exec_net_filter(struct sfilterp_st *sfilterp, struct conn_table_st *ct){
   int status = 0;
   int i;
 
-  status = exec_sfilter_script(sfilterp);
-  if(status != 0)
-    return(-1);
-
-  /*
-   * Use a dynamically allocated variable for the "allow(0)" name
-   * to work around the resrtiction of Tcl_GetVar that it modifies the
-   * variable when it is an array name.
-   */
-
-  /* First time */
-  if(s_var_default == NULL){
-    s_var_default = malloc(strlen(VAR_DEFAULT) + 1);
-    if(s_var_default != NULL)
-      strncpy(s_var_default, VAR_DEFAULT, strlen(VAR_DEFAULT) + 1);
-  }
-
-  if(s_var_default != NULL)
-    status = tcl_get_int(sfilterp->interp, s_var_default,
-			 &allow_filter_default);
-
-  if((status != 0) || (s_var_default == NULL)){
-    allow_filter_default = allow_hardcoded_default;
-    status = 0;
-  }
-
   numentries = conn_table_get_numentries(ct);
   for(i = 0; i < numentries; ++i){
     f_thread_created = conn_table_get_element_fthread_created(ct, i);
@@ -115,60 +123,77 @@ int exec_net_filter(struct sfilterp_st *sfilterp, struct conn_table_st *ct){
     if((isnetclient == 0) || (f_thread_created == 0) || f_thread_finished)
       continue;
 
-    var_ip = allow_filter_get_varip(&ct->ce[i]);
-    var_name = allow_filter_get_varname(&ct->ce[i]);
+    name = conn_element_get_name(&ct->ce[i]);
+    ip = conn_element_get_ip(&ct->ce[i]);
 
-    if(var_name != NULL)
-      status = tcl_get_int(sfilterp->interp, var_name, &allow_result);
+    if(name != NULL)
+      status = tcl_set_serverinfo(sfilterp->interp,
+				  SERVERINFO_CLIENTNAME_INDEX, name);
+    else
+      status = tcl_set_serverinfo(sfilterp->interp,
+				  SERVERINFO_CLIENTNAME_INDEX,
+				  SERVERINFO_CLIENT_EMPTYVAL);
 
-    if((var_name == NULL) || (status != 0))
-      status = tcl_get_int(sfilterp->interp, var_ip, &allow_result);
+    if(status == 0){
+      if(ip != NULL)
+	status = tcl_set_serverinfo(sfilterp->interp,
+				    SERVERINFO_CLIENTIP_INDEX, ip);
+      else
+	status = tcl_set_serverinfo(sfilterp->interp,
+				    SERVERINFO_CLIENTIP_INDEX,
+				    SERVERINFO_CLIENT_EMPTYVAL);
+    }
 
+    if(status == 0){
+      if(exec_sfilter_script(sfilterp) != 0)
+	status = -1;
+    }
+
+    /*
+     * Any error up to this point is considered fatal, in the sense that
+     * the filter cannot be properly evaluated.
+     */
     if(status != 0)
+      break;
+
+    /*
+     * Here we try to retrieve the allow setting for each client, and
+     * errors are not considered fatal.
+     */
+    status = tcl_get_allow_val(sfilterp->interp,
+			       ALLOW_DEFAULT_INDEX, &allow_filter_default);
+    if(status != 0){
+      allow_filter_default = allow_hardcoded_default;
+      status = 0;
+    }
+    
+    if(name != NULL)
+      status = tcl_get_allow_val(sfilterp->interp, name, &allow_result);
+
+    if((name == NULL) || (status != 0))
+      status = tcl_get_allow_val(sfilterp->interp, ip, &allow_result);
+
+    if(status != 0){
       allow_result = allow_filter_default;
+      status = 0;
+    }
 
     allow_filter_set_flag(&ct->ce[i], allow_result);
   }
 
-  return(0);
+  return(status);
 }
 
 int allow_filter_init(struct conn_element_st *ce){
 
   struct allow_filter_st *allowp;
-  char *var_ip = NULL;
-  char *var_name = NULL;
-  char *ip;
-  char *name;
   int status = 0;
 
   allowp = (struct allow_filter_st*)malloc(sizeof(struct allow_filter_st));
   if(allowp == NULL)
     return(-1);
 
-  ip = conn_element_get_ip(ce);
-  name = conn_element_get_name(ce);
-
-  var_ip = malloc(strlen(ip) + VAR_ADD_SIZE + 1);
-  if(var_ip == NULL){
-    free(allowp);
-    return(-1);
-  }
-  snprintf(var_ip, strlen(ip) + VAR_ADD_SIZE + 1, VAR_FMT, ip);
-
-  if(name != NULL){
-    var_name = malloc(strlen(name) + VAR_ADD_SIZE + 1);
-    if(var_name == NULL){
-      free(var_ip);
-      free(allowp);
-      return(-1);
-    }
-    snprintf(var_name, strlen(name) + VAR_ADD_SIZE + 1, VAR_FMT, name);
-  }
-
   allowp->allow = NETFILTER_ALLOW_DEFAULT;
-  allowp->var_ip = var_ip;
-  allowp->var_name = var_name;
 
   status = conn_element_init3(ce, (void*)allowp, free_filterdata);
   if(status != 0){
@@ -197,35 +222,9 @@ int allow_filter_get_flag(struct conn_element_st *ce){
   return(allowp->allow);
 }
 
-static char *allow_filter_get_varip(struct conn_element_st *ce){
-
-  struct allow_filter_st *allowp = (struct allow_filter_st*)ce->filterdata;
-
-  assert(allowp != NULL);
-
-  return(allowp->var_ip);
-}
-
-static char *allow_filter_get_varname(struct conn_element_st *ce){
-
-  struct allow_filter_st *allowp = (struct allow_filter_st*)ce->filterdata;
-
-  assert(allowp != NULL);
-
-  return(allowp->var_name);
-}
-
 static void free_filterdata(void *p){
 
-  struct allow_filter_st *allowp = (struct allow_filter_st*)p;
-
   assert(p != NULL);
-
-  if(allowp->var_ip != NULL)
-    free(allowp->var_ip);
-
-  if(allowp->var_name != NULL)
-    free(allowp->var_name);
 
   free(p);
 }
