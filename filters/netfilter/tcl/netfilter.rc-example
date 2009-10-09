@@ -1,0 +1,55 @@
+#
+# $Id$
+#
+
+#
+# Example file -
+#
+
+# Suppose we are writing the netfilter.rc.
+# The best way to start is by setting this:
+
+lappend cond {1}
+lappend action {
+  set allow(0) 0;
+}
+
+# Now suppose I want to allow any computer in ".upr.clu.edu" to connect
+# and receive everything. Then I can add
+
+lappend cond {
+  [regexp {\.upr\.clu\.edu$} $serverinfo(clientname)]
+}
+lappend action {
+  set allow(0) 1
+}
+
+# Now suppose I want to allow any computer from wxpro.net to get
+# all the TX/OK n0r radars:
+
+lappend cond {
+  [regexp {(n0r)(dyx|fdr|crp|grk|ewx|sjt|ama|lbb|hgx|maf|tlx|inx|epz|dfx|fws|br
+o)} $rc(awips)] && [regexp {\.wxpro\.net$} $serverinfo(clientname)]
+}
+
+lappend action {
+  set allow(0) 1;
+}
+
+# My defaults are now set, and I can put individual rules separately,
+# for each computer if I need to override some of the those defaults
+# set above. For example if I want indra to have everything
+
+lappend cond {1}
+lappend action {
+  set allow(indra.wxpro.net) 1;
+}
+
+# Another way to accomplish the same thing is
+
+lappend cond {
+  $serverinfo(clientname) eq "indra.wxpro.net"
+}
+lappend action {
+  set allow(0) 1;
+}
