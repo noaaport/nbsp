@@ -115,6 +115,10 @@ libexec/nbsp/cspoolbdb.tcl
 libexec/nbsp/pkgIndex.tcl
 libexec/nbsp/tclgrads/grads.tcl
 libexec/nbsp/tclgrads/pkgIndex.tcl
+libexec/nbsp/tclgempak/gempak.tcl
+libexec/nbsp/tclgempak/gdinfo.tcl
+libexec/nbsp/tclgempak/sflist.tcl
+libexec/nbsp/tclgempak/pkgIndex.tcl
 libexec/nbsp/tclmetar/metar.tcl
 libexec/nbsp/tclmetar/pkgIndex.tcl
 libexec/nbsp/tclupperair/fm35.tcl

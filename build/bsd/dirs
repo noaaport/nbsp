@@ -11,6 +11,7 @@ libexec/nbsp/tclhttpd/nbsp
 libexec/nbsp/tclhttpd/extensions
 libexec/nbsp/tclhttpd/extensions/weatherscope
 libexec/nbsp/tclgrads
+libexec/nbsp/tclgempak
 libexec/nbsp/tclmetar
 libexec/nbsp/tclupperair
 share/doc/nbsp
