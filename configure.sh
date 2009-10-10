@@ -5,6 +5,7 @@
 config_dirs="conf src utils scripts doc filters \
     tclhttpd \
     tclgrads/ext/nbsp \
+    tclgempak/ext/nbsp \
     tclmetar/dc/nbsp \
     tclupperair/dc/nbsp"
 
