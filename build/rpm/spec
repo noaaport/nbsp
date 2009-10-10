@@ -142,6 +142,10 @@ make clean
 /usr/local/libexec/nbsp/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclgrads/grads.tcl
 /usr/local/libexec/nbsp/tclgrads/pkgIndex.tcl
+/usr/local/libexec/nbsp/tclgempak/gempak.tcl
+/usr/local/libexec/nbsp/tclgempak/gdinfo.tcl
+/usr/local/libexec/nbsp/tclgempak/sflist.tcl
+/usr/local/libexec/nbsp/tclgempak/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclmetar/metar.tcl
 /usr/local/libexec/nbsp/tclmetar/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclupperair/fm35.tcl

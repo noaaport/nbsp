@@ -3,7 +3,7 @@
 project=nbsp
 
 # nbsptclhttpd receives special treatment
-tcllibs="tclgrads tclmetar tclupperair"
+tcllibs="tclgrads tclgempak tclmetar tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 
