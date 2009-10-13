@@ -14,5 +14,5 @@ rm -rf $name-${version}
 cp -r $name $name-${version}
 tar -czf $name-$version.tgz $name-$version
 cp $name-$version.tgz /usr/src/redhat/SOURCES
-cd $name/rpm
+cd $name/build/rpm
 make package

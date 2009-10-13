@@ -18,7 +18,7 @@ Release = ${package_build}
 License = BSD
 Group = Applications/Internet
 Source = http://www.noaaport.net/software/${pkgsrc_name}/src/${pkgsrc_name}.tgz
-BuildRoot = ${rpmroot}/BUILD/${pkgsrc_name}/rpm/pkg
+BuildRoot = ${rpmroot}/BUILD/${pkgsrc_name}/build/rpm/pkg
 Requires = tcp_wrappers-libs db4 db4-utils tcl tcllib tk expect libpng netpbm-progs zlib gnuplot
 Conflicts = ${nameclient}
 
