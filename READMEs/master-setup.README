@@ -36,11 +36,28 @@ the client queues growing and the connections being dropped.
 For the first problem the netfilter can be used to limit the number
 of products to send to the client. For the second problem, the parameters
 
-	client_write_timeout
-	slave_read_timeout
+	client_write_timeout_ms
+	client_write_timeout_retry
+	client_reconnect_wait_sleep_secs
+	client_reconnect_wait_sleep_retry
 
 can be used adjusted in ``nbspd.conf'' to control the timeout limits
-in the master and the slave, respectively.
+in the master respectively.
+
+Starting with nbsp-2.0, after a client disconnects for some reason,
+the server will keep the client's queue state for the amount of time
+indicated in client_reconnect_wait_sleep_secs, and then check if that same
+client has connected again. It the client remains disconnected, it will
+repeat that loop until the number of times indicated in
+client_reconnect_wait_sleep_retry is reached. If the client has connected
+again in any of those cycles, then the server resumes the transmission to
+the client at the point where the transmision was suspended. Otherwise
+the client's queue state is deleted and if that same client connects
+again it will be treated as an entirely new connection.
+Those parameters can also be set on a per-client basis through the
+variable ``clientoptions'' (see nbspd.conf).
+
+See also slave-setup.README and netfilter.conf.
 
 -
 JFN

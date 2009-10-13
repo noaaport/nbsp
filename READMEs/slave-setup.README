@@ -4,18 +4,44 @@
 
 Setting up an nbsp slave -
 
-This assumes that an nbsp master server has been setup, let's say
-"nbsp.noaaport.net" (see "netfilter.README"). Then to setup a slave
-the following settings must appear in the site/nbspd.conf file:
+Starting with nbsp-2.0, a slave can read from several masters
+simultaneously. The intention is that a sleve can be configured to receive
+different sets of products from different "providers".
 
-set feedmode   1
-set mastername "nbsp.noaaport.net"
-
-The other possibility is
+To setup a network slave, the following settings must appear
+in the site/nbspd.conf file:
 
 set feedmode   2
-set mastername "nbsp.noaaport.net"
 
+Then the "masterservers" must be set to specify the protocol,
+server and port of the master(s), and optionally the five options
+
+slave_read_timeout_secs
+slave_read_timeout_retry
+slave_reopen_timeout_secs
+slave_so_rcvbuf
+slave_stats_logperiod_secs
+
+The masterservers is a string of the form
+
+<protocol>,<server>,<port>[,<options>]:...
+
+where the separating character can be any combination of ': \t\n';
+for example
+
+set masterservers {
+     2,nbsp.uprrp.edu,2210
+     1,nbsp.noaaport.net,2210
+     2,joshua.wxpro.net,2210,10,,,,300
+     2,joshua.wxpro.net,2212,10,x,x,x,300
+}
+
+If the <options> are omited, or if some of the fields are emtpty (as in
+the third entry) or set to a non-numeric value (as in the fourth), then
+the defaults (set in nbspd.conf) are used for those fields.
+
+In protocol 1 the entire file content is transmitted, while
+in 2 only the location (full path) of the file is transmitted
 but this requires the following two additional steps:
 
 	(1) The master (nbsp.noaaport.net) must export by NSF the spool
@@ -30,8 +56,7 @@ but this requires the following two additional steps:
 	must be changed to reflect the actual mount point.
 
 
-See also the NOTE in ``master-setup.README''.
-
+See also master-setup.README.
 
 -
 JFN
