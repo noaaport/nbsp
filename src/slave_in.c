@@ -140,9 +140,8 @@ static void *slavein_main(void *arg){
     }
   }
 
-  /*
-   * The cleanup functions are called by pthread_cleanup_push.
-   */
+  pthread_cleanup_pop(1);
+  pthread_cleanup_pop(1);
 
   return(NULL);
 }

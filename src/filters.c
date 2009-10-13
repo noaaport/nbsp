@@ -201,9 +201,7 @@ static void *filter_main(void *data __attribute__ ((unused))){
     status = filter_loop();
   }
 
-  /*
-   * The cleanup functions are called by pthread_cleanup_push.
-   */
+  pthread_cleanup_pop(1);
 
   return(NULL);
 }

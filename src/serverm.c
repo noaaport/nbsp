@@ -197,9 +197,7 @@ static void *server_main(void *data __attribute__((unused))){
     status = server_loop();
   }
 
-  /*
-   * The cleanup functions are called by pthread_cleanup_push.
-   */
+  pthread_cleanup_pop(1);
 
   return(NULL);
 }
