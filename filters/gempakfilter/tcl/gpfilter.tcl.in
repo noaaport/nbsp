@@ -577,7 +577,7 @@ proc is_sat_rule_enabled {key} {
 
 proc is_file_rule_enabled {key} {
 #
-# For sat the key is "nwx/spc/<subdir>" (e.g., nwx/spc/stahry)
+# For file the key is "nwx/spc/<subdir>" (e.g., nwx/spc/stahry)
 #
     global gpfilter;
 
