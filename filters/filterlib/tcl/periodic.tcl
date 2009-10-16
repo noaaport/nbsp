@@ -114,7 +114,7 @@ proc ::periodic::run {} {
 
     set periodic(run_time) [::periodic::_run_time_reset \
 				$now $periodic(run_period)];
-    set msg "";
+
     foreach cmd $periodic(cmd_list) {
 	set status [catch {
 	    ::periodic::_run_cmd $cmd;
@@ -131,10 +131,10 @@ proc ::periodic::scheduler {rcfile} {
     variable periodic;
 
     if {[file exists $rcfile] == 0} {
-	log_msg "$rcfile not found.";
+	::syslog::warn "$rcfile not found.";
     } else {
 	if {$periodic(verbose) == 1} {
-	    log_msg "Executing nbspscheduler";
+	    ::syslog::msg "Executing nbspscheduler";
 	}
 
 	set status [catch {
