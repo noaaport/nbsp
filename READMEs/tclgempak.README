@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+TclGempak is a separate package, written purely in Tcl, for executing
+Gempak programs from a Tcl script. There are many example scripts
+for using the library in the ``Projects'' section of the noaaport.net
+web site. 
+
+Starting with nbsp-2.0, the tclgempak library is included in the
+nbsp package and there is no need to install the tclgempak package
+separately as decsribed there.
+ 
+Howwever, in order to use that version of the library, the scripts
+must contain the instruction
+
+lappend auto_path "/usr/local/libexec/nbsp";
+
+before the ``package require gempak'' instruction, so that the library
+included with nbsp is found.

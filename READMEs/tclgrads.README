@@ -5,8 +5,19 @@ Tclgrads is a separate package, written purely in Tcl, for executing
 Grads commands from a Tcl script. This file explains how to use tclgrads
 scripts with the grib data files processed by Nbsp.
 
-[Tclgrads packages can be downloaded from the ``opengrads.org''
-or ``noaaport.net'' web sites.]
+[NOTE:
+ Starting with nbsp-2.0, the tclgrads library is included in the
+ nbsp package and there is no need to install the tclgrads package
+ separately.
+ 
+ Howwever, in order to use that version of the library, the scripts
+ must contain the instruction
+
+ lappend auto_path "/usr/local/libexec/nbsp";
+
+ before the ``package require grads'' instruction, so that the library
+ included with nbsp is found.
+]
 
 First the ``gribfilter'' must be enabled in the Nbsp configuration
 file ``features.conf'':
