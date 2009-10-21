@@ -46,7 +46,7 @@ nbsptrackplot: nbsptrackplot.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbsptrackplot.tcl > nbsptrackplot
 
 ${TMPLTARGET}: ${TMPLSOURCES}
-	tar -c --exclude '*CVS*' -z -f ${TMPLTARGET} ${TMPLDIR}
+	tar -c @EXCLUDE@'*.svn*' -z -f ${TMPLTARGET} ${TMPLDIR}
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}

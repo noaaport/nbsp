@@ -27,7 +27,7 @@ INSTALL=install
 SUFFIXRULES=".c.o:"
 
 # excude options to tar
-EXCLUDE="-W exclude"
+EXCLUDE="-W exclude="
 
 os=`uname`
 [ $os = Linux ] && flavor=unknown
@@ -90,7 +90,7 @@ case $os in
 	LOCAL_LIBDIR=
 	SUFFIXRULES="%.o: %.c"
 
-	EXCLUDE="--exclude"
+	EXCLUDE="--exclude "
 
 	# Override the defaults for flavor != fedoracore
     	if [ $flavor = opensuse ]
