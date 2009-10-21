@@ -1,6 +1,7 @@
 #!/bin/sh
 
 project=nbsp
+mastersite="svn+ssh://diablo/home/svn"
 
 # nbsptclhttpd receives special treatment
 tcllibs="tclgrads tclgempak tclmetar tclupperair"
@@ -17,19 +18,19 @@ rm -r -f $tmpdir
 mkdir $tmpdir
 cd $tmpdir
 
-svn export file:///home/svn/$project/trunk $project-$version
+svn export $mastersite/$project/trunk $project-$version
 cd $project-$version
 rm -r $exclude
 for p in $tcllibs
 do
-  svn export file:///home/svn/$p/trunk $p
+  svn export $mastersite/$p/trunk $p
 done
-svn export file:///home/svn/$tclhttpd/trunk tclhttpd
+svn export $mastersite/$tclhttpd/trunk tclhttpd
 
 cd src
 for p in $srclibs
 do
-  svn export file:///home/svn/$p/trunk $p
+  svn export $mastersite/$p/trunk $p
 done
 
 cd ../.. 
