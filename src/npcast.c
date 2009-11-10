@@ -257,7 +257,8 @@ static int open_channel(int id){
   char *port;
   int udprcvsize;
   int sfd = -1;
-  struct sockaddr *sa = NULL;
+  /* struct sockaddr *sa = NULL; */
+  void *sa = NULL;
   socklen_t sa_len;
   struct sockaddr *sender_sa = NULL;
   int gai_code;
@@ -270,7 +271,7 @@ static int open_channel(int id){
   udprcvsize = gnpcast.channel[id].udprcvsize;
 
   sfd = mcast_rcv(ip, port, gifname, gifip, udprcvsize,
-		  (void **)&sa, &sa_len, &gai_code);
+		  &sa, &sa_len, &gai_code);
   if(sfd < 0)
     return(-1);
 

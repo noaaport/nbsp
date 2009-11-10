@@ -391,7 +391,7 @@ static void e_np_close(void){
 int init_queues(void){
   /*
    * Initialize all the queues before starting any processing thread.
-   * This fucnction must be called after initializing the feeds (see
+   * This function must be called after initializing the feeds (see
    * init_feeds() below).
    */
   int status = 0;
@@ -450,7 +450,7 @@ static void close_queues(void){
 int init_feeds(void){
   /*
    * This function creates the slave table and therefore, if there are
-   * slave nbs readers, it determines how many pctl readers there are.
+   * slave nbs1 readers, it determines how many pctl readers there are.
    * The number of pctl readers is required for initializing the pctl
    * (see init_pctl() in nbsp.c) and therefore this function init_feed()
    * must be called before the the function that initializes the pctl
@@ -463,7 +463,7 @@ int init_feeds(void){
 
   if(status == 0){
     /*
-     * The slave table must initialized if there are slaves either
+     * The slave table must initialized if there are slaves; either
      * network slaves or input fifo(s).
      */
     if(feedmode_slave_enabled())

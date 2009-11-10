@@ -58,7 +58,7 @@ static int get_reload_server_filters_flag(void);
 
 static int greport_client_connections = 0;
 static pthread_mutex_t greport_client_connections_mutex =
-		PTHREAD_MUTEX_INITIALIZER;
+	PTHREAD_MUTEX_INITIALIZER;
 static int get_server_state_flag(void);
 static void report_client_connections(void);
 static void print_client_connections(FILE *fp);
@@ -78,13 +78,28 @@ static void cleanup_unpack_packet_pool(void);
 static int create_server_thread(void);
 static void *server_main(void*);
 static int server_loop(void);
+static int process_server_queue(void);
+static int handle_client(struct conn_table_st *ct, int i);
+static void handle_client_hup(struct conn_table_st *ct, int i, int condition);
+
+/*
+ * The process_connections() function is executed periodically,
+ * but we feel there is no need to let the period be a run-time
+ * configuration option. In case we later decide to do that, we leave
+ * here some place holders for the flag functions that can be used in
+ * per.c, similar to the other flags of the server.
+ *
+ * static int gprocess_connections = 0;
+ * static pthread_mutex_t gprocess_connections_mutex =
+ * PTHREAD_MUTEX_INITIALIZER;
+ */
+#define SERVER_PROCESS_CONNECTIONS_PERIOD_SECS 1
+static time_t gprocess_connections_time = 0;	/* next time to process */
+static int get_process_connections_flag(void);
 static void process_connections(void);
 static void process_unidentified_connections(void);
 static void process_finished_connections(void);
 static void process_dirty_connections(void);
-static int process_server_queue(void);
-static int handle_client(struct conn_table_st *ct, int i);
-static void handle_client_hup(struct conn_table_st *ct, int i, int condition);
 
 static int server_send_client_queues(struct packet_info_st *packetinfo);
 static int exec_emwin_filter(struct packet_info_st *packetinfo,
@@ -207,7 +222,10 @@ static int server_loop(void){
   int status = 0;
 
   while((status == 0) && (get_quit_flag() == 0)){
-    process_connections();
+    if(get_process_connections_flag()){
+      process_connections();
+    }
+
     status = process_server_queue();
 
     /*
@@ -926,6 +944,53 @@ void set_server_state_flag(void){
   }else
     log_errx("Error %d locking mutex in set_report_client_conn_flag().",
 	     status);
+}
+
+#if 0
+/*
+ * See comment in the top of this file about these two functions.
+ */
+static int get_process_connections_flag(void){
+
+  int r = 0;
+
+  if(gprocess_connections == 0)
+    return(0);
+
+  if(pthread_mutex_trylock(&gprocess_connections_mutex) == 0){
+    r = gprocess_connections;
+    gprocess_connections = 0;
+    pthread_mutex_unlock(&gprocess_connections_mutex);
+  }else
+    log_info("Cannot lock mutex in get_process_connections_flag().");
+
+  return(r);
+}
+
+void set_process_connections_flag(void){
+
+  int status = 0;
+
+  if((status = pthread_mutex_lock(&gprocess_connections_mutex)) == 0){
+    gprocess_connections = 1;
+    pthread_mutex_unlock(&gprocess_connections_mutex);
+  }else
+    log_errx("Error %d locking mutex in set_process_connections_flag().",
+	     status);
+}
+#endif
+
+static int get_process_connections_flag(void){
+
+  time_t now;
+
+  now = time(NULL);
+  if(now < gprocess_connections_time)
+    return(0);
+
+  gprocess_connections_time = now + SERVER_PROCESS_CONNECTIONS_PERIOD_SECS;
+
+  return(1);
 }
 
 static int match_client_protocol(struct conn_table_st *ct, int i){

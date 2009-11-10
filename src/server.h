@@ -12,5 +12,6 @@ int spawn_server(void);
 void kill_server_thread(void);
 void set_reload_server_filters_flag(void);
 void set_server_state_flag(void);
+/* void set_process_connections_flag(void); */
 
 #endif

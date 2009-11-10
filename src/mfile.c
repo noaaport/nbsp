@@ -265,13 +265,20 @@ int get_memframe(struct memfile_st *mf,
    * Sets frdata to point to the start of the next frame found, and returns
    * the size (in bytes) of the frame, 0 if there are no frames left or -1
    * if there is an error.
+   *
+   * We use the void *p pointer to avoid the
+   * ``warning: dereferencing type-punned pointer will break strict-aliasing
+   *   rules'' message that the compiler emits with -O2. Prior to FreeBSD-8,
+   * the -fno-strict-aliasing flag was used by default (which avoids the
+   * warning and the possible optimizations).
    */
   struct memframe_info_st *mframeinfo;
   int n;
   int frdata_size;
-  void *p = NULL;	/* debian-5.0 warned about uninitalized variable */
+  void *p = NULL; 	/* debian-5.0 warned about uninitalized variable */
 
-  n = read_memfile(mf, (void**)&mframeinfo, sizeof(struct memframe_info_st));
+  n = read_memfile(mf, &p, sizeof(struct memframe_info_st));
+  mframeinfo = p;
   if(n != 0){
     n = mframeinfo->size;
     *f_compressed = mframeinfo->f_compressed;
