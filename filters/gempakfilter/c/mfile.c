@@ -184,7 +184,8 @@ int get_memframe(struct memfile_st *mf,
   int frdata_size;
   void *p = NULL;	/* debian-5.0 warned about uninitalized variable */
 
-  n = read_memfile(mf, (void**)&mframeinfo, sizeof(struct memframe_info_st));
+  n = read_memfile(mf, &p, sizeof(struct memframe_info_st));
+  mframeinfo = p;
   if(n != 0){
     n = mframeinfo->size;
     *f_compressed = mframeinfo->f_compressed;

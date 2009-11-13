@@ -23,6 +23,11 @@ set common(filtersconf)   "filters.conf";
 set common(confdir)	  "/usr/local/etc/nbsp"
 set common(localconfdirs) [list [file join $common(confdir) "defaults"] \
 				[file join $common(confdir) "site"]];
+##
+# regexp {^[^\.]+} [info hostname] _hostname;
+# lappend common(localconfdirs) \
+#         [file join $common(confdir) "site" ${_hostname}];
+##
 set common(rcdir)	[file join $common(confdir) "rc.d"];
 set common(libdir)	"/usr/local/libexec/nbsp";
 set common(locallibdir)	[file join $common(libdir) "site"];
