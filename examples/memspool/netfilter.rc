@@ -1,0 +1,13 @@
+lappend cond {1}
+lappend action {
+  set allow(0) 1;
+  set allow(tp.caribeweather.net) 0;
+}
+
+lappend cond {
+  $rc(awips1) eq "n0r"
+}
+lappend action {
+  set allow(tp.caribeweather.net) 1;
+  break;
+}
