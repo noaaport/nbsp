@@ -47,12 +47,11 @@ int nbsp_rtxdb_open(struct nbsp_rtxdb_st **rtxdb, DB_ENV *dbenv,
   }
      
   status = db_create(&dbp1, dbenv, 0);
+  if(status == 0)
+    status = dbp1->set_bt_compare(dbp1, rtxdb_compare);
 
   if(status == 0)
     status = dbp1->open(dbp1, NULL, fullname, NULL, DB_BTREE, dbflags, mode);
-
-  if(status == 0)
-    dbp1->set_bt_compare(dbp1, rtxdb_compare);
 
   if(status == 0){
     if(fullname != NULL)
@@ -60,7 +59,7 @@ int nbsp_rtxdb_open(struct nbsp_rtxdb_st **rtxdb, DB_ENV *dbenv,
 
     status = db_create(&dbp2, dbenv, 0);
     if(status == 0)
-      dbp2->set_bt_compare(dbp2, rtxdb_compare);
+      status = dbp2->set_bt_compare(dbp2, rtxdb_compare);
 
     if(status == 0)
       status = dbp2->open(dbp2, NULL, fullname, NULL, DB_BTREE, dbflags, mode);
@@ -217,6 +216,7 @@ static int rtxdb_read_record2(DB *dbp,
 
   key.data = (void*)&seqnum;
   key.size = sizeof(seqnum);
+  key.flags = DB_DBT_USERMEM;
   data.data = rtxdata;
   data.ulen = sizeof(struct nbsp_rtxdb_data_st);
   data.flags = DB_DBT_USERMEM;
