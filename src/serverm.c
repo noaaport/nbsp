@@ -203,10 +203,8 @@ static void *server_main(void *data __attribute__((unused))){
   pthread_cleanup_push(close_server, NULL);
 
   status = open_server();
-  if(status != 0){
+  if(status != 0)
     set_quit_flag();
-    return(NULL);
-  }
 
   while(get_quit_flag() == 0){
     status = server_loop();
