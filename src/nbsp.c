@@ -861,7 +861,7 @@ static int pce_savecbdb_memfile(struct pctl_element_st *pce,
 }
 
 /*
- * Functions to support the filter nbspdb_truncate flag.
+ * Functions to support the retransmission-db truncate flag.
  */
 static int get_rtxdb_truncate_flag(void){
 

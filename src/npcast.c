@@ -281,7 +281,7 @@ static int open_channel(int id){
 
   if(status == 0){
     gnpcast.channel[id].sfd = sfd;
-    gnpcast.channel[id].sa = sa;
+    gnpcast.channel[id].sa = (struct sockaddr*)sa;
     gnpcast.channel[id].sa_len = sa_len;
     gnpcast.channel[id].sender_sa = sender_sa;
     gnpcast.channel[id].sender_sa_len = sa_len;
