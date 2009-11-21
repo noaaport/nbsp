@@ -293,42 +293,71 @@ proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
 	return;
     }
 
-    cd $dafilter(datadir);
-    file mkdir $savedir;
-
-    set status [catch {
-	if {$unzflag != 0} {
-	    if {$dafilter(radstripheader) == 1} {
-		set opts "-c $dafilter(ccbsize)";
-	    } elseif {$dafilter(radstripheader) == 2} {
-		set opts "-c $dafilter(ccbwmoawipssize)";
-	    } else {
-		set opts "";
-	    }
-	    eval exec $filtersprogs(nbspunz) $opts $fpath > \
-			[file join $savedir $savename];
+    if {$unzflag != 0} {
+	# Set the options for nbspunz
+	if {$dafilter(radstripheader) == 1} {
+	    set opts "-c $dafilter(ccbsize)";
+	} elseif {$dafilter(radstripheader) == 2} {
+	    set opts "-c $dafilter(ccbwmoawipssize)";
 	} else {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
-#	    filterlib_nbspfile $seq $fpath $savedir $savename;
+	    set opts "";
 	}
-    } errmsg];
-
-    if {$status != 0} {
-	# In case the file was created
-	file delete [file join $savedir $savename];
-	log_msg $errmsg;
-
-	return;
     }
 
-    filter_rad_insert_inventory $savedir \
-    	[file join $dafilter(datadir) $savedir $savename];
+    if {$dafilter(rad_archive_enable) != 2} {
+        cd $dafilter(datadir);
+        file mkdir $savedir;
+	set data_path [file join $savedir $savename];
+	set datafpath [file join $dafilter(datadir) $data_path];
 
-    # Create the link to the latest
-    make_rad_latest $savedir $savename;
+        set status [catch {
+            if {$unzflag != 0} {
+	        eval exec $filtersprogs(nbspunz) $opts $fpath > $data_path;
+	    } else {
+	        filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+                # filterlib_nbspfile $seq $fpath $savedir $savename;
+            }
+	} errmsg];
 
-    # Create he directory listing
-    make_rad_dirlist $savedir;
+	if {$status != 0} {
+	    # In case the file was created
+	    file delete $data_path;
+	    log_msg $errmsg;
+
+	    return;
+	}
+
+        filter_rad_insert_inventory $savedir $datafpath;
+
+	# Create the link to the latest
+	make_rad_latest $savedir $savename;
+
+	# Create the directory listing
+	make_rad_dirlist $savedir;
+    }
+
+    if {$dafilter(rad_archive_enable) != 0} {
+        set archive_savedir [file join $dafilter(archive_subdir) $savedir];
+        cd $dafilter(archivedir);
+        file mkdir $archive_savedir;
+	set archivepath [file join $archive_savedir $savename];
+
+        set status [catch {
+            if {$unzflag != 0} {
+	        eval exec $filtersprogs(nbspunz) $opts $fpath > $archivepath;
+	    } else {
+	        filterlib_cspool_nbspfile $seq $fpath \
+			$archive_savedir $savename;
+                # filterlib_nbspfile $seq $fpath $archive_savedir $savename;
+            }
+	} errmsg];
+
+	if {$status != 0} {
+	    # In case the file was created
+	    file delete $archivepath;
+	    log_msg $errmsg;
+	}
+    }
 }
 
 proc filter_rad {seq fpath savedir savename} {
@@ -353,56 +382,73 @@ proc filter_sat {fpath datasavedir prefix} {
 	return;
     }
 
-    cd $dafilter(datadir);
-    file mkdir $datasavedir;	
-
-    set satdatext $dafilter(satdatext);
-    set satprefixsep $dafilter(satprefixsep);
-
-    set fname [file tail $fpath];
-    set datafpath [file join $dafilter(datadir) $datasavedir $fname];
-
-    set status [catch {
-	if {$dafilter(satuncompress) == 0} {
-	    file copy -force $fpath $datafpath;
-	} else {
-	    exec $filtersprogs(nbspunz) -o $datafpath $fpath;
-	}
-    } errmsg];
-
-    if {$status == 0} {
-	set output [filter_sat_info $datafpath];
-	#
-	# Rename the uncompressed data file to match the image (which
-	# this filter does not produce). E.g,
-	#
-	# knes_tigp01.070101_1414381 (raw, compressed)
-	# tigp01_20060307_0101.png   (image)
-	# tigp01_20060307_0101.gini  (optionally uncompressed data)
-	#
-	set status [lindex $output 0];
-	set datetime [lindex $output 1];
-    }
-
-    if {$status == 0} {
-	set status [catch {
-    	    set newdatafpath [file join [file dirname $datafpath] \
-		${prefix}${satprefixsep}${datetime}${satdatext}];
-    	    file rename -force $datafpath $newdatafpath;
-    	} errmsg];
-    }
-
+    # First extract the relevant information from the raw data file in order
+    # to rename the data file to match the image (which this filter does
+    # not produce); e.g,
+    #
+    # knes_tigp01.070101_1414381 (raw, compressed)
+    # tigp01_20060307_0101.png   (image)
+    # tigp01_20060307_0101.gini  (optionally uncompressed data)
+    
+    set output [filter_sat_info $fpath];
+    set status [lindex $output 0];
+    set datetime [lindex $output 1];
     if {$status != 0} {
-	file delete $datafpath;
-	log_msg $errmsg;
-
+	log_msg "Cannot extract satinfo from $fpath.";
 	return;
     }
 
-    filter_sat_insert_inventory $datasavedir $newdatafpath;
+    set satdatext $dafilter(satdatext);
+    set satprefixsep $dafilter(satprefixsep);
+    set datafname ${prefix}${satprefixsep}${datetime}${satdatext};
 
-    # Create the link to the latest
-    make_sat_latest $datasavedir [file tail $newdatafpath];
+    if {$dafilter(sat_archive_enable) != 2} {
+	cd $dafilter(datadir);
+	file mkdir $datasavedir;
+	set datafpath [file join $dafilter(datadir) $datasavedir $datafname];
+
+	set status [catch {
+	    if {$dafilter(satuncompress) == 0} {
+		file copy -force $fpath $datafpath;
+	    } else {
+		exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	    }
+	} errmsg];
+
+	if {$status != 0} {
+	    file delete $datafpath;
+	    log_msg $errmsg;
+	    return;
+	}
+
+	filter_sat_insert_inventory $datasavedir $datafpath;
+
+	# Create the link to the latest
+	make_sat_latest $datasavedir $datafname;
+    }
+
+    if {$dafilter(sat_archive_enable) != 0} {
+        cd $dafilter(archivedir);
+        set archive_savedir [file join $dafilter(archive_subdir) $datasavedir];
+        file mkdir $archive_savedir;
+
+	set archivepath [file join $archive_savedir $datafname];
+
+	set status [catch {
+	    if {$dafilter(satuncompress) == 0} {
+		file copy -force $fpath $archivepath;
+	    } else {
+		exec $filtersprogs(nbspunz) -o $archivepath $fpath;
+	    }
+	} errmsg];
+
+	cd $dafilter(datadir);
+
+	if {$status != 0} {
+	    file delete $archivepath;
+	    log_msg $errmsg;
+	}
+    }
 }
 
 proc filter_sat_info {fpath} {
@@ -433,14 +479,20 @@ proc filter_sat_info {fpath} {
 
 proc filter_grib {seq fpath savedir savename} {
 
+    global dafilter;
     global filtersprogs;
 
     if {[is_grib_rule_enabled $savedir] == 0} {
 	return;
     }
 
-    # Pass the pass_through flag set since the regex has been checked here.
-    filter_file $seq $fpath $savedir $savename 1;
+    if {$dafilter(grib_archive_enable) != 2} {
+        filter_file_normal $seq $fpath $savedir $savename "-a";	
+    }
+
+    if {$dafilter(grib_archive_enable) != 0} {
+        filter_file_archive $seq $fpath $savedir $savename "-a";
+    }
 }
 
 #
