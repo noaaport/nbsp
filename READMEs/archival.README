@@ -1,0 +1,48 @@
+#
+# $Id$
+#
+In normal operation, the files that are saved in the data directory
+
+	/var/noaaport/data
+
+are deleted periodically. Nbsp can archive permanently the data files
+in two different ways. One way is to enable the ``spoolfilter'' to
+save the raw data files (see spoolfilter.README). The other way is
+described here.
+
+The `dafilter'' has an option to archive the data files in
+a directory tree that mirrors the structure of
+	
+	/var/noaaport/data/digatmos
+
+under
+
+	/var/noaaport/data/archive/digatmos
+
+The relevant parameters are
+
+## set dafilter(archive_subdir_fmt) "%Y%m%d";
+## set dafilter(archive_enable) 0;
+## set dafilter(rad_archive_enable) 0;
+## set dafilter(sat_archive_enable) 0;
+## set dafilter(grib_archive_enable) 0;
+
+and their meaning is the following.
+
+A non-zero setting of ``dafilter(archive_enable)'' enables the archive.
+If the setting is 1, than a copy of all the data is saved
+permamently (it is not "pruned" by the hourly cleanup script) in the
+archive directory. A setting of 2 also enables the archive
+but it disables the usual mode of saving the data. The variable
+dafilter(archive_enable) enables the archive of all the data files
+except rad (nids), sat(gini) and grib. Those three are enable/disabled
+separately. 
+
+In the default configuration, the files are saved in subdirectories
+named like 20080521 (yyyymmdd). All the files of a given day
+are saved in the corresponding subdirectory. The variable
+``dafilter(archive_subdir_fmt)'' can be used to specify a different
+naming convention of those subdirectories.
+
+-
+JFN

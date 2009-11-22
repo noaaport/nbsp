@@ -13,10 +13,10 @@ in the system.
 
 The ``spoolfilter'' is designed for those situations that require
 the raw data files to be kept around for longer periods. The spoolfilter
-simply saves a copy of each raw data file in a directory tree that is rooted
-at
+simply saves a copy of each raw data file in a directory tree that, by
+default, is rooted at
 
-	/var/noaaport/data/spool/files
+	/var/noaaport/data/archive/spool
 
 called the "secondary" spool directory. In the default configuration,
 the spoolfilter creates subdirectories named like 20080521 (yyyymmdd)
@@ -29,8 +29,5 @@ The spoolfilter is not enabled by default, but it can enabled in the
 can be modified in the spoolfilters.conf file to, for example,
 use only the day of the month or day of the week.
 
-The spoolfilter should not be enabled without planning ahead. It requires
-significant io disk resources. Moreover, there is no default mechanism
-installed to purge old files from the secondary spool directory.
-If that is desired, it must be implemented outside of nbsp.
--
+See the file ``spoolfilter.conf'' for specific details about the
+configuration options.
