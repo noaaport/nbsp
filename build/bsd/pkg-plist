@@ -4,6 +4,7 @@ sbin/nbspd
 bin/nbspcleanup
 bin/nbspversion
 bin/nbspsat
+bin/nbspsatinfo
 bin/nbspradinfo
 bin/nbspcat
 bin/nbspfile

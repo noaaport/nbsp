@@ -23,4 +23,9 @@ dnl the configuration file).
 # data.
 match_rad($rc(wmoid), ^sdus[2357],
 nexrad/nids/[subst $dafilter(rad_dirfmt)], [subst $dafilter(rad_namefmt)])
+
+match_rad_archive($rc(wmoid), ^sdus[2357],
+nexrad/nids/[subst $dafilter(archive_rad_dirfmt)],
+[subst $dafilter(archive_rad_namefmt)])
+
 match_stop($rc(wmoid), ^sdus[2357])

@@ -8,7 +8,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$3" "$4";
+  filter_file rc $rc(seq) $rc(fpath) "$3" "$4";
   $5
 })
 
@@ -18,7 +18,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$5" "$6";
+  filter_file rc $rc(seq) $rc(fpath) "$5" "$6";
   $7
 })
 
@@ -28,7 +28,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$5" "$6";
+  filter_file rc $rc(seq) $rc(fpath) "$5" "$6";
   $7
 })
 
@@ -39,7 +39,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$3" "$4";	
+  filter_file rc $rc(seq) $rc(fpath) "$3" "$4";	
   $5
   break;
 })
@@ -50,7 +50,7 @@ lappend cond {
 } 
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$5" "$6";
+  filter_file rc $rc(seq) $rc(fpath) "$5" "$6";
   $7
   break;
 })
@@ -61,7 +61,7 @@ lappend cond {
 } 
 lappend action {
   set rc_status 0;
-  filter_file $rc(seq) $rc(fpath) "$5" "$6";
+  filter_file rc $rc(seq) $rc(fpath) "$5" "$6";
   $7
   break;
 })
@@ -113,7 +113,7 @@ lappend cond {
   [regexp {$2} $1]
 } 
 lappend action {
- set rc_status 0;
+  set rc_status 0;
   if {($dafilter(raduncompress) != 0) && \
     ([regexp {^nmd} $rc(awips)] == 0)} {
 	filter_rad_unz $rc(seq) $rc(fpath) "$3" "$4";
@@ -121,7 +121,16 @@ lappend action {
 	filter_rad $rc(seq) $rc(fpath) "$3" "$4";
   }
   $5
-  break;
+})
+
+define(match_rad_archive,
+lappend cond {
+  [regexp {$2} $1]
+} 
+lappend action {
+  set rc_status 0;
+  filter_rad_archive rc $rc(seq) $rc(fpath) "$3" "$4";
+  $5
 })
 
 define(match_rad_only,
@@ -137,7 +146,6 @@ lapend action {
       filter_rad $rc(seq) $rc(fpath) "$5" "$6";
   }
   $7
-  break;
 })
 
 define(match_rad_except,
@@ -152,7 +160,6 @@ lappend action {
     filter_rad $rc(seq) $rc(fpath) "$5" "$6";
   }
   $7
-  break;
 })
 
 define(match_sat,
@@ -161,9 +168,18 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_sat $rc(fpath) "$3" "$4";
+  filter_sat $rc(seq) $rc(fpath) "$3" "$4";
   $5
-  break;	
+})
+
+define(match_sat_archive,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_sat_archive rc $rc(seq) $rc(fpath) "$3" "$4";
+  $5
 })
 
 define(match_and_grib,

@@ -179,8 +179,10 @@ static int open_nbsproc(void){
    * The spool bookeeping db is private to the processor and it is
    * opened here. The memory spools are shared by the processor and
    * the filter and/or server threads and they are opened in main.
+   * The fs spool is used always, except if the spooltype is the pure
+   * in-memory bdb.
    */
-  if(spooltype_fsspool()){
+  if(spooltype_fsspool() || spooltype_cspool()){
     /* The fs spool bookeeping db */
     status = nbsp_spooldb_open();
   }
@@ -505,8 +507,11 @@ static int pce_spool_product(struct pctl_element_st *pce){
        status = pce_savefs_memfile(pce, mf);
     else if(spooltype_mspool())
       status = pce_savembdb_memfile(pce, mf);
-    else if(spooltype_cspool())
+    else if(spooltype_cspool()){
       status = pce_savecbdb_memfile(pce, mf);
+      if(status == 0)
+	status = pce_savefs_memfile(pce, mf);
+    }
   }
 
   /*

@@ -59,6 +59,7 @@ int main(int argc, char **argv){
 static int udpsend(void){
 
   int fd;
+  void *addr;
   struct sockaddr *readeraddr;
   socklen_t readeraddr_len;
   char str[STRSIZE];
@@ -66,7 +67,7 @@ static int udpsend(void){
   int gai_code;
 
   fd = udp_client(g.opt_host, g.opt_service,
-		  (void**)&readeraddr, &readeraddr_len, &gai_code);
+		  &addr, &readeraddr_len, &gai_code);
   if(fd < 0){
     if(gai_code == 0)
       err(1, "Error in udp_client()");
@@ -76,6 +77,8 @@ static int udpsend(void){
 
     return(-1);
   }
+
+  readeraddr = addr;
 
   if(g.opt_str != NULL){
     if(sendto(fd, g.opt_str, strlen(g.opt_str), 0,

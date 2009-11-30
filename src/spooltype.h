@@ -8,9 +8,9 @@
 #ifndef SPOOLTYPE_H
 #define SPOOLTYPE_H
 
-int spooltype_fsspool(void);	/* file system */
-int spooltype_cspool(void);	/* file system backed bdb (with cache) */
-int spooltype_mspool(void);	/* memory based private spool */
-int spooltype_cspool_nofile(void);	/* memory based shared spool */
+int spooltype_fsspool(void);  /* file system */
+int spooltype_mspool(void);   /* memory based private spool */
+int spooltype_cspool(void);   /* shared bdb with cache (fs backed or mmaped) */
+int spooltype_cspool_nofile(void); /* mmaped cspool  */
 
 #endif

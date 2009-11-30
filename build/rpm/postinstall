@@ -23,8 +23,9 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/data/inv/rst
 /var/noaaport/data/inv/digatmos
 /var/noaaport/data/inv/gempak
-/var/noaaport/data/archive/spool
-/var/noaaport/data/archive/digatmos
+/var/noaaport/archive/data/spool
+/var/noaaport/archive/data/digatmos
+/var/noaaport/archive/inv
 /var/noaaport/www
 /var/log/noaaport
 /var/run/nbsp

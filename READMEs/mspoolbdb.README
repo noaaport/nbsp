@@ -109,7 +109,9 @@ filters to make us of it, the appropriate settings must made also
 in the file "cspoolbdb.conf" which is the configuration file for
 the filters library for interfacing with the spool cache. If the defaults
 settings are ok, all that is required is to enable the spool cache
-in that file by setting the variable "cspoolbdb_enable" to 1.
+in that file by setting the variable
+
+	set cspoolbdb_enable 1
 
 NOTE: With these settings the cache can hold 18,000 files. If the load on
       the machine is such that its filter queue grows larger than this value
@@ -135,6 +137,11 @@ This configuration is enabled by setting
 in features.conf. In addition, in the cspoolbdb.conf file, the variable
 ``cspoolbdb_mpool_nofile'' must be set to 1:
 
-	set cspoolbdb_mpool_nofile 1;
+	set cspoolbdb_mpool_nofile 1
+
+and, as before
+
+	set cspoolbdb_enable 1
+
 -
 JFN

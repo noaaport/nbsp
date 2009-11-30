@@ -181,6 +181,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # -nobody  =>  do not extract the body of the file and the associated variables
 # -dogrib  =>  extract the rc(grib...) variables
 # -dorad   =>  extract the radar info variables
+# -dosat   =>  extract the st info variables
 # -noccb   =>  ignore the ccb global settings and assume the file nas no ccb
 #
 # Undetermined variables are returned as "".
@@ -192,6 +193,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # with -dogrib.
 #
 # The radar info variables are extracted using nbspradinfo.
+# The sat info variables are extracted using nbspsatinfo.
 #
 # The -nobody flag can be used, for example, by the rstnntpfilter, which
 # receives the already processed files (instead of the raw data files)
@@ -225,6 +227,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     # The default values of the flags
     set dogrib 0;
     set dorad 0;
+    set dosat 0;
     set dobody 1;
     set doccb 1;
 
@@ -256,6 +259,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(NAWIPS) "";
     set rc(body) "";
     set rc(txtflag) 0;
+    set rc(seconds) "";
     set rc(gribedition) 0;
     set rc(gribstatus) 0;
     set rc(gribcenternum) "";
@@ -278,6 +282,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(radseconds) "";
     set rc(radmode) "";
     set rc(radcode) "";
+    set rc(satsource) "";
+    set rc(satcreatingentity) "";
+    set rc(satsector) "";
+    set rc(satchannel) "";
+    set rc(satres) "";
+    set rc(satseconds) "";
 
     set finfo_parts [split $finfo];
     set rc(seq) [lindex $finfo_parts 0];
@@ -340,6 +350,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    "-dorad" {
 		set dorad 1;
 	    }
+
+	    "-dosat" {
+		set dosat 1;
+	    }
 	    
 	    "-nobody" {
 		set dobody 0;
@@ -382,6 +396,21 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(radseconds) [lindex $radinfo 3];
 	    set rc(radmode) [lindex $radinfo 4];
 	    set rc(radcode) [lindex $radinfo 5];
+	}
+    }
+
+    if {[regexp {^tig} $rc(wmoid)] && ($dosat == 1)} {
+	set satinfo_status [catch {
+	    set satinfo [split [exec nbspsatinfo -b -i $rc(fpath)]];
+	} errmsg];
+	
+	if {$satinfo_status == 0} {
+	    set rc(satsource) [lindex $satinfo 0];
+	    set rc(satcreatingentity) [lindex $satinfo 1];
+	    set rc(satsector) [lindex $satinfo 2];
+	    set rc(satchannel) [lindex $satinfo 3];
+	    set rc(satres) [lindex $satinfo 4];
+	    set rc(satseconds) [lindex $satinfo 5];
 	}
     }
 

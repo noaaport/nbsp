@@ -12,30 +12,41 @@ set dafilter(localconfdirs)	$common(localconfdirs);
 set dafilter(rcdir)	[file join $common(rcdir) "da"];
 set dafilter(datadir)	[file join $common(datadir) "digatmos"];
 ##
-set dafilter(archivedir) [file join $common(archivedir) "digatmos"];
-set dafilter(archive_subdir_fmt) "%Y%m%d";
+set dafilter(archive_datadir) [file join $common(archive_datadir) "digatmos"];
+set dafilter(archive_subdirfmt) "%Y/%m/%d";
+set dafilter(archive_sat_namefmt) {$rc(wmoid)_${ymd_hm}.gini};
+set dafilter(archive_sat_dirfmt) {$rc(wmoid)};
+set dafilter(archive_rad_namefmt) {${ymdh}.nids};
+set dafilter(archive_rad_dirfmt) {$rc(awips2)};
+
+#
 set dafilter(archive_enable) 0;
+set dafilter(archive_sat_enable) 0;
+set dafilter(archive_rad_enable) 0;
+
 ##
 set dafilter(invdir) [file join $common(datainvdir) "digatmos"];
+set dafilter(invformat) $common(datainvformat);  # format for hourly subdirs
 set dafilter(radinvsubdir) [file join "nexrad" "nids"];
 set dafilter(satinvsubdir) [file join "sat" "gini"];
-set dafilter(invformat) $common(datainvformat);  # format for hourly subdirs
 set dafilter(rad_inv_enable) 1;
 set dafilter(sat_inv_enable) 1;
-#
+
+##
 set dafilter(nntp_enable)	0;
 set dafilter(nntp_server)	"news";
 set dafilter(nntp_from)		"nbspfeed@noaaport.net";
 set dafilter(nntp_groupprefix)	"noaaport.data";
 set dafilter(hourlyfilefmt)     "%Y%m%d%H";
-#
+
+##
 set dafilter(sat_enable)	1;
 set dafilter(sat_regex)		{.*};
-set dafilter(satdatext)		".gini";
-set dafilter(satprefixsep)	"_";
 set dafilter(sat_latest_enable)	1;
 set dafilter(sat_latestname)	"latest";
 set dafilter(satuncompress)	0;
+set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
+set dafilter(sat_dirfmt)     	{$rc(wmoid)};
 #
 set dafilter(rad_enable)	1;
 set dafilter(rad_regex)		{.*};
@@ -51,6 +62,7 @@ set dafilter(rad_dirfmt)     	{$rc(awips2)/$rc(awips1)};
 set dafilter(grib_enable)	1;
 set dafilter(grib_regex)	{.*};
 set dafilter(gribfext)		".grb";
+#
 set dafilter(file_enable)	1;
 set dafilter(file_regex)	{.*};
 #
