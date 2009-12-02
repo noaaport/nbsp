@@ -834,13 +834,14 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     append opts " -d " $savedir " -o " $savename " " $fpath " " $seq;
 
     set status 0;
-    set cmd "";
     if {[::cspoolbdb::query_enable] == 1} {
+	set cmd "";
 	append cmd "|nbspfile -i" " " $opts;
 	set status [filterlib_cspool_execpipe -p $cmd $seq];
     }
 
     if {([::cspoolbdb::query_enable] == 0) || ($status != 0)} {
+	set cmd "";
         append cmd "nbspfile" " " $opts;
         filterlib_exec $cmd;
     }
