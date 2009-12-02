@@ -24,10 +24,10 @@ match_file($rc(wmoid), ^iupc0[12], profiler, ${ymd}_prof5.bufr)
 
 # ncep nam and gfs model bufr soundings.
 match_file($rc(fname) s s1, ^kwno_jus.(4[1-9]),
-soundings/nam/$ymdh, ${ymdh}_nam${s1}.bufr)
+soundings/nam, ${ymdh}_nam${s1}.bufr)
 
 match_file($rc(fname) s s1, ^kwbc_jus.(4[1-9]),
-soundings/gfs/$ymdh, ${ymdh}_gfs${s1}.bufr)
+soundings/gfs, ${ymdh}_gfs${s1}.bufr)
 
 # El Nino Southern Oscillation (ENSO) Alerts
 # KWNC FXUS24 - AWIPS = PMDENS

@@ -21,6 +21,7 @@ TCLTARGET-INIT = dafilter.init
 TCLINCLUDE-INIT = danntp.init
 TCLTMPSED = danntp.tmp.sed
 
+LIBEXECINITS =	${TCLTARGET-INIT} archive.init
 M4SOURCES =	defs.m4 dup.m4 file.m4 grib.m4 pipe.m4 rad.m4 sat.m4 extra.m4 \
 		dup-warnings.m4 dup-hurricane.m4 dup-upperair.m4 \
 		file-lite.m4 pipe-lite.m4 dup-hurricane-lite.m4 \
@@ -29,11 +30,12 @@ M4MAIN =	dafilter.m4
 M4TARGET =	dafilter.rc-defaults
 M4MAIN-LITE =	dafilter-lite.m4
 M4TARGET-LITE =	dafilter-lite.rc-defaults
-SAMPLES =	dafilter.conf-sample dafilter.rc-sample
+SAMPLES =	dafilter.conf-sample dafilter.rc-sample archive.conf-sample
 DOCSAMPLES =	level3.cfg-sample
 TARGET =	${TCLTARGET} ${TCLTARGET-INIT} ${TCLTARGET-MGR} \
 		${TOOLNAMES} ${M4TARGET} ${M4TARGET-LITE} \
 		${SAMPLES} ${DOCSAMPLES}
+
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 OSNAME =	@OSNAME@
@@ -70,12 +72,15 @@ dafilter.rc-sample: dafilter.rc
 level3.cfg-sample: level3.cfg
 	cp level3.cfg level3.cfg-sample
 
+archive.conf-sample: archive.conf
+	cp archive.conf archive.conf-sample
+
 nbspaloftcsv: nbspaloftcsv.tcl
 	 sed -e /%TCLSH%/s##${TCLSH}# nbspaloftcsv.tcl > nbspaloftcsv
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
-	${INSTALL} -m 644 ${TCLTARGET-INIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 644 ${LIBEXECINITS} ${MYLIBEXECDIR}
 	${INSTALL} -m 755 ${TCLTARGET-MGR} ${MYLIBEXECDIR}/${FILTERNAME-MGR}
 	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${M4TARGET-LITE} ${MYCONFDIR}

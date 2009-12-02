@@ -134,6 +134,7 @@ make clean
 /usr/local/libexec/nbsp/filters.lib
 /usr/local/libexec/nbsp/filters-err.lib
 /usr/local/libexec/nbsp/filters-gribid.lib
+/usr/local/libexec/nbsp/archive.init
 /usr/local/libexec/nbsp/hscheduler.tcl
 /usr/local/libexec/nbsp/mscheduler.tcl
 /usr/local/libexec/nbsp/periodic.tcl
@@ -165,6 +166,7 @@ make clean
 /usr/local/etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
 /usr/local/etc/nbsp/dist/filters.conf-sample
 /usr/local/etc/nbsp/dist/filters-gribid.def-sample
+/usr/local/etc/nbsp/dist/archive.conf-sample
 /usr/local/etc/nbsp/dist/cspoolbdb.conf-sample
 /usr/local/etc/nbsp/dist/nbspfilter.conf-sample
 /usr/local/etc/nbsp/dist/nbspfilter.rc-sample

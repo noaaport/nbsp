@@ -10,6 +10,7 @@
 # package require fileutil;	# tcllib
 # package require cmdline;      # tcllib (used by filterlib_cspool_nbspfile)
 # package require cspoolbdb;    # spool cache lib
+# package require nbsputil;     # nbsputil::date::clock_seconds
 #
 # This is done by the filters.init file.
 
@@ -288,6 +289,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(satchannel) "";
     set rc(satres) "";
     set rc(satseconds) "";
+    set rc(ymd_hm) "";
+    set rc(ymdhm) "";
+    set rc(ymdh) "";
+    set rc(ymd) "";
+    set rc(ym) "";
+    set rc(yyyy) "";
 
     set finfo_parts [split $finfo];
     set rc(seq) [lindex $finfo_parts 0];
@@ -373,6 +380,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	set rc(txtflag) [filterlib_get_txtflag $rc(body) $ccbsaved $ccbsize];
     }
 
+    # This is initialized to the default (extracted from the wmo header)
+    # but it is overriden below when the data files contain a true time.
+    set rc(seconds) [::nbsputil::date::clock_seconds $rc(wmotime)];
+
     if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
 	# We process here only those that we are sure that are transmitted
 	# compressed. There are others (e.g., dsp) that sometimes are
@@ -396,6 +407,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(radseconds) [lindex $radinfo 3];
 	    set rc(radmode) [lindex $radinfo 4];
 	    set rc(radcode) [lindex $radinfo 5];
+	    set rc(seconds) $rc(radseconds);
 	}
     }
 
@@ -411,6 +423,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(satchannel) [lindex $satinfo 3];
 	    set rc(satres) [lindex $satinfo 4];
 	    set rc(satseconds) [lindex $satinfo 5];
+	    set rc(seconds) $rc(satseconds);
 	}
     }
 
@@ -450,6 +463,13 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	}
 	unset gribparams;
     }
+
+    set rc(ymd_hm) [clock format $rc(seconds) -gmt true -format "%Y%m%d_%H%M"];
+    set rc(ymdhm) [clock format $rc(seconds) -gmt true -format "%Y%m%d%H%M"];
+    set rc(ymdh) [clock format $rc(seconds) -gmt true -format "%Y%m%d%H"];
+    set rc(ymd) [clock format $rc(seconds) -gmt true -format "%Y%m%d"];
+    set rc(ym) [clock format $rc(seconds) -gmt true -format "%Y%m"];
+    set rc(yyyy) [clock format $rc(seconds) -gmt true -format "%Y"];
 }
 
 proc filterlib_cmdfound cmdname {

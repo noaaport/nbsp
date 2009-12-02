@@ -107,6 +107,7 @@ libexec/nbsp/filters.init
 libexec/nbsp/filters.lib
 libexec/nbsp/filters-err.lib
 libexec/nbsp/filters-gribid.lib
+libexec/nbsp/archive.init
 libexec/nbsp/hscheduler.tcl
 libexec/nbsp/mscheduler.tcl
 libexec/nbsp/periodic.tcl
@@ -138,6 +139,7 @@ etc/nbsp/dist/features.conf-sample
 etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
 etc/nbsp/dist/filters.conf-sample
 etc/nbsp/dist/filters-gribid.def-sample
+etc/nbsp/dist/archive.conf-sample
 etc/nbsp/dist/cspoolbdb.conf-sample
 etc/nbsp/dist/nbspfilter.conf-sample
 etc/nbsp/dist/nbspfilter.rc-sample

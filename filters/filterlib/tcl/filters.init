@@ -21,6 +21,7 @@ unset defaultsfile;
 #
 package require cspoolbdb;
 ::cspoolbdb::init $common(cspoolbdbconf) $common(localconfdirs);
+package require nbsputil;       # nbsputil::date
 
 ## The filter error function library
 if {[file exists $common(filterserrlib)] == 0} {
