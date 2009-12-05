@@ -7,11 +7,11 @@ INCLUDE=".include"
 Q='"'
 PREFIX=usr/local
 
-TCL_INCDIR="-I /usr/local/include/tcl8.5"
-TCL_LIB="tcl85"
-TCLSH=/usr/local/bin/tclsh8.5
+TCL_INCDIR="-I /usr/local/include/tcl8.6"
+TCL_LIB="tcl86"
+TCLSH=/usr/local/bin/tclsh8.6
 
-WISH=/usr/local/bin/wish8.5
+WISH=/usr/local/bin/wish8.6
 EXPECT=/usr/local/bin/expect
 
 DB_INCDIR="-I /usr/local/include/db47"
