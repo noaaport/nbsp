@@ -66,7 +66,7 @@ set dafilter(slave,grib,ure) {\+grib};
 set dafilter(slave,default,ure) {.*};
 #
 
-@DANNTPINIT@
+@da-nntp@
 
 ## The configuration file that overrides the defaults, if it exists.
 if {[file exists $dafilter(conf)] == 1} {

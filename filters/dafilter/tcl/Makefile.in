@@ -7,21 +7,21 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	dafilter.tcl
-TCLSOURCES =	dafilter.tcl.in
+FILTERTARGET =	dafilter.tcl
+FILTERSOURCES =	dafilter.tcl.in
 FILTERNAME =	dafilter
 TOOLNAMES =	nbspaloftcsv
 
-TCLTARGET-MGR =	dafilter-manager.tcl
+FILTERTARGET-MGR = dafilter-manager.tcl
+FILTERSOURCES-MGR = dafilter-manager.tcl.in
 FILTERNAME-MGR = dafilter-manager
-TCLSOURCES-MGR = dafilter-manager.tcl.in
 
-TCLSOURCES-INIT = dafilter.init.in
-TCLTARGET-INIT = dafilter.init
-TCLINCLUDE-INIT = danntp.init
-TCLTMPSED = danntp.tmp.sed
+FILTERTARGET-INIT = dafilter.init
+FILTERSOURCES-INIT = dafilter.init.in
+FILTERINCLUDE-INIT = da-nntp.init
+FILTERSED-INIT = da-nntp.tmp.sed
 
-LIBEXECINITS =	${TCLTARGET-INIT} archive.init
+LIBEXECINITS =	${FILTERTARGET-INIT} archive.init
 M4SOURCES =	defs.m4 dup.m4 file.m4 grib.m4 pipe.m4 rad.m4 sat.m4 extra.m4 \
 		dup-warnings.m4 dup-hurricane.m4 dup-upperair.m4 \
 		file-lite.m4 pipe-lite.m4 dup-hurricane-lite.m4 \
@@ -32,7 +32,7 @@ M4MAIN-LITE =	dafilter-lite.m4
 M4TARGET-LITE =	dafilter-lite.rc-defaults
 SAMPLES =	dafilter.conf-sample dafilter.rc-sample archive.conf-sample
 DOCSAMPLES =	level3.cfg-sample
-TARGET =	${TCLTARGET} ${TCLTARGET-INIT} ${TCLTARGET-MGR} \
+TARGET =	${FILTERTARGET} ${FILTERTARGET-INIT} ${FILTERTARGET-MGR} \
 		${TOOLNAMES} ${M4TARGET} ${M4TARGET-LITE} \
 		${SAMPLES} ${DOCSAMPLES}
 
@@ -42,20 +42,20 @@ OSNAME =	@OSNAME@
 
 all: ${TARGET}
 
-${TCLTARGET}: ${TCLSOURCES}
-	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+${FILTERTARGET}: ${FILTERSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${FILTERSOURCES} > ${FILTERTARGET}
 
-${TCLTARGET-MGR}: ${TCLSOURCES-MGR}
-	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES-MGR} > ${TCLTARGET-MGR}
+${FILTERTARGET-MGR}: ${FILTERSOURCES-MGR}
+	sed -e /%TCLSH%/s##${TCLSH}# ${FILTERSOURCES-MGR} > ${FILTERTARGET-MGR}
 
-${TCLTARGET-INIT}: ${TCLSOURCES-INIT} ${TCLINCLUDE-INIT}
-	@rm -f ${TCLTMPSED}
-	@echo "/%TCLSH%/s##${TCLSH}#" >> ${TCLTMPSED}
-	@echo "/@DANNTPINIT@/{" >> ${TCLTMPSED}
-	@echo "r ${TCLINCLUDE-INIT}" >> ${TCLTMPSED}
-	@echo "d" >> ${TCLTMPSED}
-	@echo "}" >> ${TCLTMPSED}
-	sed -f ${TCLTMPSED} ${TCLSOURCES-INIT} > ${TCLTARGET-INIT}
+${FILTERTARGET-INIT}: ${FILTERSOURCES-INIT} ${FILTERINCLUDE-INIT}
+	@rm -f ${FILTERSED-INIT}
+	@echo "/%TCLSH%/s##${TCLSH}#" >> ${FILTERSED-INIT}
+	@echo "/@da-nntp@/{" >> ${FILTERSED-INIT}
+	@echo "r ${FILTERINCLUDE-INIT}" >> ${FILTERSED-INIT}
+	@echo "d" >> ${FILTERSED-INIT}
+	@echo "}" >> ${FILTERSED-INIT}
+	sed -f ${FILTERSED-INIT} ${FILTERSOURCES-INIT} > ${FILTERTARGET-INIT}
 
 ${M4TARGET}: ${M4MAIN} ${M4SOURCES}
 	m4 ${M4MAIN} > ${M4TARGET}
@@ -79,12 +79,12 @@ nbspaloftcsv: nbspaloftcsv.tcl
 	 sed -e /%TCLSH%/s##${TCLSH}# nbspaloftcsv.tcl > nbspaloftcsv
 
 install: ${TARGET}
-	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 755 ${FILTERTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
 	${INSTALL} -m 644 ${LIBEXECINITS} ${MYLIBEXECDIR}
-	${INSTALL} -m 755 ${TCLTARGET-MGR} ${MYLIBEXECDIR}/${FILTERNAME-MGR}
+	${INSTALL} -m 755 ${FILTERTARGET-MGR} ${MYLIBEXECDIR}/${FILTERNAME-MGR}
 	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${M4TARGET-LITE} ${MYCONFDIR}
 	${INSTALL} -m 644 ${DOCSAMPLES} ${MYDOCDIR}
 
 clean:
-	rm -f *~ ${TARGET} ${TCLTMPSED} Makefile
+	rm -f *~ ${TARGET} ${FILTERSED-INIT} Makefile
