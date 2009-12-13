@@ -18,8 +18,18 @@ FILTERNAME-MGR = dafilter-manager
 
 FILTERTARGET-INIT = dafilter.init
 FILTERSOURCES-INIT = dafilter.init.in
-FILTERINCLUDE-INIT = da-nntp.init
-FILTERSED-INIT = da-nntp.tmp.sed
+FILTERINCLUDE-INIT = dainit-nntp.tcl
+
+FILTERLIBFILES = dalib-archive.tcl \
+	dalib-dirlist.tcl \
+	dalib-enable.tcl \
+	dalib-file.tcl \
+	dalib-grib.tcl \
+	dalib-inventory.tcl \
+	dalib-periodic.tcl \
+	dalib-rad.tcl \
+	dalib-sat.tcl
+FILTERLIBTMP = dalib.tmp
 
 LIBEXECINITS =	${FILTERTARGET-INIT} archive.init
 M4SOURCES =	defs.m4 dup.m4 file.m4 grib.m4 pipe.m4 rad.m4 sat.m4 extra.m4 \
@@ -42,20 +52,19 @@ OSNAME =	@OSNAME@
 
 all: ${TARGET}
 
-${FILTERTARGET}: ${FILTERSOURCES}
-	sed -e /%TCLSH%/s##${TCLSH}# ${FILTERSOURCES} > ${FILTERTARGET}
+${FILTERTARGET}: ${FILTERSOURCES} ${FILTERLIBFILES}
+	cat ${FILTERLIBFILES} > ${FILTERLIBTMP}
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e '/@dalib@/r ${FILTERLIBTMP}' -e '/@dalib@/d' \
+	${FILTERSOURCES} > ${FILTERTARGET}
+	rm -f ${FILTERLIBTMP}
 
 ${FILTERTARGET-MGR}: ${FILTERSOURCES-MGR}
 	sed -e /%TCLSH%/s##${TCLSH}# ${FILTERSOURCES-MGR} > ${FILTERTARGET-MGR}
 
 ${FILTERTARGET-INIT}: ${FILTERSOURCES-INIT} ${FILTERINCLUDE-INIT}
-	@rm -f ${FILTERSED-INIT}
-	@echo "/%TCLSH%/s##${TCLSH}#" >> ${FILTERSED-INIT}
-	@echo "/@da-nntp@/{" >> ${FILTERSED-INIT}
-	@echo "r ${FILTERINCLUDE-INIT}" >> ${FILTERSED-INIT}
-	@echo "d" >> ${FILTERSED-INIT}
-	@echo "}" >> ${FILTERSED-INIT}
-	sed -f ${FILTERSED-INIT} ${FILTERSOURCES-INIT} > ${FILTERTARGET-INIT}
+	sed -e '/@dainit-nntp@/r ${FILTERINCLUDE-INIT}' -e '/@dainit-nntp@/d' \
+	${FILTERSOURCES-INIT} > ${FILTERTARGET-INIT}
 
 ${M4TARGET}: ${M4MAIN} ${M4SOURCES}
 	m4 ${M4MAIN} > ${M4TARGET}
@@ -87,4 +96,4 @@ install: ${TARGET}
 	${INSTALL} -m 644 ${DOCSAMPLES} ${MYDOCDIR}
 
 clean:
-	rm -f *~ ${TARGET} ${FILTERSED-INIT} Makefile
+	rm -f *~ ${TARGET} Makefile
