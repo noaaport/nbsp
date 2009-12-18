@@ -1,7 +1,11 @@
 #!/bin/sh
 
 project=nbsp
-mastersite="svn+ssh://diablo/home/svn"
+masterhost="http://svn.1-loop.net"
+masterrepo="nbsprepo"
+#
+## mastersite="svn+ssh://diablo/home/svn"
+mastersite=${masterhost}/${masterrepo}
 
 # nbsptclhttpd receives special treatment
 tcllibs="tclgrads tclgempak tclmetar tclupperair"
@@ -18,8 +22,8 @@ rm -r -f $tmpdir
 mkdir $tmpdir
 cd $tmpdir
 
-svn export $mastersite/$project/trunk $project-$version
-cd $project-$version
+svn export $mastersite/$project/trunk ${name}-$version
+cd ${name}-${version}
 rm -r $exclude
 for p in $tcllibs
 do

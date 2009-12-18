@@ -1,8 +1,11 @@
 #!/bin/sh
 
 project=nbsp
-#mastersite="svn+ssh://diablo/home/svn/nbsprepo"
-mastersite="http://svn.1-loop.net/nbsprepo"
+masterhost="http://svn.1-loop.net"
+masterrepo="nbsprepo"
+#
+## mastersite="svn+ssh://diablo/home/svn"
+mastersite=${masterhost}/${masterrepo}
 
 # nbsptclhttpd receives special treatment
 tcllibs="tclgrads tclgempak tclmetar tclupperair"

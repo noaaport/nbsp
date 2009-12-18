@@ -7,7 +7,7 @@
 # filters.conf (by the programs).
 
 set spoolfilter(conf)	[file join $common(confdir) "spoolfilter.conf"];
-set spoolfilter(datadir) [file join $common(archive_datadir) "spool"];
+set spoolfilter(datadir) [file join $common(archivedatadir) "spool"];
 set spoolfilter(datasubdir) "%Y%m%d";
 # set spoolfilter(datasubdir) "%u";		# day of week
 set spoolfilter(stripccb) 1;
