@@ -110,7 +110,7 @@ H=02:/var/noaaport/data/upperair/archive: -c 7 -d
 H=02:/var/noaaport/data/weatherscope: -c 7 -d
 
 # Keep a week of the old www logfiles
-H=01:/var/noaaport/www/log: -mtime +6
+H=01:/var/log/nbsp/www: -mtime +6
 
 # Delete files in the spool directory (see below)
 #
