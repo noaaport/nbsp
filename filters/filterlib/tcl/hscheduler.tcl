@@ -4,7 +4,7 @@
 # This package contains the functions that should be used in the schedule
 # scripts that are invoked hourly (e.g., the "nbspgribsched").
 # The analogous functions for the minutely schedules (e.g., scheduler)
-# are in hscheduler.tcl.
+# are in mscheduler.tcl.
 #
 # The main function of the library is
 #
