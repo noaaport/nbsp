@@ -103,7 +103,6 @@ case $os in
 	   DB_LIB="db-4.6"
 	elif [ $flavor = debian ]
 	then
-	   TCLSH=/usr/bin/tclsh8.5
 	   TCL_INCDIR="-I /usr/include/tcl8.5"
     	fi
 	;;
