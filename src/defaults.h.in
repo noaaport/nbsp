@@ -100,7 +100,7 @@
  */
 #define SPOOLDB_SLOTS		262144		/* 2048*128 */
 #define SPOOLDB_SLOTS_MIN	1024
-#define SPOOLDB_FNAME		"/var/noaaport/nbsp/db/spool.db"
+#define SPOOLDB_FNAME		"/var/noaaport/nbsp/db/spool.state"
 
 /*
  * Default parameters for the shared memory bdb spool (cspool)
