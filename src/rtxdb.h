@@ -27,7 +27,7 @@
  *
  * At 1,500 products/minute (90,000/hour) the databases can grow very
  * large. The lookups in periods of too many retransmissions can then
- * take significant resources. We use can two approaces: (i) limit the
+ * take significant resources. We use can two approaches: (i) limit the
  * size of the database (e.g., using a circular array) or (ii) truncate
  * the databases periodically. We use the latter; it is a rather heuristic
  * approach, but it avoids introducing more overhead, and the retransmission
