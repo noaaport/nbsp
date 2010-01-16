@@ -54,7 +54,7 @@ bin/nbspqdc
 bin/nbspqstat
 bin/nbspinvrm
 bin/nbspexec
-bin/nbsp-rsscreate
+bin/nbsprsscreate
 bin/nbsprecover
 bin/nbspaloftcsv
 bin/nbsptrackdata

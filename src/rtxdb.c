@@ -214,8 +214,16 @@ static int rtxdb_read_record2(DB *dbp,
   memset(&key, 0 , sizeof(DBT));
   memset(&data, 0 , sizeof(DBT));
 
+  /*
+   * From the documentation -
+   *
+   * We tell DB to use our memory instead of its own by specifying
+   * the DB_DBT_USERMEM flag. Be aware that when we do this, we must also
+   * identify how much user memory is available through the use of the
+   * ulen field.
+   */
   key.data = (void*)&seqnum;
-  key.size = sizeof(seqnum);
+  key.ulen = sizeof(seqnum);
   key.flags = DB_DBT_USERMEM;
   data.data = rtxdata;
   data.ulen = sizeof(struct nbsp_rtxdb_data_st);

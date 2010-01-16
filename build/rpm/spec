@@ -81,7 +81,7 @@ make clean
 /usr/local/bin/nbspqstat
 /usr/local/bin/nbspinvrm
 /usr/local/bin/nbspexec
-/usr/local/bin/nbsp-rsscreate
+/usr/local/bin/nbsprsscreate
 /usr/local/bin/nbsprecover
 /usr/local/bin/nbspaloftcsv
 /usr/local/bin/nbsptrackdata

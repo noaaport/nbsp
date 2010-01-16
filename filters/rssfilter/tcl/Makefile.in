@@ -7,8 +7,8 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	rssfilter.tcl nbsp-rsscreate.tcl
-TCLSOURCES =	rssfilter.tcl.in nbsp-rsscreate.tcl.in rssfilter.init
+TCLTARGET =	rssfilter.tcl nbsprsscreate.tcl
+TCLSOURCES =	rssfilter.tcl.in nbsprsscreate.tcl.in rssfilter.init
 M4SOURCES =	defs.m4 txt.m4 img.m4 rssfilter.m4
 M4MAIN =	rssfilter.m4
 M4TARGET =	rssfilter.rc-defaults
@@ -31,9 +31,9 @@ all: ${TARGET}
 rssfilter.tcl: rssfilter.tcl.in
 	sed -e /%TCLSH%/s##${TCLSH}# rssfilter.tcl.in > rssfilter.tcl
 
-nbsp-rsscreate.tcl: nbsp-rsscreate.tcl.in
-	sed -e /%TCLSH%/s##${TCLSH}# nbsp-rsscreate.tcl.in \
-		> nbsp-rsscreate.tcl
+nbsprsscreate.tcl: nbsprsscreate.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# nbsprsscreate.tcl.in \
+		> nbsprsscreate.tcl
 
 ${M4TARGET}: ${M4MAIN} ${M4SOURCES}
 	m4 ${M4MAIN} > ${M4TARGET}
@@ -62,7 +62,7 @@ ${TXMLTARGET}: ${TXMLSOURCES}
 install: ${TARGET}
 	${INSTALL} -m 755 rssfilter.tcl ${MYLIBEXECDIR}/rssfilter
 	${INSTALL} -m 755 rssfilter.init ${MYLIBEXECDIR}
-	${INSTALL} -m 755 nbsp-rsscreate.tcl ${BINDIR}/nbsp-rsscreate
+	${INSTALL} -m 755 nbsprsscreate.tcl ${BINDIR}/nbsprsscreate
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 
 clean:

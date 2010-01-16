@@ -21,7 +21,7 @@ set rssfilter(txmldirs) $rssfilter(localconfdirs);
 set rssfilter(txmlsubdir) "rss";
 set rssfilter(txmlfext) ".txml";
 append rssfilter(hostport) [info hostname] ":8015";
-set rssfilter(createbin) "nbsp-rsscreate";
+set rssfilter(createbin) "nbsprsscreate";
 set rssfilter(def) [file join $common(confdir) "rssfilter.def"];
 set rssfilter(wfodef) [file join $common(confdir) "rssfilter-wfo.def"];
 set rssfilter(stationconf) [file join $common(confdir) "rssfilter-st.conf"];
