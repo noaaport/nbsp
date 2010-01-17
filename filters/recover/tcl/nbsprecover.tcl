@@ -37,8 +37,8 @@ unset nbspd_init_file;
 # recover.init
 set recover_init_file [file join $common(libdir) recover.init];
 if {[file exists $recover_init_file] == 0} {
-        puts "$recover_init_file not found.";
-        return 1;
+    puts "$recover_init_file not found.";
+    return 1;
 }
 source $recover_init_file;
 unset recover_init_file;
