@@ -64,6 +64,7 @@ static void rtxdb_flag_filter(struct pctl_element_st *pce);
 static void log_missing(struct pctl_element_st *pce);
 static void log_rtx(struct pctl_element_st *pce);
 static void write_log_pce(FILE *f, struct pctl_element_st *pce);
+static void write_log_pce_rtx(FILE *f, struct pctl_element_st *pce);
 /* the processsing thread functions */
 static int open_nbsproc(void);
 static void close_nbsproc(void *arg);
@@ -700,17 +701,30 @@ static void log_rtx(struct pctl_element_st *pce){
     return;
   }
 
-  write_log_pce(f, pce);
+  write_log_pce_rtx(f, pce);
 
   fclose(f);
 }
 
 static void write_log_pce(FILE *f, struct pctl_element_st *pce){
 
-  fprintf(f, "%" PRIuMAX " %u %d %d %d %d %s\n",
-	  (uintmax_t)pce->ts.tv_sec,
-	  pce->seq_number, pce->psh_product_type, pce->psh_product_category,
-	  pce->psh_product_code, pce->np_channel_index, pce->fbasename);
+    fprintf(f, "%" PRIuMAX " %u %d %d %d %d %s\n",
+	    (uintmax_t)pce->ts.tv_sec,
+	    pce->seq_number, pce->psh_product_type, pce->psh_product_category,
+	    pce->psh_product_code, pce->np_channel_index, pce->fbasename);
+}
+
+static void write_log_pce_rtx(FILE *f, struct pctl_element_st *pce){
+  /*
+   * Same as above, but includes the original sequence
+   * (that it is retransmitting) in the last field.
+   */
+
+    fprintf(f, "%" PRIuMAX " %u %d %d %d %d %s %u\n",
+	    (uintmax_t)pce->ts.tv_sec,
+	    pce->seq_number, pce->psh_product_type, pce->psh_product_category,
+	    pce->psh_product_code, pce->np_channel_index, pce->fbasename,
+	    pce->orig_seq_number);
 }  
 
 /*
