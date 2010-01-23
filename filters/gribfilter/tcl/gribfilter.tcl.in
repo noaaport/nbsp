@@ -23,7 +23,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 #
-# packages are loaded in gribfilter.init
+# Nbsp packages are loaded in gribfilter.init
 #
 
 # The default configuration is shared between the filter and cmd-line tools
@@ -97,7 +97,7 @@ proc main {argc argv} {
 	    log_msg $errorInfo;
 	}
 
-	::periodic::run;
+	::nbsp::periodic::run;
     }
 }
 
@@ -123,7 +123,7 @@ proc process {finfo} {
 	return;
     } 
 
-    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];
     set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
@@ -297,12 +297,12 @@ if {$option(s) == 1} {
 
 # The job to create the ctl files
 if {$gribfilter(gradsctl_enable) == 1} {
-    ::periodic::register gribfilter_control_files "hourly";
+    ::nbsp::periodic::register gribfilter_control_files "hourly";
 }
 
 # In work-crew mode the slaves do not run the scheduler
 if {$option(s) == 0} {
-    ::periodic::register \
+    ::nbsp::periodic::register \
         gribfilter_run_scheduler $gribfilter(schedule_run_period);
 }
 

@@ -108,13 +108,14 @@ libexec/nbsp/filters.lib
 libexec/nbsp/filters-err.lib
 libexec/nbsp/filters-gribid.lib
 libexec/nbsp/archive.init
+libexec/nbsp/pkgIndex.tcl
+libexec/nbsp/cspoolbdb.tcl
+libexec/nbsp/errx.tcl
 libexec/nbsp/hscheduler.tcl
 libexec/nbsp/mscheduler.tcl
 libexec/nbsp/periodic.tcl
-libexec/nbsp/errx.tcl
-libexec/nbsp/nbsputil.tcl
-libexec/nbsp/cspoolbdb.tcl
-libexec/nbsp/pkgIndex.tcl
+libexec/nbsp/syslog.tcl
+libexec/nbsp/util.tcl
 libexec/nbsp/tclgrads/grads.tcl
 libexec/nbsp/tclgrads/pkgIndex.tcl
 libexec/nbsp/tclgempak/gempak.tcl
@@ -236,6 +237,7 @@ etc/nbsp/dist/export.conf-sample
 etc/nbsp/dist/export-da.def-sample
 etc/nbsp/dist/weatherscope.conf-sample
 etc/nbsp/dist/npstats.conf-sample
+etc/nbsp/dist/npstats.conf-defaults
 share/doc/nbsp/weatherscope-extension.tgz
 share/doc/nbsp/www.tgz
 libexec/nbsp/httpd

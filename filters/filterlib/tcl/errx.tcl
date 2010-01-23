@@ -1,17 +1,19 @@
 #
 # $Id$
 #
-package provide errx 1.0;
+package provide nbsp::errx 1.0;
+package require fileutil;
 
-namespace eval errx {}
-namespace eval syslog {
+namespace eval nbsp::errx {}
+namespace eval nbsp::filelog {}
+namespace eval nbsp::syslog {
 
     variable syslog;
 
     set syslog(usesyslog) 0;
 }
 
-proc ::errx::warn s {
+proc ::nbsp::errx::warn s {
 
     global argv0;
 
@@ -19,7 +21,12 @@ proc ::errx::warn s {
     puts stderr "$name: $s";
 }
 
-proc ::errx::err s {
+proc ::nbsp::errx::errc s {
+
+    warn $s;
+}
+
+proc ::nbsp::errx::err s {
 
     warn $s;
     exit 1;
@@ -28,14 +35,14 @@ proc ::errx::err s {
 #
 # syslog
 #
-proc ::syslog::usesyslog {{flag 1}} {
+proc ::nbsp::syslog::usesyslog {{flag 1}} {
 
     variable syslog;
 
     set syslog(usesyslog) $flag;
 }
 
-proc ::syslog::_log_msg s {
+proc ::nbsp::syslog::_log_msg s {
 
     global argv0;
 
@@ -43,7 +50,7 @@ proc ::syslog::_log_msg s {
     exec logger -t $name -- $s;
 }
 
-proc ::syslog::msg s {
+proc ::nbsp::syslog::msg s {
 
     variable syslog;
 
@@ -54,25 +61,55 @@ proc ::syslog::msg s {
     }
 }
 
-proc ::syslog::warn s {
+proc ::nbsp::syslog::warn s {
 
     variable syslog;
 
     if {$syslog(usesyslog) == 1} {
-	_log_msg $s;
+	_log_msg "Warning: $s";
     } else {
-	::errx::warn $s;
+	::nbsp::errx::warn $s;
     }
 }
 
-proc ::syslog::err s {
+proc ::nbsp::syslog::errc s {
 
     variable syslog;
 
     if {$syslog(usesyslog) == 1} {
-	_log_msg $s;
+	_log_msg "Error: $s";
+    } else {
+	::nbsp::errx::errc $s;
+    }
+}
+
+proc ::nbsp::syslog::err s {
+
+    variable syslog;
+
+    if {$syslog(usesyslog) == 1} {
+	_log_msg "Error: $s";
 	exit 1;
     } else {
-	::errx::err $s;
+	::nbsp::errx::err $s;
+    }
+}
+
+#
+# Log to a file
+#
+proc ::nbsp::filelog::msg {logfile s} {
+
+    global argv0;
+
+    set name [file tail $argv0];
+    append msg $name ": " [clock format [clock seconds]] ": " $s "\n"; 
+
+    set status [catch {
+	::fileutil::appendToFile $logfile $msg;
+    } errmsg];
+
+    if {$status != 0} {
+	puts stderr $errmsg;
     }
 }

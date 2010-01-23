@@ -135,13 +135,14 @@ make clean
 /usr/local/libexec/nbsp/filters-err.lib
 /usr/local/libexec/nbsp/filters-gribid.lib
 /usr/local/libexec/nbsp/archive.init
+/usr/local/libexec/nbsp/pkgIndex.tcl
+/usr/local/libexec/nbsp/cspoolbdb.tcl
+/usr/local/libexec/nbsp/errx.tcl
 /usr/local/libexec/nbsp/hscheduler.tcl
 /usr/local/libexec/nbsp/mscheduler.tcl
 /usr/local/libexec/nbsp/periodic.tcl
-/usr/local/libexec/nbsp/errx.tcl
-/usr/local/libexec/nbsp/nbsputil.tcl
-/usr/local/libexec/nbsp/cspoolbdb.tcl
-/usr/local/libexec/nbsp/pkgIndex.tcl
+/usr/local/libexec/nbsp/syslog.tcl
+/usr/local/libexec/nbsp/util.tcl
 /usr/local/libexec/nbsp/tclgrads/grads.tcl
 /usr/local/libexec/nbsp/tclgrads/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclgempak/gempak.tcl
@@ -263,6 +264,7 @@ make clean
 /usr/local/etc/nbsp/dist/export-da.def-sample
 /usr/local/etc/nbsp/dist/weatherscope.conf-sample
 /usr/local/etc/nbsp/dist/npstats.conf-sample
+/usr/local/etc/nbsp/dist/npstats.conf-defaults
 /usr/local/share/doc/nbsp/weatherscope-extension.tgz
 /usr/local/share/doc/nbsp/www.tgz
 /usr/local/libexec/nbsp/httpd

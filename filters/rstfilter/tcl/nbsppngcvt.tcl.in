@@ -21,22 +21,10 @@ set optlist {{g 0}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 
-proc errx s {
-
-    global argv0;
-
-    set p [file tail $argv0];
-    puts stderr "$p: $s";
-    exit 1;
-}
-
 ## The common defaults file (this script uses netpbm programs)
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-if {[file exists $defaultsfile] == 0} {
-    errx "$defaultsfile not found.";
-    return 1;
-}
-source $defaultsfile;
+source "/usr/local/etc/nbsp/filters.conf";
+
+package require nbsp::errx;
 
 ## Defaults for this filter.
 set jpgextension ".jpg";
@@ -46,7 +34,7 @@ set gifextension ".gif";
 # main
 #
 if {$argc == 0} {
-    errx $usage;
+    ::nbsp::errx::err $usage;
 } else {
     set fpath [lindex $argv 0];
 }

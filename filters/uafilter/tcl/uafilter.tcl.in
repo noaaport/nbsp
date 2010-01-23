@@ -18,7 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # packages
-package require nbsputil;
+package require nbsp::util;
 
 set ua_init_file [file join $common(libdir) "uafilter.init"];
 if {[file exists $ua_init_file] == 0} {
@@ -128,7 +128,7 @@ proc save_data_daily_arcv {wmotime rawdata} {
 
     global uafilter;
 
-    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
 
     set rawdata_list [split $rawdata "\n"];
@@ -151,7 +151,7 @@ proc save_data_hourly_arcv {wmotime rawdata} {
 
     global uafilter;
 
-    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
   

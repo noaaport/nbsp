@@ -68,23 +68,22 @@ set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
 # (It is matched against awips1)
 set filterslib(doradinfounz)	{^n([^m]|m[^d])|^tr};
 
-# The error functions and their global variables.
+# Global variables of the filtererr library.
 # By default the filters report errors using syslog.
-# Setting usesyslog to 0 will cause them to report to a logfile
-# in the directory defined below (the directory is not used if
-# usesyslog == 1). If errorInfo is set, then the filters print
+# Otherwise, if usesyslog is set to 0 they will report to stderr or,
+# if it is set to 2, to a logfile in the directory defined below.
+# (That directory is also used by the gempak decoders).
+# If errorInfo is set, then the filters print
 # debuging information using the tcl errorInfo variable.
 #
-set common(filterserrlib)       [file join $common(libdir) "filters-err.lib"];
 set common(debug)		0;
 set filterserrlib(usesyslog)	1;
 set filterserrlib(logdir)	"/var/log/noaaport";
 set filterserrlib(errorInfo)	$common(debug);
 
-# The library to extract information from the grib files
-# (used by the dafilter, gpfilter and ldmfilter).
+# The definitions used by the gribid library to extract information
+# from the grib files (used by the dafilter, gpfilter and ldmfilter).
 #
-set common(filtersgribidlib) [file join $common(libdir) "filters-gribid.lib"];
 set common(filtersgribiddef) [file join $common(confdir) "filters-gribid.def"];
 
 # Location of the external programs used by the filters.

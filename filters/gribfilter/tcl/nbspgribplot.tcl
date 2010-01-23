@@ -30,8 +30,8 @@ source $initfile;
 unset initfile;
 
 package require grads;
-package require nbsputil;
-package require errx;
+package require nbsp::util;
+package require nbsp::errx;
 
 set usage {Usage: nbspgribplot [-c ctlfile] [-g grbfile] [-i idxfile]
     [-d outputdir] [-o imgfile] [-D var=val ...] [-M var=val ...]
@@ -61,7 +61,7 @@ proc run_grads_script {gsfile} {
 	return;
     }
 
-    ::nbsputil::pwrite_block [subst $gsplot(script)] grads -bl > /dev/null;
+    ::nbsp::util::pwrite_block [subst $gsplot(script)] grads -bl > /dev/null;
 
     if {[info exists gsplot(post)]} {
 	eval $gsplot(post);
@@ -71,16 +71,16 @@ proc run_grads_script {gsfile} {
 #
 # main
 #
-array set option [::nbsputil::cmdline_getoptions argv $optlist $usage];
+array set option [::nbsp::util::cmdline_getoptions argv $optlist $usage];
 set argc [llength $argv];
 if {$argc != 1} {
-    ::errx::err $usage;
+    ::nbsp::errx::err $usage;
 }
 set grads(gsfile) [lindex $argv 0];
 
 # At least one of [-c] or [-g] must be given
 if {($option(g) eq "") && ($option(c) eq "")} {
-    ::errx::err $usage;
+    ::nbsp::errx::err $usage;
 }
 
 if {$option(g) ne ""} {
@@ -97,7 +97,7 @@ if {$option(c) ne ""} {
 # If only the ctlfile is given, it must exist.
 if {$option(g) eq ""} {
     if {[file exists $grads(ctlfile)] == 0} {
-	::errx::err "$grads(ctlfile) not found.";
+	::nbsp::errx::err "$grads(ctlfile) not found.";
     }
 }
 
@@ -116,7 +116,7 @@ if {[file exists $grads(ctlfile)] == 0} {
     } errmsg];
 
     if {$status != 0} {
-	::errx::err $errmsg;
+	::nbsp::errx::err $errmsg;
     }
 }
 
@@ -127,7 +127,7 @@ if {[file exists $grads(idxfile)] == 0} {
 	set msg [exec gribmap -q -i $grads(ctlfile)];
     } errmsg];
     if {$msg != ""} {
-	::errx::err $msg;
+	::nbsp::errx::err $msg;
     }
 }
 
@@ -152,14 +152,14 @@ set gsplot(forecasttime) [lindex $ctlname_parts 3];
 
 # The user-defined variables
 foreach d $option(D) {
-    set keyval [::nbsputil::split_first $d "="];
+    set keyval [::nbsp::util::split_first $d "="];
     set key [lindex $keyval 0];
     set val [lindex $keyval 1];
     set gsplot(D,$key) $val;
 }
 
 foreach d $option(M) {
-    set keyval [::nbsputil::split_first $d "="];
+    set keyval [::nbsp::util::split_first $d "="];
     set key [lindex $keyval 0];
     set val [lindex $keyval 1];
     set gsplot(M,$key) $val;

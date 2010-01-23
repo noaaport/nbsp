@@ -18,7 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # packages
-package require nbsputil;
+package require nbsp::util;
 
 ## The initialization of this filter.
 set initfile [file join $common(libdir) "gpfilter.init"];
@@ -90,7 +90,7 @@ proc process {finfo} {
     filterlib_get_rcvars rc $finfo -dogrib;
 
     # The gpfilter rules use these variables
-    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];
     set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
     unset seconds;

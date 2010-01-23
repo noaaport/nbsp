@@ -18,7 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # packages
-package require nbsputil;
+package require nbsp::util;
 
 # The default configuration is shared between the filter and cmd-line tools
 # and therefore it is out in a separate file that is read by both.
@@ -97,7 +97,7 @@ proc save_rawdata_old_unused {rc_name} {
     set rawdata_list [split $rawdata "\n"];
     set rawdata_list_length [llength $rawdata_list];
 
-    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set rawfname [clock format $seconds -gmt true -format "%Y%m%d%H%M"];
     append rawfname $metarfilter(rawfext);	    
 
@@ -389,7 +389,7 @@ proc save_obdata_station_daily_arcv {cname wmotime obstation obdata} {
     global metarfilter;
     global collective
 
-    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
   
     set arcvfname ${obstation}_${ymd};
@@ -408,7 +408,7 @@ proc save_obdata_station_hourly_arcv {cname wmotime obstation obdata} {
     global metarfilter;
     global collective
 
-    set seconds [::nbsputil::date::clock_seconds $wmotime];
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
   

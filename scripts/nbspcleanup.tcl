@@ -21,7 +21,7 @@ source $defaultsfile;
 unset defaultsfile;
 #
 package require cmdline;
-package require hscheduler;
+package require nbsp::hscheduler;
 
 set usage {usage: nbspcleanup [-f] <configfile>};
 set optlist {{f}};
@@ -267,7 +267,7 @@ dict for {dir line} $schedule {
     }
 
     set status [catch {
-        set match [::hscheduler::match_timespec $hour];
+        set match [::nbsp::hscheduler::match_timespec $hour];
     } errmsg];
 
     if {$status != 0} {

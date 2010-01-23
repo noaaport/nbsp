@@ -8,23 +8,13 @@
 # instead.
 
 ## The common defaults
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-if {[file exists $defaultsfile] == 0} {
-    puts "$argv0: $defaultsfile not found.";
-    return 1;
-}
-source $defaultsfile;
-unset defaultsfile;
+source "/usr/local/etc/nbsp/filters.conf";
 
-## The filter error function library
-if {[file exists $common(filterserrlib)] == 0} {
-    puts "$argv0: $common(filterserrlib) not found.";
-    return 1;
-}
-source $common(filterserrlib);
+## The error library
+package require nbsp::syslog;
 
 ## The scheduler library (load the library for minutely run schedules)
-package require mscheduler;
+package require nbsp::mscheduler;
 
 #
 # Default schedule
@@ -39,11 +29,11 @@ proc schedule {code args} {
     global g;
     
     set status [catch {
-	set match [::mscheduler::match_timespec $code];
+	set match [::nbsp::mscheduler::match_timespec $code];
     } errmsg];
 
     if {$status != 0} {
-	log_msg $errmsg;
+	::nbsp::syslog::warn $errmsg;
     } elseif {$match == 1} {
 	lappend g(cmdlist) $args;
     }
@@ -64,7 +54,7 @@ proc exec_cmd {cmd} {
     } errmsg];
 
     if {$status != 0} {
-	log_msg $errmsg;
+	::nbsp::syslog::warn $errmsg;
     }
 }
 
@@ -80,7 +70,7 @@ foreach _d $scheduler(confdirs) {
     }
 }
 if {$rcfile eq ""} {
-    log_msg "$scheduler(rc) not found.";
+    ::nbsp::syslog::warn "$scheduler(rc) not found.";
     return 1;
 }
 

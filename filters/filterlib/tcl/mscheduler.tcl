@@ -8,7 +8,7 @@
 #
 # The main function of the library is
 #
-#     proc ::mscheduler::match_timespec <spec>
+#     proc ::nbsp::mscheduler::match_timespec <spec>
 #
 # which returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -52,15 +52,15 @@
 # D=010100 => run on the first day of the month at 1 am.
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 #
-package provide mscheduler 1.0;
-namespace eval mscheduler {
+package provide nbsp::mscheduler 1.0;
+namespace eval nbsp::mscheduler {
 
     variable option;
 
     set option(gmt) "";
 }
 
-proc ::mscheduler::match_timespec {spec} {
+proc ::nbsp::mscheduler::match_timespec {spec} {
 #
 # Returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -87,7 +87,7 @@ proc ::mscheduler::match_timespec {spec} {
     return $match;
 }
 
-proc ::mscheduler::match_minutespec {code} {
+proc ::nbsp::mscheduler::match_minutespec {code} {
 
     variable option;
 
@@ -121,7 +121,7 @@ proc ::mscheduler::match_minutespec {code} {
     return $match;
 }
 
-proc ::mscheduler::match_hourspec {hourspec} {
+proc ::nbsp::mscheduler::match_hourspec {hourspec} {
 
     variable option;
 
@@ -156,7 +156,7 @@ proc ::mscheduler::match_hourspec {hourspec} {
     return $match;
 }
 
-proc ::mscheduler::match_dayspec {dayspec} {
+proc ::nbsp::mscheduler::match_dayspec {dayspec} {
 
     variable option;
 
@@ -191,7 +191,7 @@ proc ::mscheduler::match_dayspec {dayspec} {
     return $match;
 }
 
-proc ::mscheduler::match_wdayspec {wdayspec} {
+proc ::nbsp::mscheduler::match_wdayspec {wdayspec} {
 
     variable option;
 

@@ -17,7 +17,7 @@ if {$filters_init_status == 1} {
 }
 unset filters_init_status;
 
-package require nbsputil;
+package require nbsp::util;
 
 # The default configuration is shared between the filter and cmd-line tools
 # and therefore it is out in a separate file that is read by both.
@@ -232,7 +232,7 @@ proc make_xml {cat_body subchannel channeldesc rsstemplate} {
     }
 
     set status [catch {
-	::nbsputil::pwrite_block $cat_body \
+	::nbsp::util::pwrite_block $cat_body \
 	    $rssfilter(createbin) -o $xml_fpath \
 	    -D hostport=$rssfilter(hostport) \
 	    $channeltitle $channeldesc $rssfilter(def) $txml_fpath;

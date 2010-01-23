@@ -8,7 +8,7 @@
 #
 # The main function of the library is
 #
-#     proc ::hscheduler::match_timespec {spec}
+#     proc ::nbsp::hscheduler::match_timespec {spec}
 #
 # which returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -41,15 +41,15 @@
 # D=0101 => run on the first of the month at 1 am.
 # D03|21/2  => run every other day at 3 am and 9 pm.
 #
-package provide hscheduler 1.0;
-namespace eval hscheduler {
+package provide nbsp::hscheduler 1.0;
+namespace eval nbsp::hscheduler {
 
     variable option;
 
     set option(gmt) "";
 }
 
-proc ::hscheduler::match_timespec {spec} {
+proc ::nbsp::hscheduler::match_timespec {spec} {
 #
 # Returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -76,7 +76,7 @@ proc ::hscheduler::match_timespec {spec} {
     return $match;
 }
 
-proc ::hscheduler::match_hourspec {hour} {
+proc ::nbsp::hscheduler::match_hourspec {hour} {
 
     variable option;
 
@@ -111,7 +111,7 @@ proc ::hscheduler::match_hourspec {hour} {
     return $match;
 }
 
-proc ::hscheduler::match_dayspec {dayspec} {
+proc ::nbsp::hscheduler::match_dayspec {dayspec} {
 
     variable option;
 
@@ -146,7 +146,7 @@ proc ::hscheduler::match_dayspec {dayspec} {
     return $match;
 }
 
-proc ::hscheduler::match_wdayspec {wdayspec} {
+proc ::nbsp::hscheduler::match_wdayspec {wdayspec} {
 
     variable option;
 

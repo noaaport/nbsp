@@ -1,8 +1,8 @@
 #
 # $Id$
 #
-package require nbsputil;
-package require periodic;
+package require nbsp::util;
+package require nbsp::periodic;
 
 # This file is split from gribfilter.tcl because some of the variables
 # are also used by the cmd-line tools, the gribfilter and the
@@ -84,7 +84,7 @@ proc gribfilter_run_scheduler {} {
     file mkdir $gribfilter(imgdatadir);
     set savedir [pwd];
     cd $gribfilter(imgdatadir);
-    ::periodic::scheduler $gribfilter(schedule);
+    ::nbsp::periodic::scheduler $gribfilter(schedule);
     cd $savedir;
 }
 
@@ -150,7 +150,7 @@ proc gribfilter_run_scheduler {} {
 #     log_msg "Opening pipe to nbspgribsched.";
 # 
 #     set status [catch {
-# 	::nbsputil::pwrite_nonblock $schedule nbspgribsched -b;
+# 	::nbsp::util::pwrite_nonblock $schedule nbspgribsched -b;
 #     } errmsg];
 # 
 #     log_msg "Closed pipe to nbspgribsched.";

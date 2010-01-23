@@ -13,19 +13,19 @@
 #    nbsputil::date::guess_clock_seconds {ddhhmm}
 #    nbsputil::date::clock_seconds {ddhhmm}
 #
-package provide nbsputil 1.0;
+package provide nbsp::util 1.0;
 package require cmdline;
 
-namespace eval nbsputil {
+namespace eval nbsp::util {
 
     variable nbsputil;
 
     array set nbsputil {};
 }
 
-namespace eval nbsputil::date {};
+namespace eval nbsp::util::date {};
 
-proc ::nbsputil::cmdline_getoptions {argv_name optlist usage} {
+proc ::nbsp::util::cmdline_getoptions {argv_name optlist usage} {
 #
 # Similar to the standard one, with the following differences:
 #
@@ -81,7 +81,7 @@ proc ::nbsputil::cmdline_getoptions {argv_name optlist usage} {
     return [array get option];
 }
 
-proc ::nbsputil::split_first {str substr} {
+proc ::nbsp::util::split_first {str substr} {
 #
 # Given a string in str, returns the two parts that are separated
 # by the first instance of substr.
@@ -94,14 +94,14 @@ proc ::nbsputil::split_first {str substr} {
     return [list $s1 $s2];
 }
 
-proc ::nbsputil::set_var {varname varval} {
+proc ::nbsp::util::set_var {varname varval} {
 
     variable nbsputil;
 
     set nbsputil(var,$varname) $varval;
 }
 
-proc ::nbsputil::get_var {varname} {
+proc ::nbsp::util::get_var {varname} {
 
     variable nbsputil;
 
@@ -112,7 +112,7 @@ proc ::nbsputil::get_var {varname} {
     return $nbsputil(var,$varname);
 }
 
-proc ::nbsputil::pread {args} {
+proc ::nbsp::util::pread {args} {
 #
 # A substitute for
 #
@@ -141,7 +141,7 @@ proc ::nbsputil::pread {args} {
     return $content;
 }
 
-proc ::nbsputil::pwrite_block {data args} {
+proc ::nbsp::util::pwrite_block {data args} {
 
     set s [join $args " "];
     set status [catch {
@@ -159,7 +159,7 @@ proc ::nbsputil::pwrite_block {data args} {
     }
 }
 
-proc ::nbsputil::pwrite_nonblock {data args} {
+proc ::nbsp::util::pwrite_nonblock {data args} {
 
     set s [join $args " "];
     set status [catch {
@@ -178,7 +178,7 @@ proc ::nbsputil::pwrite_nonblock {data args} {
     }
 }
 
-proc ::nbsputil::find_local_rcfile {rcfile localconfdirs {subdir ""}} {
+proc ::nbsp::util::find_local_rcfile {rcfile localconfdirs {subdir ""}} {
 #
 # Looks for a file with the same as rcfile, in the local directories. If
 # it is found, the path is returned, otherwise the original rcfile is returned.
@@ -208,7 +208,7 @@ proc ::nbsputil::find_local_rcfile {rcfile localconfdirs {subdir ""}} {
 # nbsputil::date
 #
 
-proc ::nbsputil::date::guess_clock_seconds {ddhhmm} {
+proc ::nbsp::util::date::guess_clock_seconds {ddhhmm} {
 #
 # The algorith will be like this. First we calculate "now" as
 # ``clock seconds''. From that we determine three points, in seconds:
@@ -306,7 +306,7 @@ proc ::nbsputil::date::guess_clock_seconds {ddhhmm} {
     return $r;
 }
 
-proc ::nbsputil::date::clock_seconds {ddhhmm} {
+proc ::nbsp::util::date::clock_seconds {ddhhmm} {
 
     set s "";
 
@@ -322,7 +322,7 @@ proc ::nbsputil::date::clock_seconds {ddhhmm} {
     return $s;
 }
 
-proc ::nbsputil::date::_is_leap_year {yyyy} {
+proc ::nbsp::util::date::_is_leap_year {yyyy} {
 #
 # KR p.41
 #
@@ -334,7 +334,7 @@ proc ::nbsputil::date::_is_leap_year {yyyy} {
     return 0;
 }
 
-proc ::nbsputil::date::_days_in_month {year month} {
+proc ::nbsp::util::date::_days_in_month {year month} {
 
     set days(1) 31;
     set days(2) 28;
@@ -356,7 +356,7 @@ proc ::nbsputil::date::_days_in_month {year month} {
     return $days($month);
 }
 
-proc ::nbsputil::date::_debug {s} {
+proc ::nbsp::util::date::_debug {s} {
 
     puts $s;
 }

@@ -8,46 +8,25 @@ set filtername		[file tail $argv0];
 set filters_init_status	1;
 
 ## The common defaults
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-if {[file exists $defaultsfile] == 0} {
-    puts "$filtername disabled: $defaultsfile not found.";
-    return 1;
-}
-source $defaultsfile;
-unset defaultsfile;
+source  "/usr/local/etc/nbsp/filters.conf";
 
 #
-# local packages
+# nbsp packages
 #
-package require cspoolbdb;
-::cspoolbdb::init $common(cspoolbdbconf) $common(localconfdirs);
-package require nbsputil;       # nbsputil::date
+package require nbsp::cspoolbdb;
+::nbsp::cspoolbdb::init $common(cspoolbdbconf) $common(localconfdirs);
 
-## The filter error function library
-if {[file exists $common(filterserrlib)] == 0} {
-    puts "$filtername disabled: $common(filterserrlib) not found.";
-    return 1;
-}
-source $common(filterserrlib);
+package require nbsp::util;       # nbsputil::date
 
-## The function library
-if {[file exists $common(filterslib)] == 0} {
-    puts "$filtername disabled: $common(filterslib) not found.";
-    return 1;
-}
-source $common(filterslib);
+## The filter error function library (in turn loads errx package)
+package require nbsp::filterserrlib;
 
-## The grib library
-if {[file exists $common(filtersgribiddef)] == 0} {
-    puts "$filtername disabled: $common(filtersgribiddef) not found.";
-    return 1;
-}
-if {[file exists $common(filtersgribidlib)] == 0} {
-    puts "$filtername disabled: $common(filtersgribidlib) not found.";
-    return 1;
-}
+## The function library (must be loaded after all of the above)
+package require nbsp::filterslib;
+
+## The gribid library and definitions
+package require nbsp::filtersgribidlib 1.0;
 source $common(filtersgribiddef);
-source $common(filtersgribidlib);
 
 # Let the calling script know that the initialization portion
 # was completed.

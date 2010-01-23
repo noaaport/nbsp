@@ -5,6 +5,8 @@
 #
 # $Id$
 
+package provide nbsp::filtersgribidlib 1.0;
+
 proc get_grib_model_params {fpath station wmoid} {
 
 # Without errors, this function returns the list

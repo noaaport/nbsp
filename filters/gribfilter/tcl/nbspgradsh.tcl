@@ -22,6 +22,8 @@ if {[file exists $initfile] == 0} {
 source $initfile;
 unset initfile;
 
+package require nbsp::errx;
+
 # Configuration
 set grads(ctldir) [file join $gribfilter(datadir) $gribfilter(ctldatadir)];
 set grads(prompt) $gribfilter(gradsprompt);
@@ -61,12 +63,12 @@ if {$option(I) ne "" } {
 		       [split [exec find ${_dir} -name ${_fname}] "\n"]];
 
     if {[llength ${_ctlflist}] == 0} {
-        errx "${_ctlfile} not found.";
+        ::nbsp::errx::err "${_ctlfile} not found.";
     } else {
         set grads(ctlfile) [lindex ${_ctlflist} $option(I)];
         # The index option(I) could be out of bounds.
         if {$grads(ctlfile) eq ""} {
-            errx "${_ctlfile} not found.";
+            ::nbsp::errx::err "${_ctlfile} not found.";
         }
     }
 }

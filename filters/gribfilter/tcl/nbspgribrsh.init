@@ -11,7 +11,7 @@ proc errx {s} {
     global argv0;
 
     set progname [file tail $argv0];
-    puts "$progname: Error: $s";
+    puts stderr "$progname: Error: $s";
     exit 1;
 }
     

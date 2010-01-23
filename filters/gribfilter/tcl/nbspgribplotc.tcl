@@ -71,7 +71,7 @@ proc run_grads_script {gsfile} {
 	return;
     }
 
-    ::nbsputil::pwrite_block [subst $gsplot(script)] grads -bl > /dev/null;
+    ::nbsp::util::pwrite_block [subst $gsplot(script)] grads -bl > /dev/null;
 
     if {[info exists gsplot(post)]} {
 	eval $gsplot(post);
@@ -88,10 +88,10 @@ source $initfile;
 unset initfile;
 
 package require grads;
-package require nbsputil;
-package require errx;
+package require nbsp::util;
+package require nbsp::errx;
 
-array set option [::nbsputil::cmdline_getoptions argv $optlist $usage];
+array set option [::nbsp::util::cmdline_getoptions argv $optlist $usage];
 set argc [llength $argv];
 
 foreach k [list I Y] {
@@ -101,13 +101,13 @@ foreach k [list I Y] {
 }
 
 if {$argc != 1} {
-    ::errx::err $usage;
+    ::nbsp::errx::err $usage;
 }
 set _gsfile [lindex $argv 0];
 
 if {($option(f) eq "") && \
 	(($option(m) eq "") || ($option(g) eq "") || ($option(h) eq ""))} {
-    ::errx::err "Either -f or, -m and -g and -h are mandatory.";
+    ::nbsp::errx::err "Either -f or, -m and -g and -h are mandatory.";
 }
 
 # Locate the script
@@ -128,7 +128,7 @@ if {$option(r) == 1} {
     }
 }
 if {$grads(gsfile) eq ""} {
-    ::errx::err "${_gsfile} not found.";
+    ::nbsp::errx::err "${_gsfile} not found.";
 }
 
 set grads(ctlfile) "";
@@ -138,7 +138,7 @@ if {$option(f) ne ""} {
 	append grads(ctlfile) $gribfilter(ctlfext);
     }
     if {[file exists $grads(ctlfile)] == 0} {
-	::errx::err "$grads(ctlfile) not found.";
+	::nbsp::errx::err "$grads(ctlfile) not found.";
     }
 }
 
@@ -155,11 +155,11 @@ if {$grads(ctlfile) eq ""} {
     set _d [file join $gribfilter(datadir) $gribfilter(ctldatadir) $option(m)];
     set dirlist [lsort -dictionary [glob -dir ${_d} -nocomplain $ymdh_glob]];
     if {[llength $dirlist] == 0} {
-	::errx::err "$ymdh_glob not found.";
+	::nbsp::errx::err "$ymdh_glob not found.";
     }
     set ymdh_fpath [lindex $dirlist $option(I)];
     if {$ymdh_fpath eq ""} {
-	::errx::err "Invalid value of option -I.";
+	::nbsp::errx::err "Invalid value of option -I.";
     }
     set ymdh [file tail $ymdh_fpath];
 
@@ -175,7 +175,7 @@ if {$grads(ctlfile) eq ""} {
     append grads(ctlfile) $gribfilter(ctlfext);
 
     if {[file exists $grads(ctlfile)] == 0} {
-	::errx::err "$grads(ctlfile) not found.";
+	::nbsp::errx::err "$grads(ctlfile) not found.";
     }
 }
 
@@ -189,7 +189,7 @@ if {$option(d) ne ""} {
 	set gsplot(outputdir) [file join ${_imgbasedir} $option(d)];
 	file mkdir $gsplot(outputdir);
     } else {
-	::errx::err "${_imgbasedir} not found.";
+	::nbsp::errx::err "${_imgbasedir} not found.";
     }
 } else {
     set gsplot(outputdir) "";
@@ -205,14 +205,14 @@ set gsplot(forecasttime) [lindex $ctlname_parts 3];
 
 # The user-defined variables
 foreach d $option(D) {
-    set keyval [::nbsputil::split_first $d "="];
+    set keyval [::nbsp::util::split_first $d "="];
     set key [lindex $keyval 0];
     set val [lindex $keyval 1];
     set gsplot(D,$key) $val;
 }
 
 foreach d $option(M) {
-    set keyval [::nbsputil::split_first $d "="];
+    set keyval [::nbsp::util::split_first $d "="];
     set key [lindex $keyval 0];
     set val [lindex $keyval 1];
     set gsplot(M,$key) $val;

@@ -72,7 +72,7 @@ proc main {argc argv} {
 	    }
 	}
 
-	::periodic::run
+	::nbsp::periodic::run
     }
 
     foreach type $gribfilter(slave,types) {
@@ -179,6 +179,6 @@ foreach type $gribfilter(slave,types) {
 }
 
 # In work-crew mode only the master runs the scheduler
-::periodic::register gribfilter_run_scheduler $gribfilter(schedule_run_period);
+::nbsp::periodic::register gribfilter_run_scheduler $gribfilter(schedule_run_period);
 
 main $argc $argv;

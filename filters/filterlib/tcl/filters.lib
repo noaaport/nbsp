@@ -9,19 +9,21 @@
 #
 # package require fileutil;	# tcllib
 # package require cmdline;      # tcllib (used by filterlib_cspool_nbspfile)
-# package require cspoolbdb;    # spool cache lib
-# package require nbsputil;     # nbsputil::date::clock_seconds
+# package require nbsp::cspoolbdb;    # spool cache lib
+# package require nbsp::util;     # nbsputil::date::clock_seconds
 #
 # This is done by the filters.init file.
 
+package provide nbsp::filterslib 1.0;
+
 proc filterlib_init {} {
 
-    if {[::cspoolbdb::query_enable] == 0} {
+    if {[::nbsp::cspoolbdb::query_enable] == 0} {
 	return;
     }
 
     set status [catch {
-        ::cspoolbdb::open;
+        ::nbsp::cspoolbdb::open;
     } errmsg];
 
     if {$status != 0} {
@@ -31,12 +33,12 @@ proc filterlib_init {} {
 
 proc filterlib_end {} {
 
-    if {[::cspoolbdb::query_enable] == 0} {
+    if {[::nbsp::cspoolbdb::query_enable] == 0} {
 	return;
     }
 
     set status [catch {
-        ::cspoolbdb::close;
+        ::nbsp::cspoolbdb::close;
     } errmsg];
 
     if {$status != 0} {
@@ -114,22 +116,22 @@ proc filterlib_get_body_cspool {seqnum bodypartsize} {
     set body "";
 
     set status [catch {
-        set result [::cspoolbdb::read $seqnum $bodypartsize];
+        set result [::nbsp::cspoolbdb::read $seqnum $bodypartsize];
     } errmsg];
 
     if {$status != 0} {
-	if {[::cspoolbdb::query_code_notfound]} {
-	    if {[::cspoolbdb::query_verbose] >= 1} {
+	if {[::nbsp::cspoolbdb::query_code_notfound]} {
+	    if {[::nbsp::cspoolbdb::query_verbose] >= 1} {
 		log_msg $errmsg;
 	    }
-	} elseif {[::cspoolbdb::query_code_error]} {
+	} elseif {[::nbsp::cspoolbdb::query_code_error]} {
 	    log_msg $errmsg;
 	}
 
 	return "";
     }
 
-    if {[::cspoolbdb::query_verbose] >= 2} {
+    if {[::nbsp::cspoolbdb::query_verbose] >= 2} {
         log_msg "$seqnum found in cspool.";
     }
 
@@ -144,7 +146,7 @@ proc filterlib_get_body {fpath seqnum bodypartsize} {
 
     set body "";
 
-    if {[::cspoolbdb::query_enable] != 0} {
+    if {[::nbsp::cspoolbdb::query_enable] != 0} {
         set body [filterlib_get_body_cspool $seqnum $bodypartsize];
     }
 
@@ -382,7 +384,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     # This is initialized to the default (extracted from the wmo header)
     # but it is overriden below when the data files contain a true time.
-    set rc(seconds) [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
     if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
 	# We process here only those that we are sure that are transmitted
@@ -777,19 +779,19 @@ proc filterlib_cspool_execpipe {args} {
     set seq [lindex $args 0];
 
     set status [catch {
-	set result [::cspoolbdb::read $seq];
+	set result [::nbsp::cspoolbdb::read $seq];
     } errmsg];
 
-    if {[::cspoolbdb::query_code_notfound]} {
+    if {[::nbsp::cspoolbdb::query_code_notfound]} {
 	set status 1;
-	if {[::cspoolbdb::query_verbose] != 0} {
+	if {[::nbsp::cspoolbdb::query_verbose] != 0} {
 	    log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
 	}
 	if {$option(e) ne ""} {
 	    set status [filterlib_exec $option(e)];
 	}
 	return $status;
-    } elseif {[::cspoolbdb::query_code_error]} {
+    } elseif {[::nbsp::cspoolbdb::query_code_error]} {
 	set status 1;
 	log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
 	if {$option(e) ne ""} {
@@ -802,7 +804,7 @@ proc filterlib_cspool_execpipe {args} {
     set size [lindex $result 1];
     set body [lindex $result 2];
     
-    if {[::cspoolbdb::query_verbose] >= 2} {
+    if {[::nbsp::cspoolbdb::query_verbose] >= 2} {
 	log_msg "filterlib_cspool_execpipe: $seq found in cspool.";
     }
     if {$option(p) eq ""} {
@@ -834,13 +836,13 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     append opts " -d " $savedir " -o " $savename " " $fpath " " $seq;
 
     set status 0;
-    if {[::cspoolbdb::query_enable] == 1} {
+    if {[::nbsp::cspoolbdb::query_enable] == 1} {
 	set cmd "";
 	append cmd "|nbspfile -i" " " $opts;
 	set status [filterlib_cspool_execpipe -p $cmd $seq];
     }
 
-    if {([::cspoolbdb::query_enable] == 0) || ($status != 0)} {
+    if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
 	set cmd "";
         append cmd "nbspfile" " " $opts;
         filterlib_exec $cmd;
@@ -884,12 +886,12 @@ proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
 
     set status 0;
     set cmd "";
-    if {[::cspoolbdb::query_enable] == 1} {
+    if {[::nbsp::cspoolbdb::query_enable] == 1} {
 	append cmd "|nbsppipe" " " $opts " -s " $seq " | " $pipe_cmd;
 	set status [filterlib_cspool_execpipe -p $cmd_pipe $seq];
     }
 
-    if {([::cspoolbdb::query_enable] == 0) || ($status != 0)} {
+    if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
         append cmd "nbsppipe" \
 		" " $opts " -s " $seq " < " $fpath " | " $pipe_cmd;
 	filterlib_exec $cmd;

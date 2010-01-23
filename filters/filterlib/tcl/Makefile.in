@@ -9,9 +9,10 @@
 
 TCLLIBS =	filters.lib filters-err.lib filters-gribid.lib filters.init \
 		pkgIndex.tcl \
+		cspoolbdb.tcl errx.tcl \
 		hscheduler.tcl mscheduler.tcl periodic.tcl \
-		errx.tcl nbsputil.tcl \
-		cspoolbdb.tcl
+		syslog.tcl util.tcl
+
 SAMPLES =	filters.conf-sample \
 		filters-gribid.def-sample \
 		gempak.env-sample \

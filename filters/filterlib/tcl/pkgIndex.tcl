@@ -1,9 +1,35 @@
 #
 # $Id$
 #
-package ifneeded hscheduler 1.0 [list source [file join $dir hscheduler.tcl]]
-package ifneeded mscheduler 1.0 [list source [file join $dir mscheduler.tcl]]
-package ifneeded periodic 1.0 [list source [file join $dir periodic.tcl]]
-package ifneeded errx 1.0 [list source [file join $dir errx.tcl]]
-package ifneeded nbsputil 1.0 [list source [file join $dir nbsputil.tcl]]
-package ifneeded cspoolbdb 1.0 [list source [file join $dir cspoolbdb.tcl]]
+package ifneeded nbsp::cspoolbdb 1.0 \
+    [list source [file join $dir cspoolbdb.tcl]]
+
+package ifneeded nbsp::errx 1.0 \
+    [list source [file join $dir errx.tcl]]
+
+package ifneeded nbsp::hscheduler 1.0 \
+    [list source [file join $dir hscheduler.tcl]]
+
+package ifneeded nbsp::mscheduler 1.0 \
+    [list source [file join $dir mscheduler.tcl]]
+
+package ifneeded nbsp::util 1.0 \
+    [list source [file join $dir util.tcl]]
+
+package ifneeded nbsp::periodic 1.0 \
+    [list source [file join $dir periodic.tcl]]
+
+package ifneeded nbsp::syslog 1.0 \
+    [list source [file join $dir syslog.tcl]]
+
+#
+# Not yet converted to use namespaces
+#
+package ifneeded nbsp::filterslib 1.0 \
+    [list source [file join $dir filters.lib]]
+
+package ifneeded nbsp::filterserrlib 1.0 \
+    [list source [file join $dir filters-err.lib]]
+
+package ifneeded nbsp::filtersgribidlib 1.0 \
+    [list source [file join $dir filters-gribid.lib]]

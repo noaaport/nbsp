@@ -6,20 +6,11 @@
 #
 set usage {Usage: startstop <start|stop>};
 
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-## The common defaults
-if {[file exists $defaultsfile] == 0} {
-    puts "$argv0 disabled: $defaultsfile not found.";
-    return 1;
-}
-source $defaultsfile;
+# Common defaults
+source "/usr/local/etc/nbsp/filters.conf";
 
 ## The filter error function library
-if {[file exists $common(filterserrlib)] == 0} {
-        puts "$argv0: $common(filterserrlib) not found.";
-        return 1;
-}
-source $common(filterserrlib);
+package require nbsp::filterserrlib;
 
 #
 # Default schedule

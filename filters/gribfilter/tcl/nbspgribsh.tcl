@@ -13,11 +13,13 @@ if {[file exists $initfile] == 0} {
 source $initfile;
 unset initfile;
 
+package require nbsp::errx;
+
 # Configuration 
 set browser(catfile) [file join \
     $gribfilter(datadir) $gribfilter(catalogdir) $gribfilter(ctlcatalog)];
 if {[file exists $browser(catfile)] == 0} {
-    errx "$browser(catfile) not found.";
+    ::nbsp::errx::err "$browser(catfile) not found.";
 }
 
 wm minsize . 30 20;
@@ -133,7 +135,7 @@ foreach line [lsort -dictionary [split [exec cat $browser(catfile)] "\n"]] {
     }
 }
 if {[llength $browser(list)] == 0} {
-    errx "No control files found.";
+    ::nbsp::errx::err "No control files found.";
 }
 set browser(curix) -1;
 

@@ -10,17 +10,17 @@
 #
 # from the nbsp libspool library.
 #
-# ::cspoolbdb::init {conffile {localconfdirs [list]}}
-# ::cspoolbdb::open {}
-# ::cspoolbdb::close {}
-# ::cspoolbdb::read {key {size ""}}
-# ::cspoolbdb::get {key {size ""}}
-# ::cspoolbdb::query_enable {}
-# ::cspoolbdb::query_open {}
+# ::nbsp::cspoolbdb::init {conffile {localconfdirs [list]}}
+# ::nbsp::cspoolbdb::open {}
+# ::nbsp::cspoolbdb::close {}
+# ::nbsp::cspoolbdb::read {key {size ""}}
+# ::nbsp::cspoolbdb::get {key {size ""}}
+# ::nbsp::cspoolbdb::query_enable {}
+# ::nbsp::cspoolbdb::query_open {}
 #
-package provide cspoolbdb 1.0;
+package provide nbsp::cspoolbdb 1.0;
 
-namespace eval cspoolbdb {} {
+namespace eval nbsp::cspoolbdb {} {
 
     variable cspoolbdb;
 
@@ -50,7 +50,7 @@ namespace eval cspoolbdb {} {
     set cspoolbdb(data_size) 0;
 }
 
-proc ::cspoolbdb::init {conffile {localconfdirs [list]}} {
+proc ::nbsp::cspoolbdb::init {conffile {localconfdirs [list]}} {
 #
 # This function should be called immediately after "package require".
 #
@@ -69,11 +69,11 @@ proc ::cspoolbdb::init {conffile {localconfdirs [list]}} {
     }
 }
 
-proc ::cspoolbdb::open {} {
+proc ::nbsp::cspoolbdb::open {} {
 
     variable cspoolbdb;
 
-    if {[::cspoolbdb::query_enable] == 0} {
+    if {[::nbsp::cspoolbdb::query_enable] == 0} {
 	return -code error "cspoolbdb is not enabled.";
     }
 
@@ -119,7 +119,7 @@ proc ::cspoolbdb::open {} {
     set cspoolbdb(F_open) 1;
 }
 
-proc ::cspoolbdb::close {} {
+proc ::nbsp::cspoolbdb::close {} {
 
     variable cspoolbdb;
     
@@ -143,7 +143,7 @@ proc ::cspoolbdb::close {} {
     }
 }
 
-proc ::cspoolbdb::read {key {size 0}} {
+proc ::nbsp::cspoolbdb::read {key {size 0}} {
 #
 # Returns a tcl list:  <code> <size> <data>
 # The <code> is "001" if the file was not found, "255" in case of an error or
@@ -154,7 +154,7 @@ proc ::cspoolbdb::read {key {size 0}} {
 
     # Check if it is closed (perhaps due to a previous error) and reopen it.
     if {$cspoolbdb(F_open) == 0} {
-	::cspoolbdb::open;
+	::nbsp::cspoolbdb::open;
     }
 
     set cspoolbdb(data_size) 0;
@@ -186,12 +186,12 @@ proc ::cspoolbdb::read {key {size 0}} {
 	    set cspoolbdb(code) $code;
 	} else {
 	    set cspoolbdb(code) $cspoolbdb(code_error);
-	    return -code error "Error $code getting $key in ::cspoolbdb::read";
+	    return -code error "Error $code getting $key in ::nbsp::cspoolbdb::read";
 	}
 	
 	if {[string length $data_size_str] != 8} {
 	    set cspoolbdb(code) $cspoolbdb(code_error);
-	    return -code error "Error 2 getting $key in ::cspoolbdb::read";
+	    return -code error "Error 2 getting $key in ::nbsp::cspoolbdb::read";
 	}
 
 	scan $data_size_str "%x" data_size;
@@ -203,7 +203,7 @@ proc ::cspoolbdb::read {key {size 0}} {
 	# In case of an error, close it. We will try to reopen the next time.
 	if {$cspoolbdb(code) eq $cspoolbdb(code_error)} {
 	    set status [catch {
-		::cspoolbdb::close;
+		::nbsp::cspoolbdb::close;
 	    } errmsg1];
 	    if {$status != 0} {
 		append errmsg "\n" $errmsg1;
@@ -215,39 +215,39 @@ proc ::cspoolbdb::read {key {size 0}} {
     return [list $cspoolbdb(code) $cspoolbdb(data_size) $cspoolbdb(data)];
 }
 
-proc ::cspoolbdb::get {key {size 0}} {
+proc ::nbsp::cspoolbdb::get {key {size 0}} {
     #
     # Passing size as 0 returns all the data
     #
-    ::cspoolbdb::open;
-    set result [::cspoolbdb::read $key $size];
-    ::cspoolbdb::close;
+    ::nbsp::cspoolbdb::open;
+    set result [::nbsp::cspoolbdb::read $key $size];
+    ::nbsp::cspoolbdb::close;
 
     return $result;
 }
 
-proc ::cspoolbdb::query_enable {} {
+proc ::nbsp::cspoolbdb::query_enable {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(enable);
 }
 
-proc ::cspoolbdb::query_verbose {} {
+proc ::nbsp::cspoolbdb::query_verbose {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(verbose);
 }
 
-proc ::cspoolbdb::query_open {} {
+proc ::nbsp::cspoolbdb::query_open {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(F_open);
 }
 
-proc ::cspoolbdb::query_code_ok {} {
+proc ::nbsp::cspoolbdb::query_code_ok {} {
 
     variable cspoolbdb;
 
@@ -258,7 +258,7 @@ proc ::cspoolbdb::query_code_ok {} {
     return 0;
 }
 
-proc ::cspoolbdb::query_code_notfound {} {
+proc ::nbsp::cspoolbdb::query_code_notfound {} {
 
     variable cspoolbdb;
 
@@ -269,7 +269,7 @@ proc ::cspoolbdb::query_code_notfound {} {
     return 0;
 }
 
-proc ::cspoolbdb::query_code_error {} {
+proc ::nbsp::cspoolbdb::query_code_error {} {
 
     variable cspoolbdb;
 
@@ -280,35 +280,35 @@ proc ::cspoolbdb::query_code_error {} {
     return 0;
 }
 
-proc ::cspoolbdb::query_code {} {
+proc ::nbsp::cspoolbdb::query_code {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(code);
 }
 
-proc ::cspoolbdb::query_data {} {
+proc ::nbsp::cspoolbdb::query_data {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(data);
 }
 
-proc ::cspoolbdb::query_data_size {} {
+proc ::nbsp::cspoolbdb::query_data_size {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(data_size);
 }
 
-proc ::cspoolbdb::set_verbose {{v 1}} {
+proc ::nbsp::cspoolbdb::set_verbose {{v 1}} {
 
     variable cspoolbdb;
 
     set cspoolbdb(verbose) $v;
 }
 
-proc ::cspoolbdb::set_background {{v 1}} {
+proc ::nbsp::cspoolbdb::set_background {{v 1}} {
 
     variable cspoolbdb;
 

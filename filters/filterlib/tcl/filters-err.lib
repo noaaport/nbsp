@@ -4,41 +4,42 @@
 # This file contains common functions used by all filters. The global
 # configuration variables are defined in filters.conf.
 
+package provide nbsp::filterserrlib 1.0;
+
+# Load syslog so that errx is already configured to use the syslog functions
+package require nbsp::syslog;
+if {$filterserrlib(usesyslog) == 0} {
+    ::nbsp::syslog::usesyslog 0;
+}
+
 proc log_msg s {
 
     global filterserrlib;
 
-    if {$filterserrlib(usesyslog) == 1} {
-	syslog_msg $s;
+    if {$filterserrlib(usesyslog) != 2} {
+	::nbsp::syslog::msg $s;
     } else {
-	logfile_msg $s;
+	filelog_msg $s;
     }
 }
 
-proc syslog_msg s {
+proc log_warn s {
 
-    global argv0;
-
-    set name [file tail $argv0];
-    exec logger -t $name -- $s;
+    log_msg "Warning: $s";
 }
 
-proc logfile_msg s {
+proc log_errc s {
+
+    log_msg "Error: $s";
+}
+
+proc filelog_msg s {
 
     global argv0 filterserrlib;
 
     set name [file tail $argv0];
-    append logfile $filterserrlib(logdir) "/" $name ".log";
-    append msg $name ": " [clock format [clock seconds]] ": " $s; 
-    set status [catch {
-        set f [open $logfile a];
-        puts $f $msg;
-        close $f;
-    } errmsg];
-
-    if {$status != 0} {
-        puts $errmsg;
-    }
+    append logfile [file join $filterserrlib(logdir) $name] ".log";
+    ::nbsp::filelog::msg $logfile $s;
 }
 
 proc log_errInfo {} {
@@ -48,16 +49,4 @@ proc log_errInfo {} {
     if {$filterserrlib(errorInfo) == 1} {
 	log_msg $errorInfo;
     }
-}
-
-#
-# Some filter tools use this library. These functions are for their use.
-#
-proc errx {s} {
-	
-    global argv0;
-
-    set progname [file tail $argv0];
-    puts "$progname: Error: $s";
-    exit 1;
 }

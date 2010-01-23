@@ -13,7 +13,7 @@ source $filters_init_file;
 unset filters_init_file;
 
 # packages
-package require nbsputil;
+package require nbsp::util;
 
 if {$filters_init_status == 1} {
 	return 1;
@@ -124,7 +124,7 @@ proc process {finfo} {
 
     filterlib_get_rcvars rc $finfo;
 
-    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];
+    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];
     set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
 
     # Initialize to no match found.

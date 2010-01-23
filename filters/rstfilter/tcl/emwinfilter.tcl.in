@@ -18,7 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # packages
-package require nbsputil;
+package require nbsp::util;
 
 # The defaults of this filter
 set emwinfilter(conf)	[file join $common(confdir) "emwinfilter.conf"];
@@ -197,7 +197,7 @@ proc process {finfo} {
 
     filterlib_get_rcvars rc $finfo;
 
-    set seconds [::nbsputil::date::clock_seconds $rc(wmotime)];	
+    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];	
     set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
 
     # Initialize to no match found

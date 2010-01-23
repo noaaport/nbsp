@@ -18,8 +18,8 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # packages
-package require nbsputil;
-package require periodic;
+package require nbsp::util;
+package require nbsp::periodic;
 
 set ws_init_file [file join $common(libdir) "wsfilter.init"];
 if {[file exists $ws_init_file] == 0} {
@@ -67,7 +67,7 @@ proc process {finfo} {
     # filterlib_get_rcvars rc $finfo -nobody;
 
     set status [catch {
-	::periodic::run;	# Run the registered periodic functions
+	::nbsp::periodic::run;	# Run the registered periodic functions
     } errmsg];
 
     if {$status != 0} {
@@ -79,7 +79,7 @@ proc wsfilter_run_schedule {} {
 
     global wsfilter;
 
-    ::periodic::scheduler $wsfilter(schedule);
+    ::nbsp::periodic::scheduler $wsfilter(schedule);
 }
 
 #
@@ -87,7 +87,7 @@ proc wsfilter_run_schedule {} {
 #
 
 # Register the scheduler to run ever minute
-::periodic::register wsfilter_run_schedule $wsfilter(schedule_run_period);
+::nbsp::periodic::register wsfilter_run_schedule $wsfilter(schedule_run_period);
 
 #
 # main
