@@ -1,5 +1,7 @@
 #!/bin/sh
-
+#
+# $Id$
+#
 . upload.conf
 
 cp ../../QUICK_START/* ../../RELEASE_NOTES ../../UPGRADING \
@@ -9,17 +11,15 @@ upload_files="QUICK* RELEASE_NOTES UPGRADING CONFIGURING *.README"
 release_file=RELEASE_NOTES
 dt=`date +%d%b%G`
 
-ftp -n -v $uploadhost <<EOF
-user $uploaduser
-prompt
-mkdir $uploaddir
-cd $uploaddir
-mkdir Docs
-cd Docs
-mdelete *
+lftp -c "\
+$lftpoptions;
+open -u $uploaduser $uploadhost;
+cd $uploadbasedir;
+mkdir -p $filesdir;
+cd $filesdir;
+mrm *
 mput $upload_files
-rename $release_file $release_file-$dt
-quit
-EOF
+mv $release_file $release_file-$dt
+quit"
 
-rm $upload_files $readme_files
+rm $upload_files

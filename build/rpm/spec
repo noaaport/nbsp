@@ -30,6 +30,7 @@ make clean
 /usr/local/sbin/nbspd
 /usr/local/bin/nbspcleanup
 /usr/local/bin/nbspversion
+/usr/local/bin/nbspupdate
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspradinfo
@@ -252,6 +253,7 @@ make clean
 /usr/local/etc/nbsp/dist/logrotate.conf-sample
 /usr/local/etc/nbsp/dist/startstop.rc-sample
 /usr/local/etc/nbsp/dist/start-cleanup.conf-sample
+/usr/local/etc/nbsp/dist/nbspupdate.conf-sample
 /usr/local/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample
