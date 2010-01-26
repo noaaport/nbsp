@@ -2,13 +2,15 @@
 #
 # $Id$
 #
-# Usage: nbspupdate [-a <osname>-<osarch>] [-c] [-q] [-F] [<pkgname>]
+# Usage: nbspupdate [-a <osname>-<osarch>] [-c] [-k] [-q] [-u] [-F] [<pkgname>]
 #
 #       If <pkgname> is not specified the default is "nbsp"
-# -a => use the given <osname>-<osarch>, otherwise the hosts's parameters
-# -c => just check, don't download package
-# -q => quiet (default is verbose if whatever is in the conf file)
-# -F => force download of pkg unconditionally
+# -a => Use the given <osname>-<osarch>, otherwise the hosts's parameters
+# -c => Just check, don't download package
+# -k => If -u is given, keep (do not delete) the package file 
+# -q => Quiet (default is verbose if whatever is in the conf file)
+# -u => Upgrade (pkg_delete and pkg_add)
+# -F => Force download (or install) of pkg unconditionally
 #
 package require http;
 package require cmdline;
@@ -111,6 +113,29 @@ proc nbspupdate_get_installedpkgversion {programversion} {
     return $installed_pkgversion;
 }
 
+proc nbspupdate_get_filepkgversion {pkgname pkgfilename} {
+#
+# Extract the version from the package file name
+#
+    set pkgfext [string range [file extension $pkgfilename] 1 end];
+    set pkgfilerootname [file rootname $pkgfilename];
+
+    # For rpm and deb, cut out the arch
+    if {$pkgfext eq "tbz"} {
+	regexp "${pkgname}-(.+)" $pkgfilerootname match new_pkgversion;
+    } elseif {$pkgfext eq "rpm"} {
+	set pkgfilerootname [file rootname $pkgfilerootname];
+	regexp "${pkgname}-(.+)" $pkgfilerootname match new_pkgversion;
+    } elseif {$pkgfext eq "deb"} {
+	set i [string last "_" $pkgfilerootname];
+	incr i -1;
+	set pkgfilerootname [string range $pkgfilerootname 0 $i];
+	regexp "${pkgname}_(.+)" $pkgfilerootname match new_pkgversion;
+    }
+
+    return $new_pkgversion;
+}
+
 proc nbspupdate_download_pkg {pkgfilename pkgurl} {
 
     set F [open $pkgfilename "w"];
@@ -128,19 +153,61 @@ proc nbspupdate_download_pkg {pkgfilename pkgurl} {
     return $status;
 }
 
+proc nbspupdate_upgrade_pkg {osname pkgname pkgfilename} {
+
+    global option;
+
+    if {$osname eq "freebsd"} {
+	set delcmd [list pkg_delete "$pkgname-*"];
+	set addcmd [list pkg_add $pkgfilename];
+    } elseif {$osname eq "centos"} {
+	set delcmd [list rpm -e $pkgname];
+	set addcmd [list rpm -i $pkgfilename];
+    } elseif {$osname eq "debian"} {
+	set delcmd [list dpkg -r $pkgname];
+	set addcmd [list dpkg -i $pkgfilename];
+    } else {
+	return -code error "Invalid osname: $osname";
+    }
+	
+    set status [catch {
+	eval exec $delcmd;
+    } errmsg];
+
+    # If there is an error deleting the package, put an error message and
+    # return, unless -F was given.
+    if {$status != 0} {
+	if {$option(F) == 0} {
+	    puts $errmsg;
+	    return 1;
+	}
+    }
+
+    set status [catch {
+	eval exec $addcmd;
+    } errmsg];
+
+    if {$status != 0} {
+	puts $errmsg;
+    }
+
+    return $status;
+}
+
 #
 # main
 #
 source "/usr/local/etc/nbsp/nbspupdate.conf";
 
-set usage {usage: nbspupdate [-a <osname>-<osarch>] [-c] [-F] [<pkgname>]};
-set optlist {{a.arg ""} {c} {q} {F}};
+set usage {usage: nbspupdate [-a <osname>-<osarch>] [-c] [-k] [-q] [-u]
+[-F] [<pkgname>]};
+set optlist {{a.arg ""} {c} {k} {q} {u} {F}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
 ## Check for option conflict
-if {($option(c) == 1) && ($option(F) == 1)} {
-    puts "Options -c and -F conflict.";
+if {($option(c) == 1) && (($option(F) == 1) || ($option(u) == 1))} {
+    puts "Options -c and -F|-u conflict.";
     return 1;
 }
 
@@ -183,15 +250,14 @@ if {[llength $data] == 0} {
     return 0;
 }
 #
-set pkgversion [lindex $data 1];
+set pkgversion [lindex $data 1];  # does not contain the package build number 
 set pkgurl [lindex $data 2];
 #
 set pkgfilename [file tail $pkgurl];
-set pkgfilerootname [file rootname $pkgfilename];
-regexp "$pkgname-(.+)" $pkgfilerootname match new_pkgversion;
 
-# Get the installed version and compare with the new_pkgversion that
-# was obtained above
+# Get the installed version and the full (including the build number) new
+# version and then compare.
+set new_pkgversion [nbspupdate_get_filepkgversion $pkgname $pkgfilename];
 set installed_pkgversion [nbspupdate_get_installedpkgversion $programversion];
 
 #
@@ -216,4 +282,24 @@ nbspupdate_log_verbose "Downloading $pkgfilename ...";
 set status [nbspupdate_download_pkg $pkgfilename $pkgurl];
 if {$status == 0} {
     nbspupdate_log_verbose "Done";
+} else {
+    return 1;
 }
+
+if {$option(u) == 0} {
+    return;
+}
+
+nbspupdate_log_verbose "Upgrading $pkgname ...";
+
+set status [nbspupdate_upgrade_pkg $osname $pkgname $pkgfilename];
+
+if {$option(k) == 0} {
+    file delete $pkgfilename;
+}
+
+if {$status != 0} {
+    return 1;
+}
+
+nbspupdate_log_verbose "Done";
