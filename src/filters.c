@@ -1010,11 +1010,12 @@ static void report_filters_stats(void){
     return;
   }
 
+  /* Same format as the server active and connections file */
   now = time(NULL);
-  fprintf(fp, "%u\n", (unsigned int)now);
+  fprintf(fp, "- %u\n", (unsigned int)now);
   for(i = 0; i <= gflist.nmax - 1; ++i){
     if(gflist.filters[i].fname != NULL){
-      fprintf(fp, " %s %u %u\n",
+      fprintf(fp, "  %s %u %u\n",
 	      gflist.filters[i].fname,
 	      gflist.filters[i].stats.files_sent,
 	      gflist.filters[i].stats.errors);
