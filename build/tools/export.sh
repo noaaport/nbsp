@@ -22,7 +22,7 @@ rm -r -f $tmpdir
 mkdir $tmpdir
 cd $tmpdir
 
-svn export $mastersite/$project/trunk ${name}-$version
+svn export $mastersite/$name/trunk ${name}-$version
 cd ${name}-${version}
 rm -r $exclude
 for p in $tcllibs

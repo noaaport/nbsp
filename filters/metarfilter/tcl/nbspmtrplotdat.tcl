@@ -69,7 +69,8 @@ proc convert_list {origlist numpoints slp_missing_mark} {
 		set a [lreplace $a 8 8 $slp_missing_mark];
 	    }
 	    # Add the pressure in mb and relative humid at the end of the data.
-	    lappend a [expr [lindex $a 7] * 33.8639];
+	    # (We use two decimal places for the pressure.)
+	    lappend a [format "%.2f" [expr [lindex $a 7] * 33.8639]];
 	    lappend a [relative_humidity [lindex $a 5] [lindex $a 6]];
 
 	    set newlist [linsert $newlist 0 [join $a " "]];

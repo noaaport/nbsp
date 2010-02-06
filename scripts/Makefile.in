@@ -12,8 +12,8 @@ STARTCLEANCONF = @STARTCLEANCONF@
 STARTSTOPRC = 	@STARTSTOPRC@
 
 SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
-		startstop.rc-sample nbspupdate.conf-sample
-BINTOOLS =	nbspcleanup nbspversion nbspupdate
+		startstop.rc-sample
+BINTOOLS =	nbspcleanup nbspversion
 LIBTOOLS =	startstop
 LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
 DOCS =		nbspd.sh-sample
@@ -33,9 +33,6 @@ nbspcleanup: ${NBSPCLEANUP}
 nbspversion: nbspversion.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspversion.tcl > nbspversion
 
-nbspupdate: nbspupdate.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspupdate.tcl > nbspupdate
-
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop
 
@@ -44,9 +41,6 @@ start-cleanup.conf-sample: ${STARTCLEANCONF}
 
 startstop.rc-sample: ${STARTSTOPRC}
 	cp ${STARTSTOPRC} startstop.rc-sample
-
-nbspupdate.conf-sample: nbspupdate.conf
-	cp nbspupdate.conf nbspupdate.conf-sample
 
 install:
 	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
