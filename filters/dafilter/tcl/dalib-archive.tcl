@@ -1,5 +1,7 @@
-
-proc filter_file_archive {rc_array seq fpath savedir savename {f_append ""}} {
+#
+# Functions to support the archive
+#
+proc filter_file_archive {rc_array seq fpath savedir savename} {
 #
 # This function is called by filter_file.
 #
@@ -18,11 +20,8 @@ proc filter_file_archive {rc_array seq fpath savedir savename {f_append ""}} {
     file mkdir $archive_savedir;
 
     set status [catch {
-      if {$f_append eq "-a"} {
         filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename "-a";
-      } else {
-	filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename;
-      }
+	# filterlib_nbspfile $seq $fpath $archive_savedir $savename "-a";
     } errmsg];
 
     cd $_pwd;
@@ -47,10 +46,10 @@ proc filter_rad_archive {rc_array seq fpath savedir savename} {
 
     set _pwd [pwd];
 
-    set archive_savedir [file join $dafilter(archive_subdir) $savedir];
     cd $dafilter(archive_datadir);
+
+    set archive_savedir [file join $dafilter(archive_subdir) $savedir];
     file mkdir $archive_savedir;
-    set archivepath [file join $archive_savedir $savename];
 
     set status [catch {
 	filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename "-a";
@@ -81,9 +80,9 @@ proc filter_sat_archive {rc_array seq fpath savedir savename} {
     set _pwd [pwd];
 
     cd $dafilter(archive_datadir);
+
     set archive_savedir [file join $dafilter(archive_subdir) $savedir];
     file mkdir $archive_savedir;
-
     set archivepath [file join $archive_savedir $savename];
 
     set status [catch {
