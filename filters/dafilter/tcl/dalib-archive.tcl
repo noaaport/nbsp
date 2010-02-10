@@ -12,28 +12,8 @@ proc filter_file_archive {rc_array seq fpath savedir savename} {
 	return;
     }
 
-    set _pwd [pwd];
-
-    cd $dafilter(archive_datadir);
-
-    set archive_savedir [file join $dafilter(archive_subdir) $savedir];
-    file mkdir $archive_savedir;
-
-    set status [catch {
-        filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename "-a";
-	# filterlib_nbspfile $seq $fpath $archive_savedir $savename "-a";
-    } errmsg];
-
-    cd $_pwd;
-
-    if {$status != 0} {
-	log_msg $errmsg;
-	return;
-    }
-
-    filter_register_archive_inventory rc $savedir $savename;
+    filter_archive rc $seq $fpath $savedir $savename;
 }
-
 
 proc filter_rad_archive {rc_array seq fpath savedir savename} {
 
@@ -44,26 +24,7 @@ proc filter_rad_archive {rc_array seq fpath savedir savename} {
 	return;
     }
 
-    set _pwd [pwd];
-
-    cd $dafilter(archive_datadir);
-
-    set archive_savedir [file join $dafilter(archive_subdir) $savedir];
-    file mkdir $archive_savedir;
-
-    set status [catch {
-	filterlib_cspool_nbspfile $seq $fpath $archive_savedir $savename "-a";
-	# filterlib_nbspfile $seq $fpath $archive_savedir $savename "-a";
-    } errmsg];
-
-    cd $_pwd;
-
-    if {$status != 0} {
-	log_msg $errmsg;
-	return;
-    }
-
-    filter_register_archive_inventory rc $savedir $savename;
+    filter_archive rc $seq $fpath $savedir $savename;
 }
 
 
@@ -71,25 +32,35 @@ proc filter_sat_archive {rc_array seq fpath savedir savename} {
 
     upvar $rc_array rc;
     global dafilter;
-    global filtersprogs;
 
     if {[is_archive_sat_rule_enabled $savedir] == 0} {
 	return;
     }
 
-    set _pwd [pwd];
+    filter_archive rc $seq $fpath $savedir $savename;
+}
 
-    cd $dafilter(archive_datadir);
+proc filter_archive {rc_array seq fpath savedir savename} {
+#
+# This function is called by filter_file.
+#
+    upvar $rc_array rc;
+    global dafilter;
 
     set archive_savedir [file join $dafilter(archive_subdir) $savedir];
-    file mkdir $archive_savedir;
     set archivepath [file join $archive_savedir $savename];
 
+    set _pwd [pwd];
+    cd $dafilter(archive_datadir);
+    file mkdir $archive_savedir;
+
     set status [catch {
-	if {$dafilter(satuncompress) == 0} {
-	    file copy -force $fpath $archivepath;
+	if {$dafilter(archive_asyncmode) == 1} {
+	    exec tar -r -f $archivepath -C [file dirname $fpath] \
+		[file tail $fpath] &;
 	} else {
-	    exec $filtersprogs(nbspunz) -o $archivepath $fpath;
+	    exec tar -r -f $archivepath -C [file dirname $fpath] \
+		[file tail $fpath];
 	}
     } errmsg];
 
@@ -117,7 +88,7 @@ proc filter_register_archive_inventory {rc_array \
 		       $dafilter(archive_inv_name)];
 
     set invdata [list];
-    foreach key [list station wmoid awips wmotime seconds] {
+    foreach key [list station wmoid awips wmotime seconds fbasename] {
 	lappend invdata $rc($key);
     }
     lappend invdata $dafilter(archive_datadir) $dafilter(archive_subdir) \

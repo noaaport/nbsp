@@ -1,6 +1,6 @@
 #!/bin/sh
 
-requires="db47 tcl-8.5 tcllib tk expect png netpbm gnuplot"
+requires="db47 tcl86 tcllib tk86 expect png netpbm gnuplot"
 conflict="nbspgribrsh"
 
 # so that FreeBSD runs it only once 
@@ -15,7 +15,7 @@ do
     status=$?
     if [ $status -ne 0 ]
     then
-	echo "$p not found"
+	echo "$p not found. Install with pkg_add -r $p"
 	exit_status=1
     fi
 done

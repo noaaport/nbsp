@@ -185,11 +185,11 @@ static int process_frames(struct memfile_st *mf,
     inflateEnd(&zs);
 
   if(status == -1)
-    log_err(1, "Error processing frame.");
+    log_err(1, "Error processing frame in %s", ginputfname);
   else if(status == 1)
-    log_errx(1, "Error %d from inflate.", zstatus);
+    log_errx(1, "Error %d from inflate in %s.", zstatus, ginputfname);
   else if(status == 2)
-    log_errx(1, "Error %d from inflateInit.", zstatus); 
+    log_errx(1, "Error %d from inflateInit in %s.", zstatus, ginputfname); 
 
   return(status);
 }

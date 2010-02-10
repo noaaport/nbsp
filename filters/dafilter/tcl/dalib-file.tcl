@@ -18,7 +18,8 @@ proc filter_file {rc_array seq fpath savedir savename {pass_through 0}} {
     }
 
     if {$dafilter(archive_file_enable) != 0} {
-	filter_file_archive rc $seq $fpath $savedir $savename "-a";
+	append savename $dafilter(archive_file_namefext);
+	filter_file_archive rc $seq $fpath $savedir $savename;
     }
 }
 
@@ -39,7 +40,7 @@ proc filter_file_noappend {seq fpath savedir savename} {
 proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 #
 # This is the ordinary method for saving the files under the "data" directory.
-# This function is caled by filter_file and filter_file_noappend.
+# This function is called by filter_file and filter_file_noappend.
 #
     global dafilter;
 

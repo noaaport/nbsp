@@ -57,7 +57,8 @@ set dafilter(option_s)		0;
 # If the archive is enabled, the next three variables are reset according
 # to the current date: the wmo header or file data for archive_subdir;
 # the arrival time for the inv subdir and name. In addition, we copy
-# the archive(da,xxx) filter files for easy reference in the functions here.
+# each archive(da,xxx) variable to dafilter(archive_xxx) for easy reference
+# in the functions here.
 #
 set dafilter(archive_subdir) "";
 set dafilter(archive_inv_subdir) "";
@@ -146,13 +147,17 @@ proc process {finfo} {
     set dafilter(archive_subdir) [clock format $rc(seconds) -format \
 	$dafilter(archive_subdirfmt) -gmt true];
 
-    # The inventory names are based on the arrival time
-    set arrseconds [clock seconds];
-    set dafilter(archive_inv_subdir) [clock format $arrseconds -format \
+    # If we want the inventory names to be based on the arrival time, then
+    # use
+    #
+    # set invseconds [clock seconds];
+    #
+    set invseconds $rc(seconds);
+    set dafilter(archive_inv_subdir) [clock format $invseconds -format \
 	$dafilter(archive_inv_subdirfmt) -gmt true];
-    set dafilter(archive_inv_name) [clock format $arrseconds -format \
+    set dafilter(archive_inv_name) [clock format $invseconds -format \
 	$dafilter(archive_inv_namefmt) -gmt true];
-    unset arrseconds;
+    unset invseconds;
 
     # These variables are based on the time determined by the filterlib
     # The default is the wmotime, except when the data file gives a true time,

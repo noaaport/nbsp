@@ -136,11 +136,17 @@ int main(int argc, char **argv){
     }
   }
 
+  /*
+   * The file name must be given in the argument even if the data will be
+   * read from stdin. The file name is used to extract some information
+   * regarding the wmo header (e.g., has_awips_line()).
+   */
   if(optind == argc)
     log_errx(1, "Needs one argument.");
   
   g.opt_input_fname = argv[optind++];
 
+  /* The (optional) sequence number */
   if(optind < argc - 1)
     log_errx(1, "Too many arguments.");
   else if(optind == argc - 1){
