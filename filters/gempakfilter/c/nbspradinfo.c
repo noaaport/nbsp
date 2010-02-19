@@ -12,12 +12,14 @@
 #include <string.h>
 #include <libgen.h>
 #include "err.h"
+#include "util.h"
 
 /*
- * Usage: nbspradinfo < <filename>
+ * Usage: nbspradinfo <file> | < <file>
  *
- * The program reads only from stdin, and the data must start with the
- * nids header (i.e., the ccb and wmo headers must have been removed).
+ * The program reads from a file or stdin, but the data must start with the
+ * nids header (i.e., the ccb and wmo headers must have been removed;
+ * but see below).
  *
  * The typical usage is therefore
  *
@@ -26,6 +28,23 @@
  *  
  * In the first case the data file is one from the spool directory;
  * in the second the the data file is on from the digatmos/nexrad directory.
+ *
+ * If the data does not start with nids header, the [-c <count>] options
+ * can be used to instruct the program to ignore the first <count> bytes.
+ * So an alternative usage is
+ *
+ * nbspunz ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo -c 54
+ *
+ * or, if the file is not compressed
+ *
+ * nbspradinfo -c 54 n0qtlx_20100218_1547.nids
+ *
+ * The default information printed is
+ *
+ *          nheader.pdb_lat, nheader.pdb_lon, nheader.pdb_height, seconds,
+ *          nheader.pdb_mode, nheader.pdb_code
+ *
+ * unless [-t] is given in which case only the "seconds" is printed.
  */
 #define NIDS_HEADER_SIZE 120	/* message and pdb */
 
@@ -46,16 +65,27 @@ struct nids_header_st {
 };
 
 struct {
-  int opt_background;
-  int opt_timeonly;	/* only extract and print the time (unix secs) [-t] */
-} g = {0, 0};
+  int opt_background;	/* -b */
+  int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
+  int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
+  char *opt_inputfile;
+  /* variables */
+  int fd;
+} g = {0, 0, 0, NULL, -1};
 
-int process_file(void);
+static int process_file(void);
+static void cleanup(void);
+
+static void cleanup(void){
+
+  if((g.fd != -1) && (g.opt_inputfile != NULL))
+    (void)close(g.fd);
+}
 
 int main(int argc, char **argv){
 
-  char *optstr = "bt";
-  char *usage = "nbspradinfo [-b] [-t] < filename";
+  char *optstr = "bc:t";
+  char *usage = "nbspradinfo [-b] [-c <count>] [-t] <file> | < file";
   int status = 0;
   int c;
 
@@ -65,6 +95,12 @@ int main(int argc, char **argv){
     switch(c){
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'c':
+      status = strto_int(optarg, &g.opt_skipcount);
+      if((status == 1) || (g.opt_skipcount <= 0)){
+	log_errx(1, "Invalid argument to [-c] option.");
+      }
       break;
     case 't':
       g.opt_timeonly = 1;
@@ -80,6 +116,12 @@ int main(int argc, char **argv){
   if(g.opt_background == 1)
     set_usesyslog();
 
+  if(optind < argc - 1)
+    log_errx(1, "Too many arguments.");
+  else if(optind == argc -1)
+    g.opt_inputfile = argv[optind++];
+
+  atexit(cleanup);
   status = process_file();
 
   return(status != 0 ? 1 : 0);
@@ -94,12 +136,37 @@ int process_file(void){
   struct nids_header_st nheader;
   int lat, lon;
   char dummy[4096];
+  size_t dummy_size = 4096;
+  size_t nleft;
+  size_t ndummy_read;
 
   memset(&nheader, 0, sizeof(struct nids_header_st));
 
-  fd = fileno(stdin);
+  if(g.opt_inputfile == NULL)
+    fd = fileno(stdin);
+  else{
+    fd = open(g.opt_inputfile, O_RDONLY);
+    if(fd == -1)
+      log_err_open(g.opt_inputfile);
+    else
+      g.fd = fd;
+  }
 
   b = &nheader.header[0];
+
+  if(g.opt_skipcount != 0){
+    nleft = g.opt_skipcount;
+    while(nleft > 0){
+      ndummy_read = nleft;
+      if((size_t)nleft > dummy_size)
+	ndummy_read = dummy_size;
+
+      if(read(fd, dummy, ndummy_read) == -1)
+	log_err(1, "Error from read()");
+
+      nleft -= ndummy_read;
+    }
+  }
 
   n = read(fd, b, NIDS_HEADER_SIZE);
   if(n == -1)
@@ -130,11 +197,14 @@ int process_file(void){
 	    nheader.pdb_mode, nheader.pdb_code);
 
   /*
-   * Consume the input to avoid generating a pipe error in the
-   * tcl scripts. nbspunz shuld be called with the [-n] option.
+   * If reading from stdin, then consume the input to avoid generating
+   * a pipe error in the tcl scripts.
+   * nbspunz should be called with the [-n] option.
    */
-  while(read(fd, dummy, 4096) > 0)
-    ;
+  if(g.opt_inputfile == NULL){
+    while(read(fd, dummy, dummy_size) > 0)
+      ;
+  }
 
   return(0);
 }

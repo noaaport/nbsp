@@ -387,11 +387,9 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
     if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
-	# We process here only those that we are sure that are transmitted
-	# compressed. There are others (e.g., dsp) that sometimes are
-	# transmitted compresed and sometimes not. If (when) we know
-	# for sure those that are uncompressed, then we can put
-	# and else clause to process those as well.
+	#
+	# Process here only those that are transmitted compressed.
+	#
 	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
@@ -399,7 +397,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 			$rc(fpath) | nbspradinfo -b]];
 	    } errmsg];
         } else {
-	    set radinfo_status 1;
+	    set radinfo_status [catch {
+	        set radinfo [split \
+		  [nbspradinfo -b -c $filterslib(totalheadersize) $rc(fpath)]];
+	    } errmsg];
         }
 
 	if {$radinfo_status == 0} {

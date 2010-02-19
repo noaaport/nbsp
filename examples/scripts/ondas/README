@@ -2,6 +2,21 @@
 # $Id$
 #
 
+Wed Feb 17 20:41:34 AST 2010 -
+
+- The file dualp.cfg was created in anticipation of the new
+(dual polarization) radar files. The new product list was taken from the file
+"newproducts-2010/radar.txt" in the dev-notes directory.
+
+- The station list in grlevel.cfg was sorted.
+
+- The file tdwr.cfg was created for the tdwr files in case those
+types are used in the future. The list of tdwr stations was taken from
+tdwr-radar-list.pdf in the dev-notes, and the types were extracted from
+a live system from the sju site.
+
+Original -
+
 The functionality of producing the dir.list file has been
 implemented directly in the filters (the dafilter) so that
 the dir.list file is updated on-the-fly as a new product is
@@ -9,3 +24,4 @@ received. The mkdirlist script here is obsolete.
 
 The configuration file grlevel3.cfg is a working example that
 can be used in the nbsp distribution.
+
