@@ -1,0 +1,437 @@
+Unidata - To provide the data services, tools, and cyberinfrastructure
+leadership that advance Earth system science, enhance educational
+opportunities, and broaden participation. </> 	Unidata </>
+Data </data/>
+	 	
+Tools </software/>
+	 	
+Community </community/>
+	 	
+Downloads </downloads/>
+	 	
+Support </support/>
+	 	
+Projects </projects/>
+	 	
+About Us </about/>
+
+	    *?*     Login </account/login.jsp>   	
+  advanced </search.jsp?advanced>  
+
+ 
+
+------------------------------------------------------------------------
+[Date Prev <msg01398.html>][Date Next <msg01400.html>][Thread Prev
+<msg01397.html>][Thread Next <msg01398.html>][Date Index
+<maillist.html#01399>][Thread Index <threads.html#01399>]
+
+
+  20001207: Gempak5.6 color tables
+
+------------------------------------------------------------------------
+
+    * /To/: Michael Voss <voss@xxxxxxxxxxxx <mailto:voss@DOMAIN.HIDDEN>>
+    * /Subject/: 20001207: Gempak5.6 color tables
+    * /From/: Unidata Support <support@xxxxxxxxxxxxxxxx
+      <mailto:support@DOMAIN.HIDDEN>>
+    * /Date/: Fri, 08 Dec 2000 10:07:30 -0700
+    * /Cc/: Unidata Support <support@xxxxxxxxxxxxxxxx
+      <mailto:support@DOMAIN.HIDDEN>>
+    * /In-reply-to/: Your message of "Thu, 07 Dec 2000 16:42:03 PST."
+      <3.0.32.20001207164202.01418a64@innetix.com>
+    * /Keywords/: 200012081707.eB8H7Uo17309
+    * /Organization/: UCAR/Unidata
+
+------------------------------------------------------------------------
+
+Mike,
+
+You run gpcolor before your gdplot program within your script.
+Yes, you can run the nawk program once to create the input file
+to gpcolor (and just add that to your script). By the way, GDPLOT
+will be phased out in favor of GDPLOT2 (since gdplot2 allows more
+functionality with combined scalar and vector functions.
+
+Anyhow, the flow of the script would look like:
+
+gpcolor << EOF
+	DEVICE = gf|outfile.gif
+	COLORS = 0=0:0:0;1=255:255:255;2=255:0:0;3=0:0:255;4=20:17:0;5=48:30:0
+	r
+
+	COLORS = 6=68:50:0;7=90:75:0;8=113:100:0;9=135:125:0;10=157:150:0;11=180:175:0
+	r
+
+        etc...
+
+
+	
+	exit
+EOF
+gdplot2 << EOF1
+	stuff
+EOF1
+
+gpend
+
+
+The gpcolor program will assign the rgb pairs for each color index for the
+specified device driver. Then, your plotting will use those colors.
+(interactively you can use the "ncolor" program, gpcolor is good for scripts).
+
+Also, you can use gpcolor to change the background color if desired.
+The background color is color 101, so to set that to white in gpcolor,
+you could use:
+COLORS = 101=255:255:255
+or 
+COLORS = 101=white
+
+you can't use color names with the gif2 gif driver since the X server is needed to
+specify the rgb for a color name.
+
+
+If all this is too cumbersome, I can add the code for the environmental variable back
+in the 5.6a release. However, as you probably know, when you are running a display 
+with NTL, the shared color table will override this.
+
+
+Steve Chiswell
+
+>From: Michael Voss <voss@xxxxxxxxxxxx>
+>Organization: UCAR/Unidata
+>Keywords: 200012080041.eB80ffo13301
+
+>Steve,
+>
+>Ouch! I can't figure out how to use the gpcolor program. Does it run before or
+>  inside another gempak program...?
+>
+>Can I run the nawk script to create the gpcolor input file (setcols.$$) and th
+> en just save this file to input into gpcolor whenever I need it?
+>
+>thanks,
+>
+>Mike
+>
+>At 02:44 PM 12/7/00 -0700, you wrote:
+>>
+>>Mike,
+>>
+>>The GEMCOLTBL environmental variable was something I provided in GEMPAK 5.4 
+>>in $GEMPAKHOME/source/driver/active/gn/csctbl.c to override the
+>>default color table (now coltbl.xwp when ntl isn't running).
+>>I haven't added that feature into GEMPAK 5.6 since it won't work with all
+>>the device drivers.
+>>
+>>Instead, you can set the colors using the gempak program gpcolor.
+>>You can either set the colors explicitly, or use a short nawk script
+>>such as the following to set the colors from your coltbl.precip table.
+>>This scripts can either be within your script, or made into an
+>>external script for calling from lots of scripts.
+>>
+>>
+>>#!/bin/csh -f
+>># this csh script fragment can be used to create an input file for gpcolor
+>># from a coltbl file.
+>>
+>>set FILE="$GEMTBL/colors/coltbl.precip"
+>>set DEVICE=xw
+>>
+>>nawk -v COUNT=0 -v LINE=0 -v GDEV=${DEVICE}\
+>>	'index($0,"\!") != 1 { \
+>>	if(COUNT == 0) printf "DEVICE = %s\n",GDEV \
+>>	if(LINE == 0) { printf "COLORS = "}  else { printf ";"} \
+>>        printf "%d=%d:%d:%d",COUNT,$3,$4,$5 \
+>>	if(LINE == 5) { \
+>>	   printf "\n r \n \n" \
+>>	   LINE = 0 \
+>>	   } \
+>>	else LINE = LINE + 1 \
+>>	COUNT = COUNT + 1 \
+>>	} ' $FILE >! /tmp/setcols.$$
+>>
+>>cat >> /tmp/setcols.$$ << EOF
+>>
+>>r
+>>
+>>e
+>>EOF
+>>
+>>gpcolor < /tmp/setcols.$$
+>>
+>>rm /tmp/setcols.$$
+>>exit 0
+>>#---------------------------------------------------------------------------
+>>
+>>
+>>Let me know if you still have trouble.
+>>
+>>Steve Chiswell
+>>Unidata User Support
+>>
+>>
+>>
+>>
+>>
+>>
+>>>From: Mike Voss <voss@xxxxxxxxxxxxxxxxxxxx>
+>>>Organization: UCAR/Unidata
+>>>Keywords: 200012071928.eB7JSeo03656
+>>
+>>
+>>>Hello Steve,
+>>>
+>>>I have recently installed Gempak5.6 on a Sun U-60 running Sol 2.7. I'm
+>>>running some scripts developed on a Sun U-1 running Sol 2.6 and Gempak
+>>>5.4, patch 16. For some reason I can't seem to get the scripts to read a
+>>>custom color table. In other words in the script I use:
+>>>
+>>> setenv GEMCOLTBL coltbl.precip
+>>>
+>>>which works fine in gempak5.4, but not in my setup of gempak5.6...?
+>>>I have verified that that the coltbl.precip file is in the correct place
+>>>and I have tried explicitly setting GEMCOLTBL with the full path, but I
+>>>seem to get a generic color table no matter what.(the rest of the script
+>>>seems to work fine in terms of generating the correct info from the grid
+>>>files.
+>>>
+>>>I have tried with device=gf and a virtual frame buffer, and with the new
+>>>device=gif2 system with the same result. When I use device=xw I get the
+>>>same colors alsoA.
+>>>
+>>>Here is a copy of my script in case it helps and some diagnostic info
+>>>from my machine:
+>>>
+>>>------------------------------------------------
+>>>#!/bin/csh -f
+>>>#This script uses GEMPAK to make gif files of precip 500-1000mb hght and
+>>>sfcpres.
+>>>
+>>> setenv DISPLAY methost15:1
+>>> source /usr/local/gempak/gempak5.6/Gemenviron
+>>># setenv GEMCOLTBL $GEMTBL/colors/coltbl.precip
+>>> setenv GEMCOLTBL coltbl.precip
+>>> set CURRENT_ETA=`ls -t $METDAT/grids/*_eta211.gem | head -1`
+>>> cd /export/home/baggett/gempak/eta/ready
+>>>
+>>>if (-e sfc5f00.gif ) then
+>>>     rm -f sfc5*.gif*
+>>>endif
+>>>rm gemglb.nts
+>>>set a=00 b=06 c=12 d=18 e=24 f=30 g=36 h=42 i=48 j=54 k=60
+>>>foreach time($a $b $c $d $e $f $g $h $i $j $k)
+>>>#set a=00 b=06
+>>>#foreach time($a $b)
+>>>set thing = f$time
+>>>echo $thing
+>>>echo $GEMCOLTBL
+>>>    gdplot<< EOF
+>>>    restore sfc5.nts
+>>>    gdfile=$CURRENT_ETA
+>>>    gdattim=$thing
+>>>    title=1/-1!1/-2!1/-3
+>>>#    device=gf|sfc5$thing.gif|760;540
+>>>    device=gf|sfc5$thing.gif|760;540	
+>>>    clear=y
+>>>    text=1/2/1/hw
+>>>    title=1/-3/@ 6hr. Precip.(in.)!1/-2/ 1000-500mb Thickness(m)!1/-1/
+>>>Valid ~ UTC
+>>>    r
+>>>
+>>>    e
+>>>EOF
+>>>
+>>>gpend
+>>>rm gemglb.nts
+>>>end
+>>>--------------------------------------------	
+>>>
+>>>other diagnostics run from where the script is run:
+>>>--------
+>>>methost15:~/gempak/eta/ready>echo $GEMTBL
+>>>/usr/local/gempak/gempak5.6/gempak/tables
+>>>methost15:~/gempak/eta/ready>cd $GEMTBL
+>>>methost15:/usr/local/gempak/gempak5.6/gempak/tables>ls
+>>>bounds/  config/  grid/    loop/    nafos/   pack/    pgen/    sat/
+>>>colors/  draw/    grphgd/  luts/    nmap/    parms/   rad/     stns/
+>>>methost15:/usr/local/gempak/gempak5.6/gempak/tables>cd colors
+>>>methost15:/usr/local/gempak/gempak5.6/gempak/tables/colors>ls
+>>>coltbl.1        coltbl.psc      coltbl.ramp     coltbl.xwp
+>>>coltbl.precip   coltbl.psg      coltbl.tbl      cvtclr.psc
+>>>methost15:/usr/local/gempak/gempak5.6/gempak/tables/colors>more
+>>>coltbl.precip
+>>>! COLTBL.precip
+>>>!
+>>>!Custom color table for Precip
+>>>!
+>>>!Color name    Abrev   Red  Green   Blue  X color name
+>>>BLACK           BLA      0      0      0  black
+>>>WHITE           VAN    255    255    255  white
+>>>RED             RED    255      0      0  red
+>>>BLUE            BLU      0      0    255  blue
+>>>p1              T18    102    000    102  p1
+>>p2              T19    153    000    153  p2
+>>>p3              T20    204    000    204  p3
+>>>p4              T21    255    000    255  p4
+>>>p5              T22    000    000    179  p5
+>>>p6              T23    076    076    255  p6
+>>>p7              T24    000    179    000  p7
+>>>p8              T25    076    255    076  p8
+>>>p9              T26    179    179    000  p9
+>>>p10             T27    255    255    000  p10
+>>>p11             P11    179    000    000  p11
+>>>p14             P14    255    076    076  p14
+>>>p15             P15    179    179    179  p15
+>>>TEMP04          T04    000    255    255  temp04
+>>>TEMP05          T05    000    230    204  temp05
+>>>TEMP06          T06    000    204    127  temp06
+>>>TEMP07          T07    000    179    000  temp07
+>>>TEMP23          T23    127    000    255  temp23
+>>>TEMP24          T24    000    000    255  temp24
+>>>TEMP25          T25    000    089    255  temp25
+>>>TEMP26          T26    000    124    255  temp26
+>>>TEMP27          T27    000    191    255  temp27
+>>>methost15:/usr/local/gempak/gempak5.6/gempak/tables/colors>
+>>>----------
+>>>
+>>>thanks for any clues you might have,
+>>>Mike
+>>>
+>>>--------------------------
+>>>Mike Voss                                
+>>>Department of Meteorology   		
+>>>San Jose State University                        
+>>>One Washington Square  	  	           
+>>>San Jose, CA 95192-0104   
+>>>             
+>>>408.924.5204 voice
+>>>408.924.5191 fax   
+>>>
+>>>
+>>
+>>**************************************************************************** 
+> <
+>>Unidata User Support                                    UCAR Unidata Program 
+> <
+>>(303)497-8644                                                  P.O. Box 3000 
+> <
+>>support@xxxxxxxxxxxxxxxx                                   Boulder, CO 80307 
+> <
+>>---------------------------------------------------------------------------- 
+> <
+>>Unidata WWW Service                        http://www.unidata.ucar.edu/      
+> <
+>>**************************************************************************** 
+> <
+>>
+>>
+>--------------------------
+>Mike Voss                                
+>Department of Meteorology   		
+>San Jose State University                        
+>One Washington Square  	  	           
+>San Jose, CA 95192-0104   
+>             
+>408.924.5204 voice
+>408.924.5191 fax   
+>
+
+**************************************************************************** <
+Unidata User Support                                    UCAR Unidata Program <
+(303)497-8644                                                  P.O. Box 3000 <
+support@xxxxxxxxxxxxxxxx                                   Boulder, CO 80307 <
+---------------------------------------------------------------------------- <
+Unidata WWW Service                        http://www.unidata.ucar.edu/      <
+**************************************************************************** <
+
+------------------------------------------------------------------------
+
+    * Prev by Date: *20001207: GEMPAK download instructions
+      <msg01398.html>*
+    * Next by Date: *20001208: plotting snow depth <msg01400.html>*
+    * Previous by thread: *20001207: Gempak5.6 color tables
+      <msg01397.html>*
+    * Next by thread: *20001207: GEMPAK download instructions
+      <msg01398.html>*
+    * Index(es):
+          o *Date* <maillist.html#01399>
+          o *Thread* <threads.html#01399>
+
+Data-flow Quick Help </data/DataFlow.html>
+Real-time Model Data </data/index.html#model>
+Real-time Remote Sensing Image Data </data/index.html#image>
+Real-time Point Data </data/index.html#point>
+Real-time Text Data </data/index.html#text>
+Archived Data Access </data/index.html#archives>
+more > </data/>
+
+GEMPAK </software/gempak/>
+IDV </software/idv/>
+McIDAS </software/mcidas/>
+IDD </software/idd/>
+LDM </software/ldm/>
+libcf </software/libcf/>
+netCDF </software/netcdf/>
+netCDF Java </software/netcdf-java/>
+Common Data Model </software/netcdf-java/CDM/>
+OPeNDAP/DODS <http://www.opendap.org>
+RAMADDA </software/ramadda/>
+THREDDS </projects/THREDDS/tech/TDS.html>
+UDUNITS </software/udunits/>
+more > </software/>
+
+Cooperative Endeavors </community/coopendeavors.html>
+Unidata Seminars </community/seminars/>
+Governance </community/index.html#governance>
+Equipment Awards </community/equipaward/>
+Acronym List/Glossary </publications/acronyms/glossary.html>
+more > </community/>
+
+Download Software </downloads/>
+Provision of Software </legal/participation.html#software>
+Participation in Unidata </legal/participation.html>
+Register as a User </account/account.jsp>
+more > </downloads/>
+
+Suggested Support Process </support/index.html#process>
+Software Documentation </support/index.html#documentation>
+Support Archives </support/help/>
+Topic-Specific Queries </support/topics.jsp>
+Provision of Support </legal/participation.html#support>
+more > </support/>
+
+Case Studies <http://data.eol.ucar.edu/cometCases/>
+CONDUIT </data/conduit/>
+CRAFT </software/craft/>
+LEAD <http://lead.ou.edu/>
+netCDF/HDF Merger </software/netcdf/netcdf-4/>
+NLDM </projects/nldm/>
+THREDDS </projects/THREDDS/tech/TDS.html>
+SuomiNet </data/suominet/>
+more > </projects/>
+
+Unidata Overview </publications/directorspage/UnidataOverview.html>
+Unidata Leaflet </publications/leaflet/Leaflet.pdf>
+Director's Page </publications/directorspage/>
+Contact Us </about/contact.html>
+Staff Listing </about/staff.jsp>
+more > </about/>
+
+ 
+ 
+  Contact Us </about/contact.html>   *?*   Site Map
+</about/sitemap.html>   *?*   Search </search.jsp>   *?*   Terms and
+Conditions <http://www.ucar.edu/legal/terms_of_use.shtml>   *?*  
+Privacy Policy <http://www.ucar.edu/legal/privacy_policy.shtml>   *?*  
+Participation Policy </legal/participation.html>
+ 
+National Science Foundation (NSF) <http://www.nsf.gov/> 	UCAR Community
+Programs <http://www.ucar.edu/> 	  	Unidata </> is a member of the UCAR
+Community Programs <http://www.ucar.edu>, is managed by the University
+Corporation for Atmospheric Research <http://www.ucar.edu/>, and is
+sponsored by the National Science Foundation <http://www.nsf.gov/>.
+P.O. Box 3000   *?*   Boulder, CO 80307-3000 USA   *?*   Tel:
+303-497-8643   *?*   Fax: 303-497-8690
+
+ 
+

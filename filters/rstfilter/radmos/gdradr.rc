@@ -1,0 +1,34 @@
+#
+# These are the defaults, but the calling script has the chance
+# to customize them below.
+#
+set _gdradr(gdfile) {};
+set _gdradr(gdpfun) {n0r};
+set _gdradr(radtim) {current};
+set _gdradr(raddur) 30;
+set _gdradr(grdarea) {us};
+set _gdradr(proj) {lcc/25;-103;60};
+set _gdradr(kxky) {720;500};
+set _gdradr(cpyfil) {};
+set _gdradr(maxgrd) 1000;
+
+foreach _k [list gdfile gdpfun radtim raddur grdarea proj kxky cpyfil maxgrd] {
+    if {[info exists gdradr($_k)] == 0} {
+        set gdradr($_k) $_gdradr($_k);
+    }
+}
+
+set gdradr(script) {
+    gdfile  = $gdradr(gdfile)
+    gdpfun  = $gdradr(gdpfun)
+    radtim  = $gdradr(radtim)
+    raddur  = $gdradr(raddur)
+    grdarea = $gdradr(grdarea)
+    proj    = $gdradr(proj)
+    kxky    = $gdradr(kxky)
+    cpyfil  = $gdradr(cpyfil)
+    maxgrd  = $gdradr(maxgrd)
+    r
+    
+    e
+}

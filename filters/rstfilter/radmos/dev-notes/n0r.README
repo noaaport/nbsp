@@ -1,0 +1,51 @@
+Mon Feb 22 17:00:56 AST 2010 -
+
+1) The file "color_ramp.gif" comes from
+
+	http://mesonet.agron.iastate.edu/docs/nexrad_composites/
+
+and it gives the "standard" color coding. Quoting from that site:
+
+``The raster image has a colormap associated with it. The raw pixel
+values increase monotonically from -30 dbz to 75 dbz every 5 dbz.
+All values below 0 dbz are assigned black (rgb 0 0 0).
+We have tried to match the commonly used NEXRAD display as what you
+see on National Weather Service page. Please note: We do not include
+a concept of missing data or "no-data". So spots with beem blockage
+in the mountains or out away from the CONUS are just "black".''
+
+2) The file "gempak_colors4.gif" comes from
+
+	http://www.mesoscale.ws/gempak/
+
+In gempak, the background color is 101. I remember that I saw this
+somewhere in the gempak documentation or help files, but I don't
+remember exactly where (it is also mentioned in msg01399.txt).
+
+Therefore
+
+1) in order to have a white background, the equivalent of this code
+must be used (or setting some other color background)
+
+gpcolor <<EOF1
+DEVICE = gif|output.gif
+COLORS = 101=255:255:255
+r
+
+e
+EOF1
+
+
+2) Looking at the nexrad color table, and identifying (by eye) the
+corresponding index in thegempak table, then the folowing must be
+given in the arguments to gdplot2:
+
+background="101";
+blue="27;26;25"
+green="21;22;23"
+yellow="19;18;17"
+red="16;15;14;7;29"
+white="31"
+#
+FINT = 0;5;10;15;20;25;30;35;40;45;50;55;60;65;70;75
+FLINE = ${background};${background};${blue};${green};${yellow};${red};${white}

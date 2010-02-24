@@ -1,0 +1,68 @@
+#
+# $Id$
+#
+
+# Short hand names
+set blue "27;26;25";
+set green "21;22;23";
+set yellow "19;18;17";
+set red "16;15;14;7;29";
+set white "31";
+
+# Defaults (overriden by conf file)
+set _gdplot2(devfmt) "gif";
+set _gdplot2(devsize) "";
+set _gdplot2(gdpfun) "n0r";
+set _gdplot2(garea) "us";
+set _gdplot2(proj) "def";
+set _gdplot2(type) "F";
+set _gdplot2(fint) "0;5;10;15;20;25;30;35;40;45;50;55;60;65;70;75";
+set _gdplot2(fline) "101;101;${blue};${green};${yellow};${red};${white}";
+set _gdplot2(gdattim) "last";
+set _gdplot2(title) "14/-2/n0r - [clock format [clock seconds] -gmt 1]";
+#
+# In Gempak, 101 is the background color. This sets it to white.
+#
+set _gdplot2(colors) "101=255:255:255";
+
+# Override with the conf file settings
+foreach _k [list devfmt devsize \
+	gdpfun garea proj type fint fline gdattim title colors] {
+    if {[info exists gdplot2($_k)] == 0} {
+        set gdplot2($_k) $_gdplot2($_k);
+    }
+}
+
+#
+# Any redefinition of gdplot2() here will override the conf file settings
+#
+
+
+#
+# scripts
+#
+set gpcolor(script) {
+    device = $gdplot2(devfmt)|$gdplot2(devfile)|$gdplot2(devsize)
+    colors = $gdplot2(colors)
+    r
+   
+    e
+}
+
+set gdplot2(script) {
+    gdfile = $gdplot2(gdfile)
+    device = $gdplot2(devfmt)|$gdplot2(devfile)|$gdplot2(devsize)
+    gdpfun = $gdplot2(gdpfun)
+    garea = $gdplot2(garea)
+    proj = $gdplot2(proj)
+    type = $gdplot2(type)
+    fint = $gdplot2(fint)
+    fline = $gdplot2(fline)
+    gdattim = $gdplot2(gdattim)
+    title = $gdplot2(title)
+    glevel = 0
+    gvcord = none
+    r
+
+    e
+}

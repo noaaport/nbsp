@@ -1,0 +1,69 @@
+#
+# Copyright (c) 2005-2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLSOURCES1 =	nbspgdradr.tcl
+TCLTARGET1 =	nbspgdradr
+#
+TCLSOURCES2 =	nbspradmos.tcl
+TCLTARGET2 =	nbspradmos
+#
+TCLTARGET =	${TCLTARGET1} ${TCLTARGET2}
+
+CONFSOURCES1 =	nbspgdradr.conf
+CONFTARGET1 =	nbspgdradr.conf-sample
+#
+CONFSOURCES2 =	nbspradmos.conf
+CONFTARGET2 =	nbspradmos.conf-sample
+#
+CONFTARGET =	${CONFTARGET1} ${CONFTARGET2}
+
+TMPLSOURCES1 =	gdradr.rc
+TMPLSOURCES2 =	radmos.n0r.rc
+TMPLDIR1 =	gdradr
+TMPLDIR2 =	gdplot2/rad
+TMPLPDIRS =	gdradr gdplot2
+#
+TMPLTARGET =	radmos-templates.tgz
+
+TARGET =        ${TCLTARGET} ${CONFTARGET} ${TMPLTARGET}
+
+TCLSH =         @TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}	
+
+install: all
+
+${TCLTARGET1}: ${TCLSOURCES1}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES1} > ${TCLTARGET1}
+
+${TCLTARGET2}: ${TCLSOURCES2}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES2} > ${TCLTARGET2}
+
+${CONFTARGET1}: ${CONFSOURCES1}
+	cp ${CONFSOURCES1} ${CONFTARGET1}
+
+${CONFTARGET2}: ${CONFSOURCES2}
+	cp ${CONFSOURCES2} ${CONFTARGET2}
+
+${TMPLTARGET}: ${TMPLSOURCES1} ${TMPLSOURCES2}
+	rm -rf ${TMPLDIR1} ${TMPLDIR2}
+	mkdir -p ${TMPLDIR1}
+	mkdir -p ${TMPLDIR2}
+	cp ${TMPLSOURCES1} ${TMPLDIR1}
+	cp ${TMPLSOURCES2} ${TMPLDIR2}
+	tar -czf ${TMPLTARGET} ${TMPLDIR1} ${TMPLDIR2}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${CONFTARGET} ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}
+	rm -rf ${TMPLPDIRS}

@@ -44,6 +44,8 @@ make clean
 /usr/local/bin/nbspradmapc
 /usr/local/bin/nbspradmap
 /usr/local/bin/nbspsatmap
+/usr/local/bin/nbspgdradr
+/usr/local/bin/nbspradmos
 /usr/local/bin/nbsppngcvt
 /usr/local/bin/nbspnntpsend
 /usr/local/bin/nbspinsert
@@ -242,6 +244,9 @@ make clean
 /usr/local/etc/nbsp/dist/gempak.env-sample
 /usr/local/etc/nbsp/dist/satmap-templates.tgz
 /usr/local/etc/nbsp/dist/radmap-templates.tgz
+/usr/local/etc/nbsp/dist/radmos-templates.tgz
+/usr/local/etc/nbsp/dist/nbspgdradr.conf-sample
+/usr/local/etc/nbsp/dist/nbspradmos.conf-sample
 /usr/local/etc/nbsp/dist/track-templates.tgz
 /usr/local/etc/nbsp/dist/nbspgribrsh.conf-sample
 /usr/local/etc/nbsp/dist/nbspgribrsh.conf-user

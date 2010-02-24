@@ -17,6 +17,8 @@ bin/nbspradmap
 bin/nbspradmapl
 bin/nbspradmapc
 bin/nbspsatmap
+bin/nbspgdradr
+bin/nbspradmos
 bin/nbsppngcvt
 bin/nbspnntpsend
 bin/nbspinsert
@@ -215,6 +217,9 @@ etc/nbsp/dist/statplot-templates.tgz
 etc/nbsp/dist/gempak.env-sample
 etc/nbsp/dist/satmap-templates.tgz
 etc/nbsp/dist/radmap-templates.tgz
+etc/nbsp/dist/radmos-templates.tgz
+etc/nbsp/dist/nbspgdradr.conf-sample
+etc/nbsp/dist/nbspradmos.conf-sample
 etc/nbsp/dist/track-templates.tgz
 etc/nbsp/dist/nbspgribrsh.conf-sample
 etc/nbsp/dist/nbspgribrsh.conf-user
