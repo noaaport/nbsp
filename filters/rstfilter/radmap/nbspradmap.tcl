@@ -27,7 +27,7 @@ package require cmdline;
 
 set usage {nbspradmap [-b] [-g gpmap_gif] [-d outputdir] [-o outputname]
     [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]};
-set optlist {b e p {d.arg ""} {g.arg "gpmap_gif"} {o.arg ""}
+set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];

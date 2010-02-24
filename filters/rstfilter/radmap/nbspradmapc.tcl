@@ -71,7 +71,7 @@ if {$option(R) ne ""} {
     set rcfile [filterlib_find_conf $option(r) \
         $rstfilter(radmap_rcdirs) $rstfilter(radmap_rcsubdir)];
 } else {
-    # This will nbspradmap use the configuration file defaults.
+    # This will make nbspradmap use the configuration file defaults.
     set rcfile "";
 }
 

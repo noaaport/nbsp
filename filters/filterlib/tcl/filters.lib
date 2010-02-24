@@ -163,13 +163,15 @@ proc filterlib_get_txtflag {body ccbsaved ccbsize} {
         return 0;
     }
 
-    set txtflag [regexp {^[[:graph:][:space:]]+$} $body];
 
-    # If the body contains non-text, and if the (txt) files are being saved
-    # with the ccb, then try again bypassing the first $ccbsize characters. 
-    if {($txtflag == 0) && ($ccbsaved == 1)} {
+    # If the files are being saved with the ccb, bypass the first $ccbsize
+    # characters. 
+
+    if {$ccbsaved == 1} {
         set txtflag [regexp {^[[:graph:][:space:]]+$} \
                 [string range $body $ccbsize end]];
+    } else {
+        set txtflag [regexp {^[[:graph:][:space:]]+$} $body];
     }
 
     return $txtflag;

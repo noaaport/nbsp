@@ -37,7 +37,9 @@
  *
  * or, if the file is not compressed
  *
- * nbspradinfo -c 54 n0qtlx_20100218_1547.nids
+ * nbspradinfo -c 54 koun_sdus54-n0qvnx.210224_204899761
+ * nbspradinfo -c 41 n0qvnx_20100221_0224.nids
+ *               (41 = 30 + gempak header [const.h])
  *
  * The default information printed is
  *
