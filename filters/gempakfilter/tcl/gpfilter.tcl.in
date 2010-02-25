@@ -2,6 +2,10 @@
 #
 # $Id$
 #
+package require cmdline;
+
+set usage {gpfilter [-s]};
+set optlist {s};
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
@@ -36,8 +40,11 @@ set gpfilter(ccbsize)		$common(ccbsize);
 set gpfilter(condition)		[list];
 set gpfilter(action)		[list];
 #
-set gpfilter(satdef_sourced)	0;
+# Default is to run as master unless "-s" is given.
+set gpfilter(option_s)	0;
 
+set gpfilter(satdef_sourced)	0;
+#
 if {[file exists $gpfilter(satdef)] == 1} {
     source $gpfilter(satdef);
     set gpfilter(satdef_sourced) 1;
@@ -80,6 +87,8 @@ proc main {argc argv} {
 	    log_msg $errmsg;
 	    log_msg $errorInfo;
 	}
+
+	::nbsp::periodic::run;
     }
 }
 
@@ -589,6 +598,23 @@ proc is_file_rule_enabled {key} {
     }
 
     return $r;
+}
+
+#
+# main
+#
+array set option [::cmdline::getoptions argv $optlist $usage];
+set argc [llength $argv];
+
+# Check if invoked as a slave worker
+if {$option(s) == 1} {
+    set gpfilter(option_s) 1;
+}
+
+# In work-crew mode the slaves do not run the scheduler
+if {$option(s) == 0} {
+    ::nbsp::periodic::register \
+        gpfilter_run_scheduler $gpfilter(schedule_run_period);
 }
 
 filterlib_init;		# open the cpool if enabled

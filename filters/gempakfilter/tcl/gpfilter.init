@@ -1,6 +1,7 @@
 #
 # $Id$
 #
+package require nbsp::periodic;
 
 ## The defaults of this filter.
 set gpfilter(conf)	[file join $common(confdir) "gpfilter.conf"];
@@ -59,6 +60,15 @@ set gpfilter(sat_regex)  {.*};
 set gpfilter(file_enable) 1;
 set gpfilter(file_regex)  {.*};
 
+# Radar mosaic configuration (runs out of the scheduler) 
+set gpfilter(gdradr_enable)	1;
+set gpfilter(gdradr_datadir)	[file join $gpfilter(dec_datadir) "nexrad"];
+
+# Schedule configuration
+set gpfilter(scheduler_enable) 0;
+set gpfilter(schedule) [file join $common(confdir) "gpfilter-schedule.rc"];
+set gpfilter(schedule_run_period) "minutely";
+
 # The default configuration file of this filter
 if {[file exists $gpfilter(conf)] == 1} {
     source $gpfilter(conf);
@@ -68,3 +78,21 @@ if {[file exists $gpfilter(conf)] == 1} {
 # Variables
 #
 set gpfilter(manager) 0;
+
+#
+# This function is called by the manager (when in work-crew configuration)
+# or by the stand alone filter.
+#
+proc gpfilter_run_scheduler {} {
+#
+# Only the master (in work-crew mode) or the stand-alone filter run
+# the scheduler.
+#
+    global gpfilter;
+
+    if {$gpfilter(scheduler_enable) == 0} {
+        return;
+    }
+
+    ::nbsp::periodic::scheduler $gpfilter(schedule);
+}

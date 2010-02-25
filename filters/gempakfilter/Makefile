@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	c tcl
+SUBDIRS =	c tcl radmos
 
 all:
 	for dir in ${SUBDIRS}; do \

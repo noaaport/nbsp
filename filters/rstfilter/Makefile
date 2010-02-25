@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	tcl satmap radmap radmos
+SUBDIRS =	tcl satmap radmap
 
 all:
 	for dir in ${SUBDIRS}; do \

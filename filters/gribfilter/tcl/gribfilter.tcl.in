@@ -6,7 +6,7 @@ package require cmdline;
 package require fileutil;
 
 set usage {gribfilter [-s]};
-set optlist {{s}};
+set optlist {s};
 
 ## The common defaults initialization
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";

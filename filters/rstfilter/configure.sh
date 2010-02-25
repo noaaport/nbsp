@@ -1,6 +1,6 @@
 #!/bin/sh
 
-subdirs="tcl satmap radmap radmos"
+subdirs="tcl satmap radmap"
 
 for d in $subdirs
 do

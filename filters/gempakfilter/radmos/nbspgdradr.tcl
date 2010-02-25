@@ -2,53 +2,43 @@
 #
 # $Id$
 # 
-# Usage: nbspgdradr [-b] [-d <outputdir>]
+# Usage: nbspgdradr [-b] [-c] [-C <workdir>] [-d <outputdir>]
 #        [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
 #        [-t <tmpdir>] [-D <defs>] [-r <rcfile> | -R <rcfilepath>]
 #
-# -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
+# -c => create the <outputdir>
+# -C => cd to <workdir>
 # -d => output directory
+# -D => key=value,... comma separated list of gdradr(key)=var pairs
 # -f => interpret <outputnamefmt> as a format string for clock seconds
-# -o => outputname
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
+# -o => outputname
 # -t => cd to tmp directory (all partial paths are still relative
-#       to the current directory.
-# -r => rcfile, searched in the standard directories
-# -R => rcfilepath, used as given
+#       to the working directory)
+# -r => rc file, searched in the standard directories
+# -R => rc file path, used as given
 #
 # This program ends up calling gdradr.
 # If the <rcfile> is not specified, the program uses the same logic as
 # nbspradmap to search for the default file "gdradr.rc".
 #
-package require cmdline;
-
-set usage {nbspgdradr [-b] [-d outputdir] [-f outputnamefmt | -o outputname]
+set usage {nbspgdradr [-b] [-c] [-C <workdir>] [-d <outputdir>]
+    [-f <outputnamefmt> | -o <outputname>]
     [-k] [-l <logfile>] [-t <tmpdir>] [-D <defs>]
     [-r <rcfile> | -R <rcfilepath>]};
-
-set optlist {b {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
+set optlist {b c {C.arg ""} {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
     {t.arg ""} {D.arg ""} {r.arg ""} {R.arg ""}};
-array set option [::cmdline::getoptions argv $optlist $usage];
 
 proc log_warn s {
 
-    global argv0;
-    global option;
-
-    set name [file tail $argv0];
-    if {$option(b) == 0} {
-        puts "$name: $s";
-    } else {
-        exec logger -t $name $s;
-    }
+    ::nbsp::syslog::warn $s;
 }
 
 proc log_err s {
 
-    log_warn $s;
-    exit 1;
+    ::nbsp::syslog::err $s;
 }
 
 proc source_template {rcfile} {
@@ -61,7 +51,7 @@ proc source_template {rcfile} {
     source $rcfile;
 }
 
-## The common defaults (gempak.env is needed and the filter library are neded)
+## The common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
 if {[file exists $defaultsfile] == 0} {
    log_err "$defaultsfile not found.";
@@ -72,6 +62,14 @@ if {[file exists $gempak(envfile)] == 0} {
     log_err "$gempak(envfile) not found.";
 }
 source $gempak(envfile);
+
+# Packages from tcllib
+package require cmdline;
+
+# Nbsp packages
+## The errx library. syslog enabled below if -b is given.
+package require nbsp::errx;
+package require nbsp::util;
 
 # Defaults
 set nbspgdradr(localconfdirs) $common(localconfdirs);
@@ -89,14 +87,22 @@ if {[file exists $nbspgdradr(conf)]} {
 #
 # main
 #
+array set option [::cmdline::getoptions argv $optlist $usage];
+
+if {$option(b) == 1} {
+    ::nbsp::syslog::usesyslog
+}
+
+if {$option(C) ne ""} {
+    cd $option(C);
+}
 
 if {$option(R) eq ""} {
     # Search for the rcfile 
-    source $common(filterslib);
     if {$option(r) eq ""} {
 	set option(r) $nbspgdradr(rcfile);
     }
-    set option(rcfile) [filterlib_find_conf $option(r) \
+    set option(rcfile) [::nbsp::util::find_local_rcfile $option(r) \
 			    $nbspgdradr(localconfdirs) \
 			    $nbspgdradr(rcsubdir)];
 } else {
@@ -138,6 +144,9 @@ if {$option(l) eq ""} {
 
 if {$option(d) ne ""} {
     set gdradr(gdfile) [file join $option(d) $gdradr(gdfile)];
+    if {$option(c) == 1} {
+	file mkdir $option(d);
+    }
 }
 
 if {$option(t) ne ""} {

@@ -2,15 +2,18 @@
 #
 # $Id$
 # 
-# Usage: nbspradmos [-b] [-d <outputdir>] [-f <fmt>] [-o <outputname>]
+# Usage: nbspradmos [-b] [-c] [-C <workdir>] [-d <outputdir>] 
+#        [-f <fmt>] [-o <outputname>]
 #	 [-k] [-l <logfile>]
 #        [-s <devsize>] [-t <tmpdir>] [-D <defs>]
 #        [-r <rcfile> | -R <rcfilepath>] <inputfile>
 #
-# -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
+# -c => create the <outputdir>
+# -C => cd to <workdir>
+# -D => key=value,... comma separated list of gdplot2(key)=var pairs
 # -d => output directory
-# -f => output file format
+# -f => output file format (gif, ...)
 # -o => output file name
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
@@ -24,33 +27,22 @@
 # If the <rcfile> is not specified, the program uses the same logic as
 # nbspradmap to search for the default file "radcomp.rc".
 #
-package require cmdline;
-
-set usage {nbspradmos [-b] [-d outputdir] [-f fmt] [-o outputname]
+set usage {nbspradmos [-b] [-c] [-C <workdir>] [-d outputdir]
+    [-f fmt] [-o outputname]
     [-k] [-l <logfile>] [-s <devsize>] [-t <tmpdir>]
     [-D <defs>] [-r <rcfile> | -R <rcfilepath>]};
 
-set optlist {b {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
+set optlist {b c {C.arg ""} {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
     {s.arg ""} {t.arg ""} {D.arg ""} {r.arg ""} {R.arg ""}};
-array set option [::cmdline::getoptions argv $optlist $usage];
 
 proc log_warn s {
 
-    global argv0;
-    global option;
-
-    set name [file tail $argv0];
-    if {$option(b) == 0} {
-        puts "$name: $s";
-    } else {
-        exec logger -t $name $s;
-    }
+    ::nbsp::syslog::warn $s;
 }
 
 proc log_err s {
 
-    log_warn $s;
-    exit 1;
+    ::nbsp::syslog::err $s;
 }
 
 proc source_template {rcfile} {
@@ -63,7 +55,7 @@ proc source_template {rcfile} {
     source $rcfile;
 }
 
-## The common defaults (gempak.env is needed and the filter library are neded)
+## The common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
 if {[file exists $defaultsfile] == 0} {
    log_err "$defaultsfile not found.";
@@ -74,6 +66,14 @@ if {[file exists $gempak(envfile)] == 0} {
     log_err "$gempak(envfile) not found.";
 }
 source $gempak(envfile);
+
+# Packages from tcllib
+package require cmdline;
+
+# Nbsp packages
+## The errx library. syslog enabled below if -b is given.
+package require nbsp::errx;
+package require nbsp::util;
 
 # Defaults
 set nbspradmos(localconfdirs) $common(localconfdirs);
@@ -93,11 +93,21 @@ if {[file exists $nbspradmos(conf)]} {
 #
 # main
 #
+array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
+
+if {$option(b) == 1} {
+    ::nbsp::syslog::usesyslog
+}
+
 if {$argc == 0} {
     log_err $usage;
 }
 set gdplot2(gdfile) [lindex $argv 0];
+
+if {$option(C) ne ""} {
+    cd $option(C);
+}
 
 if {$option(R) eq ""} {
     # Search for the rcfile 
@@ -105,7 +115,7 @@ if {$option(R) eq ""} {
     if {$option(r) eq ""} {
 	set option(r) $nbspradmos(rcfile);
     }
-    set option(rcfile) [filterlib_find_conf $option(r) \
+    set option(rcfile) [::nbsp::util::find_local_rcfile $option(r) \
 			    $nbspradmos(localconfdirs) \
 			    $nbspradmos(rcsubdir)];
 } else {
@@ -153,6 +163,9 @@ if {$option(l) eq ""} {
 
 if {$option(d) ne ""} {
     set gdplot2(devfile) [file join $option(d) $gdplot2(devfile)];
+    if {$option(c) == 1} {
+	file mkdir $option(d);
+    }
 }
 
 if {$option(t) ne ""} {

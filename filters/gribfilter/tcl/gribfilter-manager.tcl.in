@@ -179,6 +179,7 @@ foreach type $gribfilter(slave,types) {
 }
 
 # In work-crew mode only the master runs the scheduler
-::nbsp::periodic::register gribfilter_run_scheduler $gribfilter(schedule_run_period);
+::nbsp::periodic::register \
+    gribfilter_run_scheduler $gribfilter(schedule_run_period);
 
 main $argc $argv;

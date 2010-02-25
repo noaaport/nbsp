@@ -74,6 +74,8 @@ proc main {argc argv} {
 	        gpfilter_slave_open $type;
 	    }
 	}
+
+	::nbsp::periodic::run;
     }
 
     foreach type $gpfilter(slave,types) {
@@ -105,7 +107,7 @@ proc gpfilter_slave_open {type} {
     global gpfilter;
 
     set status [catch {
-	set gpfilter(slave,$type,F) [open "|$gpfilter(slave)" w];
+	set gpfilter(slave,$type,F) [open "|$gpfilter(slave) -s" w];
 	fconfigure $gpfilter(slave,$type,F) -buffering line;
     } errmsg];
 

@@ -1,6 +1,11 @@
 #
 # $Id$
 #
+NOTE: This is the initial version of this document. The updated version
+      is kept in the README's directory with all the other README files.
+      
+      Wed Feb 24 15:25:25 AST 2010
+-
 These scripts, apart from using some of the gempak programs, require
 that the gempak filter be enabled. In particular, "nbspgdradr"
 is the script that calls gdradr to collect the data and requires
@@ -17,9 +22,8 @@ in "gpfilter.conf".
 
 To produce the mosaics, let the system run for a few minutes
 to gather enough data from the radar sites. The generation of
-the mosaics is as simle as executing two commands. The first one is
+the mosaics is as simple as executing two commands. The first one is
 
--
 nbspgdradr
 
 That will produce a <data file> with a name like yyyymmdd_hhmm.gem.
@@ -29,15 +33,16 @@ The second command is
 nbspradmos <data file>
 
 where the argument is the data file that is output from the first command.
--
 
-The relevant "rc" scripts forr each of those two programs are in
+The relevant "rc" files for each of those two programs are
 
 	defaults/gdradr
 	defaults/gdplot2/rad
 
+relative to the nbsp configuration directory.
+
 The output of the two programs (scripts) can be customized  by command-line
-options and/or modifying the scripts, or writing new scripts and passing
+options and/or modifying the scripts, or writing new "rc" files and passing
 them as arguments to the program (-r and -R options).
 
 -

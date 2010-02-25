@@ -7,7 +7,7 @@
 # $Id$
 #
 
-subdirs="c tcl"
+subdirs="c tcl radmos"
 
 for d in $subdirs
 do
