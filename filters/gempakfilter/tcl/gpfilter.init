@@ -60,10 +60,6 @@ set gpfilter(sat_regex)  {.*};
 set gpfilter(file_enable) 1;
 set gpfilter(file_regex)  {.*};
 
-# Radar mosaic configuration (runs out of the scheduler) 
-set gpfilter(gdradr_enable)	1;
-set gpfilter(gdradr_datadir)	[file join $gpfilter(dec_datadir) "nexrad"];
-
 # Schedule configuration
 set gpfilter(scheduler_enable) 0;
 set gpfilter(schedule) [file join $common(confdir) "gpfilter-schedule.rc"];

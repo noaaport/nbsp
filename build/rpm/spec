@@ -96,6 +96,7 @@ make clean
 /usr/local/libexec/nbsp/gpfilter
 /usr/local/libexec/nbsp/gpfilter-manager
 /usr/local/libexec/nbsp/gpfilter.init
+/usr/local/libexec/nbsp/nbspradmos.init
 /usr/local/libexec/nbsp/rstfilter
 /usr/local/libexec/nbsp/rstfilter-manager
 /usr/local/libexec/nbsp/rstfilter.init
@@ -245,7 +246,6 @@ make clean
 /usr/local/etc/nbsp/dist/satmap-templates.tgz
 /usr/local/etc/nbsp/dist/radmap-templates.tgz
 /usr/local/etc/nbsp/dist/radmos-templates.tgz
-/usr/local/etc/nbsp/dist/nbspgdradr.conf-sample
 /usr/local/etc/nbsp/dist/nbspradmos.conf-sample
 /usr/local/etc/nbsp/dist/track-templates.tgz
 /usr/local/etc/nbsp/dist/nbspgribrsh.conf-sample

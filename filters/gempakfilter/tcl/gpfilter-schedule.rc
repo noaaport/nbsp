@@ -48,9 +48,9 @@
 # D=010100 => run on the first day of the month at 1 am.
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 
-# Short hand definition
-set cwd "/var/noaaport/data/gempak"
-
+#
+# -C causes it to cd to the directory defined in nbspgdradr(Cdir)
+#
 foreach p [list n0r n1p] {
-  schedule M/10 nbspgdradr -b -c -C ${cwd} -d nexrad/${p}
+  schedule M/10 nbspgdradr -b -c -C -d ${p}
 }

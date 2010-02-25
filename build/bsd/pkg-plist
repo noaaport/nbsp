@@ -69,6 +69,7 @@ libexec/nbsp/nbspfilter
 libexec/nbsp/gpfilter
 libexec/nbsp/gpfilter-manager
 libexec/nbsp/gpfilter.init
+libexec/nbsp/nbspradmos.init
 libexec/nbsp/rstfilter
 libexec/nbsp/rstfilter-manager
 libexec/nbsp/rstfilter.init
@@ -218,7 +219,6 @@ etc/nbsp/dist/gempak.env-sample
 etc/nbsp/dist/satmap-templates.tgz
 etc/nbsp/dist/radmap-templates.tgz
 etc/nbsp/dist/radmos-templates.tgz
-etc/nbsp/dist/nbspgdradr.conf-sample
 etc/nbsp/dist/nbspradmos.conf-sample
 etc/nbsp/dist/track-templates.tgz
 etc/nbsp/dist/nbspgribrsh.conf-sample

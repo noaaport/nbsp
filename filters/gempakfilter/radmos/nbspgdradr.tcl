@@ -2,34 +2,36 @@
 #
 # $Id$
 # 
-# Usage: nbspgdradr [-b] [-c] [-C <workdir>] [-d <outputdir>]
+# Usage: nbspgdradr [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
 #        [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
-#        [-t <tmpdir>] [-D <defs>] [-r <rcfile> | -R <rcfilepath>]
+#        [-t <tmpdir>] [-r <rcfile> | -R <rcfilepath>]
 #
 # -b => background mode
 # -c => create the <outputdir>
-# -C => cd to <workdir>
+# -C => cd to <workdir> defined by nbspgdradr(Cdir)
 # -d => output directory
 # -D => key=value,... comma separated list of gdradr(key)=var pairs
 # -f => interpret <outputnamefmt> as a format string for clock seconds
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
 # -o => outputname
-# -t => cd to tmp directory (all partial paths are still relative
-#       to the working directory)
 # -r => rc file, searched in the standard directories
 # -R => rc file path, used as given
+# -t => cd to tmp directory (all partial paths are still relative
+#       to the working directory)
 #
 # This program ends up calling gdradr.
 # If the <rcfile> is not specified, the program uses the same logic as
 # nbspradmap to search for the default file "gdradr.rc".
 #
-set usage {nbspgdradr [-b] [-c] [-C <workdir>] [-d <outputdir>]
+# This script loads the nbspradmos.init file (which in turn optionally
+# loads the nbspradmos.conf file).
+#
+set usage {nbspgdradr [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
     [-f <outputnamefmt> | -o <outputname>]
-    [-k] [-l <logfile>] [-t <tmpdir>] [-D <defs>]
-    [-r <rcfile> | -R <rcfilepath>]};
-set optlist {b c {C.arg ""} {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
-    {t.arg ""} {D.arg ""} {r.arg ""} {R.arg ""}};
+    [-k] [-l <logfile>] [-t <tmpdir>] [-r <rcfile> | -R <rcfilepath>]};
+set optlist {b c C {d.arg ""} {D.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
+    {t.arg ""} {r.arg ""} {R.arg ""}};
 
 proc log_warn s {
 
@@ -51,38 +53,12 @@ proc source_template {rcfile} {
     source $rcfile;
 }
 
-## The common defaults
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-if {[file exists $defaultsfile] == 0} {
-   log_err "$defaultsfile not found.";
+## The common initialization
+set initfile "/usr/local/libexec/nbsp/nbspradmos.init";
+if {[file exists $initfile] == 0} {
+   log_err "$initfile not found.";
 }
-source $defaultsfile;
-
-if {[file exists $gempak(envfile)] == 0} {
-    log_err "$gempak(envfile) not found.";
-}
-source $gempak(envfile);
-
-# Packages from tcllib
-package require cmdline;
-
-# Nbsp packages
-## The errx library. syslog enabled below if -b is given.
-package require nbsp::errx;
-package require nbsp::util;
-
-# Defaults
-set nbspgdradr(localconfdirs) $common(localconfdirs);
-set nbspgdradr(conf)      [file join $common(confdir) "nbspgdradr.conf"];
-#
-set nbspgdradr(rcsubdir)  "gdradr";
-set nbspgdradr(rcfile)    "gdradr.rc";
-set nbspgdradr(namefmt)   "%Y%m%d_%H%M.gem";
-
-# optional config file
-if {[file exists $nbspgdradr(conf)]} {
-    source $nbspgdradr(conf);
-}
+source $initfile;
 
 #
 # main
@@ -93,8 +69,8 @@ if {$option(b) == 1} {
     ::nbsp::syslog::usesyslog
 }
 
-if {$option(C) ne ""} {
-    cd $option(C);
+if {$option(C) == 1} {
+    cd $nbspgdradr(Cdir);
 }
 
 if {$option(R) eq ""} {

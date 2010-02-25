@@ -2,38 +2,38 @@
 #
 # $Id$
 # 
-# Usage: nbspradmos [-b] [-c] [-C <workdir>] [-d <outputdir>] 
-#        [-f <fmt>] [-o <outputname>]
-#	 [-k] [-l <logfile>]
-#        [-s <devsize>] [-t <tmpdir>] [-D <defs>]
-#        [-r <rcfile> | -R <rcfilepath>] <inputfile>
+# Usage: nbspradmos [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
+#        [-f <fmt>] [-i] [-k] [-l <logfile>] [-o <outputname>]
+#        [-s <devsize>] [-t <tmpdir>]
+#        [-r <rcfile> | -R <rcfilepath>] <gdfile>
 #
 # -b => background mode
 # -c => create the <outputdir>
-# -C => cd to <workdir>
-# -D => key=value,... comma separated list of gdplot2(key)=var pairs
+# -C => cd to <workdir> defined by nbspradmos(Cdir)
 # -d => output directory
+# -D => key=value,... comma separated list of gdplot2(key)=var pairs
 # -f => output file format (gif, ...)
-# -o => output file name
+# -i => interpret <gdfile> to be relative to nbspgdradr(Cdir)
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
+# -o => output file name
+# -r => rcfile, searched in the standard directories
+# -R => rcfilepath, used as given
 # -s => device size
 # -t => cd to tmp directory (all partial paths are still relative
 #       to the current directory.
-# -r => rcfile, searched in the standard directories
-# -R => rcfilepath, used as given
 #
 # This program ends up calling gdplot2.
 # If the <rcfile> is not specified, the program uses the same logic as
 # nbspradmap to search for the default file "radcomp.rc".
 #
-set usage {nbspradmos [-b] [-c] [-C <workdir>] [-d outputdir]
-    [-f fmt] [-o outputname]
-    [-k] [-l <logfile>] [-s <devsize>] [-t <tmpdir>]
-    [-D <defs>] [-r <rcfile> | -R <rcfilepath>]};
+set usage {nbspradmos [-b] [-c] [-C] [-d outputdir] [-D <defs>]
+    [-f fmt] [-i] [-k] [-l <logfile>] [-o outputname]
+    [-s <devsize>] [-t <tmpdir>]
+    [-r <rcfile> | -R <rcfilepath>] <gdfile>};
 
-set optlist {b c {C.arg ""} {d.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
-    {s.arg ""} {t.arg ""} {D.arg ""} {r.arg ""} {R.arg ""}};
+set optlist {b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} {o.arg ""}
+    {s.arg ""} {t.arg ""} {r.arg ""} {R.arg ""}};
 
 proc log_warn s {
 
@@ -55,40 +55,12 @@ proc source_template {rcfile} {
     source $rcfile;
 }
 
-## The common defaults
-set defaultsfile "/usr/local/etc/nbsp/filters.conf";
-if {[file exists $defaultsfile] == 0} {
-   log_err "$defaultsfile not found.";
+## The common initialization
+set initfile "/usr/local/libexec/nbsp/nbspradmos.init";
+if {[file exists $initfile] == 0} {
+   log_err "$initfile not found.";
 }
-source $defaultsfile;
-
-if {[file exists $gempak(envfile)] == 0} {
-    log_err "$gempak(envfile) not found.";
-}
-source $gempak(envfile);
-
-# Packages from tcllib
-package require cmdline;
-
-# Nbsp packages
-## The errx library. syslog enabled below if -b is given.
-package require nbsp::errx;
-package require nbsp::util;
-
-# Defaults
-set nbspradmos(localconfdirs) $common(localconfdirs);
-set nbspradmos(conf)      [file join $common(confdir) "nbspradmos.conf"];
-#
-set nbspradmos(rcsubdir)  [file join "gdplot2" "rad"];
-set nbspradmos(rcfile)    "radmos.n0r.rc";
-#
-set gdplot2(devfmt) "gif";
-set gdplot2(devsize) "";
-
-# optional config file
-if {[file exists $nbspradmos(conf)]} {
-    source $nbspradmos(conf);
-}
+source $initfile;
 
 #
 # main
@@ -104,9 +76,12 @@ if {$argc == 0} {
     log_err $usage;
 }
 set gdplot2(gdfile) [lindex $argv 0];
+if {$option(i) == 1} {
+    set gdplot2(gdfile) [file join $nbspgdradr(Cdir) $gdplot2(gdfile)];
+}
 
-if {$option(C) ne ""} {
-    cd $option(C);
+if {$option(C) == 1} {
+    cd $nbspradmos(Cdir);
 }
 
 if {$option(R) eq ""} {
