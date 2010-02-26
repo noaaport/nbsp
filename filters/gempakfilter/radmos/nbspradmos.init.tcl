@@ -28,6 +28,7 @@ set nbspradmos(conf)      [file join $common(confdir) "nbspradmos.conf"];
 # nbspgdradr defaults
 set nbspgdradr(localconfdirs) $common(localconfdirs);
 #
+set nbspgdradr(enable)	   1;
 set nbspgdradr(rcsubdir)  "gdradr";
 set nbspgdradr(rcfile)    "gdradr.rc";
 set nbspgdradr(namefmt)   "%Y%m%d_%H%M.gem";
@@ -40,6 +41,7 @@ set nbspgdradr(latest_name) "latest";
 # nbspradmos defaults
 set nbspradmos(localconfdirs) $common(localconfdirs);
 #
+set nbspradmos(enable)	  1;
 set nbspradmos(rcsubdir)  [file join "gdplot2" "rad"];
 set nbspradmos(rcfile)    "radmos.n0r.rc";
 set nbspradmos(Cdir)      "/var/noaaport/data/gempak";
@@ -50,7 +52,7 @@ set gdplot2(devfmt) "gif";
 set gdplot2(devsize) "";
 
 # nbspradmosl - loop
-set nbspradmosl(enable)		0;
+set nbspradmosl(enable)		1;
 set nbspradmosl(program)	"gifsicle";
 # Endless loop with a 2 second delay after the last frame
 set nbspradmosl(program_preoptions)	{-l};

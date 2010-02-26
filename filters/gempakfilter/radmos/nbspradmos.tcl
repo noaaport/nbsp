@@ -2,11 +2,12 @@
 #
 # $Id$
 # 
-# Usage: nbspradmos [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
+# Usage: nbspradmos [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
 #        [-f <fmt>] [-i] [-k] [-l <logfile>] [-L] [-o <outputname>]
 #        [-s <devsize>] [-t <tmpdir>]
 #        [-r <rcfile> | -R <rcfilepath>] <gdfile>
 #
+# -a => run anyway; override the setting in nbspradmos(enable)
 # -b => background mode
 # -c => create the <outputdir>
 # -C => cd to <workdir> defined by nbspradmos(Cdir)
@@ -28,12 +29,12 @@
 # If the <rcfile> is not specified, the program uses the same logic as
 # nbspradmap to search for the default file "radcomp.rc".
 #
-set usage {nbspradmos [-b] [-c] [-C] [-d outputdir] [-D <defs>]
+set usage {nbspradmos [-a] [-b] [-c] [-C] [-d outputdir] [-D <defs>]
     [-f fmt] [-i] [-k] [-l <logfile>] [-L] [-o outputname]
     [-s <devsize>] [-t <tmpdir>]
     [-r <rcfile> | -R <rcfilepath>] <gdfile>};
 
-set optlist {b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} L
+set optlist {a b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} L
     {o.arg ""} {s.arg ""} {t.arg ""} {r.arg ""} {R.arg ""}};
 
 proc log_warn s {
@@ -72,6 +73,10 @@ set nbspradmos(_logfext) ".log";
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
+
+if {($option(a) == 0) && ($nbspradmos(enable) == 0)} {
+    return;
+}
 
 if {$option(b) == 1} {
     ::nbsp::syslog::usesyslog

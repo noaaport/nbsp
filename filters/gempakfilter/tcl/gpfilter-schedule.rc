@@ -61,5 +61,8 @@ foreach p [list n0r n0v n1p n1s n2r n3r \
   if {$p eq "n0r"} {
     schedule M/10 nbspradmos -b -c -C -d ${sd}/img/$p -r radmos.${p}.rc \
 	-i -L ${sd}/gem/${p}/latest
+
+    schedule M/10 nbspradmosl -b -c -C -d ${sd}/loop -o ${p}.gif \
+	-i ${sd}/img/$p
   }
 }

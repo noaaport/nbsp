@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspradmosl [-b] [-c] [-C] [-d <outputdir>] [-g <globpatt>] [-i]
+# Usage: nbspradmosl [-a] [-b] [-c] [-C] [-d <outputdir>] [-g <globpatt>] [-i]
 #                    [-o <outputname>] <dir>
 #
 # The argunment <dir> is a directory that contains the individual image files.
@@ -11,6 +11,7 @@
 #   (1) The files are named such the they can be sorted by date
 #   (2) The directory contains only the image files + the "latest" link file
 #
+# -a => run anyway; override the setting in nbspradmos(enable)
 # -b => background mode
 # -c => create the <outputdir>
 # -C => cd to <workdir> defined by nbspradmosl(Cdir)
@@ -18,9 +19,9 @@
 # -g => glob pattern to choose input files
 # -i => <dir> is relative to nbspradmos(Cdir)
 
-set usage {nbspradmosl [-b] [-c] [-C] [-d outputdir] [-g globpatt] [i]
+set usage {nbspradmosl [-a] [-b] [-c] [-C] [-d outputdir] [-g globpatt] [i]
     [-o outputname] <dir>};
-set optlist {b c C {d.arg ""} {g.arg ""} i {o.arg ""}};
+set optlist {a b c C {d.arg ""} {g.arg ""} i {o.arg ""}};
 
 proc log_warn s {
 
@@ -71,6 +72,10 @@ source $initfile;
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
+
+if {($option(a) == 0) && ($nbspradmosl(enable) == 0)} {
+    return;
+}
 
 if {$option(b) == 1} {
     ::nbsp::syslog::usesyslog
