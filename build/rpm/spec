@@ -179,6 +179,7 @@ make clean
 /usr/local/etc/nbsp/dist/gpfilter.rc-sample
 /usr/local/etc/nbsp/dist/gpfilter.rc-defaults
 /usr/local/etc/nbsp/dist/gpfilter-sat.def-sample
+/usr/local/etc/nbsp/dist/gpfilter-schedule.rc-sample
 /usr/local/etc/nbsp/dist/rstfilter.conf-sample
 /usr/local/etc/nbsp/dist/rstfilter.rc-sample
 /usr/local/etc/nbsp/dist/rstfilter.rc-defaults

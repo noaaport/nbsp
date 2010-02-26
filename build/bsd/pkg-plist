@@ -152,6 +152,7 @@ etc/nbsp/dist/gpfilter.conf-sample
 etc/nbsp/dist/gpfilter.rc-sample
 etc/nbsp/dist/gpfilter.rc-defaults
 etc/nbsp/dist/gpfilter-sat.def-sample
+etc/nbsp/dist/gpfilter-schedule.rc-sample
 etc/nbsp/dist/rstfilter.conf-sample
 etc/nbsp/dist/rstfilter.rc-sample
 etc/nbsp/dist/rstfilter.rc-defaults

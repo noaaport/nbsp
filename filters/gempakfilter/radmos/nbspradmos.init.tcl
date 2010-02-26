@@ -25,23 +25,29 @@ package require nbsp::util;
 # Common (optional) configuration  file
 set nbspradmos(conf)      [file join $common(confdir) "nbspradmos.conf"];
 
-# nbspradmos defaults
-set nbspradmos(localconfdirs) $common(localconfdirs);
-#
-set nbspradmos(rcsubdir)  [file join "gdplot2" "rad"];
-set nbspradmos(rcfile)    "radmos.n0r.rc";
-set nbspgdradr(Cdir)      "/var/noaaport/gempak/images/rad";
-#
-set gdplot2(devfmt) "gif";
-set gdplot2(devsize) "";
-
 # nbspgdradr defaults
 set nbspgdradr(localconfdirs) $common(localconfdirs);
 #
 set nbspgdradr(rcsubdir)  "gdradr";
 set nbspgdradr(rcfile)    "gdradr.rc";
 set nbspgdradr(namefmt)   "%Y%m%d_%H%M.gem";
-set nbspgdradr(Cdir)      "/var/noaaport/gempak/nexrad";
+set nbspgdradr(Cdir)      "/var/noaaport/data/gempak";
+set nbspgdradr(logfile)   "";
+# set nbspgdradr(logfile)   "/var/log/nbsp/nbspgdradr.log";
+set nbspgdradr(latest_enable) 1;
+set nbspgdradr(latest_name) "latest";
+
+# nbspradmos defaults
+set nbspradmos(localconfdirs) $common(localconfdirs);
+#
+set nbspradmos(rcsubdir)  [file join "gdplot2" "rad"];
+set nbspradmos(rcfile)    "radmos.n0r.rc";
+set nbspradmos(Cdir)      "/var/noaaport/data/gempak";
+set nbspradmos(logfile)   "";
+# set nbspradmos(logfile)   "/var/log/nbsp/nbspradmos.log";
+#
+set gdplot2(devfmt) "gif";
+set gdplot2(devsize) "";
 
 # optional config file
 if {[file exists $nbspradmos(conf)]} {

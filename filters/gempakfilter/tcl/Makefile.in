@@ -15,7 +15,8 @@ M4MAIN =	gpfilter.m4
 M4TARGET =	gpfilter.rc-defaults
 SAMPLES =	gpfilter.conf-sample \
 		gpfilter.rc-sample \
-		gpfilter-sat.def-sample
+		gpfilter-sat.def-sample \
+		gpfilter-schedule.rc-sample
 
 TCLTARGET-MGR =	gpfilter-manager.tcl
 FILTERNAME-MGR = gpfilter-manager
@@ -47,6 +48,9 @@ gpfilter.rc-sample: gpfilter.rc
 
 gpfilter-sat.def-sample: gpfilter-sat.def
 	cp gpfilter-sat.def gpfilter-sat.def-sample
+
+gpfilter-schedule.rc-sample: gpfilter-schedule.rc
+	cp gpfilter-schedule.rc gpfilter-schedule.rc-sample
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}

@@ -16,6 +16,8 @@ set gpfilter(file_enable) 0;
 
 in "gpfilter.conf".
 
+Manual invocation -
+-----------------
 To produce the mosaics, let the system run for a few minutes
 to gather enough data from the radar sites. The generation of
 the mosaics is as simple as executing two commands. The first one is
@@ -40,4 +42,19 @@ relative to the nbsp configuration directory.
 The output of the two programs (scripts) can be customized  by command-line
 options and/or modifying the scripts, or writing new "rc" files and passing
 them as arguments to the program (-r and -R options).
+
+Auto schedule -
+------------
+
+Automatic generation of both the data files and the images can be
+enabled by editng "gpfilter.conf", and setting
+
+set gpfilter(scheduler_enable) 1
+
+The file "gpfilter-schedule.rc" can also be edited to fine-tune the details
+of the product generation.
+
+The default location of the products is
+
+	/var/noaaport/data/gempak/nexrad_mosaic
 -

@@ -48,9 +48,18 @@
 # D=010100 => run on the first day of the month at 1 am.
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 
-#
-# -C causes it to cd to the directory defined in nbspgdradr(Cdir)
-#
-foreach p [list n0r n1p] {
-  schedule M/10 nbspgdradr -b -c -C -d ${p}
+# short hand
+set sd "nexrad_mosaic"
+
+foreach p [list n0r n0v n1p n1s n2r n3r \
+		ncr nvl n0s n0z n1r n1v n2s n3s net ntp nvw] {
+
+  # Create the data files for all
+  schedule M/10 nbspgdradr -b -D gdpfun=${p} -c -C -d ${sd}/gem/$p
+
+  # Create the images only for n0r until we have all the rc files
+  if {$p eq "n0r"} {
+    schedule M/10 nbspradmos -b -c -C -d ${sd}/img/$p -r radmos.${p}.rc \
+	-i -L ${sd}/gem/${p}/latest
+  }
 }

@@ -60,6 +60,10 @@ if {[file exists $initfile] == 0} {
 }
 source $initfile;
 
+# private settings
+set nbspgdradr(_tmpfext) ".tmp";
+set nbspgdradr(_logfext) ".log";
+
 #
 # main
 #
@@ -111,11 +115,16 @@ if {$option(o) ne ""} {
     set gdradr(gdfile) [clock format $now -format $option(f) -gmt 1];
 }
 
+# logfile
+if {$option(l) eq ""} {
+    set option(l) $nbspgdradr(logfile);
+}
 if {$option(l) eq ""} {
     set outrootname [file rootname [file tail $gdradr(gdfile)]];
-    append logfile $outrootname ".log";
+    append logfile $outrootname $nbspgdradr(_logfext);
 } else {
     set logfile $option(l);
+    set option(k) 1;
 }
 
 if {$option(d) ne ""} {
@@ -145,6 +154,10 @@ if {$option(k) == 0} {
     file delete $logfile;
 }
 
+# Create the data file in a tmp file, then rename it at the end
+set _real_gdfile $gdradr(gdfile);
+append gdradr(gdfile) $nbspgdradr(_tmpfext);
+
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gdradr(script)] == 0} {
@@ -169,6 +182,17 @@ if {$status != 0} {
     # In case gdradr created the file.
     file delete $gdradr(gdfile);
     log_err $errmsg;
+} else {
+    file rename -force $gdradr(gdfile) ${_real_gdfile};
+    set gdradr(gdfile) ${_real_gdfile};     #in cast the post-script uses it
+}
+
+if {$nbspgdradr(latest_enable) == 1} {
+    set cwd [pwd];
+    cd [file dirname $gdradr(gdfile)];
+    file delete $nbspgdradr(latest_name);
+    file link -symbolic $nbspgdradr(latest_name) [file tail $gdradr(gdfile)];
+    cd $cwd;
 }
 
 if {[info exists gdradr(post)]} {

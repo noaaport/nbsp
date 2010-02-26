@@ -3,7 +3,7 @@
 # $Id$
 # 
 # Usage: nbspradmos [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
-#        [-f <fmt>] [-i] [-k] [-l <logfile>] [-o <outputname>]
+#        [-f <fmt>] [-i] [-k] [-l <logfile>] [-L] [-o <outputname>]
 #        [-s <devsize>] [-t <tmpdir>]
 #        [-r <rcfile> | -R <rcfilepath>] <gdfile>
 #
@@ -16,6 +16,7 @@
 # -i => interpret <gdfile> to be relative to nbspgdradr(Cdir)
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
+# -L => the <gdfile> argument is a link to the real data file
 # -o => output file name
 # -r => rcfile, searched in the standard directories
 # -R => rcfilepath, used as given
@@ -28,12 +29,12 @@
 # nbspradmap to search for the default file "radcomp.rc".
 #
 set usage {nbspradmos [-b] [-c] [-C] [-d outputdir] [-D <defs>]
-    [-f fmt] [-i] [-k] [-l <logfile>] [-o outputname]
+    [-f fmt] [-i] [-k] [-l <logfile>] [-L] [-o outputname]
     [-s <devsize>] [-t <tmpdir>]
     [-r <rcfile> | -R <rcfilepath>] <gdfile>};
 
-set optlist {b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} {o.arg ""}
-    {s.arg ""} {t.arg ""} {r.arg ""} {R.arg ""}};
+set optlist {b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} L
+    {o.arg ""} {s.arg ""} {t.arg ""} {r.arg ""} {R.arg ""}};
 
 proc log_warn s {
 
@@ -62,6 +63,10 @@ if {[file exists $initfile] == 0} {
 }
 source $initfile;
 
+# private settings
+set nbspradmos(_tmpfext) ".tmp";
+set nbspradmos(_logfext) ".log";
+
 #
 # main
 #
@@ -75,9 +80,18 @@ if {$option(b) == 1} {
 if {$argc == 0} {
     log_err $usage;
 }
+
 set gdplot2(gdfile) [lindex $argv 0];
 if {$option(i) == 1} {
     set gdplot2(gdfile) [file join $nbspgdradr(Cdir) $gdplot2(gdfile)];
+}
+
+# Get the real file if the given <gdfile> is supposed to be a link
+if {$option(L) == 1} {
+    # Do it safely
+    set pdir [file dirname $gdplot2(gdfile)];
+    set fbasename [file tail [file link $gdplot2(gdfile)]];
+    set gdplot2(gdfile) [file join $pdir $fbasename];
 }
 
 if {$option(C) == 1} {
@@ -130,10 +144,15 @@ if {$option(o) ne ""} {
     append gdplot2(devfile) "." $gdplot2(devfmt);
 }
 
+# logfile
 if {$option(l) eq ""} {
-    append logfile $outrootname ".log";
+    set option(l) $nbspradmos(logfile);
+}
+if {$option(l) eq ""} {
+    append logfile $outrootname $nbspradmos(_logfext);
 } else {
     set logfile $option(l);
+    set option(k) 1;
 }
 
 if {$option(d) ne ""} {
@@ -163,6 +182,10 @@ file delete "gemglb.nts" "last.nts";
 if {$option(k) == 0} {
     file delete $logfile;
 }
+
+# Create the img file in a tmp file, then rename it at the end
+set _real_devfile $gdplot2(devfile);
+append gdplot2(devfile) $nbspradmos(_tmpfext);
 
 set status [catch {
     source_template $option(rcfile);
@@ -197,6 +220,9 @@ if {$status != 0} {
     # In case gdplot2 created the file.
     file delete $gdplot2(devfile);
     log_err $errmsg;
+} else {
+    file rename -force $gdplot2(devfile) ${_real_devfile};
+    set gdplot2(devfile) ${_real_devfile}; 
 }
 
 if {[info exists gdplot2(post)]} {
