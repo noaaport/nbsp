@@ -19,6 +19,7 @@ bin/nbspradmapc
 bin/nbspsatmap
 bin/nbspgdradr
 bin/nbspradmos
+bin/nbspradmosl
 bin/nbsppngcvt
 bin/nbspnntpsend
 bin/nbspinsert

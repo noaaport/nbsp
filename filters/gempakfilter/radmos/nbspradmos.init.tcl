@@ -49,6 +49,18 @@ set nbspradmos(logfile)   "";
 set gdplot2(devfmt) "gif";
 set gdplot2(devsize) "";
 
+# nbspradmosl - loop
+set nbspradmosl(enable)		0;
+set nbspradmosl(program)	"gifsicle";
+# Endless loop with a 2 second delay after the last frame
+set nbspradmosl(program_preoptions)	{-l};
+set nbspradmosl(program_postoptions)	{-d 200 #-1};
+set nbspradmosl(count)	0;         # 0 means to include all images
+set nbspradmosl(globpatt) "*.gif";
+#
+set nbspradmosl(Cdir)      "/var/noaaport/data/gempak";
+set nbspradmosl(loopfilename) "nexrad_mosaic_loop.gif";
+
 # optional config file
 if {[file exists $nbspradmos(conf)]} {
     source $nbspradmos(conf);

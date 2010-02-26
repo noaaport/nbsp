@@ -46,6 +46,7 @@ make clean
 /usr/local/bin/nbspsatmap
 /usr/local/bin/nbspgdradr
 /usr/local/bin/nbspradmos
+/usr/local/bin/nbspradmosl
 /usr/local/bin/nbsppngcvt
 /usr/local/bin/nbspnntpsend
 /usr/local/bin/nbspinsert
