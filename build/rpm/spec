@@ -30,6 +30,7 @@ make clean
 /usr/local/sbin/nbspd
 /usr/local/bin/nbspcleanup
 /usr/local/bin/nbspversion
+/usr/local/bin/nbsppanic
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspradinfo

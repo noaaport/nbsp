@@ -8,6 +8,7 @@ HOURLYCONF=hourly-cleanup.conf-freebsd
 NBSPCLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
 STARTSTOPRC=startstop.rc-freebsd
+NBSPD_RC_FPATH=/usr/local/etc/rc.d/nbspd
 
 case $os in
     FreeBSD) 
@@ -27,6 +28,7 @@ case $os in
 	NBSPDSH=nbspd.sh-${flavor}
 	HOURLYCONF=hourly-cleanup.conf-generic
 	STARTCLEANCONF=start-cleanup.conf-generic
+	NBSPD_RC_FPATH=/etc/init.d/nbspd
 
 	[ $flavor = debian ] && STARTSTOPRC=startstop.rc-debian
 

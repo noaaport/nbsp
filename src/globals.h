@@ -62,6 +62,7 @@ struct nbsp_globals {
   unsigned int mspoolbdb_maxsize_per128; /* maxsize as a fraction of 128 */
   char *mspoolbdb_dbstats_logfile;   /* file to write the mspoolbdb dbstats */
   time_t mspoolbdb_dbstats_logperiod_secs;
+  char *mspoolbdb_panicfile; /* file created when bdb returns DB_RUNRECOVERY */
   char *filterdevdir;		/* directory for external filters and fifos */
   int filterserver_enable;
   char *sysfilterlist;		/* list of filters distributed with program */

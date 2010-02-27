@@ -22,6 +22,7 @@ set nbspconfdir /usr/local/etc/nbsp;
 set nbsplogdir /var/log/nbsp;
 set nbspcspooldir /var/noaaport/nbsp/cspool;
 set nbsprundir /var/run/nbsp;
+set nbspdbpanicfile /var/run/nbsp/nbspd.bdbpanic;
 
 # Execute the start cleanup script
 lappend start {
@@ -39,6 +40,12 @@ lappend start {
 # This is not needed by debian but it is needed by ubuntu
 lappend start {
   file mkdir $nbsprundir;
+}
+
+lappend stop {
+  if {[file exists $nbspdbpanicfile]} {
+    exec nbsppanic -b -r &;
+  }
 }
 
 #

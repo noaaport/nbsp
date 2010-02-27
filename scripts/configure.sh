@@ -12,4 +12,5 @@ sed \
     -e "/@HOURLYCONF@/s||$HOURLYCONF|" \
     -e "/@STARTCLEANCONF@/s||$STARTCLEANCONF|" \
     -e "/@STARTSTOPRC@/s||$STARTSTOPRC|" \
+    -e "/@NBSPD_RC_FPATH@/s||$NBSPD_RC_FPATH|" \
     Makefile.in > Makefile

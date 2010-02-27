@@ -21,6 +21,7 @@
 set nbspconfdir /usr/local/etc/nbsp;
 set nbsplogdir /var/log/nbsp;
 set nbspcspooldir /var/noaaport/nbsp/cspool;
+set nbspdbpanicfile /var/run/nbsp/nbspd.bdbpanic;
 
 # Execute the start cleanup script
 lappend start {
@@ -32,6 +33,12 @@ lappend start {
 lappend start {
   foreach f [glob -dir $nbspcspooldir -nocomplain *] {
     file delete $f;
+  }
+}
+
+lappend stop {
+  if {[file exists $nbspdbpanicfile]} {
+    exec nbsppanic -b -r &;
   }
 }
 

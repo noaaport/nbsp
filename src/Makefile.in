@@ -15,7 +15,8 @@ INSOURCES =	conf.c.in defaults.h.in
 INOBJECTS =	conf.c defaults.h
 
 SOURCES =	main.c access.c appdata.c \
-		conf.c dbenv.c dbstats.c emwin.c err.c efile.c exec.c \
+		conf.c dbenv.c dbpanic.c dbstats.c \
+		emwin.c err.c efile.c exec.c \
 		file.c filters.c framep.c init.c load.c mfile.c mcast.c \
 		nbs1s.c nbs1r.c nbspmspoolbdb.c \
 		nbsp.c nbspq.c nbspre.c npcast.c \
@@ -34,7 +35,8 @@ SOURCES =	main.c access.c appdata.c \
 		oscompat.c
 
 OBJECTS =	main.o access.o appdata.o \
-		conf.o dbenv.o dbstats.o emwin.o err.o efile.o exec.o \
+		conf.o dbenv.o dbpanic.o dbstats.o \
+		emwin.o err.o efile.o exec.o \
 		file.o filters.o framep.o init.o load.o mfile.o mcast.o \
 		nbs1s.o nbs1r.o nbspmspoolbdb.o \
 		nbsp.o nbspq.o nbspre.o npcast.o \
@@ -54,7 +56,8 @@ OBJECTS =	main.o access.o appdata.o \
 
 HEADERS =	config.h const.h common.h defaults.h globals.h \
 		access.h appdata.h \
-		conf.h dbenv.h dbstats.h emwin.h err.h efile.h exec.h \
+		conf.h dbenv.h dbpanic.h dbstats.h \
+		emwin.h err.h efile.h exec.h \
 		file.h filters.h framep.h init.h load.h mfile.h mcast.h \
 		nbs1.h nbsp.h nbspmspoolbdb.h \
 		nbspq.h nbspre.h npcast.h \

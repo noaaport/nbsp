@@ -48,13 +48,20 @@
 # D=010100 => run on the first day of the month at 1 am.
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 
-# short hand
+# Define possible types to include
+set plist_lite [list n0r]
+set plist_full [list n0r n0v n1p n1s n2r n3r \
+		ncr nvl n0s n0z n1r n1v n2s n3s net ntp nvw]
+
+# Choose which one
+set plist $plist_lite
+
+# Short hand
 set sd "nexrad_mosaic"
 
-foreach p [list n0r n0v n1p n1s n2r n3r \
-		ncr nvl n0s n0z n1r n1v n2s n3s net ntp nvw] {
+foreach p $plist {
 
-  # Create the data files for all
+  # Create the data files for all types
   schedule M/10 nbspgdradr -b -D gdpfun=${p} -c -C -d ${sd}/gem/$p
 
   # Create the images only for n0r until we have all the rc files

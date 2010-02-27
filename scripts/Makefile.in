@@ -10,10 +10,11 @@ NBSPCLEANUP =	@NBSPCLEANUP@
 HOURLYCONF =	@HOURLYCONF@
 STARTCLEANCONF = @STARTCLEANCONF@
 STARTSTOPRC = 	@STARTSTOPRC@
+NBSPD_RC_FPATH = @NBSPD_RC_FPATH@
 
 SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
 		startstop.rc-sample
-BINTOOLS =	nbspcleanup nbspversion
+BINTOOLS =	nbspcleanup nbspversion nbsppanic
 LIBTOOLS =	startstop
 LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
 DOCS =		nbspd.sh-sample
@@ -32,6 +33,11 @@ nbspcleanup: ${NBSPCLEANUP}
 
 nbspversion: nbspversion.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspversion.tcl > nbspversion
+
+nbsppanic: nbsppanic.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%NBSPD_RC_FPATH%/s##${NBSPD_RC_FPATH}# \
+	nbsppanic.tcl > nbsppanic
 
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop

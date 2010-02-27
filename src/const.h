@@ -75,8 +75,8 @@
  * spool methods - The functions in spooltype.h should be used and not
  * these constants directly.
  */
-#define SPOOLTYPE_FS	1	/* flat file system based (fsspool) */
-#define SPOOLTYPE_MBDB	2	/* memory based bdb (mspool) */
+#define SPOOLTYPE_FS	1	/* flat file system based spool (fsspool) */
+#define SPOOLTYPE_MBDB	2	/* memory based bdb spool (mspool) */
 #define SPOOLTYPE_CBDB  3	/* file backed bdb spool (cspool) */
 #define SPOOLTYPE_MCBDB  4	/* shared memory based cspool (mpool_nofile) */
 #define SPOOLTYPE_MIN_VAL 1

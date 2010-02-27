@@ -16,6 +16,7 @@
 static int f_quit = 0;
 static int f_hup = 0;
 static int f_alarm = 0;
+static int f_dbpanic = 0;	/* set by dbpanic */
 static pthread_t signal_thread_id;
 static pthread_mutex_t signal_mutex = PTHREAD_MUTEX_INITIALIZER;
 static sigset_t signal_set;
@@ -238,6 +239,22 @@ int get_alarm_flag(void){
   return(flag);
 }
 
+int get_dbpanic_flag(void){
+  /*
+   * This function is called only by the main thread, and only just before
+   * stoping, and therefore it does not need to be mutex protected.
+   */
+  int flag;
+
+  /*  pthread_mutex_lock(&signal_mutex); */
+
+  flag = f_dbpanic;
+
+  /*  pthread_mutex_unlock(&signal_mutex); */
+
+  return(flag);
+}
+
 static void set_hup_flag(void){
 
   pthread_mutex_lock(&signal_mutex);
@@ -260,6 +277,18 @@ void set_quit_flag(void){
   /*  pthread_mutex_lock(&signal_mutex); */
 
   f_quit = 1;
+
+  /*  pthread_mutex_unlock(&signal_mutex); */
+}
+
+void set_dbpanic_flag(void){
+  /*
+   * See the note in get_dbpanic_flag.
+   */
+
+  /*  pthread_mutex_lock(&signal_mutex); */
+
+  f_dbpanic = 1;
 
   /*  pthread_mutex_unlock(&signal_mutex); */
 }

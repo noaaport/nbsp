@@ -84,8 +84,8 @@ clients.
 Nbsp can be configured to use a file-backed bdb as a spool cache.
 If enabled, the spool cache exsists in addition to (not instead of)
 the ordinary file-based spool. The idea is that the filters (and other
-parts of the srver) first look in the cache for any file, and if it is not
-found. then look in the file system spool.
+parts of the server) first look in the cache for any file, and if it is not
+found, then look in the file system spool.
 
 The file-backed bdb spool cache is enabled by setting
 
@@ -124,7 +124,7 @@ Shared memory bdb spool cache - (not yet operational)
 ===============================
 
 This is similar to the file-backed bdb spool, but it resides entirely
-in memory and it is not file-backed. Howerver, in contrast to the
+in memory and it is not file-backed. However, in contrast to the
 private memory based spool described earlier, this one uses
 shared memory so that it is accessible by the filters as well.
 Again, if enabled, this cache exists in addition to the ordinary

@@ -98,6 +98,9 @@
 #define DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS \
 	MSPOOLBDB_DBSTATS_LOGPERIOD_SECS
 
+#define CONFOPT_MSPOOLBDB_PANICFILE	@counter@
+#define DEFVAL_MSPOOLBDB_PANICFILE	MSPOOLBDB_PANICFILE
+
 #define CONFOPT_DEVDIR			@counter@
 #define DEFVAL_DEVDIR			NBSP_FILTER_DEVDIR
 
@@ -426,6 +429,8 @@ static struct confoption_st confoptions[] = {
   {"mspoolbdb_dbstats_logperiod_secs",
 	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS},
+  {"mspoolbdb_panicfile", CONFOPT_MSPOOLBDB_PANICFILE,
+	TCL_LINK_STRING, NULL, 0},
   {"devdir", CONFOPT_DEVDIR, TCL_LINK_STRING, NULL, 0},
   {"filterserver_enable", CONFOPT_FILTERSERVER_ENABLE, TCL_LINK_INT, NULL,
 	DEFVAL_FILTERSERVER_ENABLE},
@@ -625,6 +630,7 @@ int configure(void){
 	CONFOPT_MSPOOLBDB_DBSTATS_LOGFILE);
   setoptval(&g.mspoolbdb_dbstats_logperiod_secs, confoptions,
 	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS);
+  setoptval(&g.mspoolbdb_panicfile, confoptions, CONFOPT_MSPOOLBDB_PANICFILE);
   setoptval(&g.filterdevdir, confoptions, CONFOPT_DEVDIR);
   setoptval(&g.filterserver_enable, confoptions, CONFOPT_FILTERSERVER_ENABLE);
   setoptval(&g.sysfilterlist, confoptions, CONFOPT_SYSFILTERLIST);
@@ -802,6 +808,7 @@ void print_confoptions(void){
 	g.mspoolbdb_dbstats_logfile);
   fprintf(stdout, "mspoolbdb_dbstats_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.mspoolbdb_dbstats_logperiod_secs);
+  fprintf_str(stdout, fmt, "mspoolbdb_panicfile", g.mspoolbdb_panicfile);
   fprintf_str(stdout, fmt, "filterdevdir", g.filterdevdir);
   fprintf(stdout, "filterserver_enable %d\n", g.filterserver_enable); 
   fprintf_str(stdout, fmt, "sysfilterlist", g.sysfilterlist);
@@ -969,6 +976,7 @@ int validate_configuration(void){
   VALIDATE_STR(g.mspoolbdb_dbstats_logfile, "mspoolbdb_dbstats_logfile");
   VALIDATE_PARAM_L(g.mspoolbdb_dbstats_logperiod_secs, 0,
 	"mspoolbdb_dbstats_logperiod_secs");
+  VALIDATE_STR(g.mspoolbdb_panicfile, "mspoolbdb_panicfile");
   VALIDATE_STR(g.filterdevdir, "filterdevdir");
   VALIDATE_PARAMETER(g.filterserver_enable, 0, 1, "filterserver_enable");
   /* char* sysfilterlist, emwinfilter, emwinfilter_fifo can be NULL/empty */

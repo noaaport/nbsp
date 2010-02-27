@@ -16,6 +16,7 @@
 #include "err.h"
 #include "const.h"
 #include "dbstats.h"
+#include "dbpanic.h"
 #include "libspoolbdb/mspoolbdb.h"
 #include "spooltype.h"
 #include "nbspmspoolbdb.h"
@@ -77,6 +78,9 @@ int nbsp_mspoolbdb_create(void){
 			    g.mspoolbdb_maxsize_per128,
 			    g.mspoolbdb_ndb,
 			    g.mspoolbdb_nslots);
+
+  if(status == 0)
+    status = mspoolbdb_set_event_notify(g.mspoolbdb, nbsp_db_event_callback);
 
   if(status != 0){
     log_errx("Cannot create memory spool bdb. %s", db_strerror(status));

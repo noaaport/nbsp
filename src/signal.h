@@ -14,6 +14,8 @@ int init_signals_thread(void);
 int get_quit_flag(void);
 int get_hup_flag(void);
 int get_alarm_flag(void);
+int get_dbpanic_flag(void);
 void set_quit_flag(void);
+void set_dbpanic_flag(void);
 
 #endif

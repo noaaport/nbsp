@@ -35,6 +35,7 @@
 #include "efile.h"
 #include "nbspre.h"
 #include "dbenv.h"
+#include "dbpanic.h"
 #include "slave.h"
 #include "httpd.h"
 #include "conf.h"
@@ -97,6 +98,8 @@ void init_globals(void){
 
   g.mspoolbdb_dbstats_logfile = MSPOOLBDB_DBSTATS_LOGFILE;
   g.mspoolbdb_dbstats_logperiod_secs = MSPOOLBDB_DBSTATS_LOGPERIOD_SECS;
+
+  g.mspoolbdb_panicfile = MSPOOLBDB_PANICFILE;
 
   g.filterdevdir = NBSP_FILTER_DEVDIR;
   g.filterserver_enable = FILTERSERVER_ENABLE;
@@ -283,6 +286,8 @@ void cleanup(void){
   free_nbsp_regex();
 
   cleanup_files();
+
+  nbsp_bdbpanic();
 
   log_info("Stopped.");
   (void)exec_stopscript();

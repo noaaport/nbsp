@@ -161,6 +161,14 @@
 #define MSPOOLBDB_DBSTATS_LOGFILE "/var/noaaport/nbsp/stats/nbspd.mdbstats"
 #define MSPOOLBDB_DBSTATS_LOGPERIOD_SECS 60
 
+/*
+ * When the db reports a DB_RUNRECOVERY error, the nbsp library sets the
+ * quit and panic flags. When the cleanup() routine detects the panic flag,
+ * it creates this file, which the start-stop script can read and use to
+ * take appropriate action.
+ */
+#define MSPOOLBDB_PANICFILE "/var/run/nbsp/nbspd.bdbpanic"
+
 /* Directory for putting the fifos and external filters */
 #define NBSP_FILTER_DEVDIR	"/var/noaaport/nbsp/dev"
 

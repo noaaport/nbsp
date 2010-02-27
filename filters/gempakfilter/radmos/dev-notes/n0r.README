@@ -14,7 +14,11 @@ see on National Weather Service page. Please note: We do not include
 a concept of missing data or "no-data". So spots with beem blockage
 in the mountains or out away from the CONUS are just "black".''
 
-2) The file "gempak_colors4.gif" comes from
+2) The file precip.gif comes from
+
+	http://weather.noaa.gov/radar/radinfo/radinfo.html
+
+3) The file "gempak_colors4.gif" comes from
 
 	http://www.mesoscale.ws/gempak/
 
@@ -44,8 +48,10 @@ background="101";
 blue="27;26;25"
 green="21;22;23"
 yellow="19;18;17"
-red="16;15;14;7;29"
+red="16;15;14"
+purple="7;29"
 white="31"
 #
 FINT = 0;5;10;15;20;25;30;35;40;45;50;55;60;65;70;75
-FLINE = ${background};${background};${blue};${green};${yellow};${red};${white}
+FLINE = ${background};${background};${blue};${green};${yellow};\
+        ${red};${purple};${white}

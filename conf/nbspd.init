@@ -23,6 +23,10 @@ slave eval {
     set spooldir	"/var/noaaport/nbsp/spool";
     set infeedfifo	"/var/run/nbsp/infeed.fifo"
 
+    # These are used by the nbsppanic script
+    set bdbdir		"/var/noaaport/nbsp/db";
+    set rundir          "/var/run/nbsp";
+
     # The optional configuration file
     set _conf "/usr/local/etc/nbsp/nbspd.conf";
     if {[file exists ${_conf}]} {
@@ -43,5 +47,8 @@ set nbspd(slavestatsfile)       [slave eval {return $slavestatsfile}];
 
 set nbspd(spooldir)		[slave eval {return $spooldir}];
 set nbspd(infeedfifo)		[slave eval {return $infeedfifo}];
+
+set nbspd(bdbdir)		[slave eval {return $bdbdir}];
+set nbspd(rundir)		[slave eval {return $rundir}];
 
 interp delete slave;
