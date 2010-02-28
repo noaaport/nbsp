@@ -87,7 +87,7 @@ foreach k [list spool rst da metar ua ws grib pan msg track nntp gp ldm nbsp] {
 set filterlist [join $filterlist " "];
 
 set spooltype $feature(spooltype);
-if {$spooltype == 2} {
+if {($spooltype == 2) || ($spooltype == 3)} {
     set servertype 1;
     set filterserver_enable 0;
     set netfilter_enable 0;

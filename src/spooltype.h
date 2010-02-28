@@ -9,7 +9,8 @@
 #define SPOOLTYPE_H
 
 int spooltype_fsspool(void);  /* file system */
-int spooltype_mspool(void);   /* memory based private spool */
+int spooltype_mspool(void);   /* in-memory private spool (fs or mem dbenv) */
+int spooltype_mspool_nodbhome(void);   /* mem dbenv; pure in-memory db */
 int spooltype_cspool(void);   /* shared bdb with cache (fs backed or mmaped) */
 int spooltype_cspool_nofile(void); /* mmaped cspool  */
 

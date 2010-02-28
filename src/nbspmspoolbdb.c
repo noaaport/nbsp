@@ -72,8 +72,24 @@ static int get_fpath_key(char *fpath, char *spoolbdb_fkey){
 int nbsp_mspoolbdb_create(void){
 
   int status;
+  char *dbhome = NULL;	/* a pure in-memory mspool by default */
+  mode_t dbenv_mode = 0;
+
+  if(spooltype_mspool() == 0){
+    log_errx("Invalid value of spooltype in nbsp_mspoolbdb_create()");
+    return(-1);
+  }
+
+  if(spooltype_mspool_nodbhome() == 0){
+    /*
+     * An mspool with an fs based dbenv.
+     */
+    dbhome = g.cspoolbdb_dir;
+    dbenv_mode = g.cspoolbdb_mode;
+  }
 
   status = mspoolbdb_create(&g.mspoolbdb,
+			    dbhome, dbenv_mode,
 			    g.mspoolbdb_dbcache_mb,
 			    g.mspoolbdb_maxsize_per128,
 			    g.mspoolbdb_ndb,

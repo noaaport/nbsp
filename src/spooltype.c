@@ -17,17 +17,25 @@ int spooltype_fsspool(void){
   return(0);
 }
 
-int spooltype_cspool(void){
+int spooltype_mspool(void){
 
-  if((g.spooltype == SPOOLTYPE_CBDB) || (g.spooltype == SPOOLTYPE_MCBDB))
+  if((g.spooltype == SPOOLTYPE_MBDB) || (g.spooltype == SPOOLTYPE_FMBDB))
     return(1);
 
   return(0);  
 }
 
-int spooltype_mspool(void){
+int spooltype_mspool_nodbhome(void){
 
   if(g.spooltype == SPOOLTYPE_MBDB)
+    return(1);
+
+  return(0);    
+}
+
+int spooltype_cspool(void){
+
+  if((g.spooltype == SPOOLTYPE_CBDB) || (g.spooltype == SPOOLTYPE_MCBDB))
     return(1);
 
   return(0);  

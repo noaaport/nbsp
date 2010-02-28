@@ -75,12 +75,13 @@
  * spool methods - The functions in spooltype.h should be used and not
  * these constants directly.
  */
-#define SPOOLTYPE_FS	1	/* flat file system based spool (fsspool) */
-#define SPOOLTYPE_MBDB	2	/* memory based bdb spool (mspool) */
-#define SPOOLTYPE_CBDB  3	/* file backed bdb spool (cspool) */
-#define SPOOLTYPE_MCBDB  4	/* shared memory based cspool (mpool_nofile) */
+#define SPOOLTYPE_FS	1    /* flat file system based spool (fsspool) */
+#define SPOOLTYPE_MBDB	2    /* memory based bdb spool (mspool) (no dbhome) */
+#define SPOOLTYPE_FMBDB	3    /* mspool with file-based dbenv (dbhome) */
+#define SPOOLTYPE_CBDB  4    /* file backed bdb spool (cspool) */
+#define SPOOLTYPE_MCBDB  5   /* shared memory based cspool (mpool_nofile) */
 #define SPOOLTYPE_MIN_VAL 1
-#define SPOOLTYPE_MAX_VAL 4
+#define SPOOLTYPE_MAX_VAL 5
 
 /*
  * Logfiles that are meant to be read by other programs will be written

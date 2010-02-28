@@ -7,7 +7,7 @@ directory that holds the raw data files that are received and later
 sent to the filter and network server for processing and distribution.
 The file is divided in the following sections
 
-	Private memory based bdb spool
+	Private memory based bdb spool	
 	File-backed bdb spool cache    (not yet operational)
 	Shared memory bdb spool cache  (not yet operational)
 
@@ -47,9 +47,11 @@ private to the server and it is not accessible by the filters.
 
 The recommended way to enable the memory bdb spool is:
 
-1) Set the variable "feature(spooltype)" 
+1) Set the variable "feature(spooltype)"  (see note below for the difference)
 
 	set feature(spooltype) 2
+or
+	set feature(spooltype) 3
 
 in features.conf.
 
@@ -70,6 +72,14 @@ The above steps enable these two filters properly, but the relevant
 lines in the file "nbspd-mspoolbdb.conf" (renamed "site/nbspd.conf")
 can be commented to disable them as well if desired.
 
+NOTE: The difference between the settings 2 and 3 is that in the first case
+      the bsd resides entire in memory. It is a truly memory based bdb.
+      In the second case (setting 3), the db is in memory but the bdb
+      administrative "bdb enviroment" files are reside in the file system.
+      This second setting could result in slightly slower performance,
+      but it is less prone to the db_recovery type of errors to which
+      the pure in-memory bdb is susceptible. 
+
 File-backed bdb spool cache - (not yet operational)
 =============================
 
@@ -89,17 +99,17 @@ found, then look in the file system spool.
 
 The file-backed bdb spool cache is enabled by setting
 
-	set feature(spooltype) 3
+	set feature(spooltype) 4
 
 in the features.conf file. The default parametes for the spool cache are 
 
-### set cspoolbdb_dbcache_mb	150;
+### set cspoolbdb_dbcache_mb	180;
 ### set cspoolbdb_ndb		4;
 ### set cspoolbdb_nslots	4;
 
 These define ndb = 4 databases, with each database configured such that it
-can hold the files received in about 3 minutes (150 MB).
-This requires 600 MB + 20% (overhead) of free memory, to hold a cache
+can hold the files received in about 3 minutes (180 MB).
+This requires 720 MB + 20% (overhead) of free memory, to hold a cache
 of 12 minutes of data. The "nslots = 4" parameter configure 4 reading buffers
 for retrieving the data from the db to send it to the nbs1 network clients.
 Since there is only one reader, the network server, nslots can be set to 1.
@@ -132,7 +142,7 @@ file-system based spool.
 
 This configuration is enabled by setting
 
-	set feature(spooltype) 4
+	set feature(spooltype) 5
 
 in features.conf. In addition, in the cspoolbdb.conf file, the variable
 ``cspoolbdb_mpool_nofile'' must be set to 1:
