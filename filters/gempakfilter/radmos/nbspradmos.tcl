@@ -253,7 +253,8 @@ if {$nbspradmos(legend_enable) == 1} {
     set _1 $gdplot2(devfile);
     set _2 $option(legendfile);
     set _3 ${_real_devfile};
-    eval $nbspradmos(legend_cmd);
+    eval exec $nbspradmos(legend_cmd);
+    file delete $gdplot2(devfile);
 } else {
     file rename -force $gdplot2(devfile) ${_real_devfile};
 }

@@ -50,6 +50,12 @@ set nbspradmos(logfile)   "";
 #
 set gdplot2(devfmt) "gif";
 set gdplot2(devsize) "";
+#
+# Color Legend
+set nbspradmos(legend_enable) 1;
+set nbspradmos(legend_dir) [file join $common(sharedir) "defaults" "gif"];
+set nbspradmos(legend_file) "radmos.n0r.legend.gif";
+set nbspradmos(legend_cmd) {gifsicle ${_1} ${_2} | gifsicle -U #1 -o ${_3}};
 
 # nbspradmosl - loop
 set nbspradmosl(enable)		1;
