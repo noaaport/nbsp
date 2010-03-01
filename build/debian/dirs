@@ -14,5 +14,7 @@ usr/local/libexec/nbsp/tclgempak
 usr/local/libexec/nbsp/tclmetar
 usr/local/libexec/nbsp/tclupperair
 usr/local/man/man1
+usr/local/share/nbsp
+usr/local/share/nbsp/dist
 usr/local/share/doc/nbsp
 usr/local/share/doc/nbsp/radmap

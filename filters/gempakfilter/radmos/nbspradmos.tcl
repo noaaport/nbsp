@@ -4,15 +4,16 @@
 # 
 # Usage: nbspradmos [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
 #        [-f <fmt>] [-i] [-k] [-l <logfile>] [-L] [-o <outputname>]
-#        [-s <devsize>] [-t <tmpdir>]
-#        [-r <rcfile> | -R <rcfilepath>] <gdfile>
+#        [-r <rcfile> | -R <rcfilepath>]
+#	 [-u <legendfile> | -U <legendfilepath>]
+#        [-s <devsize>] [-t <tmpdir>] <gdfile>
 #
 # -a => run anyway; override the setting in nbspradmos(enable)
 # -b => background mode
 # -c => create the <outputdir>
 # -C => cd to <workdir> defined by nbspradmos(Cdir)
 # -d => output directory
-# -D => key=value,... comma separated list of gdplot2(key)=var pairs
+# -D => key=value,... comma separated list of gdplot2(key)=val pairs
 # -f => output file format (gif, ...)
 # -i => interpret <gdfile> to be relative to nbspgdradr(Cdir)
 # -k => keep the log file (the default is to delete it)
@@ -24,6 +25,8 @@
 # -s => device size
 # -t => cd to tmp directory (all partial paths are still relative
 #       to the current directory.
+# -u => use this legend file (in the nbspradmos(legend_dir) directory)
+# -U => use this legend file, as given
 #
 # This program ends up calling gdplot2.
 # If the <rcfile> is not specified, the program uses the same logic as
@@ -31,11 +34,13 @@
 #
 set usage {nbspradmos [-a] [-b] [-c] [-C] [-d outputdir] [-D <defs>]
     [-f fmt] [-i] [-k] [-l <logfile>] [-L] [-o outputname]
-    [-s <devsize>] [-t <tmpdir>]
-    [-r <rcfile> | -R <rcfilepath>] <gdfile>};
+    [-r <rcfile> | -R <rcfilepath>]
+    [-u <legendfile> | -U <legendfilepath>]    
+    [-s <devsize>] [-t <tmpdir>] <gdfile>};
 
 set optlist {a b c C {d.arg ""} {D.arg ""} {f.arg ""} i k {l.arg ""} L
-    {o.arg ""} {s.arg ""} {t.arg ""} {r.arg ""} {R.arg ""}};
+    {o.arg ""} {r.arg ""} {R.arg ""} {s.arg ""} {t.arg ""}
+    {u.arg ""} {U.arg ""}};
 
 proc log_warn s {
 
@@ -103,6 +108,7 @@ if {$option(C) == 1} {
     cd $nbspradmos(Cdir);
 }
 
+# Get the rc file
 if {$option(R) eq ""} {
     # Search for the rcfile 
     source $common(filterslib);
@@ -115,10 +121,25 @@ if {$option(R) eq ""} {
 } else {
     set option(rcfile) $option(R);
 }
-
+#
 # Check that it exists
+#
 if {[file exists $option(rcfile)] == 0} {
     log_err "$option(rcfile) not found.";
+}
+
+# Similar for legend file
+if {$option(U) ne ""} {
+    set option(legendfile) $option(U);
+} else {
+    if {$option(u) eq ""} {
+	set option(u) $nbspradmos(legend_file);
+    }
+    set option(legendfile) [file join $nbspradmos(legend_dir) $option(u)];
+}
+if {($nbspradmos(legend_enable) == 1) && \
+	([file exists $option(legendfile)] == 0)} {
+    log_err "$option(legendfile) not found.";
 }
 
 # Definitions - Override any gdplot2() settings in conf file.
@@ -225,10 +246,18 @@ if {$status != 0} {
     # In case gdplot2 created the file.
     file delete $gdplot2(devfile);
     log_err $errmsg;
+}
+
+# Add the legend if that option is enabled
+if {$nbspradmos(legend_enable) == 1} {
+    set _1 $gdplot2(devfile);
+    set _2 $option(legendfile);
+    set _3 ${_real_devfile};
+    eval $nbspradmos(legend_cmd);
 } else {
     file rename -force $gdplot2(devfile) ${_real_devfile};
-    set gdplot2(devfile) ${_real_devfile}; 
 }
+set gdplot2(devfile) ${_real_devfile}; 
 
 if {[info exists gdplot2(post)]} {
     eval $gdplot2(post);

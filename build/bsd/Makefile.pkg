@@ -42,12 +42,14 @@ install: build
 .if ${OS} == FreeBSD || ${OS} == NetBSD
 	install -d pkg
 	cd pkg; install -d `cat ../dirs`
-	cd ../..; ${MAKE} DESTDIR=`pwd`/build/bsd/pkg PKGCONFDIR=/dist install
+	cd ../..; ${MAKE} DESTDIR=`pwd`/build/bsd/pkg \
+		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
 .elif ${OS} == OpenBSD
 	install -d pkg/${PREFIX}
 	dirslist=`pwd`/dirs; cd pkg/${PREFIX}; install -d `cat $$dirslist`
 	cd ../..; \
-	${MAKE} PKGBUILDDIR=`pwd`/build/bsd/pkg PKGCONFDIR=/dist install
+	${MAKE} PKGBUILDDIR=`pwd`/build/bsd/pkg \
+		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
 .endif
 
 package: install

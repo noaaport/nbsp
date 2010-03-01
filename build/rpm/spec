@@ -260,6 +260,7 @@ make clean
 /usr/local/etc/nbsp/dist/logrotate.conf-sample
 /usr/local/etc/nbsp/dist/startstop.rc-sample
 /usr/local/etc/nbsp/dist/start-cleanup.conf-sample
+/usr/local/share/nbsp/dist/radmos-share.tgz
 /usr/local/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample

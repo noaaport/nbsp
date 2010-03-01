@@ -49,8 +49,11 @@ dirs="/var/noaaport/nbsp
 /usr/local/etc/nbsp/rc.d/pan
 /usr/local/etc/nbsp/rc.d/grib
 /usr/local/etc/nbsp/rc.d/net
+/usr/local/share/nbsp/defaults
+/usr/local/share/nbsp/site
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
+
 
 for d in $dirs
 do
@@ -58,10 +61,11 @@ do
 done
 
 #
-# install optional files from doc directory
+# install optional files from doc directory, templates, etc
 #
 docdir=/usr/local/share/doc/nbsp
 confdir=/usr/local/etc/nbsp
+sharedir=/usr/local/share/nbsp
 rcdir=/usr/local/etc/rc.d
 nexraddir=/var/noaaport/data/digatmos/nexrad
 
@@ -90,6 +94,15 @@ do
 done
 
 for file in *-templates.tgz
+do
+  tar -C ../defaults -xzf $file
+done
+
+#
+# shared files
+#
+cd $sharedir/dist
+for file in *-share.tgz
 do
   tar -C ../defaults -xzf $file
 done

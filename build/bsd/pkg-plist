@@ -233,6 +233,7 @@ etc/nbsp/dist/scheduler.conf-sample
 etc/nbsp/dist/recover.conf-sample
 etc/nbsp/dist/startstop.rc-sample
 etc/nbsp/dist/start-cleanup.conf-sample
+share/nbsp/dist/radmos-share.tgz
 man/man1/nbspd.1.gz
 share/doc/nbsp/LICENSE
 share/doc/nbsp/nbspd.sh-sample

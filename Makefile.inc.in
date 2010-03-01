@@ -6,6 +6,7 @@ PKGNAME = nbsp
 # This is for manipulation by (rpm style) packaging tools
 PKGBUILDDIR =
 PKGCONFDIR =
+PKGSHAREDIR =
 
 #
 # These directories are assumed to exist
@@ -16,6 +17,7 @@ DESTDIR = ${PKGBUILDDIR}/${PREFIX}
 BINDIR = ${DESTDIR}/bin
 SBINDIR = ${DESTDIR}/sbin
 CONFDIR = ${DESTDIR}/etc
+SHAREDIR = ${DESTDIR}/share
 DOCDIR = ${DESTDIR}/share/doc
 MANDIR = ${DESTDIR}/man
 LIBEXECDIR = ${DESTDIR}/libexec
@@ -27,5 +29,6 @@ MYMANDIR = ${MANDIR}/man${MANEXT}
 #
 MYDOCDIR = ${DOCDIR}/${PKGNAME}
 MYCONFDIR = ${CONFDIR}/${PKGNAME}${PKGCONFDIR}
+MYSHAREDIR = ${SHAREDIR}/${PKGNAME}${PKGSHAREDIR}
 MYLIBEXECDIR = ${LIBEXECDIR}/${PKGNAME}
 RADMAPDOCDIR = ${MYDOCDIR}/radmap

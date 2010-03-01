@@ -50,7 +50,8 @@ install: build
 	rm -r -f pkg
 	install -d pkg
 	cd pkg  && install -d `cat ../dirs`
-	cd ../..; ${MAKE} PKGBUILDDIR=${BuildRoot} PKGCONFDIR=/dist install
+	cd ../..; ${MAKE} PKGBUILDDIR=${BuildRoot} \
+		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
 
 package: ${specfile}
 	rpmbuild -bb ${specfile}

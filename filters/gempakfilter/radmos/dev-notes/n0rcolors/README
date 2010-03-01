@@ -1,0 +1,10 @@
+With the information from the parent dir, "n0r.colors.txt" was
+prepared, and processed with n0r.colors.awk to produce
+n0r.colors.html. A screenshot of that page then produced n0r.colors.{png,gif}
+which is the basis for the color legends used in the scripts, via gifsicle:
+
+n0rmap="nexrad_mosaic.gif";
+n0rlegend="n0r.colors.gif"
+output="n0r.gif"
+#
+gifsicle $n0rmap $n0rlegend | gifsicle -U "#1" > $output  (man gifsicle)

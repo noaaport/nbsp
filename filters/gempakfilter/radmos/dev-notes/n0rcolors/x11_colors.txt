@@ -1,0 +1,11 @@
+blue = aqua, deepskyblue, blue
+green = lawngreen, limegreen, green
+yellow = yellow, gold, orange
+red = red, firebrick, brown
+purple = magenta, darkviolet
+
+blue = 00ffff, 00bfff, 0000ff
+green = 7cfc00, 32cd32, 008000
+yelllow = ffff00, ffd700, ffa500
+red = ff0000, b22222, a52a2a
+purple = ff00ff, 9400d3

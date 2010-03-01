@@ -499,7 +499,6 @@ void slave_stats_report(struct slave_element_st *slave){
    * This is a utility function for the slave threads.
    * If the threads use the same file for logging, they must synchronize
    * the access, or leave it to fopen().
-   * This function is called by slave_stats_update_packets().
    */
   time_t now;
   FILE *f;
@@ -522,8 +521,7 @@ void slave_stats_report(struct slave_element_st *slave){
   /*  now = time(NULL); */
   fprintf(f, "%s %s" " %" PRIuMAX " %u" " %" PRIuMAX " %u %u %.1g"
 	  " %" PRIuMAX " %u %u %.1g\n",
-	  slave->mastername, slave->masterport,
-	  (uintmax_t)now,
+	  slave->mastername, slave->masterport, (uintmax_t)now,
 	  slave->stats.connect_errors,
 	  (uintmax_t)slave->stats.ctime,
 	  slave->stats.errors_ctime,

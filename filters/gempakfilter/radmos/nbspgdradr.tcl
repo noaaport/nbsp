@@ -4,7 +4,7 @@
 # 
 # Usage: nbspgdradr [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
 #        [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
-#        [-t <tmpdir>] [-r <rcfile> | -R <rcfilepath>]
+#        [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]
 #
 # -a => run anyway; override the setting in nbspgdradr(enable)
 # -b => background mode
@@ -29,10 +29,11 @@
 # loads the nbspradmos.conf file).
 #
 set usage {nbspgdradr [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
-    [-f <outputnamefmt> | -o <outputname>]
-    [-k] [-l <logfile>] [-t <tmpdir>] [-r <rcfile> | -R <rcfilepath>]};
+    [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
+    [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]};
+
 set optlist {a b c C {d.arg ""} {D.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
-    {t.arg ""} {r.arg ""} {R.arg ""}};
+    {r.arg ""} {R.arg ""} {t.arg ""}};
 
 proc log_warn s {
 

@@ -30,6 +30,7 @@ set common(localconfdirs) [list [file join $common(confdir) "defaults"] \
 ##
 set common(rcdir)	[file join $common(confdir) "rc.d"];
 set common(libdir)	"/usr/local/libexec/nbsp";
+set common(sharedir)	"/usr/local/share/nbsp";
 set common(locallibdir)	[file join $common(libdir) "site"];
 set common(datadir)	"/var/noaaport/data";
 set common(archivedatadir) "/var/noaaport/archive/data";

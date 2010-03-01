@@ -25,7 +25,7 @@ set _gdplot2(title) "14/-2/n0r - [clock format [clock seconds] -gmt 1]";
 #
 set _gdplot2(colors) "101=255:255:255";
 
-# Override with the conf file settings
+# Override with the conf file settings (or -D defines)
 foreach _k [list devfmt devsize \
 	gdpfun garea proj type fint fline gdattim title colors] {
     if {[info exists gdplot2($_k)] == 0} {
@@ -34,7 +34,8 @@ foreach _k [list devfmt devsize \
 }
 
 #
-# Any redefinition of gdplot2() here will override the conf file settings
+# Any redefinition of gdplot2() here will override the conf file settings and
+# -D defines.
 #
 
 
