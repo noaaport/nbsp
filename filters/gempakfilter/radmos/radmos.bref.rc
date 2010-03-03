@@ -19,7 +19,11 @@ set _gdplot2(type) "F";
 set _gdplot2(fint) "0;5;10;15;20;25;30;35;40;45;50;55;60;65;70;75";
 set _gdplot2(fline) "101;101;${blue};${green};${yellow};${red};${white}";
 set _gdplot2(gdattim) "last";
-set _gdplot2(title) "14/-2/n0r - [clock format [clock seconds] -gmt 1]";
+# The braces delay evaluation until the script is sent to gdplot, and if
+# gdpfun is redefined by -D, then gdplot(title) will be reset as well.
+set _gdplot2(title) \
+	{14/-2/$gdplot2(gdpfun) - [clock format [clock seconds] -gmt 1]};
+
 #
 # In Gempak, 101 is the background color. This sets it to white.
 #

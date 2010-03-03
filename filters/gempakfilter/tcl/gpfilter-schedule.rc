@@ -49,12 +49,12 @@
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 
 # Define possible types to include
-set plist_lite [list n0r]
-set plist_full [list n0r n0v n1p n1s n2r n3r \
-		ncr nvl n0s n0z n1r n1v n2s n3s net ntp nvw]
+set plist_bref [list n0r n1r n2r n3r n0z]
+set plist_full [list n0r n1r n2r n3r n0z \
+	n0v n1v ncr n1s net nvw n0s n1s nvl n2s n3s nvl n1p ntp]
 
 # Choose which one
-set plist $plist_lite
+set plist $plist_bref
 
 # Short hand
 set sd "nexrad_mosaic"
@@ -64,10 +64,9 @@ foreach p $plist {
   # Create the data files for all types
   schedule M/10 nbspgdradr -b -D gdpfun=${p} -c -C -d ${sd}/gem/$p
 
-  # Create the images only for n0r until we have all the rc files
-  if {$p eq "n0r"} {
-    schedule M/10 nbspradmos -b -c -C -d ${sd}/img/$p -r radmos.${p}.rc \
-	-i -L ${sd}/gem/${p}/latest
+  # Create the images and loops
+    schedule M/10 nbspradmos -b -D gdpfun=${p} -c -C -d ${sd}/img/$p \
+	-r radmos.bref.rc -u radmos.bref.legend.gif -i -L ${sd}/gem/${p}/latest
 
     schedule M/10 nbspradmosl -b -c -C -d ${sd}/loop -o ${p}.gif \
 	-i ${sd}/img/$p

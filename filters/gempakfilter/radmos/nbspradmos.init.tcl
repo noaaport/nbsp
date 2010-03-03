@@ -43,7 +43,7 @@ set nbspradmos(localconfdirs) $common(localconfdirs);
 #
 set nbspradmos(enable)	  1;
 set nbspradmos(rcsubdir)  [file join "gdplot2" "rad"];
-set nbspradmos(rcfile)    "radmos.n0r.rc";
+set nbspradmos(rcfile)    "radmos.bref.rc";
 set nbspradmos(Cdir)      "/var/noaaport/data/gempak";
 set nbspradmos(logfile)   "";
 # set nbspradmos(logfile)   "/var/log/nbsp/nbspradmos.log";
@@ -54,7 +54,7 @@ set gdplot2(devsize) "";
 # Color Legend
 set nbspradmos(legend_enable) 1;
 set nbspradmos(legend_dir) [file join $common(sharedir) "defaults" "gif"];
-set nbspradmos(legend_file) "radmos.n0r.legend.gif";
+set nbspradmos(legend_file) "radmos.bref.legend.gif";
 set nbspradmos(legend_cmd) {gifsicle ${_1} ${_2} | gifsicle -U #1 -o ${_3}};
 
 # nbspradmosl - loop

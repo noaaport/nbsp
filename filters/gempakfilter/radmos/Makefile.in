@@ -24,14 +24,14 @@ INITSOURCES =	nbspradmos.init.tcl
 INITTARGET =	nbspradmos.init
 
 TMPLSOURCES1 =	gdradr.rc
-TMPLSOURCES2 =	radmos.n0r.rc
+TMPLSOURCES2 =	radmos.bref.rc
 TMPLDIR1 =	gdradr
 TMPLDIR2 =	gdplot2/rad
 TMPLPDIRS =	gdradr gdplot2
 #
 TMPLTARGET =	radmos-templates.tgz
 
-SHARESOURCES1 =	radmos.n0r.legend.gif
+SHARESOURCES1 =	radmos.bref.legend.gif
 SHAREDIR1 =	gif
 SHAREDIRS =	gif
 SHARETARGET =	radmos-share.tgz
@@ -83,4 +83,5 @@ install: ${TARGET}
 
 clean:
 	rm -f *~ Makefile ${TARGET}
-	rm -rf ${TMPLPDIRS}
+	rm -rf ${TMPLPDIRS} ${SHAREDIRS}
+
