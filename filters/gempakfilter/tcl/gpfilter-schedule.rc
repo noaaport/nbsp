@@ -61,8 +61,8 @@ set sd "nexrad_mosaic"
 
 foreach p $plist {
 
-  # Create the data files for all types
-  schedule M/10 nbspgdradr -b -D gdpfun=${p} -c -C -d ${sd}/gem/$p
+  # Create the data files for all types (and create the latest link)
+  schedule M/10 nbspgdradr -b -D gdpfun=${p} -c -C -d ${sd}/gem/$p -L latest
 
   # Create the images and loops
     schedule M/10 nbspradmos -b -D gdpfun=${p} -c -C -d ${sd}/img/$p \
@@ -70,5 +70,4 @@ foreach p $plist {
 
     schedule M/10 nbspradmosl -b -c -C -d ${sd}/loop -o ${p}.gif \
 	-i ${sd}/img/$p
-  }
 }

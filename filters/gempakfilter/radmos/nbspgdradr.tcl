@@ -4,7 +4,7 @@
 # 
 # Usage: nbspgdradr [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
 #        [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
-#        [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]
+#	 [-L <latestname>] [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]
 #
 # -a => run anyway; override the setting in nbspgdradr(enable)
 # -b => background mode
@@ -15,6 +15,7 @@
 # -f => interpret <outputnamefmt> as a format string for clock seconds
 # -k => keep the log file (the default is to delete it)
 # -l => use the given logfile (implies -k).
+# -L => create the "latest" link
 # -o => outputname
 # -r => rc file, searched in the standard directories
 # -R => rc file path, used as given
@@ -30,10 +31,10 @@
 #
 set usage {nbspgdradr [-a] [-b] [-c] [-C] [-d <outputdir>] [-D <defs>]
     [-f <outputnamefmt> | -o <outputname>] [-k] [-l <logfile>]
-    [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]};
+    [-L <latestname>] [-r <rcfile> | -R <rcfilepath>] [-t <tmpdir>]};
 
 set optlist {a b c C {d.arg ""} {D.arg ""} {f.arg ""} {o.arg ""} k {l.arg ""}
-    {r.arg ""} {R.arg ""} {t.arg ""}};
+    {L.arg ""} {r.arg ""} {R.arg ""} {t.arg ""}};
 
 proc log_warn s {
 
@@ -193,11 +194,11 @@ if {$status != 0} {
     set gdradr(gdfile) ${_real_gdfile};     #in cast the post-script uses it
 }
 
-if {$nbspgdradr(latest_enable) == 1} {
+if {$option(L) ne ""} {
     set cwd [pwd];
     cd [file dirname $gdradr(gdfile)];
-    file delete $nbspgdradr(latest_name);
-    file link -symbolic $nbspgdradr(latest_name) [file tail $gdradr(gdfile)];
+    file delete $option(L);
+    file link -symbolic $option(L) [file tail $gdradr(gdfile)];
     cd $cwd;
 }
 

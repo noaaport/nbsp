@@ -35,8 +35,6 @@ set nbspgdradr(namefmt)   "%Y%m%d_%H%M.gem";
 set nbspgdradr(Cdir)      "/var/noaaport/data/gempak";
 set nbspgdradr(logfile)   "";
 # set nbspgdradr(logfile)   "/var/log/nbsp/nbspgdradr.log";
-set nbspgdradr(latest_enable) 1;
-set nbspgdradr(latest_name) "latest";
 
 # nbspradmos defaults
 set nbspradmos(localconfdirs) $common(localconfdirs);

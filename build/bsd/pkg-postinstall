@@ -54,10 +54,10 @@ dirs="/var/noaaport/nbsp
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
 
-
+# See note at the end of the file for usage of [-e] instead of [!-e]
 for d in $dirs
 do
-  install -d -m 755 $d
+  [ -e $d ] || install -d -m 755 $d
 done
 
 #

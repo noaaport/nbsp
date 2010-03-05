@@ -68,7 +68,7 @@ set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first
 # (It is matched against awips1). Included are:
-#  n0r n0v n1p n1s n2r n3r ncr nvl n0s n0z n1r n1v n2s n3s net ntp nvw tr[0-2] 
+#  n0r n1r n2r n3r n0z n0v n1v nce net nvw n0s n1s n2s n3s nvl n1p ntp tr[0-2] 
 #
 # The following have an uncompressed nids header.
 #

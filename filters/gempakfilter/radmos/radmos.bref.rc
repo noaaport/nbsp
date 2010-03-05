@@ -19,8 +19,8 @@ set _gdplot2(type) "F";
 set _gdplot2(fint) "0;5;10;15;20;25;30;35;40;45;50;55;60;65;70;75";
 set _gdplot2(fline) "101;101;${blue};${green};${yellow};${red};${white}";
 set _gdplot2(gdattim) "last";
-# The braces delay evaluation until the script is sent to gdplot, and if
-# gdpfun is redefined by -D, then gdplot(title) will be reset as well.
+# The braces delay evaluation of the rhs until the eval below, so that is
+# gdpfun is redefined by the (-D) option, the title is reset.
 set _gdplot2(title) \
 	{14/-2/$gdplot2(gdpfun) - [clock format [clock seconds] -gmt 1]};
 
@@ -29,11 +29,16 @@ set _gdplot2(title) \
 #
 set _gdplot2(colors) "101=255:255:255";
 
-# Override with the conf file settings (or -D defines)
+# Override with the conf file settings (or -D defines). The title has
+# special treatment.
 foreach _k [list devfmt devsize \
 	gdpfun garea proj type fint fline gdattim title colors] {
     if {[info exists gdplot2($_k)] == 0} {
-        set gdplot2($_k) $_gdplot2($_k);
+	if {$_k eq "title"} {
+	    eval set gdplot2($_k) \"$_gdplot2($_k)\";
+	} else {
+            set gdplot2($_k) $_gdplot2($_k);
+	}
     }
 }
 

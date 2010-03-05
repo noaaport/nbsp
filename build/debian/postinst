@@ -54,7 +54,7 @@ dirs="/var/noaaport/nbsp
 
 for d in $dirs
 do
-  install -d -m 755 $d
+  [ -e $d ] || install -d -m 755 $d
 done
 
 #
