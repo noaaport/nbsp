@@ -11,11 +11,11 @@
 /*
  * This file contains definitions of constants that use to be in
  * various files (e.g., const.h) but which are also used by the
- * programs in gempakfilter/c. The relevant explanations of the
+ * programs in gpfilter/c. The relevant explanations of the
  * definitions still appear in the original files, but the definitions
  * there have been commented out.
  *
- * The make file in gempakfilter/c creates a copy of this file
+ * The make file in gpfilter/c creates a copy of this file
  * during compilation. The master copy of this file is src/common.h
  * and any editing should be done there.
  */
