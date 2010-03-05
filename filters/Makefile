@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS = nbspfilter gempakfilter rstfilter dafilter nntpfilter rstnntpfilter \
+SUBDIRS = nbspfilter gpfilter rstfilter dafilter nntpfilter rstnntpfilter \
 	inventory rssfilter filterlib ldmfilter metarfilter uafilter wsfilter \
 	panfilter gribfilter netfilter spoolfilter msgfilter trackfilter \
 	scheduler recover

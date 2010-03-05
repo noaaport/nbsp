@@ -1,7 +1,7 @@
 #!/bin/sh
 
 subdirs="nbspfilter
-gempakfilter
+gpfilter
 rstfilter
 dafilter
 nntpfilter
