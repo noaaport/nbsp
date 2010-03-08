@@ -141,6 +141,8 @@ int slavein_loop(struct slave_element_st *slave){
     log_err2("Error reading from", slave->infifo);
   else if(status == -2)
     log_info("Timed out watiting to read from %s", slave->infifo);
+  else if(status == -3)
+    log_verbose(2, "A writer closed the infifo.");
   else if(status == 1)
     log_info("Bad input from %s", slave->infifo);
   else if(status >= 2)
@@ -200,10 +202,13 @@ static int recv_in_packet(struct slave_element_st *slave){
 
   n = readn(slave->slave_fd, finfo_size_buf, 4,
 	    (unsigned int)slave->options.slave_read_timeout_secs, 0);
+    
   if(n == -1)
     status = -1;	/* real reading error */
   else if(n == -2)
     status = -2;	/* timed out before anything could be read */
+  else if(n == 0)
+    status = -3;	/* (eof) a writer closed the fifo */
   else if(n != 4)
     status = 1;
 

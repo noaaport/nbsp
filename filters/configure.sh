@@ -19,6 +19,7 @@ netfilter
 spoolfilter
 msgfilter
 trackfilter
+craftfilter
 scheduler
 recover"
 

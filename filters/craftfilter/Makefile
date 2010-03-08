@@ -6,11 +6,7 @@
 # $Id$
 #
 
-SUBDIRS = nbspfilter gpfilter rstfilter dafilter nntpfilter rstnntpfilter \
-	inventory rssfilter filterlib ldmfilter metarfilter uafilter wsfilter \
-	panfilter gribfilter netfilter spoolfilter msgfilter trackfilter \
-	craftfilter \
-	scheduler recover
+SUBDIRS =	tcl
 
 all:
 	for dir in ${SUBDIRS}; do \
@@ -27,3 +23,4 @@ clean:
 	for dir in ${SUBDIRS}; do \
 	(cd $$dir; ${MAKE} clean) \
 	done
+

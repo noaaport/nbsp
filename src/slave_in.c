@@ -179,8 +179,16 @@ static int slavein_open(struct slave_element_st *slave){
 		       slave->options.infifo_mode);
   }
 
+  /*
+   * If we open the fifo O_RDONLY, then when the last writer closes the fifo
+   * it will cause readn() in recv_in_packet() [reader.c] to return eof (n== 0)
+   * wich will trigger a return error from recv_in_packet() in slavein_loop
+   * and will force to close and reopen the fifo (and the associated "error"
+   * message(s). Thereforem we will open the fifo RW so that the number of
+   * writers never drops to zero.
+   */
   if(status == 0)
-    slave->slave_fd = open(slave->infifo, O_RDONLY | O_NONBLOCK);
+    slave->slave_fd = open(slave->infifo, O_RDWR | O_NONBLOCK);
 
   if(slave->slave_fd == -1){
     status = -1;

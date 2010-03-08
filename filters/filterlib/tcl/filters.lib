@@ -825,6 +825,7 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     # The args are flags for nbspfile:
     #
     # [-a] => append
+    # [-t] => do not add gempak header and footer
 
     global filterslib;
 

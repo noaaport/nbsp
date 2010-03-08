@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+Installation instructions -
+
+1) Make the user "ldm" a member of the group "news"
+2) Change the group of the directories
+
+	/var/noaaport/nbsp/spool
+	/var/noaaport/data/digatmos/nexrad/craft
+   
+   to the group "news", and make them writable by that group:
+
+	chmod 775 <dir>
+
+3) Add the line
+
+   set craftinsert(nbspd_enable) 1;
+
+   to the file "site/craftfilter.conf" in the nbsp configuration directory.
+
+4) Add the line
+
+   set feedmode 4;
+  
+   in "site/nbspd.conf".
+
+5) Edit the ldm pqact.conf file as indicated in the sample file
+
+   pqact.conf-craftinsert.README
+-

@@ -19,6 +19,8 @@ set archive(da,sat_namefmt) {$rc(wmoid)_${ymd_hm}.gini.tar};
 set archive(da,sat_dirfmt) {$rc(wmoid)};
 set archive(da,rad_namefmt) {${ymdh}.nids.tar};
 set archive(da,rad_dirfmt) {$rc(awips2)};
+set archive(da,rad2_namefmt) {${ymdh}.craft.tar};
+set archive(da,rad2_dirfmt) {$rc(station)};
 set archive(da,invdir) [file join $archive(invdir) "digatmos"];
 set archive(da,inv_subdirfmt) "%Y%m%d";
 set archive(da,inv_namefmt) "%H%M.inv";

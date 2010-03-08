@@ -7,6 +7,7 @@ bin/nbsppanic
 bin/nbspsat
 bin/nbspsatinfo
 bin/nbspradinfo
+bin/nbsprad2info
 bin/nbspcat
 bin/nbspfile
 bin/nbspunz
@@ -108,6 +109,7 @@ libexec/nbsp/netfilter
 libexec/nbsp/msgfilter
 libexec/nbsp/trackfilter
 libexec/nbsp/trackfilter.init
+libexec/nbsp/craftinsert
 libexec/nbsp/filters.init
 libexec/nbsp/filters.lib
 libexec/nbsp/filters-err.lib
@@ -215,6 +217,7 @@ etc/nbsp/dist/msgfilter-ugczones.def-sample
 etc/nbsp/dist/msgfilter.rc-ex
 etc/nbsp/dist/msgfilter-subscribers.txt-ex
 etc/nbsp/dist/trackfilter.conf-sample
+etc/nbsp/dist/craftinsert.conf-sample
 etc/nbsp/dist/grib-templates.tgz
 etc/nbsp/dist/metarplot-templates.tgz
 etc/nbsp/dist/statplot-templates.tgz

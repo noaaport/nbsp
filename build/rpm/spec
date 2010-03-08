@@ -34,6 +34,7 @@ make clean
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspradinfo
+/usr/local/bin/nbsprad2info
 /usr/local/bin/nbspcat
 /usr/local/bin/nbspfile
 /usr/local/bin/nbspunz
@@ -135,6 +136,7 @@ make clean
 /usr/local/libexec/nbsp/msgfilter
 /usr/local/libexec/nbsp/trackfilter
 /usr/local/libexec/nbsp/trackfilter.init
+/usr/local/libexec/nbsp/craftinsert
 /usr/local/libexec/nbsp/filters.init
 /usr/local/libexec/nbsp/filters.lib
 /usr/local/libexec/nbsp/filters-err.lib
@@ -242,6 +244,7 @@ make clean
 /usr/local/etc/nbsp/dist/msgfilter.rc-ex
 /usr/local/etc/nbsp/dist/msgfilter-subscribers.txt-ex
 /usr/local/etc/nbsp/dist/trackfilter.conf-sample
+/usr/local/etc/nbsp/dist/craftinsert.conf-sample
 /usr/local/etc/nbsp/dist/grib-templates.tgz
 /usr/local/etc/nbsp/dist/metarplot-templates.tgz
 /usr/local/etc/nbsp/dist/statplot-templates.tgz

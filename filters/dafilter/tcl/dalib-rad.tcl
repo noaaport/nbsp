@@ -1,7 +1,6 @@
-proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
+proc filter_rad {seq fpath savedir savename {level2flag 0}} {
 
     global dafilter;
-    global filtersprogs;
 
     if {[is_rad_rule_enabled $savedir] == 0} {
 	return;
@@ -12,17 +11,6 @@ proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
 	return;
     }
 
-    if {$unzflag != 0} {
-	# Set the options for nbspunz
-	if {$dafilter(radstripheader) == 1} {
-	    set opts "-c $dafilter(ccbsize)";
-	} elseif {$dafilter(radstripheader) == 2} {
-	    set opts "-c $dafilter(ccbwmoawipssize)";
-	} else {
-	    set opts "";
-	}
-    }
-
     set _pwd [pwd];
 
     cd $dafilter(datadir);
@@ -31,11 +19,11 @@ proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
     set datafpath [file join $dafilter(datadir) $data_path];
 
     set status [catch {
-	if {$unzflag != 0} {
-	    eval exec $filtersprogs(nbspunz) $opts $fpath > $data_path;
-	} else {
+	if {$level2flag == 0} {
 	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
 	    # filterlib_nbspfile $seq $fpath $savedir $savename;
+	} else {
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-t";
 	}
     } errmsg];
 
@@ -56,14 +44,4 @@ proc filter_rad_unzflag {seq fpath savedir savename unzflag} {
     make_rad_dirlist $savedir;
 
     cd $_pwd;
-}
-
-proc filter_rad {seq fpath savedir savename} {
-
-    filter_rad_unzflag $seq $fpath $savedir $savename 0;
-}
-
-proc filter_rad_unz {seq fpath savedir savename} {
-
-    filter_rad_unzflag $seq $fpath $savedir $savename 1;
 }

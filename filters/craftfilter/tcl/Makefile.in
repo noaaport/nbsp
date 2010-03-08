@@ -1,0 +1,40 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLSOURCES =	craftfilter.tcl craftinsert.tcl
+#TCLTARGET =	craftfilter craftinsert
+#SAMPLES =	craftfilter.conf-sample craftinsert.conf-sample
+TCLTARGET =	craftinsert
+SAMPLES =	craftinsert.conf-sample
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+craftfilter: craftfilter.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# craftfilter.tcl > craftfilter
+
+craftinsert: craftinsert.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# craftinsert.tcl > craftinsert
+
+craftfilter.conf-sample: craftfilter.conf
+	cp craftfilter.conf craftfilter.conf-sample
+
+craftinsert.conf-sample: craftinsert.conf
+	cp craftinsert.conf craftinsert.conf-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

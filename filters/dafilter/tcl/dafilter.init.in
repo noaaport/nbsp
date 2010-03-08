@@ -15,8 +15,8 @@ set dafilter(datadir)	[file join $common(datadir) "digatmos"];
 ## Parameters for the inventory database (for the cleanup script)
 set dafilter(invdir) [file join $common(datainvdir) "digatmos"];
 set dafilter(invformat) $common(datainvformat);  # format for hourly subdirs
-set dafilter(radinvsubdir) [file join "nexrad" "nids"];
-set dafilter(satinvsubdir) [file join "sat" "gini"];
+set dafilter(radinvsubdir) [file join "nexrad"];
+set dafilter(satinvsubdir) [file join "sat"];
 set dafilter(rad_inv_enable) 1;
 set dafilter(sat_inv_enable) 1;
 
@@ -42,10 +42,10 @@ set dafilter(rad_dirlist_enable) 1;
 set dafilter(rad_dirlistname)	"list";
 set dafilter(rad_latest_enable)	1;
 set dafilter(rad_latestname)	"latest";
-set dafilter(raduncompress)	0;
-set dafilter(radstripheader)	0;
 set dafilter(rad_namefmt)	{$rc(awips)_${ymd_hm}.nids};
 set dafilter(rad_dirfmt)     	{$rc(awips2)/$rc(awips1)};
+set dafilter(rad2_namefmt)	{$rc(STATION)_${ymd_hm}};   # level 2
+set dafilter(rad2_dirfmt)     	{$rc(STATION)};             # level 2
 #
 set dafilter(grib_enable)	1;
 set dafilter(grib_regex)	{.*};

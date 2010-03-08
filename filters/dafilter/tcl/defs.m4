@@ -114,12 +114,17 @@ lappend cond {
 } 
 lappend action {
   set rc_status 0;
-  if {($dafilter(raduncompress) != 0) && \
-    ([regexp {^nmd} $rc(awips)] == 0)} {
-	filter_rad_unz $rc(seq) $rc(fpath) "$3" "$4";
-  } else {
-	filter_rad $rc(seq) $rc(fpath) "$3" "$4";
-  }
+  filter_rad $rc(seq) $rc(fpath) "$3" "$4";
+  $5
+})
+
+define(match_rad2,
+lappend cond {
+  [regexp {$2} $1]
+} 
+lappend action {
+  set rc_status 0; 
+  filter_rad $rc(seq) $rc(fpath) "$3" "$4" 1;
   $5
 })
 
@@ -139,12 +144,7 @@ lappend cond {
 } 
 lapend action {
   set rc_status 0;
-  if {($dafilter(raduncompress) != 0) && \
-    ([regexp {^nmd} $rc(awips)] == 0)} {
-      filter_rad_unz $rc(seq) $rc(fpath) "$5" "$6";
-  } else {
-      filter_rad $rc(seq) $rc(fpath) "$5" "$6";
-  }
+  filter_rad $rc(seq) $rc(fpath) "$5" "$6";
   $7
 })
 
@@ -154,11 +154,7 @@ lappend {
 }
 lappend action {
   set rc_status 0;
-  if {($dafilter(raduncompress) != 0) && ([regexp {^nmd} $rc(awips)] == 0)} {
-    filter_rad_unz $rc(seq) $rc(fpath) "$5" "$6";
-  } else {
-    filter_rad $rc(seq) $rc(fpath) "$5" "$6";
-  }
+  filter_rad $rc(seq) $rc(fpath) "$5" "$6";
   $7
 })
 
