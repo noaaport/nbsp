@@ -4,12 +4,11 @@
 Installation instructions -
 
 1) Make the user "ldm" a member of the group "news"
-2) Change the group of the directories
+2) Change the group of the directory
 
 	/var/noaaport/nbsp/spool
-	/var/noaaport/data/digatmos/nexrad/craft
    
-   to the group "news", and make them writable by that group:
+   to the group "news", and make it writable by that group:
 
 	chmod 775 <dir>
 
