@@ -455,9 +455,9 @@
  * in DEFAULT_FEEDMODE, then the SLAVE_MASTERSERVERS is used (and it
  * must be set). The syntax is a string of the form
  *
- * <protocol>,<server>,<port>[,<options>]:...
+ * <protocol>,<server>[,<port>][,<options>]:...
  *
- * where the <options> is optional and specify the values for
+ * where the <options> are optional and specify the values for
  *
  * SLAVE_READ_TIMEOUT_SECS
  * SLAVE_READ_TIMEOUT_RETRY
@@ -465,11 +465,13 @@
  * SLAVE_SO_RCVBUF
  * SLAVE_STATS_LOGPERIOD_SECS
  *
- * for example 10,2,2,-1,60. Empty or non-numeric values use the default
- * values given below.
+ * for example 10,2,2,-1,60. The port and the numeric options can
+ * empty (or non-numeric in the case of the numeric options)
+ * in which case the default values given below are used.
  *
  * SLAVE_MASTERSERVERS =  "1,noaaport.uprrp.edu,2210:\
- *                         1,feed.noaaport.net,2210,600,,,,120:\
+ *                         1,noaaport.uprrp.edu:\
+ *                         1,feed.noaaport.net,,600,,,,120:\
  *                         1,feed.noaaport.net,2212,600,x,x,x,180\"
  *
  * The separator(s) of the master specifications is anyone of ': \t\n'.
@@ -479,6 +481,7 @@
 #define FEEDMODE_INPUTFIFO	4
 
 #define SLAVE_MASTERSERVERS	NULL
+#define SLAVE_MASTERPORT	"2210"
 
 #define SLAVE_READ_TIMEOUT_SECS	10
 #define SLAVE_READ_TIMEOUT_RETRY 2

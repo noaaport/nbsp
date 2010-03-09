@@ -4,7 +4,8 @@
 
 proc is_rad_rule_enabled {key} {
 #
-# For radar the key is the subdirectory name, e.g., nexrad/nids/jua/n0r.
+# For radar the key is the subdirectory name, e.g., nexrad/nids/jua/n0r,
+# or nexrad/craft/tjua for level2.
 #
     global dafilter;
 

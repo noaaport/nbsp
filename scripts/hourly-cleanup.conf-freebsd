@@ -91,12 +91,12 @@ H/2:/var/noaaport/data/inv/rst/rad: -i -mtime +4h
 H:/var/noaaport/data/inv/rst/sat: -i -mtime +4h
 #
 H/6:/var/noaaport/data/digatmos:nexrad|sat|aloft|hurricane|enso: -mtime +2
-H/2:/var/noaaport/data/inv/digatmos/nexrad/nids: -i -mtime +4h
-H/6:/var/noaaport/data/inv/digatmos/sat/gini: -i -mtime +1
+H/2:/var/noaaport/data/inv/digatmos/nexrad: -i -mtime +4h
+H/6:/var/noaaport/data/inv/digatmos/sat: -i -mtime +1
 H/6:/var/noaaport/data/digatmos/aloft: -mtime +6h
 #
 H/5:/var/noaaport/data/gempak:nexrad|images: -mtime +1
-H/2:/var/noaaport/data/inv/gempak/nexrad/nids: -i -mtime +4h
+H/2:/var/noaaport/data/inv/gempak/nexrad: -i -mtime +4h
 H:/var/noaaport/data/inv/gempak/images/sat: -i -mtime +4h
 #
 H/6:/var/noaaport/data/grib: -mtime +1

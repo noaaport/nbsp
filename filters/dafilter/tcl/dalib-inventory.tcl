@@ -17,7 +17,7 @@ proc filter_insert_inventory {invsubdir savedir fpathout} {
 
     # The inventory files are saved in hourly subdirs within
     # digatmos/<invsubdir>. E.g.,
-    # digatmos/nextad/nids/<yyyymmddhh>/nexrad.nids.mhx.ncr
+    # digatmos/nexrad/nids/<yyyymmddhh>/nexrad.nids.mhx.ncr
     #
     set parentdir [file join $dafilter(invdir) $invsubdir \
 	[clock format [clock seconds] -format $dafilter(invformat) -gmt true]];

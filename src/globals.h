@@ -143,6 +143,7 @@ struct nbsp_globals {
   int loadave_max_rtx_index;	/* max retrans. accepted in high load cond. */
   int feedmode;			/* master, net slave, input fifo */
   char *masterservers;		/* master hosts list for net slave mode */
+  char *slave_masterport;	/* default port to use in slave mode */
   int slave_read_timeout_secs;	/* timeout when slave reads from master */
   int slave_read_timeout_retry;
   int slave_reopen_timeout_secs; /* sleep secs before reopening connection */

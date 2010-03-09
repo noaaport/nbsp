@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <inttypes.h>	/* PRIuMAX */
 #include "err.h"
+#include "util.h"
 #include "strsplit.h"
 #include "defaults.h"	/* NPCAST_NUM_CHANNELS */
 #include "stoi.h"
@@ -84,22 +85,51 @@ static int slave_element_configure(struct slave_element_st *slave,
   }
 
   if(slavetype == SLAVETYPE_INFIFO){
-    if((ssplit->argc != 2) && (ssplit->argc != SLAVE_IN_STRING_FIELDS)){
-      log_errx("Invalid configuration string for SLAVETYPE_INFIFO: %s", s);
+    if((ssplit->argc == 2) || (ssplit->argc == SLAVE_IN_STRING_FIELDS)){
+      infifo = ssplit->argv[1];
+      if(valid_str(infifo) == 0)
+	status = 1;
+    } else 
       status = 1;
+
+    if(status != 0){
+      status = 1;
+      log_errx("Invalid configuration string for SLAVETYPE_INFIFO: %s", s);
       goto End;
     }
-    infifo =  ssplit->argv[1];
     if(ssplit->argc > 2)
       options_argv = ssplit->argv + 2;
   } else {
-    if((ssplit->argc != 3) && (ssplit->argc != SLAVE_NET_STRING_FIELDS)){
-      log_errx("Invalid configuration string for SLAVETYPE_NBS: %s", s);
+    masterport = defaults->slave_masterport;
+    if(ssplit->argc == 2)
+      mastername = ssplit->argv[1];
+    else if(ssplit->argc == 3){
+      /*
+       * In this case both the host and port are given.
+       */
+      mastername = ssplit->argv[1];
+      masterport = ssplit->argv[2];
+    } else if(ssplit->argc == SLAVE_NET_STRING_FIELDS){
+      /*
+       * In this case the port can be empty, so that we leave the default.
+       */
+      mastername = ssplit->argv[1];
+      if(valid_str(ssplit->argv[2]))
+	masterport = ssplit->argv[2];
+    } else
       status = 1;
+
+    if(status == 0){
+      if((valid_str(mastername) == 0) || (valid_str(masterport) == 0))
+	status = 1;
+    }
+
+    if(status != 0){
+      status = 1;
+      log_errx("Invalid configuration string for SLAVETYPE_NBS: %s", s);
       goto End;
     }
-    mastername = ssplit->argv[1];
-    masterport = ssplit->argv[2];
+
     if(ssplit->argc > 3)
       options_argv = ssplit->argv + 3;
   }

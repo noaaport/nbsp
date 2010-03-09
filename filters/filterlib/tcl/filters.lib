@@ -287,6 +287,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(radseconds) "";
     set rc(radmode) "";
     set rc(radcode) "";
+    set rc(rad2seconds) "";        # rad2xxx are for level 2
+    set rc(rad2site) "";
     set rc(satsource) "";
     set rc(satcreatingentity) "";
     set rc(satsector) "";
@@ -413,6 +415,18 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(radmode) [lindex $radinfo 4];
 	    set rc(radcode) [lindex $radinfo 5];
 	    set rc(seconds) $rc(radseconds);
+	}
+    }
+
+    if {[regexp {^level2} $rc(wmoid)] && ($dorad == 1)} {
+	set rad2info_status [catch {
+	    set rad2info [split [nbsprad2info -b -t $rc(fpath)]];
+	} errmsg];
+
+	if {$rad2info_status == 0} {
+	    set rc(rad2seconds) [lindex $rad2info 0];
+	    set rc(rad2site) [lindex $rad2info 1];
+	    set rc(seconds) $rc(rad2seconds);
 	}
     }
 

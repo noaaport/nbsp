@@ -180,7 +180,6 @@ int process_file(void){
   /*
    * If reading from stdin, then consume the input to avoid generating
    * a pipe error in the tcl scripts.
-   * nbspunz should be called with the [-n] option.
    */
   if(g.opt_inputfile == NULL){
     while(read(fd, dummy, dummy_size) > 0)

@@ -32,6 +32,7 @@ struct slave_options_st {
   mode_t infifo_mode;
   char *infifo_grp;
   char *slavestatsfile;
+  char *slave_masterport;
   int slave_read_timeout_secs;     /* timeout when slave reads from master */
   int slave_read_timeout_retry;
   int slave_reopen_timeout_secs;   /* sleep secs before reopening connection */

@@ -14,7 +14,7 @@ set gpfilter(rcdir)	[file join $common(rcdir) "gp"];
 set gpfilter(satdef)	[file join $common(confdir) "gpfilter-sat.def"];
 ##
 set gpfilter(invdir)	[file join $common(datainvdir) "gempak"];
-set gpfilter(radinvsubdir) [file join "nexrad" "nids"];
+set gpfilter(radinvsubdir) "nexrad";
 set gpfilter(satinvsubdir) [file join "images" "sat"];
 set gpfilter(invformat)	$common(datainvformat);
 set gpfilter(rad_inv_enable) 1;

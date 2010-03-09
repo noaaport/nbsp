@@ -335,6 +335,9 @@
 #define CONFOPT_SLAVE_MASTERSERVERS	@counter@
 #define DEFVAL_SLAVE_MASTERSERVERS	SLAVE_MASTERSERVERS
 
+#define CONFOPT_SLAVE_MASTERPORT	@counter@
+#define DEFVAL_SLAVE_MASTERPORT		SLAVE_MASTERPORT
+
 #define CONFOPT_SLAVE_READ_TIMEOUT_SECS	@counter@
 #define DEFVAL_SLAVE_READ_TIMEOUT_SECS	SLAVE_READ_TIMEOUT_SECS
 
@@ -554,6 +557,7 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_LOADAVE_MAX_RTX_INDEX},
   {"feedmode", CONFOPT_FEEDMODE, TCL_LINK_INT, NULL, DEFVAL_FEEDMODE},
   {"masterservers", CONFOPT_SLAVE_MASTERSERVERS, TCL_LINK_STRING, NULL, 0},
+  {"slave_masterport", CONFOPT_SLAVE_MASTERPORT, TCL_LINK_STRING, NULL, 0},
   {"slave_read_timeout_secs", CONFOPT_SLAVE_READ_TIMEOUT_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SLAVE_READ_TIMEOUT_SECS},
   {"slave_read_timeout_retry", CONFOPT_SLAVE_READ_TIMEOUT_RETRY, TCL_LINK_INT,
@@ -741,6 +745,7 @@ int configure(void){
 
   setoptval(&g.feedmode, confoptions, CONFOPT_FEEDMODE);
   setoptval(&g.masterservers, confoptions, CONFOPT_SLAVE_MASTERSERVERS);
+  setoptval(&g.slave_masterport, confoptions, CONFOPT_SLAVE_MASTERPORT);
   setoptval(&g.slave_read_timeout_secs, confoptions,
 	CONFOPT_SLAVE_READ_TIMEOUT_SECS);
   setoptval(&g.slave_read_timeout_retry, confoptions,
@@ -908,6 +913,7 @@ void print_confoptions(void){
 
   fprintf(stdout, "feedmode %d\n", g.feedmode);
   fprintf_str(stdout, fmt, "masterservers", g.masterservers);
+  fprintf_str(stdout, fmt, "slave_masterport", g.slave_masterport);
   fprintf(stdout, "slave_read_timeout_secs %d\n", g.slave_read_timeout_secs);
   fprintf(stdout, "slave_read_timeout_retry %d\n", g.slave_read_timeout_retry);
   fprintf(stdout, "slave_reopen_timeout_secs %d\n",
@@ -1071,6 +1077,7 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.loadave_max_rtx_index, 0, "loadave_max_rtx_index");
   VALIDATE_PARAM_L(g.feedmode, 1, "feedmode");
   /* char* g.masterservers can be NULL or empty */
+  VALIDATE_STR(g.slave_masterport, "slave_masterport");
   VALIDATE_PARAM_L(g.slave_read_timeout_secs, 0, "slave_read_timeout_secs");
   VALIDATE_PARAM_L(g.slave_read_timeout_retry, 0, "slave_read_timeout_retry");
   VALIDATE_PARAM_L(g.slave_reopen_timeout_secs, 0,

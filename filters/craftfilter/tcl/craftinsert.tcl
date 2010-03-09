@@ -51,7 +51,7 @@ proc proc_nbsp {ppath} {
 	file copy -force $ppath $fpath;
     }
 
-    # exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+    exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
 }
 
 #

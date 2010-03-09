@@ -190,6 +190,7 @@ void init_globals(void){
 
   g.feedmode = DEFAULT_FEEDMODE;
   g.masterservers = SLAVE_MASTERSERVERS;
+  g.slave_masterport = SLAVE_MASTERPORT;
   g.slave_read_timeout_secs = SLAVE_READ_TIMEOUT_SECS;
   g.slave_read_timeout_retry = SLAVE_READ_TIMEOUT_RETRY;
   g.slave_reopen_timeout_secs = SLAVE_REOPEN_TIMEOUT_SECS;

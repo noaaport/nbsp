@@ -227,7 +227,7 @@ int init_pctl(void){
   int status = 0;
   struct pctl_st *pctl;
   struct pctldb_param_st param;
-  int num_active_channels;
+  int num_active_channels = 0;
 
   param.dbenv =  g.dbenv;
   param.dbname = NULL;
@@ -253,13 +253,17 @@ int init_pctl(void){
   if(feedmode_masterservers_enabled()){
     /*
      * Only the nbs1 (fdata) slaves use the pctl. Even if there are no
-     * nbs1 readers we open it with one (unused) channel anyway;
-     * otherwise the queue status reporting
-     * functions have to check if there are nbs1 readers to decide what to do.
+     * nbs1 readers we open it, with one (unused) channel, anyway;
+     * otherwise the queue status reporting functions (i.e. the functions
+     * that write the queue status to the fifo) have to check if there
+     * are nbs1 readers and/or the pctl is open, in order to decide how
+     * to write the report. With one used channel they simply report an
+     * empty pctl.
      */
-    num_active_channels = 1;
     if(g.slavet->num_slavenbs_readers != 0)
-      num_active_channels = g.slavet->num_slavenbs_readers;
+      num_active_channels += g.slavet->num_slavenbs_readers;
+    else
+      num_active_channels += 1;
   }
 
   pctl = epctl_open(num_active_channels, &param);
