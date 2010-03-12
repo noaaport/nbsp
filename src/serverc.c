@@ -321,10 +321,11 @@ static int emwin_retransmit_packet(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * Set the connection_status flag to force the main thread to
-     * close the connection and the client to reopen it since there
-     * is no other way to resynchronize the server and client. If
-     * there is an error (mutex) trying to traise the flag, then
+     * Set the connection_status flag to make the main thread
+     * (process_dirty_connections() in serverm.c) to
+     * close the connection and let the the client to try to restore
+     * it since there is no other way to resynchronize the server and client.
+     * If there is an error (mutex) trying to raise the flag, then
      * we try to exit the client thread entirely.
      */
     conn_element_set_fd(ce, -1);
@@ -436,10 +437,11 @@ static int nbs_retransmit_packet(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * Set the connection_status flag to force the main thread to
-     * close the connection and the client to reopen it since there
-     * is no other way to resynchronize the server and client. If
-     * there is an error (mutex) trying to traise the flag, then
+     * Set the connection_status flag to make the main thread
+     * (process_dirty_connections() in serverm.c) to
+     * close the connection and let the the client to try to restore
+     * it since there is no other way to resynchronize the server and client.
+     * If there is an error (mutex) trying to raise the flag, then
      * we try to exit the client thread entirely.
      */
     conn_element_set_fd(ce, -1);
@@ -485,10 +487,11 @@ static int send_nbs2_client(struct conn_element_st *ce,
 
   if(status != 0){
     /*
-     * Set the connection_status flag to force the main thread to
-     * close the connection and the client to reopen it since there
-     * is no other way to resynchronize the server and client. If
-     * there is an error (mutex) trying to traise the flag, then
+     * Set the connection_status flag to make the main thread
+     * (process_dirty_connections() in serverm.c) to
+     * close the connection and let the the client to try to restore
+     * it since there is no other way to resynchronize the server and client.
+     * If there is an error (mutex) trying to raise the flag, then
      * we try to exit the client thread entirely.
      */
     conn_element_set_fd(ce, -1);

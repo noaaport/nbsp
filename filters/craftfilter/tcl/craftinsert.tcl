@@ -23,7 +23,7 @@ proc proc_nbsp {ppath} {
 
     # The spooldir must exist
     if {[file isdirectory $spooldir] == 0} {
-	return -code error "Sppol directory does not exist: $spooldir";
+	return -code error "Spool directory does not exist: $spooldir";
     }
 
     # extract info from input name
@@ -35,8 +35,11 @@ proc proc_nbsp {ppath} {
 
     set station [string tolower $STATION];
     append dhm [string range $ymd 6 7] $hm;
-    append seq $ymd $hm;
 
+    # For the sequence number use the unix seconds
+    append _datestr $ymd "T" $hm "00";
+    set seq [clock scan ${_datestr} -gmt 1];
+    
     append fname $station "_" $wmoid;
     append fbasename $fname "." $dhm "_" $seq;
     

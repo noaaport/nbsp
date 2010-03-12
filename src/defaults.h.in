@@ -264,7 +264,7 @@
  * done so after this time limit (in seconds) the protocol is set to 
  * the default (assumed to be emwin).
  */
-#define SERVER_CLIENTID_TIMEOUT_SECS	5
+#define SERVER_CLIENTID_TIMEOUT_SECS	10
 
 /* How often to recollect the statistics (in seconds). */
 #define NBSP_STATS_LOGPERIOD_SECS	60	/* 1 min */
@@ -304,8 +304,8 @@
  * Server's threads sleep time waiting for network clients to reconnect,
  * and how many times to check.
  */
-#define CLIENT_RECONNECT_WAIT_SLEEP_SECS	5
-#define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	12
+#define CLIENT_RECONNECT_WAIT_SLEEP_SECS	10
+#define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	6
 
 /*
  * filter and server, and server-threads and filter-threads timeout waiting
@@ -465,7 +465,7 @@
  * SLAVE_SO_RCVBUF
  * SLAVE_STATS_LOGPERIOD_SECS
  *
- * for example 10,2,2,-1,60. The port and the numeric options can
+ * for example 10,2,5,-1,60. The port and the numeric options can
  * empty (or non-numeric in the case of the numeric options)
  * in which case the default values given below are used.
  *
@@ -485,7 +485,7 @@
 
 #define SLAVE_READ_TIMEOUT_SECS	10
 #define SLAVE_READ_TIMEOUT_RETRY 2
-#define SLAVE_REOPEN_TIMEOUT_SECS 2
+#define SLAVE_REOPEN_TIMEOUT_SECS 1
 #define SLAVE_SO_RCVBUF		-1
 #define SLAVE_STATS_LOGPERIOD_SECS 60
 /*

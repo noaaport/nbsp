@@ -1223,7 +1223,7 @@ static void spawn_client_threads(void){
     }
    
     /*
-     * The write options has already been initialized by init1 to the
+     * The write options have already been initialized by init1 to the
      * global value. Here we look to see if there is a per-client setting
      * for this client.
      */

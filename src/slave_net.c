@@ -131,10 +131,10 @@ static void *slavenet_main(void *arg){
      * If the slave_fd is -1 it means that the socket was closed
      * due to a reading error. It could be a real error, or the server
      * not sending anything within the timeout limit and the like.
-     * We wait some time and try to reopen it.
+     * reopen() waits some time and tries to reopen it.
      */
     if(slave->slave_fd == -1){
-      log_errx("Lost connection to %s. Trying again.", slave->mastername);
+      log_errx("Closed connection to %s. Reconnecting.", slave->mastername);
       status = slavenet_reopen(slave);
       if(slave->slave_fd != -1)
 	slave_stats_connect(slave);
@@ -266,9 +266,9 @@ static int slavenet_close(struct slave_element_st *slave){
     return(0);
 
   status = close(slave->slave_fd);
-  if(status == 0)
+  if(status == 0){
     slave->slave_fd = -1;
-  else
+  }else
     log_err2("Error closing connection to", slave->mastername);
 
   return(status);
@@ -284,18 +284,14 @@ static void slavenet_try_close(void *arg){
 static int slavenet_reopen(struct slave_element_st *slave){
   /*
    * This function is meant to be used when reading from the master
-   * returns an error. It closes the connection and tries to open it
-   * again. If it fails, then it sleeps for a time out period before
-   * returning.
+   * returns an error. It closes the connection (if it is not already closed)
+   * and tries to open it again after sleeping for a specified period.
    */
   int status = 0;
 
   status = slavenet_close(slave);
-  if(status == 0)
-    status = slavenet_open(slave);
-
-  if(status != 0)
-    sleep((unsigned int)slave->options.slave_reopen_timeout_secs);
+  sleep((unsigned int)slave->options.slave_reopen_timeout_secs);
+  status = slavenet_open(slave);
 
   return(status);
 }

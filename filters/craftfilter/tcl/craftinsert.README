@@ -20,11 +20,24 @@ Installation instructions -
 
 4) Add the line
 
-   set feedmode 4;
+   set feedmode 4;    # or 5 to read also from noaaport
   
    in "site/nbspd.conf".
 
 5) Edit the ldm pqact.conf file as indicated in the sample file
 
    pqact.conf-craftinsert.README
+
+6) Note that the files that are written to the nbsp spool directory
+   by the craftinsert script in ldm, are not processed by Nbsp and
+   therefore they are not inserted in the spooldb for handling their
+   deletion. The assumption is that those fil;es are not "owned" by Nbsp,
+   but owned by the process that writes them there and it is that process
+   which has to delete them.
+
+   In ldm, that can be accomplished by the "scour" process.
+   Another option is to add the cleanup scheduling option of the
+   spool directory in the Nbsp scheduler.
+
+   See the note in "nbspinsert", which this script calls.
 -

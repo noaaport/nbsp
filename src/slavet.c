@@ -548,10 +548,14 @@ void slave_stats_report(struct slave_element_st *slave){
     return;
   }
 
-  /*  now = time(NULL); */
-  fprintf(f, "%s %s" " %" PRIuMAX " %u" " %" PRIuMAX " %u %u %.1g"
+  if(slave->mastername != NULL)
+    fprintf(f, "%s:%s", slave->mastername, slave->masterport);
+  else
+    fprintf(f, "%s", slave->infifo);
+
+  fprintf(f, " %" PRIuMAX " %u" " %" PRIuMAX " %u %u %.1g"
 	  " %" PRIuMAX " %u %u %.1g\n",
-	  slave->mastername, slave->masterport, (uintmax_t)now,
+	  (uintmax_t)now,
 	  slave->stats.connect_errors,
 	  (uintmax_t)slave->stats.ctime,
 	  slave->stats.errors_ctime,

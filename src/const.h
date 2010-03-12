@@ -40,7 +40,6 @@
 #define WMO_NOTAWIPS_SIZE	6	/* maximum */
 #define FSEQNUM_SIZE		10	/* seqnum & ffffffff */
 #define FSEQKEY_SIZE		17	/* ddhhmm_seqnum[10] */
-#define FSEQNUM_SIZE		10
 #define FBASENAME_SIZE		36	/* fname[18].fseqkey[17] */
 
 /*

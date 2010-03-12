@@ -20,6 +20,13 @@
 # If [-f] is not given to specify the location of the nbspd.infifo file,
 # then the nbsp configuration files are read.
 #
+# NOTE:  In this mode the Nbsp processor is not invoked and the files
+#        that are saved in the spool directory by the caller of this script,
+#        or by this script itself, are not inserted by the spooldb that
+#        handles the deletion of the spooled files. Therefore the files
+#        that are sent to Nbsp by this script must be deleted from the spool
+#        by the caller of this script.
+#
 package require cmdline;
 
 set usage {

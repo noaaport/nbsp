@@ -83,7 +83,7 @@ int recv_nbs_packet(int fd, struct nbs1_packet_st *nbs,
    *  1 => short read (time out or disconnect) while reading 
    *  2 => checksum error (corrupt packet) or incorrect type of packet.
    *
-   * In we need or want to disnguish whether it is a disconnect or time out
+   * In we need or want to distinguish whether it is a disconnect or time out
    * in the case of the short read we can use sreadn() instead of readn()
    * below.
    */
