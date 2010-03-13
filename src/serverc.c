@@ -130,26 +130,37 @@ static void *client_thread_main(void *arg){
    * The *arg is a private copy of the ce. This function must
    * free(ce) it when it is finished, but it must _not_ try to
    * delete anything else from the ce.
-   * To avoid cancelling the thread while they hold a mutex locked,
-   * the cancellation state is set to DISABLED and renabled in the loop.
+   * We used to set the cancellation state to DISABLED and then renabled
+   * after the loop in the loop, to avoid cancelling the thread while
+   * it holds a mutex locked. But this not appropriate if we let the
+   * g.sthreads_queue_read_timeout_ms be a configurable parameter: the user
+   * can set this very high, and the thread would not be canceled until
+   * that timer expires. [The alternative would be to write a wrapper
+   * over connqueue_rcv() that disbales the cancellation and calls
+   * connqueue_rcv() with a short (i.e., 1 second) wait time
+   * and retries any number of times.]
+   *
+   * See cleanup().
    */
-  int cancel_state;
-  int status = 0;
+  /* int cancel_state; */
+  /* int status = 0; */
   struct conn_element_st *ce = (struct conn_element_st*)arg;
 
   pthread_cleanup_push(cleanup, arg);
 
   while((get_quit_flag() == 0) && (conn_element_get_exit_flag(ce) == 0)){
     pthread_testcancel();
-    status = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
-    if(status == 0){
-      periodic(ce);
-      loop(ce);
-      status = pthread_setcancelstate(cancel_state, &cancel_state);
-    }
-    assert(status == 0);
-    if(status != 0)
-      log_err("pthread_setcancelstate() returning error in serverc.c.");
+
+    /*
+     * status = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, &cancel_state);
+     */
+
+    periodic(ce);
+    loop(ce);
+
+    /*
+     * status = pthread_setcancelstate(cancel_state, &cancel_state);
+     */
   }
 
   pthread_cleanup_pop(1);
@@ -197,23 +208,23 @@ static void cleanup(void *arg){
   /*
    * See note in client_thread_main().
    *
-   * In principle, we should also call connqueue_rcv_cleanup() here to
+   * We should call connqueue_rcv_cleanup() here to
    * unlock the libqdb mutex since it is posible that the thread was
    * canceled while waiting on the condition variable in connqueue_rcv().
-   * But since we have disabled the cancellation while calling
-   * connqueue_rcv() there is no need to do that.
+   * If we disable the cancellation while calling connqueue_rcv() there
+   * is no need to do that, but since we are not disabling the cancelation
+   * (as we used to) we must call connqueue_rcv_cleanup().
    */
   int status;
+  int dberror;
   struct conn_element_st *ce = (struct conn_element_st*)arg;
 
-  /*
-   * status = connqueue_rcv_cleanup(ce->cq, &dberror);
-   * if(status != 0)
-   *    log_err("Error from connqueue_rcv_cleanup()");
-   */
+  status = connqueue_rcv_cleanup(ce->cq, &dberror);
+  if(status != 0)
+    log_err_db("Error from connqueue_rcv_cleanup()", dberror);
 
   /*
-   * The thread_finished  flag is set here so that if the thread is exiting
+   * The thread_finished flag is set here so that if the thread is exiting
    * by iteself (e.g., if it encountered an unrrecoverable error from write())
    * the main thread can check and remove the connection element
    * from the table.

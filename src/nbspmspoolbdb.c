@@ -59,8 +59,8 @@ static int get_fpath_key(char *fpath, char *spoolbdb_fkey){
   }
 
   ++p;
-  if(strlen(p) >= FKEY_SPOOLBDB_SIZE){
-    log_errx("get_fpath_key(): key too long in fpath %s:", fpath);
+  if(strlen(p) > FKEY_SPOOLBDB_SIZE){
+    log_errx("get_fpath_key(): key too long in fpath %s", fpath);
     return(1);
   }
 
