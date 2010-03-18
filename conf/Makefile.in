@@ -3,12 +3,14 @@
 #
 @include@ @q@../Makefile.inc@q@
 
-TARGET =	nbspd.conf-sample newsyslog.conf-sample logrotate.conf-sample \
-		features.conf-sample \
-		${DOCSAMPLES} \
-		nbspd.conf-defaults \
-		nbspd-mspoolbdb.conf-ex
+TARGET =	${SAMPLES} ${DEFAULTS} ${EXAMPLES} ${DOCSAMPLES}
 
+SAMPLES =	nbspd.conf-sample features.conf-sample \
+		newsyslog.conf-sample logrotate.conf-sample
+
+DEFAULTS =	nbspd.conf-defaults
+EXAMPLES =	nbspd-mspoolbdb.conf-ex \
+		nbspd-tier1.conf-ex features-tier1.conf-ex
 DOCSAMPLES =	macosx-launchd.plist-sample
 READMES =	README CONFIGURING
 INITS =		features.init nbspd.init
@@ -41,14 +43,17 @@ nbspd-mspoolbdb.conf-ex: nbspd-mspoolbdb.conf
 macosx-launchd.plist-sample: macosx-launchd.plist
 	cp macosx-launchd.plist macosx-launchd.plist-sample
 
+features-tier1.conf-ex: features-tier1.conf
+	cp features-tier1.conf features-tier1.conf-ex
+
+nbspd-tier1.conf-ex: nbspd-tier1.conf
+	cp nbspd-tier1.conf nbspd-tier1.conf-ex
+
 install:
-	${INSTALL} -m 644 nbspd.conf-sample ${MYCONFDIR}
-	${INSTALL} -m 644 nbspd.conf-defaults ${MYCONFDIR}
-	${INSTALL} -m 644 features.conf-sample ${MYCONFDIR}
-	${INSTALL} -m 644 nbspd-mspoolbdb.conf-ex ${MYCONFDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${DEFAULTS} ${MYCONFDIR}
+	${INSTALL} -m 644 ${EXAMPLES} ${MYCONFDIR}
 	${INSTALL} -m 644 ${READMES} ${MYCONFDIR}
-	${INSTALL} -m 644 newsyslog.conf-sample ${MYCONFDIR}
-	${INSTALL} -m 644 logrotate.conf-sample ${MYCONFDIR}
 	${INSTALL} -m 644 ${INITS} ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${DOCSAMPLES} ${MYDOCDIR}
 

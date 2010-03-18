@@ -16,6 +16,7 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/data/rst
 /var/noaaport/data/digatmos
 /var/noaaport/data/digatmos/nexrad
+/var/noaaport/data/digatmos/nexrad/craft
 /var/noaaport/data/gempak
 /var/noaaport/data/metar
 /var/noaaport/data/upperair
@@ -80,6 +81,8 @@ fi
     install -m 0644 $docdir/level3.cfg-sample $nexraddir/grlevel3.cfg
 [ -e $nexraddir/config.cfg ] || \
     ln -s $nexraddir/grlevel3.cfg $nexraddir/config.cfg
+[ -e $nexraddir/craft/grlevel2.cfg ] || \
+    install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/grlevel2.cfg
 
 #
 # configure default

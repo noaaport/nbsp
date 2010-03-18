@@ -172,6 +172,8 @@ make clean
 /usr/local/etc/nbsp/dist/nbspd.conf-defaults
 /usr/local/etc/nbsp/dist/features.conf-sample
 /usr/local/etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
+/usr/local/etc/nbsp/dist/features-tier1.conf-ex
+/usr/local/etc/nbsp/dist/nbspd-tier1.conf-ex
 /usr/local/etc/nbsp/dist/filters.conf-sample
 /usr/local/etc/nbsp/dist/filters-gribid.def-sample
 /usr/local/etc/nbsp/dist/archive.conf-sample

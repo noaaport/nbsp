@@ -145,6 +145,8 @@ etc/nbsp/dist/nbspd.conf-sample
 etc/nbsp/dist/nbspd.conf-defaults
 etc/nbsp/dist/features.conf-sample
 etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
+etc/nbsp/dist/features-tier1.conf-ex
+etc/nbsp/dist/nbspd-tier1.conf-ex
 etc/nbsp/dist/filters.conf-sample
 etc/nbsp/dist/filters-gribid.def-sample
 etc/nbsp/dist/archive.conf-sample
