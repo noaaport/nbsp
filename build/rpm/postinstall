@@ -75,11 +75,11 @@ then
 	update-rc.d nbspd defaults 99
 fi
 
-[ -e $nexraddir/grlevel3.cfg ] || \
+# [ -e $nexraddir/grlevel3.cfg ] || \
     install -m 0644 $docdir/level3.cfg-sample $nexraddir/grlevel3.cfg
 [ -e $nexraddir/config.cfg ] || \
     ln -s $nexraddir/grlevel3.cfg $nexraddir/config.cfg
-[ -e $nexraddir/craft/grlevel2.cfg ] || \
+# [ -e $nexraddir/craft/grlevel2.cfg ] || \
     install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/grlevel2.cfg
 
 #
