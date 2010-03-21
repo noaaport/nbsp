@@ -3,17 +3,14 @@ $Id$
 QUICK_START.0
 
 These notes cover the instructions that are common to all the operating
-systems on which the program runs, and they are here for documentation
-purposes only. 
+systems on which the program runs. They are obslete and they are here for
+documentation purposes only. 
 
-The steps explained below for configuring nbsp are
-carried out automatically by the system packages installation tools,
-which are described in the individual QUICK_START.xxx files.
-
-If nbsp is installed from the packages, no further instructions
-beyond those given in the individual QUICK_START.xxx files
-are required to run in the default configuration.
-
+Nbsp should be installed from the packages, in which case no further
+instructions are required to run in the default configuration. The best
+source of the current documentation are the README files in the Nbsp
+configuration, which are reproduced in the noaaport.net site.
+-
 
 CONTENTS
 

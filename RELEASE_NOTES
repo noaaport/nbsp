@@ -1,6 +1,8 @@
 $Id$
 
-- This is the 1st release of the 2.0 version of the
+- Sun Mar 21 12:47:48 AST 2010
+
+This is the 1st release of the 2.0 version of the
 Noaaport Broadcast System Processor (nbsp). Packages, sources and
 documentation are available from
 
@@ -9,70 +11,27 @@ documentation are available from
 Packages for other operating systems or distributions not found there
 can be created upon request.
 
-New features in 1.8.r2 -
+This generation of Nbsp contains many improvements and new features
+over the Nbsp-1.x versions, too many to list them one by one here.
+The most important changes have taken place in the networking module,
+which has been revised to support very configurable master-slave setups
+to support the i-Noaaport project. Nbsp can now receive data from various
+sources, simultaneously, including Noaaport, Radar Level II data,
+and/or other Nbsp master servers. Most, if not all, of the new features are
+documented in some form in the README files or the noaaport.net site.
+-
 
-1) The dafilter has an archive mode for long term archival of the data,
-   in addition to, or instead of, the usual mode. In that mode, the data
-   is saved in the directory "/var/noaaport/data/archive" and it is not
-   pruned by the periodic cleanup scripts.
+- Nbsp includes the following features:
 
-New features in 1.8 -
-
-1) The Weatherscope extension is now included in the distribution so that
-   the WS program is supported ``out of the box''.
-   (see weatherscope.README)
-2) Two new filters (uafilter, wsfilter) have been added to expand the support
-   for Weatherscope. The uafilter converts the upperair data to the mdf format
-   used by Weatherscope. The wsfilter converts model grib forecast data.
-   The program can now display hundreds of parameters from different models,
-   grids, levels and forecast time combinations.
-   (see weatherscope.README)
-3) New scheduler to support a schedule file per filter (used in the gribfilter
-   to create the plots via tclgrads and in the wsfilter to create the WS
-   data files from the forecast models).
-4) Many refinements to the memory-based-spool system for master/slave
-   configuration without a disk-based spool.
-   (see mspoolbdb.README and master-setup.README).
-
-Changes -
-
-- Revised nbspgribplot and scripts to use tclgrads.
-- A local copy of tclgrads is included with nbsp (gribfilter, wsfilter)
-- A local copy of tclupperair is included with nbsp (uafilter)
-- Several functions in the filterlib are being converted
-  to packages (nbsputil, errx).
-- New packages for the per-filter scheduler (mscheduler, hscheduler, scheduler)
-- A per-filter scheduler (nbspscheduler)
-  (used by the wsfilter and the gribfilter).
-  nbspexec to execute all the filters schedulers jobs in the background in an
-  independent environment.
-- New convention for grib file names. This caused revision of
-  all the auxiliary grib scripts (plot, ctl files, gribsh).
-- Revised the syntax of the gribfilter schedule file
-  (now called gribfilter-schedule.rc).
-- Changed all matchstop to match in the pipe.m4 decoders rule
-  in the dafilter (in analolgy with the gpfilter).
-- Added optional daily and hourly archives in metarfilter
-  (to add support for Weatherscope). Enabled by default.
-- Added uafilter and wsfilter to support Weatherscope.
-  Revised the Weatherscope extension
-  Added configuration files for the model forecasts data (via m4)
-- Weatherscope tcl files included as an extension.
-- Separate package for the WS client configuration files also included
-  in the doc directory.
-
-Nbsp includes the following features:
-
-o nbsp can work in "master" or "slave" mode. In master mode it can
+o It can work in "master" or "slave" mode. In master mode it can
   accept connections from emwin (byteblaster) clients or other nbsp processes
   running on other hosts (in the same or in a remote network).
   A filter (netfilter) controls what hosts get what products by
   means of fully configurable allow/deny policy rules.
   More details in the netfilter.README and slave-setup.README files.
   
-o In slave mode and get its feed either
-  from a master nbsp running on a different computer in the network,
-  or through an nntp (inn) feed.
+o Nbsp can receive data from various sources, simultaneously,
+  including Noaaport, Radar Level II data, and/or other Nbsp master servers.
 
 o In master-slave configurations, the master can be configured to
   use a spool file system that resides entirely in memory

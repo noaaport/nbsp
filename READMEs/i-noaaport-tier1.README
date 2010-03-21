@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+To configure a slave that connects to the one of the root masters -
+
+There are two files in the nbsp configuration directory
+"/usr/local/etc/nbsp/dist", named
+
+	features-tier1.conf-ex
+	nbspd-tier1.conf-ex
+
+Those two files should be copied (and renamed) as
+
+	/usr/local/etc/nbsp/site/features.conf
+	/usr/local/etc/nbsp/site/nbspd.conf
+
+That's it. (To change the root master, that "nbspd.conf" file must be edited
+to, for example, replace nbsp1 by nbsp2).
+
+To setup a master (any slave can in turn be a master), just add the following
+line to that "features.conf" file:
+
+set feature(nbs1server)         1

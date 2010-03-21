@@ -24,13 +24,13 @@ slave_stats_logperiod_secs
 
 The masterservers is a string of the form
 
-<protocol>,<server>,<port>[,<options>]:...
+<protocol>,<server>[,<port>[,<options>]]:...
 
 where the separating character can be any combination of ': \t\n';
 for example
 
 set masterservers {
-     2,nbsp.uprrp.edu,2210
+     2,nbsp.uprrp.edu
      1,nbsp.noaaport.net,2210
      2,joshua.wxpro.net,2210,10,,,,300
      2,joshua.wxpro.net,2212,10,x,x,x,300

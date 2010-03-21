@@ -2,36 +2,11 @@ $Id$
 
 QUICK_START.freebsd
 
-- The following packages are required:
-
-	db4-4.6
-	db4-utils
-	libpng-1.2
-	zlib-1.2
-	tcl-8.5
-	tcllib-1.10
-	tk-8.5
-	expect
-	tclX
-	netpbm-progs-10
-	gnuplot-4
-
-The packages for db4, png, zlib, tcl, and tcllib are required by the daemon
-and various filters, and in addition the emwin server requires the
-programs from the netpbm package and the ploting facility of the metar module
-requires gnuplot.
-
-- The package installation will create the various directories
-needed, as described in the QUICK_START.0 guide, and enable
-the rstfilter and dafilter. To run with in this default mode no
-further configuration is needed. An hourly cleanup script and a log rotation
-script are run by the scheduler. The configuration file scheduler.conf
-can be edited if desired.
+	pkg_add nbsp-<version>.tbz
 	
 The variable 
 
 	nbspd_enable=1
 
 must be set in /etc/rc.conf or /etc/rc.conf.local for automatic
-start/stop at boot/shutdown time, and the startup script nbspd.sh
-must be installed.
+start/stop at boot/shutdown time.
