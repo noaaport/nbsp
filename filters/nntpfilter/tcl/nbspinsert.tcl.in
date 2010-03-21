@@ -25,7 +25,8 @@
 #        or by this script itself, are not inserted by the spooldb that
 #        handles the deletion of the spooled files. Therefore the files
 #        that are sent to Nbsp by this script must be deleted from the spool
-#        by the caller of this script.
+#        by the caller of this script, or by the cleanup scheduler.
+#        (The latter is set automaticaly by the default hourly-cleanup.conf.)
 #
 package require cmdline;
 
