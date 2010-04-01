@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh8.6
+#!%TCLSH%
 #
 # $Id$
 #
