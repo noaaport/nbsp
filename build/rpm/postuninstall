@@ -13,11 +13,15 @@ then
 fi
 
 cat <<__EOF__
-To deinstall completely this package, the directories
+To deinstall completely this package, the noaaport user and the directories
 
+/usr/local/etc/nbsp
+/usr/local/share/doc/nbsp
+/usr/local/libexec/nbsp
 /var/noaaport
 /var/log/noaaport
-/usr/local/etc/nbsp
+/var/log/nbsp
+/var/run/nbsp
 
-may have to be removed manually.
+must be removed manually.
 __EOF__

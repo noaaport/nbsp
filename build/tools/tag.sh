@@ -1,9 +1,10 @@
 #!/bin/sh
 
 project=nbsp
+tag="tags/nbsp-2.0.r1"
+#
 masterhost="http://svn.1-loop.net"
 masterrepo="nbsprepo"
-tag=trunk
 #
 ## mastersite="svn+ssh://diablo/home/svn"
 mastersite=${masterhost}/${masterrepo}
@@ -13,19 +14,18 @@ tcllibs="tclgrads tclgempak tclmetar tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 
-# Override tag with the cmd line argument ("tags/nbsp-2.0.r1")
-[ $# -ne 0 ] && tag=$1
-
-svn co $mastersite/$project/$tag $project
+cd ../../../
+svn copy $project $mastersite/$project/$tag
 cd $project
+
 for p in $tcllibs
 do
-  svn co $mastersite/$p/$tag $p
+  svn copy $p $mastersite/$p/$tag
 done
-svn co $mastersite/$tclhttpd/$tag tclhttpd
+svn copy tclhttpd $mastersite/$tclhttpd/$tag
 
 cd src
 for p in $srclibs
 do
-  svn co $mastersite/$p/$tag $p
+  svn copy $p $mastersite/$p/$tag
 done

@@ -6,7 +6,7 @@
 #
 # CRAFT <tab> ^L2-BZIP2/(....)/([0-9][0-9][0-9][0-9][0-1][0-9][0-3][0-9]) \
 #                       ([0-2][0-9][0-5][0-9])([0-9][0-9])/([0-9]*)/([0-9]*)/E
-# <tab> EXEC <tab> bin/craftinsert data/gempak/nexrad/craft/\1/\1_\2_\3
+# <tab> EXEC <tab> /usr/local/libexec/nbsp/craftinsert data/craft/\1/\1_\2_\3
 
 proc err {s} {
     

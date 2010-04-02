@@ -171,7 +171,7 @@ static int slavein_open(struct slave_element_st *slave){
 
   if(status == 0){
     /*
-     * The mkfifo() sets mode masked by the default umask. We need to call
+     * The mkfifo() sets the mode masked by the default umask. We need to call
      * chown to set the group and chmod to set the absolute mask. The
      * function chgrpmode (in libconn) does this.
      */
@@ -182,9 +182,9 @@ static int slavein_open(struct slave_element_st *slave){
   /*
    * If we open the fifo O_RDONLY, then when the last writer closes the fifo
    * it will cause readn() in recv_in_packet() [reader.c] to return eof (n== 0)
-   * wich will trigger a return error from recv_in_packet() in slavein_loop
+   * which will trigger a return error from recv_in_packet() in slavein_loop
    * and will force to close and reopen the fifo (and the associated "error"
-   * message(s). Thereforem we will open the fifo RW so that the number of
+   * message(s). Therefore we will open the fifo RW so that the number of
    * writers never drops to zero.
    */
   if(status == 0)

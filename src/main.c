@@ -108,6 +108,13 @@ int main(int argc, char **argv){
   if(status == 0)
     status = validate_configuration();
 
+  /*
+   * user and group are configurable so this must be done after reading
+   * configuration options.
+   */
+  if(status == 0)
+    status = drop_privs();
+
   if(status == 0)
     status = init_nbsp_regex();
 
@@ -180,9 +187,6 @@ int main(int argc, char **argv){
     if(g.httpd_enable > 0)
       status = spawn_httpd_server();
   }
-
-  if(status == 0)
-    status = drop_privs();
 
   if((status == 0) && (g.option_disable_readers == 0))
     status = spawn_feeds();

@@ -1,0 +1,13 @@
+#
+# $Id$
+#
+
+By default, nbspd runs as the user/group "noaaport:noaaport". While the
+package installation creates the various directories with the
+apropriate ownership, it may be necesary sometimes to recreate them
+by hand:
+
+	chown -R noaaport:noaaport /var/noaaport
+	chown -R noaaport:noaaport /var/log/noaaport
+	chown -R noaaport:noaaport /var/log/nbsp
+	chown -R noaaport:noaaport /var/run/nbsp

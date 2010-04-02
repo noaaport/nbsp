@@ -5,7 +5,17 @@ name=$1
 key=$2
 [ "$key" = "PRE-INSTALL" ] && exit 0
 
-dirs="/var/noaaport/nbsp
+#
+# nbsp user/group, directories owned by user, and directories owned by root
+#
+user=noaaport
+#
+userdirs="/var/run/nbsp
+/var/log/noaaport
+/var/log/nbsp
+/var/log/nbsp/www
+/var/noaaport
+/var/noaaport/nbsp
 /var/noaaport/nbsp/db
 /var/noaaport/nbsp/dev
 /var/noaaport/nbsp/spool
@@ -15,6 +25,7 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/nbsp/rss
 /var/noaaport/nbsp/recover
 /var/noaaport/nbsp/stats
+/var/noaaport/data
 /var/noaaport/data/rst
 /var/noaaport/data/digatmos
 /var/noaaport/data/digatmos/nexrad
@@ -25,18 +36,18 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/data/grib
 /var/noaaport/data/track
 /var/noaaport/data/weatherscope
+/var/noaaport/data/inv
 /var/noaaport/data/inv/rst
 /var/noaaport/data/inv/digatmos
 /var/noaaport/data/inv/gempak
+/var/noaaport/archive
+/var/noaaport/archive/data
 /var/noaaport/archive/data/spool
 /var/noaaport/archive/data/digatmos
 /var/noaaport/archive/inv
-/var/noaaport/www
-/var/log/noaaport
-/var/run/nbsp
-/var/log/nbsp
-/var/log/nbsp/www
-/usr/local/etc/nbsp/defaults
+/var/noaaport/www"
+#
+rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/etc/nbsp/site
 /usr/local/etc/nbsp/rc.d
 /usr/local/etc/nbsp/rc.d/rst
@@ -55,8 +66,30 @@ dirs="/var/noaaport/nbsp
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
 
+# user/group
+pw groupadd $user -q
+status=$?
+if [ $status -ne 65 -a $status -ne 0 ]
+then
+    echo "Could not create group: $user"
+    exit 1
+fi
+#
+pw useradd $user -g $user -q
+status=$?
+if [ $status -ne 65 -a $status -ne 0 ]
+then
+    echo "Could not create user: $user"
+    exit 1
+fi
+
 # See note at the end of the file for usage of [-e] instead of [!-e]
-for d in $dirs
+for d in $userdirs
+do
+  [ -e $d ] || install -d -m 755 -o $user -g $user $d
+done
+
+for d in $rootdirs
 do
   [ -e $d ] || install -d -m 755 $d
 done
@@ -119,7 +152,7 @@ cp /usr/local/share/doc/nbsp/www.tgz /var/noaaport/www
 cd /var/noaaport/www
 tar -xzf www.tgz
 rm www.tgz
-chown -R root:wheel *
+chown -R $user:$user *
 cd htdocs/pub
 #
 # Note: If we reverse the test [ ! -e ...] && ....

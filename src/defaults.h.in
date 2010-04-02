@@ -19,8 +19,8 @@
 
 #define DAEMON_NAME		"nbspd"
 
-#define NBSP_USER		NULL
-#define NBSP_GROUP		NULL
+#define NBSP_USER		"noaaport"
+#define NBSP_GROUP		"noaaport"
 
 #define DEFAULT_UMASK		022
 
@@ -498,7 +498,7 @@
 
 #define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
 #define SLAVE_INPUT_FIFO_MODE	0660
-#define SLAVE_INPUT_FIFO_GRP	"news"
+#define SLAVE_INPUT_FIFO_GRP	"noaaport"
 
 /*
  * #define DEFAULT_FEEDMODE	(FEEDMODE_NOAAPORT | FEEDMODE_INPUTFIFO)

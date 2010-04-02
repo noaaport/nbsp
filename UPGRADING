@@ -3,9 +3,35 @@
 #
 UPGRADE NOTES -
 
-1) Starting with this update (1.6.r7), the "hourly-cleanup.conf" uses
-a slightly different syntax than before. If you have made modifications
-to that file, be sure to incorporate them in the new version.
+1) Starting with version 2.0, Nbsp can be upgraded easily.
+The first thing is to install the nbspadm package for your OS.
+That package contains the program _nbspupdate_ which is used as follows.
+Executing
+
+	nbspupdate
+
+without arguments, will check the version of the installed Nbsp package
+against the latest one available, and if the latter is newer than the
+former it will download it. The Nbsp package can then be upgraded
+manually as usual. Alternatively, executing
+
+	nbspupdate -u
+
+will do the upgrade automatically after downloading the package as above.
+By passing the [-F] option as well, i.e.,
+
+	nbspupdate -u -F
+
+nbspupdate will do as above, even if the installed version is the same
+as the latest one, or if Nbsp had not been installed before.
+
+nbsppupdate can also upgrade Npemwin and Nbspadm itself,
+by passing any of those names as an argument; i.e.,
+
+	nbspupdate -u npemwin
+
+will download and upgrade Npemwin if the latest version is different
+than the installed one.
 
 2) When upgrading to a new version of nbsp, it may be necessary sometimes to
 delete all the files in the directories

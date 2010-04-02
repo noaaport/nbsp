@@ -1,9 +1,16 @@
 #!/bin/sh
 
 #
-# create directories
+# nbsp user/group, directories owned by user, and directories owned by root
 #
-dirs="/var/noaaport/nbsp
+user=noaaport
+#
+userdirs="/var/run/nbsp
+/var/log/noaaport
+/var/log/nbsp
+/var/log/nbsp/www
+/var/noaaport
+/var/noaaport/nbsp
 /var/noaaport/nbsp/db
 /var/noaaport/nbsp/dev
 /var/noaaport/nbsp/spool
@@ -13,6 +20,7 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/nbsp/rss
 /var/noaaport/nbsp/recover
 /var/noaaport/nbsp/stats
+/var/noaaport/data
 /var/noaaport/data/rst
 /var/noaaport/data/digatmos
 /var/noaaport/data/digatmos/nexrad
@@ -23,18 +31,18 @@ dirs="/var/noaaport/nbsp
 /var/noaaport/data/grib
 /var/noaaport/data/track
 /var/noaaport/data/weatherscope
+/var/noaaport/data/inv
 /var/noaaport/data/inv/rst
 /var/noaaport/data/inv/digatmos
 /var/noaaport/data/inv/gempak
+/var/noaaport/archive
+/var/noaaport/archive/data
 /var/noaaport/archive/data/spool
 /var/noaaport/archive/data/digatmos
 /var/noaaport/archive/inv
-/var/noaaport/www
-/var/log/noaaport
-/var/run/nbsp
-/var/log/nbsp
-/var/log/nbsp/www
-/usr/local/etc/nbsp/defaults
+/var/noaaport/www"
+#
+rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/etc/nbsp/site
 /usr/local/etc/nbsp/rc.d
 /usr/local/etc/nbsp/rc.d/rst
@@ -48,12 +56,25 @@ dirs="/var/noaaport/nbsp
 /usr/local/etc/nbsp/rc.d/pan
 /usr/local/etc/nbsp/rc.d/grib
 /usr/local/etc/nbsp/rc.d/net
-/usr/local/libexec/nbsp/site
 /usr/local/share/nbsp/defaults
 /usr/local/share/nbsp/site
+/usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
 
-for d in $dirs
+useradd $user > /dev/null 2>&1
+status=$?
+if [ $status -ne 9 -a $status -ne 0 ]
+then
+    echo "Error creating user $user."
+    exit 1
+fi
+
+for d in $userdirs
+do
+  [ -e $d ] || install -d -m 755 -o $user -g $user $d
+done
+
+for d in $rootdirs
 do
   [ -e $d ] || install -d -m 755 $d
 done
@@ -125,7 +146,7 @@ cp /usr/local/share/doc/nbsp/www.tgz /var/noaaport/www
 cd /var/noaaport/www
 tar -xzf www.tgz
 rm www.tgz
-chown -R root:root *
+chown -R $user:$user *
 cd htdocs/pub
 [ -e "rst" ] || ln -s /var/noaaport/data/rst rst
 [ -e "digatmos" ] || ln -s /var/noaaport/data/digatmos digatmos
@@ -141,6 +162,9 @@ cd htdocs/pub
     ln -s /var/noaaport/data/weatherscope weatherscope/data
 [ -d "npstats" ] || mkdir npstats
 
+#
+# Display message
+#
 cat <<__EOF__
 
 The configuration files are installed in /usr/local/etc/nbsp.
@@ -163,6 +187,20 @@ It can also be started or stoped manually by executing
 
 	/etc/init.d/nbspd start
 	/etc/init.d/nbspd stop
---
 
+NOTE:
+----
+  As of version 2.0.r2, nbspd runs as user noaaport, and therefore
+  the directories where the daemon writes must be owned by that user:
+
+    chown -R noaaport:noaaport /var/noaaport
+    chown -R noaaport:noaaport /var/log/noaaport
+    chown -R noaaport:noaaport /var/log/nbsp
+    chown -R noaaport:noaaport /var/run/nbsp
+
+  During a fresh install, the package installer will create the
+  directories with the appropriate ownership, bit not during an upgrade.
+  If you are uprading from an older version, those commands must be
+  executed manually.
+--
 __EOF__

@@ -40,5 +40,14 @@ cat $template > $target
 
 for f in $files
 do
-    printf "$logdir/$f\t\t644  4      100 *     ZN\n"
+    printf "$logdir/$f\t\t644  4      100 *     ZNB\n"
 done >> $target
+
+cat >> $target <<EOF
+#
+# If the filters do not use syslog, then the corresponding entries
+# should be added here; e.g.,
+#
+EOF
+printf "# /var/log/noaaport/xxxfilter.log\t644  7      *   \$D0   ZNB" \
+    >> $target
