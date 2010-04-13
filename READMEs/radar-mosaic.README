@@ -7,6 +7,9 @@ gempak programs, require that the gempak filter be enabled. In particular,
 "nbspgdradr" is the script that calls gdradr to collect the data and requires
 that the gpfilter processes the radar data files.
 
+NOTE: This facility requires the installation of the "gifsicle" package
+      (which is not in the default required packages list).
+
 The gpfilter can be configured to process only the radar data if desired.
 This is accomplished by setting
 

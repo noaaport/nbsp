@@ -3,14 +3,16 @@
 #
 Installation instructions -
 
-1) Make the user "ldm" a member of the group "news"
+1) Make the user "ldm" a member of the group "noaaport"
 2) Change the group of the directory
 
 	/var/noaaport/nbsp/spool
    
-   to the group "news", and make it writable by that group:
+   to the group "noaaport", and make it writable by that group:
 
-	chmod 775 <dir>
+	cd /var/noaaport/nbsp
+	chgrp -R noaapport spool
+	chmod g+w spool
 
 3) Add the line
 

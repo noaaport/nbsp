@@ -12,18 +12,20 @@ used by Digital Atmosphere, IDV and GrLevel3 programs:
   Digital Atmosphere: rad, grib, surface, syn, upperair, fronts, day1-3,
                       hurricane/forecast
 
-This alternative set of rules is enabled by renaming the file
+This alternative set of rules can be enabled by either one of the following
+methods:
 
-	defaults/dafilter-lite.rc
-to
-	defaults/dafilter.rc
+1) Set the variable
 
-(in the nbsp configuration directory) or by copying it to
+	set dafilter(localrc) "dafilter-lite.rc";
 
-	site/dafilter.rc
+   in the file "site/dafilter.conf".
 
-which is better.
+2) Copy
 
+	cp defaults/dafilter-lite.rc site/dafilter.rc
+
+   in the bsp configuration ditrectory.
 -
 Jose F Nieves <nieves@ltp.upr.clu.edu>
 Tue Aug  5 16:55:47 AST 2008

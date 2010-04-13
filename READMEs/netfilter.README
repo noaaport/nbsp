@@ -36,6 +36,9 @@ To start, copy the file
 	defaults/netfilter.rc
 
 to the site subdirectory and edit it following the examples in that file.
+More examples are given in the file
+
+	dist/netfilter.rc-ex
 
 Note that this filter does not control what computers are allowed
 to connect to the nbsp process in your computer. It only controls
@@ -44,6 +47,10 @@ nbsp is linked against "libwrap", the tcpwrapers library, and it uses
 is to determine whether or not to accept a connection. Thus, the
 /etc/hosts.allow file is used to control what clients can connect to nsbp,
 and the netfilter is used to control what is sent to each of those clients.
+
+The "rc" file is read only once, when nbspd starts. If the file is edited while
+nbspd is running, it can be forced to reload the file by sending a HUP signal
+to nbspd (it will reload all the other filters as well).
 
 A master can be configured to use an in-memory spool for improved
 performance. The details of this setup are covered separately

@@ -5,7 +5,7 @@
 Setting up an nbsp slave -
 
 Starting with nbsp-2.0, a slave can read from several masters
-simultaneously. The intention is that a sleve can be configured to receive
+simultaneously. The intention is that a slave can be configured to receive
 different sets of products from different "providers".
 
 To setup a network slave, the following settings must appear
