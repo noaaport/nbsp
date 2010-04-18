@@ -158,6 +158,8 @@ make clean
 /usr/local/libexec/nbsp/tclgempak/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclmetar/metar.tcl
 /usr/local/libexec/nbsp/tclmetar/pkgIndex.tcl
+/usr/local/libexec/nbsp/tclssh/ssh.tcl
+/usr/local/libexec/nbsp/tclssh/pkgIndex.tcl
 /usr/local/libexec/nbsp/tclupperair/fm35.tcl
 /usr/local/libexec/nbsp/tclupperair/pkgIndex.tcl
 /usr/local/libexec/nbsp/scheduler
@@ -239,6 +241,7 @@ make clean
 /usr/local/etc/nbsp/dist/netfilter.rc-sample
 /usr/local/etc/nbsp/dist/netfilter.rc-defaults
 /usr/local/etc/nbsp/dist/netfilter-mspoolbdb.conf-ex
+/usr/local/etc/nbsp/dist/netfilter.rc-ex
 /usr/local/etc/nbsp/dist/msgfilter.conf-sample
 /usr/local/etc/nbsp/dist/msgfilter.rc-sample
 /usr/local/etc/nbsp/dist/msgfilter-prodcodes.def-sample

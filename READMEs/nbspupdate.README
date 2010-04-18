@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+
+The nbspupdate tool, part of the nbspdam package, vcan be used to
+install and upgrade nbsp (as well as npemwin and nbspadm itself) in
+automatia fashion. Usage instructions and examples are given
+the documentation of the nbspadm package (and the NbspRecipes section
+of the redmine.1-loop.net site).
+-

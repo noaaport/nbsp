@@ -2,13 +2,16 @@
 #
 # $Id$
 # 
-# Usage: nbspradmap [-b] [-g gpmap_gif] [-d <outputdir>] [-o <outputname>] [-p]
-#        [-s <outputsize>] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
+# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] [-K] [-L <logfile>]
+#        [-o <outputname>] [-p] [-s <outputsize>] [-t <tmpdir>] [-D <defs>]
+#        <inputfile> [<rcfile>]
 #
 # -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
 # -g => the name (or full path of the program)
 # -d => output directory
+# -K => keep (don't delete) the logfile
+# -L => specify the logfile instead of the default
 # -o => outputname
 # -p => output png instead of the default gif (gpmap_gif only outputs gif)
 # -s => image size. It is specified as, e.g, "1024;768".
@@ -25,9 +28,10 @@
 #
 package require cmdline;
 
-set usage {nbspradmap [-b] [-g gpmap_gif] [-d outputdir] [-o outputname]
-    [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]};
-set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} {o.arg ""}
+set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
+    [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>]
+    <inputfile> [<rcfile>]};
+set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} K {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
@@ -133,7 +137,7 @@ if {$option(D) ne ""} {
         set p [split $pair "="];
         set var [lindex $p 0];
         set val [lindex $p 1];
-        set gpmap($var) $val;
+        set gpmap(rad,$var) $val;
     }
 }
 
@@ -156,7 +160,11 @@ if {$option(o) ne ""} {
     append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
 }
 
-append logfile $outrootname ".log";
+if {$option(L) eq ""} {
+    append logfile $outrootname ".log";
+} else {
+    set logfile $option(L);
+}
 
 if {$option(d) ne ""} {
     set gpmap(outputfile) [file join $option(d) $gpmap(outputfile)];
@@ -176,6 +184,10 @@ if {$option(t) ne ""} {
 }
 
 file delete $gpmap(outputfile);
+file delete "gemglb.nts" "last.nts";
+if {$option(K) == 0} {
+    file delete $logfile;
+}
 
 set status [catch {
     source_template $option(rcfile);
@@ -192,7 +204,10 @@ if {[info exists fout]} {
     catch {close $fout};
 }
 
-file delete "gemglb.nts" "last.nts" $logfile;
+file delete "gemglb.nts" "last.nts";
+if {$option(K) == 0} {
+    file delete $logfile;
+}
 
 if {$status != 0} {
     # In case gpmap created the file.

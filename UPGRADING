@@ -33,7 +33,21 @@ by passing any of those names as an argument; i.e.,
 will download and upgrade Npemwin if the latest version is different
 than the installed one.
 
-2) When upgrading to a new version of nbsp, it may be necessary sometimes to
+2) Starting with version 2.0.r2, nbspd runs as the user
+"noaaport", and therefore the directories where the daemon writes
+must be owned by that user:
+
+    chown -R noaaport:noaaport /var/noaaport
+    chown -R noaaport:noaaport /var/log/noaaport
+    chown -R noaaport:noaaport /var/log/nbsp
+    chown -R noaaport:noaaport /var/run/nbsp
+
+During a fresh install, the package installer will create the
+directories with the appropriate ownership, but not during an upgrade.
+If you are uprading from an older version, those commands must be
+executed manually.
+
+3) When upgrading to a new version of nbsp, it may be necessary sometimes to
 delete all the files in the directories
 
 	/var/noaaport/nbsp/db

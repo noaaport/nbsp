@@ -37,6 +37,7 @@ proc filter_sat {seq fpath savedir savename} {
 
     set status [catch {
 	if {$dafilter(satuncompress) == 0} {
+	    # Sat files do not have a ccb
 	    file copy -force $fpath $datafpath;
 	} else {
 	    exec $filtersprogs(nbspunz) -o $datafpath $fpath;

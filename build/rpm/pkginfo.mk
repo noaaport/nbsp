@@ -19,14 +19,14 @@ License = BSD
 Group = Applications/Internet
 Source = http://www.noaaport.net/software/${pkgsrc_name}/src/${pkgsrc_name}.tgz
 BuildRoot = ${rpmroot}/BUILD/${pkgsrc_name}/build/rpm/pkg
-Requires = tcp_wrappers-libs db4 db4-utils tcl tcllib tk expect libpng netpbm-progs zlib gnuplot
+Requires = tcp_wrappers-libs db4 db4-utils tcl tcllib tk expect libpng netpbm-progs zlib gnuplot gifsicle
 Conflicts = ${nameclient}
 
 ifeq (${FLAVOR}, opensuse)
 rpmroot = /usr/src/packages
-Requires = tcpd libdb-4_5 db-utils tcl tcllib tk expect libpng netpbm zlib gnuplot sharutils
+Requires = tcpd libdb-4_5 db-utils tcl tcllib tk expect libpng netpbm zlib gnuplot gifsicle sharutils
 endif
 
 ifeq (${FLAVOR}, centos)
-Requires =  tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib gnuplot sharutils
+Requires =  tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib gnuplot gifsicle sharutils
 endif

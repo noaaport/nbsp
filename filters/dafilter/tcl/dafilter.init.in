@@ -10,6 +10,7 @@ set dafilter(prerc)	[file join $common(confdir) "dafilterpre.rc"];
 set dafilter(postrc)	[file join $common(confdir) "dafilterpost.rc"];
 set dafilter(localconfdirs)	$common(localconfdirs);
 set dafilter(rcdir)	[file join $common(rcdir) "da"];
+set dafilter(localrc)	"dafilter.rc";
 set dafilter(datadir)	[file join $common(datadir) "digatmos"];
 
 ## Parameters for the inventory database (for the cleanup script)
@@ -44,8 +45,16 @@ set dafilter(rad_latest_enable)	1;
 set dafilter(rad_latestname)	"latest";
 set dafilter(rad_namefmt)	{$rc(awips)_${ymd_hm}.nids};
 set dafilter(rad_dirfmt)     	{$rc(awips2)/$rc(awips1)};
-set dafilter(rad2_namefmt)	{$rc(STATION)_${ymd_hm}};   # level 2
-set dafilter(rad2_dirfmt)     	{$rc(STATION)};             # level 2
+#
+# level 2 (with contributions from Brad Holcomb <brad@w0wdx.com>)
+# BEH 4/13/2010 , gr2a does not read "list", must be "dir.list"
+#
+set dafilter(rad2_dirlist_enable) 1;
+set dafilter(rad2_dirlistname)	"dir.list";
+set dafilter(rad2_latest_enable)	0;
+set dafilter(rad2_latestname)	"latest";
+set dafilter(rad2_namefmt)	{$rc(STATION)_${ymd_hm}};   
+set dafilter(rad2_dirfmt)     	{$rc(STATION)};
 #
 set dafilter(grib_enable)	1;
 set dafilter(grib_regex)	{.*};

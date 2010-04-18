@@ -11,7 +11,7 @@
 #
 # This tool is designed for use from the command line.
 # The [-l] argument specifies a range of files to process from the list
-# that are in he specified directory. The [-n] <nids_subdirectory> argument
+# that are in the specified directory. The [-n] <nids_subdirectory> argument
 # is relative to the dafilter data directory (e.g., nexrad/nids).
 # The [-f] option specifies the file extension of the data files (e.g., nids)
 # to distinguish them from other files (e.g, latest, ...).

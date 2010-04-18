@@ -49,6 +49,7 @@ userdirs="/var/run/nbsp
 #
 rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/etc/nbsp/site
+/usr/local/etc/nbsp/defaults/nbspd.conf.d
 /usr/local/etc/nbsp/rc.d
 /usr/local/etc/nbsp/rc.d/rst
 /usr/local/etc/nbsp/rc.d/da

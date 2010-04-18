@@ -23,7 +23,9 @@ proc filter_rad {seq fpath savedir savename {level2flag 0}} {
 	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
 	    # filterlib_nbspfile $seq $fpath $savedir $savename;
 	} else {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-t";
+	    # level 2 files do not have a ccb, and since they do not pass
+	    # through the processor they are not in the cspool cache.
+	    file copy -force $fpath $datafpath;
 	}
     } errmsg];
 
@@ -38,10 +40,10 @@ proc filter_rad {seq fpath savedir savename {level2flag 0}} {
     filter_rad_insert_inventory $savedir $datafpath;
 
     # Create the link to the latest
-    make_rad_latest $savedir $savename;
+    make_rad_latest $savedir $savename $level2flag;
 
     # Create the directory listing
-    make_rad_dirlist $savedir;
+    make_rad_dirlist $savedir $level2flag;
 
     cd $_pwd;
 }

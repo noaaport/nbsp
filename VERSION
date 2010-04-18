@@ -10,7 +10,8 @@
 # r = release
 name=nbsp
 nameclient=nbspclient
+nameslave=nbspslave
 branch=2.0
 releaselevel=p
-releasenumber=2.3
+releasenumber=2.6
 version=${branch}.${releaselevel}${releasenumber}

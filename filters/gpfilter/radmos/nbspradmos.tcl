@@ -215,10 +215,12 @@ append gdplot2(devfile) $nbspradmos(_tmpfext);
 
 set status [catch {
     source_template $option(rcfile);
+
     if {([info exists gdplot2(script)] == 0) || \
 	    ([info exists gpcolor(script)] == 0)} {
 	return;
     }
+
     set fout [open "|gpcolor >& $logfile" w];
     fconfigure $fout -translation binary -encoding binary;
     set script [subst $gpcolor(script)];
@@ -226,7 +228,7 @@ set status [catch {
     close $fout;
     unset fout;
 
-    set fout [open "|gdplot2 >& $logfile" w];
+    set fout [open "|gdplot2 >>& $logfile" w];
     fconfigure $fout -translation binary -encoding binary;
     set script [subst $gdplot2(script)];
     puts $fout $script;

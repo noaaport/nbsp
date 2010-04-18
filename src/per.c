@@ -147,13 +147,11 @@ void periodic(void){
 
   /*
    * This is the mechanism used to reload the filters. Just let
-   * the filter thread know it should reload the filters.
+   * the filter and server threads know they should reload the filters.
    */
   if(get_hup_flag() != 0){
     set_reload_filters_flag();
-    /*
-     * set_reload_server_filters_flag();
-     */
+    set_reload_server_filters_flag();
   }
 }
 

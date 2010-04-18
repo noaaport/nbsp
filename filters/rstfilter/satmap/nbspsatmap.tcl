@@ -2,17 +2,19 @@
 #
 # $Id$
 # 
-# Usage: nbspsatmap [-b] [-g <gpmap_gif>] [-k] [-l] [-q] [-d <outputdir>]
-#	[-p] [-s <outputsize>] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
+# Usage: nbspsatmap [-b] [-d <outputdir>] [-g <gpmap_gif>] [-k]
+#       [-K] [-L <logfile>] [-p] [-q] [-s <outputsize>]
+#       [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
 #
-# -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
+# -d => output directory
+# -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -g => the name (or full path of the gpmap_gif program)
 # -k => keep the gif file when [-p] is given
-# -l => keep the log file when finished 
-# -q => silent (no normal output) [except for errors]
-# -d => output directory
+# -K => keep the log file when finished 
+# -L => specify the logfile instead of the default
 # -p => output png instead of the default gif (gpmap_gif only outputs gif)
+# -q => silent (no normal output) [except for errors]
 # -s => image size. It is specified as, e.g, "1024;768".
 #	If it is ";" then the original image size is used.
 #	The default is "800;600" if nothing is specified.
@@ -26,10 +28,11 @@
 #
 package require cmdline;
 
-set usage {nbspsatmap [-b] [-g gmap_gif] [-k] [-l] [-q] [-d outputdir] [-p]
-    [-s outputsize] [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]};
-set optlist {b k l p q {g.arg "gpmap_gif"} {d.arg ""}
-    {s.arg "800;600"} {t.arg ""} {D.arg ""}};
+set usage {nbspsatmap [-b] [-d outputdir] [-D <defs>] [-g gmap_gif]
+    [-k] [-K] [-L <logfile>] [-p] [-q]
+    [-s outputsize] [-t <tmpdir>] <inputfile> [<rcfile>]};
+set optlist {b {d.arg ""} {D.arg ""} {g.arg "gpmap_gif"} k K {L.arg ""} p q
+    {s.arg "800;600"} {t.arg ""} };
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 
@@ -104,7 +107,7 @@ if {$option(D) ne ""} {
         set p [split $pair "="];
         set var [lindex $p 0];
         set val [lindex $p 1];
-        set gpmap($var) $val;
+        set gpmap(sat,$var) $val;
     }
 }
 
@@ -136,7 +139,12 @@ set outfname [lindex $params 6];
 # nbspsat creates png files and the outfname parameter here has the .png.
 set outrootname [file rootname $outfname];
 append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
-append logfile $outrootname ".log";
+
+if {$option(L) eq ""} {
+    append logfile $outrootname ".log";
+} else {
+    set logfile $option(L);
+}
 
 if {$option(d) ne ""} {
     set gpmap(outputfile) [file join $option(d) $gpmap(outputfile)];
@@ -155,6 +163,12 @@ if {$option(t) ne ""} {
     }
 }
 
+file delete $gpmap(outputfile);
+file delete "gemglb.nts" "last.nts";
+if {$option(K) == 0} {
+    file delete $logfile;
+}
+
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
@@ -170,8 +184,8 @@ if {[info exists fout]} {
     catch {close $fout};
 }
 
-file delete gemglb.nts last.nts;
-if {$option(l) == 0} {
+file delete "gemglb.nts" "last.nts";
+if {$option(K) == 0} {
     file delete $logfile;
 }
 

@@ -2,9 +2,11 @@ $Id$
 
 - Sun Mar 21 12:47:48 AST 2010
 
-This is the 1st release of the 2.0 version of the
-Noaaport Broadcast System Processor (nbsp). Packages, sources and
-documentation are available from
+This is the 2nd release of the 2.0 version of the
+
+	Noaaport Broadcast System Processor (Nbsp).
+
+Packages, sources and documentation are available from
 
     http://www.noaaport.net
 
@@ -15,10 +17,33 @@ This generation of Nbsp contains many improvements and new features
 over the Nbsp-1.x versions, too many to list them one by one here.
 The most important changes have taken place in the networking module,
 which has been revised to support very configurable master-slave setups
-to support the i-Noaaport project. Nbsp can now receive data from various
-sources, simultaneously, including Noaaport, Radar Level II data,
-and/or other Nbsp master servers. Most, if not all, of the new features are
-documented in some form in the README files or the noaaport.net site.
+to support the i-Noaaport project.
+
+Nbsp can now receive data from various sources, simultaneously,
+including Noaaport, Radar Level II data, and/or other Nbsp master servers.
+Most, if not all, of the new features are documented in some form in the
+README files or the noaaport.net site.
+
+Starting with version 2.0.r2 (this release), nbspd runs as the user
+"noaaport", and therefore the directories where the daemon writes
+must be owned by that user:
+
+    chown -R noaaport:noaaport /var/noaaport
+    chown -R noaaport:noaaport /var/log/noaaport
+    chown -R noaaport:noaaport /var/log/nbsp
+    chown -R noaaport:noaaport /var/run/nbsp
+
+During a fresh install, the package installer will create the
+directories with the appropriate ownership, bit not during an upgrade.
+If you are uprading from an older version, those commands must be
+executed manually.
+
+The Nbspgpmap package is being released simultaneously. This package consists
+of a bunch of program scripts that use the Tclgempak library to drive
+several of the Gempak plot programs.
+
+The Tclssh package is included in this release. This package allows
+one host to execute tcl commands (and scripts) in a remote host (via ssh).
 -
 
 - Nbsp includes the following features:

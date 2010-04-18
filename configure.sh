@@ -7,6 +7,7 @@ config_dirs="conf src utils scripts doc filters \
     tclgrads/ext/nbsp \
     tclgempak/ext/nbsp \
     tclmetar/dc/nbsp \
+    tclssh/ext/nbsp \
     tclupperair/dc/nbsp"
 
 configure_default

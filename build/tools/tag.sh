@@ -10,7 +10,7 @@ masterrepo="nbsprepo"
 mastersite=${masterhost}/${masterrepo}
 
 # nbsptclhttpd receives special treatment
-tcllibs="tclgrads tclgempak tclmetar tclupperair"
+tcllibs="tclgrads tclgempak tclmetar tclssh tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 

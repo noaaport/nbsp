@@ -29,6 +29,10 @@ lappend action {
 # /etc/hosts.allow file is used to control what clients can connect to nsbp,
 # and the netfilter is used to control what is sent to each of those clients.
 
+# This file is read only once, when nbspd starts. If this file is edited while
+# nbspd is running, it can be forced to reload this file by sending a HUP
+# signal to nbspd (it will reload all the other filters as well).
+
 # Examples- 
 
 # The rules are evaluated for each product and for each client.

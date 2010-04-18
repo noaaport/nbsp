@@ -42,6 +42,7 @@ userdirs="/var/run/nbsp
 #
 rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/etc/nbsp/site
+/usr/local/etc/nbsp/defaults/nbspd.conf.d
 /usr/local/etc/nbsp/rc.d
 /usr/local/etc/nbsp/rc.d/rst
 /usr/local/etc/nbsp/rc.d/da
@@ -197,7 +198,7 @@ NOTE:
     chown -R noaaport:noaaport /var/run/nbsp
 
   During a fresh install, the package installer will create the
-  directories with the appropriate ownership, bit not during an upgrade.
+  directories with the appropriate ownership, but not during an upgrade.
   If you are uprading from an older version, those commands must be
   executed manually.
 --

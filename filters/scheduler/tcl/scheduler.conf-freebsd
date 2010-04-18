@@ -73,4 +73,4 @@ schedule H01/1 nbspcleanup hourly-cleanup.conf >& \
 	$nbsplogdir/hourly-cleanup.log &
 
 # Log file rotation
-schedule H01/1 newsyslog -f $nbspconfdir/newsyslog.conf &
+schedule H01/1 newsyslog -r -f $nbspconfdir/newsyslog.conf &

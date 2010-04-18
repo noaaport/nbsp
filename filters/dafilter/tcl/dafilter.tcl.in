@@ -75,7 +75,7 @@ if {[file exists $dafilter(rc)] == 0} {
 }
 
 # Build the list of rc files
-set dafilter(rcfiles) [filterlib_get_rcfiles [file tail $dafilter(rc)] \
+set dafilter(rcfiles) [filterlib_get_rcfiles $dafilter(localrc) \
 	$dafilter(localconfdirs) $dafilter(rcdir) \
 	$dafilter(prerc) $dafilter(postrc)];
 

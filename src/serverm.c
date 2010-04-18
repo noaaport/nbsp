@@ -40,6 +40,9 @@
 /* This is used in lookup_client_options() */
 #define CLIENTOPTION_SEP_CHAR ','
 
+/* How long to sleep if there is an error reloading the filters */
+#define SERVER_RELOAD_FILTER_ERROR_SLEEP_SECS 2
+
 /*
  * The server provides its own allocation for the packetinfo->packet
  * that is retrieved from the queue, to avoid having the qdb functions
@@ -235,20 +238,18 @@ static int server_loop(void){
     }
 
     /*
-     * The server's filters are not curently reloaded when receiving a hup
-     * signal (see periodic() in per.c). We have not enabled that yet
-     * because it is not straightforward how to proceed if the new filter
-     * has an error (i.e., kill the server or continue trying to reload
-     * the filter).
-     */     
+     * Reload the filters if the HUP signal was sent (the flag is set
+     * in the periodic function).
+     */
     if(get_reload_server_filters_flag()){
-      /*
-       *   close_server_filters();
-       *   status = open_server_filters();
-       *   while(status != 0)
-       *     status = open_server_filters();
-       */
-      log_info("%s", "Servers filters are not reloaded.");
+      close_server_filters();
+      status = open_server_filters();
+      while(status != 0){
+	log_errx("%s", "Error reloading server filter. Will try again.");
+	sleep(SERVER_RELOAD_FILTER_ERROR_SLEEP_SECS);
+	status = open_server_filters();
+      }
+      log_info("%s", "Server filters reloaded.");
     }
   }
     

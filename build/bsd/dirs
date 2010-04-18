@@ -13,6 +13,7 @@ libexec/nbsp/tclhttpd/extensions/weatherscope
 libexec/nbsp/tclgrads
 libexec/nbsp/tclgempak
 libexec/nbsp/tclmetar
+libexec/nbsp/tclssh
 libexec/nbsp/tclupperair
 share/nbsp
 share/nbsp/dist
