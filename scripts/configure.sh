@@ -7,11 +7,11 @@ sed \
     -e "/@q@/ s||$Q|g" \
     -e "/@INSTALL@/ s||$INSTALL|" \
     -e "/@TCLSH@/ s||$TCLSH|" \
-    -e "/@NBSPDSH@/s||$NBSPDSH|" \
-    -e "/@NBSPDSHCONF@/s||$NBSPDSHCONF|" \
-    -e "/@NBSPCLEANUP@/s||$NBSPCLEANUP|" \
+    -e "/@RCINIT@/s||$RCINIT|" \
+    -e "/@RCFPATH@/s||$RCFPATH|" \
+    -e "/@RCCONF@/s||$RCCONF|" \
+    -e "/@CLEANUP@/s||$CLEANUP|" \
     -e "/@HOURLYCONF@/s||$HOURLYCONF|" \
     -e "/@STARTCLEANCONF@/s||$STARTCLEANCONF|" \
     -e "/@STARTSTOPRC@/s||$STARTSTOPRC|" \
-    -e "/@NBSPD_RC_FPATH@/s||$NBSPD_RC_FPATH|" \
     Makefile.in > Makefile

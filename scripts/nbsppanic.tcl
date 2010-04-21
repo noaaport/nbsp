@@ -9,7 +9,7 @@
 #   (1) Deletes all the db-related files in the db directory.
 #   (2) Deletes all files in /var/run/nbsp
 #
-# It ensures that nbspd is not running by sending a ``kill -KILL nbspd''
+# It ensures that nbspd is not running by sending a ``pkill -KILL nbspd''
 # before doing anything.
 #
 # -b => run in the background (report errors to syslog instead of stderr)
@@ -17,7 +17,7 @@
 # -r => try to restart nbspd after doing the cleanup
 #
 set usage {nbsppanic [-b] [-p <pause_secs>] [-r]};
-    set optlist {b {p.arg ""} r};
+set optlist {b {p.arg ""} r};
 
 # Let tcl report the errors if these files do not exist. nbspd.init defines,
 # via the nbspd(), the nbspd settings that we need, e.g.,
@@ -35,10 +35,10 @@ package require nbsp::errx;
 
 # configuration
 set nbsppanic(pause_msecs) 2000;
-set nbsppanic(nbspd_rc_fpath) "%NBSPD_RC_FPATH%";
+set nbsppanic(rcfpath) "%RCFPATH%";
 
 #
-# main
+# init
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
@@ -60,12 +60,14 @@ after $nbsppanic(pause_msecs);
 catch {exec pkill -KILL "nbspd"};
 after $nbsppanic(pause_msecs);
 
-# clean the run directory
-cd $nbspd(rundir);
-foreach f [glob -directory "." -tails -nocomplain "*"] {
-    file delete $f;
+# Clean the run directory, if it exists.
+if {[file isdirectory $nbspd(rundir)]} {
+    cd $nbspd(rundir);
+    foreach f [glob -directory "." -tails -nocomplain "*"] {
+	file delete $f;
+    }
+    after $nbsppanic(pause_msecs);
 }
-after $nbsppanic(pause_msecs);
 
 # bdb dir
 cd $nbspd(bdbdir);
@@ -82,7 +84,7 @@ foreach f [glob -directory "." -tails -nocomplain "pctl*"] {
 }
 after $nbsppanic(pause_msecs);
 
-# If -s was given try to start it
+# If -r was given try to restart it
 if {$option(r) == 1} {
-    exec $nbsppanic(nbspd_rc_fpath) "start";
+    exec $nbsppanic(rcfpath) "start";
 }

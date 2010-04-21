@@ -5,41 +5,46 @@
 
 TCLSH =         @TCLSH@
 INSTALL =	@INSTALL@
-NBSPDSH =	@NBSPDSH@
-NBSPDSHCONF =	@NBSPDSHCONF@
-NBSPCLEANUP =	@NBSPCLEANUP@
+RCINIT =	@RCINIT@
+RCCONF =	@RCCONF@
+RCFPATH =	@RCFPATH@
+CLEANUP =	@CLEANUP@
 HOURLYCONF =	@HOURLYCONF@
 STARTCLEANCONF = @STARTCLEANCONF@
 STARTSTOPRC = 	@STARTSTOPRC@
-NBSPD_RC_FPATH = @NBSPD_RC_FPATH@
 
 SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
 		startstop.rc-sample
-BINTOOLS =	nbspcleanup nbspversion nbsppanic
+BINTOOLS =	nbspcleanup nbspversion nbsppanic nbspctl
 LIBTOOLS =	startstop
 LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
 DOCS =		nbspd.sh-sample
-EXTRA_DOCS =	${NBSPDSHCONF}
+EXTRA_DOCS =	${RCCONF}
 TARGET = 	${SAMPLES} ${BINTOOLS} ${LIBTOOLS} ${DOCS}
 
 all: ${TARGET}
 
-nbspd.sh-sample: ${NBSPDSH}
-	cp ${NBSPDSH} nbspd.sh-sample
+nbspd.sh-sample: ${RCINIT}
+	cp ${RCINIT} nbspd.sh-sample
 
 hourly-cleanup.conf-sample: ${HOURLYCONF}
 	cp ${HOURLYCONF} hourly-cleanup.conf-sample
 
-nbspcleanup: ${NBSPCLEANUP}
-	sed -e /%TCLSH%/s##${TCLSH}# ${NBSPCLEANUP} > nbspcleanup
+nbspcleanup: ${CLEANUP}
+	sed -e /%TCLSH%/s##${TCLSH}# ${CLEANUP} > nbspcleanup
 
 nbspversion: nbspversion.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspversion.tcl > nbspversion
 
 nbsppanic: nbsppanic.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# \
-	-e /%NBSPD_RC_FPATH%/s##${NBSPD_RC_FPATH}# \
+	-e /%RCFPATH%/s##${RCFPATH}# \
 	nbsppanic.tcl > nbsppanic
+
+nbspctl: nbspctl.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%RCFPATH%/s##${RCFPATH}# \
+	nbspctl.tcl > nbspctl
 
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop
