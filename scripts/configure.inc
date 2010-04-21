@@ -4,6 +4,7 @@
 . ../configure.inc
 
 NBSPDSH=nbspd.sh-freebsd
+NBSPDSHCONF=
 HOURLYCONF=hourly-cleanup.conf-freebsd
 NBSPCLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
@@ -31,6 +32,7 @@ case $os in
 	NBSPD_RC_FPATH=/etc/init.d/nbspd
 
 	[ $flavor = debian ] && STARTSTOPRC=startstop.rc-debian
+	[ $flavor = debian ] && NBSPDSHCONF=nbspd.sh.conf-debian
 
 	# Centos does not have tcl-8.5 and cannot the dicts version of
 	# the nbspcleanup script

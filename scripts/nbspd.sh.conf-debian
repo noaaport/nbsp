@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+# This file can be installed as
+#
+# /etc/default/nbsp
+#
+# to change some of the default settings used in
+#
+# /etc/init.d/nbspd
+
+#
+# Defaults
+#
+
+# RUNDIR=/var/run/nbsp
+# OWNER=noaaport
+# GROUP=noaaport

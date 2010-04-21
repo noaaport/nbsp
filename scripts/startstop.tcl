@@ -29,7 +29,7 @@ if {$argc == 1} {
     set startstop(stage) [lindex $argv 0];
 }
 if {($startstop(stage) ne "start") && ($startstop(stage) ne "stop")} {
-    puts "$argv0 disabled: $usage";
+    log_msg "$argv0 disabled: $usage";
     return 1;
 }
 

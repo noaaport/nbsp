@@ -14,6 +14,9 @@
 #
 # 	PATH=$PATH:/usr/local/{bin,sbin,libexec/nbsp,libexec/nbsp/site}:
 #
+# This file is executed as the normal user (e.g. noaaport). Any commands
+# that must be executed as root must appear in the init script
+# (i.e., re-creating /var/run/<subdir> in Ubuntu).
 
 #
 # Default Configuration
@@ -37,10 +40,12 @@ lappend start {
   }
 }
 
-# MacOSX needs this
-lappend start {
-  file mkdir $nbsprundir;
-}
+# MacOSX needs this. If the program runs as root this is ok here,
+# otherwise the equivalent of this must appear in the init script.
+#
+# lappend start {
+#  file mkdir $nbsprundir;
+# }
 
 lappend stop {
   if {[file exists $nbspdbpanicfile]} {

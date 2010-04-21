@@ -16,19 +16,25 @@
 NAME=nbsp
 DESC=nbsp
 DAEMON=/usr/local/sbin/${NAME}d
-PIDFILE=/var/run/$NAME/${NAME}d.pid
+RUNDIR=/var/run/$NAME
+PIDFILE=$RUNDIR/${NAME}d.pid
+OWNER=noaaport
+GROUP=noaaport
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 [ -x $DAEMON ] || exit 0
 
 # Include nbsp defaults if available
-if [ -f /etc/default/$NAME ] ; then
-	. /etc/default/$NAME
+if [ -f /etc/default/${NAME}d ] ; then
+	. /etc/default/${NAME}d
 fi
 
 case "$1" in
   start)
+	# In Ubuntu /var/run/<subdir> must be recreated
+	[ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
+
 	echo -n "Starting $DESC: "
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
 	    -- $DAEMON_OPTS
@@ -40,7 +46,7 @@ case "$1" in
 	echo "$NAME."
 	;;
   *)
-	N=/etc/init.d/$NAME
+	N=/etc/init.d/${NAME}d
 	echo "Usage: $N {start|stop}" >&2
 	exit 1
 	;;

@@ -14,14 +14,17 @@
 #
 # 	PATH=$PATH:/usr/local/{bin,sbin,libexec/nbsp,libexec/nbsp/site}:
 #
+# This file is executed as the normal user (e.g. noaaport). Any commands
+# that must be executed as root must appear in the init script
+# (i.e., re-creating /var/run/<subdir> in Ubuntu).
 
 #
 # Default Configuration
 #
 set nbspconfdir /usr/local/etc/nbsp;
 set nbsplogdir /var/log/nbsp;
-set nbspcspooldir /var/noaaport/nbsp/cspool;
 set nbsprundir /var/run/nbsp;
+set nbspcspooldir /var/noaaport/nbsp/cspool;
 set nbspdbpanicfile /var/run/nbsp/nbspd.bdbpanic;
 
 # Execute the start cleanup script
@@ -37,10 +40,13 @@ lappend start {
   }
 }
 
-# This is not needed by debian but it is needed by ubuntu
-lappend start {
-  file mkdir $nbsprundir;
-}
+# This is not needed by debian but it is needed by ubuntu. If the program
+# runs as root this is ok here, otherwise the equivalent of this must
+# appear in the init script.
+#
+# lappend start {
+#   file mkdir $nbsprundir;
+# }
 
 lappend stop {
   if {[file exists $nbspdbpanicfile]} {
