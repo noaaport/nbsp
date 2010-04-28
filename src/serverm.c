@@ -1231,6 +1231,15 @@ static void spawn_client_threads(void){
     if(valid_str(g.clientoptions))
       lookup_client_options(&g.ct->ce[i], g.clientoptions);
 
+    /*
+     * NOTE: Using a function such as
+     *
+     * lookup_client_options(&g.ct->ce[i], &cqparam, g.clientoptions);
+     *
+     * we can also include in clienoptions the cqparam for per-thread
+     * setting of those parameters.
+     */
+
     status = allow_filter_init(&g.ct->ce[i]);
     if(status == 0){
       status = conn_element_init4(&g.ct->ce[i],
@@ -1292,9 +1301,10 @@ static void lookup_client_options(struct conn_element_st *ce,
     p = strchr(p, CLIENTOPTION_SEP_CHAR);
     if(p != NULL){
       ++p;
-      if(sscanf(p, "%d", &val) == 1)
-	a[count] = val;
-      
+      if(sscanf(p, "%d", &val) == 1){
+	if(val > 0)
+	  a[count] = val;
+      }
       ++count;
     }
   }
