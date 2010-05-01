@@ -165,11 +165,13 @@ cd htdocs/pub
 [ -e "gempak" ] || ln -s /var/noaaport/data/gempak gempak
 [ -e "grib" ] || ln -s /var/noaaport/data/grib grib
 [ -e "track" ] || ln -s /var/noaaport/data/track track
-[ -d "metarplot" ] || mkdir metarplot
-[ -d "statplot" ] || mkdir statplot
-[ -d "radmap" ] || mkdir radmap
-[ -d "weatherscope/conf" ] || mkdir -p weatherscope/conf
-[ -d "weatherscope/client" ] || mkdir -p weatherscope/client
+[ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
+[ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot
+[ -d "radmap" ] || install -d -m 755 -o $user -g $user radmap
+[ -d "npstats" ] || install -d -m 755 -o $user -g $user npstats
+[ -d "weatherscope/conf" ] || \
+    install -d -m 755 -o $user -g $user weatherscope/conf
+[ -d "weatherscope/client" ] || \
+    install -d -m 755 -o $user -g $user weatherscope/client
 [ -e "weatherscope/data" ] || \
     ln -s /var/noaaport/data/weatherscope weatherscope/data
-[ -d "npstats" ] || mkdir npstats
