@@ -192,8 +192,8 @@
 #define CONFOPT_SERVERSTATE_LOGPERIOD_SECS	@counter@
 #define DEFVAL_SERVERSTATE_LOGPERIOD_SECS	SERVERSTATE_LOGPERIOD_SECS
 
-#define CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT	@counter@
-#define DEFVAL_SERVERTHREADS_LOGPERIOD_COUNT	SERVERTHREADS_LOGPERIOD_COUNT
+#define CONFOPT_SERVERTHREADS_LOGPERIOD_SECS	@counter@
+#define DEFVAL_SERVERTHREADS_LOGPERIOD_SECS	SERVERTHREADS_LOGPERIOD_SECS
 
 #define CONFOPT_SERVERTYPE		@counter@
 #define DEFVAL_SERVERTYPE		SERVER_TYPE
@@ -475,8 +475,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_QSTATE_LOGPERIOD_SECS},
   {"serverstate_logperiod_secs", CONFOPT_SERVERSTATE_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SERVERSTATE_LOGPERIOD_SECS},
-  {"serverthreads_logperiod_count", CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT,
-	TCL_LINK_INT, NULL, DEFVAL_SERVERTHREADS_LOGPERIOD_COUNT},
+  {"serverthreads_logperiod_secs", CONFOPT_SERVERTHREADS_LOGPERIOD_SECS,
+	TCL_LINK_INT, NULL, DEFVAL_SERVERTHREADS_LOGPERIOD_SECS},
   {"servertype", CONFOPT_SERVERTYPE, TCL_LINK_INT, NULL, DEFVAL_SERVERTYPE},
   {"servername", CONFOPT_SERVERNAME, TCL_LINK_STRING, NULL, 0},
   {"serverport", CONFOPT_SERVERPORT, TCL_LINK_STRING, NULL, 0},
@@ -670,8 +670,8 @@ int configure(void){
 	CONFOPT_QSTATE_LOGPERIOD_SECS);
   setoptval(&g.serverstate_logperiod_secs, confoptions,
 	CONFOPT_SERVERSTATE_LOGPERIOD_SECS);
-  setoptval(&g.serverthreads_logperiod_count, confoptions,
-	CONFOPT_SERVERTHREADS_LOGPERIOD_COUNT);
+  setoptval(&g.serverthreads_logperiod_secs, confoptions,
+	CONFOPT_SERVERTHREADS_LOGPERIOD_SECS);
   setoptval(&g.servertype, confoptions, CONFOPT_SERVERTYPE);
   setoptval(&g.servername, confoptions, CONFOPT_SERVERNAME);
   setoptval(&g.serverport, confoptions, CONFOPT_SERVERPORT);
@@ -848,8 +848,8 @@ void print_confoptions(void){
 	(uintmax_t)g.qstate_logperiod_secs);
   fprintf(stdout, "serverstate_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.serverstate_logperiod_secs);
-  fprintf(stdout, "serverthreads_logperiod_count " "%d\n",
-	g.serverthreads_logperiod_count);
+  fprintf(stdout, "serverthreads_logperiod_secs " "%" PRIuMAX "\n",
+	(uintmax_t)g.serverthreads_logperiod_secs);
   fprintf(stdout, "servertype %d\n", g.servertype);
   fprintf_str(stdout, fmt, "servername", g.servername);
   fprintf_str(stdout, fmt, "serverport", g.serverport);
@@ -1022,8 +1022,8 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.qstate_logperiod_secs, 0, "qstate_logperiod_secs");
   VALIDATE_PARAM_L(g.serverstate_logperiod_secs, 0,
 	"serverstate_logperiod_secs");
-  VALIDATE_PARAM_L(g.serverthreads_logperiod_count, 0,
-	"serverthreads_logperiod_count");
+  VALIDATE_PARAM_L(g.serverthreads_logperiod_secs, 0,
+	"serverthreads_logperiod_secs");
 
   VALIDATE_PARAM_L(g.broadcast_read_timeout_secs, 0,
 	"broadcast_read_timeout_secs");

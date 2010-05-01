@@ -140,7 +140,7 @@ void init_globals(void){
   g.nbspstats_logperiod_secs = NBSP_STATS_LOGPERIOD_SECS;
   g.qstate_logperiod_secs = QSTATE_LOGPERIOD_SECS;
   g.serverstate_logperiod_secs = SERVERSTATE_LOGPERIOD_SECS;
-  g.serverthreads_logperiod_count = SERVERTHREADS_LOGPERIOD_COUNT;
+  g.serverthreads_logperiod_secs = SERVERTHREADS_LOGPERIOD_SECS;
   g.broadcast_read_timeout_secs = BROADCAST_READ_TIMEOUT_SECS;
   g.fifo_write_timeout_ms = FIFO_WRITE_TIMEOUT_MS;
   g.client_write_timeout_ms = CLIENT_WRITE_TIMEOUT_MS;

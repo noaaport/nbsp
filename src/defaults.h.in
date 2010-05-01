@@ -279,10 +279,9 @@
 #define SERVERSTATE_LOGPERIOD_SECS	60
 
 /* 
- * How often to write the server threads statistics (in terms of the
- * number of products processed).
+ * How often to write the server threads statistics
  */
-#define SERVERTHREADS_LOGPERIOD_COUNT		100
+#define SERVERTHREADS_LOGPERIOD_SECS	60
 
 /* 
  * Readers' timeout waiting for broadcasts (in seconds). 

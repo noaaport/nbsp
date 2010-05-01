@@ -243,9 +243,11 @@ static void cleanup(void *arg){
 
 static void periodic(struct conn_element_st *ce){
   /*
-   * When the number of products given in the variable
-   *	g.serverthreads_logperiod_count
-   * have been processed, this function will write the stats summary since
+   * When the period defined in the variable
+   * 
+   *	g.serverthreads_logperiod_secs
+   *
+   * has passed, this function will write the stats summary since
    * the last time that it was called.
    *
    * Also check the status flag of the queue. The flags are defined
@@ -265,7 +267,11 @@ static void periodic(struct conn_element_st *ce){
     return;
   }
 
-  status = conn_element_report_cstats(ce, g.serverthreads_logperiod_count,
+  /*
+   * In nbsp the criterion for loging is based on the period, and not on the
+   * packet count.
+   */
+  status = conn_element_report_cstats(ce, 0, g.serverthreads_logperiod_secs,
 				      g.serverthreadsfile);
   if(status != 0)
     log_err_write(g.serverthreadsfile);
