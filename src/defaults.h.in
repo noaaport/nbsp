@@ -82,11 +82,13 @@
  * The default spool method is the flat-file fs configuration (const.h).
  */
 #define SPOOLTYPE_DEFAULT SPOOLTYPE_FS
+
 /* 
  * Where the unpacked and assembled (but unfiltered) products are
  * stored before passing them through the filters.
  */
 #define NBSP_SPOOL_DIR		"/var/noaaport/nbsp/spool"
+
 /*
  * The default number of slots in the spooldb (the array struct that
  * keeps track of the number of files saved in the spool directory).
