@@ -100,6 +100,7 @@ struct nbsp_globals {
   time_t nbspstats_logperiod_secs;
   time_t qstate_logperiod_secs;	/* how often to log the state of the queues */
   time_t serverstate_logperiod_secs; /* how often to log the server state */
+  int serverthreads_logperiod_packets; /* how often a server thread logs */
   time_t serverthreads_logperiod_secs; /* how often a server thread logs */
   int broadcast_read_timeout_secs;  /* readers timeout waiting for broadcast */
   int fifo_write_timeout_ms;	   /* filter server timeout writing to fifos */

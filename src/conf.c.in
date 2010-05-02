@@ -192,6 +192,9 @@
 #define CONFOPT_SERVERSTATE_LOGPERIOD_SECS	@counter@
 #define DEFVAL_SERVERSTATE_LOGPERIOD_SECS	SERVERSTATE_LOGPERIOD_SECS
 
+#define CONFOPT_SERVERTHREADS_LOGPERIOD_PACKETS	@counter@
+#define DEFVAL_SERVERTHREADS_LOGPERIOD_PACKETS	SERVERTHREADS_LOGPERIOD_PACKETS
+
 #define CONFOPT_SERVERTHREADS_LOGPERIOD_SECS	@counter@
 #define DEFVAL_SERVERTHREADS_LOGPERIOD_SECS	SERVERTHREADS_LOGPERIOD_SECS
 
@@ -475,6 +478,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_QSTATE_LOGPERIOD_SECS},
   {"serverstate_logperiod_secs", CONFOPT_SERVERSTATE_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SERVERSTATE_LOGPERIOD_SECS},
+  {"serverthreads_logperiod_packets", CONFOPT_SERVERTHREADS_LOGPERIOD_PACKETS,
+	TCL_LINK_INT, NULL, DEFVAL_SERVERTHREADS_LOGPERIOD_PACKETS},
   {"serverthreads_logperiod_secs", CONFOPT_SERVERTHREADS_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SERVERTHREADS_LOGPERIOD_SECS},
   {"servertype", CONFOPT_SERVERTYPE, TCL_LINK_INT, NULL, DEFVAL_SERVERTYPE},
@@ -670,6 +675,8 @@ int configure(void){
 	CONFOPT_QSTATE_LOGPERIOD_SECS);
   setoptval(&g.serverstate_logperiod_secs, confoptions,
 	CONFOPT_SERVERSTATE_LOGPERIOD_SECS);
+  setoptval(&g.serverthreads_logperiod_packets, confoptions,
+	CONFOPT_SERVERTHREADS_LOGPERIOD_PACKETS);
   setoptval(&g.serverthreads_logperiod_secs, confoptions,
 	CONFOPT_SERVERTHREADS_LOGPERIOD_SECS);
   setoptval(&g.servertype, confoptions, CONFOPT_SERVERTYPE);
@@ -848,6 +855,8 @@ void print_confoptions(void){
 	(uintmax_t)g.qstate_logperiod_secs);
   fprintf(stdout, "serverstate_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.serverstate_logperiod_secs);
+  fprintf(stdout, "serverthreads_logperiod_packets %d\n",
+	g.serverthreads_logperiod_packets);
   fprintf(stdout, "serverthreads_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.serverthreads_logperiod_secs);
   fprintf(stdout, "servertype %d\n", g.servertype);
@@ -1022,6 +1031,9 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.qstate_logperiod_secs, 0, "qstate_logperiod_secs");
   VALIDATE_PARAM_L(g.serverstate_logperiod_secs, 0,
 	"serverstate_logperiod_secs");
+
+  VALIDATE_PARAM_L(g.serverthreads_logperiod_packets, -1,
+	"serverthreads_logperiod_packets");
   VALIDATE_PARAM_L(g.serverthreads_logperiod_secs, 0,
 	"serverthreads_logperiod_secs");
 

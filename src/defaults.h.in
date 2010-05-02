@@ -279,8 +279,12 @@
 #define SERVERSTATE_LOGPERIOD_SECS	60
 
 /* 
- * How often to write the server threads statistics
+ * How often to write the server threads statistics. If the "packets" parameter
+ * is positive then the stats are written after that number
+ * of packets have been transmitted to the client. Otherwise the "secs"
+ * parameter is used.
  */
+#define SERVERTHREADS_LOGPERIOD_PACKETS	-1
 #define SERVERTHREADS_LOGPERIOD_SECS	60
 
 /* 

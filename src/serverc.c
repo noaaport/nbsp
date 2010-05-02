@@ -268,10 +268,12 @@ static void periodic(struct conn_element_st *ce){
   }
 
   /*
-   * In nbsp the criterion for loging is based on the period, and not on the
-   * packet count.
+   * In nbsp the default criterion for loging is the period, and not on the
+   * packet count, but that is runtime configurable.
    */
-  status = conn_element_report_cstats(ce, 0, g.serverthreads_logperiod_secs,
+  status = conn_element_report_cstats(ce,
+				      g.serverthreads_logperiod_packets,
+				      g.serverthreads_logperiod_secs,
 				      g.serverthreadsfile);
   if(status != 0)
     log_err_write(g.serverthreadsfile);
