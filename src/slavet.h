@@ -25,6 +25,7 @@
 #define SLAVE_STRING_SEP1 ": \t\n"
 #define SLAVE_STRING_SEP2 ","
 
+#define SLAVE_NUM_OPTIONS 5
 #define SLAVE_NET_STRING_FIELDS 8
 #define SLAVE_IN_STRING_FIELDS 7
 

@@ -29,13 +29,15 @@ static int slave_element_configure2(struct slave_element_st *slave,
 				    char *masterport,
 				    char *infifo,
 				    char **options_argv,
+				    int options_argc,
 				    struct slave_options_st *defaults);
 static void slave_element_release(struct slave_element_st *slave);
 static int slave_element_configure_options(struct slave_element_st *slave,
 					   struct slave_options_st *options);
 static void slave_element_release_options(struct slave_element_st *slave);
 static int slave_element_override_options(struct slave_element_st *slave,
-					  char **options_argv);
+					  char **options_argv,
+					  int options_argc);
 
 
 static int slave_table_alloc(struct slave_table_st **slavet, int numslaves);
@@ -67,6 +69,7 @@ static int slave_element_configure(struct slave_element_st *slave,
   char *masterport;
   char *infifo;
   char **options_argv = NULL;    /* the numeric options, if given in "s" */
+  int options_argc = 0;
     
   ssplit = strsplit_create(s, SLAVE_STRING_SEP2, STRSPLIT_FLAG_INCEMPTY);
   if(ssplit == NULL){
@@ -85,7 +88,7 @@ static int slave_element_configure(struct slave_element_st *slave,
   }
 
   if(slavetype == SLAVETYPE_INFIFO){
-    if((ssplit->argc == 2) || (ssplit->argc == SLAVE_IN_STRING_FIELDS)){
+    if((ssplit->argc >= 2) && (ssplit->argc <= SLAVE_IN_STRING_FIELDS)){
       infifo = ssplit->argv[1];
       if(valid_str(infifo) == 0)
 	status = 1;
@@ -97,8 +100,11 @@ static int slave_element_configure(struct slave_element_st *slave,
       log_errx("Invalid configuration string for SLAVETYPE_INFIFO: %s", s);
       goto End;
     }
-    if(ssplit->argc > 2)
+
+    if(ssplit->argc > 2){
       options_argv = ssplit->argv + 2;
+      options_argc = ssplit->argc - 2;
+    }
   } else {
     masterport = defaults->slave_masterport;
     if(ssplit->argc == 2)
@@ -109,13 +115,17 @@ static int slave_element_configure(struct slave_element_st *slave,
        */
       mastername = ssplit->argv[1];
       masterport = ssplit->argv[2];
-    } else if(ssplit->argc == SLAVE_NET_STRING_FIELDS){
+    } else if((ssplit->argc > 3) && (ssplit->argc <= SLAVE_NET_STRING_FIELDS)){
       /*
-       * In this case the port can be empty, so that we leave the default.
+       * In this case the port can be empty, and in that case
+       * we leave the default.
        */
       mastername = ssplit->argv[1];
       if(valid_str(ssplit->argv[2]))
 	masterport = ssplit->argv[2];
+
+      options_argv = ssplit->argv + 3;
+      options_argc = ssplit->argc - 3;
     } else
       status = 1;
 
@@ -129,9 +139,6 @@ static int slave_element_configure(struct slave_element_st *slave,
       log_errx("Invalid configuration string for SLAVETYPE_NBS: %s", s);
       goto End;
     }
-
-    if(ssplit->argc > 3)
-      options_argv = ssplit->argv + 3;
   }
 
   status = slave_element_configure2(slave,
@@ -140,6 +147,7 @@ static int slave_element_configure(struct slave_element_st *slave,
 				    masterport,
 				    infifo,
 				    options_argv,
+				    options_argc,
 				    defaults);
  End:
   
@@ -155,6 +163,7 @@ static int slave_element_configure2(struct slave_element_st *slave,
 				    char *masterport,
 				    char *infifo,
 				    char **options_argv,
+				    int options_argc,
 				    struct slave_options_st *defaults){
 
   if(slavetype == SLAVETYPE_INFIFO){
@@ -208,7 +217,7 @@ static int slave_element_configure2(struct slave_element_st *slave,
 
   /* Configure the options with the individual overrides in options_argv */ 
   if(options_argv != NULL){
-    if(slave_element_override_options(slave, options_argv) != 0){
+    if(slave_element_override_options(slave, options_argv, options_argc) != 0){
       log_err("Cannot override options.");
       slave_element_release(slave);
       return(-1);
@@ -276,7 +285,8 @@ static void slave_element_release_options(struct slave_element_st *slave){
 }
 
 static int slave_element_override_options(struct slave_element_st *slave,
-					  char **options_argv){
+					  char **options_argv,
+					  int options_argc){
   /*
    * Here options_argv is an array of pointers to the strings that
    * appear in the <options> section of the masterservers specification.
@@ -288,27 +298,33 @@ static int slave_element_override_options(struct slave_element_st *slave,
    * Our job here is to extract the values, keeping in mind that some of
    * them could be empty (i.e., the string 10,,,-1,60 is valid.
    */
+  int i;
+  int a[SLAVE_NUM_OPTIONS];
   int v;
 
-  if(strto_int(options_argv[0], &v) == 0){
-    slave->options.slave_read_timeout_secs = v;
+  /*
+   * The strategy is to copy to the a[] array the default values that are
+   * already set. Then override the a[] with the options_argv[], and then
+   * copy the updated values in a[] to the final variables.
+   */
+  assert(SLAVE_NUM_OPTIONS == 5);
+
+  a[0] = slave->options.slave_read_timeout_secs;
+  a[1] = slave->options.slave_read_timeout_retry;
+  a[2] = slave->options.slave_reopen_timeout_secs;
+  a[3] = slave->options.slave_so_rcvbuf;
+  a[4] = slave->options.slave_stats_logperiod_secs;
+
+  for(i = 0; i < options_argc; ++i){
+    if(strto_int(options_argv[i], &v) == 0)
+      a[i] = v;
   }
 
-  if(strto_int(options_argv[1], &v) == 0){
-    slave->options.slave_read_timeout_retry = v;
-  }
-
-  if(strto_int(options_argv[2], &v) == 0){
-    slave->options.slave_reopen_timeout_secs = v;
-  }
-
-  if(strto_int(options_argv[3], &v) == 0){
-    slave->options.slave_so_rcvbuf = v;
-  }
-
-  if(strto_int(options_argv[4], &v) == 0){
-    slave->options.slave_stats_logperiod_secs = v;
-  }
+  slave->options.slave_read_timeout_secs = a[0];
+  slave->options.slave_read_timeout_retry = a[1];
+  slave->options.slave_reopen_timeout_secs = a[2];
+  slave->options.slave_so_rcvbuf = a[3];
+  slave->options.slave_stats_logperiod_secs = a[4];
 
   return(0);
 }

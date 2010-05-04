@@ -1236,7 +1236,7 @@ static void spawn_client_threads(void){
      *
      * lookup_client_options(&g.ct->ce[i], &cqparam, g.clientoptions);
      *
-     * we can also include in clienoptions the cqparam for per-thread
+     * we can also include in clientoptions the cqparam for per-thread
      * setting of those parameters.
      */
 
