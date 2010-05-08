@@ -149,9 +149,6 @@ void init_globals(void){
   g.client_reconnect_wait_sleep_secs = CLIENT_RECONNECT_WAIT_SLEEP_SECS;
   g.client_reconnect_wait_sleep_retry = CLIENT_RECONNECT_WAIT_SLEEP_RETRY;
   g.clientoptions = NULL;
-  g.servers_queue_read_timeout_ms = SERVERS_QUEUE_READ_TIMEOUT_MS;
-  g.sthreads_queue_read_timeout_ms = STHREADS_QUEUE_READ_TIMEOUT_MS;
-  g.processor_pctl_read_timeout_ms = PROCESSOR_PCTL_READ_TIMEOUT_MS;
 
   g.memfile_blocksize = MEMFILE_BLOCKSIZE;
   g.memfile_minsize = MEMFILE_MINSIZE;
@@ -167,16 +164,19 @@ void init_globals(void){
 
   g.queue_maxsize_soft = QUEUE_MAXSIZE_SOFT;
   g.queue_maxsize_hard = QUEUE_MAXSIZE_HARD;
+  g.queue_read_timeout_ms = QUEUE_READ_TIMEOUT_MS;
   g.queue_quota_logperiod_secs = QUEUE_QUOTA_LOGPERIOD_SECS;
 
   g.pctl_maxsize_soft = PCTL_MAXSIZE_SOFT;
   g.pctl_maxsize_hard = PCTL_MAXSIZE_HARD;
   g.pctl_maxmem_soft = PCTL_MAXMEM_SOFT_MB;
   g.pctl_maxmem_hard = PCTL_MAXMEM_HARD_MB;
+  g.pctl_read_timeout_ms = PCTL_READ_TIMEOUT_MS;
 
+  g.client_queue_dbcache_mb = CLIENT_QUEUE_DBCACHE_MB;
   g.client_queue_maxsize_soft = CLIENT_QUEUE_MAXSIZE_SOFT;
   g.client_queue_maxsize_hard = CLIENT_QUEUE_MAXSIZE_HARD;
-  g.client_queue_dbcache_mb = CLIENT_QUEUE_DBCACHE_MB;
+  g.client_queue_read_timeout_ms = CLIENT_QUEUE_READ_TIMEOUT_MS;
 
   g.rtxdb_dbfname = NBSP_RTXDB_DBFNAME;
   g.rtxdb_slots = NBSP_RTXDB_SLOTS;

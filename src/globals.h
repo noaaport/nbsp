@@ -109,9 +109,6 @@ struct nbsp_globals {
   int client_reconnect_wait_sleep_secs;
   int client_reconnect_wait_sleep_retry;
   char *clientoptions;		/* per-host client options */
-  int servers_queue_read_timeout_ms; /* servers timeout reading from queues */
-  int sthreads_queue_read_timeout_ms; /* same for servers' threads */
-  int processor_pctl_read_timeout_ms; /* processor thread waiting for pctl */
   int memfile_blocksize;	/* for the mfile routines */
   int memfile_minsize;		/* same as above */
   char *dbhome;			/* home dir for db queues (for dbenv) */
@@ -125,14 +122,17 @@ struct nbsp_globals {
   /* db configuration */
   int queue_maxsize_soft;	/* maximum size (soft) of servers queues */
   int queue_maxsize_hard;	/* same but hard */
+  int queue_read_timeout_ms;    /* servers timeout reading from queues */
   int queue_quota_logperiod_secs;
   int pctl_maxsize_soft;	/* maximum sizes of pctl queue */
   int pctl_maxsize_hard;
   int pctl_maxmem_soft;		/* mem limits for pctlmfdb queue (in mb) */
   int pctl_maxmem_hard;
-  int client_queue_maxsize_soft; /* same for network client queues */
-  int client_queue_maxsize_hard; /* same for network client queues */
-  int client_queue_dbcache_mb;
+  int pctl_read_timeout_ms;     /* processor thread waiting for pctl */
+  int client_queue_dbcache_mb;   /* size for network client queues */
+  int client_queue_maxsize_soft; /* same as above for network client queues */
+  int client_queue_maxsize_hard; /* same as above for network client queues */
+  int client_queue_read_timeout_ms;
   char *rtxdb_dbfname;		/* processor db of received files */
   unsigned int rtxdb_slots;	/* number of slots in rtxdb */
   unsigned int rtxdb_truncate_minutes;

@@ -133,7 +133,7 @@ static void *client_thread_main(void *arg){
    * We used to set the cancellation state to DISABLED and then renabled
    * after the loop in the loop, to avoid cancelling the thread while
    * it holds a mutex locked. But this not appropriate if we let the
-   * g.sthreads_queue_read_timeout_ms be a configurable parameter: the user
+   * g.client_queue_read_timeout_ms be a configurable parameter: the user
    * can set this very high, and the thread would not be canceled until
    * that timer expires. [The alternative would be to write a wrapper
    * over connqueue_rcv() that disbales the cancellation and calls
@@ -178,7 +178,7 @@ static void loop(struct conn_element_st *ce){
    */
   int status;
   int dberror;
-  int timeout_ms = g.sthreads_queue_read_timeout_ms;
+  int timeout_ms = g.client_queue_read_timeout_ms;
   void *data = NULL;
   uint32_t data_size;
 

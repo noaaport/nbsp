@@ -312,16 +312,6 @@
 #define CLIENT_RECONNECT_WAIT_SLEEP_SECS	10
 #define CLIENT_RECONNECT_WAIT_SLEEP_RETRY	6
 
-/*
- * filter and server, and server-threads and filter-threads timeout waiting
- * for queue ready.
- */
-#define SERVERS_QUEUE_READ_TIMEOUT_MS	1000
-#define STHREADS_QUEUE_READ_TIMEOUT_MS	10000
-
-/* processor thread timeout waiting for complete product in pctl */
-#define PROCESSOR_PCTL_READ_TIMEOUT_MS	1000
-
 /* main loop sleep interval */
 #define MAINLOOP_SLEEP_SECS	5
 
@@ -385,7 +375,13 @@
  */
 #define QUEUE_MAXSIZE_SOFT		16384
 #define QUEUE_MAXSIZE_HARD		(SPOOLDB_SLOTS/2)
-/* How often any soft or hard limit excess (see above) is reported. */
+/*
+ * filter and network servers timeout waiting for queue ready.
+ */
+#define QUEUE_READ_TIMEOUT_MS		1000
+/*
+ * How often any soft or hard limit excess (see above) is reported.
+ */
 #define QUEUE_QUOTA_LOGPERIOD_SECS	60
 
 /*
@@ -398,15 +394,19 @@
 #define PCTL_MAXSIZE_HARD		0
 #define PCTL_MAXMEM_SOFT_MB		128
 #define PCTL_MAXMEM_HARD_MB		256
+#define PCTL_READ_TIMEOUT_MS		1000
 
 /* 
  * The network client db queues. They are all in-memory. Each entry in
  * each queue is around 100 bytes (the packetinfo or emwininfo struct).
  * A cache of 1 MB for each queue is enough to hold ten thousand entries.
+ * The parameter CLIENT_QUEUE_READ_TIMEOUT_MS is the
+ * server threads timeout waiting for the client queues.
  */
+#define CLIENT_QUEUE_DBCACHE_MB		1
 #define CLIENT_QUEUE_MAXSIZE_SOFT	1024
 #define CLIENT_QUEUE_MAXSIZE_HARD	2048
-#define CLIENT_QUEUE_DBCACHE_MB		1
+#define CLIENT_QUEUE_READ_TIMEOUT_MS	10000
 
 /*
  * The rtxdb database file, used to keep track of retransmissions.

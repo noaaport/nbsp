@@ -1199,8 +1199,8 @@ static void spawn_client_threads(void){
    * Initialize the cqparam with the parameters appropriate for nbs1, nbs2
    * clients.
    */
-  cqparam.cache_mb = g.client_queue_dbcache_mb;
   cqparam.reclen = gpacketinfo.packet_size;
+  cqparam.cache_mb = g.client_queue_dbcache_mb;
   cqparam.softlimit = g.client_queue_maxsize_soft;
   cqparam.hardlimit = g.client_queue_maxsize_hard;
 

@@ -239,15 +239,6 @@
 #define CONFOPT_CLIENT_OPTIONS		@counter@
 #define DEFVAL_CLIENT_OPTIONS		NULL
 
-#define CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS @counter@
-#define DEFVAL_SERVERS_QUEUE_READ_TIMEOUT_MS SERVERS_QUEUE_READ_TIMEOUT_MS
-
-#define CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS	@counter@
-#define DEFVAL_STHREADS_QUEUE_READ_TIMEOUT_MS STHREADS_QUEUE_READ_TIMEOUT_MS
-
-#define CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS @counter@
-#define DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT_MS PROCESSOR_PCTL_READ_TIMEOUT_MS
-
 #define CONFOPT_MEMFILE_BLOCKSIZE	@counter@
 #define DEFVAL_MEMFILE_BLOCKSIZE	MEMFILE_BLOCKSIZE
 
@@ -281,6 +272,9 @@
 #define CONFOPT_QUEUE_MAXSIZE_HARD	@counter@
 #define DEFVAL_QUEUE_MAXSIZE_HARD	QUEUE_MAXSIZE_HARD
 
+#define CONFOPT_QUEUE_READ_TIMEOUT_MS	@counter@
+#define DEFVAL_QUEUE_READ_TIMEOUT_MS	QUEUE_READ_TIMEOUT_MS
+
 #define CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS	@counter@
 #define DEFVAL_QUEUE_QUOTA_LOGPERIOD_SECS	QUEUE_QUOTA_LOGPERIOD_SECS
 
@@ -296,14 +290,20 @@
 #define CONFOPT_PCTLMAXMEM_HARD		@counter@
 #define DEFVAL_PCTLMAXMEM_HARD		PCTL_MAXMEM_HARD_MB
 
+#define CONFOPT_PCTL_READ_TIMEOUT_MS	@counter@
+#define DEFVAL_PCTL_READ_TIMEOUT_MS	PCTL_READ_TIMEOUT_MS
+
+#define CONFOPT_CLIENT_QUEUE_DBCACHE_MB		@counter@
+#define DEFVAL_CLIENT_QUEUE_DBCACHE_MB		CLIENT_QUEUE_DBCACHE_MB
+
 #define CONFOPT_CLIENT_QUEUE_MAXSIZE_SOFT	@counter@
 #define DEFVAL_CLIENT_QUEUE_MAXSIZE_SOFT	CLIENT_QUEUE_MAXSIZE_SOFT
 
 #define CONFOPT_CLIENT_QUEUE_MAXSIZE_HARD	@counter@
 #define DEFVAL_CLIENT_QUEUE_MAXSIZE_HARD	CLIENT_QUEUE_MAXSIZE_HARD
 
-#define CONFOPT_CLIENT_QUEUE_DBCACHE_MB		@counter@
-#define DEFVAL_CLIENT_QUEUE_DBCACHE_MB		CLIENT_QUEUE_DBCACHE_MB
+#define CONFOPT_CLIENT_QUEUE_READ_TIMEOUT_MS	@counter@
+#define DEFVAL_CLIENT_QUEUE_READ_TIMEOUT_MS	CLIENT_QUEUE_READ_TIMEOUT_MS
 
 #define CONFOPT_NBSP_RTXDB_DBFNAME		@counter@
 #define DEFVAL_NBSP_RTXDB_DBFNAME		NBSP_RTXDB_DBFNAME
@@ -506,12 +506,6 @@ static struct confoption_st confoptions[] = {
 	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_RETRY,
 	TCL_LINK_INT, NULL, DEFVAL_CLIENT_RECONNECT_WAIT_SLEEP_RETRY},
   {"clientoptions", CONFOPT_CLIENT_OPTIONS, TCL_LINK_STRING, NULL, 0},
-  {"servers_queue_read_timeout_ms", CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS,
-	TCL_LINK_INT, NULL, DEFVAL_SERVERS_QUEUE_READ_TIMEOUT_MS},
-  {"sthreads_queue_read_timeout_ms", CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS,
-	TCL_LINK_INT, NULL, DEFVAL_STHREADS_QUEUE_READ_TIMEOUT_MS},
-  {"processor_pctl_read_timeout_ms", CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS,
-	TCL_LINK_INT, NULL, DEFVAL_PROCESSOR_PCTL_READ_TIMEOUT_MS},
   {"memfileblocksize", CONFOPT_MEMFILE_BLOCKSIZE, TCL_LINK_INT, NULL,
 	DEFVAL_MEMFILE_BLOCKSIZE},
   {"memfileminsize", CONFOPT_MEMFILE_MINSIZE, TCL_LINK_INT, NULL,
@@ -527,6 +521,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_QUEUE_MAXSIZE_SOFT},
   {"queuemaxhard", CONFOPT_QUEUE_MAXSIZE_HARD, TCL_LINK_INT, NULL,
 	DEFVAL_QUEUE_MAXSIZE_HARD},
+  {"queue_read_timeout_ms", CONFOPT_QUEUE_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_QUEUE_READ_TIMEOUT_MS},
   {"queue_quota_logperiod_secs", CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_QUEUE_QUOTA_LOGPERIOD_SECS},
   {"pctlmaxsoft", CONFOPT_PCTLMAXSIZE_SOFT, TCL_LINK_INT, NULL,
@@ -537,12 +533,16 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_PCTLMAXMEM_SOFT},
   {"pctlmaxmemhard", CONFOPT_PCTLMAXMEM_HARD, TCL_LINK_INT, NULL,
 	DEFVAL_PCTLMAXMEM_HARD},
+  {"pctl_read_timeout_ms", CONFOPT_PCTL_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_PCTL_READ_TIMEOUT_MS},
+  {"clientqueuedbcachemb", CONFOPT_CLIENT_QUEUE_DBCACHE_MB, TCL_LINK_INT, NULL,
+	DEFVAL_CLIENT_QUEUE_DBCACHE_MB},
   {"clientqueuemaxsoft", CONFOPT_CLIENT_QUEUE_MAXSIZE_SOFT, TCL_LINK_INT, NULL,
 	DEFVAL_CLIENT_QUEUE_MAXSIZE_SOFT},
   {"clientqueuemaxhard", CONFOPT_CLIENT_QUEUE_MAXSIZE_HARD, TCL_LINK_INT, NULL,
 	DEFVAL_CLIENT_QUEUE_MAXSIZE_HARD},
-  {"clientqueuedbcachemb", CONFOPT_CLIENT_QUEUE_DBCACHE_MB, TCL_LINK_INT, NULL,
-	DEFVAL_CLIENT_QUEUE_DBCACHE_MB},
+  {"client_queue_read_timeout_ms", CONFOPT_CLIENT_QUEUE_READ_TIMEOUT_MS,
+	TCL_LINK_INT, NULL, DEFVAL_CLIENT_QUEUE_READ_TIMEOUT_MS},
   {"rtxdb_dbfname", CONFOPT_NBSP_RTXDB_DBFNAME, TCL_LINK_STRING, NULL, 0},
   {"rtxdb_slots", CONFOPT_NBSP_RTXDB_SLOTS, TCL_LINK_INT, NULL,
 	DEFVAL_NBSP_RTXDB_SLOTS},
@@ -699,12 +699,6 @@ int configure(void){
   setoptval(&g.client_reconnect_wait_sleep_retry, confoptions,
 	CONFOPT_CLIENT_RECONNECT_WAIT_SLEEP_RETRY);
   setoptval(&g.clientoptions, confoptions, CONFOPT_CLIENT_OPTIONS);
-  setoptval(&g.servers_queue_read_timeout_ms, confoptions,
-	CONFOPT_SERVERS_QUEUE_READ_TIMEOUT_MS);
-  setoptval(&g.sthreads_queue_read_timeout_ms, confoptions,
-	CONFOPT_STHREADS_QUEUE_READ_TIMEOUT_MS);
-  setoptval(&g.processor_pctl_read_timeout_ms, confoptions,
-	CONFOPT_PROCESSOR_PCTL_READ_TIMEOUT_MS);
 
   setoptval(&g.memfile_blocksize, confoptions, CONFOPT_MEMFILE_BLOCKSIZE);
   setoptval(&g.memfile_minsize, confoptions, CONFOPT_MEMFILE_MINSIZE);
@@ -719,6 +713,8 @@ int configure(void){
 
   setoptval(&g.queue_maxsize_soft, confoptions, CONFOPT_QUEUE_MAXSIZE_SOFT);
   setoptval(&g.queue_maxsize_hard, confoptions, CONFOPT_QUEUE_MAXSIZE_HARD);
+  setoptval(&g.queue_read_timeout_ms, confoptions,
+	CONFOPT_QUEUE_READ_TIMEOUT_MS);
   setoptval(&g.queue_quota_logperiod_secs, confoptions,
 	CONFOPT_QUEUE_QUOTA_LOGPERIOD_SECS);
 
@@ -726,13 +722,17 @@ int configure(void){
   setoptval(&g.pctl_maxsize_hard, confoptions, CONFOPT_PCTLMAXSIZE_HARD);
   setoptval(&g.pctl_maxmem_soft, confoptions, CONFOPT_PCTLMAXMEM_SOFT);
   setoptval(&g.pctl_maxmem_hard, confoptions, CONFOPT_PCTLMAXMEM_HARD);
+  setoptval(&g.pctl_read_timeout_ms, confoptions,
+	CONFOPT_PCTL_READ_TIMEOUT_MS);
 
+  setoptval(&g.client_queue_dbcache_mb, confoptions,
+	CONFOPT_CLIENT_QUEUE_DBCACHE_MB);
   setoptval(&g.client_queue_maxsize_soft, confoptions,
 	CONFOPT_CLIENT_QUEUE_MAXSIZE_SOFT);
   setoptval(&g.client_queue_maxsize_hard, confoptions,
 	CONFOPT_CLIENT_QUEUE_MAXSIZE_HARD);
-  setoptval(&g.client_queue_dbcache_mb, confoptions,
-	CONFOPT_CLIENT_QUEUE_DBCACHE_MB);
+  setoptval(&g.client_queue_read_timeout_ms, confoptions,
+	CONFOPT_CLIENT_QUEUE_READ_TIMEOUT_MS);
 
   setoptval(&g.rtxdb_dbfname, confoptions, CONFOPT_NBSP_RTXDB_DBFNAME);
   setoptval(&g.rtxdb_slots, confoptions, CONFOPT_NBSP_RTXDB_SLOTS);
@@ -877,12 +877,6 @@ void print_confoptions(void){
   fprintf(stdout, "client_reconnect_wait_sleep_retry %d\n",
 	g.client_reconnect_wait_sleep_retry);
   fprintf_str(stdout, fmt, "clientoptions", g.clientoptions);
-  fprintf(stdout, "servers_queue_read_timeout_ms %d\n",
-	g.servers_queue_read_timeout_ms);
-  fprintf(stdout, "sthreads_queue_read_timeout_ms %d\n",
-	g.sthreads_queue_read_timeout_ms);
-  fprintf(stdout, "processor_pctl_read_timeout %d\n",
-	g.processor_pctl_read_timeout_ms);
 
   fprintf(stdout, "memfileblocksize %d\n", g.memfile_blocksize);
   fprintf(stdout, "memfileminsize %d\n", g.memfile_minsize);
@@ -897,17 +891,22 @@ void print_confoptions(void){
 
   fprintf(stdout, "queuemaxsizesoft %d\n", g.queue_maxsize_soft);
   fprintf(stdout, "queuemaxsizehard %d\n", g.queue_maxsize_hard);
-  fprintf(stdout, "queue_quota_logperiod)secs %d\n",
+  fprintf(stdout, "queue_read_timeout_ms %d\n",
+	g.queue_read_timeout_ms);
+  fprintf(stdout, "queue_quota_logperiod_secs %d\n",
 	g.queue_quota_logperiod_secs);
 
   fprintf(stdout, "pctlmaxsoft %d\n", g.pctl_maxsize_soft);
   fprintf(stdout, "pctlmaxhard %d\n", g.pctl_maxsize_hard);
   fprintf(stdout, "pctlmaxmemsoft %d\n", g.pctl_maxmem_soft);
   fprintf(stdout, "pctlmaxmemhard %d\n", g.pctl_maxmem_hard);
+  fprintf(stdout, "pctl_read_timeout_ms %d\n", g.pctl_read_timeout_ms);
 
+  fprintf(stdout, "clientqueuedbcachemb %d\n", g.client_queue_dbcache_mb); 
   fprintf(stdout, "clientqueuemaxsizesoft %d\n", g.client_queue_maxsize_soft);
   fprintf(stdout, "clientqueuemaxsizehard %d\n", g.client_queue_maxsize_hard);
-  fprintf(stdout, "clientqueuedbcachemb %d\n", g.client_queue_dbcache_mb); 
+  fprintf(stdout, "client_queue_read_timeout_ms %d\n",
+	g.client_queue_read_timeout_ms);
 
   fprintf_str(stdout, fmt, "rtxdb_dbfname", g.rtxdb_dbfname);
   fprintf(stdout, "rtxdb_slots %u\n", g.rtxdb_slots);
@@ -1049,12 +1048,6 @@ int validate_configuration(void){
 	"client_reconnect_wait_sleep_retry");
 
   /* char* g.clientoptions can be NULL or empty */
-  VALIDATE_PARAM_L(g.servers_queue_read_timeout_ms, 0,
-	"servers_queue_read_timeout_ms");
-  VALIDATE_PARAM_L(g.sthreads_queue_read_timeout_ms, 0,
-	"sthreads_queue_read_timeout_ms");
-  VALIDATE_PARAM_L(g.processor_pctl_read_timeout_ms, 0,
-	"processor_pctl_read_timeout_ms");
   VALIDATE_PARAM_L(g.memfile_blocksize, MEMFILE_BLOCKSIZE_LIMIT,
 		   "memfileblocksize");
   VALIDATE_PARAM_L(g.memfile_minsize, MEMFILE_MINSIZE_LIMIT, "memfileminsize");
@@ -1069,15 +1062,20 @@ int validate_configuration(void){
    */
   VALIDATE_PARAM_L(g.queue_maxsize_soft, 0, "queuemaxsoft");
   VALIDATE_PARAM_L(g.queue_maxsize_hard, 0, "queuemaxhard");
+  VALIDATE_PARAM_L(g.queue_read_timeout_ms, 0,
+	"queue_read_timeout_ms");
   VALIDATE_PARAM_L(g.queue_quota_logperiod_secs, 0,
 	"queue_quota_logperiod_secs");
   VALIDATE_PARAM_L(g.pctl_maxsize_soft, 0, "pctlmaxsoft");
   VALIDATE_PARAM_L(g.pctl_maxsize_hard, 0, "pctlmaxhard");
   VALIDATE_PARAM_L(g.pctl_maxmem_soft, 0, "pctlmaxmemsoft");
   VALIDATE_PARAM_L(g.pctl_maxmem_hard, 0, "pctlmaxmemhard");
+  VALIDATE_PARAM_L(g.pctl_read_timeout_ms, 0, "pctl_read_timeout_ms");
+  VALIDATE_PARAM_L(g.client_queue_dbcache_mb, 0, "clientqueuedbcachemb");
   VALIDATE_PARAM_L(g.client_queue_maxsize_soft, 0, "cllientqueuemaxsoft");
   VALIDATE_PARAM_L(g.client_queue_maxsize_hard, 0, "clientqueuemaxhard");
-  VALIDATE_PARAM_L(g.client_queue_dbcache_mb, 0, "clientqueuedbcachemb");
+  VALIDATE_PARAM_L(g.client_queue_read_timeout_ms, 0,
+	"client_queue_read_timeout_ms");
   /* char* rtxdb_dbfname can be NULL or empty */
   /* unsigned int rtxdb_slots type and can be zero */
   VALIDATE_PARAM_L(g.rtxdb_truncate_minutes, 1, "rtxdb_truncate_minutes");

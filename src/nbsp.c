@@ -455,7 +455,7 @@ static int process_pctl(void){
   struct pctl_element_st *pce;
 
   pce = eopen_pctl_outputpce(g.pctl,
-			     g.processor_pctl_read_timeout_ms,
+			     g.pctl_read_timeout_ms,
 			     &status);
   if(status == 1){
     /*

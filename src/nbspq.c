@@ -209,7 +209,7 @@ int e_nbspq_rcv1(int type, void **packet, size_t *packet_size){
 
   packet_size_uint32 = *packet_size;
   status = nbspqt_rcv(g.qtable, type, packet, &packet_size_uint32,
-		      g.servers_queue_read_timeout_ms, &qerrno);
+		      g.queue_read_timeout_ms, &qerrno);
 
   if(status == 0)
     *packet_size = packet_size_uint32;
