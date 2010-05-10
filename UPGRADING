@@ -25,7 +25,15 @@ By passing the [-F] option as well, i.e.,
 nbspupdate will do as above, even if the installed version is the same
 as the latest one, or if Nbsp had not been installed before.
 
-nbsppupdate can also upgrade Npemwin and Nbspadm itself,
+Nbspupdate can be used if nbspd is running, by passing the [-r] option,
+i.e.,
+
+	nbspupdate -u -r
+
+This will cause it to fetch the new package, stop the running daemon, upgrade
+the package and restart the newly installed daemon.
+
+nbspupdate can also upgrade Npemwin and Nbspadm itself,
 by passing any of those names as an argument; i.e.,
 
 	nbspupdate -u npemwin
