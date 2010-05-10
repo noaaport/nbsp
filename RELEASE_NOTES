@@ -1,6 +1,6 @@
 $Id$
 
-- Sun Mar 21 12:47:48 AST 2010
+- Mon May 10 10:15:55 AST 2010
 
 This is the 2nd release of the 2.0 version of the
 
@@ -34,7 +34,7 @@ must be owned by that user:
     chown -R noaaport:noaaport /var/run/nbsp
 
 During a fresh install, the package installer will create the
-directories with the appropriate ownership, bit not during an upgrade.
+directories with the appropriate ownership, but not during an upgrade.
 If you are uprading from an older version, those commands must be
 executed manually.
 
@@ -44,6 +44,10 @@ several of the Gempak plot programs.
 
 The Tclssh package is included in this release. This package allows
 one host to execute tcl commands (and scripts) in a remote host (via ssh).
+
+Upgrading nbsp, even when nbspd is running, is now easier then ever using
+the nbspupdate proram that is included in the nbspadm package.
+See the file "UPGRADING" for explanations and examples.
 -
 
 - Nbsp includes the following features:
