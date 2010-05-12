@@ -16,6 +16,15 @@
 #	gpmap(inputfile)	(full path of input data file)
 #	gpmap(awips)		(e.g., "n0rjua")
 #
+# as well as the following radar site information:
+#
+#	gpmap(radinfo,lat)
+#	gpmap(radinfo,lon)
+#	gpmap(radinfo,height)
+#	gpmap(radinfo,seconds)
+#	gpmap(radinfo,mode) (0 = maintenance, 1 = clean air, 2 = precip/severe)
+#	gpmap(radinfo,code) (Nexrad product code - Table III of td7000.pdf)
+#
 # This script can define additional gpmap() variables, and can redefine
 # the gpmap(outputfile) and gpmap(devsize) variables,
 # and at some point it must contain a portion of the form
