@@ -26,6 +26,18 @@
 # rstfilter to search for the default and use that (in this case the program
 # uses the filterlib file, and also the rstfilter configuration file).
 #
+# If the variable "awips" is defined in the command line by using the -D
+# option (e.g., -D awips=n0qjua) then this script executed nbspradinfo
+# on the file and defines the following variables for the use of the rc
+# script:
+#
+# gpmap(radinfo,lat)
+# gpmap(radinfo,lon)
+# gpmap(radinfo,height)
+# gpmap(radinfo,seconds)
+# gpmap(radinfo,mode)    (0 = maintenance, 1 = clean air, 2 = precip/severe)
+# gpmap(radinfo,code)    (Nexrad product code - Table III of td7000.pdf)
+#
 package require cmdline;
 
 set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
@@ -88,7 +100,46 @@ proc source_template_unused {rcfile} {
     interp delete slave;
 }
 
-## The common defaults (to get the location of the netpbm progs).
+proc fill_gpmap_radinfo {doradinfounz_regexp} {
+
+    global gpmap;
+    global filterslib;	# the header sizes
+
+    set gpmap(radinfo,lat) "";
+    set gpmap(radinfo,lon) "";
+    set gpmap(radinfo,height) "";
+    set gpmap(radinfo,seconds) "";
+    set gpmap(radinfo,mode) "";
+    set gpmap(radinfo,code) "";
+
+    if {[info exists gpmap(rad,awips)] == 0} {
+	return;
+    }
+
+    # This is copied from the filters.lib file, with the modifications needed
+    # for the uncpompressed files (e.g., n0q, ...) which do not
+    # have the ccb header (since this script is assumed to operate on the
+    # files in the data directory not the spool directory).
+
+    if {[regexp $doradinfounz_regexp $gpmap(rad,awips)]} {
+	set radinfo [split \
+	    [exec nbspunz -c $filterslib(totalheadersize) -n 1 \
+		 $gpmap(inputfile) | nbspradinfo]];
+    } else {
+	set radinfo [split \
+	    [exec nbspradinfo -c $filterslib(wmoawips_gmpk_headersize) \
+		 $gpmap(inputfile)]];
+    }
+
+    set gpmap(radinfo,lat) [lindex $radinfo 0];
+    set gpmap(radinfo,lon) [lindex $radinfo 1];
+    set gpmap(radinfo,height) [lindex $radinfo 2];
+    set gpmap(radinfo,seconds) [lindex $radinfo 3];
+    set gpmap(radinfo,mode) [lindex $radinfo 4];
+    set gpmap(radinfo,code) [lindex $radinfo 5];
+}
+
+## The common defaults (e.g., netpbm progs and filterslib(doradinfounz))
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
 if {[file exists $defaultsfile] == 0} {
    log_err "$defaultsfile not found.";
@@ -140,6 +191,11 @@ if {$option(D) ne ""} {
         set gpmap(rad,$var) $val;
     }
 }
+
+# Fill the gpmap(radinfo,...) variables
+# (requires -D awips=... and the gpmap(inputfile) defined).
+#
+fill_gpmap_radinfo $filterslib(doradinfounz);
 
 set gpmapbin $option(g);
 
