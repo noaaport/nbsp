@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+
+- Revised nbspradmap to define the gpmap(radinfo,xxx) variables that
+  can be used in the radmap.rc script (xx = lat, lon, height, seconds,
+  mode, code). Required the introduction of the [-h] option in the
+  nbspradmapxxx scripts to distinguish the cases in which the input
+  file has the gempak header (e.g., from diagtmos/nexrad) or it doesn't
+  (like the tmp files in filter_rad in the rstfilter.lib).
+  In the case of the uncompressed files nbspradinfo needs to know
+  how much header to skip before looking for the data, and this option
+  is needed to determine the size of the header.
+

@@ -2,12 +2,12 @@
 #
 # $Id$
 #
-# Usage: nbspradmapc [-d <output_subdir>] [-f <fext>] [-l <first,last>] \
+# Usage: nbspradmapc [-d <output_subdir>] [-f <fext>] [-h] [-l <first,last>] \
 #			[-n <nids_subdir>] [-r <rcfile>] \
 #			[-R <rcfile_path>] [-v] <site> <type>
 #
-# Examples: nbspradmapc jua n0r
-#           nbspradmapc -l end-3,end jua n0r
+# Examples: nbspradmapc [-h] jua n0r
+#           nbspradmapc [-h] -l end-3,end jua n0r
 #
 # This tool is designed for use from the command line.
 # The [-l] argument specifies a range of files to process from the list
@@ -16,11 +16,17 @@
 # The [-f] option specifies the file extension of the data files (e.g., nids)
 # to distinguish them from other files (e.g, latest, ...).
 #
+# The [-h] option must be given when the input files do not have the
+# gempak header. (This is needed so nbspradinfo knows what header to
+# skip before it starts looking for the data info.) This option is actually
+# not required for the compressed files (n0r, ...) but it is required by the
+# uncompressed ones (e.g., n0q, ...).
+#
 package require cmdline;
 
-set usage {nbspradmapc [-d <output_subdir>] [-f <fext>] [-l <first,last>]
+set usage {nbspradmapc [-d <output_subdir>] [-f <fext>] [-h] [-l <first,last>]
     [-n <nids_subdir>] [-r <rcfile>] [-R <rcfile_path>] [-v] <site> <type>};
-set optlist {v {d.arg ""} {f.arg ".nids"} {l.arg "end,end"} {n.arg ""}
+set optlist {v {d.arg ""} {f.arg ".nids"} h {l.arg "end,end"} {n.arg ""}
     {r.arg ""} {R.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 
@@ -96,6 +102,11 @@ if {[llength $flist] == 0} {
 set opts [list "-D" "awips=${type}${site}"];
 if {$option(d) ne ""} {
     lappend opts "-d" $option(d) "-t" $option(d);
+}
+
+# The [-h] option is passed to nbspradmap
+if {$option(h) == 1} {
+    lappend opts "-h";
 }
 
 foreach f $flist {

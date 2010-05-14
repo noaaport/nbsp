@@ -2,13 +2,14 @@
 #
 # $Id$
 # 
-# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] [-K] [-L <logfile>]
-#        [-o <outputname>] [-p] [-s <outputsize>] [-t <tmpdir>] [-D <defs>]
-#        <inputfile> [<rcfile>]
+# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] [-h] \
+#        [-K] [-L <logfile>] [-o <outputname>] [-p] [-s <outputsize>]
+#        [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
 #
 # -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
 # -g => the name (or full path of the program)
+# -h => the input file does not have the gempak header
 # -d => output directory
 # -K => keep (don't delete) the logfile
 # -L => specify the logfile instead of the default
@@ -21,7 +22,10 @@
 #       to the current directory.
 #
 # The input file can be the one with the compressed or uncompressed frames,
-# but without the CCB. This is what gpmap_gif expects.
+# but without the CCB, and it can have the gempak header. This is what
+# gpmap_gif expects. If it does not have the gempak header, then [-h]
+# must be given so that nbspradinfo is called with the correct [-c] option
+# when the input file is of the uncompressed type (e.g., n0q and family). 
 # If the <rcfile> is not specified, the program uses the same logic as the
 # rstfilter to search for the default and use that (in this case the program
 # uses the filterlib file, and also the rstfilter configuration file).
@@ -40,10 +44,10 @@
 #
 package require cmdline;
 
-set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
+set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-h] [-K] [-L logfile]
     [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>]
     <inputfile> [<rcfile>]};
-set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} K {L.arg ""} {o.arg ""}
+set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} h K {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
@@ -102,6 +106,7 @@ proc source_template_unused {rcfile} {
 
 proc fill_gpmap_radinfo {doradinfounz_regexp} {
 
+    global option;
     global gpmap;
     global filterslib;	# the header sizes
 
@@ -117,18 +122,28 @@ proc fill_gpmap_radinfo {doradinfounz_regexp} {
     }
 
     # This is copied from the filters.lib file, with the modifications needed
-    # for the uncpompressed files (e.g., n0q, ...) which do not
+    # for the uncompressed files (e.g., n0q, ...) which do not
     # have the ccb header (since this script is assumed to operate on the
-    # files in the data directory not the spool directory).
+    # files without the ccb).
 
     if {[regexp $doradinfounz_regexp $gpmap(rad,awips)]} {
 	set radinfo [split \
 	    [exec nbspunz -c $filterslib(totalheadersize) -n 1 \
 		 $gpmap(inputfile) | nbspradinfo]];
     } else {
+	if {$option(h) == 0} {
+	    # The file has a gempak header (e.g., from digatmos/nexrad)
+	    set headersize $filterslib(wmoawipsgmpk_header_size);
+	} else {
+	    #
+	    # The file does not have the gtempak header; such as the
+	    # tmp files used by the rstfilter.
+	    #
+	    set headersize $filterslib(wmoawips_size);
+	}
+
 	set radinfo [split \
-	    [exec nbspradinfo -c $filterslib(wmoawips_gmpk_headersize) \
-		 $gpmap(inputfile)]];
+			 [exec nbspradinfo -c $headersize $gpmap(inputfile)]];
     }
 
     set gpmap(radinfo,lat) [lindex $radinfo 0];

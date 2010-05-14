@@ -15,7 +15,7 @@
 #include "util.h"
 
 /*
- * Usage: nbspradinfo <file> | < <file>
+ * Usage: nbspradinfo [-c <count>] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
  * nids header (i.e., the ccb and wmo headers must have been removed;
@@ -40,6 +40,11 @@
  * nbspradinfo -c 54 koun_sdus54-n0qvnx.210224_204899761
  * nbspradinfo -c 41 n0qvnx_20100221_0224.nids
  *               (41 = 30 + gempak header [const.h])
+ *
+ * If the file does not have the gempak header (as the tmp file used
+ * by the rstfilter.lib), then
+ *
+ * nbspradinfo -c 30 n0qvnx_20100221_0224.tmp
  *
  * The default information printed is
  *

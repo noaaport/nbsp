@@ -60,12 +60,13 @@ set common(wmobbbawips_size)	34;     # including the possible ( BBB)
 #
 set filterslib(ccbsaved)	$common(ccbsaved);
 set filterslib(ccbsize)		$common(ccbsize);
+set filterslib(wmoawips_size)	$common(wmoawips_size);
 set filterslib(totalheadersize) $common(totalheadersize);
 set filterslib(bodypartsize)	512;
 set filterslib(gmpk_header_fmt) "\001\r\r\n%03d \r\r\n"; 
 set filterslib(gmpk_trailer_str) "\r\r\n\003";
 set filterslib(gmpk_header_size) 11;	# gpfilter/c/const.h
-set filterslib(wmoawips_gmpk_headersize) [expr $common(wmoawips_size) + \
+set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
 	$filterslib(gmpk_header_size)];    # used in nbspradmap
 #
 set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
