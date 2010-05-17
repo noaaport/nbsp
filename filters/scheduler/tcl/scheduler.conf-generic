@@ -73,4 +73,5 @@ schedule H01/1 nbspcleanup hourly-cleanup.conf >& \
     $nbsplogdir/hourly-cleanup.log &
 
 # Log file rotation
-schedule H01/1 logrotate $nbspconfdir/logrotate.conf &
+schedule H01/1 logrotate -s $nbsplogdir/logrotate.status \
+	$nbspconfdir/logrotate.conf &
