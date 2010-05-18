@@ -12,3 +12,7 @@
   how much header to skip before looking for the data, and this option
   is needed to determine the size of the header.
 
+- Added -s option to logrotate in scheduler.conf-generic so that
+  logrotate can write its status file in a directory that is
+  writable by the "noaaport" user.
+
