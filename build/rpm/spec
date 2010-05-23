@@ -284,6 +284,8 @@ make clean
 /usr/local/etc/nbsp/dist/weatherscope.conf-sample
 /usr/local/etc/nbsp/dist/npstats.conf-sample
 /usr/local/etc/nbsp/dist/npstats.conf-defaults
+/usr/local/etc/nbsp/dist/catalog.conf-sample
+/usr/local/etc/nbsp/dist/catalog-templates.def-sample
 /usr/local/share/doc/nbsp/weatherscope-extension.tgz
 /usr/local/share/doc/nbsp/www.tgz
 /usr/local/libexec/nbsp/httpd
@@ -356,6 +358,7 @@ make clean
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope/metar.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope/nids.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/npstats.tcl
+/usr/local/libexec/nbsp/tclhttpd/extensions/catalog.tcl
 
 %changelog
 

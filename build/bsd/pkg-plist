@@ -257,6 +257,8 @@ etc/nbsp/dist/export-da.def-sample
 etc/nbsp/dist/weatherscope.conf-sample
 etc/nbsp/dist/npstats.conf-sample
 etc/nbsp/dist/npstats.conf-defaults
+etc/nbsp/dist/catalog.conf-sample
+etc/nbsp/dist/catalog-templates.def-sample
 share/doc/nbsp/weatherscope-extension.tgz
 share/doc/nbsp/www.tgz
 libexec/nbsp/httpd
@@ -329,3 +331,4 @@ libexec/nbsp/tclhttpd/extensions/weatherscope.tcl
 libexec/nbsp/tclhttpd/extensions/weatherscope/metar.tcl
 libexec/nbsp/tclhttpd/extensions/weatherscope/nids.tcl
 libexec/nbsp/tclhttpd/extensions/npstats.tcl
+libexec/nbsp/tclhttpd/extensions/catalog.tcl

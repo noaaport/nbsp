@@ -16,3 +16,8 @@
   logrotate can write its status file in a directory that is
   writable by the "noaaport" user.
 
+- Added "Bytes Ranges" header handling capability in tclhttpd, to support
+  the IDV catalogs.
+
+- Added support for IDV catalogs to tclhttpd in the form of the
+  catalog "extension".
