@@ -10,6 +10,12 @@ has files that can be read by both DA and IDV; e.g.,
 those under the nexrad, surface, syn, ship6hr, upperair, fronts, day1-3
 and grib subdirectories (DA), nexrad, grib, fronts, forecast (IDV).
 
+In IDV, the data can be accessed using the Nbsp web server's "IDV catalogs"
+by point the IDV Data Chooser to
+
+	http://<server>:8015/_catalog/digatmos
+
+
 There is some quirk in DA that must be worked around when dealing
 with grib files. If you open DA and immediately try to open a grib file,
 it will write an error that it cannot access the file.
