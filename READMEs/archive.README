@@ -21,28 +21,31 @@ under
 
 The relevant parameters are
 
-## set dafilter(archive_subdir_fmt) "%Y%m%d";
-## set dafilter(archive_enable) 0;
-## set dafilter(rad_archive_enable) 0;
-## set dafilter(sat_archive_enable) 0;
-## set dafilter(grib_archive_enable) 0;
+set archive(da,enable) 0;
+set archive(da,file_enable) 1;
+set archive(da,sat_enable) 1;
+set archive(da,rad_enable) 1;
+set archive(da,file_regex) {.*};
+set archive(da,sat_regex) {.*};
+set archive(da,rad_regex) {.*};
 
 and their meaning is the following.
 
-A non-zero setting of ``dafilter(archive_enable)'' enables the archive.
+A non-zero setting of ``archive(da,enable)'' enables the archive.
 If the setting is 1, than a copy of all the data is saved
-permamently (it is not "pruned" by the hourly cleanup script) in the
+permamently (it is not deleted by the hourly cleanup script) in the
 archive directory. A setting of 2 also enables the archive
-but it disables the usual mode of saving the data. The variable
-dafilter(archive_enable) enables the archive of all the data files
-except rad (nids), sat(gini) and grib. Those three are enable/disabled
-separately. 
+but it disables the usual mode of saving the data. If the variable
+archive(da,enable) is 1, then the variables archive(da,xxx_enable)
+and archive(da,xxx_regex) can be used to specify with finer detail
+the desired data files to archive.
 
 In the default configuration, the files are saved in subdirectories
 named like 20080521 (yyyymmdd). All the files of a given day
 are saved in the corresponding subdirectory. The variable
-``dafilter(archive_subdir_fmt)'' can be used to specify a different
-naming convention of those subdirectories.
+``archive(da,subdirfmt)'' can be used to specify a different
+naming convention of those subdirectories. Likewise, several variables
+exist to specify the format of the archive file names.
 
 -
 JFN
