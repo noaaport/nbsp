@@ -25,6 +25,7 @@ set archive(da,invdir) [file join $archive(invdir) "digatmos"];
 set archive(da,inv_subdirfmt) "%Y%m%d";
 set archive(da,inv_namefmt) "%H%M.inv";
 
+# Only data-related files (grib are not archived)
 set archive(da,enable) 0;
 set archive(da,file_enable) 1;
 set archive(da,sat_enable) 1;
