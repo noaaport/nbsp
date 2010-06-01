@@ -38,7 +38,12 @@ archive directory. A setting of 2 also enables the archive
 but it disables the usual mode of saving the data. If the variable
 archive(da,enable) is 1, then the variables archive(da,xxx_enable)
 and archive(da,xxx_regex) can be used to specify with finer detail
-the desired data files to archive.
+the desired data files to archive. The regexp is matched aainst
+the dafilter data subdirectory name, e.g., surface, nwx/hpc/fronts,
+nexrad/nids/jua.
+
+There is no provision for archiving grib (model forecast) files,
+since the motivation is to archive data-related files.
 
 In the default configuration, the files are saved in subdirectories
 named like 20080521 (yyyymmdd). All the files of a given day
