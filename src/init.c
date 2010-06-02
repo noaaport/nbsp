@@ -65,6 +65,7 @@ void init_globals(void){
 
   g.user = NBSP_USER;
   g.group = NBSP_GROUP;
+  g.home = NBSP_HOME;
   g.umask = DEFAULT_UMASK;
   g.multicastip = MULTICASTIP;
   g.multicastport = MULTICASTPORT;
@@ -309,9 +310,17 @@ void cleanup_files(void){
 int init_daemon(void){
 
   int status = 0;
+  int nochdir = 0;
+
+  /*
+   * If g.home is set, then drop_privs() will have already set
+   * the root directory to the normal user's home directory.
+   */
+  if(valid_str(g.home))
+    nochdir = 1;
 
   if(g.option_F == 0)
-    status = daemon(0, 0);
+    status = daemon(nochdir, 0);
 
   if(status != 0)
     return(status);
@@ -366,6 +375,16 @@ int drop_privs(void){
     status = change_user(g.user);
     if(status != 0)
       log_err2("Could not change to user", g.user);
+  }
+
+  /*
+   * This is needed when running as a normal user since otherwise
+   * it cannot dump core (to "/") if it has to.
+   */
+  if((status == 0) && valid_str(g.home)){
+    status = chdir(g.home);
+    if(status != 0)
+      log_err2("Could not chdir to", g.home);
   }
 
   return(status);

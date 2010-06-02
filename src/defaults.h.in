@@ -18,17 +18,27 @@
  */
 
 #define DAEMON_NAME		"nbspd"
-
-#define NBSP_USER		"noaaport"
-#define NBSP_GROUP		"noaaport"
-
-#define DEFAULT_UMASK		022
-
-/* syslog */
 #define SYSLOG_IDENT		DAEMON_NAME
 #define SYSLOG_OPTS		LOG_CONS
 #define SYSLOG_FACILITY		LOG_USER
+
 #define CONFIGFILE		"%MYCONFDIR%/nbspd.conf"
+
+/*
+ * If user/group are set to NULL, nbspd will run as the invoking user,
+ * e.g., root if started automatically at boot time.
+ *
+ * NOTE: In order to generate core dump files, it may be necessary to
+ *       set, at least temporarily, the user and group to NULL so that
+ *       the deamon runs as root. Otherwise, the core files are generated
+ *       only if several conditions are met (see Stevens, apue, p.265).
+ */
+
+#define NBSP_USER		"noaaport"
+#define NBSP_GROUP		"noaaport"
+#define NBSP_HOME		"/var/noaaport"
+
+#define DEFAULT_UMASK		022
 
 /* 
  * Almost all of the settings below can be modified in the runtime

@@ -19,6 +19,9 @@
 #define CONFOPT_GROUP			@counter@
 #define DEFVAL_GROUP			NBSP_GROUP
 
+#define CONFOPT_HOME			@counter@
+#define DEFVAL_HOME			NBSP_HOME
+
 #define CONFOPT_UMASK			@counter@
 #define DEFVAL_UMASK			DEFAULT_UMASK
 
@@ -395,6 +398,7 @@
 static struct confoption_st confoptions[] = {
   {"user", CONFOPT_USER, TCL_LINK_STRING, NULL, 0},
   {"group", CONFOPT_GROUP, TCL_LINK_STRING, NULL, 0},
+  {"home", CONFOPT_HOME, TCL_LINK_STRING, NULL, 0},
   {"umask", CONFOPT_UMASK, TCL_LINK_INT, NULL, DEFVAL_UMASK},
   {"multicastip", CONFOPT_MULTICASTIP, TCL_LINK_STRING, NULL, 0},
   {"multicastport", CONFOPT_MULTICASTPORT, TCL_LINK_STRING, NULL, 0},
@@ -607,6 +611,7 @@ int configure(void){
 
   setoptval(&g.user, confoptions, CONFOPT_USER);
   setoptval(&g.group, confoptions, CONFOPT_GROUP);
+  setoptval(&g.home, confoptions, CONFOPT_HOME);
   setoptval(&g.umask, confoptions, CONFOPT_UMASK);
   setoptval(&g.multicastip, confoptions, CONFOPT_MULTICASTIP);
   setoptval(&g.multicastport, confoptions, CONFOPT_MULTICASTPORT);
@@ -792,6 +797,7 @@ void print_confoptions(void){
 
   fprintf_str(stdout, fmt, "user", g.user);
   fprintf_str(stdout, fmt, "group", g.group);
+  fprintf_str(stdout, fmt, "home", g.home);
   fprintf(stdout, "umask %o\n", g.umask);
   fprintf_str(stdout, fmt, "multicastip", g.multicastip);
   fprintf_str(stdout, fmt, "multicastport", g.multicastport);
@@ -961,7 +967,7 @@ int validate_configuration(void){
 
   char *varname = NULL;
 
-  /* char* user, group can be NULL or empty */
+  /* char* user, group, home can be NULL or empty */
   /* mode_t umask	type */
   VALIDATE_STR(g.multicastip, "multicastip");
   VALIDATE_STR(g.multicastip, "multicastport");

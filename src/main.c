@@ -109,7 +109,7 @@ int main(int argc, char **argv){
     status = validate_configuration();
 
   /*
-   * user and group are configurable so this must be done after reading
+   * user, group and home are configurable so this must be done after reading
    * configuration options.
    */
   if(status == 0)

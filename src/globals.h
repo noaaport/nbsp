@@ -33,6 +33,7 @@ struct nbsp_globals {
    */
   char *user;
   char *group;
+  char *home;			/* where to chdir() to */
   mode_t umask;
   char *multicastip;
   char *multicastport;

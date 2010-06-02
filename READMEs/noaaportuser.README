@@ -11,3 +11,4 @@ by hand:
 	chown -R noaaport:noaaport /var/log/noaaport
 	chown -R noaaport:noaaport /var/log/nbsp
 	chown -R noaaport:noaaport /var/run/nbsp
+-

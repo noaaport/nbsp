@@ -387,7 +387,7 @@ proc save_obdata_collective_summary {cname obstation obdata} {
 proc save_obdata_station_wsdaily {cname wmotime obstation obdata} {
 
     global metarfilter;
-    global collective
+    global collective;
 
     set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
@@ -406,7 +406,7 @@ proc save_obdata_station_wsdaily {cname wmotime obstation obdata} {
 proc save_obdata_station_wshourly {cname wmotime obstation obdata} {
 
     global metarfilter;
-    global collective
+    global collective;
 
     set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
