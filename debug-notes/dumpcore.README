@@ -25,5 +25,5 @@ Quoting the relevant portion,
     (d) the file is too big (RLIMIT_CORE resource limit).
 
 In nbsp (and npemwin) both (a) and (b) are true, and therefore the core files
-are not generated in normally.
+are not generated normally.
 -
