@@ -24,6 +24,6 @@ Quoting the relevant portion,
     (c) the user does not have permission to write in the current directory
     (d) the file is too big (RLIMIT_CORE resource limit).
 
-In nbsp (npemwin) both (a) and (b) are true, and therefore the core files
+In nbsp (and npemwin) both (a) and (b) are true, and therefore the core files
 are not generated in normally.
 -
