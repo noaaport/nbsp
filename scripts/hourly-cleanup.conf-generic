@@ -105,8 +105,8 @@ H:/var/noaaport/data/inv/gempak/images/sat: -i -mmin +240
 #
 H/6:/var/noaaport/data/grib: -mtime +0
 #
-H=02:/var/noaaport/data/metar/archive: -c 7 -d
-H=02:/var/noaaport/data/upperair/archive: -c 7 -d
+H=02:/var/noaaport/data/metar/weatherscope: -c 7 -d
+H=02:/var/noaaport/data/upperair/weatherscope: -c 7 -d
 H=02:/var/noaaport/data/weatherscope: -c 7 -d
 
 # Keep a week of the old www logfiles

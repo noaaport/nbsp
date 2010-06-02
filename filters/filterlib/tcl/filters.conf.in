@@ -77,8 +77,10 @@ set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
 #
 # The following have an uncompressed nids header.
 #
-# tv0-tv2, tzl, nmd, dhr, dsp (+ the dual pol below)
+# tv0-tv2, tzl, nmd, dhr, dsp (+ the dual pol below + new dual pol next)
 # n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u dvl eet (dual pol)
+# daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
+# (the new dual pol will be added between july 2010 and december 2012)
 #
 set filterslib(doradinfounz)	{tr[0-2]|n[0-3][prsvz]|n(cr|vl|et|tp|vw)};
 

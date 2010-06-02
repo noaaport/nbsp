@@ -17,7 +17,7 @@ a directory tree that mirrors the structure of
 
 under
 
-	/var/noaaport/data/archive/digatmos
+	/var/noaaport/archive/digatmos
 
 The relevant parameters are
 

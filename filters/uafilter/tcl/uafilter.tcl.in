@@ -99,12 +99,12 @@ proc save_rawdata {rc_name} {
     }
 
     # Extract the data and save it in the daily/hourly archives.
-    if {$uafilter(daily_arcv_enable) == 1} {
-	save_data_daily_arcv $wmotime $rawdata;
+    if {$uafilter(ws_daily_enable) == 1} {
+	save_data_wsdaily $wmotime $rawdata;
     }
 
-    if {$uafilter(hourly_arcv_enable) == 1} {
-	save_data_hourly_arcv $wmotime $rawdata;
+    if {$uafilter(ws_hourly_enable) == 1} {
+	save_data_wshourly $wmotime $rawdata;
     }
 
     # Call the post (user) filter if it is has been defined.
@@ -124,7 +124,7 @@ proc save_rawdata {rc_name} {
     }
 }
 
-proc save_data_daily_arcv {wmotime rawdata} {
+proc save_data_wsdaily {wmotime rawdata} {
 
     global uafilter;
 
@@ -136,10 +136,10 @@ proc save_data_daily_arcv {wmotime rawdata} {
   	set data_parts [split $data $uafilter(FS)];
         set station [lindex $data_parts 2];
 	set arcvfname ${station}_${ymd};
-	append arcvfname $uafilter(arcv_fext);
+	append arcvfname $uafilter(fext);
 
-	set savesubdir [file join $uafilter(arcv_dir) $ymd \
-	    $uafilter(daily_arcv_datadir)];
+	set savesubdir [file join $uafilter(ws_dir) $ymd \
+	    $uafilter(ws_daily_subdir)];
 	file mkdir $savesubdir;
 
 	set arcvfile [file join $savesubdir $arcvfname];
@@ -147,7 +147,7 @@ proc save_data_daily_arcv {wmotime rawdata} {
     }
 }
 
-proc save_data_hourly_arcv {wmotime rawdata} {
+proc save_data_wshourly {wmotime rawdata} {
 
     global uafilter;
 
@@ -156,10 +156,10 @@ proc save_data_hourly_arcv {wmotime rawdata} {
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
   
     set arcvfname $ymdh;
-    append arcvfname $uafilter(arcv_fext);
+    append arcvfname $uafilter(fext);
 
-    set savesubdir [file join $uafilter(arcv_dir) $ymd \
-	$uafilter(hourly_arcv_datadir)];
+    set savesubdir [file join $uafilter(ws_dir) $ymd \
+	$uafilter(ws_hourly_subdir)];
     file mkdir $savesubdir;
 
     set arcvfile [file join $savesubdir $arcvfname];

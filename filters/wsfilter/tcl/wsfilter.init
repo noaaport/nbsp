@@ -23,7 +23,7 @@ set wsfilter(schedule_run_period) "minutely";	# run every minute
 # and grib filters.
 
 # metar
-set wsfilter(metar_basedir) [file join $common(datadir) metar archive];
+set wsfilter(metar_basedir) [file join $common(datadir) metar weatherscope];
 set wsfilter(metar_hourly_basedir) "hourly";
 set wsfilter(metar_daily_basedir) "daily";
 set wsfilter(metar_fext) ".metar";
@@ -37,7 +37,8 @@ set wsfilter(metar_siteloc) [file join $common(confdir) \
 ##	"wsfilter-metar-sitenames.def"];
 
 # upperair
-set wsfilter(upperair_basedir) [file join $common(datadir) upperair archive];
+set wsfilter(upperair_basedir) \
+	[file join $common(datadir) upperair weatherscope];
 set wsfilter(upperair_hourly_basedir) "hourly";
 set wsfilter(upperair_daily_basedir) "daily";
 set wsfilter(upperair_fext) ".upperair";

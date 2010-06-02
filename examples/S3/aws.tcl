@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh8.5
+#!/usr/local/bin/tclsh8.6
 
 package require S3;
 
@@ -26,8 +26,8 @@ puts "Listing: $b";
 
 #S3::Pull -prefix test -directory test-copy
 
-S3::Delete -resource [lindex $b 0]
-puts "Deleted"
+#S3::Delete -resource [lindex $b 0]
+#puts "Deleted"
 
 set b [S3::GetBucket];
 puts "Listing: $b";

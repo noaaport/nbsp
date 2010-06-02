@@ -278,13 +278,13 @@ proc save_rawdata {rc_name} {
 		}
 
 		# Save the obdata in the daily/hourly archives, if enabled
-		if {$metarfilter(daily_arcv_enable) == 1} {
-		    save_obdata_station_daily_arcv \
+		if {$metarfilter(ws_daily_enable) == 1} {
+		    save_obdata_station_wsdaily \
 			$cname $wmotime $obstation $obdata;
 		}
 
-		if {$metarfilter(hourly_arcv_enable) == 1} {
-		    save_obdata_station_hourly_arcv \
+		if {$metarfilter(ws_hourly_enable) == 1} {
+		    save_obdata_station_wshourly \
 			$cname $wmotime $obstation $obdata;
 		}
 
@@ -384,7 +384,7 @@ proc save_obdata_collective_summary {cname obstation obdata} {
     filterlib_file_write $summaryfile [join $summarylist "\n"];
 }
 
-proc save_obdata_station_daily_arcv {cname wmotime obstation obdata} {
+proc save_obdata_station_wsdaily {cname wmotime obstation obdata} {
 
     global metarfilter;
     global collective
@@ -395,15 +395,15 @@ proc save_obdata_station_daily_arcv {cname wmotime obstation obdata} {
     set arcvfname ${obstation}_${ymd};
     append arcvfname $metarfilter(mwfext);
 
-    set savesubdir [file join $metarfilter(arcv_dir) $ymd \
-	$metarfilter(daily_arcv_datadir) $cname];
+    set savesubdir [file join $metarfilter(ws_dir) $ymd \
+	$metarfilter(ws_daily_subdir) $cname];
     file mkdir $savesubdir;
 
     set arcvfile [file join $savesubdir $arcvfname];
     filterlib_file_append $arcvfile $obdata;
 }
 
-proc save_obdata_station_hourly_arcv {cname wmotime obstation obdata} {
+proc save_obdata_station_wshourly {cname wmotime obstation obdata} {
 
     global metarfilter;
     global collective
@@ -415,8 +415,8 @@ proc save_obdata_station_hourly_arcv {cname wmotime obstation obdata} {
     set arcvfname $ymdh;
     append arcvfname $metarfilter(mwfext);
 
-    set savesubdir [file join $metarfilter(arcv_dir) $ymd \
-	$metarfilter(hourly_arcv_datadir)];
+    set savesubdir [file join $metarfilter(ws_dir) $ymd \
+	$metarfilter(ws_hourly_subdir)];
     file mkdir $savesubdir;
 
     set arcvfile [file join $savesubdir $arcvfname];
