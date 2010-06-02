@@ -3,22 +3,27 @@
 #
 
 Wed Jun  2 15:59:49 AST 2010 -
+
 This issue arised when the ability to run as a normal user was introduced.
 
 In order to generate core dump files, it may be necessary to
-set, at least temporarily, the user and group to NULL so that
-the deamon runs as root. Otherwise, the core files are generated
+set, at least temporarily, the user and group to NULL
+(NULL in defaults.h.in or "" in nbspd.conf)
+so that the deamon runs as root. Otherwise, the core files are generated
 only if several conditions are met (see Stevens, apue, p.265).
 
 Quoting the relevant portion,
 
     When the default action is labeled ``terminate with core '' it means ...
     ...
-    This file can be used with most uniex debuggers to examine the state
+    This file can be used with most unix debuggers to examine the state
     of the process at the time it terminated. The file will not be generated if
     (a) the process was set-user-ID and the current user is not the owner
 	of the program file
-    (b) <smae thing for the group>
+    (b) <same thing for the group>
     (c) the user does not have permission to write in the current directory
     (d) the file is too big (RLIMIT_CORE resource limit).
+
+In nbsp (npemwin) both (a) and (b) are true, and therefore the core files
+are not generated in normally.
 -
