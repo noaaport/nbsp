@@ -35,9 +35,11 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/inv/gempak
 /var/noaaport/archive
 /var/noaaport/archive/data
-/var/noaaport/archive/data/spool
 /var/noaaport/archive/data/digatmos
+/var/noaaport/archive/data/metar
+/var/noaaport/archive/data/spool
 /var/noaaport/archive/inv
+/var/noaaport/archive/inv/digatmos
 /var/noaaport/www"
 #
 rootdirs="/usr/local/etc/nbsp/defaults

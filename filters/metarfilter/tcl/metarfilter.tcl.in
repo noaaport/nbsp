@@ -17,6 +17,14 @@ if {$filters_init_status == 1} {
 }
 unset filters_init_status;
 
+## This filter is archive-aware
+set initfile [file join $common(libdir) "archive.init"];
+if {[file exists $initfile] == 0} {
+        puts "metarfilter disabled: $initfile not found.";
+        return 1;
+}
+source $initfile;
+
 # packages
 package require nbsp::util;
 
@@ -33,6 +41,19 @@ unset metar_init_file;
 if {[array exists collective] == 0} {
     log_msg "No collectives defined. Disabling metarfilter.";
     return 1;
+}
+
+# The archive variables
+#
+# If the archive is enabled, the archive_subdir variable is reset according
+# to the current date: the wmo header or file data.  In addition, we copy
+# each archive(da,xxx) variable to metarfilter(archive_xxx) for easy reference
+# in the functions here.
+#
+set metarfilter(archive_subdir) "";
+foreach key [array names archive "metar,*"] {
+    set k [string range $key 6 end];
+    set metarfilter(archive_${k}) $archive($key);
 }
 
 proc main {argc argv} {
@@ -69,11 +90,18 @@ proc main {argc argv} {
 
 proc process {finfo} {
 
+    global metarfilter;
+
     filterlib_get_rcvars rc $finfo -nobody;
 
-    if {[regexp {^s[ap]} $rc(wmoid)]} {
-	save_rawdata rc;
+    if {[regexp {^s[ap]} $rc(wmoid)] == 0} {
+	return;
     }
+
+    set metarfilter(archive_subdir) [clock format $rc(seconds) -format \
+        $metarfilter(archive_subdirfmt) -gmt true];
+
+    save_rawdata rc;
 }
 
 proc save_rawdata_old_unused {rc_name} {
@@ -277,7 +305,7 @@ proc save_rawdata {rc_name} {
 		    save_obdata_collective_summary $cname $obstation $obdata;
 		}
 
-		# Save the obdata in the daily/hourly archives, if enabled
+		# Save the obdata in the WS daily/hourly archives, if enabled
 		if {$metarfilter(ws_daily_enable) == 1} {
 		    save_obdata_station_wsdaily \
 			$cname $wmotime $obstation $obdata;
@@ -286,6 +314,19 @@ proc save_rawdata {rc_name} {
 		if {$metarfilter(ws_hourly_enable) == 1} {
 		    save_obdata_station_wshourly \
 			$cname $wmotime $obstation $obdata;
+		}
+
+		# Save the obdata in the permanent daily/hourly archives
+		if {($metarfilter(archive_enable) != 0) && \
+			 ($metarfilter(archive_daily_enable) != 0)} {
+		     save_obdata_station_archive_daily \
+			 $cname $wmotime $obstation $obdata;
+		}
+
+		if {($metarfilter(archive_enable) != 0) && \
+			 ($metarfilter(archive_hourly_enable) != 0)} {
+		     save_obdata_station_archive_hourly \
+			 $cname $wmotime $obstation $obdata;
 		}
 
 	        # Make the text report, but only if it is enabled in the
@@ -421,6 +462,64 @@ proc save_obdata_station_wshourly {cname wmotime obstation obdata} {
 
     set arcvfile [file join $savesubdir $arcvfname];
     filterlib_file_append $arcvfile $obdata;
+}
+
+proc save_obdata_station_archive_daily {cname wmotime obstation obdata} {
+
+    global metarfilter;
+
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+
+    set archive_savedir [file join $metarfilter(archive_subdir) \
+	$metarfilter(archive_daily_subdir) $cname];
+
+    set archivefname ${obstation}_${ymd};
+    append archivefname $metarfilter(mwfext);
+    set archivepath [file join $archive_savedir $archivefname];
+
+    set _pwd [pwd];
+    cd $metarfilter(archive_datadir);
+
+    set status [catch {
+        file mkdir $archive_savedir;
+        filterlib_file_append $archivepath $obdata;
+    } errmsg];
+
+    cd $_pwd;
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
+}
+
+proc save_obdata_station_archive_hourly {cname wmotime obstation obdata} {
+
+    global metarfilter;
+
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
+    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
+
+    set archive_savedir [file join $metarfilter(archive_subdir) \
+	$metarfilter(archive_hourly_subdir) $cname];
+  
+    set archivefname $ymdh;
+    append archivefname $metarfilter(mwfext);
+    set archivepath [file join $archive_savedir $archivefname];
+
+    set _pwd [pwd];
+    cd $metarfilter(archive_datadir);
+
+    set status [catch {
+        file mkdir $archive_savedir;
+        filterlib_file_append $archivepath $obdata;
+    } errmsg];
+
+    cd $_pwd;
+
+    if {$status != 0} {
+        log_msg $errmsg;
+    }
 }
 
 filterlib_init;		# open the cpool if enabled

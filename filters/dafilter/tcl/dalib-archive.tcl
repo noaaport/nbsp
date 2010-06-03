@@ -52,9 +52,10 @@ proc filter_archive {rc_array seq fpath savedir savename} {
 
     set _pwd [pwd];
     cd $dafilter(archive_datadir);
-    file mkdir $archive_savedir;
 
     set status [catch {
+        file mkdir $archive_savedir;
+
 	if {$dafilter(archive_asyncmode) == 1} {
 	    exec tar -r -f $archivepath -C [file dirname $fpath] \
 		[file tail $fpath] &;
@@ -83,8 +84,7 @@ proc filter_register_archive_inventory {rc_array \
     upvar $rc_array rc;
     global dafilter;
 
-    set invfpath [file join $dafilter(archive_invdir) \
-		       $dafilter(archive_inv_subdir) \
+    set invpath [file join $dafilter(archive_inv_subdir) \
 		       $dafilter(archive_inv_name)];
 
     set invdata [list];
@@ -94,9 +94,15 @@ proc filter_register_archive_inventory {rc_array \
     lappend invdata $dafilter(archive_datadir) $dafilter(archive_subdir) \
 	$archive_savedir $archive_name;
 
+    set _pwd [pwd];
+    cd $dafilter(archive_invdir);
+
     set status [catch {
-	filterlib_file_append $invfpath [join $invdata ","];
+	file mkdir $dafilter(archive_inv_subdir);
+	filterlib_file_append $invpath [join $invdata ","];
     } errmsg];
+
+    cd $_pwd;
 
     if {$status != 0} {
 	log_msg $errmsg;
