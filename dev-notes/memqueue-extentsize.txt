@@ -2,7 +2,8 @@
 # $Id$
 #
 This note explains the background information, the isue and the solution
-to the problem of reclaiming the unused space in memory-based dbs.
+to the problem of reclaiming the unused space in memory-based queues, such
+as used in the network server threads.
 
 1. Background
 -------------
