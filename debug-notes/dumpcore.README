@@ -4,7 +4,7 @@
 
 Wed Jun  2 15:59:49 AST 2010 -
 
-This issue arised when the ability to run as a normal user was introduced.
+This issue arose when the ability to run as a normal user was introduced.
 
 In order to generate core dump files, it may be necessary to
 set, at least temporarily, the user and group to NULL
