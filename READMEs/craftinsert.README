@@ -4,15 +4,18 @@
 Installation instructions -
 
 1) Make the user "ldm" a member of the group "noaaport"
+   NOTE: An easier solution is to install the ldm user as "noaaport:noaaport".
+
 2) Change the group of the directory
 
 	/var/noaaport/nbsp/spool
    
    to the group "noaaport", and make it writable by that group:
 
-	cd /var/noaaport/nbsp
-	chgrp -R noaapport spool
-	chmod g+w spool
+	chmod 775 <dir>
+
+   (This must be done on an empty spool directory, or the above steps
+    must be repeated for each subditector.)
 
 3) Add the line
 
@@ -38,8 +41,11 @@ Installation instructions -
    which has to delete them.
 
    In ldm, that can be accomplished by the "scour" process.
-   Another option is to add the cleanup scheduling option of the
-   spool directory in the Nbsp scheduler (this is the default).
+   Another option is to rely on the cleanup of the spool directory
+   in the Nbsp scheduler (which is done daily by default). But this
+   requires that the nbsp user can delete the files that the ldm user
+   writes there (which is better done of ldm is run as the same nbsp user
+   noaaport:noaaport).
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 -
