@@ -73,6 +73,8 @@ set craftinsert(nbspd_spooldir) "/var/noaaport/nbsp/spool";
 set craftinsert(nbspd_infifo) "/var/run/nbsp/infeed.fifo";
 set craftinsert(nbspd_wmoid) "level2";
 set craftinsert(nbspd_mvtospool) 1;  # move or copy to spool (default is mv)
+#
+set craftinsert(ldm_fext) ".tmp";    # must match what is used in pqact.conf
 
 # Read optional config file
 if {[file exists $craftinsert(conf)]} {
@@ -93,11 +95,12 @@ set ppath [lindex $argv 0];
 #
 # (1) the ppath argument is of the form
 #    <directory>/<name>
+#
 # (2) the tmp file that contains the data is
 #    ${ppath}.tmp
 #
 
-append tmppath $ppath ".tmp";
+append tmppath $ppath $craftinsert(ldm_fext);
 if {[file exists $tmppath]} {
     file rename -force $tmppath $ppath;
 }
