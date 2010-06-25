@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# The extention ".tmp" must match what is set in craftfilter.conf
+# The extention ".tmp" must match what is set in craftinsert.conf
 CRAFT	^L2-BZIP2/(....)/([0-9][0-9][0-9][0-9][0-1][0-9][0-3][0-9])([0-2][0-9][0-5][0-9])([0-9][0-9])/([0-9]*)/
 	FILE	data/craft/\1/\1_\2_\3.tmp
 
