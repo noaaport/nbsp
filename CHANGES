@@ -28,3 +28,6 @@
   which is now a tml tamplate file. The same change was made in
   npemwin y npstats.
 
+- Revised the craftinsert script to set the umask before creating the
+  subdirectories and the data file in the spool directory (that now
+  requires tclx).
