@@ -3,8 +3,16 @@
 #
 Installation instructions -
 
+First of all install TclX, by e.g.,
+
+	pkg_add -r tclX
+
+See (6) below for the explanation of this requirement. 
+
+Then perform the following:
+
 1) Make the user "ldm" a member of the group "noaaport"
-   NOTE: An easier solution is to install the ldm user as "noaaport:noaaport".
+   (so that ldm it can write to the nbspd input fifo)
 
 2) Change the group of the directory
 
@@ -13,9 +21,6 @@ Installation instructions -
    to the group "noaaport", and make it writable by that group:
 
 	chmod 775 <dir>
-
-   (This must be done on an empty spool directory, or the above steps
-    must be repeated for each subditector.)
 
 3) Add the line
 
@@ -33,19 +38,22 @@ Installation instructions -
 
    pqact.conf-craftinsert.README
 
+
 6) Note that the files that are written to the nbsp spool directory
    by the craftinsert script in ldm, are not processed by Nbsp and
    therefore they are not inserted in the spooldb for handling their
    deletion. The assumption is that those files are not "owned" by Nbsp,
    but owned by the process that writes them there and it is that process
-   which has to delete them.
+   which has to delete them. In ldm, that can be accomplished by
+   the "scour" process.
 
-   In ldm, that can be accomplished by the "scour" process.
    Another option is to rely on the cleanup of the spool directory
-   in the Nbsp scheduler (which is done daily by default). But this
+   in the Nbsp scheduler (which is done daily by default). This
    requires that the nbsp user can delete the files that the ldm user
-   writes there (which is better done of ldm is run as the same nbsp user
-   noaaport:noaaport).
+   writes there. This can be accomplished, for example, by assiging to the
+   the ldm user the same uid as the nbsp user noaaport:noaaport, or by
+   setting the umask to 002 in the craftfilter script (this is the default
+   approach, and it requires TclX).
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 -

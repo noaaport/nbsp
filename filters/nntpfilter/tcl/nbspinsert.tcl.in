@@ -26,13 +26,17 @@
 #        handles the deletion of the spooled files. Therefore the files
 #        that are sent to Nbsp by this script must be deleted from the spool
 #        by the caller of this script, or by the cleanup scheduler.
-#        (The latter is set automaticaly by the default hourly-cleanup.conf.)
+#        The latter is set automaticaly by the default hourly-cleanup.conf,
+#        but the files written by this script must be writable by the
+#        nbsp user (noaaport:noaaport) so that they can be deleted by the
+#        default cleanup process. For an example of how to use this script
+#        see the craftinsert script and the craftinser.README.
 #
 package require cmdline;
 
 set usage {
-nbspinsert -d [-f nbspinfifo] seq type cat code npchidx fname fpath < file
-nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath
+nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath < file
+nbspinsert [-f nbspinfifo] seq type cat code npchidx fname fpath
 nbspinsert [-f nbspinfifo] < finfolist
 };
 
@@ -52,7 +56,7 @@ if {$option(f) ne ""} {
     source ${_defaultsfile};
     unset _defaultsfile;
 
-    # nbspd.init is needed for spool dir and nbspd.missing
+    # nbspd.init is needed to get the fifo
     set nbspd_init_file [file join $common(libdir) nbspd.init];
     if {[file exists $nbspd_init_file] == 0} {
 	puts "$nbspd_init_file not found.";

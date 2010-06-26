@@ -2,11 +2,9 @@
 #
 # $Id$
 #
-# Installation -
+# For installation see "craftinsert.README"
 #
-# CRAFT <tab> ^L2-BZIP2/(....)/([0-9][0-9][0-9][0-9][0-1][0-9][0-3][0-9]) \
-#                       ([0-2][0-9][0-5][0-9])([0-9][0-9])/([0-9]*)/([0-9]*)/E
-# <tab> EXEC <tab> /usr/local/libexec/nbsp/craftinsert data/craft/\1/\1_\2_\3
+package require Tclx;	# umask
 
 proc err {s} {
     
@@ -20,11 +18,6 @@ proc proc_nbsp {ppath} {
 
     set spooldir $craftinsert(nbspd_spooldir);
     set wmoid $craftinsert(nbspd_wmoid);
-
-    # The spooldir must exist
-    if {[file isdirectory $spooldir] == 0} {
-	return -code error "Spool directory does not exist: $spooldir";
-    }
 
     # extract info from input name
     set input_name [file tail $ppath];
@@ -46,15 +39,23 @@ proc proc_nbsp {ppath} {
     set fpath [file join $spooldir $station $fbasename];
     set finfo "$seq 0 0 0 0 $fname $fpath";
 
-    file mkdir [file dirname $fpath];
+    set oldmask [umask];
+    umask $craftinsert(umask);
 
-    if {$craftinsert(nbspd_mvtospool) == 1} {
-	file rename -force $ppath $fpath;
+    if {$craftinsert(mvtospool) == 0} {
+	exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
     } else {
-	file copy -force $ppath $fpath;
+        # The spooldir must exist
+        if {[file isdirectory $spooldir] == 0} {
+	    return -code error "Spool directory does not exist: $spooldir";
+        }
+        file mkdir [file dirname $fpath];
+
+	file rename -force $ppath $fpath;
+	exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
     }
 
-    exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+    umask $oldmask;
 }
 
 #
@@ -72,7 +73,8 @@ set craftinsert(nbspd_enable) 0;
 set craftinsert(nbspd_spooldir) "/var/noaaport/nbsp/spool";
 set craftinsert(nbspd_infifo) "/var/run/nbsp/infeed.fifo";
 set craftinsert(nbspd_wmoid) "level2";
-set craftinsert(nbspd_mvtospool) 1;  # move or copy to spool (default is mv)
+set craftinsert(mvtospool) 0;  # move to spool or insert (default is ins)
+set craftinsert(umask) "002";
 #
 set craftinsert(ldm_fext) ".tmp";    # must match what is used in pqact.conf
 
