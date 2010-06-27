@@ -5,11 +5,11 @@ My own policy regarding swap is to use:
 
 1) 4 GB if the physical Ram is <= 4 GB
 2) 8 GB if the physical Ram is <= 16 GB
-   If the disk is large enough (>= 72 GB), I use 12 GB for swap.
-3) 1/4 the physical Ram otherwise
+   If the disk is large enough (>= 72 GB), I use 12 GB for swap
+3) 1/4 the physical Ram if the Ram > 48 GB
 
 Then use a spool of 12 GB, and finally adjust the spooldb_slots
 parameter according to whether level2 is being processed or not:
-use the default if level is not being processed, or reduce it to
-to 1/4 the default value otherwise.
+use the default value if level is not being processed, or reduce it to
+to 1/4 of the default value otherwise.
 
