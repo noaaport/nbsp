@@ -335,12 +335,10 @@ proc nbspradmapproc {awips inputfile outputfile} {
     set status [catch {exec $filtersprogs(nbsppipe) \
 	-o $tmpfile $inputfile} errmsg];
 
-    set rcfile $rstfilter(radmap_rcfile_fpath);
-
     if {$status == 0} {
 	set status [catch {exec $filtersprogs(nbspradmap) -b -h \
 	   -o $outputfile -s $rstfilter(rad_mapsize) -D awips=$awips \
-	   $tmpfile $rcfile} errmsg];
+	   $tmpfile $rstfilter(radmap_rcfile_fpath)} errmsg];
     }
 
     file delete $tmpfile;
