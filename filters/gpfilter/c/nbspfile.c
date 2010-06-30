@@ -5,9 +5,9 @@
  *
  * $Id$
  */
-#include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <zlib.h>
@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include "err.h"
 #include "util.h"
+#include "io.h"
 #include "unz.h"
 #include "const.h"
 
@@ -56,8 +57,6 @@ char *gmpk_trailer_str = GMPK_TRAILER_STR;
 
 static void check(void);
 static int process_file(void);
-static int read_page(FILE *fp, char *page, int page_size);
-static int write_page(FILE *fp, char *page, int page_size);
 static int write_cpage(FILE *fp, char *page, int page_size);
 static int write_header(FILE *fp, char *page, int page_size, int *offset);
 static int has_awips_line(char *fname);
@@ -183,37 +182,6 @@ static void cleanup(void){
     free(g.malloc_page_buffer);
 }
 
-static int read_page(FILE *fp, char *page, int page_size){
-
-  int n;
-
-  n = fread(page, 1, page_size, fp);
-  if(n < page_size){
-    if(ferror(fp) != 0){
-      n = -1;
-      log_err_read(g.opt_input_fname);
-    }
-  }
-
-  return(n);
-}
-
-static int write_page(FILE *fp, char *page, int page_size){
-
-  int n;
-
-  n = fwrite(page, 1, page_size, fp);
-  if(n < page_size){
-    n = -1;
-    if(g.opt_output_fname != NULL)
-      log_err_write(g.opt_output_fname);
-    else
-      log_err(1, "Cannot write output.");
-  }
-  
-  return(n);
-}
-
 static int write_cpage(FILE *fp, char *page, int page_size){
 
   int n;
@@ -306,7 +274,7 @@ static int process_file(void){
     }
 
     if(g.opt_stdin == 0){
-      g.input_fp = fopen(g.opt_input_fname, "r");
+      g.input_fp = fopen_input(g.opt_input_fname);
       if(g.input_fp == NULL)
 	log_err_open(g.opt_input_fname);
     }else
@@ -320,9 +288,9 @@ static int process_file(void){
 
     if(g.opt_output_fname != NULL){
       if(g.opt_append == 1)
-	g.output_fp = fopen(g.opt_output_fname, "a");
+	g.output_fp = fopen_output(g.opt_output_fname, "a");
       else
-	g.output_fp = fopen(g.opt_output_fname, "w");
+	g.output_fp = fopen_output(g.opt_output_fname, "w");
     }else
       g.output_fp = stdout;
 
@@ -338,8 +306,12 @@ static int process_file(void){
     else{
       if(ferror(g.input_fp) != 0)
 	log_err_read(g.opt_input_fname);
-      else
+      else{
+	/*
+	 * g.opt_input_fname is never NULL in this program.
+	 */
 	log_errx(1, "Corrupt data file. No data. %s", g.opt_input_fname);
+      }
     }
 
     if(status != 0)

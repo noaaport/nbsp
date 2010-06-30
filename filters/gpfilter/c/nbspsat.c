@@ -15,6 +15,7 @@
 #include <zlib.h>
 #include <libgen.h>
 #include "err.h"
+#include "io.h"
 #include "unz.h"
 #include "const.h"
 
@@ -67,17 +68,17 @@ struct {
   int opt_wrinfo;	/* only extract and print info [-i] */
 } g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0};
 
-int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb);
-void fill_nesdis_pdb(struct nesdis_product_def_block *npdb);
-int write_pngdata(FILE *fp, int fd, int linesize, int numlines);
-int write_gempak(int gempak_fd, int fd,
-		 struct nesdis_product_def_block *npdb, int *unz_status);
-int process_file(char *in_file);
-int write_file_info(char *in_file);
-void check(struct nesdis_product_def_block *npdb);
-int verify_wmo_header(char *header);
-void output(char *fname, struct nesdis_product_def_block *npdb);
-char *make_default_pngname(struct nesdis_product_def_block *npdb);
+static int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb);
+static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb);
+static int write_pngdata(FILE *fp, int fd, int linesize, int numlines);
+static int write_gempak(int gempak_fd, int fd,
+       struct nesdis_product_def_block *npdb, int *unz_status);
+static int process_file(char *in_file);
+static int write_file_info(char *in_file);
+static void check(struct nesdis_product_def_block *npdb);
+static int verify_wmo_header(char *header);
+static void output(char *fname, struct nesdis_product_def_block *npdb);
+static char *make_default_pngname(struct nesdis_product_def_block *npdb);
 
 int main(int argc, char **argv){
 
@@ -169,7 +170,7 @@ int main(int argc, char **argv){
   return(status != 0 ? 1 : 0);
 }
 
-int process_file(char *in_file){
+static int process_file(char *in_file){
 
   int fd;
   int gempak_fd;
@@ -214,7 +215,7 @@ int process_file(char *in_file){
   }
 
   if(g.opt_png_output == 1){
-    fp = fopen(fname, "w");
+    fp = fopen_output(fname, "w");
     if(fp == NULL)
       log_err(1, "Could not open %s", fname);
     
@@ -231,7 +232,7 @@ int process_file(char *in_file){
 
   if(g.opt_gempak_output){
     fname[strlen(fname) - 4] = '\0';
-    gempak_fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    gempak_fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC | O_EXLOCK, 0644);
     if(gempak_fd == -1)
       log_err(1, "Could not open %s", fname);
 
@@ -253,7 +254,7 @@ int process_file(char *in_file){
   return(0);
 }
 
-int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb){
+static int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb){
 
   int n;
 
@@ -268,7 +269,7 @@ int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb){
   return(0);
 }
 
-void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
+static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
 
   unsigned char *p;
   int n;
@@ -304,7 +305,7 @@ void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
   npdb->wmoid[WMOID_SIZE] = '\0';
 }
 
-int write_pngdata(FILE *fp, int fd, int linesize, int numlines){
+static int write_pngdata(FILE *fp, int fd, int linesize, int numlines){
   
   png_structp png_ptr = NULL;
   png_infop info_ptr = NULL;
@@ -378,7 +379,7 @@ int write_pngdata(FILE *fp, int fd, int linesize, int numlines){
   return(status);
 }
 
-int write_gempak(int gempak_fd, int fd, 
+static int write_gempak(int gempak_fd, int fd, 
 		 struct nesdis_product_def_block *npdb, int *zstatus){
   /*
    * Returns:
@@ -442,7 +443,7 @@ int write_gempak(int gempak_fd, int fd,
   return(status);
 }
 
-int write_file_info(char *in_file){
+static int write_file_info(char *in_file){
   /*
    * This function extracts and prints (to stdout) the information
    * from the nesdis pdb that is used by the filters. It tries to
@@ -527,7 +528,7 @@ int write_file_info(char *in_file){
   return(0);
 }
 
-void check(struct nesdis_product_def_block *npdb){
+static void check(struct nesdis_product_def_block *npdb){
   
   fprintf(stdout, "%d%02d%02d_%02d%02d\n", 
 	  npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
@@ -545,7 +546,7 @@ void check(struct nesdis_product_def_block *npdb){
   fprintf(stdout, "    res: %d\n", npdb->res);
 }
 
-void output(char *fname, struct nesdis_product_def_block *npdb){
+static void output(char *fname, struct nesdis_product_def_block *npdb){
 
   char time[TIME_STR_SIZE + 1];
 
@@ -562,7 +563,7 @@ void output(char *fname, struct nesdis_product_def_block *npdb){
 	  fname);
 }
 
-int verify_wmo_header(char *in_file){
+static int verify_wmo_header(char *in_file){
   /*
    * Check the first WMO_HEADER_SIZE bytes to see if it consists of
    * 18 ascii bytes plus the \r\r\n.
@@ -600,7 +601,7 @@ int verify_wmo_header(char *in_file){
   return(1);
 }
 
-char *make_default_pngname(struct nesdis_product_def_block *npdb){
+static char *make_default_pngname(struct nesdis_product_def_block *npdb){
 
   char *fname;
   char prefix[WMOID_SIZE + 1];

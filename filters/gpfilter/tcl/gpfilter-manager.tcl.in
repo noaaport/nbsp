@@ -20,7 +20,7 @@ unset filters_init_status;
 ## Initialization of this filter.
 set initfile [file join $common(libdir) "gpfilter.init"];
 if {[file exists $initfile] == 0} {
-        puts "dafilter disabled: $initfile not found.";
+        puts "gpfilter disabled: $initfile not found.";
         return 1;
 }
 source $initfile;

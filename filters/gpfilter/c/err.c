@@ -140,12 +140,18 @@ void log_err_open(char *fname){
 
 void log_err_write(char *fname){
 
-  log_err(1, "Could not write to %s", fname);
+  if(fname != NULL)
+    log_err(1, "Could not write to %s", fname);
+  else
+    log_err(1, "Could not write output.");
 }
 
 void log_err_read(char *fname){
 
-  log_err(1, "Could not read from %s", fname);
+  if(fname != NULL)
+    log_err(1, "Could not read from %s", fname);
+  else
+    log_err(1, "Could not read input.");
 }
 
 void log_errn_open(char *fname){
@@ -155,10 +161,16 @@ void log_errn_open(char *fname){
 
 void log_errn_write(char *fname){
 
-  log_err(0, "Could not write to %s", fname);
+  if(fname != NULL)
+    log_err(0, "Could not write to %s", fname);
+  else
+    log_err(0, "Could not write output.");
 }
 
 void log_errn_read(char *fname){
 
-  log_err(0, "Could not read from %s", fname);
+  if(fname != NULL)
+    log_err(0, "Could not read from %s", fname);
+  else
+    log_err(0, "Could not read input.");
 }

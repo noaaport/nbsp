@@ -10,6 +10,8 @@
 
 #include <stdio.h>
 
+FILE *fopen_input(char *path);
+FILE *fopen_output(char *path, char *mode);
 int read_page(FILE *fp, void *page, int page_size);
 int write_page(FILE *fp, void *page, int page_size);
 

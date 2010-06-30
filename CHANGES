@@ -31,3 +31,12 @@
 - Revised the craftinsert script to set the umask before creating the
   subdirectories and the data file in the spool directory (that now
   requires tclx).
+
+- Revised io.c in the gpfilter/c directory to add the the fopen_xxx
+  functions. In particular fopen_output locks the output file
+  so that it is safe to execute several instances of nbspfile
+  (and nbspipe and the other programs) in parallel even in append mode
+  and if the output file is the same. The programs were updated to
+  use the new functions.
+
+

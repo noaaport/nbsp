@@ -5,9 +5,10 @@
  *
  * $Id$
  */
+#include <unistd.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <ctype.h>
 #include <zlib.h>
 #include <libgen.h>
@@ -15,6 +16,7 @@
 #include <sys/stat.h>
 #include "err.h"
 #include "util.h"
+#include "io.h"
 #include "unz.h"
 
 #define COMPRESS_LEVEL		9
@@ -119,39 +121,6 @@ static int filesize(char *fname){
   return(sb.st_size);
 }
 
-static int read_page(FILE *fp, char *page, int page_size){
-
-  int n;
-  int status = 0;
-
-  n = fread(page, 1, page_size, fp);
-  if(n < page_size){
-    if(ferror(fp) != 0){
-      status = -1;
-      log_err_read(g.opt_input_fname);
-    }
-  }
-
-  return(status);
-}
-
-static int write_page(FILE *fp, char *page, int page_size){
-
-  int n;
-  int status = 0;
-
-  n = fwrite(page, 1, page_size, fp);
-  if(n < page_size){
-    status = -1;
-    if(g.opt_output_fname != NULL)
-      log_err_write(g.opt_output_fname);
-    else
-      log_err(1, "Cannot write output.");
-  }
-  
-  return(status);
-}
-
 static int write_cpage(FILE *fp, char *page, int page_size){
 
   int status = 0;
@@ -179,12 +148,12 @@ static int process_file(void){
   if(g.buffer == NULL)
     log_err(1, "Cannot process %s", g.opt_input_fname);
   
-  g.input_fp = fopen(g.opt_input_fname, "r");
+  g.input_fp = fopen_input(g.opt_input_fname);
   if(g.input_fp == NULL)
     log_err_open(g.opt_input_fname);
   
   if(g.opt_output_fname != NULL){
-    g.output_fp = fopen(g.opt_output_fname, "w");
+    g.output_fp = fopen_output(g.opt_output_fname, "w");
   }else
     g.output_fp = stdout;
   

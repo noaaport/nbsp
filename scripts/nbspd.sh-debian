@@ -35,15 +35,24 @@ case "$1" in
 	# In Ubuntu /var/run/<subdir> must be recreated
 	[ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
 
-	echo -n "Starting $DESC: "
+	echo -n "Starting $DESC:"
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
 	    -- $DAEMON_OPTS
-	echo "$NAME."
+	echo " done"
 	;;
   stop)
-	echo -n "Stopping $DESC: "
+	echo -n "Stopping $DESC:"
 	start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $DAEMON
-	echo "$NAME."
+
+	i=0
+	while [ -f $PIDFILE ]
+	do
+	  sleep 1
+	  i=`expr $i + 1`
+	  [ $i -eq 4 ] && { printf " %s" "."; i=0; }
+	done
+
+	echo " done"
 	;;
   *)
 	N=/etc/init.d/${NAME}d

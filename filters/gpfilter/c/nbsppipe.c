@@ -124,7 +124,7 @@ static int process_file(void){
   int data_start;
 
   if(g.opt_input_fname != NULL){
-    g.input_fp = fopen(g.opt_input_fname, "r");
+    g.input_fp = fopen_input(g.opt_input_fname);
     if(g.input_fp == NULL)
       log_err_open(g.opt_input_fname);
   }else
@@ -142,9 +142,9 @@ static int process_file(void){
 
   if(g.opt_output_fname != NULL){
     if(g.opt_append == 0)
-      g.output_fp = fopen(g.opt_output_fname, "w");
+      g.output_fp = fopen_output(g.opt_output_fname, "w");
     else
-      g.output_fp = fopen(g.opt_output_fname, "a");
+      g.output_fp = fopen_output(g.opt_output_fname, "a");
     
     if(g.output_fp == NULL)
       log_err_open(g.opt_output_fname);

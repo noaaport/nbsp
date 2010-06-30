@@ -275,7 +275,7 @@ int main(int argc, char ** argv){
     log_err(1, "fill_buffer");
 
   if(goutputfname != NULL){
-    gfd = open(goutputfname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    gfd = open(goutputfname, O_WRONLY | O_CREAT | O_TRUNC | O_EXLOCK, 0644);
     if(gfd == -1)
       log_err(1, "open");
   }else

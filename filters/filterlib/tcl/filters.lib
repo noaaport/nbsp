@@ -768,11 +768,7 @@ proc filterlib_exec {cmd} {
     global filterslib;
 
     set status [catch {
-	if {$filterslib(background_processing) == 1} {
-	    eval exec $cmd &;
-	} else {
-	    eval exec $cmd;
-	}
+	eval exec $cmd;
     } errmsg];
 
     if {$status != 0} {
@@ -832,7 +828,9 @@ proc filterlib_cspool_execpipe {args} {
 }
 
 #
-# This function ends up calling nbspfile program.
+# This function ends up calling the nbspfile program. Since nbdpfile locks
+# the output file, it is safe to execute in the background. This is done
+# if filterslib(background_processing) is set to 1.
 #
 proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     #
@@ -843,33 +841,33 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
 
     global filterslib;
 
-    set opts "";
-    if {[llength $args] != 0} {
-        append opts [join $args " "];
-    }
+    set opts $args;
 
     if {$filterslib(ccbsaved) == 0} {
-	append opts " -n";
+	lappend opts "-n";
     }
-    append opts " -d " $savedir " -o " $savename " " $fpath " " $seq;
+    lappend opts "-d" $savedir "-o" $savename $fpath $seq;
 
     set status 0;
     if {[::nbsp::cspoolbdb::query_enable] == 1} {
-	set cmd "";
-	append cmd "|nbspfile -i" " " $opts;
+	set cmd [concat "|nbspfile" "-i" $opts];
 	set status [filterlib_cspool_execpipe -p $cmd $seq];
     }
 
     if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-	set cmd "";
-        append cmd "nbspfile" " " $opts;
+        set cmd [concat "nbspfile" $opts];
+	if {$filterslib(background_processing) == 1} {
+	    lappend cmd "&";
+	}
         filterlib_exec $cmd;
     }
 }
 
 #
 # Similar to the above, but calling nbsppipe with a pipeline to
-# another program (e.g., a gempak decoder).
+# another program (e.g., a gempak decoder). Since the gempak decoders
+# do not lock the output file (or do they?), they are not executed
+# in the background even if ilterslib(background_processing) is set.
 #
 proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
     #
@@ -893,25 +891,23 @@ proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
 
     global filterslib;
 
-    set opts "";
-    if {[llength $args] != 0} {
-        append opts [join $args " "];
-    }
+    set opts $args;
 
     if {$filterslib(ccbsaved) == 0} {
-	append opts " -n";
+	lappend opts "-n";
     }
 
     set status 0;
-    set cmd "";
     if {[::nbsp::cspoolbdb::query_enable] == 1} {
-	append cmd "|nbsppipe" " " $opts " -s " $seq " | " $pipe_cmd;
-	set status [filterlib_cspool_execpipe -p $cmd_pipe $seq];
+	set cmd [concat "|nbsppipe" $opts "-s" $seq "|" $pipe_cmd];
+	set status [filterlib_cspool_execpipe -p $cmd $seq];
     }
 
     if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-        append cmd "nbsppipe" \
-		" " $opts " -s " $seq " < " $fpath " | " $pipe_cmd;
+        set cmd [concat "nbsppipe" $opts "-s" $seq "<" $fpath "|" $pipe_cmd];
+	# if {$filterslib(background_processing) == 1} {
+	#    lappend cmd "&";
+	# }
 	filterlib_exec $cmd;
     }
 }
