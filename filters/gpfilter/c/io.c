@@ -5,6 +5,7 @@
  *
  * $Id$
  */
+#include <sys/file.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include "err.h"
@@ -39,13 +40,24 @@ FILE *fopen_output(char *path, char *mode){
   if(path == NULL)
     return(stdout);
 
+  /*
+   * In FreeBSD we could use O_EXLOCK and not use flock below,
+   * but not in general (e.g., linux).
+   */
   if(mode[0] == 'a')
-    fd = open(path, O_WRONLY | O_APPEND | O_CREAT | O_EXLOCK, 0666);
+    fd = open(path, O_WRONLY | O_APPEND | O_CREAT, 0666);
   else if(mode[0] == 'w')
-    fd = open(path, O_WRONLY | O_TRUNC | O_CREAT | O_EXLOCK, 0666);
+    fd = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0666);
   else{
     log_errx(1, "Invalid mode %s.", mode);
     return(NULL);
+  }
+
+  if(fd != -1){
+    if(flock(fd, LOCK_EX) == -1){
+      (void)close(fd);
+      fd = -1;
+    }
   }
 
   if(fd == -1){
