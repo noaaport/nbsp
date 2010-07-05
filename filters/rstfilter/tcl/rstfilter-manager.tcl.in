@@ -175,7 +175,7 @@ foreach type $rstfilter(slave,types) {
     rstfilter_slave_open $type;
     if {$rstfilter(slave,$type,open) == 0} {
 	log_msg "Disabling the $type dispatching.";
-	set rstfilter(slave,type,enable) 0;
+	set rstfilter(slave,$type,enable) 0;
     }
 }
 

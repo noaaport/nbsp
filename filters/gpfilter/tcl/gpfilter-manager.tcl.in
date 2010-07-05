@@ -173,7 +173,7 @@ foreach type $gpfilter(slave,types) {
     gpfilter_slave_open $type;
     if {$gpfilter(slave,$type,open) == 0} {
 	log_msg "Disabling the $type dispatching.";
-	set gpfilter(slave,type,enable) 0;
+	set gpfilter(slave,$type,enable) 0;
     }
 }
 

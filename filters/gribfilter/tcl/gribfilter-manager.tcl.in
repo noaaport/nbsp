@@ -174,7 +174,7 @@ foreach type $gribfilter(slave,types) {
     gribfilter_slave_open $type;
     if {$gribfilter(slave,$type,open) == 0} {
 	log_msg "Disabling the $type dispatching.";
-	set gribfilter(slave,type,enable) 0;
+	set gribfilter(slave,$type,enable) 0;
     }
 }
 

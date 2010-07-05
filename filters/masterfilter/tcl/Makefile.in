@@ -1,0 +1,33 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+FILTERNAME =	masterfilter
+TCLTARGET =	${FILTERNAME}.tcl
+TCLSOURCES =	${FILTERNAME}.tcl.in
+SAMPLES =	${FILTERNAME}.conf-sample
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+
+${FILTERNAME}.conf-sample: ${FILTERNAME}.conf
+	cp ${FILTERNAME}.conf ${FILTERNAME}.conf-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

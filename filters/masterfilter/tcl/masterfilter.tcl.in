@@ -1,0 +1,249 @@
+#!%TCLSH%
+#
+# $Id$
+#
+# Usage:
+#	masterfilter <fpath>
+#	masterfilter <fname> <fpath>
+#	masterfilter <seq> <fname> <fpath>
+#	masterfilter < <stdin>
+#
+# In the last mode it accepts input like all the filters.
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "masterfilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+	return 1;
+}
+unset filters_init_status;
+
+## Initialization of this filter.
+set masterfilter(conf)	[file join $common(confdir) "masterfilter.conf"];
+set masterfilter(localconfdirs)	$common(localconfdirs);
+set masterfilter(libdir) $common(libdir);
+set masterfilter(filterlist) [list];
+
+# Define defaults
+set masterfilter(inventory,enable) 1
+set masterfilter(spoolfilter,enable) 0
+set masterfilter(rstfilter,enable) 1
+set masterfilter(dafilter,enable) 1
+set masterfilter(metarfilter,enable) 1
+set masterfilter(uafilter,enable) 1
+set masterfilter(wsfilter,enable) 0
+set masterfilter(gribfilter,enable) 1
+set masterfilter(panfilter,enable) 0
+set masterfilter(msgfilter,enable) 0
+set masterfilter(trackfilter,enable) 0
+set masterfilter(nntpfilter,enable) 0
+set masterfilter(gpfilter,enable) 0
+set masterfilter(ldmfilter,enable) 0
+set masterfilter(nbspfilter,enable) 0
+
+## The configuration file that overrides the defaults, if it exists.
+if {[file exists $masterfilter(conf)] == 1} {
+    source $masterfilter(conf);
+}
+
+# If masterfilter(filterlist) was explicitly set, use that. Otherwise,
+# use the masterfilter(<filtername>,enable) settings.
+#
+if {[llength $masterfilter(filterlist)] == 0} {
+    if {$masterfilter(inventory,enable) == 1} {
+        lappend masterfilter(filterlist) "inventory";
+    }
+    foreach k \
+	[list spool rst da metar ua ws grib pan msg track nntp gp ldm nbsp] {
+        if {[info exists masterfilter(${k}filter,enable)] && \
+	    ($masterfilter(${k}filter,enable) != 0)} {
+            lappend masterfilter(filterlist) "${k}filter";
+        }
+    }
+}
+
+#
+## variables of this filter
+#
+# masterfilter(<filtername>,open) 0;
+# masterfilter(<filtername>,enable) 1;
+# masterfilter(<filtername>,F) (dynamically initialized before entering main)
+#
+foreach f $masterfilter(filterlist) { 
+    set masterfilter($f,open) 0;
+    set masterfilter($f,enable) 1;
+    set masterfilter($f,bin) [file join $masterfilter(libdir) $f];
+}
+
+proc main {argc argv} {
+
+    if {$argc == 0} {
+	loop;
+    } else {
+	once $argc $argv;
+    }
+}
+
+proc loop {} {
+
+    global masterfilter;
+    global errorInfo;
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+
+	# If there was a write error, the functions close the connections.
+	# We check and try to reopen it.
+	foreach f $masterfilter(filterlist) {
+	    if {($masterfilter($f,enable) == 1) && \
+		($masterfilter($f,open) == 0)} {
+	        masterfilter_slave_open $f;
+	    }
+	}
+    }
+}
+proc once {argc argv} {
+
+    # Construct the finfo and pass it to process {}.
+    if {$argc == 7} {
+	set finfo [join $argv " "];
+    } elseif {$argc == 1} {
+	# fpath
+	set fpath [lindex $argv 0];
+	set fname [file rootname [file tail $fpath]];
+	set finfo "0 0 0 0 0 $fname $fpath";
+    } elseif {$argc == 2} {
+	# fname fpath - insert 0 five times in front
+	set finfo [join [linsert $argv 0 0 0 0 0 0] " "];
+    } elseif {argc == 3} {
+	# seq fname fpath - insert 0 four times after seq
+	set finfo [join [linsert $argv 1 0 0 0 0] " "];
+    }
+
+    set status [catch {process $finfo} errmsg];
+    if {$status == 1} {
+	log_msg "Error processing $finfo";
+	log_msg $errmsg;
+	log_msg $errorInfo;
+    }	
+}
+
+proc process {finfo} {
+
+    global masterfilter;
+
+    foreach f $masterfilter(filterlist) {
+	if {$masterfilter($f,enable) == 1} {
+	    masterfilter_slave_write $f $finfo;
+	}
+    }
+}
+
+#
+# The slave functions
+#
+
+proc masterfilter_slave_open {filtername} {
+
+    global masterfilter;
+
+    set status [catch {
+	set masterfilter($filtername,F) \
+	    [open "|$masterfilter($filtername,bin)" w];
+	fconfigure $masterfilter($filtername,F) -buffering line;
+    } errmsg];
+
+    if {$status == 0} {
+	set masterfilter($filtername,open) 1;
+    } else {
+	log_msg $errmsg;
+    }
+}
+
+proc masterfilter_slave_close {filtername} {
+
+    global masterfilter;
+
+    if {$masterfilter($filtername,open) == 0} {
+	return;
+    }
+
+    set status [catch {close $masterfilter($filtername,F)} errmsg];
+    set masterfilter($filtername,open) 0;
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc masterfilter_slave_write {filtername msg} {
+
+    global masterfilter;
+    global errorInfo;
+
+    if {$masterfilter($filtername,open) == 0} {
+	log_msg "Connection to $filtername is closed.";
+	return;
+    }
+
+    set status [catch {puts $masterfilter($filtername,F) $msg} errmsg];
+    if {$status == 0} {
+	return;
+    }
+
+    # If there as a write error, close the connection and retry.
+    masterfilter_slave_close $filtername;
+    masterfilter_slave_open $filtername;
+    if {$masterfilter($filtername,open) == 0} {
+	log_msg $errmsg;
+	return;
+    }
+
+    set status [catch {puts $masterfilter($filtername,F) $msg} errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+	log_msg $errorInfo;
+	return;
+    }
+}
+
+#
+# Dynamic initialization
+#
+# Open the pipes. In case a connection cannot be establish, log an error
+# and continue but disable that type.
+#
+foreach f $masterfilter(filterlist) { 
+    masterfilter_slave_open $f;
+    if {$masterfilter($f,open) == 0} {
+	log_msg "Disabling dispatching to $f.";
+	set masterfilter($f,enable) 0;
+    }
+}
+
+main $argc $argv;
+
+# Close all the filters
+foreach f $masterfilter(filterlist) {
+    masterfilter_slave_close $f;
+}

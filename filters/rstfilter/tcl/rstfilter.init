@@ -27,6 +27,7 @@ set rstfilter(sat_inv_image_types) {{"png" 0} {"gif" 0} {"jpg" 1}};
 #
 set rstfilter(txt_enable)	1;
 set rstfilter(txt_regex)	{.*};      # matched against subdirectory name
+set rstfilter(txt_fext)		".txt";
 #
 set rstfilter(sat_enable)	1;
 set rstfilter(sat_regex)	{.*};

@@ -55,23 +55,22 @@ proc filter_text_old {fpath savedir} {
 proc filter_text {fpath savedir} {
 
     global rstfilter;
-    global filtersprogs;
 
     cd $rstfilter(datadir);
     file mkdir $savedir;
 
     set fname [file tail $fpath];
-    append savename $fname ".txt";
+    append savename $fname $rstfilter(txt_fext);
     set fpathout [file join $rstfilter(datadir) $savedir $savename];	
 
-    set opts "-t";
+    set cmd [list nbspfile -t];      # do not add gempak-style headers
     if {$rstfilter(ccbsaved) == 0} {
-	set opts "-t -n";
+	lappend cmd "-n";
     }
 
+    lappend cmd -d $savedir -o $savename $fpath;
     set status [catch {
-	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
-		$fpath;
+	eval exec $cmd;
     } errmsg];
 
     set output [list $status $fpathout];

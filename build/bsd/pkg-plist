@@ -110,6 +110,7 @@ libexec/nbsp/netfilter
 libexec/nbsp/msgfilter
 libexec/nbsp/trackfilter
 libexec/nbsp/trackfilter.init
+libexec/nbsp/masterfilter
 libexec/nbsp/craftinsert
 libexec/nbsp/filters.init
 libexec/nbsp/filters.lib
@@ -223,6 +224,7 @@ etc/nbsp/dist/msgfilter-ugczones.def-sample
 etc/nbsp/dist/msgfilter.rc-ex
 etc/nbsp/dist/msgfilter-subscribers.txt-ex
 etc/nbsp/dist/trackfilter.conf-sample
+etc/nbsp/dist/masterfilter.conf-sample
 etc/nbsp/dist/craftinsert.conf-sample
 etc/nbsp/dist/grib-templates.tgz
 etc/nbsp/dist/metarplot-templates.tgz

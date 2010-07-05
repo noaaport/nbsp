@@ -170,7 +170,7 @@ foreach type $dafilter(slave,types) {
     dafilter_slave_open $type;
     if {$dafilter(slave,$type,open) == 0} {
 	log_msg "Disabling the $type dispatching.";
-	set dafilter(slave,type,enable) 0;
+	set dafilter(slave,$type,enable) 0;
     }
 }
 

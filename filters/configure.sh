@@ -20,6 +20,7 @@ spoolfilter
 msgfilter
 trackfilter
 craftfilter
+masterfilter
 scheduler
 recover"
 
