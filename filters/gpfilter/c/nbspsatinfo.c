@@ -25,7 +25,7 @@
  * If no file is given in the argument, then it reads from stdin. It
  * can take either the compressed or uncompresed file as input,
  * and it extract the relevant info to stdout.
- * The functionality is similar to nbspsatinfo -i, but the output
+ * The functionality is similar to nbspsat -i, but the output
  * is different.
  */
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */
