@@ -1,3 +1,6 @@
+#
+# $Id$
+#
 Digital Atmosphere imports and displays:
 
 	land synoptic (WMO FM 12 SYNOP)

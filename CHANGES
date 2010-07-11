@@ -38,3 +38,9 @@
   so that it is safe to execute several instances of nbspfile
   in parallel even in append mode and if the output file is the same. 
   nbspfile was updated to use the new functions.
+
+- Revised the various filters that process the satellite files to
+  allow them to process the non-goes data files.
+
+- Added the ability to specify the queue_read_timeout_ms on a per-client
+  basis (via the clientoptions string in nbspd.conf).

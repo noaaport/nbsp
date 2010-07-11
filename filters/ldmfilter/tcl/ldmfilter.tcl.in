@@ -46,12 +46,28 @@ set ldmfilter(ccbsize)		$common(ccbsize);
 #
 set ldmfilter(condition)	[list];
 set ldmfilter(action)		[list];
+#
+set ldmfilter(satdef_sourced)    0;
 
 #
 # Read the default configuration file.
 #
 if {[file exists $ldmfilter(conf)] == 1} {
     source $ldmfilter(conf);
+}
+
+#
+# Read once and for all the sat definitions file and copy the
+# gpfilter(satdef,...) variables to ldmfilter(satdef,...) for easier
+# reference in the mk_ldm_sat_prodid function.
+#
+if {[file exists $ldmfilter(satdef)]} {
+    source $ldmfilter(satdef);
+    set ldmfilter(satdef_sourced) 1;
+
+    foreach k [array names gpfilter "satdef,*"] {
+	set ldmfilter($k) $gpfilter($k);
+    }
 }
 
 # The main rc file is required
@@ -204,17 +220,14 @@ proc mk_ldm_sat_prodid {fname fpath} {
 # satdef file is sourced in the global scope.
 
     global ldmfilter;
-#    global gpfilter;
 
-    if {[file exists $ldmfilter(satdef)] == 1} {
-        source $ldmfilter(satdef);
-    } else {
+    if {$ldmfilter(satdef_sourced) == 0} {
         return "";
     }
 
     # This command just extracts the information from the nesdis pdb
     set status [catch {
-        set params [exec nbspsat -i $fpath]
+        set params [exec nbspsatinfo -i $fpath]
     } errmsg];
     
     if {$status != 0} {
@@ -222,35 +235,34 @@ proc mk_ldm_sat_prodid {fname fpath} {
 	return "";
     }
 
-    set source [lindex $params 0]
-    set creating_entity [lindex $params 1]
-    set sector [lindex $params 2]
-    set channel [lindex $params 3]
-    set res [lindex $params 4]
-    set time [lindex $params 5]
-    set tmpname [lindex $params 6]
+    set source [lindex $params 0];
+    set creating_entity [lindex $params 1];
+    set sector [lindex $params 2];
+    set channel [lindex $params 3];
+    set res [lindex $params 4];
+    set time [lindex $params 5];
 
     set datetime [split $time "_"];
     set ymd [lindex $datetime 0];
     set hm [lindex $datetime 1];
 
-    if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
-	set sector_name $gpfilter(satdef,tig_sector,$sector);
+    if {[info exists ldmfilter(satdef,sat_sector,$sector)]} {
+	set sector_name $ldmfilter(satdef,sat_sector,$sector);
     } else {
 	append sector_name "sector" $sector;
     }
     
-    if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
-	set channel_name $gpfilter(satdef,tig_channel,$channel);
+    if {[info exists ldmfilter(satdef,sat_channel,$channel)]} {
+	set channel_name $ldmfilter(satdef,sat_channel,$channel);
     } else {
 	append channel_name "channel" $channel;
     }
 
-    set tig_res_suffix $gpfilter(satdef,tig_res_suffix);
+    set sat_res_suffix $ldmfilter(satdef,sat_res_suffix);
 
     # There are spaces here.
     set prodid "satz/ch$source/$creating_entity/$channel_name/$ymd";
-    append prodid " $hm/$sector_name/${res}${tig_res_suffix}/";
+    append prodid " $hm/$sector_name/${res}${sat_res_suffix}/";
     append prodid " $fname";
 
     return $prodid;

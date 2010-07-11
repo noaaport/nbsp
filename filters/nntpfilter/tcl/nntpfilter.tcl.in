@@ -132,7 +132,7 @@ proc process {finfo} {
 
 	    return;
     	}
-    } elseif {[regexp {^tig} $rc(wmoid)]} {
+    } elseif {[regexp {^ti} $rc(wmoid)]} {
 	if {!$nntpfilter(sat_enable) || \
 	    ![filterlib_uwildmat $nntpfilter(sat_regex) $rc(wmoid)]} {
 

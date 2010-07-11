@@ -78,7 +78,7 @@ dcwarn,
 -d $gpfilter(dec_logdir)/dcwarn.log m4GEMTBL,
 storm/warn/YYYYMMDDHH_warn.gem)
 
-match_pipe($rc(wmoid), ^wwus(40|08)|wous20|wwus30,
+match_pipe($rc(wmoid), wwus(40|08)|wous20|wwus30,
 dcwtch,
 -t 30 -d $gpfilter(dec_logdir)/dcwtch.log m4GEMTBL,
 storm/wtch/YYYYMMDDHH_wtch.gem)

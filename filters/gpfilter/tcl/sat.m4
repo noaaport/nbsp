@@ -1,4 +1,4 @@
 dnl
 dnl $Id$
 dnl
-match_sat($rc(wmoid), ^tig)
+match_sat($rc(wmoid), ^ti)

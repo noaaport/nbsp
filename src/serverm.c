@@ -317,7 +317,7 @@ static int init_server_conn(void){
    */
   status = conn_table_add_element(g.ct, g.server_fd,
 				  CONN_TYPE_SERVER_NET, 0, NULL, NULL,
-				  0, 0, 0, 0);
+				  0, 0, 0, 0, 0);
 
   if(status != 0)
     log_err("Cannot init server.");
@@ -582,6 +582,7 @@ static void process_connections(void){
   clientopts.write_timeout_retry = g.client_write_timeout_retry;
   clientopts.reconnect_wait_sleep_secs = g.client_reconnect_wait_sleep_secs;
   clientopts.reconnect_wait_sleep_retry = g.client_reconnect_wait_sleep_retry;
+  clientopts.queue_read_timeout_ms = g.client_queue_read_timeout_ms;
 
   process_finished_connections();
   process_unidentified_connections();
@@ -1224,7 +1225,7 @@ static void spawn_client_threads(void){
     }
    
     /*
-     * The write options have already been initialized by init1 to the
+     * The client options have already been initialized by init1 to the
      * global value. Here we look to see if there is a per-client setting
      * for this client.
      */
@@ -1270,7 +1271,8 @@ static void lookup_client_options(struct conn_element_st *ce,
   char *nameorip;
   char *p;
   int val;
-  int a[4];
+  int a[5];
+  int Na = 5;	/* size of a[] */
   int count = 0;
 
   assert(clientoptions != NULL);
@@ -1293,8 +1295,9 @@ static void lookup_client_options(struct conn_element_st *ce,
   a[1] = ce->write_timeout_retry;
   a[2] = ce->reconnect_wait_sleep_secs;
   a[3] = ce->reconnect_wait_sleep_retry;
+  a[4] = ce->queue_read_timeout_ms;
 
-  while(p != NULL){
+  while((p != NULL) && (count < Na)){
     /*
      * Find the separating character and point to the next parameter.
      */
@@ -1313,4 +1316,5 @@ static void lookup_client_options(struct conn_element_st *ce,
   ce->write_timeout_retry = a[1];
   ce->reconnect_wait_sleep_secs = a[2];
   ce->reconnect_wait_sleep_retry = a[3];
+  ce->queue_read_timeout_ms = a[4];
 }

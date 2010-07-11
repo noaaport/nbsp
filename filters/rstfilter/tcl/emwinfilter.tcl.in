@@ -408,7 +408,7 @@ proc emwin_fname fbasename {
     }
 
     if {$extension != ".txt"} {
-	if {[regexp {^tig} $fname]} {
+	if {[regexp {^ti} $fname]} {
 	    set ss $emwinfilter(unknown_state);
 	} else {
 	    set ss [get_radlocid [string range $fname 3 5]];

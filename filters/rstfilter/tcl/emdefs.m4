@@ -42,7 +42,7 @@ lappend action {
 define(match_emwin_sat,
 lappend cond {
  ($emwinfilter(sat_enable) == 1) && \
-	[regexp {^tig} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+	[regexp {^ti} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
 }
 lappend action {
   set rc_status 0;

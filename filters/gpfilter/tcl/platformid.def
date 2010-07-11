@@ -2,29 +2,29 @@
 # $Id$
 #
 
-# These definitions, as well as those in gpsat.rc, are borrowed from
+# These definitions, as well as those in gpfilter-sat.def, are borrowed from
 # the file gribid.c in "noaaport-1.1.6". These "platform" entries correspond
 # to the "creating_entity" element in the "struct nesdis_product_def_block"
-# as I use it in nbapsat.c. This file is actually not used anywehere;
+# as I use it in nbspsat.c. This file is actually not used anywhere;
 # I am keeping it only for documentation purposes.
 
-set tig_platform(2) "MISC";
-set tig_platform(3) "JERS";
-set tig_platform(4) "ERS";
-set tig_platform(5) "POES";
-set tig_platform(6) "COMP";
-set tig_platform(7) "DMSP";
-set tig_platform(8) "GMS";
-set tig_platform(9) "METEOSAT";
-set tig_platform(10) "GOES-7";
-set tig_platform(11) "GOES-8";
-set tig_platform(12) "GOES-9";
-set tig_platform(13) "GOES-10";
-set tig_platform(14) "GOES-11";
-set tig_platform(15) "GOES-12";
-set tig_platform(16) "GOES-13";
-set tig_platform(17) "GOES-14";
-set tig_platform(18) "GOES-15";
-set tig_platform(19) "GOES-16";
-set tig_platform(27) "POES";
-set tig_platform(28) "POES";
+set sat_platform(2) "MISC";
+set sat_platform(3) "JERS";
+set sat_platform(4) "ERS";
+set sat_platform(5) "POES";
+set sat_platform(6) "COMP";
+set sat_platform(7) "DMSP";
+set sat_platform(8) "GMS";
+set sat_platform(9) "METEOSAT";
+set sat_platform(10) "GOES-7";
+set sat_platform(11) "GOES-8";
+set sat_platform(12) "GOES-9";
+set sat_platform(13) "GOES-10";
+set sat_platform(14) "GOES-11";
+set sat_platform(15) "GOES-12";
+set sat_platform(16) "GOES-13";
+set sat_platform(17) "GOES-14";
+set sat_platform(18) "GOES-15";
+set sat_platform(19) "GOES-16";
+set sat_platform(27) "POES";
+set sat_platform(28) "POES";

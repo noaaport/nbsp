@@ -331,26 +331,26 @@ proc filter_sat_unz {seq fpath} {
 	set time [lindex $params 5];
 	set tmpname [lindex $params 6];
 
-	append res $gpfilter(satdef,tig_res_suffix);
+	append res $gpfilter(satdef,sat_res_suffix);
 
 	# Convert the sector and channel numbers to names.
 	# Set it to default values in case there is no official name assigned.
 
-	if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
-    	    set tig_sector $gpfilter(satdef,tig_sector,$sector);
+	if {[info exists gpfilter(satdef,sat_sector,$sector)]} {
+    	    set sat_sector $gpfilter(satdef,sat_sector,$sector);
 	} else {
-	    append tig_sector "sector" $sector;
+	    append sat_sector "sector" $sector;
 	}
 
-	if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
-    	    set tig_channel $gpfilter(satdef,tig_channel,$channel);
+	if {[info exists gpfilter(satdef,sat_channel,$channel)]} {
+    	    set sat_channel $gpfilter(satdef,sat_channel,$channel);
 	} else {
-	    append tig_channel "channel" $channel;
+	    append sat_channel "channel" $channel;
 	}
 
-	set dir [file join $tig_sector $res $tig_channel];
+	set dir [file join $sat_sector $res $sat_channel];
 	set fname "";
-	append fname $tig_channel "_" $time;
+	append fname $sat_channel "_" $time;
 
 	# The mechanism to enable/disable individual types
 	set savedir [file join $satdir $dir];
@@ -401,26 +401,26 @@ proc filter_sat {seq fpath} {
 	set time [lindex $params 5]
 	set tmpname [lindex $params 6]
 
-	append res $gpfilter(satdef,tig_res_suffix);
+	append res $gpfilter(satdef,sat_res_suffix);
 
 	# Convert the sector and channel numbers to names.
 	# Set it to default values in case there is no official name assigned.
 
-	if {[info exists gpfilter(satdef,tig_sector,$sector)]} {
-    	    set tig_sector $gpfilter(satdef,tig_sector,$sector);
+	if {[info exists gpfilter(satdef,sat_sector,$sector)]} {
+    	    set sat_sector $gpfilter(satdef,sat_sector,$sector);
 	} else {
-	    append tig_sector "sector" $sector;
+	    append sat_sector "sector" $sector;
 	}
 
-	if {[info exists gpfilter(satdef,tig_channel,$channel)]} {
-    	    set tig_channel $gpfilter(satdef,tig_channel,$channel);
+	if {[info exists gpfilter(satdef,sat_channel,$channel)]} {
+    	    set sat_channel $gpfilter(satdef,sat_channel,$channel);
 	} else {
-	    append tig_channel "channel" $channel;
+	    append sat_channel "channel" $channel;
 	}
 
-	set dir [file join $tig_sector $res $tig_channel];
+	set dir [file join $sat_sector $res $sat_channel];
 	set fname "";
-	append fname $tig_channel "_" $time;
+	append fname $sat_channel "_" $time;
 
 	# The mechanism to enable/disable individual types
 	set savedir [file join $satdir $dir];

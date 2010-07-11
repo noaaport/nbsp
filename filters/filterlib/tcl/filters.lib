@@ -186,7 +186,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # -nobody  =>  do not extract the body of the file and the associated variables
 # -dogrib  =>  extract the rc(grib...) variables
 # -dorad   =>  extract the radar info variables
-# -dosat   =>  extract the st info variables
+# -dosat   =>  extract the sat info variables
 # -noccb   =>  ignore the ccb global settings and assume the file nas no ccb
 #
 # Undetermined variables are returned as "".
@@ -430,7 +430,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	}
     }
 
-    if {[regexp {^tig} $rc(wmoid)] && ($dosat == 1)} {
+    if {[regexp {^ti} $rc(wmoid)] && ($dosat == 1)} {
 	set satinfo_status [catch {
 	    set satinfo [split [exec nbspsatinfo -b -i $rc(fpath)]];
 	} errmsg];

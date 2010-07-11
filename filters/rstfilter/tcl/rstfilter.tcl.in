@@ -122,10 +122,21 @@ proc process {finfo} {
 
     global rstfilter;
 
-    filterlib_get_rcvars rc $finfo;
+    set _cmd [list filterlib_get_rcvars rc $finfo];
 
-    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];
-    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
+    # If rad is enable, extract the rc(radxxx) parameters
+    if {([info exists rstfilter(rad_enable)] == 0) || \
+	($rstfilter(rad_enable) == 1)} {
+	lappend _cmd "-dorad";
+    }
+
+    # If sat is enable, extract the rc(satxxx) parameters
+    if {([info exists rstfilter(sat_enable)] == 0) || \
+	($rstfilter(sat_enable) == 1)} {
+	lappend _cmd "-dosat";
+    }
+
+    eval ${_cmd};
 
     # Initialize to no match found.
     set rc_status 1;

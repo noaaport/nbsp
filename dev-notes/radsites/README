@@ -9,7 +9,7 @@ radplaces-2.txt was extracted from nexrad-stations.txt, which is a copy of
 by filtering it through the s2.awk script, and eliminating the entries
 from Korea, Japan and Azores. It was not used any further.
 
-The sample file tdwr.cdf (in the ondas examples directory) was
+The sample file tdwr.cfg (in the ondas examples directory) was
 created using the information in tdwr-radar-list.pdf.
 
 A template for the dual polarization products was also created in the

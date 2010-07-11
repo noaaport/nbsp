@@ -34,6 +34,9 @@ set rstfilter(sat_regex)	{.*};
 set rstfilter(sat_datext)	".gini";
 set rstfilter(sat_latest_enable)	1; # make link to latest gini and img
 set rstfilter(sat_latestname)	"latest";
+set rstfilter(sat_namefmt)	{$rc(wmoid)_$rc(ymd_hm).png};
+set rstfilter(sat_dirfmt)     	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
+#
 set rstfilter(satmap_enable)	0;	   # set to 1 to add map outlines
 set rstfilter(satmap_regex)	{.*};	   # to restrict for which tigexx
 set rstfilter(satmap_mapsize)	"800;600";
@@ -54,6 +57,8 @@ set rstfilter(rad_enable)	0;
 set rstfilter(rad_regex)	{.*};
 set rstfilter(rad_latest_enable)	1; # make link to latest img
 set rstfilter(rad_latestname)	"latest";
+set rstfilter(rad_namefmt)	{$rc(awips)_$rc(ymd_hm).gif};
+set rstfilter(rad_dirfmt)     	{$rc(awips2)/$rc(awips1)};
 set rstfilter(rad_mapsize)	"800;600";
 set rstfilter(radmap_rcdirs)	$rstfilter(localconfdirs);
 set rstfilter(radmap_rcsubdir)	[file join "gpmap" "rad"];

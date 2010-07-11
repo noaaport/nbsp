@@ -178,9 +178,9 @@ static void loop(struct conn_element_st *ce){
    */
   int status;
   int dberror;
-  int timeout_ms = g.client_queue_read_timeout_ms;
   void *data = NULL;
   uint32_t data_size;
+  int timeout_ms = conn_element_get_queue_read_timeout_ms(ce);
 
   /*
    * The nbs1 and nbs2 threads receive the packetinfo->packet while

@@ -69,7 +69,7 @@ set filterslib(gmpk_header_size) 11;	# gpfilter/c/const.h
 set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
 	$filterslib(gmpk_header_size)];    # used in nbspradmap
 #
-set filterslib(ignorebody)	{_(sdus|tig)|\+(grib|bufr)};
+set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first
 # (It is matched against awips1). Included are:

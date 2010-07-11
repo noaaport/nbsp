@@ -26,7 +26,14 @@
  * can take either the compressed or uncompresed file as input,
  * and it extract the relevant info to stdout.
  * The functionality is similar to nbspsat -i, but the output
- * is different.
+ * does not contain the fname:
+ *
+ *         npdb->source, 
+ *         npdb->creating_entity, 
+ *         npdb->sector, 
+ *         npdb->channel,
+ *         npdb->res,
+ *         (uintmax_t)time
  */
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */
 #define WMOID_SIZE		WMO_ID_SIZE		/* common.h */

@@ -3,7 +3,7 @@
 # $Id$
 # 
 # Usage: nbspsatmap [-b] [-d <outputdir>] [-g <gpmap_gif>] [-k]
-#       [-K] [-L <logfile>] [-p] [-q] [-s <outputsize>]
+#       [-K] [-L <logfile>] [-o <outname>] [-p] [-q] [-s <outputsize>]
 #       [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
 #
 # -b => background mode
@@ -13,6 +13,7 @@
 # -k => keep the gif file when [-p] is given
 # -K => keep the log file when finished 
 # -L => specify the logfile instead of the default
+# -o => name of outputfile (otherwise the default used by nbspsat is used)
 # -p => output png instead of the default gif (gpmap_gif only outputs gif)
 # -q => silent (no normal output) [except for errors]
 # -s => image size. It is specified as, e.g, "1024;768".
@@ -29,10 +30,10 @@
 package require cmdline;
 
 set usage {nbspsatmap [-b] [-d outputdir] [-D <defs>] [-g gmap_gif]
-    [-k] [-K] [-L <logfile>] [-p] [-q]
+    [-k] [-K] [-L <logfile>] [-o <outname>] [-p] [-q]
     [-s outputsize] [-t <tmpdir>] <inputfile> [<rcfile>]};
-set optlist {b {d.arg ""} {D.arg ""} {g.arg "gpmap_gif"} k K {L.arg ""} p q
-    {s.arg "800;600"} {t.arg ""} };
+set optlist {b {d.arg ""} {D.arg ""} {g.arg "gpmap_gif"} k K {L.arg ""}
+    {o.arg ""} p q {s.arg "800;600"} {t.arg ""} };
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 
@@ -122,23 +123,33 @@ if {$option(s) eq ";"} {
     set gpmap(devsize) $option(s);
 }
 
-# Now construct the command line for nbspsat. We pass [-i] to nbspsat
+# Construct the command line for nbspsat. We pass [-i] to nbspsat
 # to extract the information without procesing. 
 set nbspsatopts [list "-i"];
 if {$option(b) == 1} {
-    lappend nbspsatopts "-b";
+   lappend nbspsatopts "-b";
 }
-
-set params [eval exec $filtersprogs(nbspsat) $nbspsatopts $gpmap(inputfile)];
+set params [eval exec nbspsat $nbspsatopts $gpmap(inputfile)];
 set sector [lindex $params 2];
 set channel [lindex $params 3];
 set res [lindex $params 4];
 set time [lindex $params 5];
-set outfname [lindex $params 6];
-
-# nbspsat creates png files and the outfname parameter here has the .png.
-set outrootname [file rootname $outfname];
-append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+set nbspsat_outfbasename [lindex $params 6];
+ 
+if {$option(o) ne ""} {
+    set outrootname [file rootname $option(o)];
+    if {$option(p) == 1} {
+	# This will be the temporary gif file name which later
+	# will be converted to png and renamed.
+	append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+    } else {
+	set gpmap(outputfile) $option(o);
+    }
+} else {
+    # nbspsat creates png files and the outfname parameter here has the .png.
+    set outrootname [file rootname $nbspsat_outfbasename];
+    append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+}
 
 if {$option(L) eq ""} {
     append logfile $outrootname ".log";
@@ -204,7 +215,13 @@ if {[file exists $gpmap(outputfile)] == 0} {
 }
 
 if {$option(p) == 1} {
-    append pngoutfile [file rootname $gpmap(outputfile)] ".png";
+    if {$option(o) eq ""} {
+	set pngoutfile [file join \
+		   [file dirname $gpmap(outputfile)] $nbspsat_outfbasename];
+    } else {
+	set pngoutfile [file join \
+		   [file dirname $gpmap(outputfile)] $option(o)];
+    }
     set status [catch {exec $filtersprogs(giftopnm) $gpmap(outputfile) \
         | $filtersprogs(pnmtopng) > $pngoutfile} errmsg];
 

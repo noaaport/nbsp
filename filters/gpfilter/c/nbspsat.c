@@ -23,6 +23,15 @@
  * This program assumes that the input file is the uncompressed gini data
  * file. Only when it is invoked with [-i] to just extract the relevant info,
  * it can take either the compressed or uncompresed file as input.
+ * It prints to stdout
+ *
+ *	  npdb->source, 
+ *	  npdb->creating_entity, 
+ *	  npdb->sector, 
+ *	  npdb->channel,
+ *	  npdb->res,
+ *	  time,
+ *	  fname
  */
 
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */
@@ -207,11 +216,11 @@ static int process_file(char *in_file){
     if(fname == NULL)
       log_err(1, "malloc()");
   }else{
-    fname = malloc(strlen(g.opt_output_fname) + 5); /* ".png" plus \0 */
+    fname = malloc(strlen(g.opt_output_fname) + 1);
     if(fname == NULL)
       log_err(1, "malloc");
 
-    sprintf(fname, "%s.png", g.opt_output_fname);
+    sprintf(fname, "%s", g.opt_output_fname);
   }
 
   if(g.opt_png_output == 1){

@@ -98,7 +98,7 @@ proc filter_sat_unz {fpath savedir} {
     return $output;
 }
 
-proc filter_sat {wmoid fpath imgsavedir datasavedir} {
+proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
 
 # This function assumes that the input file (fpath) has been saved in
 # compressed form. It is to be used if the nbsp processor is configured
@@ -106,17 +106,24 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir} {
 # case, the uncompressed data file is saved as well, with the extension
 # given by $rstfilter(sat_datext).
 # The name of the uncompressed file is copied from the generated image file.
-
+#
+# The default names are;
+#
+# knes_tigp01.070101_1414381 (raw, compressed)
+# tigp01_20060307_0101.png   (image)
+# tigp01_20060307_0101.gini  (uncompressed data)
+#
     global rstfilter;
-    global filtersprogs;
 
-    set fname [file tail $fpath];
-    set datafpath [file join $rstfilter(datadir) $datasavedir $fname];
+    # Assume that imgsavename contains the img file extension (png by default)
+    set datafbasename [file rootname $imgsavename];
+    append datafbasename $rstfilter(sat_datext);
+    set datafpath [file join $rstfilter(datadir) $datasavedir $datafbasename];
 
     set status [catch {
 	cd $rstfilter(datadir);
 	file mkdir $datasavedir;	
-	exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	exec nbspunz -o $datafpath $fpath;
     } errmsg];
 
     if {$status != 0} {
@@ -130,7 +137,7 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir} {
 
     if {($rstfilter(satmap_enable) == 1) && \
 	    [regexp $rstfilter(satmap_regex) $wmoid]} {
-	set output [filter_satmap $wmoid $fpath $imgsavedir];
+	set output [filter_satmap $wmoid $fpath $imgsavedir $imgsavename];
 	set status [lindex $output 0];
 	if {$status != 0} {
 	    log_msg "Will try without map.";
@@ -141,26 +148,11 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir} {
     if {($rstfilter(satmap_enable) == 0) || \
 	    ([regexp $rstfilter(satmap_regex) $wmoid] == 0) || \
 	    ($status != 0)} {
-	set output [filter_satplain $datafpath $imgsavedir];
+	set output [filter_satplain $datafpath $imgsavedir $imgsavename];
     }
-    #
-    # Rename the uncompressed data file to match the image file. E.g,
-    #
-    # knes_tigp01.070101_1414381 (raw, compressed)
-    # tigp01_20060307_0101.png   (image)
-    # tigp01_20060307_0101.gini  (uncompressed data)
-    #
+
     set status [lindex $output 0];
     set fpathout [lindex $output 1];
-
-    if {$status == 0} {
-	set frootname [file rootname [file tail $fpathout]];
-	append newdatafpath [file join [file dirname $datafpath] \
-	    $frootname] $rstfilter(sat_datext);
-	set status [catch {
-	    file rename -force $datafpath $newdatafpath;
-	} errmsg];
-    }
 
     if {$status != 0} {
 	# filter_satplain and filter_satmap delete the image file in
@@ -172,28 +164,27 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir} {
 
     ## Insert both img and data files in sat inventory
     filter_sat_img_insert_inventory $imgsavedir $fpathout;
-    filter_sat_insert_inventory $datasavedir $newdatafpath;
+    filter_sat_insert_inventory $datasavedir $datafpath;
 
     # Create the link to the latest
-    make_sat_latest $datasavedir [file tail $newdatafpath];
+    make_sat_latest $datasavedir [file tail $datafpath];
     make_sat_latest $imgsavedir [file tail $fpathout];
 
     return $output;
 }
 
-proc filter_satplain {fpath savedir} {
+proc filter_satplain {fpath savedir savename} {
 #
 # The input file to this function is the one with uncompresed frames.
 #
     global rstfilter;
-    global filtersprogs;
 
     cd $rstfilter(datadir);
     file mkdir $savedir;
-    set fname "";
+    set fbasename "";
 
     set status [catch {
-	set params [exec $filtersprogs(nbspsat) -n -d $savedir $fpath];
+	set params [exec nbspsat -n -d $savedir -o $savename $fpath];
     } errmsg];
 
     if {$status == 0} {
@@ -201,15 +192,15 @@ proc filter_satplain {fpath savedir} {
 	set channel [lindex $params 3]
 	set res [lindex $params 4]
 	set time [lindex $params 5]
-	set fname [lindex $params 6]
-	set fpathout [file join $rstfilter(datadir) $savedir $fname];
+	set fbasename [lindex $params 6]
+	set fpathout [file join $rstfilter(datadir) $savedir $fbasename];
     } else {
 	# Delete the file in case nbspsat returned an error, but yet
 	# the file was created.
     	set status1 [catch {
-	    set params [exec $filtersprogs(nbspsat) -i $fpath];
-	    set fname [lindex $params 6];
-	    file delete [file join $savedir $fname];
+	    set params [exec nbspsat -i $fpath];
+	    set fbasename [lindex $params 6];
+	    file delete [file join $savedir $fbasename];
     	} errmsg];
 
 	set fpathout "";
@@ -219,7 +210,7 @@ proc filter_satplain {fpath savedir} {
 
     # If loops are being generated, produce a gif file as well.
     if {($rstfilter(satloop_enable) == 1) && ($status == 0)} {
-      set status [catch {exec $filtersprogs(nbsppngcvt) -g $fpathout} errmsg];
+      set status [catch {exec nbsppngcvt -g $fpathout} errmsg];
     }
 
     if {$status != 0} {
@@ -229,21 +220,25 @@ proc filter_satplain {fpath savedir} {
     return $output;
 }
 
-proc filter_satmap {wmoid fpath savedir} {
+proc filter_satmap {wmoid fpath savedir savename} {
 #
 # The input file to this function is the one with the compresed frames.
 #
     global rstfilter;
-    global filtersprogs;
 
     cd $rstfilter(datadir);
     file mkdir $savedir;
-    set fname "";
+    set fbasename "";
 
     if {[file isdirectory $rstfilter(tmpdir)] == 1} {
 	cd $rstfilter(tmpdir);
     }
     set outdir [file join $rstfilter(datadir) $savedir];
+
+    # We assume that "savename" contains a file extension. Since nbspsatmap
+    # only makes gif, change it.
+    set outname [file rootname $savename];
+    append outname ".gif";
 
     # If the png file should be created pass [-p], and in that case
     # if loops are requested, ask nbspsatmaprc to keep the gif file.
@@ -260,9 +255,9 @@ proc filter_satmap {wmoid fpath savedir} {
     # Use eval to split pngopts, and then in this case must quote the
     # rstfilter(satmap_mapsize) because it contains special (;) characters.
     set status [catch {
-	set params [eval exec $filtersprogs(nbspsatmap) -b $pngopts \
-	-d $outdir -s \"$rstfilter(satmap_mapsize)\" -D wmoid=$wmoid \
-	$fpath $rcfile];
+	set params [eval exec nbspsatmap -b $pngopts -d $outdir -o $outname \
+		-s \"$rstfilter(satmap_mapsize)\" -D wmoid=$wmoid \
+		$fpath $rcfile];
     } errmsg];
 
     if {$status == 0} {
@@ -270,9 +265,9 @@ proc filter_satmap {wmoid fpath savedir} {
 	set channel [lindex $params 3]
 	set res [lindex $params 4]
 	set time [lindex $params 5]
-	set fname [lindex $params 6]
+	set fbasename [lindex $params 6]
 
-	set fpathout [file join $outdir $fname];
+	set fpathout [file join $outdir $fbasename];
     } else {
 	# nbspsatmap deletes the file when it returns an error.
 	set fpathout "";

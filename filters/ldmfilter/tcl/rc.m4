@@ -9,7 +9,7 @@ $rc(WMOHEADER) " /p" $rc(AWIPS))
 match_ldmfeed($rc(nawips), ^grib$, NGRID,
 $rc(WMOHEADER) " /m" $rc(gribmodelgridldm))
 
-match_ldmfeed($rc(wmoid), ^tig, NIMAGE,
+match_ldmfeed($rc(wmoid), ^ti, NIMAGE,
 [mk_ldm_sat_prodid $rc(fname) $rc(fpath)])
 
 # These catch the rest.
