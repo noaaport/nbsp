@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+set filters_radsites_wsr88d(kabr) "Albany";
+set filters_radsites_tdwr(tjua) "San Juan";
+array set filters_radsites_nids {};
+array set filters_radsites_craft {};
+
+foreach s4 [array names filters_radsites_wsr88d] {
+    set s3 [string range $s4 1 3];
+    set filters_radsites_nids($s3) $filters_radsites_wsr88d($s4);
+}
+
+foreach s4 [array names filters_radsites_tdwr] {
+    set s3 [string range $s4 1 3];
+    set filters_radsites_nids($s3) $filters_radsites_tdwr($s4);
+}
+
+foreach s4 [array names filters_radsites_wsr88d] {
+    set filters_radsites_craft($s4) $filters_radsites_wsr88d($s4);
+}

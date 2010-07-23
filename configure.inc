@@ -7,6 +7,14 @@ INCLUDE=".include"
 Q='"'
 PREFIX=usr/local
 
+CC=cc
+CCWFLAGS="-Wall -Wextra"
+INSTALL=install
+SUFFIXRULES=".c.o:"
+
+# exclude options to tar
+EXCLUDE="-W exclude="
+
 TCL_INCDIR="-I /usr/local/include/tcl8.6"
 TCL_LIB="tcl86"
 TCLSH=/usr/local/bin/tclsh8.6
@@ -20,14 +28,6 @@ DB_BINDIR=/usr/local/bin/db47
 
 LOCAL_LIBDIR="-L /usr/local/lib"
 LOCAL_INCDIR="-I /usr/local/include"
-
-CC=cc
-CCWFLAGS="-Wall -Wextra"
-INSTALL=install
-SUFFIXRULES=".c.o:"
-
-# excude options to tar
-EXCLUDE="-W exclude="
 
 os=`uname`
 [ $os = Linux ] && flavor=unknown
@@ -50,79 +50,72 @@ case $os in
         # use the defaults
 	;;
     NetBSD)
+	CCWFLAGS="-Wall -Wno-char-subscripts -fno-strict-aliasing"
 	PREFIX=usr/pkg
-        TCL_LIB="tcl84"
         TCL_INCDIR="-I /usr/pkg/include"
+        TCL_LIB="tcl84"
         TCLSH=/usr/pkg/bin/tclsh
 	WISH=/usr/pkg/bin/wish
-        DB_LIB="db4-4.4"
         DB_INCDIR="-I /usr/pkg/include/db4"
+        DB_LIB="db4-4.4"
 	DB_BINDIR=/usr/pkg/bin/db44
         LOCAL_LIBDIR="-L /usr/pkg/lib"
 	LOCAL_INCDIR="-I /usr/pkg/include"
-	CCWFLAGS="-Wall -Wno-char-subscripts -fno-strict-aliasing"
         ;;
     OpenBSD) 
         # use the defaults
 	;;
-    SunOS)
-	INCLUDE=include
-	Q=
-	PREFIX=opt/local
-	INSTALL=ginstall
-	CC=gcc
-	TCL_LIB="tcl8.3"
-	;;
     Linux)
 	INCLUDE=include
 	Q=
-	TCL_LIB="tcl8.5"
+	SUFFIXRULES="%.o: %.c"
+	EXCLUDE="--exclude "
+
+	# opensuse/fedora
 	TCL_INCDIR=
-	TCLSH=/usr/bin/tclsh
+	TCL_LIB="tcl8.5"
+	TCLSH=/usr/bin/tclsh8.5
 	WISH=/usr/bin/wish
 	EXPECT=/usr/bin/expect
 
-	DB_LIB="db-4.6"
 	DB_INCDIR=
 	DB_BINDIR=
+	DB_LIB="db-4.6"
 
 	LOCAL_INCDIR=
 	LOCAL_LIBDIR=
-	SUFFIXRULES="%.o: %.c"
 
-	EXCLUDE="--exclude "
-
-	# Override the defaults for flavor != fedoracore
-    	if [ $flavor = opensuse ]
+	if [ $flavor = centos ]
 	then
-	   DB_LIB="db-4.5"
-	elif [ $flavor = centos ]
-	then
+	   TCL_INCDIR=
 	   TCL_LIB="tcl8.4"
+	   TCLSH=/usr/bin/tclsh8.4
 	   DB_INCDIR="-I /usr/local/include/db46"
 	   DB_LIB="db-4.6"
 	elif [ $flavor = debian ]
 	then
-	   TCLSH=/usr/bin/tclsh8.5
 	   TCL_INCDIR="-I /usr/include/tcl8.5"
+	   TCL_LIB="tcl8.5"
+	   TCLSH=/usr/bin/tclsh8.5
+	   DB_INCDIR=
+	   DB_LIB="db-4.6"
     	fi
 	;;
     Darwin)
 	INCLUDE="include"
 	Q=
+	SUFFIXRULES="%.o: %.c"
+
+	TCL_INCDIR=
+	TCL_LIB="tcl8.4"
+	TCLSH=/usr/bin/tclsh
+	WISH=/sw/bin/wish
+	EXPECT=/sw/bin/expect
+	DB_INCDIR="-I /usr/local/include/db46"
+	DB_LIB="db-4.6"
 
 	LOCAL_INCDIR="-I /usr/include -I /usr/local/include -I /sw/include"
 	LOCAL_LIBDIR="-L/usr/lib -L/usr/local/lib -L/sw/lib"
-	TCL_LIB="tcl8.4"
-	TCL_INCDIR=
-	DB_LIB="db-4.6"
-	DB_INCDIR="-I /usr/local/include/db46"
-	TCLSH=/usr/bin/tclsh
-
-	WISH=/sw/bin/wish
-	EXPECT=/sw/bin/expect
-
-	SUFFIXRULES="%.o: %.c"
      	;;
 esac
 
@@ -137,6 +130,10 @@ configure_default () {
       -e "/@q@/ s||$Q|g" \
       -e "/@PREFIX@/ s||$PREFIX|" \
       -e "/@INSTALL@/ s||$INSTALL|" \
+      -e "/@CC@/ s||$CC|" \
+      -e "/@CCWFLAGS@/ s||$CCWFLAGS|" \
+      -e "/@SUFFIXRULES@/ s||$SUFFIXRULES|" \
+      -e "/@EXCLUDE@/ s||$EXCLUDE|" \
       -e "/@TCL_INCDIR@/ s||$TCL_INCDIR|" \
       -e "/@TCL_LIB@/ s||$TCL_LIB|" \
       -e "/@TCLSH@/ s||$TCLSH|" \
@@ -147,9 +144,5 @@ configure_default () {
       -e "/@DB_BINDIR@/ s||$DB_BINDIR|" \
       -e "/@LOCAL_INCDIR@/ s||$LOCAL_INCDIR|" \
       -e "/@LOCAL_LIBDIR@/ s||$LOCAL_LIBDIR|" \
-      -e "/@CC@/ s||$CC|" \
-      -e "/@CCWFLAGS@/ s||$CCWFLAGS|" \
-      -e "/@SUFFIXRULES@/ s||$SUFFIXRULES|" \
-      -e "/@EXCLUDE@/ s||$EXCLUDE|" \
       $makefile_in > $makefile_out
 }
