@@ -2,6 +2,9 @@
 # $Id$
 #
 
+r3 -
+===
+
 - Revised nbspradmap to define the gpmap(radinfo,xxx) variables that
   can be used in the radmap.rc script (xx = lat, lon, height, seconds,
   mode, code). Required the introduction of the [-h] option in the
@@ -44,3 +47,9 @@
 
 - Added the ability to specify the queue_read_timeout_ms on a per-client
   basis (via the clientoptions string in nbspd.conf).
+
+r4 -
+===
+
+- Revised nbspmtr plot scripts and tclhttpd metar functions to
+  plot the wind direction as well (suggested by Scott <ssshoema@gmail.com>).

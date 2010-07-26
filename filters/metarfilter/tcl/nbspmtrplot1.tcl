@@ -2,12 +2,14 @@
 #
 # $Id$
 #
-# Usage: nbspmtrplot1 [-p|-t|-w] [-k] [-f fmt] [-g fmtoptions]
+# Usage: nbspmtrplot1 [-p <param> [-g fmtoptions]
 #	 [-i datafile | -d outputdatafile] [-m] [-o <plotfile>] <station>
 #
 # If [-o] is given it writes the plot to <plotfile>.<fmt>, otherwise
-# <station>.<fmt> is used. The [-p|-t|-w] options determine the variable(s)
-# to plot: pressure, TDH or wind. If none is given, [-t] is assumed.
+# <station>.<fmt> is used. The [-p] option determines the variable
+# to plot. <param> is one of pre, temp (TDH), wspeed or wdir (or any
+# value for which $metarfilter(plotrc_<param>) gives a template name.
+# If none is given, temp is assumed.
 # The default is to keep the data file that is generated, unless [-k]
 # is specified. The [-i] option can specify a file to read the data from. The
 # file can be (and must be in the same format as) the datafile that 
@@ -21,31 +23,16 @@
 # gnuplot command.
 
 package require cmdline;
-set usage {nbspmtrplot1 [-p|-t|-w] [-k] [-f fmt] [-g fmtoptions]
+set usage {nbspmtrplot1 [-p <param>] [-k] [-f fmt] [-g fmtoptions]
     [-i inputdatafile | -d outputdatafile] [-m] [-o <plotfile>] <station>};
-set optlist {p t w k {f.arg ""} {g.arg ""} \
-		 {i.arg ""} {d.arg ""} m {o.arg ""}};
+set optlist {k m {f.arg ""} {g.arg ""} {i.arg ""} {d.arg ""} {o.arg ""}
+    {p.arg "temp"}};
 
 proc check_option_conflict optionarray {
 
     upvar $optionarray option; 
 
-    set ptw_conflict 0;
     set di_conflict 0;
-
-    if {$option(p) == 1} {
-	incr ptw_conflict;
-    }
-    if {$option(t) == 1} {
-	incr ptw_conflict;
-    }
-    if {$option(w) == 1} {
-	incr ptw_conflict;
-    }
-    
-    if {$ptw_conflict > 1} {
-	return 1
-    }
 
     if {$option(d) != ""} {
 	incr di_conflict;
@@ -66,19 +53,14 @@ proc choose_plot_template {optionarray station} {
     upvar $optionarray option;
     global metarfilter;
 
-    set templatename "";
-    # First get the name of the template based on the option argument.
-    if {$option(t) == 1} {
-	set templatename $metarfilter(plottemprc); 
-    } elseif {$option(p) == 1} {
-	set templatename $metarfilter(plotprerc);
-    } elseif {$option(w) == 1} {
-	set templatename $metarfilter(plotwindrc);
+    # First get the name of the template based on the -p argument.
+    set param $option(p);
+    if {[info exists metarfilter(plotrc_$param)] == 0} {
+	puts "Invalid parameter name: $param.";
+	exit 1;
     }
 
-    if {$templatename == ""} {
-	set templatename $metarfilter(plottemprc);
-    }
+    set templatename $metarfilter(plotrc_$param);
 
     # Look for it in the template directories and use the last one found.
     # First in the default directories, then in the individual station
@@ -146,8 +128,8 @@ unset _defaultsfile;
 # and therefore it is in a separate file that is read by both.
 set metar_init_file [file join $common(libdir) metarfilter.init];
 if {[file exists $metar_init_file] == 0} {
-        puts "metarfilter disabled: $metar_init_file not found.";
-        return 1;
+    puts "metarfilter disabled: $metar_init_file not found.";
+    return 1;
 }
 source $metar_init_file;
 unset metar_init_file;
@@ -224,7 +206,7 @@ source $gnuplot(template);
 set status [catch {
     set F [open "|gnuplot > /dev/null" w];
     fconfigure $F -translation binary -encoding binary;
-    puts $F [subst -nobackslashes $gnuplot(script)];
+    puts $F [subst -nobackslashes -nocommands $gnuplot(script)];
 } errmsg];
 
 if {$status != 0} {

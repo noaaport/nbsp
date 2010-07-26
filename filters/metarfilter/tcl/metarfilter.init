@@ -46,9 +46,12 @@ set metarfilter(plotfmtoptions) "small xe0e0e0";  # tiny xe0e0e0
 set metarfilter(plotdataext) ".dat";
 set metarfilter(plottemplatedirs) $common(localconfdirs);
 set metarfilter(plottemplatesubdir) [file join "gnuplot" "metar"];
-set metarfilter(plottemprc) "temp.g";
-set metarfilter(plotprerc) "pre.g";
-set metarfilter(plotwindrc) "wind.g";
+#
+set metarfilter(plotrc_temp) "temp.g";    # T, D, H
+set metarfilter(plotrc_pre) "pre.g";
+set metarfilter(plotrc_wspeed) "wspeed.g";
+set metarfilter(plotrc_wdir) "wdir.g";
+#
 set metarfilter(plotnumpoints) 25;
 
 # Overrides in the configuration file.
