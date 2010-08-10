@@ -153,8 +153,8 @@ unset _defaultsfile;
 # and therefore it is in a separate file that is read by both.
 set metar_init_file [file join $common(libdir) metarfilter.init];
 if {[file exists $metar_init_file] == 0} {
-        puts "$metar_init_file not found.";
-        return 1;
+    puts "$metar_init_file not found.";
+    return 1;
 }
 source $metar_init_file;
 unset metar_init_file;
@@ -168,11 +168,11 @@ if {$argc != 1} {
     set station [lindex $argv 0];
 }
 
-if {$option(f) == ""} {
+if {$option(f) eq ""} {
     set dir [file join $metarfilter(datadir) $metarfilter(mwdir)];
     append fname $station $metarfilter(mwfext); 
     set datafile [exec find $dir -name $fname];
-    if {$datafile == ""} {
+    if {$datafile eq ""} {
 	puts "$fname not found in $dir.";
 	exit 1;
     }
@@ -181,7 +181,7 @@ if {$option(f) == ""} {
 }
 
 set numpoints $metarfilter(plotnumpoints);
-if {$option(n) != ""} {
+if {$option(n) eq ""} {
     set numpoints $option(n);
 }
 
@@ -194,21 +194,21 @@ if {[llength $newlist] == 0} {
 }
 set newbody [join $newlist "\n"];
 
-if {($option(b) == "") && ($option(d) == "") && ($option(o) == "")} {
+if {($option(b) eq "") && ($option(d) eq "") && ($option(o) eq "")} {
     puts $newbody;
     exit 0;
 }
 
-if {$option(b) != ""} {
+if {$option(b) ne ""} {
     cd $option(b);
 }
 
-if {$option(d) != ""} {    
+if {$option(d) ne ""} {
     file mkdir $option(d);
     cd $option(d);
 }
 
-if {$option(o) == ""} {
+if {$option(o) eq ""} {
     set outputfile $station$metarfilter(plotdataext);
 } else {
     set outputfile $option(o);

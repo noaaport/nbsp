@@ -25,22 +25,22 @@ if {$argc != 1} {
     set station [lindex $argv 0];
 }
 
-if {$option(b) != ""} {
+if {$option(b) ne ""} {
     cd $option(b);
 }
 
-if {$option(d) != ""} {
+if {$option(d) ne ""} {
     file mkdir $option(d);
     cd $option(d);
 }
 
-if {$option(f) != ""} {
+if {$option(f) ne ""} {
     set fmtoption "-f $option(f)";
 } else {
     set fmtoption "";
 }
 
-if {$option(g) != ""} {
+if {$option(g) ne ""} {
     append fmtoption "-g $option(g)";
 }
 

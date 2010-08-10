@@ -18,7 +18,7 @@ proc filter_text_old {fpath savedir} {
     file mkdir $savedir;
 
     set fname [file tail $fpath];
-    append savename $fname ".txt";
+    append savename $fname $rstfilter(txt_fext);
     set fpathout [file join $rstfilter(datadir) $savedir $savename];	
 
     set status [catch {
@@ -68,7 +68,13 @@ proc filter_text {fpath savedir} {
 	lappend cmd "-n";
     }
 
-    lappend cmd -d $savedir -o $savename $fpath;
+    # Instead of just
+    #
+    # lappend cmd -d $savedir -o $savename $fpath;
+    #
+    # filter through `tr` to remove (at least some of) the control characters
+    # 
+    lappend cmd $fpath | tr -d {\r\001\003} > $fpathout;
     set status [catch {
 	eval exec $cmd;
     } errmsg];
@@ -77,7 +83,7 @@ proc filter_text {fpath savedir} {
 
     if {$status != 0} {
 	# In case it was created
-	file delete [file join $savedir $savename];
+	file delete $fpathout;
 	log_msg $errmsg;
     } else {
 	filter_text_insert_inventory $savedir $fpathout;

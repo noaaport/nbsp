@@ -53,3 +53,5 @@ r4 -
 
 - Revised nbspmtr plot scripts and tclhttpd metar functions to
   plot the wind direction as well (suggested by Scott <ssshoema@gmail.com>).
+- Added -r and -R options to the nbspmtrplot1 script.
+- Text files are filetered through tr in the rstfilter to delete cntrl chars.

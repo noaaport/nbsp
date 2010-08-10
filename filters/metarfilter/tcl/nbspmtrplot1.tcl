@@ -2,46 +2,62 @@
 #
 # $Id$
 #
-# Usage: nbspmtrplot1 [-p <param> [-g fmtoptions]
-#	 [-i datafile | -d outputdatafile] [-m] [-o <plotfile>] <station>
+# Usage: nbspmtrplot1 [-f <fmt>] [-g <fmtoptions>] [-k]
+#	 [-i <datafile> | -d <outputdatafile>] [-m]
+#        [-o <plotfile>] [-p <param> | -r <plotrc> | -R <plotrc>] <station>
 #
 # If [-o] is given it writes the plot to <plotfile>.<fmt>, otherwise
 # <station>.<fmt> is used. The [-p] option determines the variable
 # to plot. <param> is one of pre, temp (TDH), wspeed or wdir (or any
 # value for which $metarfilter(plotrc_<param>) gives a template name.
-# If none is given, temp is assumed.
+# Instead of [-p], a plot template name can be given with [-r]; it will
+# be searched in the same standard directories used to search the
+# $metarfilter(plotrc_<param>) templates. If [-R] is used, the template
+# is searched only in the current directory. If none is given, [-p temp]
+# is assumed.
+#
 # The default is to keep the data file that is generated, unless [-k]
 # is specified. The [-i] option can specify a file to read the data from. The
 # file can be (and must be in the same format as) the datafile that 
 # nbspmtrplotdat generates. The name of the output data file can be specified
-# with [-d]. Any intermediate directories
-# appearing in the [-d] or [-o] options are not created unless [-m] is given.
-# The [-f fmt] option can specify a file format for gnuplot.
+# with [-d]. Any intermediate directories appearing in the [-d] or [-o]
+# options are not created unless [-m] is given.
+#
+# The [-f <fmt>] option can specify a file format for gnuplot.
 # The default is png (as defined and editable in metarfilter.conf)
 # but other possibilities are gif, jpeg and others. The [-g] option
 # can specify additional options as they appear in the ``set terminal''
 # gnuplot command.
 
 package require cmdline;
-set usage {nbspmtrplot1 [-p <param>] [-k] [-f fmt] [-g fmtoptions]
-    [-i inputdatafile | -d outputdatafile] [-m] [-o <plotfile>] <station>};
+set usage {nbspmtrplot1 [-k] [-f fmt] [-g fmtoptions] [-k]
+    [-i inputdatafile | -d outputdatafile] [-m] [-o <plotfile>]
+    [-p <param> | -r <plotrc> | -R <plotrc>] <station>};
 set optlist {k m {f.arg ""} {g.arg ""} {i.arg ""} {d.arg ""} {o.arg ""}
-    {p.arg "temp"}};
+    {p.arg ""} {r.arg ""} {R.arg ""}};
+
+set option(p,default) "temp";
 
 proc check_option_conflict optionarray {
 
     upvar $optionarray option; 
 
     set di_conflict 0;
+    set prR_conflict 0;
 
-    if {$option(d) != ""} {
-	incr di_conflict;
+    foreach key [list d i] {
+	if {$option($key) ne ""} {
+	    incr di_conflict;
+	}
     }
- 
-    if {$option(i) != ""} {
-	incr di_conflict;
+
+    foreach key [list p r R] {
+	if {$option($key) ne ""} {
+	    incr prR_conflict;
+	}
     }
-    if {$di_conflict > 1} {
+
+    if {($di_conflict > 1) || ($prR_conflict > 1)} {
 	return 1
     }
 
@@ -53,14 +69,22 @@ proc choose_plot_template {optionarray station} {
     upvar $optionarray option;
     global metarfilter;
 
-    # First get the name of the template based on the -p argument.
-    set param $option(p);
-    if {[info exists metarfilter(plotrc_$param)] == 0} {
-	puts "Invalid parameter name: $param.";
-	exit 1;
+    if {$option(R) ne ""} {
+	return $option(R);
+    } elseif {$option(r) ne ""} {
+	set templatename $option(r);
+    } else {
+	# First get the name of the template based on the -p argument.
+	set param $option(p,default);
+	if {$option(p) ne ""} {
+	    set param $option(p);
+	}
+	if {[info exists metarfilter(plotrc_$param)] == 0} {
+	    puts "Invalid parameter name: $param.";
+	    exit 1;
+	}
+	set templatename $metarfilter(plotrc_$param);
     }
-
-    set templatename $metarfilter(plotrc_$param);
 
     # Look for it in the template directories and use the last one found.
     # First in the default directories, then in the individual station
@@ -78,7 +102,7 @@ proc choose_plot_template {optionarray station} {
 	    set _tmpl [file join $d $subdir $templatename];
 	}
     }
-    if {${_tmpl} == ""} {
+    if {${_tmpl} eq ""} {
 	puts "$templatename not found.";
 	exit 1;
     }
@@ -151,10 +175,10 @@ if {[check_option_conflict option] != 0} {
     set gnuplot(template) [choose_plot_template option $station];
 }
 
-if {$option(i) != ""} {
+if {$option(i) ne ""} {
     set gplot(datafile) $option(i);
 } else {
-    if {$option(d) != ""} {
+    if {$option(d) ne ""} {
 	set gplot(datafile) $option(d);
 	if {$option(m) == 1} {
 	    file mkdir [file dirname $option(d)];
@@ -188,7 +212,7 @@ set gplot(end) [string range [lindex $datalist end] 5 12];
 set gplot(station) $station;
 set gplot(STATION) [string toupper $station];
 set gplot(output) $gplot(station).$gplot(fmt);
-if {$option(o) != ""} {
+if {$option(o) ne ""} {
     set gplot(output) $option(o).$gplot(fmt);
     if {$option(m) == 1} {
 	file mkdir [file dirname $option(o)];
