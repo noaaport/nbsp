@@ -25,13 +25,24 @@
  * it can take either the compressed or uncompresed file as input.
  * It prints to stdout
  *
- *	  npdb->source, 
- *	  npdb->creating_entity, 
- *	  npdb->sector, 
- *	  npdb->channel,
- *	  npdb->res,
- *	  time,
- *	  fname
+ *	npdb->source, 
+ *	npdb->creating_entity, 
+ *	npdb->sector, 
+ *	npdb->channel,
+ *	npdb->res,
+ *	time,
+ *	fname
+ *
+ * With the [-e] option it prints the following additional values after those:
+ *
+ *	lat1  (lat of first grid point) int x 10000
+ *	lon1  (lon of first grid point) int x 10000
+ *      lov   (orientation of grid)     int x 10000
+ *      dx    (x-direction increment)
+ *      dy    (y-direction increment)
+ *      latin (Earth tangent)           int x 10000
+ *      lat2  (upper right-hand corner lat) int x 10000
+ *      lon2  (upper right-hand corner lon) int x 10000
  */
 
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */
@@ -63,6 +74,15 @@ struct nesdis_product_def_block {
   int nx;
   int ny;
   int res;	/* resolution */
+  /* extended parameters */
+  int lat1;
+  int lon1;
+  int lov;
+  int dx;
+  int dy;
+  int latin;
+  int lat2;
+  int lon2;
 };
 
 struct {
@@ -75,7 +95,8 @@ struct {
   int opt_png_output;
   int opt_background;
   int opt_wrinfo;	/* only extract and print info [-i] */
-} g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0};
+  int opt_extended_info; /* if [-e] is given => extended info output */
+} g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0};
 
 static int read_nesdis_pdb(int fd, struct nesdis_product_def_block *npdb);
 static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb);
@@ -86,16 +107,22 @@ static int process_file(char *in_file);
 static int write_file_info(char *in_file);
 static void check(struct nesdis_product_def_block *npdb);
 static int verify_wmo_header(char *header);
-static void output(char *fname, struct nesdis_product_def_block *npdb);
+static void output(char *fname,
+		   struct nesdis_product_def_block *npdb,
+		   int option_extended_info);
 static char *make_default_pngname(struct nesdis_product_def_block *npdb);
+
+static unsigned int unpack_uint16(void *p, size_t start);
+static unsigned int unpack_uint24(void *p, size_t start);
+/* static unsigned int unpack_uint32(void *p, size_t start); */
 
 int main(int argc, char **argv){
 
   int status = 0;
   int c;
   char *in_file;
-  char *optstr = "hCbd:gino:p:s";
-  char *usage = "nbspsat [-C] [-b] [[-o name] | [-d outputdir]"
+  char *optstr = "hCbd:egino:p:s";
+  char *usage = "nbspsat [-C] [-b] [[-o name] | [-d outputdir] [-e]"
     " [-p prefix]] [-g] [-n] [-s | -i] [-C] file";
   int conflict = 0;
 
@@ -111,6 +138,9 @@ int main(int argc, char **argv){
       break;
     case 'd':
       g.opt_output_dir = optarg;
+      break;
+    case 'e':
+      g.opt_extended_info = 1;
       break;
     case 'g':
       g.opt_gempak_output = 1;
@@ -255,7 +285,7 @@ static int process_file(char *in_file){
   }
 
   if(g.opt_silent == 0)
-    output(fname, &npdb);
+    output(fname, &npdb, g.opt_extended_info);
 
   free(fname);
   close(fd);
@@ -291,8 +321,12 @@ static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
   npdb->sector = (int)p[2];
   npdb->channel = (int)p[3];
 
+  /*
   npdb->numlines = (int)((p[4] << 8) + p[5]);
   npdb->linesize = (int)((p[6] << 8) + p[7]);
+  */
+  npdb->numlines = (int)unpack_uint16(p, 4);
+  npdb->linesize = (int)unpack_uint16(p, 4);
 
   npdb->year = (int)p[8];
   npdb->year += 1900;
@@ -303,10 +337,24 @@ static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
   npdb->secs = (int)p[13];
   npdb->hsecs = (int)p[14];
 
+  /*
   npdb->nx = (int)((p[16] << 8) + p[17]);
   npdb->ny = (int)((p[18] << 8) + p[19]);
+  */
+  npdb->nx = (int)unpack_uint16(p, 16);
+  npdb->ny = (int)unpack_uint16(p, 18);
 
   npdb->res = (int)p[41];
+
+  /* extended parameters */
+  npdb->lat1 = (int)unpack_uint24(p, 20);
+  npdb->lon1 = (int)unpack_uint24(p, 23);
+  npdb->lov = (int)unpack_uint24(p, 27);
+  npdb->dx = (int)unpack_uint24(p, 30);
+  npdb->dy = (int)unpack_uint24(p, 33);
+  npdb->latin = (int)unpack_uint24(p, 38);
+  npdb->lat2 = (int)unpack_uint24(p, 55);
+  npdb->lon2 = (int)unpack_uint24(p, 58);
 
   for(n = 0; n <= WMOID_SIZE - 1; ++n)
     npdb->wmoid[n] = tolower(npdb->buffer[n]);
@@ -518,7 +566,7 @@ static int write_file_info(char *in_file){
     }
   }else{
     /*
-     * The frame is uncmpressed.
+     * The frame is uncompressed.
      */
     if(n != npdb.buffer_size){
       log_errx(1, "Error reading from %s. File too short.", in_file);
@@ -532,7 +580,7 @@ static int write_file_info(char *in_file){
   if(output_fname == NULL)
     log_err(1, "malloc()");
 
-  output(output_fname, &npdb);
+  output(output_fname, &npdb, g.opt_extended_info);
 
   return(0);
 }
@@ -555,14 +603,16 @@ static void check(struct nesdis_product_def_block *npdb){
   fprintf(stdout, "    res: %d\n", npdb->res);
 }
 
-static void output(char *fname, struct nesdis_product_def_block *npdb){
+static void output(char *fname,
+		   struct nesdis_product_def_block *npdb,
+		   int option_extended_info){
 
   char time[TIME_STR_SIZE + 1];
 
   sprintf(time, "%d%02d%02d_%02d%02d",
 	    npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
 
-  fprintf(stdout, "%d %d %d %d %d %s %s\n", 
+  fprintf(stdout, "%d %d %d %d %d %s %s",
 	  npdb->source, 
 	  npdb->creating_entity, 
 	  npdb->sector, 
@@ -570,6 +620,21 @@ static void output(char *fname, struct nesdis_product_def_block *npdb){
 	  npdb->res,
 	  time,
 	  fname);
+
+  if(option_extended_info == 0){
+    fprintf(stdout, "\n");
+    return;
+  }
+
+  fprintf(stdout, " %d %d %d %d %d %d %d %d\n",
+	  npdb->lat1,
+	  npdb->lon1,
+	  npdb->lov,
+	  npdb->dx,
+	  npdb->dy,
+	  npdb->latin,
+	  npdb->lat2,
+	  npdb->lon2);
 }
 
 static int verify_wmo_header(char *in_file){
@@ -631,3 +696,53 @@ static char *make_default_pngname(struct nesdis_product_def_block *npdb){
 
   return(fname);
 }
+
+/*
+ * utility functions
+ */
+static unsigned int unpack_uint16(void *p, size_t start){
+  /*
+   * The first byte is the most significant one and the last byte is
+   * the least significant.
+   */
+  unsigned int u;
+  unsigned char *uptr;
+
+  uptr = &((unsigned char*)p)[start];
+
+  u = (uptr[0] << 8) + uptr[1];
+
+  return(u);
+}
+
+static unsigned int unpack_uint24(void *p, size_t start){
+  /*
+   * The first byte is the most significant one and the last byte is
+   * the least significant.
+   */
+  unsigned int u;
+  unsigned char *uptr;
+
+  uptr = &((unsigned char*)p)[start];
+
+  u = (uptr[0] << 16) + (uptr[1] << 8) + uptr[2];
+
+  return(u);
+}
+
+#if 0
+static unsigned int unpack_uint32(void *p, size_t start){
+  /*
+   * The first byte is the most significant one and the last byte is
+   * the least significant.
+   */
+  unsigned int u;
+  unsigned char *uptr;
+
+  uptr = &((unsigned char*)p)[start];
+
+  u = (uptr[0] << 24) + (uptr[1] << 16) + (uptr[2] << 8) + uptr[3];
+
+  return(u);
+}
+#endif
