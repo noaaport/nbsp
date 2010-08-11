@@ -35,14 +35,17 @@
  *
  * With the [-e] option it prints the following additional values after those:
  *
+ *	map_projection (map projection indicator)
  *	lat1  (lat of first grid point) int x 10000
  *	lon1  (lon of first grid point) int x 10000
  *      lov   (orientation of grid)     int x 10000
  *      dx    (x-direction increment)
  *      dy    (y-direction increment)
  *      latin (Earth tangent)           int x 10000
- *      lat2  (upper right-hand corner lat) int x 10000
- *      lon2  (upper right-hand corner lon) int x 10000
+ *	lat2  (lat of last grid point) int x 10000
+ *	lon2  (lon of last grid point) int x 10000
+ *      lat_ur  (upper right-hand corner lat) int x 10000
+ *      lon_ur  (upper right-hand corner lon) int x 10000
  */
 
 #define WMO_HEADER_SIZE		CTRLHDR_WMO_SIZE	/* common.h */
@@ -75,6 +78,7 @@ struct nesdis_product_def_block {
   int ny;
   int res;	/* resolution */
   /* extended parameters */
+  int map_projection;
   int lat1;
   int lon1;
   int lov;
@@ -83,6 +87,8 @@ struct nesdis_product_def_block {
   int latin;
   int lat2;
   int lon2;
+  int lat_ur;
+  int lon_ur;
 };
 
 struct {
@@ -114,6 +120,7 @@ static char *make_default_pngname(struct nesdis_product_def_block *npdb);
 
 static unsigned int unpack_uint16(void *p, size_t start);
 static unsigned int unpack_uint24(void *p, size_t start);
+static int unpack_int24(void *p, size_t start);
 /* static unsigned int unpack_uint32(void *p, size_t start); */
 
 int main(int argc, char **argv){
@@ -347,14 +354,36 @@ static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
   npdb->res = (int)p[41];
 
   /* extended parameters */
-  npdb->lat1 = (int)unpack_uint24(p, 20);
-  npdb->lon1 = (int)unpack_uint24(p, 23);
-  npdb->lov = (int)unpack_uint24(p, 27);
-  npdb->dx = (int)unpack_uint24(p, 30);
-  npdb->dy = (int)unpack_uint24(p, 33);
-  npdb->latin = (int)unpack_uint24(p, 38);
-  npdb->lat2 = (int)unpack_uint24(p, 55);
-  npdb->lon2 = (int)unpack_uint24(p, 58);
+  npdb->map_projection = (int)p[15];
+  if(npdb->map_projection == 1){
+    /*
+     * mercator
+     */
+    npdb->lat1 = unpack_int24(p, 20);
+    npdb->lon1 = unpack_int24(p, 23);
+    npdb->lov = 0;	/* not given */
+    npdb->dx = (int)unpack_uint16(p, 33);
+    npdb->dy = (int)unpack_uint16(p, 35);
+    npdb->latin = unpack_int24(p, 38);
+    npdb->lat2 = unpack_int24(p, 27);
+    npdb->lon2 = unpack_int24(p, 30);
+    npdb->lat_ur = unpack_int24(p, 55);
+    npdb->lon_ur = unpack_int24(p, 58);
+  }else{
+    /*
+     * lambert == 3, polar == 5
+     */
+    npdb->lat1 = unpack_int24(p, 20);
+    npdb->lon1 = unpack_int24(p, 23);
+    npdb->lov = unpack_int24(p, 27);
+    npdb->dx = (int)unpack_uint24(p, 30);
+    npdb->dy = (int)unpack_uint24(p, 33);
+    npdb->latin = unpack_int24(p, 38);
+    npdb->lat2 = 0;	/* not given */
+    npdb->lon2 = 0;	/* not given */
+    npdb->lat_ur = unpack_int24(p, 55);
+    npdb->lon_ur = unpack_int24(p, 58);
+  }
 
   for(n = 0; n <= WMOID_SIZE - 1; ++n)
     npdb->wmoid[n] = tolower(npdb->buffer[n]);
@@ -626,7 +655,8 @@ static void output(char *fname,
     return;
   }
 
-  fprintf(stdout, " %d %d %d %d %d %d %d %d\n",
+  fprintf(stdout, " %d %d %d %d %d %d %d %d %d %d %d\n",
+	  npdb->map_projection,
 	  npdb->lat1,
 	  npdb->lon1,
 	  npdb->lov,
@@ -634,7 +664,9 @@ static void output(char *fname,
 	  npdb->dy,
 	  npdb->latin,
 	  npdb->lat2,
-	  npdb->lon2);
+	  npdb->lon2,
+	  npdb->lat_ur,
+	  npdb->lon_ur);
 }
 
 static int verify_wmo_header(char *in_file){
@@ -728,6 +760,26 @@ static unsigned int unpack_uint24(void *p, size_t start){
   u = (uptr[0] << 16) + (uptr[1] << 8) + uptr[2];
 
   return(u);
+}
+
+static int unpack_int24(void *p, size_t start){
+  /*
+   * The first bit is the sign bit: it is set for West and South.
+   */
+  int i;
+  unsigned int u;
+  unsigned char *uptr;
+
+  uptr = &((unsigned char*)p)[start];
+
+  /* mask to pick up only the last seven bits of uptr[0] */
+  u = ((uptr[0] & 127) << 16) + (uptr[1] << 8) + uptr[2];
+  i = (int)u;
+
+  if((uptr[0] & 128) != 0)
+    i *= -1;
+
+  return(i);
 }
 
 #if 0
