@@ -43,6 +43,9 @@
  *      lov   (orientation of grid)     int x 10000
  *      dx    (x-direction increment)
  *      dy    (y-direction increment)
+ *	nx    (number of points in x direction)
+ *	ny    (number of points in y direction)
+ *	res   (same thing as above; duplicated for convenience)
  *      latin (Earth tangent)           int x 10000
  *	lat2  (lat of last grid point) int x 10000
  *	lon2  (lon of last grid point) int x 10000
@@ -350,13 +353,16 @@ void output(struct nesdis_product_def_block *npdb, int opt_extended_info){
     return;
   }
 
-  fprintf(stdout, " %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf(stdout, " %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	  npdb->map_projection,
 	  npdb->lat1,
 	  npdb->lon1,
 	  npdb->lov,
 	  npdb->dx,
 	  npdb->dy,
+	  npdb->nx,
+	  npdb->ny,
+	  npdb->res,
 	  npdb->latin,
 	  npdb->lat2,
 	  npdb->lon2,
