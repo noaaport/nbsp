@@ -1,0 +1,38 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	nbspsattif nbspsatgc
+TCLSOURCES =	nbspsattif.tcl nbspsatgc.tcl
+SAMPLES = 	nbspsattif.conf-sample nbspsatgc.conf-sample
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+nbspsattif: nbspsattif.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspsattif.tcl > nbspsattif
+
+nbspsatgc: nbspsatgc.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspsatgc.tcl > nbspsatgc
+
+nbspsattif.conf-sample: nbspsattif.conf
+	cp nbspsattif.conf nbspsattif.conf-sample
+
+nbspsatgc.conf-sample: nbspsatgc.conf
+	cp nbspsatgc.conf nbspsatgc.conf-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} ${SAMPLES} Makefile
