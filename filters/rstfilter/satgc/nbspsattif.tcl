@@ -3,20 +3,23 @@
 # $Id$
 # 
 # Usage: nbspsattif [-b] [-d outputdir] [-K] [-o outputname] 
-#                   [-p <postrcname>] [-r] <inputfile> <wctconffile>;
+#                   [-p <postrcname>] [-r <subdir>] [-w <wct_bin>]
+#                   <inputfile> <wctconffile>;
 #
 # -b => background mode
 # -d => output dir
 # -K => delete the .wct-cache dir
 # -o => prefix name of the output file (e.g., tige04)
 # -p => postrc filename
-# -r => look for wct config file and post rc file in standard dirs
+# -r => look for wct config file and post rc file in <subdir> within the
+#       standard dirs
+# -w => path to wct-export
 #
 package require cmdline;
 
 set usage {nbspsattif [-b] [-d <outputdir>] [-K] [-o <outname>]
-    [-p <postrc> [-r] <inputfile> [<wctconffile>]};
-    set optlist {b {d.arg ""} K {o.arg ""} {p.arg ""} r};
+    [-p <postrc> [-r <subdir>] [-w <wctbin>] <inputfile> [<wctconffile>]};
+    set optlist {b {d.arg ""} K {o.arg ""} {p.arg ""} {r.arg ""} {w.arg ""}};
 
 ## The common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -25,12 +28,11 @@ if {[file exists $defaultsfile] == 0} {
 }
 source $defaultsfile;
 
-# configuration
+# Convenience definitions
 set nbspsattif(localconfdirs) $common(localconfdirs);
 set nbspsattif(rcdirs) $common(localconfdirs);
-set nbspsattif(rcsubdir) [file join "wct" "sat"];
-set nbspsattif(post_rcname) "post.tcl";
-#
+
+# defaults
 set nbspsattif(wct_bin) "wct-export";
 
 # parameters
@@ -42,6 +44,7 @@ set nbspsattif(wct_cachedir) [file join $env(HOME) ".wct-cache"];
 # variables
 set nbspsattif(wct_rcname) "";
 set nbspsattif(wct_rcfile) "";
+set nbspsattif(post_rcname) "";
 set nbspsattif(post_rcfile) "";
 #
 set nbspsattif(inputfile) "";
@@ -113,6 +116,14 @@ if {$argc != 2} {
 set nbspsattif(inputfile) [lindex $argv 0];
 set nbspsattif(wct_rcname) [lindex $argv 1];
 
+if {$option(p) ne ""} {
+    set nbspsattif(post_rcname) $option(p);
+}
+
+if {$option(w) ne ""} {
+    set nbspsattif(wct_bin) $option(w);
+}
+
 if {$option(o) ne ""} {
     set nbspsattif(outputfile) $option(o);
 } else {
@@ -124,22 +135,20 @@ if {[file extension $nbspsattif(outputfile)] ne $nbspsattif(wct_fext)} {
 }
 
 if {$option(d) ne ""} {
-    set nbspsattif(outputfile) [file join $option(d) $nbspsattif(outputfile)];
+    set nbspsattif(outputfile) [file join $option(d) \
+				    [file tail $nbspsattif(outputfile)]];
 }
 
 # Find the wct and post rcfile
-if {$option(p) ne ""} {
-    set nbspsattif(post_rcname) $option(p);
-}
 
-if {$option(r) == 1} {
+if {$option(r) ne ""} {
     source $common(filterslib);
 
     set nbspsattif(wct_rcfile) [filterlib_find_conf \
-	$nbspsattif(wct_rcname) $nbspsattif(rcdirs) $nbspsattif(rcsubdir)];
+	$nbspsattif(wct_rcname) $nbspsattif(rcdirs) $option(r)];
 
     set nbspsattif(post_rcfile) [filterlib_find_conf \
-	$nbspsattif(post_rcname) $nbspsattif(rcdirs) $nbspsattif(rcsubdir)];
+	$nbspsattif(post_rcname) $nbspsattif(rcdirs) $option(r)];
 } else {
     set nbspsattif(wct_rcfile) $nbspsattif(wct_rcname);
     set nbspsattif(post_rcfile) $nbspsattif(post_rcname);

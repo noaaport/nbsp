@@ -9,9 +9,8 @@
 
 TCLTARGET =	nbspsattif nbspsatgc
 TCLSOURCES =	nbspsattif.tcl nbspsatgc.tcl
-SAMPLES = 	nbspsattif.conf-sample nbspsatgc.conf-sample
 
-TARGET =	${TCLTARGET} ${SAMPLES}
+TARGET =	${TCLTARGET}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -24,15 +23,8 @@ nbspsattif: nbspsattif.tcl
 nbspsatgc: nbspsatgc.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspsatgc.tcl > nbspsatgc
 
-nbspsattif.conf-sample: nbspsattif.conf
-	cp nbspsattif.conf nbspsattif.conf-sample
-
-nbspsatgc.conf-sample: nbspsatgc.conf
-	cp nbspsatgc.conf nbspsatgc.conf-sample
-
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
-	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
 
 clean:
-	rm -f *~ ${TARGET} ${SAMPLES} Makefile
+	rm -f *~ ${TARGET} Makefile
