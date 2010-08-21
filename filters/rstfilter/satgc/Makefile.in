@@ -10,7 +10,14 @@
 TCLTARGET =	nbspsattif nbspsatgc
 TCLSOURCES =	nbspsattif.tcl nbspsatgc.tcl
 
-TARGET =	${TCLTARGET}
+TMPLSOURCES =	wct_sat_conus.xml map_sat_conus.tmpl
+TMPLTARGET =    satgc-templates.tgz
+TMPLPDIR =      gismap
+TMPLDIR =       ${TMPLPDIR}/sat
+
+SHAREFILES =	geodata-share.tgz
+
+TARGET =	${TCLTARGET} ${TMPLTARGET}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -23,8 +30,17 @@ nbspsattif: nbspsattif.tcl
 nbspsatgc: nbspsatgc.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspsatgc.tcl > nbspsatgc
 
+${TMPLTARGET}: ${TMPLSOURCES}
+	rm -rf ${TMPLDIR}
+	mkdir -p ${TMPLDIR}
+	cp ${TMPLSOURCES} ${TMPLDIR}
+	tar -czf ${TMPLTARGET} ${TMPLDIR}
+
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${SHAREFILES} ${MYSHAREDIR}
 
 clean:
-	rm -f *~ ${TARGET} Makefile
+	rm -f *~ Makefile ${TARGET}
+	rm -rf ${TMPLPDIR}

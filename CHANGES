@@ -43,7 +43,8 @@ r3 -
   nbspfile was updated to use the new functions.
 
 - Revised the various filters that process the satellite files to
-  allow them to process the non-goes data files.
+  allow them to process the non-goes data files (i.e., they now process
+  ther tixyyy files besides tigyyy).
 
 - Added the ability to specify the queue_read_timeout_ms on a per-client
   basis (via the clientoptions string in nbspd.conf).
@@ -56,3 +57,6 @@ r4 -
 - Added -r and -R options to the nbspmtrplot1 script.
 - Text files are filetered through tr in the rstfilter to delete cntrl chars.
 - Added -e to nbspsat and nbspsatinfo (to extract the lat-lon parameters).
+- Added option(s) to set servername to the wildcard address(es).
+- Added "digatmos" as default subdir for the catalog extension
+  if no suubdir is specified in the /_catalog url.

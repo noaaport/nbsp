@@ -20,6 +20,8 @@ bin/nbspradmap
 bin/nbspradmapl
 bin/nbspradmapc
 bin/nbspsatmap
+bin/nbspsattif
+bin/nbspsatgc
 bin/nbspgdradr
 bin/nbspradmos
 bin/nbspradmosl
@@ -231,6 +233,7 @@ etc/nbsp/dist/metarplot-templates.tgz
 etc/nbsp/dist/statplot-templates.tgz
 etc/nbsp/dist/gempak.env-sample
 etc/nbsp/dist/satmap-templates.tgz
+etc/nbsp/dist/satgc-templates.tgz
 etc/nbsp/dist/radmap-templates.tgz
 etc/nbsp/dist/radmos-templates.tgz
 etc/nbsp/dist/nbspradmos.conf-sample
@@ -245,6 +248,7 @@ etc/nbsp/dist/recover.conf-sample
 etc/nbsp/dist/startstop.rc-sample
 etc/nbsp/dist/start-cleanup.conf-sample
 share/nbsp/dist/radmos-share.tgz
+share/nbsp/dist/geodata-share.tgz
 man/man1/nbspd.1.gz
 share/doc/nbsp/LICENSE
 share/doc/nbsp/nbspd.sh-sample

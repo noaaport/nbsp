@@ -2,24 +2,29 @@
 #
 # $Id$
 # 
-# Usage: nbspsattif [-b] [-d outputdir] [-K] [-o outputname] 
-#                   [-p <postrcname>] [-r <subdir>] [-w <wct_bin>]
-#                   <inputfile> <wctconffile>;
+# Usage: nbspsattif [-b] [-d outputdir] [-e fext] [-f fmt] [-K]
+#                   [-o outputname] [-p <postrcname>] [-r <subdir>]
+#                   [-w <wct_bin>] -x <wctconffile> <inputfile>
 #
 # -b => background mode
 # -d => output dir
+# -e => extension of the output file
+# -f => format of the output file
 # -K => delete the .wct-cache dir
 # -o => prefix name of the output file (e.g., tige04)
 # -p => postrc filename
 # -r => look for wct config file and post rc file in <subdir> within the
 #       standard dirs
 # -w => path to wct-export
+# -x => the wct xml config file (required)
 #
 package require cmdline;
 
-set usage {nbspsattif [-b] [-d <outputdir>] [-K] [-o <outname>]
-    [-p <postrc> [-r <subdir>] [-w <wctbin>] <inputfile> [<wctconffile>]};
-    set optlist {b {d.arg ""} K {o.arg ""} {p.arg ""} {r.arg ""} {w.arg ""}};
+set usage {nbspsattif [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>]
+    [-K] [-o <outname>] [-p <postrc>] [-r <subdir>] [-w <wctbin>]
+    -x <wctconfigfile> <inputfile>};
+set optlist {b {d.arg ""} {e.arg ""} {f.arg ""}
+    K {o.arg ""} {p.arg ""} {r.arg ""} {w.arg ""} {x.arg ""}};
 
 ## The common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -110,11 +115,23 @@ proc exec_post {post_rcfile outputfile} {
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
-if {$argc != 2} {
+if {$argc != 1} {
     log_err $usage;
 }
 set nbspsattif(inputfile) [lindex $argv 0];
-set nbspsattif(wct_rcname) [lindex $argv 1];
+
+if {$option(x) eq ""} {
+    log_err "-x is required.";
+}
+set nbspsattif(wct_rcname) $option(x);
+
+if {$option(e) ne ""} {
+    set nbspsattif(wct_fext) $option(e);
+}
+
+if {$option(f) ne ""} {
+    set nbspsattif(wct_fmt) $option(f);
+}
 
 if {$option(p) ne ""} {
     set nbspsattif(post_rcname) $option(p);

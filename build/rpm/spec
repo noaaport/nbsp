@@ -47,6 +47,8 @@ make clean
 /usr/local/bin/nbspradmapc
 /usr/local/bin/nbspradmap
 /usr/local/bin/nbspsatmap
+/usr/local/bin/nbspsattif
+/usr/local/bin/nbspsatgc
 /usr/local/bin/nbspgdradr
 /usr/local/bin/nbspradmos
 /usr/local/bin/nbspradmosl
@@ -258,6 +260,7 @@ make clean
 /usr/local/etc/nbsp/dist/statplot-templates.tgz
 /usr/local/etc/nbsp/dist/gempak.env-sample
 /usr/local/etc/nbsp/dist/satmap-templates.tgz
+/usr/local/etc/nbsp/dist/satgc-templates.tgz
 /usr/local/etc/nbsp/dist/radmap-templates.tgz
 /usr/local/etc/nbsp/dist/radmos-templates.tgz
 /usr/local/etc/nbsp/dist/nbspradmos.conf-sample
@@ -272,6 +275,7 @@ make clean
 /usr/local/etc/nbsp/dist/startstop.rc-sample
 /usr/local/etc/nbsp/dist/start-cleanup.conf-sample
 /usr/local/share/nbsp/dist/radmos-share.tgz
+/usr/local/share/nbsp/dist/geodata-share.tgz
 /usr/local/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample
