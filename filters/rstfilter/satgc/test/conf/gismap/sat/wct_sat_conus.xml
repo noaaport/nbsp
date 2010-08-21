@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<wctExportBatchOptions version="2">
+   <logging> WARNING</logging>
+   <grid>
+     <gridFilter>
+	<minLat> 20.25 </minLat>
+	<maxLat> 58.75 </maxLat>
+	<minLon> -65.00 </minLon>
+	<maxLon> -127.00 </maxLon>
+     </gridFilter>
+   </grid>
+</wctExportBatchOptions>

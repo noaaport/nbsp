@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+nbspsatgc -g ../geodata -m conf/gismap/sat/map_sat_conus.tmpl \
+	tif/tigw04.tif tif/tige04.tif
