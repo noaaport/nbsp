@@ -13,6 +13,7 @@ ldmfilter
 metarfilter
 uafilter
 wsfilter
+gisfilter
 panfilter
 gribfilter
 netfilter

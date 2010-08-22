@@ -8,8 +8,8 @@
 
 SUBDIRS = nbspfilter gpfilter rstfilter dafilter nntpfilter rstnntpfilter \
 	inventory rssfilter filterlib ldmfilter metarfilter uafilter wsfilter \
-	panfilter gribfilter netfilter spoolfilter msgfilter trackfilter \
-	craftfilter masterfilter \
+	gisfilter panfilter gribfilter netfilter spoolfilter msgfilter \
+	trackfilter craftfilter masterfilter \
 	scheduler recover
 
 all:
