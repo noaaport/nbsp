@@ -1,0 +1,8 @@
+#
+# $Id$
+#
+In principle some of the functionality of this filter can be
+implemented a spart of the dafilter and/or rstfilter. But since WCT
+is so slow processing the files, that is not prudent. By using
+this filter separately, it can run even on a separate computer without
+modifying the other filters.

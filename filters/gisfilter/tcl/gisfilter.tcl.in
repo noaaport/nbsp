@@ -1,0 +1,121 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "uafilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+    return 1;
+}
+unset filters_init_status;
+
+# packages
+package require nbsp::util;
+package require nbsp::periodic;
+
+set _init_file [file join $common(libdir) "gisfilter.init"];
+if {[file exists $_init_file] == 0} {
+    log_msg "gisfilter disabled: $_init_file not found.";
+    return 1;
+}
+source $_init_file;
+unset _init_file;
+
+@gislib@
+
+proc main {argc argv} {
+
+    global gisfilter;
+    global errorInfo;
+
+    # The gisfilter data directory must exist
+    if {[file isdirectory $gisfilter(datadir)] == 0} {
+	log_msg "$gisfilter(datadir) does not exist.";
+	return 1;
+    }
+
+    cd $gisfilter(datadir);
+	
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global gisfilter;
+
+    set _cmd [list filterlib_get_rcvars rc $finfo];
+
+    # If rad is enable, extract the rc(radxxx) parameters
+    if {$gisfilter(rad_enable) != 0} {
+        lappend _cmd "-dorad";
+    }
+
+    # If sat is enable, extract the rc(satxxx) parameters
+    if {$gisfilter(sat_enable) != 0} {
+        lappend _cmd "-dosat";
+    }
+
+    eval ${_cmd};
+
+    if {($gisfilter(sat_enable) != 0) &&
+	([filterlib_uwildmat $gisfilter(sat_regex) $rc(wmoid)] == 1)} {
+	filter_sat rc;
+    } elseif {($gisfilter(rad_enable) != 0) &&
+	([filterlib_uwildmat $gisfilter(rad_regex) $rc(awips)] == 1)} {
+	filter_rad rc;
+    }
+
+    # set status [catch {
+    #	::nbsp::periodic::run;	# Run the registered periodic functions
+    #} errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+}
+
+proc gisfilter_run_schedule {} {
+
+    global gisfilter;
+
+    ::nbsp::periodic::scheduler $gisfilter(schedule);
+}
+
+#
+# Dynamic initialization
+#
+
+# Register the scheduler to run ever minute
+## ::nbsp::periodic::register gisfilter_run_schedule \
+## 	$gisfilter(schedule_run_period);
+
+#
+# main
+#
+filterlib_init;		# open the cpool if enabled
+main $argc $argv;
+filterlib_end;		# close the cpool if enabled

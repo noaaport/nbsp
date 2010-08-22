@@ -11,6 +11,7 @@ set feature(dafilter) 1
 set feature(metarfilter) 1
 set feature(uafilter) 1
 set feature(wsfilter) 0
+set feature(gisfilter) 0
 set feature(gribfilter) 1
 set feature(panfilter) 0
 set feature(msgfilter) 0
@@ -75,7 +76,8 @@ set filterlist [list];
 if {$feature(inventory) == 1} {
     lappend filterlist	"/usr/local/libexec/nbsp/inventory";
 }
-foreach k [list spool rst da metar ua ws grib pan msg track nntp gp ldm nbsp] {
+foreach k [list spool rst da metar ua ws gis \
+	grib pan msg track nntp gp ldm nbsp] {
     if {[info exists feature(${k}filter)] == 0} {
 	continue;
     } elseif {($feature(${k}filter) == 1)} {

@@ -24,6 +24,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/digatmos/nexrad
 /var/noaaport/data/digatmos/nexrad/craft
 /var/noaaport/data/gempak
+/var/noaaport/data/gis
 /var/noaaport/data/metar
 /var/noaaport/data/upperair
 /var/noaaport/data/grib

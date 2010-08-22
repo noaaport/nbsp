@@ -126,19 +126,19 @@ proc process {finfo} {
 
     # If grib is enable, extract the rc(gribxxx) parameters
     if {([info exists dafilter(grib_enable)] == 0) || \
-	($dafilter(grib_enable) == 1)} {
+	($dafilter(grib_enable) != 0)} {
 	lappend _cmd "-dogrib";
     }
 
     # If rad is enable, extract the rc(radxxx) parameters
     if {([info exists dafilter(rad_enable)] == 0) || \
-	($dafilter(rad_enable) == 1)} {
+	($dafilter(rad_enable) != 0)} {
 	lappend _cmd "-dorad";
     }
 
     # If sat is enable, extract the rc(satxxx) parameters
     if {([info exists dafilter(sat_enable)] == 0) || \
-	($dafilter(sat_enable) == 1)} {
+	($dafilter(sat_enable) != 0)} {
 	lappend _cmd "-dosat";
     }
 

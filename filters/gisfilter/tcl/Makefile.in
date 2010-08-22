@@ -1,0 +1,66 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+FILTERTARGET =	gisfilter.tcl
+FILTERSOURCES =	gisfilter.tcl.in
+FILTERNAME =	gisfilter
+FILTERINIT =	gisfilter.init
+TOOLNAMES =	nbspwct
+
+SAMPLES =	gisfilter.conf-sample \
+		gisfilter-schedule.rc-sample
+
+FILTERLIBFILES = gislib-sat.tcl \
+		gislib-rad.tcl
+FILTERLIBTMP = gislib.tmp
+
+TMPLSOURCES =   wct_sat_conus.xml
+TMPLTARGET =    gisfilter-wct-templates.tgz
+TMPLPDIR =      gis
+TMPLDIR =       ${TMPLPDIR}/wct
+
+TARGET =	${FILTERTARGET} ${TOOLNAMES} ${SAMPLES} ${TMPLTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${FILTERTARGET}: ${FILTERSOURCES} ${FILTERLIBFILES}
+	cat ${FILTERLIBFILES} > ${FILTERLIBTMP}
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e '/@gislib@/r ${FILTERLIBTMP}' -e '/@gislib@/d' \
+	${FILTERSOURCES} > ${FILTERTARGET}
+	rm -f ${FILTERLIBTMP}
+
+gisfilter.conf-sample: gisfilter.conf
+	cp gisfilter.conf gisfilter.conf-sample
+
+gisfilter-schedule.rc-sample: gisfilter-schedule.rc
+	cp gisfilter-schedule.rc gisfilter-schedule.rc-sample
+
+nbspwct: nbspwct.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspwct.tcl > nbspwct
+
+${TMPLTARGET}: ${TMPLSOURCES}
+	rm -rf ${TMPLDIR}
+	mkdir -p ${TMPLDIR}
+	cp ${TMPLSOURCES} ${TMPLDIR}
+	tar -czf ${TMPLTARGET} ${TMPLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${FILTERTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
+	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${TMPLPDIR}
