@@ -40,9 +40,8 @@ set gisfilter(sat_outputfile_dirfmt,gini) "sat/gini/$gisfilter(sat_subdirfmt)";
 set gisfilter(sat_outputfile_namefmt,tif) "$gisfilter(sat_namefmt).tif";
 set gisfilter(sat_outputfile_dirfmt,tif) "sat/tif/$gisfilter(sat_subdirfmt)";
 #
-set gisfilter(sat_outputfile_namefmt,netcdf) "$gisfilter(sat_namefmt).nc";
-set gisfilter(sat_outputfile_dirfmt,netcdf) \
-	"sat/netcdf/$gisfilter(sat_subdirfmt)";
+set gisfilter(sat_outputfile_namefmt,nc) "$gisfilter(sat_namefmt).nc";
+set gisfilter(sat_outputfile_dirfmt,nc) "sat/netcdf/$gisfilter(sat_subdirfmt)";
 #
 set gisfilter(sat_bundlelist) [list "sat_conus_tif" "sat_conus_netcdf"];
 #
@@ -51,7 +50,7 @@ set gisfilter(sat_bundle,sat_conus_tif,wctrc_name) "wct_sat_conus.xml";
 set gisfilter(sat_bundle,sat_conus_tif,regex) {_tig(e|w)};
 set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamically if unset
 #
-set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "netcdf";
+set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "nc";
 set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_name) "wct_sat_conus.xml";
 set gisfilter(sat_bundle,sat_conus_netcdf,regex) {_tig(e|w)};
 set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_file) "";
