@@ -31,10 +31,13 @@ set optlist {b {d.arg ""} {e.arg ""} {f.arg ""}
 set nbspwct(wct_bin) "wct-export";
 
 # parameters
-set nbspwct(wct_fmt) "tif";
-set nbspwct(wct_fext) ".tif";
-set nbspwct(wct_fmeta) "-var-1-8bit";
 set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
+set nbspwct(wct_fmt) "tif";	# default
+#
+set nbspwct(wct_fext,tif) ".tif";
+set nbspwct(wct_fmeta,tif) "-var-1-8bit";
+set nbspwct(wct_fext,nc) ".nc";
+set nbspwct(wct_fmeta,nc) "-var-1";
 
 # variables
 set nbspwct(wct_rcfile) "";
@@ -43,6 +46,9 @@ set nbspwct(post_rcfile) "";
 set nbspwct(inputfile) "";
 set nbspwct(outputfile) "";
 set nbspwct(latestname) "";
+#
+set nbspwct(wct_fext) "";	# set according to fmt
+set nbspwct(wct_fmeta) "";	# set according to fmt
 
 proc log_warn s {
 
@@ -152,6 +158,8 @@ if {$option(e) ne ""} {
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
 }
+set nbspwct(wct_fext) $nbspwct(wct_fext,$nbspwct(wct_fmt)); 
+set nbspwct(wct_fmeta) $nbspwct(wct_fmeta,$nbspwct(wct_fmt));
 
 if {$option(l) ne ""} {
     set nbspwct(latestname) $option(l);
