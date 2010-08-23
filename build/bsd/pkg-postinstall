@@ -41,6 +41,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/inv/rst
 /var/noaaport/data/inv/digatmos
 /var/noaaport/data/inv/gempak
+/var/noaaport/data/inv/gis
 /var/noaaport/archive
 /var/noaaport/archive/data
 /var/noaaport/archive/data/digatmos

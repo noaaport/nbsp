@@ -9,7 +9,7 @@ proc filter_sat {rc_varname} {
     filter_sat_create_gini rc;
 
     foreach bundle $gisfilter(sat_bundlelist) {
-	set regex gisfilter(sat_bundle,$bundle,regex);
+	set regex $gisfilter(sat_bundle,$bundle,regex);
 	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
 	    continue;
 	}
@@ -56,8 +56,8 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set ginifpath $rc(fpath);
     set wctrcfile $gisfilter(sat_bundle,$bundle,wctrc_file);
 
-    # shorthane
-    set fmt $sat_outputfile_fmt;
+    # shorthand
+    set fmt $gisfilter(sat_bundle,$bundle,outputfile_fmt);
 
     set data_savedir [subst $gisfilter(sat_outputfile_dirfmt,$fmt)];
     set data_savename [subst $gisfilter(sat_outputfile_namefmt,$fmt)];
