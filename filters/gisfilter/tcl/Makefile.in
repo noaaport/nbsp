@@ -17,7 +17,11 @@ SAMPLES =	gisfilter.conf-sample \
 		gisfilter-schedule.rc-sample
 
 FILTERLIBFILES = gislib-sat.tcl \
-		gislib-rad.tcl
+		gislib-rad.tcl \
+		gislib-rad2.tcl \
+		gislib-latest.tcl \
+		gislib-inventory.tcl
+
 FILTERLIBTMP = gislib.tmp
 
 TMPLSOURCES =   wct_sat_conus.xml
