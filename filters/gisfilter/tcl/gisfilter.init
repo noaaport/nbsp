@@ -10,13 +10,16 @@
 set gisfilter(conf) [file join $common(confdir) "gisfilter.conf"];
 set gisfilter(localconfdirs)  $common(localconfdirs);
 set gisfilter(datadir) [file join $common(datadir) "gis"];
+set gisfilter(wct_bundle_conf) [file join $common(confdir) \
+	"gisfilter-wct-bundle.conf"];
 #
-# wct rc files
+# wct rc files location
 #
 set gisfilter(wct_rcdirs) $gisfilter(localconfdirs);
 set gisfilter(wct_rcsubdir) [file join "gis" "wct"];
 #
 # Parameters for the inventory database (for the cleanup script)
+#
 set gisfilter(invdir) [file join $common(datainvdir) "gis"];
 set gisfilter(invformat) $common(datainvformat);  # format for hourly subdirs
 set gisfilter(radinvsubdir) "nexrad";
@@ -43,17 +46,27 @@ set gisfilter(sat_outputfile_dirfmt,tif) "sat/tif/$gisfilter(sat_subdirfmt)";
 set gisfilter(sat_outputfile_namefmt,nc) "$gisfilter(sat_namefmt).nc";
 set gisfilter(sat_outputfile_dirfmt,nc) "sat/netcdf/$gisfilter(sat_subdirfmt)";
 #
-set gisfilter(sat_bundlelist) [list "sat_conus_tif" "sat_conus_netcdf"];
+##############################################################################
 #
-set gisfilter(sat_bundle,sat_conus_tif,outputfile_fmt) "tif";
-set gisfilter(sat_bundle,sat_conus_tif,wctrc_name) "wct_sat_conus.xml";
-set gisfilter(sat_bundle,sat_conus_tif,regex) {_tig(e|w)};
-set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamically if unset
+# Here would go the bundle configurations, for example
 #
-set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "nc";
-set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_name) "wct_sat_conus.xml";
-set gisfilter(sat_bundle,sat_conus_netcdf,regex) {_tig(e|w)};
-set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_file) "";
+### set gisfilter(sat_bundlelist) [list "sat_conus_tif" "sat_conus_netcdf"];
+#
+### set gisfilter(sat_bundle,sat_conus_tif,outputfile_fmt) "tif";
+### set gisfilter(sat_bundle,sat_conus_tif,wctrc_name) "wct_sat_conus.xml";
+### set gisfilter(sat_bundle,sat_conus_tif,regex) {_tig(e|w)};
+###  set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamic if unset
+#
+### set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "nc";
+### set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_name) "wct_sat_conus.xml";
+### set gisfilter(sat_bundle,sat_conus_netcdf,regex) {_tig(e|w)};
+### set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_file) "";
+#
+# which should be specified instead by using the bundle functions defined
+# below.
+##############################################################################
+#
+set gisfilter(sat_bundlelist) [list];
 
 #
 # rad configuration
@@ -106,10 +119,50 @@ if {[file exists $gisfilter(conf)]} {
 }
 
 #
+# Bundle configuration functions
+#
+proc _bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
+
+    global gisfilter;
+    
+    append bundle_type $type "_bundle";
+
+    # Construct a unique tag
+    append bundle_name $wct_fmt "." $wctrcr_name;
+
+    lappend gisfilter(sat_bundlelist) $bundle_name;
+    set gisfilter($bundle_type,$bundle_name,outputfile_fmt) $wct_fmt;
+    set gisfilter($bundle_type,$bundle_name,wctrc_name) $wctrc_name;
+    set gisfilter($bundle_type,$bundle_name,regex) $regex;
+    set gisfilter($bundle_type,$bundle_name,wctrc_file) $wctrc_file;
+}
+
+proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
+
+    _bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
+}
+
+#
+# Examples
+#
+### sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
+### sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
+
+#
 # Dynamic initialization
 #
 
-# get the full paths of the wct rc files
+# Read the bundle configurations
+if {[file exists $gisfilter(wct_bundle_conf)]} {
+    source $gisfilter(wct_bundle_conf);
+}
+#
+if {[llength $gisfilter(sat_bundlelist)] == 0} {
+    log_msg "No bundles configured.";
+    return 1;
+}
+
+# Get the full paths of the wct rc files
 foreach bundle $gisfilter(sat_bundlelist) {
     set rcfile $gisfilter(sat_bundle,$bundle,wctrc_file);
     if {$rcfile ne ""} {
