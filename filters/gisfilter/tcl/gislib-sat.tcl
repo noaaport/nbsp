@@ -72,7 +72,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     }
     lappend cmd -d $data_savedir -o $data_savename $ginifpath;
 
-    # Because WCT takes some time to process the file, we will execute
+    # Because WCT takes some time to process the file, we will execute it
     # in the background. 
 
     eval exec $cmd &;
