@@ -94,15 +94,17 @@ proc process {finfo} {
 
     # set status [catch {
     #	::nbsp::periodic::run;	# Run the registered periodic functions
-    #} errmsg];
-
-    if {$status != 0} {
-	log_msg $errmsg;
-    }
+    # } errmsg];
+    #
+    # if {$status != 0} {
+    #	log_msg $errmsg;
+    # }
 }
 
 proc gisfilter_run_schedule {} {
-
+#
+# This is the function that is registered with the periodic library.
+#
     global gisfilter;
 
     ::nbsp::periodic::scheduler $gisfilter(schedule);
