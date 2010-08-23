@@ -67,10 +67,18 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     set cmd [list "nbspwct" -b -f $fmt -x $wctrcfile];
+    if {$gisfilter(sat_latest_enable) != 0} {
+	lappend cmd -l $gisfilter(sat_latestname);
+    }
     lappend cmd -d $data_savedir -o $data_savename $ginifpath;
 
-    eval exec $cmd;
+    # Because WCT takes some time to process the file, we will execute
+    # in the background. 
+
+    eval exec $cmd &;
+
+    # Because of the background execution there is no way to know here if
+    # WCT actially succeeded, so we will insert it in the inventory anyway.
 
     filter_sat_insert_inventory $data_savedir $datafpath;
-    make_sat_latest $data_savedir $data_savename;
 }

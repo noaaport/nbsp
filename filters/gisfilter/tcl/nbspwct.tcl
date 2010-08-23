@@ -3,7 +3,7 @@
 # $Id$
 # 
 # Usage: nbspwct [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>] [-K]
-#                   [-o <outputfile>] [-p <postrcfile>]
+#                   [l <latestname>] [-o <outputfile>] [-p <postrcfile>]
 #                   [-w <wct_bin>] -x <wctconffile> <inputfile>
 #
 # This is a cmdline tool (really a wrapper for WCT) with no configuration file.
@@ -13,6 +13,7 @@
 # -e => extension of the output file
 # -f => format of the output file
 # -K => delete the .wct-cache dir
+# -l => create a link to the file
 # -o => outpufile (otherwise default is constructed)
 # -p => postrc filename
 # -w => path to wct-export
@@ -21,10 +22,10 @@
 package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>]
-    [-K] [-o <outputfile>] [-p <postrc>] [-w <wctbin>]
+    [-K] [-l <latestname>] [-o <outputfile>] [-p <postrc>] [-w <wctbin>]
     -x <wctconfigfile> <inputfile>};
 set optlist {b {d.arg ""} {e.arg ""} {f.arg ""}
-    K {o.arg ""} {p.arg ""} {w.arg ""} {x.arg ""}};
+    K {l.arg ""} {o.arg ""} {p.arg ""} {w.arg ""} {x.arg ""}};
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
@@ -41,6 +42,7 @@ set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
 set nbspwct(outputfile) "";
+set nbspwct(latestname) "";
 
 proc log_warn s {
 
@@ -82,6 +84,12 @@ proc exec_wct {} {
     } else {
 	file rename -force $wct_name $nbspwct(outputfile);
     }
+
+    if {$nbspwct(latestname) ne ""} {
+	set savedir [file dirname $nbspwct(outputfile)];
+	set savename [file tail $nbspwct(outputfile)];
+	make_latest $savedir $savename $nbspwct(latestname);
+    }
 }
 
 proc exec_post {post_rcfile outputfile} {
@@ -94,6 +102,31 @@ proc exec_post {post_rcfile outputfile} {
     set post(outputfile) $outputfile;
 
     source $post_rcfile;
+}
+
+proc make_latest {savedir savename latestname} {
+#
+# Create a "latest" link to the file. This functionality is put here rather
+# than the filter so that this program can be executed in the background
+# and the the link created after WCT finishes.
+#
+    set currentdir [pwd];
+    cd $savedir;
+
+    set latest $savename;
+    set linkpath $latestname;
+    if {[file exists $latest] == 0} {
+ 	cd $currentdir;
+	return;
+    }
+
+    set status [catch {
+        file delete $linkpath;
+        # file link -symbolic $linkpath $latest;
+	exec ln -s $latest $linkpath;
+    } errmsg];
+
+    cd $currentdir;
 }
 
 #
@@ -118,6 +151,10 @@ if {$option(e) ne ""} {
 
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
+}
+
+if {$option(l) ne ""} {
+    set nbspwct(latestname) $option(l);
 }
 
 if {$option(p) ne ""} {

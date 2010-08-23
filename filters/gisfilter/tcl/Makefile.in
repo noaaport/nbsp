@@ -19,7 +19,6 @@ SAMPLES =	gisfilter.conf-sample \
 FILTERLIBFILES = gislib-sat.tcl \
 		gislib-rad.tcl \
 		gislib-rad2.tcl \
-		gislib-latest.tcl \
 		gislib-inventory.tcl
 
 FILTERLIBTMP = gislib.tmp
