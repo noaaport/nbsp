@@ -137,9 +137,24 @@ proc _bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
     set gisfilter($bundle_type,$bundle_name,wctrc_file) $wctrc_file;
 }
 
+proc _bundle_clear {type} {
+
+    global gisfilter;
+    
+    append bundlelist $type "_bundlelist";
+
+    set gisfilter($bundlelist) [list];
+}
+	
+
 proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
     _bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
+}
+
+proc sat_bundle_clear {} {
+
+    _bundle_clear "sat";
 }
 
 #

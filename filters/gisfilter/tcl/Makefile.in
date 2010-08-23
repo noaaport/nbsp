@@ -17,6 +17,8 @@ SAMPLES =	gisfilter.conf-sample \
 		gisfilter-wct-bundle.conf-sample \
 		gisfilter-schedule.rc-sample
 
+DEFAULTS =	gisfilter-wct-bundle.conf-defaults
+
 FILTERLIBFILES = gislib-sat.tcl \
 		gislib-rad.tcl \
 		gislib-rad2.tcl \
@@ -66,9 +68,9 @@ install: ${TARGET}
 	${INSTALL} -m 755 ${FILTERTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
 	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
 	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
-	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${DEFAULTS} ${MYCONFDIR}
 	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
 
 clean:
-	rm -f *~ ${TARGET} Makefile
+	rm -f *~ ${TARGET} ${SAMPLES} Makefile
 	rm -rf ${TMPLPDIR}
