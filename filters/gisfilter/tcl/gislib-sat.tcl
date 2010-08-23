@@ -69,7 +69,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set cmd [list "nbspwct" -b -f $fmt -x $wctrcfile];
     lappend cmd -d $data_savedir -o $data_savename $ginifpath;
 
-    eval $cmd;
+    eval exec $cmd;
 
     filter_sat_insert_inventory $data_savedir $datafpath;
     make_sat_latest $data_savedir $data_savename;
