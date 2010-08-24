@@ -30,7 +30,7 @@ If gempak is installed:
   - Then look for the following variables in "rstfilter.conf" to
     produce satellite images with maps and radar images, respectively:
 
-	rstfilter(satoptionmap)
+	rstfilter(satmap_enable
 	rstfilter(rad_enable)
 
   - In addition the gpfilter can be enabled in "features.conf"
