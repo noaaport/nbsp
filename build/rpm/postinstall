@@ -2,6 +2,7 @@
 # nbsp user/group, directories owned by user, and directories owned by root
 #
 user=noaaport
+home=/var/noaaport
 #
 userdirs="/var/run/nbsp
 /var/log/noaaport
@@ -64,7 +65,7 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
 
-useradd -M $user > /dev/null 2>&1
+useradd -M -d $home $user > /dev/null 2>&1
 status=$?
 if [ $status -ne 9 -a $status -ne 0 ]
 then
