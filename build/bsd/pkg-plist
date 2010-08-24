@@ -209,8 +209,8 @@ etc/nbsp/dist/wsfilter-schedule.rc-sample
 etc/nbsp/dist/wsfilter-metar-siteloc.def-sample
 etc/nbsp/dist/wsfilter-upperair-siteloc.def-sample
 etc/nbsp/dist/gisfilter.conf-sample
-etc/nbsp/dist/gisfilter-wct-bundle.conf-sample
-etc/nbsp/dist/gisfilter-wct-bundle.conf-defaults
+etc/nbsp/dist/gisfilter-bundle.conf-sample
+etc/nbsp/dist/gisfilter-bundle.conf-defaults
 etc/nbsp/dist/gisfilter-schedule.rc-sample
 etc/nbsp/dist/gisfilter-wct-templates.tgz
 etc/nbsp/dist/panfilter.conf-sample

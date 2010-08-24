@@ -10,8 +10,8 @@
 set gisfilter(conf) [file join $common(confdir) "gisfilter.conf"];
 set gisfilter(localconfdirs)  $common(localconfdirs);
 set gisfilter(datadir) [file join $common(datadir) "gis"];
-set gisfilter(wct_bundle_conf) [file join $common(confdir) \
-	"gisfilter-wct-bundle.conf"];
+set gisfilter(bundle_conf) [file join $common(confdir) \
+	"gisfilter-bundle.conf"];
 #
 # wct rc files location
 #
@@ -55,7 +55,7 @@ set gisfilter(sat_outputfile_dirfmt,nc) "sat/netcdf/$gisfilter(sat_subdirfmt)";
 ### set gisfilter(sat_bundle,sat_conus_tif,outputfile_fmt) "tif";
 ### set gisfilter(sat_bundle,sat_conus_tif,wctrc_name) "wct_sat_conus.xml";
 ### set gisfilter(sat_bundle,sat_conus_tif,regex) {_tig(e|w)};
-###  set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamic if unset
+### set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamic if unset
 #
 ### set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "nc";
 ### set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_name) "wct_sat_conus.xml";
@@ -121,7 +121,7 @@ if {[file exists $gisfilter(conf)]} {
 #
 # Bundle configuration functions
 #
-proc _bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc _wct_bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
     global gisfilter;
     
@@ -137,7 +137,7 @@ proc _bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
     set gisfilter($bundle_type,$bundle_name,wctrc_file) $wctrc_file;
 }
 
-proc _bundle_clear {type} {
+proc _wct_bundle_clear {type} {
 
     global gisfilter;
     
@@ -149,12 +149,12 @@ proc _bundle_clear {type} {
 
 proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
-    _bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
+    _wct_bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
 }
 
 proc sat_bundle_clear {} {
 
-    _bundle_clear "sat";
+    _wct_bundle_clear "sat";
 }
 
 #
@@ -168,8 +168,8 @@ proc sat_bundle_clear {} {
 #
 
 # Read the bundle configurations
-if {[file exists $gisfilter(wct_bundle_conf)]} {
-    source $gisfilter(wct_bundle_conf);
+if {[file exists $gisfilter(bundle_conf)]} {
+    source $gisfilter(bundle_conf);
 }
 #
 if {[llength $gisfilter(sat_bundlelist)] == 0} {

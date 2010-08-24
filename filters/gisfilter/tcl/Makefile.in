@@ -14,10 +14,10 @@ FILTERINIT =	gisfilter.init
 TOOLNAMES =	nbspwct
 
 SAMPLES =	gisfilter.conf-sample \
-		gisfilter-wct-bundle.conf-sample \
+		gisfilter-bundle.conf-sample \
 		gisfilter-schedule.rc-sample
 
-DEFAULTS =	gisfilter-wct-bundle.conf-defaults
+DEFAULTS =	gisfilter-bundle.conf-defaults
 
 FILTERLIBFILES = gislib-sat.tcl \
 		gislib-rad.tcl \
@@ -49,8 +49,8 @@ ${FILTERTARGET}: ${FILTERSOURCES} ${FILTERLIBFILES}
 gisfilter.conf-sample: gisfilter.conf
 	cp gisfilter.conf gisfilter.conf-sample
 
-gisfilter-wct-bundle.conf-sample: gisfilter-wct-bundle.conf
-	cp gisfilter-wct-bundle.conf gisfilter-wct-bundle.conf-sample
+gisfilter-bundle.conf-sample: gisfilter-bundle.conf
+	cp gisfilter-bundle.conf gisfilter-bundle.conf-sample
 
 gisfilter-schedule.rc-sample: gisfilter-schedule.rc
 	cp gisfilter-schedule.rc gisfilter-schedule.rc-sample

@@ -236,8 +236,8 @@ make clean
 /usr/local/etc/nbsp/dist/wsfilter-metar-siteloc.def-sample
 /usr/local/etc/nbsp/dist/wsfilter-upperair-siteloc.def-sample
 /usr/local/etc/nbsp/dist/gisfilter.conf-sample
-/usr/local/etc/nbsp/dist/gisfilter-wct-bundle.conf-sample
-/usr/local/etc/nbsp/dist/gisfilter-wct-bundle.conf-defaults
+/usr/local/etc/nbsp/dist/gisfilter-bundle.conf-sample
+/usr/local/etc/nbsp/dist/gisfilter-bundle.conf-defaults
 /usr/local/etc/nbsp/dist/gisfilter-schedule.rc-sample
 /usr/local/etc/nbsp/dist/gisfilter-wct-templates.tgz
 /usr/local/etc/nbsp/dist/panfilter.conf-sample
