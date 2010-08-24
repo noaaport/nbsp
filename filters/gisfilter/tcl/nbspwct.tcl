@@ -16,16 +16,17 @@
 # -l => create a link to the file
 # -o => outpufile (otherwise default is constructed)
 # -p => postrc filename
+# -V => debug wct errors
 # -w => path to wct-export
 # -x => the wct xml config file (required)
 
 package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>]
-    [-K] [-l <latestname>] [-o <outputfile>] [-p <postrc>] [-w <wctbin>]
+    [-K] [-l <latestname>] [-o <outputfile>] [-p <postrc>] [-V] [-w <wctbin>]
     -x <wctconfigfile> <inputfile>};
 set optlist {b {d.arg ""} {e.arg ""} {f.arg ""}
-    K {l.arg ""} {o.arg ""} {p.arg ""} {w.arg ""} {x.arg ""}};
+    K {l.arg ""} {o.arg ""} {p.arg ""} V {w.arg ""} {x.arg ""}};
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
@@ -40,6 +41,7 @@ set nbspwct(wct_fext,nc) ".nc";
 set nbspwct(wct_fmeta,nc) "-var-1";
 
 # variables
+set nbspwct(debug) 0;
 set nbspwct(wct_rcfile) "";
 set nbspwct(post_rcfile) "";
 #
@@ -72,6 +74,7 @@ proc log_err s {
 proc exec_wct {} {
 
     global nbspwct;
+    global errorInfo;
 
     set status [catch {
 		exec $nbspwct(wct_bin) \
@@ -87,6 +90,9 @@ proc exec_wct {} {
 
     if {[file exists $wct_name] == 0} {
 	log_err $errmsg;
+	if {$nbspwct(debug) != 0} {
+	    log_err $errorInfo;
+	}
     } else {
 	file rename -force $wct_name $nbspwct(outputfile);
     }
@@ -167,6 +173,10 @@ if {$option(l) ne ""} {
 
 if {$option(p) ne ""} {
     set nbspwct(post_rcfile) $option(p);
+}
+
+if {$option(V) != 0} {
+    set nbspwct(debug) 1;
 }
 
 if {$option(w) ne ""} {
