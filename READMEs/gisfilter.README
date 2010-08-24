@@ -2,6 +2,25 @@
 # $Id$
 #
 
+The gisfilter is a special-purpose filter that transforms appropriate
+subsets of the noaaport data (sat, rad,..) to GIS-compatible formats
+using the WCT (http://www.ncdc.noaa.gov/oa/wct).
+
+It transforms the data and saves it in a separate directory
+
+        /var/noaaport/data/gis
+
+ready for use by GIS aware applications, Google maps, etc.
+Everything runs out of the "gisfilter". Just setting
+
+set feature(gisfilter) 0
+
+disables the entire module, and viceversa. Then particular features
+can be enabled, disabled, (re)configured by appropriate settings in
+the configuration file(s) gisfilter.conf and others.
+
+This is short for enabling the filter.
+
 ========
 1) WCT -
 ========
@@ -23,7 +42,7 @@ Then I use the following (shell) script, that I save as
 
 	/usr/local/bin/wct-export
 
-The script can be anywhere in the PATH.
+The script can be in any directory in the PATH.
 
 ------------------ wct-export -----------------
 #!/bin/sh
@@ -83,4 +102,4 @@ reinstalled in an upgrade.
 
 In "features.conf",
 
-set feature(gisfilter_enable) 1
+set feature(gisfilter) 1
