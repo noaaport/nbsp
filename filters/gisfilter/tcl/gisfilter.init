@@ -121,17 +121,17 @@ if {[file exists $gisfilter(conf)]} {
 #
 # Bundle configuration functions
 #
-proc _wct_bundle_add {type wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc _wct_bundle_add {type wctfmt wctrc_name regex {wctrc_file ""}} {
 
     global gisfilter;
     
     append bundle_type $type "_bundle";
 
     # Construct a unique tag
-    append bundle_name $wct_fmt "." $wctrcr_name;
+    append bundle_name $wctfmt "." $wctrc_name;
 
     lappend gisfilter(sat_bundlelist) $bundle_name;
-    set gisfilter($bundle_type,$bundle_name,outputfile_fmt) $wct_fmt;
+    set gisfilter($bundle_type,$bundle_name,outputfile_fmt) $wctfmt;
     set gisfilter($bundle_type,$bundle_name,wctrc_name) $wctrc_name;
     set gisfilter($bundle_type,$bundle_name,regex) $regex;
     set gisfilter($bundle_type,$bundle_name,wctrc_file) $wctrc_file;
