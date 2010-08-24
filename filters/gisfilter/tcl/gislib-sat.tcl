@@ -67,6 +67,9 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     set cmd [list "nbspwct" -b -f $fmt -x $wctrcfile];
+    if {$gisfilter(wct_debug) != 0} {
+	lappend cmd "-V";
+    }
     if {$gisfilter(sat_latest_enable) != 0} {
 	lappend cmd -l $gisfilter(sat_latestname);
     }
