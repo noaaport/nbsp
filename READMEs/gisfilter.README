@@ -1,0 +1,86 @@
+#
+# $Id$
+#
+
+========
+1) WCT -
+========
+
+The gisfilter requires the WCT, version 3.1.4
+
+	http://www.ncdc.noaa.gov/oa/wct/install.php
+
+This package can be installed anywhere; I use
+
+	/usr/local/lib/wct/3.1.4
+
+For reference, we mention that inside that directory there should be the
+following files and directories
+
+	wctBatchConfig.xml  wct-export  wct-viewer dist lib
+
+Then I use the following (shell) script, that I save as
+
+	/usr/local/bin/wct-export
+
+The script can be anywhere in the PATH.
+
+------------------ wct-export -----------------
+#!/bin/sh
+
+version="3.1.4"
+wctdir=/usr/local/lib/wct/${version}
+
+${wctdir}/wct-export "$@"
+------------------ wct-export -----------------
+
+================
+2) Configuring -
+================
+
+The relevant file to edit is "site/gisfilter-bundle.conf", by adding entries
+of the form
+
+sat_bundle_add <wct_format> <wct_config_file> <fname_regex>
+
+For example,
+
+sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
+sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
+
+The parameters are
+
+         <wct_format> = tif, tif32, nc, cvs, ...
+         <wct_config_file> = wct xml config file
+                             The file is searched in the "defaults" and "site"
+                             subdirectories of the nbsp conf directory,
+                             and the last one is found is used.
+         <fname_regex> = regular exp that will be used to select the input
+                         Only the files whose fname match, are processed
+                         by that rule.
+
+The <fname_regex> is matched against the "fname" part of the input file,
+e.g., the root of the basename of the file. For example for 
+
+          /var/noaaport/nbsp/spool/knes/knes_tige04.230045_83360
+
+the fname is "knes_tige04".
+
+The default rules (the examples shown above) are in the file
+
+       defaults/gisfilter-bundle.conf
+
+Instead of editing that file, the best is to add the new rules in
+
+       site/gisfilter-bundle.conf
+
+so that they are not overwritten when the default file is
+reinstalled in an upgrade.
+
+=============
+2) Enabling -
+=============
+
+In "features.conf",
+
+set feature(gisfilter_enable) 1
