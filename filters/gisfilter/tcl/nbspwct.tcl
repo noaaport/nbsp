@@ -10,11 +10,10 @@
 #
 # -b => background mode
 # -d => output dir
-# -e => extension of the output file
 # -f => format of the output file
 # -K => delete the .wct-cache dir
 # -l => create a link to the file
-# -o => outpufile (otherwise default is constructed)
+# -o => rootname of the outpufile (otherwise default is constructed)
 # -p => postrc filename
 # -V => debug wct errors
 # -w => path to wct-export
@@ -22,11 +21,11 @@
 
 package require cmdline;
 
-set usage {nbspwct [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>]
-    [-K] [-l <latestname>] [-o <outputfile>] [-p <postrc>] [-V] [-w <wctbin>]
-    -x <wctconfigfile> <inputfile>};
-set optlist {b {d.arg ""} {e.arg ""} {f.arg ""}
-    K {l.arg ""} {o.arg ""} {p.arg ""} V {w.arg ""} {x.arg ""}};
+set usage {nbspwct [-b] [-d <outputdir>] [-f <fmt>]
+    [-K] [-l <latestname>] [-o <outputfile_rootname>]
+    [-p <postrc>] [-V] [-w <wctbin>] -x <wctconfigfile> <inputfile>};
+set optlist {b {d.arg ""} {f.arg ""} K {l.arg ""} {o.arg ""} {p.arg ""}
+    V {w.arg ""} {x.arg ""}};
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
@@ -35,16 +34,17 @@ set nbspwct(wct_bin) "wct-export";
 set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
 set nbspwct(wct_fmt) "tif";	# default
 #
-set nbspwct(wct_fext,tif) ".tif";
 set nbspwct(wct_fmeta,tif) "-var-1-8bit";
-set nbspwct(wct_fext,nc) ".nc";
 set nbspwct(wct_fmeta,nc) "-var-1";
-set nbspwct(wct_fext,shp) ".shp";
 set nbspwct(wct_fmeta,shp) "-var-1";
-set nbspwct(wct_fext,asc) ".asc";
 set nbspwct(wct_fmeta,asc) "-var-1";
-set nbspwct(wct_fext,wkt) ".wkt";
 set nbspwct(wct_fmeta,wkt) "-var-1";
+# extensions of the outputfile(s)
+set nbspwct(wct_fext,tif) [list ".tif"];
+set nbspwct(wct_fext,nc) [list ".nc"];
+set nbspwct(wct_fext,shp) [list ".shp" ".shx" ".dbf" ".prj"];
+set nbspwct(wct_fext,asc) [list ".asc" ".prj"];
+set nbspwct(wct_fext,wkt) [list ".wkt.txt" ".wkt.prj"];
 
 # variables
 set nbspwct(debug) 0;
@@ -52,11 +52,12 @@ set nbspwct(wct_rcfile) "";
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
-set nbspwct(outputfile) "";
+set nbspwct(outputfile_rootname) "";
+set nbspwct(outputfile) "";	# main file  (for the postrc)
 set nbspwct(latestname) "";
 #
-set nbspwct(wct_fext) "";	# set according to fmt
 set nbspwct(wct_fmeta) "";	# set according to fmt
+set nbspwct(wct_fext) [list];	# set according to fmt
 
 proc log_warn s {
 
@@ -85,23 +86,32 @@ proc exec_wct {} {
     set status [catch {
 		exec $nbspwct(wct_bin) \
 		    $nbspwct(inputfile) \
-		    $nbspwct(outputfile) \
+		    $nbspwct(outputfile_rootname) \
 		    $nbspwct(wct_fmt) \
 		    $nbspwct(wct_rcfile); 
     } errmsg];
 
-    # This is the actual name that wct uses in the output file
-    append wct_name [file rootname $nbspwct(outputfile)] \
-	$nbspwct(wct_fmeta) $nbspwct(wct_fext);
+    foreach fext $nbspwct(wct_fext) {
+	# This is the actual name that wct uses in the output file(s)
+	append wct_name $nbspwct(outputfile_rootname) \
+	    $nbspwct(wct_fmeta) $fext;
 
-    if {[file exists $wct_name] == 0} {
-	log_err $errmsg;
-	if {$nbspwct(debug) != 0} {
-	    log_err $errorInfo;
+	set outputfile $nbspwct(outputfile_rootname);
+	append outputfile $fext;
+
+	if {[file exists $wct_name] == 0} {
+	    log_err $errmsg;
+	    if {$nbspwct(debug) != 0} {
+		log_err $errorInfo;
+	    }
+	} else {
+	    file rename -force $wct_name $outputfile;
 	}
-    } else {
-	file rename -force $wct_name $nbspwct(outputfile);
     }
+
+    # The main outputfile
+    append nbspwct(outputfile) \
+	$nbspwct(outputfile_rootname) [lindex $nbspwct(wct_fext) 0];
 
     if {$nbspwct(latestname) ne ""} {
 	set savedir [file dirname $nbspwct(outputfile)];
@@ -163,15 +173,11 @@ if {$option(x) eq ""} {
 }
 set nbspwct(wct_rcfile) $option(x);
 
-if {$option(e) ne ""} {
-    set nbspwct(wct_fext) $option(e);
-}
-
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
 }
-set nbspwct(wct_fext) $nbspwct(wct_fext,$nbspwct(wct_fmt)); 
 set nbspwct(wct_fmeta) $nbspwct(wct_fmeta,$nbspwct(wct_fmt));
+set nbspwct(wct_fext) $nbspwct(wct_fext,$nbspwct(wct_fmt));  # list of fext
 
 if {$option(l) ne ""} {
     set nbspwct(latestname) $option(l);
@@ -190,15 +196,17 @@ if {$option(w) ne ""} {
 }
 
 if {$option(o) ne ""} {
-    set nbspwct(outputfile) $option(o);
+    set nbspwct(outputfile_rootname) $option(o);
+    if {$option(d) ne ""} {
+	set nbspwct(outputfile_rootname) [file join $option(d) $option(o)];
+    }
 } else {
-    set nbspwct(outputfile) [file rootname $nbspwct(inputfile)];
-    append nbspwct(outputfile) $nbspwct(wct_fext);
-}
-
-if {$option(d) ne ""} {
-    set nbspwct(outputfile) [file join $option(d) \
-				    [file tail $nbspwct(outputfile)]];
+    set nbspwct(outputfile_rootname) \
+	[file rootname [file tail $nbspwct(inputfile)]];
+    if {$option(d) ne ""} {
+	set nbspwct(outputfile_rootname) \
+	    [file join $option(d) $nbspwct(outputfile_rootname)];
+    }
 }
 
 # The post_rcfile is optional but the wct rcfile is required.
