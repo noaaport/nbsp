@@ -95,6 +95,7 @@ proc exec_wct {} {
 
     foreach fext $nbspwct(wct_fext) {
 	# This is the actual name that wct uses in the output file(s)
+	set wct_name "";   # clear it
 	append wct_name [file rootname $nbspwct(outputfile)] \
 	    $nbspwct(wct_fmeta) $fext;
 
