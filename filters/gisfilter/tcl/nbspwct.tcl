@@ -39,6 +39,12 @@ set nbspwct(wct_fext,tif) ".tif";
 set nbspwct(wct_fmeta,tif) "-var-1-8bit";
 set nbspwct(wct_fext,nc) ".nc";
 set nbspwct(wct_fmeta,nc) "-var-1";
+set nbspwct(wct_fext,shp) ".shp";
+set nbspwct(wct_fmeta,shp) "-var-1";
+set nbspwct(wct_fext,asc) ".asc";
+set nbspwct(wct_fmeta,asc) "-var-1";
+set nbspwct(wct_fext,wkt) ".wkt";
+set nbspwct(wct_fmeta,wkt) "-var-1";
 
 # variables
 set nbspwct(debug) 0;
