@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspwct [-b] [-d <outputdir>] [-e <fext>] [-f <fmt>] [-K]
+# Usage: nbspwct [-b] [-d <outputdir>] [-f <fmt>] [-K]
 #                   [l <latestname>] [-o <outputfile>] [-p <postrcfile>]
 #                   [-w <wct_bin>] -x <wctconffile> <inputfile>
 #
@@ -13,7 +13,7 @@
 # -f => format of the output file
 # -K => delete the .wct-cache dir
 # -l => create a link to the file
-# -o => rootname of the outpufile (otherwise default is constructed)
+# -o => outpufile (otherwise default is constructed)
 # -p => postrc filename
 # -V => debug wct errors
 # -w => path to wct-export
@@ -39,7 +39,7 @@ set nbspwct(wct_fmeta,nc) "-var-1";
 set nbspwct(wct_fmeta,shp) "-var-1";
 set nbspwct(wct_fmeta,asc) "-var-1";
 set nbspwct(wct_fmeta,wkt) "-var-1";
-# extensions of the outputfile(s)
+# default extensions of the outputfile(s)
 set nbspwct(wct_fext,tif) [list ".tif"];
 set nbspwct(wct_fext,nc) [list ".nc"];
 set nbspwct(wct_fext,shp) [list ".shp" ".shx" ".dbf" ".prj"];
@@ -52,7 +52,6 @@ set nbspwct(wct_rcfile) "";
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
-set nbspwct(outputfile_rootname) "";
 set nbspwct(outputfile) "";	# main file  (for the postrc)
 set nbspwct(latestname) "";
 #
@@ -86,18 +85,26 @@ proc exec_wct {} {
     set status [catch {
 		exec $nbspwct(wct_bin) \
 		    $nbspwct(inputfile) \
-		    $nbspwct(outputfile_rootname) \
+		    $nbspwct(outputfile) \
 		    $nbspwct(wct_fmt) \
 		    $nbspwct(wct_rcfile); 
     } errmsg];
 
+    # the extension of the main file
+    set main_fext [lindex $nbspwct(wct_fext) 0];
+
     foreach fext $nbspwct(wct_fext) {
 	# This is the actual name that wct uses in the output file(s)
-	append wct_name $nbspwct(outputfile_rootname) \
+	append wct_name [file rootname $nbspwct(outputfile)] \
 	    $nbspwct(wct_fmeta) $fext;
 
-	set outputfile $nbspwct(outputfile_rootname);
-	append outputfile $fext;
+	# This is the name we want
+	if {$fext eq $main_fext} {
+	    set output_name $nbspwct(outputfile);
+	} else {
+	    set output_name [file rootname $nbspwct(outputfile)];
+	    append output_name $fext;
+	}
 
 	if {[file exists $wct_name] == 0} {
 	    log_err $errmsg;
@@ -105,14 +112,11 @@ proc exec_wct {} {
 		log_err $errorInfo;
 	    }
 	} else {
-	    file rename -force $wct_name $outputfile;
+	    file rename -force $wct_name $output_name;
 	}
     }
 
-    # The main outputfile
-    append nbspwct(outputfile) \
-	$nbspwct(outputfile_rootname) [lindex $nbspwct(wct_fext) 0];
-
+    # Create latest link for the (main) outputfile
     if {$nbspwct(latestname) ne ""} {
 	set savedir [file dirname $nbspwct(outputfile)];
 	set savename [file tail $nbspwct(outputfile)];
@@ -196,16 +200,18 @@ if {$option(w) ne ""} {
 }
 
 if {$option(o) ne ""} {
-    set nbspwct(outputfile_rootname) $option(o);
+    set nbspwct(outputfile) $option(o);
     if {$option(d) ne ""} {
-	set nbspwct(outputfile_rootname) [file join $option(d) $option(o)];
+	set nbspwct(outputfile) [file join $option(d) $option(o)];
     }
 } else {
-    set nbspwct(outputfile_rootname) \
-	[file rootname [file tail $nbspwct(inputfile)]];
+    # the default main fext
+    set fext [lindex $nbspwct(wct_fext) 0];
+    append nbspwct(outputfile) \
+    [file rootname [file tail $nbspwct(inputfile)]] $fext;
     if {$option(d) ne ""} {
-	set nbspwct(outputfile_rootname) \
-	    [file join $option(d) $nbspwct(outputfile_rootname)];
+	set nbspwct(outputfile) \
+	    [file join $option(d) $nbspwct(outputfile)];
     }
 }
 
