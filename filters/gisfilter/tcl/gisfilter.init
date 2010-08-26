@@ -104,9 +104,27 @@ set gisfilter(rad_outputfile_dirfmt,nids) "rad/nids/$gisfilter(rad_subdirfmt)";
 set gisfilter(rad_outputfile_namefmt,tif) "$gisfilter(rad_namefmt).tif";
 set gisfilter(rad_outputfile_dirfmt,tif) "rad/tif/$gisfilter(rad_subdirfmt)";
 #
-set gisfilter(rad_outputfile_namefmt,netcdf) "$gisfilter(rad_namefmt).nc";
-set gisfilter(rad_outputfile_dirfmt,netcdf) \
-	"rad/netcdf/$gisfilter(rad_subdirfmt)";
+set gisfilter(rad_outputfile_namefmt,nc) "$gisfilter(rad_namefmt).nc";
+set gisfilter(rad_outputfile_dirfmt,nc) "rad/nc/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,asc) "$gisfilter(rad_namefmt).asc";
+set gisfilter(rad_outputfile_dirfmt,asc) "rad/asc/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,tif32) "$gisfilter(rad_namefmt).tif";
+set gisfilter(rad_outputfile_dirfmt,tif32) \
+	"rad/tif32/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,rnc) "$gisfilter(rad_namefmt).rnc";
+set gisfilter(rad_outputfile_dirfmt,rnc) "rad/rnc/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,csv) "$gisfilter(rad_namefmt).csv";
+set gisfilter(rad_outputfile_dirfmt,csv) "rad/csv/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,shp) "$gisfilter(rad_namefmt).shp";
+set gisfilter(rad_outputfile_dirfmt,shp) "rad/shp/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,wkt) "$gisfilter(rad_namefmt).wkt";
+set gisfilter(rad_outputfile_dirfmt,wkt) "rad/wkt/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_bundlelist) [list];
 
@@ -123,13 +141,40 @@ set gisfilter(rad2_outputfile_namefmt,nids) $gisfilter(rad2_namefmt);
 set gisfilter(rad2_outputfile_dirfmt,nids) \
 	"rad2/nids/$gisfilter(rad2_subdirfmt)";
 #
+set gisfilter(rad2_outputfile_namefmt,nids) "$gisfilter(rad2_namefmt).nids";
+set gisfilter(rad2_outputfile_dirfmt,nids) \
+	"rad2/nids/$gisfilter(rad2_subdirfmt)";
+#
 set gisfilter(rad2_outputfile_namefmt,tif) "$gisfilter(rad2_namefmt).tif";
 set gisfilter(rad2_outputfile_dirfmt,tif) \
 	"rad2/tif/$gisfilter(rad2_subdirfmt)";
 #
-set gisfilter(rad2_outputfile_namefmt,netcdf) "$gisfilter(rad2_namefmt).nc";
-set gisfilter(rad2_outputfile_dirfmt,netcdf) \
-	"rad2/netcdf/$gisfilter(rad2_subdirfmt)";
+set gisfilter(rad2_outputfile_namefmt,nc) "$gisfilter(rad2_namefmt).nc";
+set gisfilter(rad2_outputfile_dirfmt,nc) "rad2/nc/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,asc) "$gisfilter(rad2_namefmt).asc";
+set gisfilter(rad2_outputfile_dirfmt,asc) \
+	"rad2/asc/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,tif32) "$gisfilter(rad2_namefmt).tif";
+set gisfilter(rad2_outputfile_dirfmt,tif32) \
+	"rad2/tif32/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,rnc) "$gisfilter(rad2_namefmt).rnc";
+set gisfilter(rad2_outputfile_dirfmt,rnc) \
+	"rad2/rnc/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,csv) "$gisfilter(rad2_namefmt).csv";
+set gisfilter(rad2_outputfile_dirfmt,csv) \
+	"rad2/csv/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,shp) "$gisfilter(rad2_namefmt).shp";
+set gisfilter(rad2_outputfile_dirfmt,shp) \
+	"rad2/shp/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,wkt) "$gisfilter(rad2_namefmt).wkt";
+set gisfilter(rad2_outputfile_dirfmt,wkt) \
+	"rad2/wkt/$gisfilter(rad2_subdirfmt)";
 #
 set gisfilter(rad2_bundlelist) [list];
 
