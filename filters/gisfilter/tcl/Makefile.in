@@ -27,7 +27,7 @@ FILTERLIBFILES = gislib-sat.tcl \
 
 FILTERLIBTMP = gislib.tmp
 
-TMPLSOURCES =   wct_sat_conus.xml
+TMPLSOURCES =   wct_defaults.xml
 TMPLTARGET =    gisfilter-wct-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =       ${TMPLPDIR}/wct

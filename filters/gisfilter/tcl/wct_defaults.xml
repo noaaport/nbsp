@@ -1,0 +1,186 @@
+<?xml version="1.0"?>
+<!--
+ *
+ * $Id$
+ *
+ * Default wct configuration file.
+-->
+<wctExportBatchOptions version="2">
+
+   <!-- Logging options: These can be 'SEVERE', 'WARNING', 'INFO', 'DEBUG' -->
+   <logging> WARNING </logging>
+		
+   <grid>
+      <gridFilter>
+         <minLat> NONE </minLat>
+         <maxLat> NONE </maxLat>
+         <minLon> NONE </minLon>
+         <maxLon> NONE </maxLon>
+      </gridFilter>
+   </grid>
+
+   <radar>
+      <radialOptions>
+
+         <!--
+            For Level-II NEXRAD this can be: 'Reflectivity',
+            'RadialVelocity' or 'SpectrumWidth'
+         -->
+         <variable> Reflectivity </variable>
+
+         <!--
+            integer sweep (sometimes called cut, not elevation angle) of
+            radar file - some sweeps will not contain any information
+            for the desired moment - 0 & 2 generally only have
+            Reflectivity data while 1 & 3 have Velocity/Spec. Width -
+            The remaining sweeps usually have all moments in each cut
+            although this may vary with - vcp 12 and 121.
+         -->
+         <sweep> 0 </sweep>
+
+         <!--
+            Classify polygon values into 5 dbZ (4 dbZ in Clear-Air Mode)
+            intervals
+         -->
+         <classify> false </classify> 
+
+      	<!-- Export RF values for BVEL and SPEC moments -->
+         <useRFvalues> true </useRFvalues>
+
+     	   <!-- Export single cut in point shapefile -->
+         <exportPoints> false </exportPoints>
+
+         <!--
+            Export entire moment in point shapefile (overrides
+            exportPoints value and any specified cut integer)
+         -->
+         <exportAllPoints> false </exportAllPoints>
+
+      </radialOptions>
+      <radialFilter>
+     
+         <!-- Range Filter units of kilometers -->
+         <minRange> NONE </minRange>
+         <maxRange> NONE </maxRange>
+
+         <!-- Azimuth Filter units of decimal degrees -->
+         <minAzimuth> NONE </minAzimuth>
+         <maxAzimuth> NONE </maxAzimuth>
+
+         <!--
+            Value Filter of int or floating point number Multiple
+            max-min ranges can be created for the value filter. Use a
+            comma-separated list of min values with a comma-separated
+            list of max values. For example, min values of '-200,30' and
+            max values of '-30,200' creates 2 value ranges of -200 to
+            -30 and 30 to 200. This is useful for velocity products
+            where the strongest winds are of most interest.
+         -->
+         <minValue> NONE </minValue>
+         <maxValue> NONE </maxValue>
+
+         <!--
+            All geographic extent fields must be specified for
+            geographic filter to be engaged.
+         -->
+   <!-- Geographic Extent Filter units of decimal degrees -->
+         <minLat> NONE </minLat>
+         <maxLat> NONE </maxLat>
+         <minLon> NONE </minLon>
+         <maxLon> NONE </maxLon>
+
+         <!-- Height Filter units of meters (relative to radar site) -->
+         <minHeight> NONE </minHeight>
+         <maxHeight> NONE </maxHeight>
+
+      </radialFilter>
+
+      <level3Options>
+         <!--
+            Join equal value polygons - this greatly increases
+            processing time but reduces filesizes by ~35%
+         -->
+         <reducePolygons> false </reducePolygons>
+      </level3Options>
+
+      <level3Filter>
+         <minRange> NONE </minRange>
+         <maxRange> NONE </maxRange>
+         <!--
+            While most Level-III data is categorized, this software will
+            calculate which categories should be included based on max
+            and min filter values. Multiple max-min ranges can be
+            created for the value filter. Use a comma-separated list of
+            min values with a comma-separated list of max values. For
+            example, min values of '-200,30' and max values of '-30,200'
+            creates 2 value ranges of -200 to -30 and 30 to 200. This is
+            useful for velocity products where the strongest winds are
+            of most interest.
+         -->
+         <minValue> NONE </minValue>
+         <maxValue> NONE </maxValue>
+
+         <!--
+            The Category Override allows non-numeric fields (such as
+            'RF' for range folding) to be included if desired.
+         -->
+         <categoryOverrides> RF </categoryOverrides>
+
+         <!--
+            All geographic extent fields must be specified for
+            geographic filter to be engaged.
+         -->
+   	   <!-- Geographic Extent Filter units of decimal degrees -->
+         <minLat> NONE </minLat>
+         <maxLat> NONE </maxLat>
+         <minLon> NONE </minLon>
+         <maxLon> NONE </maxLon>
+
+      </level3Filter>
+   </radar>
+
+   <exportGridOptions>
+      <!--
+         'squareGridSize' represents the size for the 'long' side of the
+         raster grid. The short side is dynamically calculated (always
+         height because we are on a lat/lon grid). The grid cell
+         resolution is dynamically calculated. For example, if 1000 is
+         used, the width will be 1000, but the height will probably be
+         somewhere between 800 and 900 depending on the latitude. This
+         is done to reduce filesize by minimizing the amount of 'noData'
+         areas outside the extent of the Radar site. If this value is
+         '-1', the 'gridCellResolution' value will be used and the
+         raster size is dynamically generated.
+      -->
+      <squareGridSize> 1000 </squareGridSize>
+
+      <!--
+         'gridCellResolution' represents the grid cell resolution in
+         decimal degrees. The actual size (height and width) of the
+         raster is dynamically calculated based on this value and the
+         extent of the Radar (or extent of the data if 'autoResolution'
+         flag is set to 'true') If this value is '-1', the
+         'squareGridSize' value will be used and the grid cell
+         resolution is dynamically generated. ** This functionality
+         implemented in version >= 1.5.1 **
+      -->
+      <gridCellResolution> -1 </gridCellResolution>
+
+      <!-- 'noDataValue': Value for 'No Data' points in the grid -->
+      <noDataValue> -999 </noDataValue>
+
+      <!--
+         'smoothFactor': Smoothing factor to apply to the grid 0 = No
+         Smoothing, 8 = Moderate Smoothing, 16 = Heavy Smoothing PLEASE
+         USE WITH CAUTION!!! The smoothing algorithm is a simple
+         kernal-based smoothing used in common image manipulation
+         software. Each pixel will be equally averaged with a radius of
+         neighboring pixels. The number neighboring pixels used depends
+         on the smoothing factor and zoom extent. NOTE: Excessive
+         smoothing will distort the data and remove important features.
+         PLEASE USE WITH CAUTION!!!
+      -->
+
+      <smoothFactor> 0 </smoothFactor>
+   </exportGridOptions>
+</wctExportBatchOptions>
