@@ -7,5 +7,9 @@ sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
 sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
 sat_bundle_add "asc" "wct_sat_conus.xml" {_tig(e|w)};
 #
-### sat_bundle_add "shp" "wct_sat_conus.xml" {_tig(e|w)};
-### sat_bundle_add "wkt" "wct_sat_conus.xml" {_tig(e|w)};
+## sat_bundle_add "tif32" "wct_sat_conus.xml" {_tig(e|w)};
+## sat_bundle_add "rnc" "wct_sat_conus.xml" {_tig(e|w)};
+## sat_bundle_add "csv" "wct_sat_conus.xml" {_tig(e|w)};
+#
+#### sat_bundle_add "shp" "wct_sat_conus.xml" {_tig(e|w)};
+#### sat_bundle_add "wkt" "wct_sat_conus.xml" {_tig(e|w)};

@@ -44,20 +44,27 @@ set gisfilter(sat_outputfile_dirfmt,gini) "sat/gini/$gisfilter(sat_subdirfmt)";
 set gisfilter(sat_outputfile_namefmt,tif) "$gisfilter(sat_namefmt).tif";
 set gisfilter(sat_outputfile_dirfmt,tif) "sat/tif/$gisfilter(sat_subdirfmt)";
 #
-set gisfilter(sat_outputfile_namefmt,shp) "$gisfilter(sat_namefmt).shp";
-set gisfilter(sat_outputfile_dirfmt,shp) "sat/shp/$gisfilter(sat_subdirfmt)";
+set gisfilter(sat_outputfile_namefmt,nc) "$gisfilter(sat_namefmt).nc";
+set gisfilter(sat_outputfile_dirfmt,nc) "sat/nc/$gisfilter(sat_subdirfmt)";
 #
 set gisfilter(sat_outputfile_namefmt,asc) "$gisfilter(sat_namefmt).asc";
 set gisfilter(sat_outputfile_dirfmt,asc) "sat/asc/$gisfilter(sat_subdirfmt)";
 #
+set gisfilter(sat_outputfile_namefmt,tif32) "$gisfilter(sat_namefmt).tif";
+set gisfilter(sat_outputfile_dirfmt,tif32) \
+	"sat/tif32/$gisfilter(sat_subdirfmt)";
+#
+set gisfilter(sat_outputfile_namefmt,rnc) "$gisfilter(sat_namefmt).rnc";
+set gisfilter(sat_outputfile_dirfmt,rnc) "sat/rnc/$gisfilter(sat_subdirfmt)";
+#
 set gisfilter(sat_outputfile_namefmt,csv) "$gisfilter(sat_namefmt).csv";
 set gisfilter(sat_outputfile_dirfmt,csv) "sat/csv/$gisfilter(sat_subdirfmt)";
 #
+set gisfilter(sat_outputfile_namefmt,shp) "$gisfilter(sat_namefmt).shp";
+set gisfilter(sat_outputfile_dirfmt,shp) "sat/shp/$gisfilter(sat_subdirfmt)";
+#
 set gisfilter(sat_outputfile_namefmt,wkt) "$gisfilter(sat_namefmt).wkt";
 set gisfilter(sat_outputfile_dirfmt,wkt) "sat/wkt/$gisfilter(sat_subdirfmt)";
-#
-set gisfilter(sat_outputfile_namefmt,nc) "$gisfilter(sat_namefmt).nc";
-set gisfilter(sat_outputfile_dirfmt,nc) "sat/nc/$gisfilter(sat_subdirfmt)";
 #
 ##############################################################################
 #

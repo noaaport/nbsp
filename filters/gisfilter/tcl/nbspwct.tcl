@@ -36,14 +36,20 @@ set nbspwct(wct_fmt) "tif";	# default
 #
 set nbspwct(wct_fmeta,tif) "-var-1-8bit";
 set nbspwct(wct_fmeta,nc) "-var-1";
-set nbspwct(wct_fmeta,shp) "-var-1";
 set nbspwct(wct_fmeta,asc) "-var-1";
+set nbspwct(wct_fmeta,tif32) "-var-1";
+set nbspwct(wct_fmeta,rnc) "-var-1";
+set nbspwct(wct_fmeta,csv) "-var-1";
+set nbspwct(wct_fmeta,shp) "-var-1";
 set nbspwct(wct_fmeta,wkt) "-var-1";
-# default extensions of the outputfile(s)
+# wct extensions of the outputfile(s)
 set nbspwct(wct_fext,tif) [list ".tif"];
 set nbspwct(wct_fext,nc) [list ".nc"];
-set nbspwct(wct_fext,shp) [list ".shp" ".shx" ".dbf" ".prj"];
 set nbspwct(wct_fext,asc) [list ".asc" ".prj"];
+set nbspwct(wct_fext,tif32) [list ".tif"];
+set nbspwct(wct_fext,rnc) [list ".rnc"];
+set nbspwct(wct_fext,csv) [list ".csv" ".prj"];
+set nbspwct(wct_fext,shp) [list ".shp" ".shx" ".dbf" ".prj"];
 set nbspwct(wct_fext,wkt) [list ".wkt.txt" ".wkt.prj"];
 
 # variables
