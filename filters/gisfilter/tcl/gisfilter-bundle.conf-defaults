@@ -3,13 +3,13 @@
 #
 
 # default configuration
-sat_bundle_add "tif" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
-sat_bundle_add "nc" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
-sat_bundle_add "asc" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
+sat_bundle_add "tif" "wct_defaults.xml" {_tig.0[1-5]};
+sat_bundle_add "nc" "wct_defaults.xml" {_tig.0[1-5]};
+sat_bundle_add "asc" "wct_defaults.xml" {_tig.0[1-5]};
 #
-## sat_bundle_add "tif32" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
-## sat_bundle_add "rnc" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
+## sat_bundle_add "tif32" "wct_defaults.xml" {_tig.0[1-5]};
+## sat_bundle_add "rnc" "wct_defaults.xml" {_tig.0[1-5]};
 #
-#### sat_bundle_add "shp" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
-#### sat_bundle_add "csv" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
-#### sat_bundle_add "wkt" "wct_defaults.xml" {_tig(e|w|p|q)([0-5])};
+#### sat_bundle_add "shp" "wct_defaults.xml" {_tig.0[1-5]};
+#### sat_bundle_add "csv" "wct_defaults.xml" {_tig.0[1-5]};
+#### sat_bundle_add "wkt" "wct_defaults.xml" {_tig.0[1-5]};
