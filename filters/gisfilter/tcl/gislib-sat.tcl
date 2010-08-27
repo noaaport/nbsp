@@ -66,7 +66,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set data_path [file join $data_savedir $data_savename];
     set datafpath [file join $gisfilter(datadir) $data_path];
 
-    set cmd [list "nbspwct" -b -f $fmt -x $wctrcfile];
+    set cmd [list "nbspwct" -b -f $fmt -t sat -x $wctrcfile];
     if {$gisfilter(wct_debug) != 0} {
 	lappend cmd "-V";
     }
