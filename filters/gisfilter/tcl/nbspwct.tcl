@@ -4,9 +4,10 @@
 # 
 # Usage: nbspwct [-b] [-d <outputdir>] [-f <fmt>] [-K]
 #                   [l <latestname>] [-o <outputfile>] [-p <postrcfile>]
-#                   [-w <wct_bin>] -x <wctconffile> <inputfile>
+#                   [-w <wct_bin>] [-x <wctconffile>] <inputfile>
 #
-# This is a cmdline tool (really a wrapper for WCT) with no configuration file.
+# This is a cmdline tool (really a wrapper for WCT). If "-x" is not given,
+# then it tries to use "/usr/local/etc/wct-export.xml".
 #
 # -b => background mode
 # -d => output dir
@@ -17,18 +18,19 @@
 # -p => postrc filename
 # -V => debug wct errors
 # -w => path to wct-export
-# -x => the wct xml config file (required)
+# -x => the wct xml config file (uses /usr/local/etc/wct-export.xml otherwise)
 
 package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-f <fmt>]
     [-K] [-l <latestname>] [-o <outputfile_rootname>]
-    [-p <postrc>] [-V] [-w <wctbin>] -x <wctconfigfile> <inputfile>};
+    [-p <postrc>] [-V] [-w <wctbin>] [-x <wctconfigfile>] <inputfile>};
 set optlist {b {d.arg ""} {f.arg ""} K {l.arg ""} {o.arg ""} {p.arg ""}
     V {w.arg ""} {x.arg ""}};
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
+set nbspwct(wct_rcfile) "/usr/local/etc/wct-export.xml";
 
 # parameters
 set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
@@ -54,7 +56,6 @@ set nbspwct(wct_fext,wkt) [list ".wkt.txt" ".wkt.prj"];
 
 # variables
 set nbspwct(debug) 0;
-set nbspwct(wct_rcfile) "";
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
@@ -179,10 +180,9 @@ if {$argc != 1} {
 }
 set nbspwct(inputfile) [lindex $argv 0];
 
-if {$option(x) eq ""} {
-    log_err "-x is required.";
+if {$option(x) ne ""} {
+    set nbspwct(wct_rcfile) $option(x);
 }
-set nbspwct(wct_rcfile) $option(x);
 
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
