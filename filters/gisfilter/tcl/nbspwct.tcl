@@ -3,8 +3,8 @@
 # $Id$
 # 
 # Usage: nbspwct [-b] [-d <outputdir>] [-f <fmt>] [-K]
-#                   [l <latestname>] [-o <outputfile>] [-p <postrcfile>]
-#                   [-w <wct_bin>] [-x <wctconffile>] <inputfile>
+#                   [l <latestname>] [-o <outputfile>] [-p <postrcfile>] -V
+#		    [-t <type>] [-w <wct_bin>] [-x <wctconffile>] <inputfile>
 #
 # This is a cmdline tool (really a wrapper for WCT). If "-x" is not given,
 # then it tries to use "/usr/local/etc/wct-export.xml".
@@ -16,6 +16,7 @@
 # -l => create a link to the file
 # -o => outpufile (otherwise default is constructed)
 # -p => postrc filename
+# -t => type: sat, rad, ... (to determine the fmeta in the name) 
 # -V => debug wct errors
 # -w => path to wct-export
 # -x => the wct xml config file (uses /usr/local/etc/wct-export.xml otherwise)
@@ -36,14 +37,14 @@ set nbspwct(wct_rcfile) "/usr/local/etc/wct-export.xml";
 set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
 set nbspwct(wct_fmt) "tif";	# default
 #
-set nbspwct(wct_fmeta,tif) "-var-1-8bit";
-set nbspwct(wct_fmeta,nc) "-var-1";
-set nbspwct(wct_fmeta,asc) "-var-1";
-set nbspwct(wct_fmeta,tif32) "-var-1";
-set nbspwct(wct_fmeta,rnc) "-var-1";
-set nbspwct(wct_fmeta,csv) "-var-1";
-set nbspwct(wct_fmeta,shp) "-var-1";
-set nbspwct(wct_fmeta,wkt) "-var-1";
+set nbspwct(wct_fmeta_sat,tif) "-var-1-8bit";
+set nbspwct(wct_fmeta_sat,nc) "-var-1";
+set nbspwct(wct_fmeta_sat,asc) "-var-1";
+set nbspwct(wct_fmeta_sat,tif32) "-var-1";
+set nbspwct(wct_fmeta_sat,rnc) "-var-1";
+set nbspwct(wct_fmeta_sat,csv) "-var-1";
+set nbspwct(wct_fmeta_sat,shp) "-var-1";
+set nbspwct(wct_fmeta_sat,wkt) "-var-1";
 # wct extensions of the outputfile(s)
 set nbspwct(wct_fext,tif) [list ".tif"];
 set nbspwct(wct_fext,nc) [list ".nc"];
@@ -59,7 +60,8 @@ set nbspwct(debug) 0;
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
-set nbspwct(outputfile) "";	# main file  (for the postrc)
+set nbspwct(inputtype) "";
+set nbspwct(outputfile) "";
 set nbspwct(latestname) "";
 #
 set nbspwct(wct_fmeta) "";	# set according to fmt
@@ -87,6 +89,17 @@ proc log_err s {
 proc exec_wct {} {
 
     global nbspwct;
+
+    if {$nbspwct(inputtype) eq "sat"} {
+	exec_wct_sat;
+    } else {
+	exec_wct_default;
+    }
+}
+
+proc exec_wct_sat {} {
+
+    global nbspwct;
     global errorInfo;
 
     set status [catch {
@@ -104,7 +117,7 @@ proc exec_wct {} {
 	# This is the actual name that wct uses in the output file(s)
 	set wct_name "";   # clear it
 	append wct_name [file rootname $nbspwct(outputfile)] \
-	    $nbspwct(wct_fmeta) $fext;
+	    $nbspwct(wct_fmeta_sat) $fext;
 
 	# This is the name we want
 	if {$fext eq $main_fext} {
@@ -124,6 +137,34 @@ proc exec_wct {} {
 	}
     }
 
+    # Create latest link for the (main) outputfile
+    if {$nbspwct(latestname) ne ""} {
+	set savedir [file dirname $nbspwct(outputfile)];
+	set savename [file tail $nbspwct(outputfile)];
+	make_latest $savedir $savename $nbspwct(latestname);
+    }
+}
+
+proc exec_wct_default {} {
+
+    global nbspwct;
+    global errorInfo;
+
+    set status [catch {
+		exec $nbspwct(wct_bin) \
+		    $nbspwct(inputfile) \
+		    $nbspwct(outputfile) \
+		    $nbspwct(wct_fmt) \
+		    $nbspwct(wct_rcfile); 
+    } errmsg];
+
+    if {[file exists $nbspwct(outputfile)] == 0} {
+	log_err $errmsg;
+	if {$nbspwct(debug) != 0} {
+	    log_err $errorInfo;
+	}
+    }
+    
     # Create latest link for the (main) outputfile
     if {$nbspwct(latestname) ne ""} {
 	set savedir [file dirname $nbspwct(outputfile)];
@@ -179,6 +220,10 @@ if {$argc != 1} {
     log_err $usage;
 }
 set nbspwct(inputfile) [lindex $argv 0];
+
+if {$option(t) ne ""} {
+    set nbspwct(inputtype) $option(t);
+}
 
 if {$option(x) ne ""} {
     set nbspwct(wct_rcfile) $option(x);
