@@ -25,9 +25,10 @@ package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-f <fmt>]
     [-K] [-l <latestname>] [-o <outputfile_rootname>]
-    [-p <postrc>] [-V] [-w <wctbin>] [-x <wctconfigfile>] <inputfile>};
+    [-p <postrc>] [-t <type>] [-V] [-w <wctbin>]
+    [-x <wctconfigfile>] <inputfile>};
 set optlist {b {d.arg ""} {f.arg ""} K {l.arg ""} {o.arg ""} {p.arg ""}
-    V {w.arg ""} {x.arg ""}};
+    {t.arg ""} V {w.arg ""} {x.arg ""}};
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
@@ -64,7 +65,6 @@ set nbspwct(inputtype) "";
 set nbspwct(outputfile) "";
 set nbspwct(latestname) "";
 #
-set nbspwct(wct_fmeta) "";	# set according to fmt
 set nbspwct(wct_fext) [list];	# set according to fmt
 
 proc log_warn s {
@@ -113,11 +113,13 @@ proc exec_wct_sat {} {
     # the extension of the main file
     set main_fext [lindex $nbspwct(wct_fext) 0];
 
+    # the meta information in the name
+    set fmeta $nbspwct(wct_fmeta_sat,$nbspwct(wct_fmt));
+
     foreach fext $nbspwct(wct_fext) {
 	# This is the actual name that wct uses in the output file(s)
 	set wct_name "";   # clear it
-	append wct_name [file rootname $nbspwct(outputfile)] \
-	    $nbspwct(wct_fmeta_sat) $fext;
+	append wct_name [file rootname $nbspwct(outputfile)] $fmeta $fext;
 
 	# This is the name we want
 	if {$fext eq $main_fext} {
@@ -232,7 +234,6 @@ if {$option(x) ne ""} {
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
 }
-set nbspwct(wct_fmeta) $nbspwct(wct_fmeta,$nbspwct(wct_fmt));
 set nbspwct(wct_fext) $nbspwct(wct_fext,$nbspwct(wct_fmt));  # list of fext
 
 if {$option(l) ne ""} {
