@@ -2,6 +2,9 @@
 # $Id$
 #
 
+sat_bundle_clear;
+rad_bundle_clear;
+
 # default configuration
 sat_bundle_add "tif" "wct_defaults.xml" {_tig.0[1-5]};
 sat_bundle_add "nc" "wct_defaults.xml" {_tig.0[1-5]};
