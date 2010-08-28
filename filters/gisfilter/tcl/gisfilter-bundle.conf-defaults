@@ -11,7 +11,11 @@ sat_bundle_add "nc" "wct_defaults.xml" {_tig.0[1-5]};
 sat_bundle_add "asc" "wct_defaults.xml" {_tig.0[1-5]};
 
 #
-# Examples
+# Examples -
+#
+# The tif32 and rnc convsersions are slower than, and result in files
+# larger than, tif, nc and asc.  The shp, csv and wkt are much worse
+# in both counts amd should not be used.
 #
 
 ## sat_bundle_add "tif32" "wct_defaults.xml" {_tig.0[1-5]};
