@@ -6,7 +6,7 @@ proc filter_rad {rc_varname} {
     global gisfilter;
     upvar $rc_varname rc;
 
-    filter_sat_create_nids rc;
+    filter_rad_create_nids rc;
 
     foreach bundle $gisfilter(rad_bundlelist) {
 	set regex $gisfilter(rad_bundle,$bundle,regex);
