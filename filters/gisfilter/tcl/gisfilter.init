@@ -217,7 +217,6 @@ proc _wct_bundle_clear {type} {
 
     set gisfilter($bundlelist) [list];
 }
-	
 
 proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
@@ -229,11 +228,25 @@ proc sat_bundle_clear {} {
     _wct_bundle_clear "sat";
 }
 
+
+proc rad_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
+
+    _wct_bundle_add "rad" $wct_fmt $wctrcr_name $regex $wctrc_file;
+}
+
+proc rad_bundle_clear {} {
+
+    _wct_bundle_clear "rad";
+}
+
 #
 # Examples
 #
 ### sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
 ### sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
+#
+### rad_bundle_add "tif" "wct_rad.xml" {\-n0r};
+### rad_bundle_add "nc" "wct_rad.xml" {\-n[0-3](r|s)jua};
 
 #
 # Dynamic initialization
@@ -244,30 +257,34 @@ if {[file exists $gisfilter(bundle_conf)]} {
     source $gisfilter(bundle_conf);
 }
 #
-if {[llength $gisfilter(sat_bundlelist)] == 0} {
-    log_msg "No bundles configured.";
+if {([llength $gisfilter(sat_bundlelist)] == 0) && \
+	([llength $gisfilter(rad_bundlelist)] == 0)} {
+	    log_msg "No bundles configured.";
     return 1;
 }
 
 # Get the full paths of the wct rc files
-foreach bundle $gisfilter(sat_bundlelist) {
-    set rcfile $gisfilter(sat_bundle,$bundle,wctrc_file);
-    if {$rcfile ne ""} {
-	if {[file exists $rcfile] == 0} {
-	    log_msg "$rcfile not found.";
+foreach t [list "rad" "sat"] {
+    foreach bundle $gisfilter(${t}_bundlelist) {
+	set rcfile $gisfilter(${t}_bundle,$bundle,wctrc_file);
+	if {$rcfile ne ""} {
+	    if {[file exists $rcfile] == 0} {
+		log_msg "$rcfile not found.";
+		return 1;
+	    }
+	    # If the specified file exists don't check the standard dirs.
+	    continue;
+	}
+
+	set rcname $gisfilter(${t}_bundle,$bundle,wctrc_name);
+	set rcfile [filterlib_find_conf $rcname \
+	    $gisfilter(wct_rcdirs) $gisfilter(wct_rcsubdir)];
+
+	if {$rcfile eq ""} {
+	    log_msg "$rcname not found.";
 	    return 1;
 	}
-	continue;
+
+	set gisfilter(${t}_bundle,$bundle,wctrc_file) $rcfile;
     }
-
-    set rcname $gisfilter(sat_bundle,$bundle,wctrc_name);
-    set rcfile [filterlib_find_conf $rcname \
-	$gisfilter(wct_rcdirs) $gisfilter(wct_rcsubdir)];
-
-    if {$rcfile eq ""} {
-	log_msg "$rcname not found.";
-	return 1;
-    }
-
-    set gisfilter(sat_bundle,$bundle,wctrc_file) $rcfile;
 }
