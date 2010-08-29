@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. configure.inc
+. ./configure.inc
 
 config_dirs="conf src utils scripts doc filters \
     tclhttpd \

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. configure.inc
+. ./configure.inc
 
 config_subdirs="libtclconf libconnth libqdb libspoolbdb \
 slavenbs slavefp slavein"

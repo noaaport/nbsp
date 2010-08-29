@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. configure.inc
+. ./configure.inc
 
 sed -e "/@include@/ s||$INCLUDE|" \
     -e "/@q@/ s||$Q|g" \
