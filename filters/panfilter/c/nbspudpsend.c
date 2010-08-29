@@ -38,13 +38,13 @@ int main(int argc, char **argv){
     case 'h':
     default:
       status = 1;
-      errx(1, usage);
+      errx(1, "%s", usage);
       break;
     }
   }
 
   if(optind != argc - 2)
-    errx(1, usage);
+    errx(1, "%s", usage);
 
   g.opt_host = argv[optind++];
   g.opt_service = argv[optind++];

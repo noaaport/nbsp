@@ -42,7 +42,7 @@ int main(int argc, char **argv){
       break;
     default:
       status = 1;
-      errx(1, usage);
+      errx(1, "%s", usage);
       break;
     }
   }
@@ -53,7 +53,7 @@ int main(int argc, char **argv){
     g.host = argv[optind++];
     g.service = argv[optind++];
   }else
-    errx(1, usage);
+    errx(1, "%s", usage);
 
   status = udprecv();
 
