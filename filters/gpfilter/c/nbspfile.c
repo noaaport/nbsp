@@ -52,9 +52,6 @@ struct {
        COMPRESS_LEVEL, PAGE_SIZE, NULL, NULL,
        static_large_page_buffer, LARGE_PAGE_SIZE, NULL};
 
-char *gmpk_header_fmt = GMPK_HEADER_FMT; 
-char *gmpk_trailer_str = GMPK_TRAILER_STR; 
-
 static void check(void);
 static int process_file(void);
 static int write_cpage(FILE *fp, char *page, int page_size);
@@ -298,7 +295,7 @@ static int process_file(void){
       log_err_open(g.opt_output_fname);
 
     if(g.opt_noheader == 0)
-      fprintf(g.output_fp, gmpk_header_fmt, (int)(g.opt_seqnum % 1000));
+      fprintf(g.output_fp, GMPK_HEADER_FMT, (int)(g.opt_seqnum % 1000));
 
     nread = fread(g.page, 1, g.page_size, g.input_fp);
     if(nread > 0)
@@ -344,7 +341,7 @@ static int process_file(void){
     }
 
     if(g.opt_noheader == 0)
-      fprintf(g.output_fp, gmpk_trailer_str);
+      fprintf(g.output_fp, GMPK_TRAILER_STR);
 
     if((g.opt_verbose == 1) && (g.opt_output_fname != NULL)){
 	log_info("Archiving %s in %s", g.opt_output_fname, g.opt_output_dir);

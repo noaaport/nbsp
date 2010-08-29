@@ -55,9 +55,6 @@ struct {
 } g = {0, NULL, NULL, DUMMY_SEQNUM, 0, 0, 0, NULL, NULL, NULL,
        {0}, PAGE_SIZE};
 
-char *gmpk_header_fmt = GMPK_HEADER_FMT; 
-char *gmpk_trailer_str = GMPK_TRAILER_STR; 
-
 static void process_input(void);
 static void process_cmd(int argc, char **argv);
 static void process_file(void);
@@ -240,7 +237,7 @@ static void process_file(void){
     ccb_size = 0;
 
   if(g.opt_header == 1)
-    fprintf(g.output_fp, gmpk_header_fmt, (int)(g.opt_seqnum % 1000));
+    fprintf(g.output_fp, GMPK_HEADER_FMT, (int)(g.opt_seqnum % 1000));
   
   nread = read_page(g.input_fp, g.page, g.page_size);
   
@@ -258,5 +255,5 @@ static void process_file(void){
   }	  
 
   if(g.opt_header == 1)
-    fprintf(g.output_fp, gmpk_trailer_str);
+    fprintf(g.output_fp, GMPK_TRAILER_STR);
 }
