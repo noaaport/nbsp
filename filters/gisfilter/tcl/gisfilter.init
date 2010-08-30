@@ -256,12 +256,6 @@ proc rad_bundle_clear {} {
 if {[file exists $gisfilter(bundle_conf)]} {
     source $gisfilter(bundle_conf);
 }
-#
-if {([llength $gisfilter(sat_bundlelist)] == 0) && \
-	([llength $gisfilter(rad_bundlelist)] == 0)} {
-	    log_msg "No bundles configured.";
-    return 1;
-}
 
 # Get the full paths of the wct rc files
 foreach t [list "rad" "sat"] {
