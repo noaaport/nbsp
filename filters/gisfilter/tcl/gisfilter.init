@@ -39,6 +39,7 @@ set gisfilter(sat_inv_enable) 1;
 #
 set gisfilter(wct_listfile_qdir) [file join $gisfilter(datadir) "qf"];
 set gisfilter(wct_listfile_ldir) [file join $gisfilter(datadir) "lf"];
+set gisfilter(wct_listfile_flush) 0;
 set gisfilter(wct_listfile_minute) "";      # variable
 set gisfilter(wct_listfile_list,tif) [list];    # variable
 set gisfilter(wct_listfile_list,nc) [list];    # variable
