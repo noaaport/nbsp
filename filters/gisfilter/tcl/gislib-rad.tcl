@@ -109,7 +109,7 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     # Write to the wct list
-    lappend gisfilter(wct_listfile_list,$fmt)
+    lappend gisfilter(wct_listfile_list,$fmt) \
 	"$nidsfpath,[file dirname $datafpath],$wctrcfile" \
 	"#,$nidsfpath,$datafpath";
 

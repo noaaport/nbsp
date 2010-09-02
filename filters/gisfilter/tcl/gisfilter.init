@@ -304,4 +304,4 @@ foreach t [list "rad" "sat"] {
 }
 
 # The suffix of the wct list files (<fmt>.<minute>)
-set gisfilter(wct_listfile_suffix) [clock format [clock seconds] -format "%M"];
+set gisfilter(wct_listfile_minute) [clock format [clock seconds] -format "%M"];

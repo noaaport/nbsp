@@ -105,7 +105,7 @@ proc filter_sat_queue_convert_gini {rc_varname bundle} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     # Write to the wct list
-    lappend gisfilter(wct_listfile_list,$fmt)
+    lappend gisfilter(wct_listfile_list,$fmt) \
 	"$ginifpath,[file dirname $datafpath],$wctrcfile" \
 	"#,$ginifpath,$datafpath";
 
