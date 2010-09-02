@@ -1,0 +1,48 @@
+#
+# $Id$
+#
+The format of the queue and the queue file(s) -
+
+1) The gisfilter writes (appends) to the list file, which has the name
+
+	<fmt>.qf
+
+(For efficiency, maybe it should keep the list in memory and write the total
+list at the end:  $gisfilter(wct_listfile_list)).
+
+When the current minute finishes, it renames the file (writes the list) to
+
+	<minute>.<fmt>.qf  (wct list file; with post processing instructions)
+
+2) One question is where they should be? 
+
+Answer:	/var/noaaport/vardata/gis/{qf,lf}
+
+3) When the gisfilter changes file, then the gisfilter must get all
+   the <minute>.<fmt> files (for the various formats) and call
+
+	exec nbspwct-queue -f <fmt> [options] <minute>.<fmt>.qf &
+
+   for each of them.  
+
+4) nbsp-queue should first create the file with a different extension
+(The lock file)
+
+	<minute>.<fmt>.lf
+
+  then call `wct-export <listfile> <fmt>` for each file,
+  then `nbspwct -n` for each post renaming instruction in each file,
+  and finally delete both files.
+
+--
+
+set gisfilter(wct_listfile_qdir) [file join $common(vardatadir) "gis" "qf"];
+set gisfilter(wct_listfile_ldir) [file join $common(vardatadir) "gis" "lf"];
+
+Create
+
+1) set common(vardatadir) "/var/noaaport/vardata";
+
+2) set gisfilter(wct_listfile_list) [list]; # variable
+
+3) /var/noaaport/vardata/gis

@@ -13,7 +13,7 @@ proc filter_sat {rc_varname} {
 	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
 	    continue;
 	}
-	filter_sat_convert_gini rc $bundle;
+	filter_sat_queue_convert_gini rc $bundle;
     }
 }
 
@@ -81,7 +81,48 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     eval exec $cmd &;
 
     # Because of the background execution there is no way to know here if
-    # WCT actially succeeded, so we will insert it in the inventory anyway.
+    # WCT actually succeeded, so we will insert it in the inventory anyway.
 
     filter_sat_insert_inventory $data_savedir $datafpath;
+}
+
+proc filter_sat_queue_convert_gini {rc_varname bundle} {
+
+    global gisfilter;
+    upvar $rc_varname rc;
+
+    set ginifpath $rc(fpath);
+    set wctrcfile $gisfilter(sat_bundle,$bundle,wctrc_file);
+
+    # shorthand
+    set fmt $gisfilter(sat_bundle,$bundle,outputfile_fmt);
+
+    set data_savedir [subst $gisfilter(sat_outputfile_dirfmt,$fmt)];
+    set data_savename [subst $gisfilter(sat_outputfile_namefmt,$fmt)];
+
+    file mkdir $data_savedir;
+    set data_path [file join $data_savedir $data_savename];
+    set datafpath [file join $gisfilter(datadir) $data_path];
+
+    # Write to the wct list
+    lappend gisfilter(wct_listfile_list,$fmt)
+	"$ginifpath,[file dirname $datafpath],$wctrcfile" \
+	"#,$ginifpath,$datafpath";
+
+    # Write the file if the current minute expired
+    set current_minute [clock format [clock seconds] -format "%M"];
+    if {$current_minute ne $gisfilter(wct_listfile_minute)} {
+	append wct_listfile_name $fmt "." $gisfilter(wct_listfile_minute);
+	set wct_listfile [file join \
+	    $gisfilter(wct_listfile_qdir) $wct_listfile_name];
+
+	::fileutil::appendToFile $wct_listfile \
+	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
+
+	# reinitialize
+	set gisfilter(wct_listfile_minute) $current_minute;
+	set gisfilter(wct_listfile_list,$fmt) [list];
+    }
+#    puts "$ginifpath,[file dirname $datafpath],$wctrcfile";
+#    puts "#,$ginifpath,$datafpath";
 }

@@ -2,6 +2,7 @@
 #
 # $Id$
 #
+package require fileutil;
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
