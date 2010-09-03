@@ -122,10 +122,12 @@ proc filter_sat_queue_convert_gini {rc_varname bundle} {
 	::fileutil::appendToFile $wct_listfile \
 	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
 
+	if {$current_minute ne $gisfilter(wct_listfile_minute)} {
+	    filter_sat_process_listfile $wct_listfile $fmt;
+	}
+
 	# reinitialize
 	set gisfilter(wct_listfile_minute) $current_minute;
 	set gisfilter(wct_listfile_list,$fmt) [list];
     }
-#    puts "$ginifpath,[file dirname $datafpath],$wctrcfile";
-#    puts "#,$ginifpath,$datafpath";
 }

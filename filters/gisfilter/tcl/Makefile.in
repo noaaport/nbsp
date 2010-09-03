@@ -23,7 +23,8 @@ FILTERLIBFILES = gislib-sat.tcl \
 		gislib-rad.tcl \
 		gislib-rad2.tcl \
 		gislib-latest.tcl \
-		gislib-inventory.tcl
+		gislib-inventory.tcl \
+		gislib-listfile.tcl
 
 FILTERLIBTMP = gislib.tmp
 

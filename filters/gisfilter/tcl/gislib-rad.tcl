@@ -126,11 +126,12 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	::fileutil::appendToFile $wct_listfile \
 	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
 
+	if {$current_minute ne $gisfilter(wct_listfile_minute)} {
+	    filter_rad_process_listfile $wct_listfile $fmt;
+	}
+
 	# reinitialize
 	set gisfilter(wct_listfile_minute) $current_minute;
 	set gisfilter(wct_listfile_list,$fmt) [list];
     }
-
-#    puts "$nidsfpath,[file dirname $datafpath],$wctrcfile";
-#    puts "#,$nidsfpath,$datafpath";
 }

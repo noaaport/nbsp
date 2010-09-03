@@ -2,8 +2,10 @@
 #
 # $Id$
 #
-# Usage: nbspwctlist [-b] [-l <latestname>] [-t <type>] [-V] [-w <wctbin>]
+# Usage: nbspwctlist [-b] [-K] [-l <latestname>] [-t <type>] [-V] [-w <wctbin>]
 #                    <listfile> <fmt>
+#
+# -K => delete the listfile at the end
 #
 # This is a cmdline tool to process a "listfile". A "listfile" is
 # essentially a "wct listfile" with comments that contain additional
@@ -12,9 +14,9 @@
 #
 package require cmdline;
 
-set usage {nbspwctlist [-b] [-l <latestname>] [-t <type>] [-V] [-w <wctbin>]
-    <listfile> <fmt>};
-set optlist {b {l.arg ""} {t.arg ""} V {w.arg ""}};
+set usage {nbspwctlist [-b] [-K] [-l <latestname>] [-t <type>] [-V]
+    [-w <wctbin>] <listfile> <fmt>};
+set optlist {b K {l.arg ""} {t.arg ""} V {w.arg ""}};
 
 # defaults
 set nbspwctlist(wct_bin) "wct-export";
@@ -121,6 +123,11 @@ foreach entry $flist {
     } errmsg];
 
     if {$status != 0} {
-	puts $errmsg;
-    }    
+	log_warn $errmsg;
+	continue;
+    }
+
+    if {$option(K) == 1} {
+	file delete $wct_listfile;
+    }
 }
