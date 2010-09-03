@@ -11,7 +11,7 @@ FILTERTARGET =	gisfilter.tcl
 FILTERSOURCES =	gisfilter.tcl.in
 FILTERNAME =	gisfilter
 FILTERINIT =	gisfilter.init
-TOOLNAMES =	nbspwct
+TOOLNAMES =	nbspwct nbspwctlist
 
 SAMPLES =	gisfilter.conf-sample \
 		gisfilter-bundle.conf-sample \
@@ -57,6 +57,9 @@ gisfilter-schedule.rc-sample: gisfilter-schedule.rc
 
 nbspwct: nbspwct.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspwct.tcl > nbspwct
+
+nbspwctlist: nbspwctlist.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspwctlist.tcl > nbspwctlist
 
 ${TMPLTARGET}: ${TMPLSOURCES}
 	rm -rf ${TMPLDIR}

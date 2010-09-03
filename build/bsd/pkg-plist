@@ -39,6 +39,7 @@ bin/nbspws-metartomdf
 bin/nbspws-metartomts
 bin/nbspws-uatomdf
 bin/nbspwct
+bin/nbspwctlist
 bin/nbspstatplot
 bin/nbspstatplot1
 bin/nbspstatplotdat

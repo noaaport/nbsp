@@ -25,7 +25,7 @@
 package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-f <fmt>]
-    [-K] [-l <latestname>] [-n] [-o <outputfile_rootname>]
+    [-K] [-l <latestname>] [-n] [-o <outputfile>]
     [-p <postrc>] [-t <type>] [-V] [-w <wctbin>]
     [-x <wctconfigfile>] <inputfile>};
 set optlist {b {d.arg ""} {f.arg ""} K {l.arg ""} n {o.arg ""} {p.arg ""}
@@ -58,7 +58,6 @@ set nbspwct(wct_fext,shp) [list ".shp" ".shx" ".dbf" ".prj"];
 set nbspwct(wct_fext,wkt) [list ".wkt.txt" ".wkt.prj"];
 
 # variables
-set nbspwct(debug) 0;
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
@@ -88,6 +87,19 @@ proc log_err s {
     log_warn $s;
     exit 1;
 }
+
+proc log_wct_err s {
+
+    global option;
+    global errorInfo;
+
+    if {$option(V) == 1} {
+	log_warn $s;
+	log_err $errorInfo;
+    } else {
+	log_err $s;
+    }
+}    
 
 proc exec_wct {} {
 
@@ -142,10 +154,7 @@ proc exec_wct_sat {} {
 
 	if {[file exists $wct_name] == 0} {
 	    if {$nbspwct(wct_enable) == 1} {
-		log_err $errmsg;
-		if {$nbspwct(debug) != 0} {
-		    log_err $errorInfo;
-		}
+		log_wct_err $errmsg;
 	    } else {
 		log_err "$wct_name not found.";
 	    }
@@ -177,10 +186,7 @@ proc exec_wct_default {} {
 	} errmsg];
 
 	if {[file exists $nbspwct(outputfile)] == 0} {
-	    log_err $errmsg;
-	    if {$nbspwct(debug) != 0} {
-		log_err $errorInfo;
-	    }
+	    log_wct_err $errmsg;
 	}
     } else {
 	# the extension of the main file
@@ -293,10 +299,6 @@ if {$option(t) ne ""} {
 
 if {$option(x) ne ""} {
     set nbspwct(wct_rcfile) $option(x);
-}
-
-if {$option(V) != 0} {
-    set nbspwct(debug) 1;
 }
 
 if {$option(w) ne ""} {

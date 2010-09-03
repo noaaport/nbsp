@@ -66,6 +66,7 @@ make clean
 /usr/local/bin/nbspws-metartomts
 /usr/local/bin/nbspws-uatomdf
 /usr/local/bin/nbspwct
+/usr/local/bin/nbspwctlist
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
 /usr/local/bin/nbspstatplotdat
