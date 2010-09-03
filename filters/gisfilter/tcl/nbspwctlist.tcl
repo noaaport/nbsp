@@ -106,7 +106,7 @@ foreach entry $flist {
 	lappend cmd "-t" $option(t);
     }
 
-    if ${option(V) == 1} {
+    if {$option(V) == 1} {
 	lappend cmd "-V";
     }
 
