@@ -113,25 +113,22 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	"$nidsfpath,[file dirname $datafpath],$wctrcfile" \
 	"#,$nidsfpath,$datafpath";
 
-    # Write the file if the current minute expired
-    set current_minute [clock format [clock seconds] -format "%M"];
-    if {($current_minute ne $gisfilter(wct_listfile_minute)) || \
+    # Write the file if the current listfile expired
+    set wct_listfile $gisfilter(wct_listfile_fpath,$fmt);
+    set next_wct_listfile [filter_make_next_qf $fmt];
+    
+    if {($next_wct_listfile ne $wct_listfile) || \
 	($gisfilter(wct_listfile_flush) == 1)} {
-
-	append wct_listfile_name $fmt "." $gisfilter(wct_listfile_minute) \
-	    $gisfilter(wct_listfile_qfext);
-	set wct_listfile [file join \
-	    $gisfilter(wct_listfile_qdir) $wct_listfile_name];
 
 	::fileutil::appendToFile $wct_listfile \
 	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
 
-	if {$current_minute ne $gisfilter(wct_listfile_minute)} {
-	    filter_rad_process_listfile $wct_listfile $fmt;
+	if {$next_wct_listfile ne $wct_listfile} {
+	    filter_sat_process_listfile $wct_listfile $fmt;
 	}
 
 	# reinitialize
-	set gisfilter(wct_listfile_minute) $current_minute;
+	set gisfilter(wct_listfile_fpath,$fmt) $next_wct_listfile;
 	set gisfilter(wct_listfile_list,$fmt) [list];
     }
 }

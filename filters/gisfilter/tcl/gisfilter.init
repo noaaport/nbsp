@@ -41,14 +41,14 @@ set gisfilter(wct_listfile_qdir) [file join $gisfilter(datadir) "qf"];
 set gisfilter(wct_listfile_qfext) ".qf";
 set gisfilter(wct_listfile_lfext) ".lf";
 set gisfilter(wct_listfile_flush) 0;
-set gisfilter(wct_listfile_minute) "";      # variable
-set gisfilter(wct_listfile_list,tif) [list];    # variable
-set gisfilter(wct_listfile_list,nc) [list];    # variable
-set gisfilter(wct_listfile_list,asc) [list];    # variable
-set gisfilter(wct_listfile_list,tif32) [list];    # variable
-set gisfilter(wct_listfile_list,shp) [list];    # variable
-set gisfilter(wct_listfile_list,csv) [list];    # variable
-set gisfilter(wct_listfile_list,wkt) [list];    # variable
+#
+# variables
+#
+foreach _fmt [list tif nc asc tif32 shp csv wkt] {
+    set gisfilter(wct_listfile_fpath,$_fmt) [filter_make_next_qf $_fmt];
+    set gisfilter(wct_listfile_list,$_fmt) [list];
+}
+unset _fmt;
 
 #
 # sat configuration
@@ -304,6 +304,3 @@ foreach t [list "rad" "sat"] {
 	set gisfilter(${t}_bundle,$bundle,wctrc_file) $rcfile;
     }
 }
-
-# The suffix of the wct list files (<fmt>.<minute>)
-set gisfilter(wct_listfile_minute) [clock format [clock seconds] -format "%M"];

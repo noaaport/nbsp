@@ -22,6 +22,10 @@ unset filters_init_status;
 package require nbsp::util;
 package require nbsp::periodic;
 
+# Load the functions library before gisfilter.init since gisfilter.init
+# uses some of them.
+@gislib@
+
 set _init_file [file join $common(libdir) "gisfilter.init"];
 if {[file exists $_init_file] == 0} {
     log_msg "gisfilter disabled: $_init_file not found.";
@@ -29,8 +33,6 @@ if {[file exists $_init_file] == 0} {
 }
 source $_init_file;
 unset _init_file;
-
-@gislib@
 
 proc main {argc argv} {
 
