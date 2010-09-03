@@ -124,7 +124,7 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
 
 	if {$next_wct_listfile ne $wct_listfile} {
-	    filter_sat_process_listfile $wct_listfile $fmt;
+	    filter_rad_process_listfile $wct_listfile $fmt;
 	}
 
 	# reinitialize
