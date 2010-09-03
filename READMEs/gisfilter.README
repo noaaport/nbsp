@@ -19,19 +19,21 @@ disables the entire module, and viceversa. Then particular features
 can be enabled, disabled, (re)configured by appropriate settings in
 the configuration file(s) gisfilter.conf and others.
 
-This is a short guide for enabling the filter.
+What follows is a short guide for enabling the filter.
 
 ========
 1) WCT -
 ========
 
-The gisfilter requires the WCT, version 3.1.4
+The gisfilter requires the WCT, version 3.1.4. This note
 
-	http://www.ncdc.noaa.gov/oa/wct/install.php
+	http://redmine.1-loop.net/boards/8/topics/show/63
 
-This package can be installed anywhere; I use
+explains one easy way to install it.
 
-	/usr/local/lib/wct/3.1.4
+Briefly, WCT can be installed anywhere; I use
+
+	/usr/local/lib/wct-3.1.4
 
 For reference, we mention that inside that directory there should be the
 following files and directories
@@ -48,7 +50,7 @@ The script can be in any directory in the PATH.
 #!/bin/sh
 
 version="3.1.4"
-wctdir=/usr/local/lib/wct/${version}
+wctdir=/usr/local/lib/wct-${version}
 
 ${wctdir}/wct-export "$@"
 ------------------ wct-export -----------------
