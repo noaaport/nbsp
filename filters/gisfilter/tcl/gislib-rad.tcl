@@ -118,7 +118,8 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
     if {($current_minute ne $gisfilter(wct_listfile_minute)) || \
 	($gisfilter(wct_listfile_flush) == 1)} {
 
-	append wct_listfile_name $fmt "." $gisfilter(wct_listfile_minute);
+	append wct_listfile_name $fmt "." $gisfilter(wct_listfile_minute) \
+	    $gisfilter(wct_listfile_qfext);
 	set wct_listfile [file join \
 	    $gisfilter(wct_listfile_qdir) $wct_listfile_name];
 
