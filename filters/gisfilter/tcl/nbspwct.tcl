@@ -270,14 +270,6 @@ if {$argc != 1} {
 }
 set nbspwct(inputfile) [lindex $argv 0];
 
-if {$option(t) ne ""} {
-    set nbspwct(inputtype) $option(t);
-}
-
-if {$option(x) ne ""} {
-    set nbspwct(wct_rcfile) $option(x);
-}
-
 if {$option(f) ne ""} {
     set nbspwct(wct_fmt) $option(f);
 }
@@ -287,8 +279,20 @@ if {$option(l) ne ""} {
     set nbspwct(latestname) $option(l);
 }
 
+if {$option(n) == 1} {
+    set nbspwct(wct_enable) 0;
+}
+
 if {$option(p) ne ""} {
     set nbspwct(post_rcfile) $option(p);
+}
+
+if {$option(t) ne ""} {
+    set nbspwct(inputtype) $option(t);
+}
+
+if {$option(x) ne ""} {
+    set nbspwct(wct_rcfile) $option(x);
 }
 
 if {$option(V) != 0} {
