@@ -19,7 +19,7 @@ disables the entire module, and viceversa. Then particular features
 can be enabled, disabled, (re)configured by appropriate settings in
 the configuration file(s) gisfilter.conf and others.
 
-This is short for enabling the filter.
+This is a short guide for enabling the filter.
 
 ========
 1) WCT -
