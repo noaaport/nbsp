@@ -29,4 +29,5 @@ sat_bundle_add "asc" "wct_defaults.xml" {_tig.0[1-5]};
 # radar examples
 #
 ### rad_bundle_add "tif" "wct_defaults.xml" {\-n0r};
-### rad_bundle_add "nc" "wct_defaults.xml" {\-n[0-3](r|s)jua};
+### rad_bundle_add "nc" "wct_defaults.xml" \
+###     {\-n[0-3](r|s)(ama|lbb|maf|dyx|sjt|fws|grk|ewx|dfx|hgx|crp|bro|fdr)};

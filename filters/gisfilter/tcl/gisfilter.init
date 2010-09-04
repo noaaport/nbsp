@@ -39,7 +39,6 @@ set gisfilter(sat_inv_enable) 1;
 #
 set gisfilter(wct_listfile_qdir) [file join $gisfilter(datadir) "qf"];
 set gisfilter(wct_listfile_qfext) ".qf";
-set gisfilter(wct_listfile_lfext) ".lf";
 set gisfilter(wct_listfile_flush) 0;
 #
 # variables
