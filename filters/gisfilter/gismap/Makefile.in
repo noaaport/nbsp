@@ -1,0 +1,52 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	nbspgismap nbspgismapl
+TCLSOURCES =	nbspgismap.tcl nbspgismapl.tcl
+
+TMPLTARGET =    gismap-templates.tgz
+TMPLPDIR =      gismap
+TMPLSOURCES1 =	map_sat_conus.tmpl
+TMPLSOURCES2 =	
+TMPLDIR1 =      ${TMPLPDIR}/sat
+TMPLDIR2 =      ${TMPLPDIR}/rad
+
+SHAREFILES =	geodata-share.tgz
+
+TARGET =	${TCLTARGET} ${TMPLTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+nbspgismap: nbspgismap.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgismap.tcl > nbspgismap
+
+nbspgismapl: nbspgismapl.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgismapl.tcl > nbspgismapl
+
+#geodata-share.tgz:
+#	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
+
+${TMPLTARGET}: ${TMPLSOURCES}
+	rm -rf ${TMPLPDIR}
+	mkdir -p ${TMPLDIR1} ${TMPLDIR2}
+	cp ${TMPLSOURCES1} ${TMPLDIR1}
+#	cp ${TMPLSOURCES2} ${TMPLDIR2}
+	tar -czf ${TMPLTARGET} ${TMPLPDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${SHAREFILES} ${MYSHAREDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}
+	rm -rf ${TMPLPDIR}

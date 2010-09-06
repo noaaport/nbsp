@@ -1,0 +1,45 @@
+#
+# $Id$
+#
+
+# The "inputdirs" and "outputfle" are relative to the gisfilter
+# data directory (e.g. "/var/noaaport/data/gis").
+# The map template is searched in the directories
+#  
+# etc/nbsp/{defaults,site}/gismap
+#
+# and the last one found is used. The geodata directory is searched in
+# the directories
+#
+# share/nbsp/{defaults,site}
+#
+# and the last one found is used.
+
+set nbspgismapl(geoclist) [list];
+
+lappend nbspgismapl(geoclist) {
+  id		sat_conus_01
+  maptmpl	map_sat_conus.tmpl
+  outputfile	img/tig01.png
+  inputpatt     *.tif
+  inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
+}
+
+proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
+#
+# The last argument "args" should contain the list of input directories.
+#
+    lappend nbspgismapl(geoclist) [list \
+	id $id \
+	maptmpl $maptmpl \
+	outputfile $outputfile \
+	inputpatt $inputpatt \
+	inputdirs $args];
+}
+
+proc geoc_bundle_clear {} {
+
+    global nbspgismapl;
+
+    set nbspgismapl(geoclist) [list];
+}
