@@ -10,7 +10,7 @@
 FILTERTARGET =	gisfilter.tcl
 FILTERSOURCES =	gisfilter.tcl.in
 FILTERNAME =	gisfilter
-FILTERINIT =	gisfilter.init
+FILTERINIT =	gisfilter.init1 gisfilter.init2
 TOOLNAMES =	nbspwct nbspwctlist
 
 SAMPLES =	gisfilter.conf-sample \

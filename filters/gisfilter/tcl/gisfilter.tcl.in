@@ -26,13 +26,16 @@ package require nbsp::periodic;
 # uses some of them.
 @gislib@
 
-set _init_file [file join $common(libdir) "gisfilter.init"];
-if {[file exists $_init_file] == 0} {
-    log_msg "gisfilter disabled: $_init_file not found.";
-    return 1;
+foreach _init_name [list "gisfilter.init1" "gisfilter.init2"] {
+    set _init_file [file join $common(libdir) $_init_name];
+    if {[file exists $_init_file] == 0} {
+        log_msg "gisfilter disabled: $_init_file not found.";
+        return 1;
+    }
+    source $_init_file;
 }
-source $_init_file;
 unset _init_file;
+unset _init_name;
 
 proc main {argc argv} {
 
