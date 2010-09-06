@@ -13,7 +13,7 @@ INSTALL=install
 SUFFIXRULES=".c.o:"
 
 # exclude options to tar
-EXCLUDE="-W exclude="
+EXCLUDE="--exclude "
 
 TCL_INCDIR="-I /usr/local/include/tcl8.6"
 TCL_LIB="tcl86"

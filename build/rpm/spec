@@ -67,6 +67,8 @@ make clean
 /usr/local/bin/nbspws-uatomdf
 /usr/local/bin/nbspwct
 /usr/local/bin/nbspwctlist
+/usr/local/bin/nbspgismap1
+/usr/local/bin/nbspgismap
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
 /usr/local/bin/nbspstatplotdat
@@ -241,6 +243,9 @@ make clean
 /usr/local/etc/nbsp/dist/gisfilter-bundle.conf-defaults
 /usr/local/etc/nbsp/dist/gisfilter-schedule.rc-sample
 /usr/local/etc/nbsp/dist/gisfilter-wct-templates.tgz
+/usr/local/etc/nbsp/dist/gismap-templates.tgz
+/usr/local/etc/nbsp/dist/gismap.conf-sample
+/usr/local/etc/nbsp/dist/gismap.conf-defaults
 /usr/local/etc/nbsp/dist/panfilter.conf-sample
 /usr/local/etc/nbsp/dist/panfilter.rc-sample
 /usr/local/etc/nbsp/dist/panfilter.rc-ex
@@ -281,6 +286,7 @@ make clean
 /usr/local/etc/nbsp/dist/startstop.rc-sample
 /usr/local/etc/nbsp/dist/start-cleanup.conf-sample
 /usr/local/share/nbsp/dist/radmos-share.tgz
+/usr/local/share/nbsp/dist/geodata-share.tgz
 /usr/local/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample

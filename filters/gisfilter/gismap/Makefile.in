@@ -10,12 +10,10 @@
 TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
+TMPLSOURCES =	map_sat_conus.tmpl
 TMPLTARGET =    gismap-templates.tgz
-TMPLPDIR =      gismap
-TMPLSOURCES1 =	map_sat_conus.tmpl
-TMPLSOURCES2 =	
-TMPLDIR1 =      ${TMPLPDIR}/sat
-TMPLDIR2 =      ${TMPLPDIR}/rad
+TMPLPDIR =      gis
+TMPLDIR =      ${TMPLPDIR}/map
 
 SHAREFILES =	geodata-share.tgz
 
@@ -43,9 +41,8 @@ gismap.conf-sample: gismap.conf
 
 ${TMPLTARGET}: ${TMPLSOURCES}
 	rm -rf ${TMPLPDIR}
-	mkdir -p ${TMPLDIR1} ${TMPLDIR2}
-	cp ${TMPLSOURCES1} ${TMPLDIR1}
-#	cp ${TMPLSOURCES2} ${TMPLDIR2}
+	mkdir -p ${TMPLDIR}
+	cp ${TMPLSOURCES} ${TMPLDIR}
 	tar -czf ${TMPLTARGET} ${TMPLPDIR}
 
 install: ${TARGET}

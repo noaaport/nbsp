@@ -40,6 +40,8 @@ bin/nbspws-metartomts
 bin/nbspws-uatomdf
 bin/nbspwct
 bin/nbspwctlist
+bin/nbspgismap1
+bin/nbspgismap
 bin/nbspstatplot
 bin/nbspstatplot1
 bin/nbspstatplotdat
@@ -214,6 +216,9 @@ etc/nbsp/dist/gisfilter-bundle.conf-sample
 etc/nbsp/dist/gisfilter-bundle.conf-defaults
 etc/nbsp/dist/gisfilter-schedule.rc-sample
 etc/nbsp/dist/gisfilter-wct-templates.tgz
+etc/nbsp/dist/gismap-templates.tgz
+etc/nbsp/dist/gismap.conf-sample
+etc/nbsp/dist/gismap.conf-defaults
 etc/nbsp/dist/panfilter.conf-sample
 etc/nbsp/dist/panfilter.rc-sample
 etc/nbsp/dist/panfilter.rc-ex
@@ -254,6 +259,7 @@ etc/nbsp/dist/recover.conf-sample
 etc/nbsp/dist/startstop.rc-sample
 etc/nbsp/dist/start-cleanup.conf-sample
 share/nbsp/dist/radmos-share.tgz
+share/nbsp/dist/geodata-share.tgz
 man/man1/nbspd.1.gz
 share/doc/nbsp/LICENSE
 share/doc/nbsp/nbspd.sh-sample

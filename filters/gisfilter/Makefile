@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	tcl
+SUBDIRS =	gismap tcl
 
 all:
 	for dir in ${SUBDIRS}; do \

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-subdirs="tcl"
+subdirs="gismap tcl"
 
 for d in $subdirs
 do
