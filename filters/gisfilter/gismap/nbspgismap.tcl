@@ -101,10 +101,10 @@ proc get_gclist {} {
 
     global nbspgismap;
 
-    if {[file exists $nbspgismap(conf)] == 0} {
-	log_err "$nbspgismap(conf) not found.";
+    if {[file exists $nbspgismap(bundle_conf)] == 0} {
+	log_err "$nbspgismap(bundle_conf) not found.";
     } else {
-	source $nbspgismap(conf);
+	source $nbspgismap(bundle_conf);
     }
 
     if {[llength $nbspgismap(geoclist)] == 0} {
@@ -198,7 +198,7 @@ if {$argc != 0} {
 }
 
 if {$option(c) ne ""} {
-    set nbspgismap(conf) $option(c);
+    set nbspgismap(bundle_conf) $option(c);
 }
 
 if {$option(d) ne ""} {

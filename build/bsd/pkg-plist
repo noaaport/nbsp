@@ -217,8 +217,8 @@ etc/nbsp/dist/gisfilter-bundle.conf-defaults
 etc/nbsp/dist/gisfilter-schedule.rc-sample
 etc/nbsp/dist/gisfilter-wct-templates.tgz
 etc/nbsp/dist/gismap-templates.tgz
-etc/nbsp/dist/gismap.conf-sample
-etc/nbsp/dist/gismap.conf-defaults
+etc/nbsp/dist/gismap-bundle.conf-sample
+etc/nbsp/dist/gismap-bundle.conf-defaults
 etc/nbsp/dist/panfilter.conf-sample
 etc/nbsp/dist/panfilter.rc-sample
 etc/nbsp/dist/panfilter.rc-ex

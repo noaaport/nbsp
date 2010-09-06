@@ -17,8 +17,8 @@ TMPLDIR =      ${TMPLPDIR}/map
 
 SHAREFILES =	geodata-share.tgz
 
-SAMPLES =	gismap.conf-sample
-DEFAULTS =	gismap.conf-defaults
+SAMPLES =	gismap-bundle.conf-sample
+DEFAULTS =	gismap-bundle.conf-defaults
 
 TARGET =	${TCLTARGET} ${TMPLTARGET} ${SAMPLES}
 
@@ -33,8 +33,8 @@ nbspgismap1: nbspgismap1.tcl
 nbspgismap: nbspgismap.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgismap.tcl > nbspgismap
 
-gismap.conf-sample: gismap.conf
-	cp gismap.conf gismap.conf-sample
+gismap-bundle.conf-sample: gismap-bundle.conf
+	cp gismap-bundle.conf gismap-bundle.conf-sample
 
 #geodata-share.tgz:
 #	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
