@@ -6,9 +6,9 @@
 #
 # -b => background mode
 #
-# This tool reads an rc script (defined in gisfilter.{init,conf} and then
-# calls nbspgismap with the appropriate options for each configured
-# composite bundle.
+# This tool reads a "bundle configuration file"
+# (defined in gisfilter.{init,conf} and then calls nbspgismap1 with the
+# appropriate options for each configured composite bundle.
 
 package require cmdline;
 
@@ -24,9 +24,9 @@ if {[file exists ${f}] == 0} {
 }
 source $f;
 
-# The defaults are read from the gisfilter.init, and the overrides
+# The defaults are read from the gisfilter.init1, and the overrides
 # from gisflter.conf.
-foreach f [list "gisfilter.init"] {
+foreach f [list "gisfilter.init1"] {
     set f [file join $common(libdir) $f];
     if {[file exists ${f}] == 0} {
         puts "$f not found.";
@@ -42,8 +42,8 @@ foreach k [array names gisfilter gismap_*] {
     set nbspgismap($_k) $gisfilter($k);
 }
 #
-set nbspgismap(inputdir) $gisfilter(datadir);
-set nbspgismap(outputdir) $gisfilter(datadir);
+set nbspgismap(inputdir) $nbspgismap(datadir);
+set nbspgismap(outputdir) $nbspgismap(datadir);
 
 # variables
 set nbspgismap(geocid) "";

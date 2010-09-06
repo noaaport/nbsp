@@ -3,7 +3,7 @@
 #
 
 #
-# This file is read by (some of) the command-line tools also.
+# This file is read by the (nbsp)gismap cmd-line tool also.
 #
 
 # default configuration file
@@ -18,7 +18,7 @@ set gisfilter(bundle_conf) [file join $common(confdir) \
 #
 set gisfilter(gismap_bundle_conf) [file join $common(confdir) \
     "gismap-bundle.conf"];
-set gisfilter(gismap_datadir) $gisfilter(datadir); 
+set gisfilter(gismap_datadir) $gisfilter(datadir);
 set gisfilter(gismap_mapdirs) $gisfilter(localconfdirs); 
 set gisfilter(gismap_mapsubdir) [file join "gis" "map"];
 set gisfilter(gismap_geodata_dirname) "geodata";
