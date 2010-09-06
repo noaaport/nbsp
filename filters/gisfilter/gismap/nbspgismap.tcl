@@ -50,6 +50,13 @@ set nbspgismap(geocid) "";
 set nbspgismap(geoclist) [list];
 set nbspgismap(geocidlist) [list];
 
+# Load the configured geoclist
+if {[file exists $nbspgismap(bundle_conf)] == 0} {
+    log_err "$nbspgismap(bundle_conf) not found.";
+} else {
+    source $nbspgismap(bundle_conf);
+}
+
 proc log_warn s {
 
     global argv0;
@@ -100,12 +107,6 @@ proc get_geodata_dir {} {
 proc get_gclist {} {
 
     global nbspgismap;
-
-    if {[file exists $nbspgismap(bundle_conf)] == 0} {
-	log_err "$nbspgismap(bundle_conf) not found.";
-    } else {
-	source $nbspgismap(bundle_conf);
-    }
 
     if {[llength $nbspgismap(geoclist)] == 0} {
 	log_err "geoclist is empty.";
