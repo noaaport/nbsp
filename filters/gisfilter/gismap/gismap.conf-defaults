@@ -15,31 +15,22 @@
 #
 # and the last one found is used.
 
-set nbspgismapl(geoclist) [list];
+#
+# Start with a cleared list
+#
+geoc_bundle_clear;
 
-lappend nbspgismapl(geoclist) {
+#
+# Use the function `geoc_bundle_add` to add buldles to the list, or
+# append them explicitly.
+#
+# geoc_bundle_add "sat_conus_01" "map_sat_conus.tmpl" "img/tig01.png" "*.tif" \
+#	"sat/tif/tig/tigw01" "sat/tif/tig/tige01"; 
+#
+lappend nbspgismap(geoclist) {
   id		sat_conus_01
   maptmpl	map_sat_conus.tmpl
   outputfile	img/tig01.png
   inputpatt     *.tif
   inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
-}
-
-proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
-#
-# The last argument "args" should contain the list of input directories.
-#
-    lappend nbspgismapl(geoclist) [list \
-	id $id \
-	maptmpl $maptmpl \
-	outputfile $outputfile \
-	inputpatt $inputpatt \
-	inputdirs $args];
-}
-
-proc geoc_bundle_clear {} {
-
-    global nbspgismapl;
-
-    set nbspgismapl(geoclist) [list];
 }

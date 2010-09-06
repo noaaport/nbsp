@@ -7,8 +7,8 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	nbspgismap nbspgismapl
-TCLSOURCES =	nbspgismap.tcl nbspgismapl.tcl
+TCLTARGET =	nbspgismap1 nbspgismap
+TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gismap
@@ -19,18 +19,24 @@ TMPLDIR2 =      ${TMPLPDIR}/rad
 
 SHAREFILES =	geodata-share.tgz
 
-TARGET =	${TCLTARGET} ${TMPLTARGET}
+SAMPLES =	gismap.conf-sample
+DEFAULTS =	gismap.conf-defaults
+
+TARGET =	${TCLTARGET} ${TMPLTARGET} ${SAMPLES}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 
 all: ${TARGET}
 
+nbspgismap1: nbspgismap1.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgismap1.tcl > nbspgismap1
+
 nbspgismap: nbspgismap.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgismap.tcl > nbspgismap
 
-nbspgismapl: nbspgismapl.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspgismapl.tcl > nbspgismapl
+gismap.conf-sample: gismap.conf
+	cp gismap.conf gismap.conf-sample
 
 #geodata-share.tgz:
 #	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
@@ -44,7 +50,7 @@ ${TMPLTARGET}: ${TMPLSOURCES}
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
-	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${TMPLTARGET} ${DEFAULTS} ${MYCONFDIR}
 	${INSTALL} -m 644 ${SHAREFILES} ${MYSHAREDIR}
 
 clean:
