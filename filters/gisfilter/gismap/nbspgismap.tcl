@@ -46,16 +46,9 @@ set nbspgismap(inputdir) $nbspgismap(datadir);
 set nbspgismap(outputdir) $nbspgismap(datadir);
 
 # variables
+set nbspgismap(geoclist) [list];	# initialized dynamically below
 set nbspgismap(geocid) "";
-set nbspgismap(geoclist) [list];
 set nbspgismap(geocidlist) [list];
-
-# Load the configured geoclist
-if {[file exists $nbspgismap(bundle_conf)] == 0} {
-    log_err "$nbspgismap(bundle_conf) not found.";
-} else {
-    source $nbspgismap(bundle_conf);
-}
 
 proc log_warn s {
 
@@ -164,7 +157,7 @@ proc process_geoc_entry {id} {
 }
 
 #
-# These two functions can be used in the rc file instead of using
+# These two functions can be used in the bundle conf file instead of using
 # `lappend nbspgismap(geoclist)` expicitly.
 #
 proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
@@ -184,6 +177,17 @@ proc geoc_bundle_clear {} {
     global nbspgismap;
 
     set nbspgismap(geoclist) [list];
+}
+
+#
+# Dynamic initialization
+#
+
+# Load the configured geoclist
+if {[file exists $nbspgismap(bundle_conf)] == 0} {
+    log_err "$nbspgismap(bundle_conf) not found.";
+} else {
+    source $nbspgismap(bundle_conf);
 }
 
 #
