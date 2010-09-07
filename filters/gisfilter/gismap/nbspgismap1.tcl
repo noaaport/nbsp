@@ -211,8 +211,7 @@ if {$option(o) ne ""} {
 }
 
 if {$option(d) ne ""} {
-    set nbspgismap(outputfile) [file join $option(d) \
-				   [file tail $nbspgismap(outputfile)]];
+    set nbspgismap(outputfile) [file join $option(d) $nbspgismap(outputfile)];
 }
 
 # The mapserver template is required.
