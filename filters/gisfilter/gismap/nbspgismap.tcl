@@ -106,7 +106,7 @@ proc get_gclist {} {
     }
 
     foreach gc $nbspgismap(geoclist) {
-	array set a $geoc;
+	array set a $gc;
 	foreach key [array names a] {
 	    set nbspgismap(geoclist,$a(id),$key) $a($key);
 	}
@@ -153,7 +153,7 @@ proc process_geoc_entry {id} {
 		      -p $nbspgismap(geoclist,$id,inputpatt)] \
 		 $nbspgismap(geoclist,$id,inputdirs)];
 
-    exec $cmd;
+    eval exec $cmd;
 }
 
 #
@@ -199,7 +199,7 @@ set argc [llength $argv];
 if {$argc != 0} {
     set _idlist $argv;
 } else {
-    set _idlist $nbspgismap(geocidlist);
+    set _idlist [list];
 }
 
 if {$option(c) ne ""} {
@@ -212,6 +212,11 @@ if {$option(d) ne ""} {
 
 get_geodata_dir;
 get_gclist;
+
+# If no id's were given in the cmd line, then do all of them.
+if {[llength $_idlist] == 0} {
+   set _idlist $nbspgismap(geocidlist);
+}
 
 foreach id $_idlist {
     process_geoc_entry $id;
