@@ -57,7 +57,9 @@ gisfilter-schedule.rc-sample: gisfilter-schedule.rc
 	cp gisfilter-schedule.rc gisfilter-schedule.rc-sample
 
 nbspwct: nbspwct.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspwct.tcl > nbspwct
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e '/@wct_defaults_xml@/r ${TMPLSOURCES}' -e '/@wct_defaults_xml@/d' \
+	nbspwct.tcl > nbspwct
 
 nbspwctlist: nbspwctlist.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspwctlist.tcl > nbspwctlist

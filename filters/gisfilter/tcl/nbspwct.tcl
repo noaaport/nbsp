@@ -20,8 +20,9 @@
 # -t => type: sat, rad, ... (to determine the fmeta in the name) 
 # -V => debug wct errors
 # -w => path to wct-export
-# -x => the wct xml config file (uses /usr/local/etc/wct-export.xml otherwise)
-
+# -x => the wct xml config file (uses the built-in defaults otherwise)
+#
+package require fileutil;
 package require cmdline;
 
 set usage {nbspwct [-b] [-d <outputdir>] [-f <fmt>]
@@ -33,7 +34,8 @@ set optlist {b {d.arg ""} {f.arg ""} K {l.arg ""} n {o.arg ""} {p.arg ""}
 
 # defaults
 set nbspwct(wct_bin) "wct-export";
-set nbspwct(wct_rcfile) "/usr/local/etc/wct-export.xml";
+set nbspwct(wct_rcfile) "";
+set nbspwct(wct_rcname_default) "wct-export.xml";
 
 # parameters
 set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
@@ -265,6 +267,19 @@ proc make_latest {savedir savename latestname} {
     cd $currentdir;
 }
 
+proc write_wct_defaults_file {} {
+
+    global nbspwct;
+
+    set nbspwct(wct_rcbody_default) {
+	@wct_defaults_xml@
+    }
+
+    set nbspwct(wct_rcfile) [file join dirname $nbspwct(outputfile) \
+				 $nbspwct(wct_rcname_default)];
+    ::fileutil::writeFile $nbspwct(wct_rcfile) $nbspwct(wct_rcbody_default);
+}
+
 #
 # main
 #
@@ -297,12 +312,14 @@ if {$option(t) ne ""} {
     set nbspwct(inputtype) $option(t);
 }
 
-if {$option(x) ne ""} {
-    set nbspwct(wct_rcfile) $option(x);
-}
-
 if {$option(w) ne ""} {
     set nbspwct(wct_bin) $option(w);
+}
+
+if {$option(x) ne ""} {
+    set nbspwct(wct_rcfile) $option(x);
+} else {
+    write_wct_defaults_file;
 }
 
 if {$option(o) ne ""} {
@@ -331,4 +348,8 @@ exec_post $nbspwct(post_rcfile) $nbspwct(outputfile);
 
 if {($option(K) == 1) && [file isdirectory $nbspwct(wct_cachedir)]} {
     file delete -force $nbspwct(wct_cachedir);
+}
+
+if {$option(x) eq ""} {
+    file delete $$nbspwct(wct_rcfile);
 }
