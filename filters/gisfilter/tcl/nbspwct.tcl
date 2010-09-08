@@ -275,7 +275,7 @@ proc write_wct_defaults_file {} {
 	@wct_defaults_xml@
     }
 
-    set nbspwct(wct_rcfile) [file join dirname $nbspwct(outputfile) \
+    set nbspwct(wct_rcfile) [file join [file dirname $nbspwct(outputfile)] \
 				 $nbspwct(wct_rcname_default)];
     ::fileutil::writeFile $nbspwct(wct_rcfile) $nbspwct(wct_rcbody_default);
 }
