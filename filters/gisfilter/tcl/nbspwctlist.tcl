@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# Usage: nbspwctlist [-b] [-K] [-l <latestname>] [-t <type>] [-V] [-w <wctbin>]
+# Usage: nbspwctlist [-b] [-K] [-l <latestname>] [-V] [-w <wctbin>]
 #                    <listfile> <fmt>
 #
 # -K => delete the listfile at the end
@@ -14,9 +14,9 @@
 #
 package require cmdline;
 
-set usage {nbspwctlist [-b] [-K] [-l <latestname>] [-t <type>] [-V]
+set usage {nbspwctlist [-b] [-K] [-l <latestname>] [-V]
     [-w <wctbin>] <listfile> <fmt>};
-set optlist {b K {l.arg ""} {t.arg ""} V {w.arg ""}};
+set optlist {b K {l.arg ""} V {w.arg ""}};
 
 # defaults
 set nbspwctlist(wct_bin) "wct-export";
@@ -96,16 +96,13 @@ foreach entry $flist {
     }
 	 
     set entry_parts [split $entry ","];
-    set inputfile [lindex $entry_parts 1];
-    set outputfile [lindex $entry_parts 2];
+    set type [lindex $entry_parts 1];
+    set inputfile [lindex $entry_parts 2];
+    set outputfile [lindex $entry_parts 3];
 
-    set cmd [list nbspwct -f $fmt -n -o $outputfile];
+    set cmd [list nbspwct -f $fmt -n -o $outputfile -t $type];
     if {$option(l) ne ""} {
 	lappend cmd "-l" $option(l);
-    }
-
-    if {$option(t) ne ""} {
-	lappend cmd "-t" $option(t);
     }
 
     if {$option(V) == 1} {

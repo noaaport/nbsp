@@ -6,7 +6,7 @@ proc filter_process_listfile {type wct_listfile fmt} {
 
     global gisfilter;
 
-    set cmd [list nbspwctlist -b -K -t $type];
+    set cmd [list nbspwctlist -b -K];
     if {$gisfilter(${type}_latest_enable) == 1} {
 	lappend cmd "-l" $gisfilter(${type}_latestname);
     }

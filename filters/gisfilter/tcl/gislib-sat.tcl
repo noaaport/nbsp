@@ -107,7 +107,7 @@ proc filter_sat_queue_convert_gini {rc_varname bundle} {
     # Write to the wct list
     lappend gisfilter(wct_listfile_list,$fmt) \
 	"$ginifpath,[file dirname $datafpath],$wctrcfile" \
-	"#,$ginifpath,$datafpath";
+	"#,sat,$ginifpath,$datafpath";
 
     # Write the file if the current listfile expired
     set wct_listfile $gisfilter(wct_listfile_fpath,$fmt);

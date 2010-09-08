@@ -111,7 +111,7 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
     # Write to the wct list
     lappend gisfilter(wct_listfile_list,$fmt) \
 	"$nidsfpath,[file dirname $datafpath],$wctrcfile" \
-	"#,$nidsfpath,$datafpath";
+	"#,rad,$nidsfpath,$datafpath";
 
     # Write the file if the current listfile expired
     set wct_listfile $gisfilter(wct_listfile_fpath,$fmt);
