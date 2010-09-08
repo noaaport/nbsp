@@ -351,5 +351,5 @@ if {($option(K) == 1) && [file isdirectory $nbspwct(wct_cachedir)]} {
 }
 
 if {$option(x) eq ""} {
-    file delete $$nbspwct(wct_rcfile);
+    file delete $nbspwct(wct_rcfile);
 }
