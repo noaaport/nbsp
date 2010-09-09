@@ -35,12 +35,12 @@ proc filter_rad_process_listfile {wct_listfile fmt} {
     filter_process_listfile "rad" $wct_listfile $fmt;
 }
 
-proc filter_make_next_qf {fmt} {
+proc filter_make_next_qf {type fmt} {
 
     global gisfilter;
 
     set current_minute [clock format [clock seconds] -format "%M"];
-    append wct_listfile_name $fmt "." $current_minute \
+    append wct_listfile_name $type "." $fmt "." $current_minute \
 	$gisfilter(wct_listfile_qfext);
 
     return [file join \

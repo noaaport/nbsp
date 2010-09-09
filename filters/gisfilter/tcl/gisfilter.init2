@@ -33,10 +33,14 @@ set gisfilter(wct_listfile_flush) 0;
 #
 # variables
 #
-foreach _fmt [list tif nc asc tif32 shp csv wkt] {
-    set gisfilter(wct_listfile_fpath,$_fmt) [filter_make_next_qf $_fmt];
-    set gisfilter(wct_listfile_list,$_fmt) [list];
+foreach _type [list sat rad] {
+    foreach _fmt [list tif nc asc tif32 shp csv wkt] {
+        set gisfilter(wct_listfile_fpath,$_type,$_fmt) \
+	    [filter_make_next_qf $_type $_fmt];
+        set gisfilter(wct_listfile_list,$_type,$_fmt) [list];
+    }
 }
+unset _type;
 unset _fmt;
 
 #

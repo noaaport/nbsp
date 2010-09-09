@@ -38,7 +38,7 @@ set nbspwct(wct_rcfile) "";
 set nbspwct(wct_rcname_default) "wct-export.xml";
 
 # parameters
-set nbspwct(wct_cachedir) [file join $env(HOME) ".wct-cache"];
+set nbspwct(wct_cachedir) [file join ~/ ".wct-cache"];
 set nbspwct(wct_fmt) "tif";	# default
 #
 set nbspwct(wct_fmeta_sat,tif) "-var-1-8bit";

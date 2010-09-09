@@ -109,25 +109,25 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     # Write to the wct list
-    lappend gisfilter(wct_listfile_list,$fmt) \
+    lappend gisfilter(wct_listfile_list,rad,$fmt) \
 	"$nidsfpath,[file dirname $datafpath],$wctrcfile" \
 	"#,rad,$nidsfpath,$datafpath";
 
     # Write the file if the current listfile expired
-    set wct_listfile $gisfilter(wct_listfile_fpath,$fmt);
-    set next_wct_listfile [filter_make_next_qf $fmt];
+    set wct_listfile $gisfilter(wct_listfile_fpath,rad,$fmt);
+    set next_wct_listfile [filter_make_next_qf "rad" $fmt];
     
     if {($next_wct_listfile ne $wct_listfile) || \
 	($gisfilter(wct_listfile_flush) == 1)} {
 
 	::fileutil::appendToFile $wct_listfile \
-	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
+	    [join $gisfilter(wct_listfile_list,rad,$fmt) "\n"];
 
-	set gisfilter(wct_listfile_list,$fmt) [list];
+	set gisfilter(wct_listfile_list,rad,$fmt) [list];
 
 	if {$next_wct_listfile ne $wct_listfile} {
 	    filter_rad_process_listfile $wct_listfile $fmt;
-	    set gisfilter(wct_listfile_fpath,$fmt) $next_wct_listfile;
+	    set gisfilter(wct_listfile_fpath,rad,$fmt) $next_wct_listfile;
 	}
     }
 }

@@ -23,7 +23,7 @@ set optlist {b k K {l.arg ""} V {w.arg ""}};
 set nbspwctlist(wct_bin) "wct-export";
 
 # parameters
-set nbspwctlist(wct_cachedir) [file join $env(HOME) ".wct-cache"];
+set nbspwctlist(wct_cachedir) [file join ~/ ".wct-cache"];
 
 proc log_warn s {
 
