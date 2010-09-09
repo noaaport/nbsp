@@ -21,7 +21,7 @@ proc filter_process_listfile {type wct_listfile fmt} {
     } errmsg];
 
     if {$status != 0} {
-	log_err $errmsg;
+	log_msg $errmsg;
     }
 }
 
