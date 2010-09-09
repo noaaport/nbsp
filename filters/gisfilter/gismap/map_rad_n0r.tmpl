@@ -18,6 +18,9 @@ set blue {0 0 255};
 set deepskyblue {0 191 255};
 set aqua {0 255 255};
 
+#
+# Not used (yet)
+#
 set pixels [list];
 lappend pixels [list 0 5 $background];
 lappend pixels [list 5 10 $aqua];
@@ -36,6 +39,9 @@ lappend pixels [list 65 70 $magenta];
 lappend pixels [list 70 75 $darkviolet];
 lappend pixels [list 75 80 $white];
 
+#
+# The "nexrad" layer; one for each site
+#
 set nexrad {
 LAYER
   NAME $name
