@@ -129,4 +129,5 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	    filter_rad_process_listfile $wct_listfile $fmt;
 	    set gisfilter(wct_listfile_fpath,$fmt) $next_wct_listfile;
 	}
+    }
 }
