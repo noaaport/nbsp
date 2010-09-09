@@ -280,6 +280,15 @@ proc write_wct_defaults_file {} {
     ::fileutil::writeFile $nbspwct(wct_rcfile) $nbspwct(wct_rcbody_default);
 }
 
+proc clean_wct_cache_dir {} {
+
+    global nbspwct option;
+
+    if {($option(K) == 1) && [file isdirectory $nbspwct(wct_cachedir)]} {
+	file delete -force $nbspwct(wct_cachedir);
+    }
+}
+
 #
 # main
 #
@@ -343,12 +352,10 @@ if {[file exists $nbspwct(wct_rcfile)] == 0} {
     log_err "$nbspwct(wct_rcfile) not found.";
 }
 
+clean_wct_cache_dir;
 exec_wct;
 exec_post $nbspwct(post_rcfile) $nbspwct(outputfile);
-
-if {($option(K) == 1) && [file isdirectory $nbspwct(wct_cachedir)]} {
-    file delete -force $nbspwct(wct_cachedir);
-}
+clean_wct_cache_dir;
 
 if {$option(x) eq ""} {
     file delete $nbspwct(wct_rcfile);

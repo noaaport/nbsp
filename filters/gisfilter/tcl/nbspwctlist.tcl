@@ -2,10 +2,11 @@
 #
 # $Id$
 #
-# Usage: nbspwctlist [-b] [-K] [-l <latestname>] [-V] [-w <wctbin>]
+# Usage: nbspwctlist [-b] [-k] [-K] [-l <latestname>] [-V] [-w <wctbin>]
 #                    <listfile> <fmt>
 #
-# -K => delete the listfile at the end
+# -k => delete the listfile at the end
+# -K => delete the cache dir
 #
 # This is a cmdline tool to process a "listfile". A "listfile" is
 # essentially a "wct listfile" with comments that contain additional
@@ -14,12 +15,15 @@
 #
 package require cmdline;
 
-set usage {nbspwctlist [-b] [-K] [-l <latestname>] [-V]
+set usage {nbspwctlist [-b] [-k] [-K] [-l <latestname>] [-V]
     [-w <wctbin>] <listfile> <fmt>};
-set optlist {b K {l.arg ""} V {w.arg ""}};
+set optlist {b k K {l.arg ""} V {w.arg ""}};
 
 # defaults
 set nbspwctlist(wct_bin) "wct-export";
+
+# parameters
+set nbspwctlist(wct_cachedir) [file join $env(HOME) ".wct-cache"];
 
 proc log_warn s {
 
@@ -67,6 +71,15 @@ proc process_wct_listfile {wct_listfile fmt} {
     }
 }
 
+proc clean_wct_cache_dir {} {
+
+    global nbspwctlist option;
+
+    if {($option(K) == 1) && [file isdirectory $nbspwctlist(wct_cachedir)]} {
+	file delete -force $nbspwctlist(wct_cachedir);
+    }
+}
+
 #
 # main
 #
@@ -83,8 +96,10 @@ if {$option(w) ne ""} {
     set nbspwctlist(wct_bin) $option(w);
 }
 
-# Convert the file
+# Process the list file
+clean_wct_cache_dir;
 process_wct_listfile $wct_listfile $fmt;
+clean_wct_cache_dir;
 
 # Rename
 set flist [exec cat $wct_listfile];
@@ -124,7 +139,7 @@ foreach entry $flist {
 	continue;
     }
 
-    if {$option(K) == 1} {
+    if {$option(k) == 1} {
 	file delete $wct_listfile;
     }
 }
