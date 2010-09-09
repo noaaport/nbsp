@@ -123,12 +123,10 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	::fileutil::appendToFile $wct_listfile \
 	    [join $gisfilter(wct_listfile_list,$fmt) "\n"];
 
+	set gisfilter(wct_listfile_list,$fmt) [list];
+
 	if {$next_wct_listfile ne $wct_listfile} {
 	    filter_rad_process_listfile $wct_listfile $fmt;
+	    set gisfilter(wct_listfile_fpath,$fmt) $next_wct_listfile;
 	}
-
-	# reinitialize
-	set gisfilter(wct_listfile_fpath,$fmt) $next_wct_listfile;
-	set gisfilter(wct_listfile_list,$fmt) [list];
-    }
 }
