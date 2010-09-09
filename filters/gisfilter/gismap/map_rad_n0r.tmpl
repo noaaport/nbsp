@@ -1,0 +1,175 @@
+#
+# $Id$
+#
+set background {255 255 255};
+set white {255 255 255};
+set darkviolet {148 0 211};
+set magenta {255 0 255};
+set brown {165 42 42};
+set firebrick {178 34 34};
+set red {255 0 0};
+set orange {255 165 0};
+set gold {255 215 0};
+set yellow {255 255 0};
+set green {0 255 0};
+set limegreen {50 205 50};
+set lawngreen {124 252 0};
+set blue {0 0 255};
+set deepskyblue {0 191 255};
+set aqua {0 255 255};
+
+set pixels [list];
+lappend pixels [list 0 5 $background];
+lappend pixels [list 5 10 $aqua];
+lappend pixels [list 10 15 $deepskyblue];
+lappend pixels [list 15 20 $blue];
+lappend pixels [list 20 25 $lawngreen];
+lappend pixels [list 25 30 $limegreen];
+lappend pixels [list 30 35 $green];
+lappend pixels [list 35 40 $yellow];
+lappend pixels [list 40 45 $gold];
+lappend pixels [list 45 50 $orange];
+lappend pixels [list 50 55 $red];
+lappend pixels [list 55 60 $firebrick];
+lappend pixels [list 60 65 $brown];
+lappend pixels [list 65 70 $magenta];
+lappend pixels [list 70 75 $darkviolet];
+lappend pixels [list 75 80 $white];
+
+set nexrad {
+LAYER
+  NAME $name
+  DATA $datafile
+  TYPE RASTER
+  STATUS ON
+  TRANSPARENCY 100
+  CLASSITEM "[pixel]"
+    CLASS
+        EXPRESSION ([pixel] >= 0 AND [pixel] < 5)
+        STYLE
+            COLOR $background
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 5 AND [pixel] < 10)
+        STYLE
+            COLOR $aqua
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 10 AND [pixel] < 15)
+        STYLE
+            COLOR $deepskyblue
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 15 AND [pixel] < 20)
+        STYLE
+            COLOR $blue
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 20 AND [pixel] < 25)
+        STYLE
+            COLOR $lawngreen
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 25 AND [pixel] < 30)
+        STYLE
+            COLOR $limegreen
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 30 AND [pixel] < 35)
+        STYLE
+            COLOR $green
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 35 AND [pixel] < 40)
+        STYLE
+            COLOR $yellow
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 40 AND [pixel] < 45)
+        STYLE
+            COLOR $gold
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 45 AND [pixel] < 50)
+        STYLE
+            COLOR $orange
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 50 AND [pixel] < 55)
+        STYLE
+            COLOR $red
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 55 AND [pixel] < 60)
+        STYLE
+            COLOR $firebrick
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 60 AND [pixel] < 65)
+        STYLE
+            COLOR $brown
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 65 AND [pixel] < 70)
+        STYLE
+            COLOR $magenta
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 70 AND [pixel] < 75)
+        STYLE
+            COLOR $darkviolet
+        END
+    END
+    CLASS
+        EXPRESSION ([pixel] >= 75 AND [pixel] < 80)
+        STYLE
+            COLOR $white
+        END
+    END
+END
+}
+
+set counties {
+LAYER
+    NAME 'counties'
+    TYPE POLYGON
+    STATUS ON
+    DATA 'maps/c_03oc08.shp'
+    TRANSPARENCY 100
+    CLASS
+       NAME 'counties'
+       STYLE
+         SYMBOL 0
+         SIZE 3
+         OUTLINECOLOR 90 90 90
+       END
+    END
+END
+}
+
+set MAP "MAP";
+append MAP "\n" [subst -nocommands $counties];
+set i 1;
+foreach k [array names map "inputfile,*"] {
+    set name "nexrad-$i";
+    set datafile $map($k);
+    append MAP "\n" [subst -nocommands $nexrad];
+    incr i;
+}
+append MAP "\n" "END";
+
+set map(scriptstr) $MAP;

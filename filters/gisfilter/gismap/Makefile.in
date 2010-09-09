@@ -10,7 +10,7 @@
 TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
-TMPLSOURCES =	map_sat_conus.tmpl
+TMPLSOURCES =	map_sat_conus.tmpl map_rad_n0r.tmpl
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =      ${TMPLPDIR}/map

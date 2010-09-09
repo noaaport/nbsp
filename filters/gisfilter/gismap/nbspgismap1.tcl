@@ -63,6 +63,14 @@ proc log_err s {
     exit 1;
 }
 
+proc source_map_tmpl {map_array_name} {
+
+    global nbspgismap;
+    upvar $map_array_name map;
+
+    source $nbspgismap(map_tmplfile);
+}
+
 proc run_map_rcfile {} {
 
     global nbspgismap;
@@ -76,13 +84,10 @@ proc run_map_rcfile {} {
     set dir [file dirname $nbspgismap(outputfile)];
     set nbspgismap(map_rcfile) [file join $dir $map_rcname];
 
-    source $nbspgismap(map_tmplfile);
-
     # Create the variables for the map script. For the same reason
     # mentioned in exec_shp2img {}, use the full paths in the map rc file.
     # The output file is not used by the map script (only by the postscript)
     # but for uniformity we use the full path here as well.
-
     set map(geodata) [file join [pwd] $nbspgismap(geodata_dir)];
     set map(outputfile) [file join [pwd] $nbspgismap(outputfile)];
 
@@ -91,11 +96,19 @@ proc run_map_rcfile {} {
 	set map(inputfile,$i) [file join [pwd] $inputfile];
 	incr i;
     }
+
+    # Source the template inside a function to avoid clashes with
+    # local variables.
+    source_map_tmpl map;
 	
     set status [catch {
 	set F [open $nbspgismap(map_rcfile) "w"];
 	fconfigure $F -translation binary -encoding binary;
-	puts $F [subst $map(script)];
+	if {[info exists map(script)] {
+	    puts $F [subst $map(script)];
+	} else {
+	    puts $F $map(scriptstr);
+	}
     } errmsg];
 
     if {[info exists F]} {
