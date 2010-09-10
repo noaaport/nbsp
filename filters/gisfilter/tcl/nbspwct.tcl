@@ -129,39 +129,39 @@ proc exec_wct_sat {} {
 	} errmsg];
     }
 
-    # the extension of the main file
-    set main_fext [lindex $nbspwct(wct_fext) 0];
+    # The problem is that wct does not always honor the output file name;
+    # it adds some meta data to it, e.g., if we pass
+    #
+    # tige04_20100910_2115.tif
+    #
+    # it creates
+    #
+    # tige04_20100910_2115-var-1-z0-rt0-t0-8bit.tif
+    #
+    # The situation is worse with other types (e.g., shp) because there
+    # are several files with different extensions.
 
-    # the meta information in the name
-    set fmeta $nbspwct(wct_fmeta_sat,$nbspwct(wct_fmt));
+    set output_dir [file dirname $nbspwct(outputfile)];
+    set output_name [file rootname [file tail $nbspwct(outputfile)]];
+    set output_root [file rootname $nbspwct(outputfile)];
+    set output_fext [file extension $nbspwct(outputfile)];
 
-    foreach fext $nbspwct(wct_fext) {
-	# This is the actual name that wct uses in the output file(s)
-	set wct_name "";   # clear it
+    set files [glob -nocomplain -directory $output_dir "${output_name}*"];
+    if {[llength $files] == 0} {
+	# No output file produced.
 	if {$nbspwct(wct_enable) == 1} {
-	    append wct_name [file rootname $nbspwct(outputfile)] $fmeta $fext;
+	    log_wct_err $errmsg;
 	} else {
-	    set _dir [file dirname $nbspwct(outputfile)];
-	    set _name [file rootname [file tail $nbspwct(inputfile)]];
-	    append wct_name [file join $_dir $_name] $fmeta $fext;
+	    log_err "$output_name not found.";
 	}
+    }
 
-	# This is the name we want
-	if {$fext eq $main_fext} {
-	    set output_name $nbspwct(outputfile);
-	} else {
-	    set output_name [file rootname $nbspwct(outputfile)];
-	    append output_name $fext;
-	}
-
-	if {[file exists $wct_name] == 0} {
-	    if {$nbspwct(wct_enable) == 1} {
-		log_wct_err $errmsg;
-	    } else {
-		log_err "$wct_name not found.";
-	    }
-	} else {
-	    file rename -force $wct_name $output_name;
+    foreach f $files {
+	set fext [file extension $f];
+	set newname $output_root;
+	append newname $fext;
+	if {$f ne $newname} {
+	    file rename -force $f $newname;
 	}
     }
 
