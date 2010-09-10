@@ -34,3 +34,21 @@ lappend nbspgismap(geoclist) {
   inputpatt     *.tif
   inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
 }
+
+# set _d [list];
+# foreach s [list ama lbb maf dyx sjt fws grk ewx dfx hgx crp bro fdr)] {
+#   lappend _d "rad/tif/$s/n0r";
+# }
+# geoc_bundle_add \
+#      "rad_n0r_tx" "map_rad_n0r.tmpl" "img/rad/n0r_tx.png" "*.tif" $_d
+#
+lappend nbspgismap(geoclist) {
+  id		rad_n0r_tx
+  maptmpl	map_rad_n0r.tmpl
+  outputfile	img/rad/n0rtx.png
+  inputpatt     *.tif
+  inputdirs	{rad/tif/ama/n0r rad/tif/lbb/n0r rad/tif/maf/n0r \
+	rad/tif/dyx/n0r rad/tif/sjt/n0r rad/tif/fws/n0r rad/tif/grk/n0r \
+	rad/tif/ewx/n0r rad/tif/dfx/n0r rad/tif/hgx/n0r rad/tif/crp/n0r \
+	rad/tif/bro/n0r rad/tif/fdr/n0r}
+}

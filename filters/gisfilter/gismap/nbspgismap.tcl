@@ -163,13 +163,14 @@ proc process_geoc_entry {id} {
 proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
 #
 # The last argument "args" should contain the list of input directories.
+# Each argument can be a tcl list of such directories.
 #
     lappend nbspgismap(geoclist) [list \
-	id $id \
-	maptmpl $maptmpl \
-	outputfile $outputfile \
-	inputpatt $inputpatt \
-	inputdirs $args];
+				      id $id \
+				      maptmpl $maptmpl \
+				      outputfile $outputfile \
+				      inputpatt $inputpatt \
+				      inputdirs [eval concat $args]];
 }
 
 proc geoc_bundle_clear {} {
