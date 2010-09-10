@@ -24,12 +24,15 @@ geoc_bundle_clear;
 # Use the function `geoc_bundle_add` to add buldles to the list, or
 # append them explicitly.
 #
-# geoc_bundle_add "sat_conus_01" "map_sat_conus.tmpl" "img/tig01.png" "*.tif" \
+# geoc_bundle_add "sat_conus_01" "map_sat_conus.tmpl" "-126,30,-66,50" \
+#       "1280,800" "img/tig01.png" "*.tif" \
 #	"sat/tif/tig/tigw01" "sat/tif/tig/tige01"; 
 #
 lappend nbspgismap(geoclist) {
   id		sat_conus_01
   maptmpl	map_sat_conus.tmpl
+  extent	{-126 30 -66 50}
+  size		{1280 800}
   outputfile	img/sat/tig01.png
   inputpatt     *.tif
   inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
@@ -40,11 +43,14 @@ lappend nbspgismap(geoclist) {
 #   lappend _d "rad/tif/$s/n0r";
 # }
 # geoc_bundle_add \
-#      "rad_n0r_tx" "map_rad_n0r.tmpl" "img/rad/n0r_tx.png" "*.tif" $_d
+#      "rad_n0r_tx" "map_rad_n0r.tmpl" "-126,30,-66,50" "1280,800" \
+#      "img/rad/n0r_tx.png" "*.tif" $_d
 #
 lappend nbspgismap(geoclist) {
   id		rad_n0r_tx
   maptmpl	map_rad_n0r.tmpl
+  extent	{-104 25 -90 36}
+  size		{800 800}
   outputfile	img/rad/n0rtx.png
   inputpatt     *.tif
   inputdirs	{rad/tif/ama/n0r rad/tif/lbb/n0r rad/tif/maf/n0r \

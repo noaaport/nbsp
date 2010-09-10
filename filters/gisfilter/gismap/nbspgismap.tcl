@@ -126,11 +126,20 @@ proc process_geoc_entry {id} {
     # with the common options, are passed to nbspgismap:
     #
     # nbspgismap(geoclist,$id,maptmpl)
+    # nbspgismap(geoclist,$id,extent)
+    # nbspgismap(geoclist,$id,size)
     # nbspgismap(geoclist,$id,outputfile)
     # nbspgismap(geoclist,$id,inputpatt)
     # nbspgismap(geoclist,$id,inputdirs)
 
     set map_tmplfile [get_map_tmplfile $nbspgismap(geoclist,$id,maptmpl)];
+
+    # Construct the definitions list
+    set defs_list [list];
+    foreach k [list extent size] {
+	lappend defs_list "$k=$nbspgismap(geoclist,$id,$k)";
+    }
+    set defs [join $defs_list ","];
 
     set cmd [list "nbspgismap1"];
     if {$option(b) == 1} {
@@ -146,6 +155,7 @@ proc process_geoc_entry {id} {
     
     set cmd [concat $cmd \
 		 [list -d $nbspgismap(outputdir) \
+		      -D $defs \
 		      -g $nbspgismap(geodata_dir) \
 		      -m $map_tmplfile \
 		      -o $nbspgismap(geoclist,$id,outputfile) \
@@ -160,7 +170,7 @@ proc process_geoc_entry {id} {
 # These two functions can be used in the bundle conf file instead of using
 # `lappend nbspgismap(geoclist)` expicitly.
 #
-proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
+proc geoc_bundle_add {id maptmpl extent size outputfile inputpatt args} {
 #
 # The last argument "args" should contain the list of input directories.
 # Each argument can be a tcl list of such directories.
@@ -168,6 +178,8 @@ proc geoc_bundle_add {id maptmpl outputfile inputpatt args} {
     lappend nbspgismap(geoclist) [list \
 				      id $id \
 				      maptmpl $maptmpl \
+				      extent $extent \
+				      size $size \
 				      outputfile $outputfile \
 				      inputpatt $inputpatt \
 				      inputdirs [eval concat $args]];

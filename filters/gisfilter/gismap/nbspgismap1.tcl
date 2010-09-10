@@ -2,7 +2,8 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap1 [-b] [-d <outputdir>] [-e fext] -g <geodata_dir>
+# Usage: nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
+#                  [-e fext] -g <geodata_dir>
 #                  [-I <inputdir>] -m <map_template> [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <shp2img>]
 #                  <tif1> ... <tifn>
@@ -16,6 +17,8 @@
 #       (index = end).
 # -b => background mode
 # -d => output directory
+# -D => key=value,... comma separated list of map(key)=var pairs
+#       (in practice, extent=...,size=...
 # -e => default fext
 # -g => geodata directory (required)
 # -m => map template      (required)
@@ -24,10 +27,11 @@
 
 package require cmdline;
 
-set usage {nbspgismap1 [-b] [-d <outputdir>] [-e <fext>] [-I <inputdir>]
-    [-n <index>] [-o <outputfile>] [-p <patt>] [-s <shp2img>] <map_template>};
-set optlist {b {d.arg ""} {e.arg ""} {g.arg ""} {I.arg ""} {m.arg ""}
-    {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
+set usage {nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
+    [-e <fext>] [-I <inputdir>] [-n <index>] [-o <outputfile>]
+    [-p <patt>] [-s <shp2img>] <map_template>};
+set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {g.arg ""} {I.arg ""}
+    {m.arg ""} {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
 
 # defaults
 set nbspgismap(shp2img_bin) "shp2img";
@@ -73,14 +77,13 @@ proc source_map_tmpl {map_array_name} {
 
 proc run_map_rcfile {} {
 
-    global nbspgismap;
+    global nbspgismap option;
 
     # Make the rc file name
     set fname [get_tmpl_fname];
     append map_rcname $fname $nbspgismap(map_rc_fext);
 
-    # The map rc file is created in the same directory as the
-    # output file.
+    # The map rc file is created in the same directory as the output file.
     set dir [file dirname $nbspgismap(outputfile)];
     set nbspgismap(map_rcfile) [file join $dir $map_rcname];
 
@@ -95,6 +98,17 @@ proc run_map_rcfile {} {
     foreach inputfile $nbspgismap(input_files_list) {
 	set map(inputfile,$i) [file join [pwd] $inputfile];
 	incr i;
+    }
+
+    # The defines
+    if {$option(D) ne ""} {
+	set Dlist [split $option(D) ","];
+	foreach pair $Dlist {
+	    set p [split $pair "="];
+	    set var [lindex $p 0];
+	    set val [lindex $p 1];
+	    set map($var) "$val";    # extent and size contain spaces 
+	}
     }
 
     # Source the template inside a function to avoid clashes with

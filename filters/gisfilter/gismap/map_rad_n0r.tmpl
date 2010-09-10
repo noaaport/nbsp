@@ -39,6 +39,13 @@ lappend pixels [list 65 70 $magenta];
 lappend pixels [list 70 75 $darkviolet];
 lappend pixels [list 75 80 $white];
 
+set header {
+MAP
+	EXTENT $map(extent)
+	UNITS  DD
+	SIZE $map(size)
+}
+
 #
 # The "nexrad" layer; one for each site
 #
@@ -151,13 +158,13 @@ END
 
 set counties {
 LAYER
-    NAME 'counties'
+    NAME "counties"
     TYPE POLYGON
     STATUS ON
-    DATA 'maps/c_03oc08.shp'
+    DATA "$map(geodata)/c_15jl09/c_15jl09.shp"
     TRANSPARENCY 100
     CLASS
-       NAME 'counties'
+       NAME "counties"
        STYLE
          SYMBOL 0
          SIZE 3
@@ -167,7 +174,7 @@ LAYER
 END
 }
 
-set MAP "MAP";
+set MAP [subst -nocommands $header];
 append MAP "\n" [subst -nocommands $counties];
 set i 1;
 foreach k [array names map "inputfile,*"] {
