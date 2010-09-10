@@ -39,6 +39,9 @@ lappend pixels [list 65 70 $magenta];
 lappend pixels [list 70 75 $darkviolet];
 lappend pixels [list 75 80 $white];
 
+#
+# EXTENT [string map [list ";" " "] $map(extent)];
+#
 set header {
 MAP
 	EXTENT $map(extent)
@@ -56,99 +59,99 @@ LAYER
   TYPE RASTER
   STATUS ON
   TRANSPARENCY 100
-  CLASSITEM "[pixel]"
+  CLASSITEM "\[pixel\]"
     CLASS
-        EXPRESSION ([pixel] >= 0 AND [pixel] < 5)
+        EXPRESSION (\[pixel\] >= 0 AND \[pixel\] < 5)
         STYLE
             COLOR $background
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 5 AND [pixel] < 10)
+        EXPRESSION (\[pixel\] >= 5 AND \[pixel\] < 10)
         STYLE
             COLOR $aqua
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 10 AND [pixel] < 15)
+        EXPRESSION (\[pixel\] >= 10 AND \[pixel\] < 15)
         STYLE
             COLOR $deepskyblue
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 15 AND [pixel] < 20)
+        EXPRESSION (\[pixel\] >= 15 AND \[pixel\] < 20)
         STYLE
             COLOR $blue
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 20 AND [pixel] < 25)
+        EXPRESSION (\[pixel\] >= 20 AND \[pixel\] < 25)
         STYLE
             COLOR $lawngreen
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 25 AND [pixel] < 30)
+        EXPRESSION (\[pixel\] >= 25 AND \[pixel\] < 30)
         STYLE
             COLOR $limegreen
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 30 AND [pixel] < 35)
+        EXPRESSION (\[pixel\] >= 30 AND \[pixel\] < 35)
         STYLE
             COLOR $green
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 35 AND [pixel] < 40)
+        EXPRESSION (\[pixel\] >= 35 AND \[pixel\] < 40)
         STYLE
             COLOR $yellow
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 40 AND [pixel] < 45)
+        EXPRESSION (\[pixel\] >= 40 AND \[pixel\] < 45)
         STYLE
             COLOR $gold
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 45 AND [pixel] < 50)
+        EXPRESSION (\[pixel\] >= 45 AND \[pixel\] < 50)
         STYLE
             COLOR $orange
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 50 AND [pixel] < 55)
+        EXPRESSION (\[pixel\] >= 50 AND \[pixel\] < 55)
         STYLE
             COLOR $red
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 55 AND [pixel] < 60)
+        EXPRESSION (\[pixel\] >= 55 AND \[pixel\] < 60)
         STYLE
             COLOR $firebrick
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 60 AND [pixel] < 65)
+        EXPRESSION (\[pixel\] >= 60 AND \[pixel\] < 65)
         STYLE
             COLOR $brown
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 65 AND [pixel] < 70)
+        EXPRESSION (\[pixel\] >= 65 AND \[pixel\] < 70)
         STYLE
             COLOR $magenta
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 70 AND [pixel] < 75)
+        EXPRESSION (\[pixel\] >= 70 AND \[pixel\] < 75)
         STYLE
             COLOR $darkviolet
         END
     END
     CLASS
-        EXPRESSION ([pixel] >= 75 AND [pixel] < 80)
+        EXPRESSION (\[pixel\] >= 75 AND \[pixel\] < 80)
         STYLE
             COLOR $white
         END
@@ -174,15 +177,15 @@ LAYER
 END
 }
 
-set MAP [subst -nocommands $header];
-append MAP "\n" [subst -nocommands $counties];
+set MAP [subst $header];
 set i 1;
 foreach k [array names map "inputfile,*"] {
     set name "nexrad-$i";
     set datafile $map($k);
-    append MAP "\n" [subst -nocommands $nexrad];
+    append MAP "\n" [subst $nexrad];
     incr i;
 }
+append MAP "\n" [subst $counties];
 append MAP "\n" "END";
 
 set map(scriptstr) $MAP;
