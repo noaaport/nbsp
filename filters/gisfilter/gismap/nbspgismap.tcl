@@ -2,9 +2,10 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-d <outputdir>] <id_list>
+# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>] [-L] [<id_list>]
 #
 # -b => background mode
+# -L => output the id list
 #
 # This tool reads a "bundle configuration file"
 # (defined in gisfilter.{init,conf} and then calls nbspgismap1 with the
@@ -12,8 +13,8 @@
 
 package require cmdline;
 
-set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] <id_list>};
-set optlist {b {d.arg ""} {c.arg ""}};
+set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L] [<id_list>]};
+set optlist {b {d.arg ""} {c.arg ""} L};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
 # from filter.lib is used.
@@ -229,6 +230,13 @@ get_gclist;
 # If no id's were given in the cmd line, then do all of them.
 if {[llength $_idlist] == 0} {
    set _idlist $nbspgismap(geocidlist);
+}
+
+if {$option(L) == 1} {
+    foreach id $_idlist {
+	puts $id;
+    }
+    return;
 }
 
 foreach id $_idlist {
