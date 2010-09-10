@@ -17,7 +17,7 @@
 # -n => do not call wct; only do the post renaming
 # -o => outpufile (otherwise default is constructed)
 # -p => postrc filename
-# -t => type: sat, rad, ... (to determine the fmeta in the name) 
+# -t => type: sat, rad, ... (not currently used)
 # -V => debug wct errors
 # -w => path to wct-export
 # -x => the wct xml config file (uses the built-in defaults otherwise)
@@ -40,15 +40,6 @@ set nbspwct(wct_rcname_default) "wct-export.xml";
 # parameters
 set nbspwct(wct_cachedir) [file join ~/ ".wct-cache"];
 set nbspwct(wct_fmt) "tif";	# default
-#
-set nbspwct(wct_fmeta_sat,tif) "-var-1-8bit";
-set nbspwct(wct_fmeta_sat,nc) "-var-1";
-set nbspwct(wct_fmeta_sat,asc) "-var-1";
-set nbspwct(wct_fmeta_sat,tif32) "-var-1";
-set nbspwct(wct_fmeta_sat,rnc) "-var-1";
-set nbspwct(wct_fmeta_sat,csv) "-var-1";
-set nbspwct(wct_fmeta_sat,shp) "-var-1";
-set nbspwct(wct_fmeta_sat,wkt) "-var-1";
 # wct extensions of the outputfile(s)
 set nbspwct(wct_fext,tif) [list ".tif"];
 set nbspwct(wct_fext,nc) [list ".nc"];
@@ -63,7 +54,7 @@ set nbspwct(wct_fext,wkt) [list ".wkt.txt" ".wkt.prj"];
 set nbspwct(post_rcfile) "";
 #
 set nbspwct(inputfile) "";
-set nbspwct(inputtype) "";
+set nbspwct(inputtype) "";	# not currently used
 set nbspwct(outputfile) "";
 set nbspwct(latestname) "";
 #
@@ -107,14 +98,10 @@ proc exec_wct {} {
 
     global nbspwct;
 
-    if {$nbspwct(inputtype) eq "sat"} {
-	exec_wct_sat;
-    } else {
-	exec_wct_default;
-    }
+    exec_wct_default;
 }
 
-proc exec_wct_sat {} {
+proc exec_wct_default {} {
 
     global nbspwct;
     global errorInfo;
@@ -162,63 +149,6 @@ proc exec_wct_sat {} {
 	append newname $fext;
 	if {$f ne $newname} {
 	    file rename -force $f $newname;
-	}
-    }
-
-    # Create latest link for the (main) outputfile
-    if {$nbspwct(latestname) ne ""} {
-	set savedir [file dirname $nbspwct(outputfile)];
-	set savename [file tail $nbspwct(outputfile)];
-	make_latest $savedir $savename $nbspwct(latestname);
-    }
-}
-
-proc exec_wct_default {} {
-
-    global nbspwct;
-    global errorInfo;
-
-    if {$nbspwct(wct_enable) == 1} {
-	set status [catch {
-	    exec $nbspwct(wct_bin) \
-		$nbspwct(inputfile) \
-		$nbspwct(outputfile) \
-		$nbspwct(wct_fmt) \
-		$nbspwct(wct_rcfile); 
-	} errmsg];
-
-	if {[file exists $nbspwct(outputfile)] == 0} {
-	    log_wct_err $errmsg;
-	}
-    } else {
-	# the extension of the main file
-	set main_fext [lindex $nbspwct(wct_fext) 0];
-
-	foreach fext $nbspwct(wct_fext) {
-	    # This is the actual name that wct uses in the output file(s)
-	    set wct_name "";   # clear it
-	    if {$nbspwct(wct_enable) == 1} {
-		append wct_name [file rootname $nbspwct(outputfile)] \
-		    $fmeta $fext;
-	    } else {
-		set _dir [file dirname $nbspwct(outputfile)];
-		set _name [file rootname [file tail $nbspwct(inputfile)]];
-		append wct_name [file join $_dir $_name] $fext;
-	    }
-
-	    # This is the name we want
-	    if {$fext eq $main_fext} {
-		set output_name $nbspwct(outputfile);
-	    } else {
-		set output_name [file rootname $nbspwct(outputfile)];
-		append output_name $fext;
-	    }
-
-	    if {[file exists $wct_name] == 0} {
-		log_err "$wct_name not found.";
-	    } else {
-		file rename -force $wct_name $output_name;
-	    }
 	}
     }
 
