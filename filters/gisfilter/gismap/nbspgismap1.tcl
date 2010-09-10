@@ -104,7 +104,7 @@ proc run_map_rcfile {} {
     set status [catch {
 	set F [open $nbspgismap(map_rcfile) "w"];
 	fconfigure $F -translation binary -encoding binary;
-	if {[info exists map(script)] {
+	if {[info exists map(script)]} {
 	    puts $F [subst $map(script)];
 	} else {
 	    puts $F $map(scriptstr);

@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-d <outputdir>] [-i <id>]
+# Usage: nbspgismap [-b] [-d <outputdir>] <id_list>
 #
 # -b => background mode
 #
@@ -12,8 +12,8 @@
 
 package require cmdline;
 
-set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-i <id>]};
-set optlist {b {d.arg ""} {c.arg ""} {i.arg ""}};
+set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] <id_list>};
+set optlist {b {d.arg ""} {c.arg ""}};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
 # from filter.lib is used.
