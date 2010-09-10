@@ -11,6 +11,13 @@
    <logging> WARNING </logging>
 		
    <grid>
+      <gridOptions>
+         <variable name="Total_precipitation"/>
+         <time    lookupType="index" lookup="0"/>
+         <runtime lookupType="index" lookup="0"/>
+         <height  lookupType="index" lookup="0"/>
+      </gridOptions>
+
       <gridFilter>
          <minLat> NONE </minLat>
          <maxLat> NONE </maxLat>
