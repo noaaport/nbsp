@@ -8,6 +8,23 @@
 #                  [-o <outputfile>] [-p <patt>] [-s <shp2img>]
 #                  <tif1> ... <tifn>
 #
+############################################################################
+# Example
+#
+# !/bin/sh
+#
+# outputdir="sat/img/tig"
+# outputfile="tig01.png"
+# inputdir="/var/noaaport/data/gis/sat/tif/tig"
+#
+## cd /var/noaaport/data/gis
+# mkdir -p $outputdir
+#
+# ./nbspgismap -d $outputdir -o $outputfile -g geodata -m map_sat_conus.tmpl \
+#    -D extent=,size=1200;800 \
+#    -I $inputdir -p "*.tif" tigw01 tige01
+############################################################################
+#
 # This is cmdline tool with no configuration file.
 #
 # -I => parent directory for the arguments <tif1> ...
@@ -19,6 +36,8 @@
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs
 #       (in practice, extent=...,size=...
+#	The extent size values can be separated by spaces or ";", for example
+#	-D size="sx sy",extent="a b c d" or -D size=sx;sy,extent=a;b;c;d
 # -e => default fext
 # -g => geodata directory (required)
 # -m => map template      (required)

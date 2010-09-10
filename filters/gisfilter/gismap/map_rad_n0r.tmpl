@@ -1,6 +1,20 @@
 #
 # $Id$
 #
+
+#
+# These defaults can (should) be overriden via the -D switch to
+# nbspgismap1. In practice, they are set in the "bundle configuration file".
+#
+set _map(extent) {-104 25 -90 36};
+set _map(size) {800 600};
+#
+foreach _k [list extent size] {
+    if {[info exists map($_k)] == 0} {
+        set map($_k) $_map($_k);
+    }
+}
+
 set background {255 255 255};
 set white {255 255 255};
 set darkviolet {148 0 211};
@@ -39,14 +53,15 @@ lappend pixels [list 65 70 $magenta];
 lappend pixels [list 70 75 $darkviolet];
 lappend pixels [list 75 80 $white];
 
-#
-# EXTENT [string map [list ";" " "] $map(extent)];
-#
 set header {
 MAP
-	EXTENT $map(extent)
+	#
+	# Allow the possibility that the extent parameters are
+	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
+	#
+	EXTENT [string map [list ";" " "] $map(extent)]
 	UNITS  DD
-	SIZE $map(size)
+	SIZE [string map [list ";" " "] $map(size)]
 }
 
 #

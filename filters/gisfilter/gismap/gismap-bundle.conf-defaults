@@ -50,7 +50,7 @@ lappend nbspgismap(geoclist) {
   id		rad_n0r_tx
   maptmpl	map_rad_n0r.tmpl
   extent	{-104 25 -90 36}
-  size		{800 800}
+  size		{800 600}
   outputfile	img/rad/n0rtx.png
   inputpatt     *.tif
   inputdirs	{rad/tif/ama/n0r rad/tif/lbb/n0r rad/tif/maf/n0r \

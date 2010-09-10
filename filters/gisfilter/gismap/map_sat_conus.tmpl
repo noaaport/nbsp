@@ -3,18 +3,31 @@
 #
 
 #
-# EXTENT [string map [list ";" " "] $map(extent)];
+# These defaults can (should) be overriden via the -D switch to
+# nbspgismap1. In practice, they are set in the "bundle configuration file".
 #
+set _map(extent) {-126 30 -66 50};
+set _map(size) {800 600};
+#
+foreach _k [list extent size] {
+    if {[info exists map($_k)] == 0} {
+        set map($_k) $_map($_k);
+    }
+}
+
 set map(script) {
 MAP
+	#
+	# Allow the possibility that the extent parameters are
+	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
+	#
+	EXTENT [string map [list ";" " "] $map(extent)]
+	UNITS  DD
+	SIZE [string map [list ";" " "] $map(size)]
 
 	NAME "GOESMap"
-	EXTENT $map(extent)
-	UNITS  DD
-	SIZE   $map(size)
-
+	IMAGETYPE mypng
 	TRANSPARENT ON
-
 	OUTPUTFORMAT
 		NAME mypng
 		DRIVER "GD/PNG"
@@ -23,8 +36,6 @@ MAP
 		MIMETYPE "image/png"
 		EXTENSION "png"
 	END
-
-	IMAGETYPE mypng
 
 	LAYER
 		TYPE RASTER
