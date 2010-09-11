@@ -114,6 +114,10 @@ proc exec_wct_default {} {
 		$nbspwct(wct_fmt) \
 		$nbspwct(wct_rcfile); 
 	} errmsg];
+
+	if {[file exists $nbspwct(outputfile)] == 0} {
+	    log_wct_err $errmsg;
+	}
     }
 
     # The problem is that wct does not always honor the output file name;
@@ -129,17 +133,23 @@ proc exec_wct_default {} {
     # are several files with different extensions.
 
     set output_dir [file dirname $nbspwct(outputfile)];
-    set output_name [file rootname [file tail $nbspwct(outputfile)]];
     set output_root [file rootname $nbspwct(outputfile)];
-    set output_fext [file extension $nbspwct(outputfile)];
 
-    set files [glob -nocomplain -directory $output_dir "${output_name}*"];
+    # This is the actual name (without the extension)
+    # that wct uses in the output file(s)
+    if {$nbspwct(wct_enable) == 1} {
+	set wct_name [file rootname [file tail $nbspwct(outputfile)]];
+    } else {
+	set wct_name [file rootname [file tail $nbspwct(inputfile)]];
+    }
+
+    set files [glob -nocomplain -directory $output_dir "${wct_name}*"];
     if {[llength $files] == 0} {
 	# No output file produced.
 	if {$nbspwct(wct_enable) == 1} {
 	    log_wct_err $errmsg;
 	} else {
-	    log_err "$output_name not found.";
+	    log_err "No $wct_name files found in $output_dir.";
 	}
     }
 

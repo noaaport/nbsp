@@ -41,7 +41,7 @@ EOF1
 
 
 2) Looking at the nexrad color table, and identifying (by eye) the
-corresponding index in thegempak table, then the folowing must be
+corresponding index in the gempak table, then the folowing must be
 given in the arguments to gdplot2:
 
 background="101";
