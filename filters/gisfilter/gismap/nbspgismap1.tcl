@@ -21,7 +21,7 @@
 # mkdir -p $outputdir
 #
 # ./nbspgismap -d $outputdir -o $outputfile -g geodata -m map_sat_conus.tmpl \
-#    -D extent=,size=1200;800 \
+#    -D extent=a;b;s;d,size=1200;800 \
 #    -I $inputdir -p "*.tif" tigw01 tige01
 ############################################################################
 #
