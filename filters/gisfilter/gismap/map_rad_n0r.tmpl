@@ -3,8 +3,9 @@
 #
 
 #
-# These defaults can (should) be overriden via the -D switch to
-# nbspgismap1. In practice, they are set in the "bundle configuration file".
+# These (extent and size) defaults can (should) be overriden via
+# the -D switch to nbspgismap1. In practice, they are set in the
+# "bundle configuration file".
 #
 set _map(extent) {-104 25 -90 36};
 set _map(size) {800 600};
@@ -15,6 +16,10 @@ foreach _k [list extent size] {
     }
 }
 
+#
+# Color definitions - these should be in some common file somewhere
+# and sourced by the main script before sourcing this one.
+#
 set background {255 255 255};
 set white {255 255 255};
 set darkviolet {148 0 211};
@@ -33,25 +38,38 @@ set deepskyblue {0 191 255};
 set aqua {0 255 255};
 
 #
-# Not used (yet)
+# These should be set according to some standard; e.g,
 #
-set pixels [list];
-lappend pixels [list 0 5 $background];
-lappend pixels [list 5 10 $aqua];
-lappend pixels [list 10 15 $deepskyblue];
-lappend pixels [list 15 20 $blue];
-lappend pixels [list 20 25 $lawngreen];
-lappend pixels [list 25 30 $limegreen];
-lappend pixels [list 30 35 $green];
-lappend pixels [list 35 40 $yellow];
-lappend pixels [list 40 45 $gold];
-lappend pixels [list 45 50 $orange];
-lappend pixels [list 50 55 $red];
-lappend pixels [list 55 60 $firebrick];
-lappend pixels [list 60 65 $brown];
-lappend pixels [list 65 70 $magenta];
-lappend pixels [list 70 75 $darkviolet];
-lappend pixels [list 75 80 $white];
+#   osf_ref16.tbl
+#   nids_ref16.tbl 
+#
+# and should also be in some file that is separate from the template. For
+# other types (s,v,...) only the corresponding xxx_color_table file
+# needs to be sourced. 
+#
+set n0r_color_table [list];
+lappend n0r_color_table [list 0 5 $background];
+lappend n0r_color_table [list 5 10 $aqua];
+lappend n0r_color_table [list 10 15 $deepskyblue];
+lappend n0r_color_table [list 15 20 $blue];
+lappend n0r_color_table [list 20 25 $lawngreen];
+lappend n0r_color_table [list 25 30 $limegreen];
+lappend n0r_color_table [list 30 35 $green];
+lappend n0r_color_table [list 35 40 $yellow];
+lappend n0r_color_table [list 40 45 $gold];
+lappend n0r_color_table [list 45 50 $orange];
+lappend n0r_color_table [list 50 55 $red];
+lappend n0r_color_table [list 55 60 $firebrick];
+lappend n0r_color_table [list 60 65 $brown];
+lappend n0r_color_table [list 65 70 $magenta];
+lappend n0r_color_table [list 70 75 $darkviolet];
+lappend n0r_color_table [list 75 80 $white];
+
+#
+# Using the values above, the color_start_end variables that
+# are used in the template will be set.
+#
+set color_table $n0r_color_table;
 
 set header {
 MAP
@@ -78,97 +96,97 @@ LAYER
     CLASS
         EXPRESSION (\[pixel\] >= 0 AND \[pixel\] < 5)
         STYLE
-            COLOR $background
+            COLOR $color_0_5
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 5 AND \[pixel\] < 10)
         STYLE
-            COLOR $aqua
+            COLOR $color_5_10
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 10 AND \[pixel\] < 15)
         STYLE
-            COLOR $deepskyblue
+            COLOR $color_10_15
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 15 AND \[pixel\] < 20)
         STYLE
-            COLOR $blue
+            COLOR $color_15_20
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 20 AND \[pixel\] < 25)
         STYLE
-            COLOR $lawngreen
+            COLOR $color_20_25
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 25 AND \[pixel\] < 30)
         STYLE
-            COLOR $limegreen
+            COLOR $color_25_30
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 30 AND \[pixel\] < 35)
         STYLE
-            COLOR $green
+            COLOR $color_30_35
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 35 AND \[pixel\] < 40)
         STYLE
-            COLOR $yellow
+            COLOR $color_35_40
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 40 AND \[pixel\] < 45)
         STYLE
-            COLOR $gold
+            COLOR $color_40_45
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 45 AND \[pixel\] < 50)
         STYLE
-            COLOR $orange
+            COLOR $color_45_50
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 50 AND \[pixel\] < 55)
         STYLE
-            COLOR $red
+            COLOR $color_50_55
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 55 AND \[pixel\] < 60)
         STYLE
-            COLOR $firebrick
+            COLOR $color_55_60
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 60 AND \[pixel\] < 65)
         STYLE
-            COLOR $brown
+            COLOR $color_60_65
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 65 AND \[pixel\] < 70)
         STYLE
-            COLOR $magenta
+            COLOR $color_65_70
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 70 AND \[pixel\] < 75)
         STYLE
-            COLOR $darkviolet
+            COLOR $color_70_75
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 75 AND \[pixel\] < 80)
         STYLE
-            COLOR $white
+            COLOR $color_75_80
         END
     END
 END
@@ -192,6 +210,18 @@ LAYER
 END
 }
 
+#
+# Set the color_start_end variables that are used in the template.
+#
+foreach p $color_table {
+    foreach {i1 i2 c} $p {
+        eval set color_${i1}_${i2} {$c};
+    }
+}
+
+#
+# Build the main script
+#
 set MAP [subst $header];
 set i 1;
 foreach k [array names map "inputfile,*"] {
@@ -204,3 +234,14 @@ append MAP "\n" [subst $counties];
 append MAP "\n" "END";
 
 set map(scriptstr) $MAP;
+
+#
+# Test
+#
+# set map(inputfile,1) "1.tif";
+# set map(inputfile,2) "2.tif";
+# set map(geodata) "/usr/local/share/geodata";
+#
+# source map_rad_n0r.tmpl;
+# puts $map(scriptstr);
+#
