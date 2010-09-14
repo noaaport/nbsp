@@ -31,7 +31,7 @@ proc ::nbsp::util::cmdline_getoptions {argv_name optlist usage} {
 #
 # (1) The options can have a ".marg" extension to indicate that they can
 # appear multiple times. The corresponding result option(<key>) is a tcl list.
-# (2) The optstrlist must be in the format accepetd by the getopt
+# (2) The optstrlist must be in the format accepted by the getopt
 # function not the getoptions. For example,
 #
 # set optlist [list D.marg M.arg v];
@@ -119,7 +119,7 @@ proc ::nbsp::util::pread {args} {
 #   set content [exec <program> <options>];
 #
 # when the output from <program> is binary data that we don't want exec
-# to modify it.
+# to modify.
 #
     set s [join $args " "];
 
@@ -180,7 +180,7 @@ proc ::nbsp::util::pwrite_nonblock {data args} {
 
 proc ::nbsp::util::find_local_rcfile {rcfile localconfdirs {subdir ""}} {
 #
-# Looks for a file with the same as rcfile, in the local directories. If
+# Looks for a file with the same name as rcfile, in the local directories. If
 # it is found, the path is returned, otherwise the original rcfile is returned.
 # The <subdir> can specify a subdir of the localconfdirs to look.
 # (The function has the same functionality as filterlib_find_conf
