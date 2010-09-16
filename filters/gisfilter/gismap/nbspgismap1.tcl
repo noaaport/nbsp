@@ -54,6 +54,7 @@ package require cmdline;
 
 # Source filters.init so that the templates can "require" locally
 # installed packages (e.g., map_rad requitres gis.tcl)
+#
 source "/usr/local/libexec/nbsp/filters.init";
 
 # defaults
