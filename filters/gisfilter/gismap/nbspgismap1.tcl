@@ -44,13 +44,17 @@
 # -o => name of outputfile (otherwise the default is used)
 # -s => shp2img binary
 
-package require cmdline;
-
 set usage {nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
     [-e <fext>] [-I <inputdir>] [-n <index>] [-o <outputfile>]
     [-p <patt>] [-s <shp2img>] <map_template>};
 set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {g.arg ""} {I.arg ""}
     {m.arg ""} {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
+
+package require cmdline;
+
+# Source filters.init so that the templates can "require" locally
+# installed packages (e.g., map_rad requitres gis.tcl)
+source "/usr/local/libexec/nbsp/filters.init";
 
 # defaults
 set nbspgismap(shp2img_bin) "shp2img";

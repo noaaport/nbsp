@@ -4,7 +4,6 @@
 # When this file is sourced (by nbspgismap1), the following parameters
 # will have been set:
 #
-# map(tmpl)	= the name (full path) of this template file
 # map(awips1)	= e.g., n0r
 # map(geodata)
 # map(inputfile,<i>)
@@ -166,8 +165,10 @@ END
 # init
 package require nbsp::gis;
 
-# Load the color definitions
-::nbsp::gis::init [file join [file dirname $map(tmpl)] "gis-colors.def"];
+# Load the color definitions - the default is that they are in the file
+# gis-color-def in the same directory as this template.
+#
+::nbsp::gis::init [file join [file dirname [info script]] "gis-colors.def"];
 
 # Set the color table for this template
 set color_table [::nbsp::gis::radcolor $map(awips1)];
