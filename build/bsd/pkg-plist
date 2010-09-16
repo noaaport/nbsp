@@ -106,6 +106,7 @@ libexec/nbsp/wsfilter.init
 libexec/nbsp/gisfilter
 libexec/nbsp/gisfilter.init1
 libexec/nbsp/gisfilter.init2
+libexec/nbsp/gis.tcl
 libexec/nbsp/panfilter
 libexec/nbsp/gribfilter
 libexec/nbsp/gribfilter-manager

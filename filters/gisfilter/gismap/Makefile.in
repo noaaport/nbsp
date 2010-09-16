@@ -10,12 +10,13 @@
 TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
-TMPLSOURCES =	map_sat_conus.tmpl map_rad_n0r.tmpl
+TMPLSOURCES =	map_sat_conus.tmpl map_rad.tmpl gis-colors.def
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =      ${TMPLPDIR}/map
 
 SHAREFILES =	geodata-share.tgz
+LIBFILES =	gis.tcl
 
 SAMPLES =	gismap-bundle.conf-sample
 DEFAULTS =	gismap-bundle.conf-defaults
@@ -49,6 +50,7 @@ install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${TMPLTARGET} ${DEFAULTS} ${MYCONFDIR}
 	${INSTALL} -m 644 ${SHAREFILES} ${MYSHAREDIR}
+	${INSTALL} -m 644 ${LIBFILES} ${MYLIBEXECDIR}
 
 clean:
 	rm -f *~ Makefile ${TARGET}

@@ -133,6 +133,7 @@ make clean
 /usr/local/libexec/nbsp/gisfilter
 /usr/local/libexec/nbsp/gisfilter.init1
 /usr/local/libexec/nbsp/gisfilter.init2
+/usr/local/libexec/nbsp/gis.tcl
 /usr/local/libexec/nbsp/panfilter
 /usr/local/libexec/nbsp/gribfilter
 /usr/local/libexec/nbsp/gribfilter-manager

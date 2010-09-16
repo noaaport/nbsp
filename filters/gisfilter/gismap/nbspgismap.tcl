@@ -127,8 +127,7 @@ proc process_geoc_entry {id} {
     # with the common options, are passed to nbspgismap:
     #
     # nbspgismap(geoclist,$id,maptmpl)
-    # nbspgismap(geoclist,$id,extent)
-    # nbspgismap(geoclist,$id,size)
+    # nbspgismap(geoclist,$id,options)
     # nbspgismap(geoclist,$id,outputfile)
     # nbspgismap(geoclist,$id,inputpatt)
     # nbspgismap(geoclist,$id,inputdirs)
@@ -137,8 +136,8 @@ proc process_geoc_entry {id} {
 
     # Construct the definitions list
     set defs_list [list];
-    foreach k [list extent size] {
-	lappend defs_list "$k=$nbspgismap(geoclist,$id,$k)";
+    foreach {k v} $nbspgismap(geoclist,$id,options) {
+	lappend defs_list "$k=$v";
     }
     set defs [join $defs_list ","];
 
@@ -171,16 +170,32 @@ proc process_geoc_entry {id} {
 # These two functions can be used in the bundle conf file instead of using
 # `lappend nbspgismap(geoclist)` expicitly.
 #
-proc geoc_bundle_add {id maptmpl extent size outputfile inputpatt args} {
+proc geoc_sat_bundle_add {id maptmpl extent size outputfile inputpatt args} {
 #
 # The last argument "args" should contain the list of input directories.
 # Each argument can be a tcl list of such directories.
 #
+    set options [list extent $extent size $size];
     lappend nbspgismap(geoclist) [list \
 				      id $id \
 				      maptmpl $maptmpl \
-				      extent $extent \
-				      size $size \
+				      options $options \
+				      outputfile $outputfile \
+				      inputpatt $inputpatt \
+				      inputdirs [eval concat $args]];
+}
+
+proc geoc_rad_bundle_add {id maptmpl extent size awips1 \
+			      outputfile inputpatt args} {
+#
+# The last argument "args" should contain the list of input directories.
+# Each argument can be a tcl list of such directories.
+#
+    set options [list extent $extent size $size awips1 $awips1];
+    lappend nbspgismap(geoclist) [list \
+				      id $id \
+				      maptmpl $maptmpl \
+				      options $options \
 				      outputfile $outputfile \
 				      inputpatt $inputpatt \
 				      inputdirs [eval concat $args]];

@@ -1,0 +1,50 @@
+#
+# $Id$
+#
+namespace eval ::nbsp::gis {
+
+    variable x11color;
+
+    set x11color(background) {255 255 255};
+    set x11color(white) {255 255 255};
+    set x11color(darkviolet) {148 0 211};
+    set x11color(magenta) {255 0 255};
+    set x11color(brown) {165 42 42};
+    set x11color(firebrick) {178 34 34};
+    set x11color(red) {255 0 0};
+    set x11color(orange) {255 165 0};
+    set x11color(gold) {255 215 0};
+    set x11color(yellow) {255 255 0};
+    set x11color(green) {0 255 0};
+    set x11color(limegreen) {50 205 50};
+    set x11color(lawngreen) {124 252 0};
+    set x11color(blue) {0 0 255};
+    set x11color(deepskyblue) {0 191 255};
+    set x11color(aqua) {0 255 255};
+}
+
+namespace eval ::nbsp::gis {
+
+    variable radcolor;
+
+    foreach t [list n0r n1r n2r n1s] {
+	set radcolor($t) [list];
+    }
+
+    lappend radcolor(n0r) [list 0 5 [::nbsp::gis::x11color background]];
+    lappend radcolor(n0r) [list 5 10 [::nbsp::gis::x11color aqua]];
+    lappend radcolor(n0r) [list 10 15 [::nbsp::gis::x11color deepskyblue]];
+    lappend radcolor(n0r) [list 15 20 [::nbsp::gis::x11color blue]];
+    lappend radcolor(n0r) [list 20 25 [::nbsp::gis::x11color lawngreen]];
+    lappend radcolor(n0r) [list 25 30 [::nbsp::gis::x11color limegreen]];
+    lappend radcolor(n0r) [list 30 35 [::nbsp::gis::x11color green]];
+    lappend radcolor(n0r) [list 35 40 [::nbsp::gis::x11color yellow]];
+    lappend radcolor(n0r) [list 40 45 [::nbsp::gis::x11color gold]];
+    lappend radcolor(n0r) [list 45 50 [::nbsp::gis::x11color orange]];
+    lappend radcolor(n0r) [list 50 55 [::nbsp::gis::x11color red]];
+    lappend radcolor(n0r) [list 55 60 [::nbsp::gis::x11color firebrick]];
+    lappend radcolor(n0r) [list 60 65 [::nbsp::gis::x11color brown]];
+    lappend radcolor(n0r) [list 65 70 [::nbsp::gis::x11color magenta]];
+    lappend radcolor(n0r) [list 70 75 [::nbsp::gis::x11color darkviolet]];
+    lappend radcolor(n0r) [list 75 80 [::nbsp::gis::x11color white]];
+}

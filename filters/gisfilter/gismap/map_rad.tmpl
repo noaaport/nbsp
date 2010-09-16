@@ -1,7 +1,15 @@
 #
 # $Id$
 #
-
+# When this file is sourced (by nbspgismap1), the following parameters
+# will have been set:
+#
+# map(tmpl)	= the name (full path) of this template file
+# map(awips1)	= e.g., n0r
+# map(geodata)
+# map(inputfile,<i>)
+# map(extent)
+# map(size)
 #
 # These (extent and size) defaults can (should) be overriden via
 # the -D switch to nbspgismap1. In practice, they are set in the
@@ -15,61 +23,6 @@ foreach _k [list extent size] {
         set map($_k) $_map($_k);
     }
 }
-
-#
-# Color definitions - these should be in some common file somewhere
-# and sourced by the main script before sourcing this one.
-#
-set background {255 255 255};
-set white {255 255 255};
-set darkviolet {148 0 211};
-set magenta {255 0 255};
-set brown {165 42 42};
-set firebrick {178 34 34};
-set red {255 0 0};
-set orange {255 165 0};
-set gold {255 215 0};
-set yellow {255 255 0};
-set green {0 255 0};
-set limegreen {50 205 50};
-set lawngreen {124 252 0};
-set blue {0 0 255};
-set deepskyblue {0 191 255};
-set aqua {0 255 255};
-
-#
-# These should be set according to some standard; e.g,
-#
-#   osf_ref16.tbl
-#   nids_ref16.tbl 
-#
-# and should also be in some file that is separate from the template. For
-# other types (s,v,...) only the corresponding xxx_color_table file
-# needs to be sourced. 
-#
-set n0r_color_table [list];
-lappend n0r_color_table [list 0 5 $background];
-lappend n0r_color_table [list 5 10 $aqua];
-lappend n0r_color_table [list 10 15 $deepskyblue];
-lappend n0r_color_table [list 15 20 $blue];
-lappend n0r_color_table [list 20 25 $lawngreen];
-lappend n0r_color_table [list 25 30 $limegreen];
-lappend n0r_color_table [list 30 35 $green];
-lappend n0r_color_table [list 35 40 $yellow];
-lappend n0r_color_table [list 40 45 $gold];
-lappend n0r_color_table [list 45 50 $orange];
-lappend n0r_color_table [list 50 55 $red];
-lappend n0r_color_table [list 55 60 $firebrick];
-lappend n0r_color_table [list 60 65 $brown];
-lappend n0r_color_table [list 65 70 $magenta];
-lappend n0r_color_table [list 70 75 $darkviolet];
-lappend n0r_color_table [list 75 80 $white];
-
-#
-# Using the values above, the color_start_end variables that
-# are used in the template will be set.
-#
-set color_table $n0r_color_table;
 
 set header {
 MAP
@@ -210,6 +163,17 @@ LAYER
 END
 }
 
+# init
+
+### package require nbsp::gis;
+source gis.tcl;
+
+# Load the color definitions
+::nbsp::gis::init [file join [file dirname $map(tmpl)] "gis-colors.def"];
+
+# Set the color table for this template
+set color_table [::nbsp::gis::radcolor $map(awips1)];
+
 #
 # Set the color_start_end variables that are used in the template.
 #
@@ -238,10 +202,16 @@ set map(scriptstr) $MAP;
 #
 # Test
 #
-# set map(inputfile,1) "1.tif";
-# set map(inputfile,2) "2.tif";
+# set map(tmpl) "map_rad.tmpl";
+# set map(awips1) "n0r";
 # set map(geodata) "/usr/local/share/geodata";
+# set map(inputfile,1) "/var/noaaport/data/gis/1.tif";
+# set map(inputfile,2) "/var/noaaport/data/gis/2.tif";
 #
-# source map_rad_n0r.tmpl;
+# Use the defaults for these two:
+#
+# map(extent)
+# map(size)
+#
+# source "map_rad.tmpl";
 # puts $map(scriptstr);
-#
