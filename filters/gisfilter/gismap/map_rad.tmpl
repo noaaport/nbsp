@@ -164,9 +164,7 @@ END
 }
 
 # init
-
-### package require nbsp::gis;
-source gis.tcl;
+package require nbsp::gis;
 
 # Load the color definitions
 ::nbsp::gis::init [file join [file dirname $map(tmpl)] "gis-colors.def"];
