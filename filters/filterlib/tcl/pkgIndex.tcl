@@ -33,3 +33,7 @@ package ifneeded nbsp::filterserrlib 1.0 \
 
 package ifneeded nbsp::filtersgribidlib 1.0 \
     [list source [file join $dir filters-gribid.lib]]
+
+# filters/gisfilter/gismap
+package ifneeded nbsp::gis 1.0 \
+    [list source [file join $dir gis.tcl]]
