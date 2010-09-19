@@ -44,30 +44,32 @@ proc log_err s {
     exit 1;
 }
 
-proc log_wct_err s {
+proc log_wct_warn s {
 
     global option;
     global errorInfo;
 
+    # Report the "error" but do not exit
     if {$option(V) == 1} {
 	log_warn $s;
-	log_err $errorInfo;
+	log_warn $errorInfo;
     } else {
-	log_err $s;
+	log_warn $s;
     }
 }    
 
 proc process_wct_listfile {wct_listfile fmt} {
 
     global nbspwctlist option;
-    global errorInfo;
 
     set status [catch {
 	exec $nbspwctlist(wct_bin) $wct_listfile $fmt;
     } errmsg];
 
+    # How do we tell when WCT encounters an error?
     if {[regexp {BATCH PROCESSING ERROR} $errmsg]} {
-	log_wct_err $errmsg;
+	# Report the "error" but do not exit
+	log_wct_warn $errmsg;
     }
 }
 

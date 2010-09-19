@@ -104,6 +104,9 @@ proc filter_sat_queue_convert_gini {rc_varname bundle} {
     set data_path [file join $data_savedir $data_savename];
     set datafpath [file join $gisfilter(datadir) $data_path];
 
+    # Insert it in the inventory unconditionally
+    filter_sat_insert_inventory $data_savedir $datafpath;
+
     # Write to the wct list
     lappend gisfilter(wct_listfile_list,sat,$fmt) \
 	"$ginifpath,[file dirname $datafpath],$wctrcfile" \
