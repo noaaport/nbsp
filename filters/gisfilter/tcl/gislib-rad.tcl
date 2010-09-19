@@ -120,7 +120,11 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
     if {($next_wct_listfile ne $wct_listfile) || \
 	($gisfilter(wct_listfile_flush) == 1)} {
 
-	::fileutil::appendToFile $wct_listfile \
+	# Use this function instead of ::fileutil::appendToFile to ensure
+	# that there is a newline inserted at the end so that if further
+	# appends are made thay will go in a new line.
+
+	filterlib_file_append $wct_listfile \
 	    [join $gisfilter(wct_listfile_list,rad,$fmt) "\n"];
 
 	set gisfilter(wct_listfile_list,rad,$fmt) [list];
