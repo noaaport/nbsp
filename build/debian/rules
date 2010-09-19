@@ -34,7 +34,7 @@ clean: Makefile
 install: Makefile stage.build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep
 	dh_installdirs
 	${MAKE} PKGBUILDDIR=${CURDIR}/debian/${name} \
 		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
