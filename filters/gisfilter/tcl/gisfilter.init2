@@ -49,7 +49,7 @@ unset _fmt;
 set gisfilter(sat_enable) 1;  # whether to generate the tif files
 set gisfilter(sat_regex)  {_tig(a|b|e|w|g|h|p|q)0[1-5]};   # fname
 set gisfilter(sat_latest_enable)        1; # make link to latest
-set gisfilter(sat_latestname)   "latest";
+set gisfilter(sat_latestname)   "sn.last";
 set gisfilter(sat_namefmt) {$rc(wmoid)_$rc(ymd_hm)}; # without the extension
 set gisfilter(sat_subdirfmt) {[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 #
@@ -115,7 +115,7 @@ set gisfilter(sat_bundlelist) [list];
 set gisfilter(rad_enable) 0;
 set gisfilter(rad_regex)  {_sdus};  # matches against fname
 set gisfilter(rad_latest_enable)        1; # make link to latest
-set gisfilter(rad_latestname)   "latest";
+set gisfilter(rad_latestname)   "sn.last";
 set gisfilter(rad_namefmt)      {$rc(awips)_$rc(ymd_hm)}; # without extension
 set gisfilter(rad_subdirfmt)    {$rc(awips2)/$rc(awips1)};
 #
@@ -156,7 +156,7 @@ set gisfilter(rad_bundlelist) [list];
 set gisfilter(rad2_enable) 0;
 set gisfilter(rad2_regex)  {.*};  # matches against fname
 set gisfilter(rad2_latest_enable)        1; # make link to latest
-set gisfilter(rad2_latestname)   "latest";
+set gisfilter(rad2_latestname)   "sn.last";
 set gisfilter(rad2_namefmt)      {$rc(STATION)_$rc(ymd_hm)};
 set gisfilter(rad2_subdirfmt)    {$rc(STATION)};
 set gisfilter(rad2_outputfile_namefmt,nids) $gisfilter(rad2_namefmt);
