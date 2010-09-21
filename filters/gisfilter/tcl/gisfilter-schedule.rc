@@ -51,12 +51,12 @@
 #
 
 # Get the default list
-set geoclist [exec nbspwctlist -L];
+set geoclist [exec nbspgismap -L];
 
 foreach c $geoclist {
     if {[regexp {^rad} $c]} {
-        schedule M/10 nbspwctlist $c;
+        schedule M/10 nbspgismap $c;
     } elseif {[regexp {^sat} $c]} {
-        schedule M/30 nbspwctlist $c;
+        schedule M/30 nbspgismap $c;
     }
 }
