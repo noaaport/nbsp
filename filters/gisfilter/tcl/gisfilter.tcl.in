@@ -98,13 +98,13 @@ proc process {finfo} {
 	filter_rad2 rc;
     }
 
-    # set status [catch {
-    #	::nbsp::periodic::run;	# Run the registered periodic functions
-    # } errmsg];
-    #
-    # if {$status != 0} {
-    #	log_msg $errmsg;
-    # }
+    set status [catch {
+        ::nbsp::periodic::run;	# Run the registered periodic functions
+    } errmsg];
+    
+    if {$status != 0} {
+    	log_msg $errmsg;
+    }
 }
 
 proc gisfilter_run_schedule {} {
@@ -113,6 +113,10 @@ proc gisfilter_run_schedule {} {
 #
     global gisfilter;
 
+    if {$gisfilter(scheduler_enable) == 0} {
+        return;
+    }
+
     ::nbsp::periodic::scheduler $gisfilter(schedule);
 }
 
@@ -120,9 +124,9 @@ proc gisfilter_run_schedule {} {
 # Dynamic initialization
 #
 
-# Register the scheduler to run ever minute
-## ::nbsp::periodic::register gisfilter_run_schedule \
-## 	$gisfilter(schedule_run_period);
+# Register the scheduler to run every minute
+::nbsp::periodic::register gisfilter_run_schedule \
+	$gisfilter(schedule_run_period);
 
 #
 # main
