@@ -15,7 +15,7 @@ TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =      ${TMPLPDIR}/map
 
-SHAREFILES =	geodata-share.tgz
+SHAREFILES =	geodata-share.tgz mapfonts-share.tgz
 LIBFILES =	gis.tcl
 
 SAMPLES =	gismap-bundle.conf-sample

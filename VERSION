@@ -13,5 +13,5 @@ nameclient=nbspclient
 nameslave=nbspslave
 branch=2.0
 releaselevel=p
-releasenumber=4.8
+releasenumber=4.9
 version=${branch}.${releaselevel}${releasenumber}

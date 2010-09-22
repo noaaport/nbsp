@@ -3,7 +3,7 @@
 # $Id$
 # 
 # Usage: nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
-#                  [-e fext] -g <geodata_dir>
+#                  [-e fext] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-I <inputdir>] -m <map_template> [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <shp2img>]
 #                  <tif1> ... <tifn>
@@ -20,7 +20,8 @@
 ## cd /var/noaaport/data/gis
 # mkdir -p $outputdir
 #
-# ./nbspgismap -d $outputdir -o $outputfile -g geodata -m map_sat_conus.tmpl \
+# ./nbspgismap -d $outputdir -o $outputfile \
+#    -f mapfonts -g geodata -m map_sat_conus.tmpl \
 #    -D extent=a;b;s;d,size=1200;800 \
 #    -I $inputdir -p "*.tif" tigw01 tige01
 ############################################################################
@@ -39,16 +40,17 @@
 #	The extent size values can be separated by spaces or ";", for example
 #	-D size="sx sy",extent="a b c d" or -D size=sx;sy,extent=a;b;c;d
 # -e => default fext
+# -f => map fonts directory (required)
 # -g => geodata directory (required)
 # -m => map template      (required)
 # -o => name of outputfile (otherwise the default is used)
 # -s => shp2img binary
 
 set usage {nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
-    [-e <fext>] [-I <inputdir>] [-n <index>] [-o <outputfile>]
-    [-p <patt>] [-s <shp2img>] <map_template>};
-set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {g.arg ""} {I.arg ""}
-    {m.arg ""} {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
+    [-e <fext>] [-f <mapfontsdir>] [-g <geodatadir> [-I <inputdir>]
+    [-n <index>] [-o <outputfile>] [-p <patt>] [-s <shp2img>] <map_template>};
+set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+    {I.arg ""} {m.arg ""} {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
 
 package require cmdline;
 
@@ -69,6 +71,7 @@ set nbspgismap(map_tmpl_fext) ".tmpl";
 set nbspgismap(map_tmplfile) "";
 set nbspgismap(map_rcfile) "";
 set nbspgismap(geodata_dir) "";
+set nbspgismap(mapfonts_dir) "";
 set nbspgismap(input_files_list) [list];
 set nbspgismap(outputfile) "";
 
@@ -115,6 +118,7 @@ proc run_map_rcfile {} {
     # mentioned in exec_shp2img {}, use the full paths in the map rc file.
     # The output file is not used by the map script (only by the postscript)
     # but for uniformity we use the full path here as well.
+    set map(mapfonts) [file join [pwd] $nbspgismap(mapfonts_dir)];
     set map(geodata) [file join [pwd] $nbspgismap(geodata_dir)];
     set map(outputfile) [file join [pwd] $nbspgismap(outputfile)];
 
@@ -249,9 +253,10 @@ if {$argc < 2} {
 }
 get_input_files_list $argv;
 
-if {($option(g) eq "") || ($option(m) eq "")} {
-    log_err "-g and -m are required.";
+if {($option(f) eq "") || ($option(g) eq "") || ($option(m) eq "")} {
+    log_err "-f, -g and -m are required.";
 }
+set nbspgismap(mapfonts_dir) $option(f);
 set nbspgismap(geodata_dir) $option(g);
 set nbspgismap(map_tmplfile) $option(m);
 

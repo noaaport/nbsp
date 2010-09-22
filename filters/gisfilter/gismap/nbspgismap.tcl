@@ -98,6 +98,20 @@ proc get_geodata_dir {} {
     }
 }
 
+proc get_mapfonts_dir {} {
+
+    global nbspgismap;
+
+    if {$nbspgismap(mapfonts_dir) eq ""} {
+	set nbspgismap(mapfonts_dir) [filterlib_find_conf \
+	    $nbspgismap(mapfonts_dirname) $nbspgismap(mapfonts_dirs)];
+    }
+
+    if {[file isdirectory $nbspgismap(mapfonts_dir)] == 0} {
+	log_err "$nbspgismap(mapfonts_dirname) not found.";
+    }
+}
+
 proc get_gclist {} {
 
     global nbspgismap;
@@ -156,6 +170,7 @@ proc process_geoc_entry {id} {
     set cmd [concat $cmd \
 		 [list -d $nbspgismap(outputdir) \
 		      -D $defs \
+		      -f $nbspgismap(mapfonts_dir) \
 		      -g $nbspgismap(geodata_dir) \
 		      -m $map_tmplfile \
 		      -o $nbspgismap(geoclist,$id,outputfile) \
