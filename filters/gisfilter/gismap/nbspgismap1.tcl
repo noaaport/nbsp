@@ -169,10 +169,15 @@ proc exec_shp2img {} {
 
     global nbspgismap;
 
-    # Apparently shp2img make a `cd` to the directory that has the map file.
-    # If nbspgismap(outputfile) is a partial path, it will be created
-    # there (or throw an error if the intermediate directories do not exist).
-    # As a workaround, pass to shp2img the full path.
+    # The partial file names in the mapserver script are interpreted
+    # relative to the location of the map script and the data
+    # files are relative to the SHAPEPATH variable.
+    # I am not ure, but apparently shp2img make a `cd` to
+    # the directory that has the map file. If nbspgismap(outputfile)
+    # is a partial path, it will be created there (or throw an error
+    # if the intermediate directories do not exist).
+    # As a workaround to this mess, we pass to shp2img the full path,
+    # and always use full paths in the map scripts.
 
     set outputfile [file join [pwd] $nbspgismap(outputfile)];
 
