@@ -254,6 +254,7 @@ if {$option(d) ne ""} {
     set nbspgismap(outputdir) $option(d);
 }
 
+get_mapfonts_dir;
 get_geodata_dir;
 get_gclist;
 
