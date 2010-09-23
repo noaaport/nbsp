@@ -30,9 +30,9 @@
 #
 # -I => parent directory for the arguments <tif1> ...
 # -p => the <tif1> arguments are interpreted as directories. Then the list
-#       of files is constructed using the glob <patt>, and the -n <index>
-#       option is used to select the file. The defailt is the "latest" file.
-#       (index = end).
+#       of files is constructed using the glob <patt>, sorted in decreasing
+#       order, and the -n <index> option is used to select the file.
+#       The default is the most recent file (index = 0).
 # -b => background mode
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs
@@ -50,7 +50,7 @@ set usage {nbspgismap1 [-b] [-d <outputdir>] [-D <defines>]
     [-e <fext>] [-f <mapfontsdir>] [-g <geodatadir> [-I <inputdir>]
     [-n <index>] [-o <outputfile>] [-p <patt>] [-s <shp2img>] <map_template>};
 set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
-    {I.arg ""} {m.arg ""} {n.arg "end"} {o.arg ""} {p.arg ""} {s.arg ""}};
+    {I.arg ""} {m.arg ""} {n.arg 0} {o.arg ""} {p.arg ""} {s.arg ""}};
 
 package require cmdline;
 
@@ -234,7 +234,12 @@ proc get_input_files_list {argv} {
 
     set dirlist $flist;
     foreach dir $dirlist {
-	set flist [glob -nocomplain -directory $dir $option(p)];
+	if {[file isdirectory $dir] == 0} {
+	    log_warn "Skiping $dir; not found.";
+	    continue;
+	}
+	set flist [lsort -decreasing \
+		       [glob -nocomplain -directory $dir $option(p)]];
 	set f [lindex $flist $option(n)];
 	if {$f ne ""} {
 	    lappend nbspgismap(input_files_list) $f;
