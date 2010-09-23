@@ -14,7 +14,7 @@ sat_bundle_add "tif" "wct_defaults.xml" {_tig(a|e|h|i|w|p|q)0[1-5],!_tiga05};
 ## sat_bundle_add "asc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
 #
 rad_bundle_add "tif" "wct_defaults.xml" \
-	{\-n0r(lzk|srx|lch|lix|poe|shv|abx|epz|fdx|hdx|fdr|inx|tlx|vnx|ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)};
+	{-n0r(lzk|srx|lch|lix|poe|shv|abx|epz|fdx|hdx|fdr|inx|tlx|vnx|ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)};
 
 #
 # Examples -
@@ -34,6 +34,6 @@ rad_bundle_add "tif" "wct_defaults.xml" \
 #
 # radar examples
 #
-### rad_bundle_add "tif" "wct_defaults.xml" {\-n0r};
+### rad_bundle_add "tif" "wct_defaults.xml" {-n0r};
 ### rad_bundle_add "nc" "wct_defaults.xml" \
-###     {\-n[0-3](r|s)(ama|lbb|maf|dyx|sjt|fws|grk|ewx|dfx|hgx|crp|bro|fdr)};
+###     {-n[0-3](r|s)(ama|lbb|maf|dyx|sjt|fws|grk|ewx|dfx|hgx|crp|bro|fdr)};
