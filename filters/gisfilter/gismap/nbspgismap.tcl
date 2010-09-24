@@ -17,13 +17,10 @@ set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L] [<id_list>]};
 set optlist {b {d.arg ""} {c.arg ""} L};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
-# from filter.lib is used.
-set f "/usr/local/libexec/nbsp/filters.init";
-if {[file exists ${f}] == 0} {
-    puts "$f not found.";
-    return 1;
-}
-source $f;
+# from filter.lib is used. This also allows templates to "require" locally
+# installed packages; (e.g., gismap-bundle.conf-defaults uses radstations.tcl).
+#
+source "/usr/local/libexec/nbsp/filters.init";
 
 # The defaults are read from the gisfilter.init1, and the overrides
 # from gisflter.conf.

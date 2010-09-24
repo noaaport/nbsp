@@ -16,7 +16,7 @@ TMPLPDIR =      gis
 TMPLDIR =      ${TMPLPDIR}/map
 
 SHAREFILES =	geodata-share.tgz mapfonts-share.tgz
-LIBFILES =	gis.tcl
+LIBFILES =	gis.tcl radstations/radstations.tcl
 
 SAMPLES =	gismap-bundle.conf-sample
 DEFAULTS =	gismap-bundle.conf-defaults

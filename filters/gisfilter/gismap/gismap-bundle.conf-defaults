@@ -62,57 +62,18 @@ lappend nbspgismap(geoclist) {
 #	rad/tif/sjt/n0r}
 # }
 
-# lappend nbspgismap(geoclist) {
-#  id		rad_n0r_nm
-#  maptmpl	map_rad.tmpl
-#  options	{extent	{-108 30 -105 37} size {800 600} awips1 n0r}
-#  outputfile	img/rad/n0rnm.png
-#  inputpatt     *.tif
-#  inputdirs    {rad/tif/abx/n0r rad/tif/epz/n0r rad/tif/fdx/n0r \
-#	rad/tif/hdx/n0r}
-# }
+#
+# even better
+#
+package require nbsp::radstations;
 
-# lappend nbspgismap(geoclist) {
-#  id		rad_n0r_ok
-#  maptmpl	map_rad.tmpl
-#  options	{extent	{-100 33 -94 38} size {800 600} awips1 n0r}
-#  outputfile	img/rad/n0rok.png
-#  inputpatt     *.tif
-#  inputdirs    {rad/tif/fdr/n0r rad/tif/inx/n0r rad/tif/tlx/n0r \
-#	rad/tif/vnx/n0r}
-# }
-
-# lappend nbspgismap(geoclist) {
-#  id		rad_n0r_ar
-#  maptmpl	map_rad.tmpl
-#  options	{extent	{-104 25 -90 36} size {800 600} awips1 n0r}
-#  outputfile	img/rad/n0rar.png
-#  inputpatt     *.tif
-#  inputdirs    {rad/tif/lzk/n0r rad/tif/srx/n0r}
-# }
-
-# lappend nbspgismap(geoclist) {
-#  id		rad_n0r_la
-#  maptmpl	map_rad.tmpl
-#  options	{extent	{-95 29 -88 34} size {800 600} awips1 n0r}
-#  outputfile	img/rad/n0rla.png
-#  inputpatt     *.tif
-#  inputdirs    {rad/tif/lch/n0r rad/tif/lix/n0r rad/tif/poe/n0r \
-#	rad/tif/shv/n0r}
-# }
-
-lappend nbspgismap(geoclist) {
-  id		rad_n0r_south
+lappend nbspgismap(geoclist) [subst {
+  id            rad_n0r_south
   maptmpl	map_rad.tmpl
-  options	{extent	{-108 23 -88 38} size {800 600} awips1 n0r}
-  outputfile	img/rad/n0rsouth.png
+  options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\
+		size {800 600} awips1 n0r}
+  outputfile    img/rad/n0rsouth.png
   inputpatt     *.tif
-  inputdirs    {rad/tif/lzk/n0r rad/tif/srx/n0r \
-	rad/tif/lch/n0r rad/tif/lix/n0r rad/tif/poe/n0r rad/tif/shv/n0r \
-	rad/tif/abx/n0r rad/tif/epz/n0r rad/tif/fdx/n0r rad/tif/hdx/n0r \
-	rad/tif/fdr/n0r rad/tif/inx/n0r rad/tif/tlx/n0r rad/tif/vnx/n0r \
-	rad/tif/ama/n0r rad/tif/bro/n0r rad/tif/crp/n0r \
-	rad/tif/dfx/n0r rad/tif/dyx/n0r rad/tif/ewx/n0r rad/tif/fws/n0r \
-	rad/tif/grk/n0r rad/tif/hgx/n0r rad/tif/lbb/n0r rad/tif/maf/n0r \
-	rad/tif/sjt/n0r}
-}
+  inputdirs     {[nbsp::radstations::inputdirs_bystate\
+		"rad/tif/%{sss}/n0r" ar la nm ok tx]}
+}];

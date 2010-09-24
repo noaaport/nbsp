@@ -260,8 +260,8 @@ proc rad_bundle_clear {} {
 ### sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
 ### sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
 #
-### rad_bundle_add "tif" "wct_rad.xml" {\-n0r};
-### rad_bundle_add "nc" "wct_rad.xml" {\-n[0-3](r|s)jua};
+### rad_bundle_add "tif" "wct_rad.xml" {-n0r};
+### rad_bundle_add "nc" "wct_rad.xml" {-n[0-3](r|s)jua};
 
 #
 # Dynamic initialization

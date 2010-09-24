@@ -37,3 +37,6 @@ package ifneeded nbsp::filtersgribidlib 1.0 \
 # filters/gisfilter/gismap
 package ifneeded nbsp::gis 1.0 \
     [list source [file join $dir gis.tcl]]
+
+package ifneeded nbsp::radstations 1.0 \
+    [list source [file join $dir radstations.tcl]]
