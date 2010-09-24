@@ -175,7 +175,14 @@ proc process_geoc_entry {id} {
 		      -p $nbspgismap(geoclist,$id,inputpatt)] \
 		 $nbspgismap(geoclist,$id,inputdirs)];
 
-    eval exec $cmd;
+    set status [catch {
+	eval exec $cmd;
+    } errmsg];
+    
+    if {$status != 0} {
+	# Don't exit so that other bundles can be processed
+	log_warn $errmsg;
+    }
 }
 
 #
