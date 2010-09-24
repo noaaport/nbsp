@@ -5,6 +5,10 @@
 #
 # Fields: ncdcid,icao,wban,name,state,county,lat,lon,elev,time
 #
+# Correction -
+#   original:  30001934,kvwx,53116,yuma,az,pima,32.49528,-114.65583,174,+7
+#   corrected: 30001934,kyux,53116,yuma,az,pima,32.49528,-114.65583,174,+7
+# 
 30001794,kabr,14929,aberdeen,sd,brown,45.45583,-98.41306,1302,+6
 30001795,kabx,03019,albuquerque,nm,bernalillo,35.14972,-106.82333,5870,+7
 30001796,kakq,93773,norfolk rich,va,sussex,36.98389,-77.0075,112,+5
@@ -145,7 +149,7 @@
 30001930,kvbx,93234,vandenberg afb,ca,santa barbara,34.83806,-120.39583,1233,+8
 30001931,kvnx,03995,vance afb,ok,alfalfa,36.74083,-98.1275,1210,+6
 30001932,kvtx,53101,los angeles,ca,ventura,34.41167,-119.17861,2726,+8
-30001934,kvwx,53116,yuma,az,pima,32.49528,-114.65583,174,+7
+30001934,kyux,53116,yuma,az,pima,32.49528,-114.65583,174,+7
 30001609,kvwx,63845,evansville,in,gibson,38.26,-87.72472,-99999,+6
 30001939,pabc,bethel,faa,ak,bethel,60.79278,-161.87417,162,+9
 30001940,pacg,25361,sitka,ak,sitka,56.85278,-135.52917,270,+9
