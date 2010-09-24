@@ -15,7 +15,7 @@ sat_bundle_add "tif" "wct_defaults.xml" {_tig(a|e|h|i|w|p|q)0[1-5],!_tiga05};
 ## sat_bundle_add "asc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
 #
 rad_bundle_add "tif" "wct_defaults.xml" \
-	{-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])};
+	"-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])";
 
 #
 # Examples -
