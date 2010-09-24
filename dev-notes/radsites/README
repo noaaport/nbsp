@@ -6,6 +6,9 @@ nexrad-stations.csv was extacted from nexrad-stations.txt
 (which is a copy of the nexrad-stations.TXT refered to below)
 using cvt-nexrad-stations.tcl. It is the file used in the gisfilter.
 
+There is a correction in nexrad-stations.csv. This is the file used
+in the gisfilter.
+
 Wed Feb 17 20:03:32 AST 2010 -
 
 radplaces-2.txt was extracted from nexrad-stations.txt, which is a copy of

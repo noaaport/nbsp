@@ -30,19 +30,3 @@ set g [subst {
 }];
 
 puts $g;
-
-set g [subst {
-  id       rad_n0r_pr
-  maptmpl  map_rad.tmpl
-  options  {extent {[nbsp::radstations::extent_bystate pr]}\
-			size {800 600} awips1 n0r}
-  outputfile img/rad/n0rpr.png
-  inputpatt  *.tif
-  inputdirs  {[nbsp::radstations::inputdirs_bystate \
-		   "rad/tif/%{sss}/n0r" pr]}
-}];
-
-puts $g;
-
-set r "-n0r([join [nbsp::radstations::bystate pr] "|"])";
-puts $r;

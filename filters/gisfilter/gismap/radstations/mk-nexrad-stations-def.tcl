@@ -1,5 +1,8 @@
 #!/usr/local/bin/tclsh8.6
 
+#
+# The file "nexrad-stations.csv" is in "dev-notes/radsites"
+#
 set data [split [exec cat nexrad-stations.csv] "\n"];
 foreach line $data {
     if {[regexp {^\#} $line]} {

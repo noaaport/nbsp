@@ -45,8 +45,8 @@ namespace eval nbsp::radstations {} {
       "kfsx,flagstaff,az,coconino,34.57444,-111.19694,1430,+7";
     set radstations(site,iwa) \
       "kiwa,phoenix,az,maricopa,33.28917,-111.66917,1353,+7";
-    set radstations(site,vwx) \
-      "kvwx,yuma,az,pima,32.49528,-114.65583,174,+7";
+    set radstations(site,yux) \
+      "kyux,yuma,az,pima,32.49528,-114.65583,174,+7";
     set radstations(site,bbx) \
       "kbbx,beale afb,ca,butte,39.49611,-121.63167,173,+8";
     set radstations(site,bhx) \
@@ -322,7 +322,7 @@ namespace eval nbsp::radstations {} {
     set radstations(state,ak) abc,acg,aec,ahg,aih,akc,apd;
     set radstations(state,al) bmx,eox,htx,mob,mxx;
     set radstations(state,ar) lzk,srx;
-    set radstations(state,az) emx,fsx,iwa,vwx;
+    set radstations(state,az) emx,fsx,iwa,yux;
     set radstations(state,ca) bbx,bhx,dax,eyx,hnx,mux,nkx,sox,vbx,vtx;
     set radstations(state,co) ftg,gjx,pux;
     set radstations(state,de) dox;
@@ -432,7 +432,7 @@ proc nbsp::radstations::extent_bystate {args} {
 	    set data [split $radstations(site,$site) ","];
 	    set lat [expr int([lindex $data 4])];
 	    set lon [expr int([lindex $data 5])];
-		     
+
 	    if {$lat < $lat1} {
 		set lat1 $lat;
 	    }
