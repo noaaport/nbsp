@@ -253,7 +253,7 @@ proc get_input_files_list {argv} {
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
-if {$argc < 2} {
+if {$argc == 0} {
     log_err $usage;
 }
 get_input_files_list $argv;

@@ -454,7 +454,7 @@ proc nbsp::radstations::extent_bystate {args} {
     incr lon1 -2;
     incr lat1 -2;
     incr lon2 2;
-    incr lar2 2;
+    incr lat2 2;
 
     return [list $lon1 $lat1 $lon2 $lat2];
 }
