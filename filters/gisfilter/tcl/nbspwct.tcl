@@ -297,7 +297,7 @@ if {$option(x) ne ""} {
 }
 
 # The post_rcfile is optional but the wct rcfile is required.
-if {[file exists $nbspwct(wct_rcfile)] == 0} {
+if {($nbspwct(wct_enable) == 1) && ([file exists $nbspwct(wct_rcfile)] == 0)} {
     log_err "$nbspwct(wct_rcfile) not found.";
 }
 
