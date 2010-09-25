@@ -90,5 +90,5 @@ append  _confdir ".d";
 foreach _f [glob -nocomplain -directory $_confdir "*.conf"] {
     source $_f;
 }
-unset _f;
+catch {unset _f};
 unset _confdir;
