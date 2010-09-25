@@ -71,6 +71,11 @@ proc get_map_tmplfile {map_tmplname} {
 
     global nbspgismap;
 
+    # If the argument is a full path, then it is not looked any further
+    if {[file pathtype $map_tmplname] eq "absolute"} {
+	return $map_tmplname;
+    }
+
     set map_tmplfile [filterlib_find_conf $map_tmplname \
 	$nbspgismap(mapdirs) $nbspgismap(mapsubdir)];
 
