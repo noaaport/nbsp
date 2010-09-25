@@ -82,8 +82,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
 
     # Because of the background execution there is no way to know here if
     # WCT actually succeeded, so we will insert it in the inventory anyway.
-
-    filter_sat_insert_inventory $data_savedir $datafpath;
+    # filter_sat_insert_inventory $data_savedir $datafpath;
 }
 
 proc filter_sat_queue_convert_gini {rc_varname bundle} {
@@ -104,8 +103,12 @@ proc filter_sat_queue_convert_gini {rc_varname bundle} {
     set data_path [file join $data_savedir $data_savename];
     set datafpath [file join $gisfilter(datadir) $data_path];
 
-    # Insert it in the inventory unconditionally
-    filter_sat_insert_inventory $data_savedir $datafpath;
+    # Insert it in the inventory unconditionally. This actually
+    # almost usless because the wct output file is sometimes accompanied
+    # by several other files, and trying to anticipate here all of them
+    # is doomed to fail at some point.
+    #
+    # filter_sat_insert_inventory $data_savedir $datafpath;
 
     # Write to the wct list
     lappend gisfilter(wct_listfile_list,sat,$fmt) \
