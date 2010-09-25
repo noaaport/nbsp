@@ -31,20 +31,21 @@ namespace eval ::nbsp::gis {
 	set radcolor($t) [list];
     }
 
-    lappend radcolor(n0r) [list 0 5 [::nbsp::gis::x11color background]];
-    lappend radcolor(n0r) [list 5 10 [::nbsp::gis::x11color aqua]];
-    lappend radcolor(n0r) [list 10 15 [::nbsp::gis::x11color deepskyblue]];
-    lappend radcolor(n0r) [list 15 20 [::nbsp::gis::x11color blue]];
-    lappend radcolor(n0r) [list 20 25 [::nbsp::gis::x11color lawngreen]];
-    lappend radcolor(n0r) [list 25 30 [::nbsp::gis::x11color limegreen]];
-    lappend radcolor(n0r) [list 30 35 [::nbsp::gis::x11color green]];
-    lappend radcolor(n0r) [list 35 40 [::nbsp::gis::x11color yellow]];
-    lappend radcolor(n0r) [list 40 45 [::nbsp::gis::x11color gold]];
-    lappend radcolor(n0r) [list 45 50 [::nbsp::gis::x11color orange]];
-    lappend radcolor(n0r) [list 50 55 [::nbsp::gis::x11color red]];
-    lappend radcolor(n0r) [list 55 60 [::nbsp::gis::x11color firebrick]];
-    lappend radcolor(n0r) [list 60 65 [::nbsp::gis::x11color brown]];
-    lappend radcolor(n0r) [list 65 70 [::nbsp::gis::x11color magenta]];
-    lappend radcolor(n0r) [list 70 75 [::nbsp::gis::x11color darkviolet]];
-    lappend radcolor(n0r) [list 75 80 [::nbsp::gis::x11color white]];
+    set radcolor(n0r,background) [::nbsp::gis::x11color background];
+    set radcolor(n0r,0) [::nbsp::gis::x11color background];
+    set radcolor(n0r,5) [::nbsp::gis::x11color aqua];
+    set radcolor(n0r,10) [::nbsp::gis::x11color deepskyblue];
+    set radcolor(n0r,15) [::nbsp::gis::x11color blue];
+    set radcolor(n0r,20) [::nbsp::gis::x11color lawngreen];
+    set radcolor(n0r,25) [::nbsp::gis::x11color limegreen];
+    set radcolor(n0r,30) [::nbsp::gis::x11color green];
+    set radcolor(n0r,35) [::nbsp::gis::x11color yellow];
+    set radcolor(n0r,40) [::nbsp::gis::x11color gold];
+    set radcolor(n0r,45) [::nbsp::gis::x11color orange];
+    set radcolor(n0r,50) [::nbsp::gis::x11color red];
+    set radcolor(n0r,55) [::nbsp::gis::x11color firebrick];
+    set radcolor(n0r,60) [::nbsp::gis::x11color brown];
+    set radcolor(n0r,65) [::nbsp::gis::x11color magenta];
+    set radcolor(n0r,70) [::nbsp::gis::x11color darkviolet];
+    set radcolor(n0r,75) [::nbsp::gis::x11color white];
 }

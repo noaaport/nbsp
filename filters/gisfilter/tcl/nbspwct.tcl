@@ -217,7 +217,13 @@ proc write_wct_defaults_file {} {
 
     set nbspwct(wct_rcfile) [file join [file dirname $nbspwct(outputfile)] \
 				 $nbspwct(wct_rcname_default)];
-    ::fileutil::writeFile $nbspwct(wct_rcfile) $nbspwct(wct_rcbody_default);
+
+    # If wct will not be executed, there is no need to actually create the
+    # file.
+    if {$nbspwct(wct_enable) == 1} {
+	::fileutil::writeFile \
+	    $nbspwct(wct_rcfile) $nbspwct(wct_rcbody_default);
+    }
 }
 
 proc clean_wct_cache_dir {} {
@@ -265,12 +271,6 @@ if {$option(w) ne ""} {
     set nbspwct(wct_bin) $option(w);
 }
 
-if {$option(x) ne ""} {
-    set nbspwct(wct_rcfile) $option(x);
-} else {
-    write_wct_defaults_file;
-}
-
 if {$option(o) ne ""} {
     set nbspwct(outputfile) $option(o);
     if {$option(d) ne ""} {
@@ -285,6 +285,15 @@ if {$option(o) ne ""} {
 	set nbspwct(outputfile) \
 	    [file join $option(d) $nbspwct(outputfile)];
     }
+}
+
+# This should go after the outputfile because the default wct config file
+# is written in the output directory if it is not specified.
+#
+if {$option(x) ne ""} {
+    set nbspwct(wct_rcfile) $option(x);
+} else {
+    write_wct_defaults_file;
 }
 
 # The post_rcfile is optional but the wct rcfile is required.

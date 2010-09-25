@@ -2,6 +2,10 @@
 # $Id$
 #
 
+#
+# Default configuration
+#
+
 # The "inputdirs" and "outputfle" are relative to the gisfilter
 # data directory (e.g. "/var/noaaport/data/gis").
 # The map template is searched in the directories
@@ -32,7 +36,7 @@ lappend nbspgismap(geoclist) {
   id		sat_conus_01
   maptmpl	map_sat_conus.tmpl
   options	{extent	{-126 30 -66 50} size {1280 800}}
-  outputfile	img/sat/tig01.png
+  outputfile	img/sat/sat_conus_01.png
   inputpatt     *.tif
   inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
 }
@@ -40,40 +44,51 @@ lappend nbspgismap(geoclist) {
 #
 # rad example
 #
-# set _d [list];
-# foreach s [list ama lbb maf dyx sjt fws grk ewx dfx hgx crp bro fdr)] {
-#   lappend _d "rad/tif/$s/n0r";
-# }
-# geoc_rad_bundle_add \
-#      "rad_n0r_tx" "map_rad.tmpl" "-104,23,-93,37" "1280,800" n0r \
-#      "img/rad/n0rtx.png" "*.tif" $_d
-#
-## or equivalently
-#
 # lappend nbspgismap(geoclist) {
 #  id		rad_n0r_tx
 #  maptmpl	map_rad.tmpl
 #  options	{extent	{-104 23 -93 37} size {800 600} awips1 n0r}
-#  outputfile	img/rad/n0rtx.png
-#  inputpatt     *.tif
-#  inputdirs    {rad/tif/ama/n0r rad/tif/bro/n0r rad/tif/crp/n0r \
-#	rad/tif/dfx/n0r rad/tif/dyx/n0r rad/tif/ewx/n0r rad/tif/fws/n0r \
-#	rad/tif/grk/n0r rad/tif/hgx/n0r rad/tif/lbb/n0r rad/tif/maf/n0r \
-#	rad/tif/sjt/n0r}
+#  outputfile	img/rad/rad_n0r_tx.png
+#  inputpatt     *.asc
+#  inputdirs    {rad/asc/ama/n0r rad/asc/bro/n0r rad/asc/crp/n0r \
+#	rad/asc/dfx/n0r rad/asc/dyx/n0r rad/asc/ewx/n0r rad/asc/fws/n0r \
+#	rad/asc/grk/n0r rad/asc/hgx/n0r rad/asc/lbb/n0r rad/asc/maf/n0r \
+#	rad/asc/sjt/n0r}
 # }
+#
+## or equivalently
+#
+# set _d [list];
+# foreach s [list ama lbb maf dyx sjt fws grk ewx dfx hgx crp bro fdr)] {
+#   lappend _d "rad/asc/$s/n0r";
+# }
+# geoc_rad_bundle_add \
+#      "rad_n0r_tx" "map_rad.tmpl" "-104,23,-93,37" "1280,800" n0r \
+#      "img/rad/rad_n0r_tx" "*.asc" $_d
+#
 
 #
-# even better
+# Better
 #
-package require nbsp::radstations;
-
 lappend nbspgismap(geoclist) [subst {
   id            rad_n0r_south
   maptmpl	map_rad.tmpl
   options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\
 		size {800 600} awips1 n0r}
-  outputfile    img/rad/n0rsouth.png
-  inputpatt     *.tif
+  outputfile    img/rad/rad_n0r_south.png
+  inputpatt     *.asc
   inputdirs     {[nbsp::radstations::inputdirs_bystate\
-		"rad/tif/%{sss}/n0r" ar la nm ok tx]}
+		"rad/asc/%{sss}/n0r" ar la nm ok tx]}
 }];
+
+#
+# Load all the files gismap-bundle.d/*.conf
+#
+set _confdir [file rootname [info script]];
+append  _confdir ".d";
+
+foreach _f [glob -nocomplain -directory $_confdir "*.conf"] {
+    source $_f;
+}
+unset _f;
+unset _confdir;

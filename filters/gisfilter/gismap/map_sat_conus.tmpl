@@ -19,11 +19,11 @@ set map(script) {
 MAP
 	#
 	# Allow the possibility that the extent parameters are
-	# specified as "a b c d" or "a,b,c,d", and similarly with the size.
+	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
 	#
-	EXTENT [string map [list "," " "] $map(extent)]
+	EXTENT [string map [list ";" " "] $map(extent)]
 	UNITS  DD
-	SIZE [string map [list "," " "] $map(size)]
+	SIZE [string map [list ";" " "] $map(size)]
 
 	NAME "GOESMap"
 	IMAGETYPE mypng

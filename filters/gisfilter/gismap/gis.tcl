@@ -3,7 +3,9 @@
 #
 # nbsp::gis::init {color_def_file}
 # nbsp::gis::x11color {color_name}
-# nbsp::gis::radcolor {}
+# nbsp::gis::x11color_set {name rgb}
+# nbsp::gis::radcolor {awips1 level}
+# nbsp::gis::radcolor_set {awips1 level rgb}
 #
 # The gisfilter.init1 file must have been sourced before requiring this
 # package, so that it can find the gisfilter template directories.
@@ -35,9 +37,23 @@ proc nbsp::gis::x11color {name} {
     return $x11color($name);
 }
 
-proc nbsp::gis::radcolor {awips1} {
+proc nbsp::gis::x11color_set {name rgb} {
+
+    variable x11color;
+
+    set x11color($name) $rgb;
+}
+
+proc nbsp::gis::radcolor {awips1 level} {
 
     variable radcolor;
 
-    return $radcolor($awips1);
+    return $radcolor($awips1,$level);
+}
+
+proc nbsp::gis::radcolor_set {awips1 level rgb} {
+
+    variable radcolor;
+
+    set radcolor($awips1,$level) $rgb;
 }

@@ -31,6 +31,6 @@ set gisfilter(gismap_mapfonts_dir) ""; # If unset, use std dirs above
 #
 # scheduler parameters
 #
-set gisfilter(scheduler_enable) 0;
+set gisfilter(scheduler_enable) 1;
 set gisfilter(schedule) [file join $common(confdir) "gisfilter-schedule.rc"];
 set gisfilter(schedule_run_period) "minutely";

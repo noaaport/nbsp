@@ -1,29 +1,37 @@
 #
 # $Id$
 #
-package require nbsp::radstations;
+
+#
+# Default configuration -
+#
 
 sat_bundle_clear;
 rad_bundle_clear;
 
-# default configuration -
+#
+# sat -
+#
 # WCT gives errors processing tigb and tiga05 so they are excluded.
 #
 sat_bundle_add "all" "tif" "wct_defaults.xml" \
 	 {_tig(a|e|h|i|w|p|q)0[1-5],!_tiga05};
-#
+
 ## sat_bundle_add all "nc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
 ## sat_bundle_add all "asc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
+
 #
-rad_bundle_add "south" "tif" "wct_defaults.xml" \
+# rad -
+#
+rad_bundle_add "south" "asc" "wct_defaults.xml" \
 	"-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])";
 
 #
 # Examples -
 #
-# The tif32 and rnc convsersions are slower than, and result in files
+# The tif32 and rnc conversions are slower than, and result in files
 # larger than, tif, nc and asc.  The shp, csv and wkt are much worse
-# in both counts amd should not be used.
+# in both counts and should not be used.
 #
 
 ## sat_bundle_add "conuspr" "tif32" "wct_defaults.xml" {_tig(e|w|p|q)0[1-5]};
@@ -36,6 +44,18 @@ rad_bundle_add "south" "tif" "wct_defaults.xml" \
 #
 # radar examples
 #
-### rad_bundle_add "n0r" "tif" "wct_defaults.xml" {-n0r};
+### rad_bundle_add "n0r" "asc" "wct_defaults.xml" {-n0r};
 ### rad_bundle_add "tx" "nc" "wct_defaults.xml" \
 ###     {-n[0-3](r|s)(ama|lbb|maf|dyx|sjt|fws|grk|ewx|dfx|hgx|crp|bro|fdr)};
+
+#
+# Load all the files gismap-bundle.d/*.conf
+#
+set _confdir [file rootname [info script]];
+append  _confdir ".d";
+
+foreach _f [glob -nocomplain -directory $_confdir "*.conf"] {
+    source $_f;
+}
+unset _f;
+unset _confdir;

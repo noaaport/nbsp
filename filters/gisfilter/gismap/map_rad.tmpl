@@ -1,6 +1,13 @@
 #
 # $Id$
 #
+package require nbsp::gis;
+
+# Load the color definitions - the default is that they are in the file
+# gis-color-def in the same directory as this template.
+#
+::nbsp::gis::init [file join [file dirname [info script]] "gis-colors.def"];
+
 # When this file is sourced (by nbspgismap1), the following parameters
 # will have been set:
 #
@@ -28,12 +35,16 @@ set header {
 MAP
 	#
 	# Allow the possibility that the extent parameters are
-	# specified as "a b c d" or "a,b,c,d", and similarly with the size.
+	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
 	#
-	EXTENT [string map [list "," " "] $map(extent)]
+	EXTENT [string map [list ";" " "] $map(extent)]
 	UNITS  DD
-	SIZE [string map [list "," " "] $map(size)]
+	SIZE [string map [list ";" " "] $map(size)]
+	IMAGECOLOR [::nbsp::gis::radcolor $map(awips1) background]
 	FONTSET "$map(mapfonts)/fonts.list"
+	#
+	# IMAGECOLOR 196 196 196  will give a light grey background
+	#
 }
 
 #
@@ -50,97 +61,97 @@ LAYER
     CLASS
         EXPRESSION (\[pixel\] >= 0 AND \[pixel\] < 5)
         STYLE
-            COLOR $color_0_5
+            COLOR [::nbsp::gis::radcolor $map(awips1) 0]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 5 AND \[pixel\] < 10)
         STYLE
-            COLOR $color_5_10
+            COLOR [::nbsp::gis::radcolor $map(awips1) 5]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 10 AND \[pixel\] < 15)
         STYLE
-            COLOR $color_10_15
+            COLOR [::nbsp::gis::radcolor $map(awips1) 10]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 15 AND \[pixel\] < 20)
         STYLE
-            COLOR $color_15_20
+            COLOR [::nbsp::gis::radcolor $map(awips1) 15]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 20 AND \[pixel\] < 25)
         STYLE
-            COLOR $color_20_25
+            COLOR [::nbsp::gis::radcolor $map(awips1) 20]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 25 AND \[pixel\] < 30)
         STYLE
-            COLOR $color_25_30
+            COLOR [::nbsp::gis::radcolor $map(awips1) 25]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 30 AND \[pixel\] < 35)
         STYLE
-            COLOR $color_30_35
+            COLOR [::nbsp::gis::radcolor $map(awips1) 30]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 35 AND \[pixel\] < 40)
         STYLE
-            COLOR $color_35_40
+            COLOR [::nbsp::gis::radcolor $map(awips1) 35]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 40 AND \[pixel\] < 45)
         STYLE
-            COLOR $color_40_45
+            COLOR [::nbsp::gis::radcolor $map(awips1) 40]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 45 AND \[pixel\] < 50)
         STYLE
-            COLOR $color_45_50
+            COLOR [::nbsp::gis::radcolor $map(awips1) 45]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 50 AND \[pixel\] < 55)
         STYLE
-            COLOR $color_50_55
+            COLOR [::nbsp::gis::radcolor $map(awips1) 50]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 55 AND \[pixel\] < 60)
         STYLE
-            COLOR $color_55_60
+            COLOR [::nbsp::gis::radcolor $map(awips1) 55]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 60 AND \[pixel\] < 65)
         STYLE
-            COLOR $color_60_65
+            COLOR [::nbsp::gis::radcolor $map(awips1) 60]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 65 AND \[pixel\] < 70)
         STYLE
-            COLOR $color_65_70
+            COLOR [::nbsp::gis::radcolor $map(awips1) 65]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 70 AND \[pixel\] < 75)
         STYLE
-            COLOR $color_70_75
+            COLOR [::nbsp::gis::radcolor $map(awips1) 70]
         END
     END
     CLASS
         EXPRESSION (\[pixel\] >= 75 AND \[pixel\] < 80)
         STYLE
-            COLOR $color_75_80
+            COLOR [::nbsp::gis::radcolor $map(awips1) 75]
         END
     END
 END
@@ -173,28 +184,7 @@ LAYER
         BUFFER 4
       END # end of label 
     END
-
 END
-}
-
-# init
-package require nbsp::gis;
-
-# Load the color definitions - the default is that they are in the file
-# gis-color-def in the same directory as this template.
-#
-::nbsp::gis::init [file join [file dirname [info script]] "gis-colors.def"];
-
-# Set the color table for this template
-set color_table [::nbsp::gis::radcolor $map(awips1)];
-
-#
-# Set the color_start_end variables that are used in the template.
-#
-foreach p $color_table {
-    foreach {i1 i2 c} $p {
-        eval set color_${i1}_${i2} {$c};
-    }
 }
 
 #
@@ -216,11 +206,13 @@ set map(scriptstr) $MAP;
 #
 # Test
 #
-# set map(tmpl) "map_rad.tmpl";
+# source "gis.tcl";
+#
 # set map(awips1) "n0r";
-# set map(geodata) "/usr/local/share/geodata";
-# set map(inputfile,1) "/var/noaaport/data/gis/1.tif";
-# set map(inputfile,2) "/var/noaaport/data/gis/2.tif";
+# set map(geodata) "/usr/local/share/nbsp/defaults/geodata";
+# set map(mapfonts) "/usr/local/share/nbsp/defaults/mapfonts";
+# set map(inputfile,1) "/var/noaaport/data/gis/1.asc";
+# set map(inputfile,2) "/var/noaaport/data/gis/2.asc";
 #
 # Use the defaults for these two:
 #
