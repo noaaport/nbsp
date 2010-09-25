@@ -5,7 +5,6 @@ namespace eval ::nbsp::gis {
 
     variable x11color;
 
-    set x11color(background) {255 255 255};
     set x11color(white) {255 255 255};
     set x11color(darkviolet) {148 0 211};
     set x11color(magenta) {255 0 255};
@@ -31,8 +30,8 @@ namespace eval ::nbsp::gis {
 	set radcolor($t) [list];
     }
 
-    set radcolor(n0r,background) [::nbsp::gis::x11color background];
-    set radcolor(n0r,0) [::nbsp::gis::x11color background];
+    set radcolor(n0r,background) [::nbsp::gis::x11color white];
+    set radcolor(n0r,0) [::nbsp::gis::x11color white];
     set radcolor(n0r,5) [::nbsp::gis::x11color aqua];
     set radcolor(n0r,10) [::nbsp::gis::x11color deepskyblue];
     set radcolor(n0r,15) [::nbsp::gis::x11color blue];
