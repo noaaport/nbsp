@@ -106,13 +106,10 @@ proc run_map_rcfile {} {
 
     global nbspgismap option;
 
-    # Make the rc file name
-    set fname [get_tmpl_fname];
-    append map_rcname $fname $nbspgismap(map_rc_fext);
-
-    # The map rc file is created in the same directory as the output file.
-    set dir [file dirname $nbspgismap(outputfile)];
-    set nbspgismap(map_rcfile) [file join $dir $map_rcname];
+    # The map rc file is created in the same directory as the output file,
+    # and with the same name but with the ".map" extension.
+    set nbspgismap(map_rcfile) [file rootname $nbspgismap(outputfile)];
+    append nbspgismap(map_rcfile) $nbspgismap(map_rc_fext);
 
     # Create the variables for the map script. For the same reason
     # mentioned in exec_shp2img {}, use the full paths in the map rc file.
@@ -199,7 +196,10 @@ proc exec_shp2img {} {
 }
 
 proc get_tmpl_fname {} {
-
+#
+# If the output file name is not specified, then the name is derived from
+# the template name.
+#
     global nbspgismap;
 
     if {[file extension $nbspgismap(map_tmplfile)] \
