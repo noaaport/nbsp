@@ -82,13 +82,12 @@ lappend nbspgismap(geoclist) [subst {
 }];
 
 #
-# Load all the files gismap-bundle.d/*.conf
+# Load "gis/gismap-bundle.conf"
 #
-set _confdir [file rootname [info script]];
-append  _confdir ".d";
+set _f [file join [file dirname [info script]] \
+	"gis" [file tail [info script]]];
 
-foreach _f [glob -nocomplain -directory $_confdir "*.conf"] {
+if {[file exists $_f]} {
     source $_f;
 }
-catch {unset _f};
-unset _confdir;
+unset _f;
