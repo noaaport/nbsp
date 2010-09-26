@@ -90,4 +90,4 @@ set _f [file join [file dirname [info script]] \
 if {[file exists $_f]} {
     source $_f;
 }
-unset _f;
+catch {unset _f};
