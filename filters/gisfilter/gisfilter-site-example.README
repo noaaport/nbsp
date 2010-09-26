@@ -14,14 +14,9 @@ These are configuration files that I use to test the "gisfilter" in Nbsp.
    rm wct-3.2.0.zip
 
 3) Install the wct-export script (or something equivalent)
-   in "/usr/local/bin" (or somewhere in PATH)
+   in "/usr/local/bin" (or somewhere in PATH):
 
-   #!/bin/sh
-
-   version="3.2.0"
-   wctdir=/usr/local/lib/wct-${version}
-
-   ${wctdir}/wct-export "$@"
+   install -m 0755 wct-export.sh /usr/local/bin/wct-export
 
 4) Start nbspd as usual - You should start to see some data files in
 
