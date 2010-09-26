@@ -26,10 +26,6 @@ namespace eval ::nbsp::gis {
 
     variable radcolor;
 
-    foreach t [list n0r n1r n2r n1s] {
-	set radcolor($t) [list];
-    }
-
     set radcolor(n0r,background) [::nbsp::gis::x11color white];
     set radcolor(n0r,0) [::nbsp::gis::x11color white];
     set radcolor(n0r,5) [::nbsp::gis::x11color aqua];
@@ -47,4 +43,12 @@ namespace eval ::nbsp::gis {
     set radcolor(n0r,65) [::nbsp::gis::x11color magenta];
     set radcolor(n0r,70) [::nbsp::gis::x11color darkviolet];
     set radcolor(n0r,75) [::nbsp::gis::x11color white];
+
+    foreach k [array names radcolor "n0r,*"] {
+	if {[regexp {^n0r,(.+)} $k match level]} {
+	    foreach t [list n0r n1r n2r n3r n0z] {
+		set radcolor($t,$level) $radcolor(n0r,$level);
+    	    }
+	}
+    }
 }
