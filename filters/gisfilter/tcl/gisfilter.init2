@@ -102,6 +102,7 @@ set gisfilter(sat_outputfile_dirfmt,wkt) "sat/wkt/$gisfilter(sat_subdirfmt)";
 ##############################################################################
 #
 set gisfilter(sat_bundlelist) [list];
+set gisfilter(sat_bundlelist_seqnum) 0;
 
 #
 # rad configuration
@@ -149,12 +150,13 @@ set gisfilter(rad_outputfile_namefmt,wkt) "$gisfilter(rad_namefmt).wkt";
 set gisfilter(rad_outputfile_dirfmt,wkt) "rad/wkt/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_bundlelist) [list];
+set gisfilter(rad_bundlelist_seqnum) 0;
 
 #
 # rad2
 #
 set gisfilter(rad2_enable) 0;
-set gisfilter(rad2_regex)  {.*};  # matches against fname
+set gisfilter(rad2_regex)  {-level2};  # matches against fname
 set gisfilter(rad2_latest_enable)        1; # make link to latest
 set gisfilter(rad2_latestname)   "sn.last";
 set gisfilter(rad2_namefmt)      {$rc(STATION)_$rc(ymd_hm)};
@@ -199,6 +201,7 @@ set gisfilter(rad2_outputfile_dirfmt,wkt) \
 	"rad2/wkt/$gisfilter(rad2_subdirfmt)";
 #
 set gisfilter(rad2_bundlelist) [list];
+set gisfilter(rad2_bundlelist_seqnum) 0;
 
 # The local overrides
 if {[file exists $gisfilter(conf)]} {
@@ -208,10 +211,9 @@ if {[file exists $gisfilter(conf)]} {
 #
 # Bundle configuration functions
 #
-proc _wct_bundle_add {type name wctfmt wctrc_name regex {wctrc_file ""}} {
+proc _wct_bundle_add {type wctfmt wctrc_name regex {wctrc_file ""}} {
 #
 # type = rad|sat
-# name = tag of the regex (e.g., the name of a state(s))
 # wctfmt = tif,nc,...
 # wctrc_name = wct config file name; searched in default dirs
 # regex = matched against fname
@@ -221,6 +223,9 @@ proc _wct_bundle_add {type name wctfmt wctrc_name regex {wctrc_file ""}} {
     
     append bundle_type $type "_bundle";
     append bundle_list $type "_bundlelist";
+
+    set name $gisfilter(${type}_bundlelist_seqnum);
+    incr gisfilter(${type}_bundlelist_seqnum);
 
     # Construct a unique tag
     set bundle_name [join [list $type $name $wctfmt] "."];
@@ -241,9 +246,9 @@ proc _wct_bundle_clear {type} {
     set gisfilter($bundlelist) [list];
 }
 
-proc sat_bundle_add {name wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
-    _wct_bundle_add "sat" $name $wct_fmt $wctrcr_name $regex $wctrc_file;
+    _wct_bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
 }
 
 proc sat_bundle_clear {} {
@@ -251,9 +256,9 @@ proc sat_bundle_clear {} {
     _wct_bundle_clear "sat";
 }
 
-proc rad_bundle_add {name wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc rad_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
 
-    _wct_bundle_add "rad" $name $wct_fmt $wctrcr_name $regex $wctrc_file;
+    _wct_bundle_add "rad" $wct_fmt $wctrcr_name $regex $wctrc_file;
 }
 
 proc rad_bundle_clear {} {
@@ -264,11 +269,11 @@ proc rad_bundle_clear {} {
 #
 # Examples
 #
-### sat_bundle_add "conus" "tif" "wct_sat_conus.xml" {_tig(e|w)};
-### sat_bundle_add "conus" "nc" "wct_sat_conus.xml" {_tig(e|w)};
+### sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
+### sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
 #
-### rad_bundle_add "n0r" "tif" "wct_rad.xml" {-n0r};
-### rad_bundle_add "jua" "nc" "wct_rad.xml" {-n[0-3](r|s)jua};
+### rad_bundle_add "tif" "wct_rad.xml" {-n0r};
+### rad_bundle_add "nc" "wct_rad.xml" {-n[0-3](r|s)jua};
 
 #
 # Dynamic initialization
