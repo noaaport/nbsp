@@ -64,9 +64,15 @@ LAYER
   TRANSPARENCY 100
   CLASSITEM "\[pixel\]"
     CLASS
-        EXPRESSION (\[pixel\] >= 0 AND \[pixel\] < 5)
+        EXPRESSION (\[pixel\] == 0)
         STYLE
             COLOR [::nbsp::gis::radcolor $map(awips1) background]
+        END
+    END
+    CLASS
+        EXPRESSION (\[pixel\] > 0 AND \[pixel\] < 5)
+        STYLE
+            COLOR [::nbsp::gis::radcolor $map(awips1) 1]
         END
     END
     CLASS
