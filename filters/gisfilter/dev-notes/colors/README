@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+1) Edit the cvt.c to uncomment the appropriate color section.
+
+2) Run make -
+   This will produce
+	color.html
+	cvt.output
+
+    Then rename them as
+
+	<color>.html
+	<color>.txt
+
+3) Repeat (1) and (2) for each color: blue, green, yellow, orange, red, magenta
+
+3) Execute mktcltable.sh to create rgbcolor.tcl, which is the file
+   used in gis-colors.def

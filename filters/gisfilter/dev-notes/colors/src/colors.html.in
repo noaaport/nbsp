@@ -1,0 +1,15 @@
+<html>
+<head><title></title></head>
+
+<body>
+
+<table border style="font-size:75%">
+<tr><td></td><td>hex</td><td>rgb</td></tr>
+
+@body@
+
+</table>
+
+</body>
+
+</html>

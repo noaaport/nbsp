@@ -4,6 +4,7 @@
 # nbsp::gis::init {color_def_file}
 # nbsp::gis::x11color {color_name}
 # nbsp::gis::x11color_set {name rgb}
+# nbsp::gis::rgbcolor {name}
 # nbsp::gis::radcolor {awips1 level}
 # nbsp::gis::radcolor_set {awips1 level rgb}
 #
@@ -16,9 +17,11 @@ namespace eval nbsp::gis {} {
 
     variable gis;
     variable x11color;
+    variable rgbcolor;
     variable radcolor;
 
     array set x11color {};
+    array set rgbcolor {};
     array set radcolor {};
 }
 
@@ -42,6 +45,13 @@ proc nbsp::gis::x11color_set {name rgb} {
     variable x11color;
 
     set x11color($name) $rgb;
+}
+
+proc nbsp::gis::rgbcolor {family number} {
+
+    variable rgbcolor;
+
+    return $rgbcolor($family,$number);
 }
 
 proc nbsp::gis::radcolor {awips1 level} {
