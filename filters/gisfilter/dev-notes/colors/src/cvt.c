@@ -17,7 +17,7 @@ int main(void){
   /* green
   b = 0;
   g = 255;
-  for(r = 128; r >= 0; r -= step){
+  for(r = 127; r >= 0; r -= step){
     fprintf(stdout, "%d %d 0 #%.2x%.2x00\n", r, g, r, g);
     --g;
   }
@@ -26,7 +26,7 @@ int main(void){
   /* yellow
   r = 255;
   g = 255;
-  for(b = 128; b >= 0; b -= step){
+  for(b = 127; b >= 0; b -= step){
     fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
   }
   */

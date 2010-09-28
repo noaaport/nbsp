@@ -4,7 +4,7 @@
 # nbsp::gis::init {color_def_file}
 # nbsp::gis::x11color {color_name}
 # nbsp::gis::x11color_set {name rgb}
-# nbsp::gis::rgbcolor {name}
+# nbsp::gis::rgbcolor {family number}
 # nbsp::gis::radcolor {awips1 level}
 # nbsp::gis::radcolor_set {awips1 level rgb}
 #
