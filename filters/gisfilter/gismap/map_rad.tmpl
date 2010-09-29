@@ -63,108 +63,119 @@ LAYER
   STATUS ON
   TRANSPARENCY 100
   CLASSITEM "\[pixel\]"
-    CLASS
-        EXPRESSION (\[pixel\] == 0)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) background]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] > 0 AND \[pixel\] < 5)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 1]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 5 AND \[pixel\] < 10)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 5]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 10 AND \[pixel\] < 15)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 10]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 15 AND \[pixel\] < 20)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 15]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 20 AND \[pixel\] < 25)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 20]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 25 AND \[pixel\] < 30)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 25]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 30 AND \[pixel\] < 35)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 30]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 35 AND \[pixel\] < 40)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 35]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 40 AND \[pixel\] < 45)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 40]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 45 AND \[pixel\] < 50)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 45]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 50 AND \[pixel\] < 55)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 50]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 55 AND \[pixel\] < 60)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 55]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 60 AND \[pixel\] < 65)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 60]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 65 AND \[pixel\] < 70)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 65]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 70 AND \[pixel\] < 75)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 70]
-        END
-    END
-    CLASS
-        EXPRESSION (\[pixel\] >= 75)
-        STYLE
-            COLOR [::nbsp::gis::radcolor $map(awips1) 75]
-        END
-    END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 0 && \[pixel\] < 5)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 0]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 5 && \[pixel\] < 10)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 5]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 10 && \[pixel\] < 15)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 10]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 15 && \[pixel\] < 20)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 15]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 20 && \[pixel\] < 25)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 20]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 25 && \[pixel\] < 30)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 25]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 30 && \[pixel\] < 35)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 30]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 35 && \[pixel\] < 40)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 35]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 40 && \[pixel\] < 45)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 40]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 45 && \[pixel\] < 50)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 45]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 50 && \[pixel\] < 55)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 50]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 55 && \[pixel\] < 60)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 55]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 60 && \[pixel\] < 65)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 60]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 65 && \[pixel\] < 70)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 65]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 70 && \[pixel\] < 75)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 70]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[pixel\] >= 75)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 75]
+     END
+   END
+
 END
 }
 
