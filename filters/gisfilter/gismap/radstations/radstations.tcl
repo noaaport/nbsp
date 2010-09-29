@@ -6,6 +6,7 @@
 # proc nbsp::radstations::extent_bystate {args}
 #
 package provide nbsp::radstations 1.0;
+package require textutil::split;
 
 namespace eval nbsp::radstations {} {
 
@@ -370,13 +371,21 @@ namespace eval nbsp::radstations {} {
 
 proc nbsp::radstations::inputdirs_bystate {dir_tmpl args} {
 #
-# The last argument should be a list of states; e.g.,
+# In the last argument, each element can be a space separated list of
+# states; e.g.,
 #
-# bundlelib_inputdirs "rad/tif/%{sss}/n0r" ar la nm ok tx;
+# bundlelib_inputdirs "rad/tif/%{sss}/n0r" ar la nm ok tx ...;
+# bundlelib_inputdirs "rad/tif/%{sss}/n0r" "ar la" "nm ok tx" ...;
 #
     variable radstations;
 
-    set r [list];	# the returned list
+    set r [list];	# the returned list of radar sites
+
+    # Construct the (tcl) state list
+    set statelist [list];
+    foreach _a $args {
+	set statelist [concat $statelist [::textutil::split::splitx ${_a}]];
+    }
 
     foreach k [array names radstations "site,*"] {
 	set line $radstations($k);
@@ -395,7 +404,7 @@ proc nbsp::radstations::inputdirs_bystate {dir_tmpl args} {
 	    regsub "%{SSSS}" $dir_tmpl [string toupper $ssss] dir;
 	}
 
-	foreach _state $args {
+	foreach _state $statelist {
 	    if {$_state eq $state} {
 		lappend r $dir;
 		break;
@@ -411,7 +420,14 @@ proc nbsp::radstations::bystate {args} {
     variable radstations;
 
     set r [list];
-    foreach state $args {
+
+    # Construct the (tcl) state list
+    set statelist [list];
+    foreach _a $args {
+	set statelist [concat $statelist [::textutil::split::splitx ${_a}]];
+    }
+
+    foreach state $statelist {
 	set r [concat $r [split $radstations(state,$state) ","]];
     }
 
@@ -427,7 +443,13 @@ proc nbsp::radstations::extent_bystate {args} {
     set lon1 0;
     set lon2 -1000;
 
-    foreach state $args {
+    # Construct the (tcl) state list
+    set statelist [list];
+    foreach _a $args {
+	set statelist [concat $statelist [::textutil::split::splitx ${_a}]];
+    }
+
+    foreach state $statelist {
 	foreach site [split $radstations(state,$state) ","] {
 	    set data [split $radstations(site,$site) ","];
 	    set lat [expr int([lindex $data 4])];
