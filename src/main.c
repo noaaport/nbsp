@@ -271,7 +271,7 @@ static int parse_args(int argc, char **argv){
 #endif
     default:
       status = 1;
-      errx(1, "%s", usage);
+      errx(1, "%s\n", usage);
       break;
     }
   }
@@ -281,7 +281,7 @@ static int parse_args(int argc, char **argv){
    */
   if(conflict_frs >= 3){
     status = 1;
-    errx(1, "Options frs specified simultaneously.");
+    errx(1, "%s\n", "Options frs specified simultaneously.");
   }
 
   return(status);
