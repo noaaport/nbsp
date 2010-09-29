@@ -101,7 +101,7 @@ void log_err(char *s){
   if(f_daemon == 1)
     syslog(LOG_ERR, "%s %m", s);
   else
-    warn(s);
+    warn("%s", s);
 }
 
 void log_err2(char *s1, char *s2){
