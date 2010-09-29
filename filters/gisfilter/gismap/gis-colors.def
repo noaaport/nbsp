@@ -1195,8 +1195,9 @@ namespace eval ::nbsp::gis {
     set radcolor(n0r,72) [::nbsp::gis::rgbcolor magenta 113];
     set radcolor(n0r,73) [::nbsp::gis::rgbcolor magenta 129];
     set radcolor(n0r,74) [::nbsp::gis::rgbcolor magenta 145];
-
     set radcolor(n0r,75) [::nbsp::gis::rgbcolor magenta 160];
+
+    set radcolor(n0r,max_level) 75;
 
     # foreach k [array names radcolor "n0r,*"] {
     #	if {[regexp {^n0r,(.+)} $k match level]} {
