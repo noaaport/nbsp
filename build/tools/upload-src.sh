@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-. upload.conf
+. ./upload.conf
 
 filename=${name}-${version}.tgz
 

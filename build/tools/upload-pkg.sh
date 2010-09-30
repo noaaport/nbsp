@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-. upload.conf
+. ./upload.conf
 
 # Create the index
 echo $updateindexstring > $updateindexfile

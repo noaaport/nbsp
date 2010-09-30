@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-. upload.conf
+. ./upload.conf
 
 cp ../../QUICK_START/* ../../RELEASE_NOTES ../../UPGRADING \
     ../../conf/CONFIGURING ../../READMEs/*.README .
