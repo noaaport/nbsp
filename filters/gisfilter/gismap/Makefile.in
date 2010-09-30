@@ -13,7 +13,6 @@ TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 TMPLSOURCES =	map_sat_conus.tmpl gis-colors.def \
 		map_rad.tmpl \
 		map_rad_1.tmpl \
-		map_rad_1b.tmpl \
 		map_rad_3.tmpl \
 		map_rad_5.tmpl
 TMPLTARGET =    gismap-templates.tgz
