@@ -2,7 +2,7 @@ $Id$
 
 - Mon May 10 10:15:55 AST 2010
 
-This is the 2nd release of the 2.0 version of the
+This is the 4th release of the 2.0 version of the
 
 	Noaaport Broadcast System Processor (Nbsp).
 
@@ -24,7 +24,7 @@ including Noaaport, Radar Level II data, and/or other Nbsp master servers.
 Most, if not all, of the new features are documented in some form in the
 README files or the noaaport.net site.
 
-Starting with version 2.0.r2 (this release), nbspd runs as the user
+Starting with version 2.0.r2, nbspd runs as the user
 "noaaport", and therefore the directories where the daemon writes
 must be owned by that user:
 

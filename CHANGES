@@ -60,3 +60,4 @@ r4 -
 - Added option(s) to set servername to the wildcard address(es).
 - Added "digatmos" as default subdir for the catalog extension
   if no suubdir is specified in the /_catalog url.
+- Added the gisfilter.
