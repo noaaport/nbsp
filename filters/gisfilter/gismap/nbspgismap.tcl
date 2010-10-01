@@ -140,7 +140,7 @@ proc process_geoc_entry {id} {
     global option nbspgismap;
 
     # get_geoclist {} fills these, for each id, and these, together
-    # with the common options, are passed to nbspgismap:
+    # with the common options, are passed to nbspgismap1:
     #
     # nbspgismap(geoclist,$id,maptmpl)
     # nbspgismap(geoclist,$id,options)
