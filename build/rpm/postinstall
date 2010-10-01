@@ -158,7 +158,6 @@ cd htdocs/pub
 [ -e "gempak" ] || ln -s /var/noaaport/data/gempak gempak
 [ -e "grib" ] || ln -s /var/noaaport/data/grib grib
 [ -e "track" ] || ln -s /var/noaaport/data/track track
-[ -e "gis" ] || ln -s /var/noaaport/data/gis gis
 [ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
 [ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot
 [ -d "radmap" ] || install -d -m 755 -o $user -g $user radmap
@@ -169,6 +168,11 @@ cd htdocs/pub
     install -d -m 755 -o $user -g $user weatherscope/client
 [ -e "weatherscope/data" ] || \
     ln -s /var/noaaport/data/weatherscope weatherscope/data
+[ -d "gis/defaults" ] || \
+    install -d -m 755 -o $user -g $user gis/defaults
+[ -d "gis/site" ] || \
+    install -d -m 755 -o $user -g $user gis/site
+[ -e "gis/data" ] || ln -s /var/noaaport/data/gis gis/data
 
 #
 # Display message
