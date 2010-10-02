@@ -11,10 +11,10 @@ TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
 TMPLSOURCES =	map_sat_conus.tmpl gis-colors.def \
-		map_rad.tmpl \
-		map_rad_1.tmpl \
-		map_rad_3.tmpl \
-		map_rad_5.tmpl
+		map_rad_bref.tmpl \
+		map_rad_bref_1.tmpl \
+		map_rad_bref_3.tmpl \
+		map_rad_bref_5.tmpl
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =      ${TMPLPDIR}/map
