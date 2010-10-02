@@ -33,10 +33,10 @@ geoc_bundle_clear;
 #	"sat/tif/tig/tigw01" "sat/tif/tig/tige01"; 
 #
 lappend nbspgismap(geoclist) {
-  id		sat_conus_01
+  id		sat_tig01_conus
   maptmpl	map_sat_conus.tmpl
   options	{extent	{-126 30 -66 50} size {1280 800}}
-  outputfile	img/sat/sat_conus_01.png
+  outputfile	img/sat/sat_tig01_conus.png
   inputpatt     *.tif
   inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
 }
