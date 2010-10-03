@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {ar la nm ok tx};
+set _name "south";

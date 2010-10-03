@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {hi};
+set _name "hi";

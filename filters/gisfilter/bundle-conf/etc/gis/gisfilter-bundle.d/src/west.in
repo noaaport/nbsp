@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {az ca id nv or ut wa};
+set _name "west";

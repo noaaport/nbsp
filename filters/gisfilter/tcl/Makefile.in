@@ -28,12 +28,17 @@ FILTERLIBFILES = gislib-sat.tcl \
 
 FILTERLIBTMP = gislib.tmp
 
+BUNDLE_ETC_TEMPLATES = gis-bundle-etc-templates.tgz
+BUNDLE_WWW_TEMPLATES = gis-bundle-www-templates.tgz
+BUNDLE_TEMPLATES = ${BUNDLE_ETC_TEMPLATES} ${BUNDLE_WWW_TEMPLATES}
+
 TMPLSOURCES =   wct_defaults.xml
 TMPLTARGET =    gisfilter-wct-templates.tgz
 TMPLPDIR =      gis
 TMPLDIR =       ${TMPLPDIR}/wct
 
-TARGET =	${FILTERTARGET} ${TOOLNAMES} ${SAMPLES} ${TMPLTARGET}
+TARGET =	${FILTERTARGET} ${TOOLNAMES} ${SAMPLES} ${TMPLTARGET} \
+		${BUNDLE_TEMPLATES}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -70,13 +75,21 @@ ${TMPLTARGET}: ${TMPLSOURCES}
 	cp ${TMPLSOURCES} ${TMPLDIR}
 	tar -czf ${TMPLTARGET} ${TMPLDIR}
 
+${BUNDLE_TEMPLATES}:
+	cd ../bundle-conf/build; make
+	cp ../bundle-conf/build/${BUNDLE_ETC_TEMPLATES} .
+	cp ../bundle-conf/build/${BUNDLE_WWW_TEMPLATES} .
+
 install: ${TARGET}
 	${INSTALL} -m 755 ${FILTERTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
 	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
 	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${DEFAULTS} ${MYCONFDIR}
 	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
+	${INSTALL} -m 644 ${BUNDLE_ETC_TEMPLATES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${BUNDLE_WWW_TEMPLATES} ${MYDOCDIR}
 
 clean:
 	rm -f *~ ${TARGET} ${SAMPLES} Makefile
 	rm -rf ${TMPLPDIR}
+	cd ../bundle-conf/build; make clean

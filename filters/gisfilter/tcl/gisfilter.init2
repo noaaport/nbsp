@@ -113,7 +113,7 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 #   sn.NNNN     (and it depends on the number of N's)
 #   TJSJ_SDUS52_N0RJUA_200809220154
 #
-set gisfilter(rad_enable) 0;
+set gisfilter(rad_enable) 1;
 set gisfilter(rad_regex)  {_sdus};  # matches against fname
 set gisfilter(rad_latest_enable)        1; # make link to latest
 set gisfilter(rad_latestname)   "sn.last";

@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {pr};
+set _name "pr";

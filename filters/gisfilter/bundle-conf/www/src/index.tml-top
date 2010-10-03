@@ -1,0 +1,13 @@
+[Doc_Dynamic]
+
+<html>
+<head>
+[::html::if {[file exists $Config(docRoot)/gis/site/index.html]} {
+  <meta http-equiv="Refresh" content="0; url=/gis/site/index.tml"/>
+ } else {
+  <meta http-equiv="Refresh" content="0; url=/gis/defaults/index.tml"/>
+ }
+]
+</head>
+<body></body>
+</html>

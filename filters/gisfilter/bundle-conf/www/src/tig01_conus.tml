@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+# This file lives in
+#
+# /gis/defaults/tml/sat/<name>.tml
+#
+[Doc_Dynamic]
+
+[::html::set _docpath "/gis/data/img/sat/tig01_conus.png"]
+[::html::set _headtitle "TIG01 CONUS"]
+[::html::set _title "tige01 and tigw01 composite"]
+
+<html>
+<head><title> $_headtitle </title></head>
+
+<body>
+
+<h1> $_title - [clock format [file mtime $Config(docRoot)/$_docpath]] </h1>
+
+<table>
+<tr>
+  <td><img src="$_docpath"</td>
+</tr>
+</table>
+
+</body>
+</html>

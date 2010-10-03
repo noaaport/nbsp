@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {al de ga fl in ky ma mi ms nc nj ny oh pa sc va vt wv};
+set _name "east";

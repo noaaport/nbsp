@@ -222,6 +222,7 @@ etc/nbsp/dist/gisfilter-wct-templates.tgz
 etc/nbsp/dist/gismap-templates.tgz
 etc/nbsp/dist/gismap-bundle.conf-sample
 etc/nbsp/dist/gismap-bundle.conf-defaults
+etc/nbsp/dist/gis-bundle-etc-templates.tgz
 etc/nbsp/dist/panfilter.conf-sample
 etc/nbsp/dist/panfilter.rc-sample
 etc/nbsp/dist/panfilter.rc-ex
@@ -272,6 +273,7 @@ share/doc/nbsp/level3.cfg-sample
 share/doc/nbsp/level2.cfg-sample
 share/doc/nbsp/nbspudpread.pl
 share/doc/nbsp/nbspudpread.tcl
+share/doc/nbsp/gis-bundle-www-templates.tgz
 etc/nbsp/dist/httpd.conf-sample
 etc/nbsp/dist/export.conf-sample
 etc/nbsp/dist/export-da.def-sample

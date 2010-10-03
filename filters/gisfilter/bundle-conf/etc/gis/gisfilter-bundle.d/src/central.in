@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {co ia il ks mn mo mt nd ne sd wi wy};
+set _name "central";

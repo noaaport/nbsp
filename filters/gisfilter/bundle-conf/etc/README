@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+To complete the configuration:
+
+1) In the ".d" subdirectories copy (or symlink) the files from "avail"
+   to "enable".
+
+   NOTE: Only conus needs to be enabled in gisfilter-bundle.d/enable since
+         that will pull all the states (and sites) for processing.
+
+2) Edit
+
+    bundle-plist.conf
+
+to enable more products for each bundle.
+_

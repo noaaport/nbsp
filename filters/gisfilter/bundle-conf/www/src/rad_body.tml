@@ -1,0 +1,21 @@
+
+<html>
+<head><title> $_headtitle </title></head>
+
+<body>
+
+<h5>
+  $_title -
+  [clock format [file mtime [file join $Config(docRoot) $_imgpath]] -gmt true]
+</h5>
+
+<table>
+<tr>
+  <!-- <td><img src="/$_legendpath"></td> -->
+  <td>[::fileutil::cat [file join $Config(docRoot) $_legendpath]]</td>
+  <td><img src="/$_imgpath"</td>
+</tr>
+</table>
+
+</body>
+</html>
