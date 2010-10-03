@@ -1,11 +1,12 @@
 #
 # $Id$
 #
-These are configuration files that I use to test the "gisfilter" in Nbsp.
 
-1) Copy all the files "site" to
+Installation -
+==============
 
-     /usr/local/etc/nbsp/site
+1) Enable the "gisfilter" in features.conf. In my gisfilter machine I disable
+   all the other filters (because the gisfilter is CPU consuming).
 
 2) Install WCT as I have explained in several other places, i.e.,
 
@@ -24,12 +25,18 @@ These are configuration files that I use to test the "gisfilter" in Nbsp.
 
    "sat" and "rad" will contain initially the gini and nids data files.
    The files in qf will be processed every minute or so, and as a result
-   the tif, nc, ... converted files will start to show up.
+   the asc, tif, nc, ... converted files will start to show up.
 
 5) After about 10 minutes you see an "img" subdirectory with
    the configured image files.
 
-6) After a few minutes execute, from a terminal,
+   The data files and the images are accesisble from the web server
+   under the "GIS" item in the right-hand side menu.
+
+Play -
+=====
+
+1) After a few minutes execute, from a terminal,
 
    nbspgismap -L
 
@@ -40,7 +47,7 @@ These are configuration files that I use to test the "gisfilter" in Nbsp.
    rad_n0r_south
    <a few others>
 
-7) Then execute
+2) Then execute
 
    nbspgismap -d . <bundle_name>
 
@@ -51,6 +58,6 @@ These are configuration files that I use to test the "gisfilter" in Nbsp.
 
    img/rad/n0rsouth.png
 
-8) Edit some of the options in "site" files installed in step (1) to
+3) Edit some of the options in "site" files installed in step (1) to
    play with the test.
 -
