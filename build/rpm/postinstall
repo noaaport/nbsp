@@ -147,10 +147,10 @@ done
 #
 # www and tclhttpd
 #
-cp /usr/local/share/doc/nbsp/www.tgz /var/noaaport/www
+cd /usr/local/share/doc/nbsp
+tar -C /var/noaaport/www -x -z -f www.tgz
+tar -C /var/noaaport/www/htdocs/pub -x -z -f gis-bundle-www-templates.tgz
 cd /var/noaaport/www
-tar -xzf www.tgz
-rm www.tgz
 chown -R $user:$user *
 cd htdocs/pub
 [ -e "rst" ] || ln -s /var/noaaport/data/rst rst
