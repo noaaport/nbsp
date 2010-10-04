@@ -27,7 +27,7 @@
  * nbspunz -c 54 n0rsjt_20091002_0007.nids | nbspradinfo
  *  
  * In the first case the data file is one from the spool directory;
- * in the second the the data file is on from the digatmos/nexrad directory.
+ * in the second, the data file is from the digatmos/nexrad directory.
  *
  * If the data does not start with nids header, the [-c <count>] options
  * can be used to instruct the program to ignore the first <count> bytes.
@@ -64,11 +64,15 @@ struct nids_header_st {
   int m_source;                 /* unused */
   int m_destination;            /* unused */
   int m_numblocks;              /* unused */
-  float pdb_lat;
-  float pdb_lon;
+  int pdb_lat;
+  int pdb_lon;
   int pdb_height;
   int pdb_code;
   int pdb_mode;
+  /* derived values */
+  unsigned int unixseconds;
+  float lat;
+  float lon;
 };
 
 struct {
@@ -80,8 +84,15 @@ struct {
   int fd;
 } g = {0, 0, 0, NULL, -1};
 
+/* general functions */
 static int process_file(void);
 static void cleanup(void);
+/* extraction functions */
+static uint16_t extract_uint16(unsigned char *p, int halfwordid);
+static uint32_t extract_uint32(unsigned char *p, int halfwordid);
+static int32_t extract_int32(unsigned char *p, int halfwordid);
+/* decoding functions */
+static void decode_nids_header(struct nids_header_st *nheader);
 
 static void cleanup(void){
 
@@ -138,10 +149,8 @@ int process_file(void){
 
   int fd;
   int n;
-  unsigned int seconds;
   unsigned char *b;
   struct nids_header_st nheader;
-  int lat, lon;
   char dummy[4096];
   size_t dummy_size = 4096;
   size_t nleft;
@@ -181,26 +190,14 @@ int process_file(void){
   else if(n < NIDS_HEADER_SIZE)
     log_errx(1, "Corrupt file.");
 
-  nheader.m_code = (b[0] << 8) + b[1];
-  nheader.m_days = (b[2] << 8) + b[3] - 1;
-  nheader.m_seconds = (b[4] << 24) + (b[5] << 16) + (b[6] << 8) + b[7];
-
-  lat = (b[20]<< 24) + (b[21] << 16) + (b[22] << 8) + b[23];
-  lon = (b[24]<< 24) + (b[25] << 16) + (b[26] << 8) + b[27];
-  nheader.pdb_lat = ((float)lat)/1000;
-  nheader.pdb_lon = ((float)lon)/1000;
-
-  nheader.pdb_height = (b[28] << 8) + b[29];
-  nheader.pdb_code = (b[30] << 8) + b[31];    /* same as m_code */
-  nheader.pdb_mode = (b[32] << 8) + b[33];
-
-  seconds = nheader.m_days * 24 * 3600 + nheader.m_seconds;
+  decode_nids_header(&nheader);
 
   if(g.opt_timeonly)
-    fprintf(stdout, "%u", seconds);
+    fprintf(stdout, "%u", nheader.unixseconds);
   else
     fprintf(stdout, "%.3f %.3f %d %u %d %d",
-	    nheader.pdb_lat, nheader.pdb_lon, nheader.pdb_height, seconds,
+	    nheader.lat, nheader.lon, nheader.pdb_height,
+	    nheader.unixseconds,
 	    nheader.pdb_mode, nheader.pdb_code);
 
   /*
@@ -214,4 +211,66 @@ int process_file(void){
   }
 
   return(0);
+}
+
+/*
+ * decoding functions
+ */
+static void decode_nids_header(struct nids_header_st *nheader){
+
+  unsigned char *b = nheader->header;
+
+  nheader->m_code = extract_uint16(b, 1);
+  nheader->m_days = extract_uint16(b, 2) - 1;
+  nheader->m_seconds = extract_uint32(b, 3);
+
+  nheader->pdb_lat = extract_int32(b, 11);
+  nheader->pdb_lon = extract_int32(b, 13);
+
+  nheader->pdb_height = extract_uint16(b, 15);
+  nheader->pdb_code = extract_uint16(b, 16);    /* same as m_code */
+  nheader->pdb_mode = extract_uint16(b, 17);
+
+  nheader->lat = ((float)nheader->pdb_lat)/1000.0;
+  nheader->lon = ((float)nheader->pdb_lon)/1000.0;
+  nheader->unixseconds = nheader->m_days * 24 * 3600 + nheader->m_seconds;
+}
+
+/*
+ * extraction functions
+ */
+static uint16_t extract_uint16(unsigned char *p, int halfwordid){
+  /*
+   * The halfwordid argument is the (1-based) index number as in the Unisys
+   * documentation.
+   */
+  uint16_t r;	/* result */
+  unsigned char *b = p;
+
+  b += (halfwordid - 1) * 2;
+  r = (b[0] << 8) + b[1];  
+  
+  return(r);
+}
+
+static uint32_t extract_uint32(unsigned char *p, int halfwordid){
+
+  uint32_t r;	/* result */
+  unsigned char *b = p;
+
+  b += (halfwordid - 1) * 2;
+  r = (b[0] << 24) + (b[1] << 16) + (b[2] << 8) + b[3];
+
+  return(r);
+}
+
+static int32_t extract_int32(unsigned char *p, int halfwordid){
+
+  int32_t r;	/* result */
+  unsigned char *b = p;
+
+  b += (halfwordid - 1) * 2;
+  r = (b[0] << 24) + (b[1] << 16) + (b[2] << 8) + b[3];
+
+  return(r);
 }
