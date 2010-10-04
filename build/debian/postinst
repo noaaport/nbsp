@@ -170,10 +170,10 @@ cd htdocs/pub
     install -d -m 755 -o $user -g $user weatherscope/client
 [ -e "weatherscope/data" ] || \
     ln -s /var/noaaport/data/weatherscope weatherscope/data
-[ -d "gis/defaults" ] || \
-    install -d -m 755 -o $user -g $user gis/defaults
-[ -d "gis/site" ] || \
-    install -d -m 755 -o $user -g $user gis/site
+[ -d "gis/maps/defaults" ] || \
+    install -d -m 755 -o $user -g $user gis/maps/defaults
+[ -d "gis/maps/site" ] || \
+    install -d -m 755 -o $user -g $user gis/maps/site
 [ -e "gis/data" ] || ln -s /var/noaaport/data/gis gis/data
 
 #
