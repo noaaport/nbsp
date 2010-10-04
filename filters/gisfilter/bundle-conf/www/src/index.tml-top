@@ -2,10 +2,10 @@
 
 <html>
 <head>
-[::html::if {[file exists $Config(docRoot)/gis/site/index.html]} {
-  <meta http-equiv="Refresh" content="0; url=/gis/site/index.tml"/>
+[::html::if {[file exists $Config(docRoot)/gis/maps/site/index.html]} {
+  <meta http-equiv="Refresh" content="0; url=/gis/maps/site/index.tml"/>
  } else {
-  <meta http-equiv="Refresh" content="0; url=/gis/defaults/index.tml"/>
+  <meta http-equiv="Refresh" content="0; url=/gis/maps/defaults/index.tml"/>
  }
 ]
 </head>
