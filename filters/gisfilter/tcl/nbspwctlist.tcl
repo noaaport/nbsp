@@ -77,8 +77,16 @@ proc clean_wct_cache_dir {} {
 
     global nbspwctlist option;
 
+    set status 0;
+
     if {($option(K) == 1) && [file isdirectory $nbspwctlist(wct_cachedir)]} {
-	file delete -force $nbspwctlist(wct_cachedir);
+	set status [catch {
+	    file delete -force $nbspwctlist(wct_cachedir);
+	} errmsg];
+    }
+
+    if {$status != 0} {
+	log_warn $errmsg;
     }
 }
 
