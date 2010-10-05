@@ -13,7 +13,7 @@ set gisfilter(wct_debug) 0;
 #
 set gisfilter(invdir) [file join $common(datainvdir) "gis"];
 set gisfilter(invformat) $common(datainvformat);  # format for hourly subdirs
-set gisfilter(radinvsubdir) "nexrad";
+set gisfilter(radinvsubdir) "rad";
 set gisfilter(satinvsubdir) "sat";
 set gisfilter(rad_inv_enable) 1;
 set gisfilter(sat_inv_enable) 1;
