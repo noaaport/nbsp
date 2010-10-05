@@ -60,7 +60,7 @@ struct nids_header_st {
   int m_code;
   int m_days;
   unsigned int m_seconds;
-  unsigned int m_length;	/* unused */
+  unsigned int m_msglength;	/* unused */
   int m_source;                 /* unused */
   int m_destination;            /* unused */
   int m_numblocks;              /* unused */
@@ -69,15 +69,6 @@ struct nids_header_st {
   int pdb_height;
   int pdb_code;
   int pdb_mode;
-  int pdb_nummaps;
-  unsigned int pdb_symbol_block_offset;
-  unsigned int pdb_graphic_block_offset;
-  unsigned int pdb_tabular_block_offset;
-  int psb_header_id;	/* should be 1 */
-  unsigned int psb_header_length;
-  int psb_header_num_layers;
-  unsigned int psb_layer_length;
-  int psb_layer_display_data_packets;
   /* derived values */
   unsigned int unixseconds;
   float lat;
@@ -103,14 +94,6 @@ static int extract_int32(unsigned char *p, int halfwordid);
 
 /* decoding functions */
 static void decode_nids_header(struct nids_header_st *nheader);
-
-/*
-#define PRINT_TEST
-*/
-#ifdef PRINT_TEST
-static int extract_int16(unsigned char *p, int halfwordid);
-static void test_print(struct nids_header_st *nheader);
-#endif
 
 static void cleanup(void){
 
@@ -242,7 +225,8 @@ static void decode_nids_header(struct nids_header_st *nheader){
   nheader->m_days = extract_uint16(b, 2) - 1;
   nheader->m_seconds = extract_uint32(b, 3);
 
-  nheader->m_length = extract_uint32(b, 5);
+  /* msglength is the file length without headers or trailers */
+  nheader->m_msglength = extract_uint32(b, 5); 
   nheader->m_source = extract_uint16(b, 7);
   nheader->m_destination = extract_uint16(b, 8);
   nheader->m_numblocks = extract_uint16(b, 9);
@@ -254,29 +238,10 @@ static void decode_nids_header(struct nids_header_st *nheader){
   nheader->pdb_code = extract_uint16(b, 16);    /* same as m_code */
   nheader->pdb_mode = extract_uint16(b, 17);
 
-  nheader->pdb_nummaps = extract_uint16(b, 54);
-  nheader->pdb_symbol_block_offset = extract_uint32(b, 55) * 2;
-  nheader->pdb_graphic_block_offset = extract_uint32(b, 57) * 2;
-  nheader->pdb_tabular_block_offset = extract_uint32(b, 59) * 2;
-
-  /* JFN - The output of this is not making sense */
-  /* move to the Product Symbol Block */
-  b += 120;
-  nheader->psb_header_id = extract_uint16(b, 2);	/* should be 1 */
-  nheader->psb_header_length = extract_uint32(b, 3);
-  nheader->psb_header_num_layers = extract_uint16(b, 5);
-  b += 10;
-  nheader->psb_layer_length = extract_uint32(b, 2);
-  nheader->psb_layer_display_data_packets = extract_uint16(b, 4);
-
   /* derived */
   nheader->lat = ((float)nheader->pdb_lat)/1000.0;
   nheader->lon = ((float)nheader->pdb_lon)/1000.0;
   nheader->unixseconds = nheader->m_days * 24 * 3600 + nheader->m_seconds;
-
-#ifdef PRINT_TEST
-  test_print(nheader);
-#endif
 }
 
 /*
@@ -307,19 +272,6 @@ static uint32_t extract_uint32(unsigned char *p, int halfwordid){
   return(r);
 }
 
-#ifdef PRINT_TEST
-static int extract_int16(unsigned char *p, int halfwordid){
-
-  int16_t r;	/* result */
-  unsigned char *b = p;
-
-  b += (halfwordid - 1) * 2;
-  r = (b[0] << 8) + b[1];  
-
-  return(r);
-}
-#endif
-
 static int extract_int32(unsigned char *p, int halfwordid){
 
   int r;	/* result */
@@ -330,20 +282,3 @@ static int extract_int32(unsigned char *p, int halfwordid){
 
   return(r);
 }
-
-#ifdef PRINT_TEST
-static void test_print(struct nids_header_st *nheader){
-
-  fprintf(stdout, "%d %d %d %d %d %u %d %u %d\n",
-	  nheader->pdb_nummaps,
-	  nheader->pdb_symbol_block_offset,
-	  nheader->pdb_graphic_block_offset,
-	  nheader->pdb_tabular_block_offset,
-	  nheader->psb_header_id,	/* should be 1 */
-	  nheader->psb_header_length,
-	  nheader->psb_header_num_layers,
-	  nheader->psb_layer_length,
-	  nheader->psb_layer_display_data_packets);
-
-}
-#endif
