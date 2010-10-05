@@ -34,6 +34,7 @@ set common(localsharedirs) [list [file join $common(sharedir) "defaults"] \
 set common(rcdir)	[file join $common(confdir) "rc.d"];
 set common(libdir)	"/usr/local/libexec/nbsp";
 set common(locallibdir)	[file join $common(libdir) "site"];
+set common(homedir)	"/var/noaaport";	# see note under env below
 set common(datadir)	"/var/noaaport/data";
 set common(archivedatadir) "/var/noaaport/archive/data";
 set common(archiveinvdir) "/var/noaaport/archive/inv";
@@ -103,6 +104,15 @@ set filterserrlib(errorInfo)	$common(debug);
 # from the grib files (used by the dafilter, gpfilter and ldmfilter).
 #
 set common(filtersgribiddef) [file join $common(confdir) "filters-gribid.def"];
+
+# The following problem arose with the gisfilter using wct. WCT writes
+# the cache dir in the home dir of user noaaport, but tcl seems to interpret
+# ~/ and env(HOME) as the home of root (or the real user), or maybe
+# juts the old (previous to forking) value of env(HOME). This creates
+# a problem in nbspwctlist when it tries to delete the cache dir, unless
+# we redefine HOME somehere.
+#
+set env(HOME) $common(homedir);
 
 # Location of the external programs used by the filters.
 #
