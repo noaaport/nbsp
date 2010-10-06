@@ -12,13 +12,13 @@
  * defaults (FreeBSD)
  */
 #define HAVE_OPTRESET
+#define HAVE_ERR
 
-#ifdef __OpenBSD__
-  #define HAVE_OPTRESET
+#if defined __linux__
+  #undef HAVE_OPTRESET
 #elif defined __sun__
   #undef HAVE_OPTRESET
-#elif defined __linux__
-  #undef HAVE_OPTRESET
+  #undef HAVE_ERR
 #endif
  
 #endif
