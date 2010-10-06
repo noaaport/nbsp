@@ -1,6 +1,10 @@
 #!/bin/sh
 
-requires="db47 tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot gifsicle"
+requires="db47 tcl-8.6 tcllib tk-8.6 expect \
+png netpbm gnuplot gifsicle"
+
+# For FreeBSD-8.1 - add openjdk7
+
 conflict="nbspgribrsh"
 
 # so that FreeBSD runs it only once 
