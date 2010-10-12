@@ -9,6 +9,7 @@ bin/nbspsat
 bin/nbspsatinfo
 bin/nbspradinfo
 bin/nbsprad2info
+bin/nbspdcnids
 bin/nbspcat
 bin/nbspfile
 bin/nbspunz
