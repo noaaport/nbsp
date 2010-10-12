@@ -11,18 +11,21 @@ SOURCES = nbspfile.c nbspsat.c nbspsatinfo.c nbspunz.c nbspz.c nbsppipe.c \
 	nbspgrib.c nbspgrib2.c nbspcat.c nbspradinfo.c nbsprad2info.c \
 	nbspradinfo-new.c \
 	err.c util.c unz.c mfile.c io.c
+
 COMMONOBJECTS = err.o util.o unz.o io.o
+
 ALLOBJECTS = nbspfile.o nbspsat.o nbspsatinfo.o nbspunz.o nbspz.o nbsppipe.o \
 	nbspgrib.o nbspgrib2.o nbspcat.o nbspradinfo.o nbsprad2info.o \
 	nbspradinfo-new.o \
 	${COMMONOBJECTS} ${SHAREDOBJECTS} mfile.o
+
 SHAREDHEADERS = common.h strsplit.h
 SHAREDSOURCES = strsplit.c
 SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h const.h io.h config.h ${SHAREDHEADERS}
+
 TARGET = nbspfile nbspsat nbspsatinfo nbspunz nbspz nbsppipe \
-	nbspgrib nbspgrib2 nbspcat nbspradinfo nbsprad2info \
-	nbspradinfo-new
+	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspdcnids nbsprad2info
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -77,18 +80,21 @@ nbspgrib2: nbspgrib2.o ${COMMONOBJECTS}
 nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 	${CC} -o nbspcat nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS} ${LDFLAGS}
 
-nbspradinfo: nbspradinfo.o ${COMMONOBJECTS}
-	${CC} -o nbspradinfo nbspradinfo.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradinfo:
+	cd dcnids; ${MAKE}
+	cp dcnids/nbspradinfo .
+
+nbspdcnids:
+	cd dcnids; ${MAKE}
+	cp dcnids/nbspdcnids .
 
 nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
 	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}
-
-nbspradinfo-new: nbspradinfo-new.o ${COMMONOBJECTS}
-	${CC} -o nbspradinfo-new nbspradinfo-new.o ${COMMONOBJECTS} ${LDFLAGS}
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}
 
 clean:
+	cd dcnids; ${MAKE} clean
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} \
-	${SHAREDHEADERS} ${SHAREDSOURCES}\
+	${SHAREDHEADERS} ${SHAREDSOURCES}

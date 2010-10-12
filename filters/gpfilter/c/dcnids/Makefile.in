@@ -1,0 +1,66 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+DCSOURCES = dcnids_extract.c dcnids_transform.c \
+	dcnids_shp.c dcnids_csv.c dcnids_dbf.c \
+	dcnids.c dbfwrite.c dcnids-test.c
+DCHEADERS = dcnids.h dcnids_shp.h
+DCOBJECTS = dcnids_extract.o dcnids_transform.o \
+	dcnids_shp.o dcnids_csv.o dcnids_dbf.o
+
+SHAREDSOURCES = err.c io.c util.c
+SHAREDHEADERS = config.h const.h io.h err.h util.h
+SHAREDOBJECTS = err.o io.o util.o
+
+ALLOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
+
+# TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfwrite dcnids-test
+TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfwrite
+
+INCDIRS =       @INCDIRS@
+LIBDIRS =       @LIBDIRS@
+LIBS =          @LIBS@
+INSTALL =       @INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+
+LIBDIRS +=	-lshp
+INCDIRS +=	-iquote ..
+
+CFLAGS +=	${DEBUGFLAGS} -c ${CCWFLAGS} ${INCDIRS}
+DEBUGFLAGS =	-g
+#DEBUGFLAGS =	-DNDEBUG
+LDFLAGS +=	${LIBDIRS} ${LIBS}
+
+all: ${TARGET}
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+err.c: ../err.c
+	cp ../err.c .
+
+io.c: ../io.c
+	cp ../io.c .
+
+util.c: ../util.c
+	cp ../util.c .
+
+nbspradinfo: nbspdcnids
+	cp nbspdcnids nbspradinfo
+
+nbspdcnids: dcnids.o ${ALLOBJECTS}
+	${CC} -o nbspdcnids dcnids.o ${ALLOBJECTS} ${LDFLAGS}
+
+nbspdcnids-dbfwrite: dbfwrite.o ${ALLOBJECTS}
+	${CC} -o nbspdcnids-dbfwrite dbfwrite.o ${ALLOBJECTS} ${LDFLAGS}
+
+#dcnids-test: dcnids-test.o ${ALLOBJECTS}
+#	${CC} -o dcnids-test dcnids-test.o ${ALLOBJECTS} ${LDFLAGS}
+
+clean:
+	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}
