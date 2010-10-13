@@ -28,7 +28,7 @@ struct dcnids_dbf_st {
 #define DCNIDS_DBF_HEADER_SIZE		32
 #define DCNIDS_DBF_FIELD_DESC_SIZE	32
 #define DCNIDS_DBF_TERMINATOR		'\015'
-#define DCNIDS_DBF_FIELDNAME_LEN	10
+#define DCNIDS_DBF_FIELDNAME_LEN	10	/* excluding '\0' */
 
 #define DCNIDS_DBF_FIELDWIDTH		3
 #define DCNIDS_DBF_NUMFIELDS		2

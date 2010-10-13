@@ -23,7 +23,10 @@ int dcnids_csv_write(FILE *fp, struct dcnids_polygon_map_st *pm){
     if(fprintf(fp, "%.3f %.3f,", polygon->lon[0], polygon->lat[0]) < 0)
       return(-1);
     
-    if(fprintf(fp, "%d\n", polygon->code) < 0)
+    /*
+     * Output the "code" (0-15) and the corresponding "level" value.
+     */
+    if(fprintf(fp, "%d,%d\n", polygon->code, polygon->level) < 0)
       return(-1);
 
     ++polygon;

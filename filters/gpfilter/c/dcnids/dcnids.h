@@ -15,6 +15,7 @@ struct dcnids_polygon_st {
   double lon[4];
   double lat[4];
   int code;	/* the level code value for this polygon */
+  int level;	/* the level value */
 };
 
 struct dcnids_polygon_map_st {
@@ -59,8 +60,14 @@ int dcnids_shp_write(int shp_fd, int shx_fd, struct dcnids_polygon_map_st *pm);
 int dcnids_csv_write(FILE *fp, struct dcnids_polygon_map_st *pm);
 
 /* dbf */
+int dcnids_dbf_write(char *dbfname, struct dcnids_polygon_map_st *pm);
+
+#if 0
 int dcnids_dbf_write(char *dbfname,
-		     char *paramname,
+		     char *codename,
+		     char *levelname,
 		     struct dcnids_polygon_map_st *pm);
+#endif
 
 #endif
+

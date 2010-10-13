@@ -65,7 +65,8 @@
  * will write the corresponding data file.
  */
 #define NIDS_HEADER_SIZE	120	/* message and pdb */
-#define NIDS_DBF_PARAMNAME	"code"  /* parameter name in dbf file */
+#define NIDS_DBF_CODENAME	"code"  /* parameter name in dbf file */
+#define NIDS_DBF_LEVELNAME	"level" /* parameter name in dbf file */
 
 struct nids_header_st {
   unsigned char header[NIDS_HEADER_SIZE];
@@ -519,13 +520,14 @@ static void nids_decode_data(struct nids_data_st *nd){
 			    nd->nids_header.lat,
 			    r1, r2, theta1, theta2, polygon);
       polygon->code = run_code;
+      polygon->level = run_code * 5;
 
       /* XXX
       int k;
       for(k = 0; k < 4; ++k){
 	fprintf(stdout, "%.2f:%.2f,", polygon->lon[k], polygon->lat[k]);
       }
-      fprintf(stdout, "%d\n", run_code * 5);
+      fprintf(stdout, "%d\n", polygon->level);
       */
 
       ++polygon;
@@ -613,6 +615,12 @@ static void nids_dbf_write(struct nids_data_st *nd){
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
   int status;
 
-  if((status = dcnids_dbf_write(g.opt_dbffile, NIDS_DBF_PARAMNAME, pm)) != 0)
+  /*
+  status = dcnids_dbf_write(g.opt_dbffile,
+			    NIDS_DBF_CODENAME, NIDS_DBF_LEVELNAME, pm);
+  */
+  status = dcnids_dbf_write(g.opt_dbffile, pm);
+
+  if(status != 0)
     log_errx(1, "Error writing dbf file: %d", status);
 }
