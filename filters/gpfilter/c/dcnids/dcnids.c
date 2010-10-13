@@ -68,6 +68,10 @@
 #define NIDS_DBF_CODENAME	"code"  /* parameter name in dbf file */
 #define NIDS_DBF_LEVELNAME	"level" /* parameter name in dbf file */
 
+#define NIDS_PDB_MODE_MAINTENANCE	0
+#define NIDS_PDB_MODE_CLEAR		1
+#define NIDS_PDB_MODE_PRECIPITATION	2
+
 struct nids_header_st {
   unsigned char header[NIDS_HEADER_SIZE];
   int m_code;
@@ -519,8 +523,19 @@ static void nids_decode_data(struct nids_data_st *nd){
       dcnids_define_polygon(nd->nids_header.lon,
 			    nd->nids_header.lat,
 			    r1, r2, theta1, theta2, polygon);
+      /*
+       * The "level" that corresponds to the code depends on the operational
+       * mode.
+       */
       polygon->code = run_code;
-      polygon->level = run_code * 5;
+      if(run_code == NIDS_PDB_MODE_PRECIPITATION)
+	polygon->level = run_code * 5;
+      else if(run_code == NIDS_PDB_MODE_CLEAR)
+	polygon->level = (run_code * 4) - 32;
+      else if(run_code == NIDS_PDB_MODE_MAINTENANCE)
+	log_errx(1, "Radar is in maintenance mode.");
+      else
+	log_errx(1, "Invalid value of radar operational mode.");
 
       /* XXX
       int k;
