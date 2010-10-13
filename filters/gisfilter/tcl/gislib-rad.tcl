@@ -176,11 +176,12 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	set datafpath($fmt) [file join $gisfilter(datadir) $data_path($fmt)];
     }
 
-    set cmd [list "nbspdcnids" -b \
+    # The ccb and wmo/awips headers must be removed for nbsdcnids
+    set cmd [list nbspunz -c $gisfilter(rad_totalheadersize) $nidsfpath \
+		 | nbspdcnids -b \
 		 -p $datafpath(shp) \
 		 -x $datafpath(shx) \
-		 -f $datafpath(dbf) \
-		 $nidsfpath];
+		 -f $datafpath(dbf)];
 
     set status [catch {
 	eval exec $cmd;
