@@ -49,22 +49,22 @@ lappend nbspgismap(geoclist) {
 #  maptmpl	map_rad_bref.tmpl
 #  options	{extent	{-104 23 -93 37} size {800 600} awips1 n0r}
 #  outputfile	img/rad/rad_n0r_tx.png
-#  inputpatt     *.asc
-#  inputdirs    {rad/asc/ama/n0r rad/asc/bro/n0r rad/asc/crp/n0r \
-#	rad/asc/dfx/n0r rad/asc/dyx/n0r rad/asc/ewx/n0r rad/asc/fws/n0r \
-#	rad/asc/grk/n0r rad/asc/hgx/n0r rad/asc/lbb/n0r rad/asc/maf/n0r \
-#	rad/asc/sjt/n0r}
+#  inputpatt     *.shp
+#  inputdirs    {rad/shp/ama/n0r rad/shp/bro/n0r rad/shp/crp/n0r \
+#	rad/shp/dfx/n0r rad/shp/dyx/n0r rad/shp/ewx/n0r rad/shp/fws/n0r \
+#	rad/shp/grk/n0r rad/shp/hgx/n0r rad/shp/lbb/n0r rad/shp/maf/n0r \
+#	rad/shp/sjt/n0r}
 # }
 #
 ## or equivalently
 #
 # set _d [list];
 # foreach s [list ama lbb maf dyx sjt fws grk ewx dfx hgx crp bro fdr)] {
-#   lappend _d "rad/asc/$s/n0r";
+#   lappend _d "rad/shp/$s/n0r";
 # }
 # geoc_rad_bundle_add \
 #      "rad_n0r_tx" "map_rad_bref.tmpl" "-104,23,-93,37" "1280,800" n0r \
-#      "img/rad/rad_n0r_tx" "*.asc" $_d
+#      "img/rad/rad_n0r_tx" "*.shp" $_d
 #
 
 #
@@ -76,9 +76,9 @@ lappend nbspgismap(geoclist) [subst {
   options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\
 		size {800 600} awips1 n0r}
   outputfile    img/rad/rad_n0r_south.png
-  inputpatt     *.asc
+  inputpatt     *.shp
   inputdirs     {[nbsp::radstations::inputdirs_bystate\
-		"rad/asc/%{sss}/n0r" ar la nm ok tx]}
+		"rad/shp/%{sss}/n0r" ar la nm ok tx]}
 }];
 
 #

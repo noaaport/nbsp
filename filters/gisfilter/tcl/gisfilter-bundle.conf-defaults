@@ -15,24 +15,28 @@ rad_bundle_clear;
 # WCT gives errors processing tigb and tiga05 so they are excluded.
 #
 sat_bundle_add "tif" "wct_defaults.xml" {_tig(a|e|h|i|w|p|q)0[1-5],!_tiga05};
-
+#
 ## sat_bundle_add "nc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
 ## sat_bundle_add "asc" "wct_defaults.xml" {_tig(a|b|e|h|i|w|p|q)0[1-5]};
 
 #
 # rad -
 #
-rad_bundle_add "asc" "wct_defaults.xml" \
+rad_bundle_add "shp" "defaults" \
 	"-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])";
+#
+### rad_bundle_add "asc" "wct_defaults.xml" \
+###	"-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])";
 
 #
 # Examples -
 #
+# The sat conversions are made by WCT.
 # The tif32 and rnc conversions are slower than, and result in files
 # larger than, tif, nc and asc.  The shp, csv and wkt are much worse
-# in both counts and should not be used.
+# in both counts and should not be used. So, for sat, only tif conversion
+# is recommended.
 #
-
 ## sat_bundle_add "tif32" "wct_defaults.xml" {_tig(e|w|p|q)0[1-5]};
 ## sat_bundle_add "rnc" "wct_defaults.xml" {_tig(e|w|p|q)0[1-5]};
 #
@@ -43,9 +47,15 @@ rad_bundle_add "asc" "wct_defaults.xml" \
 #
 # radar examples
 #
+# The shp conversions are done by Nbsp itself and is fast. The others are
+# done by WCT; they all suffer from the problems mentioned above and
+# should not be used.
+#
 ### rad_bundle_add "asc" "wct_defaults.xml" {-n0r};
 ### rad_bundle_add "nc" "wct_defaults.xml" \
 ###     {-n[0-3](r|s)(ama|lbb|maf|dyx|sjt|fws|grk|ewx|dfx|hgx|crp|bro|fdr)};
+### rad_bundle_add "asc" "wct_defaults.xml" \
+###	"-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])";
 
 #
 # Load "gis/gisfilter-bundle.conf"

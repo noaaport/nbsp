@@ -13,7 +13,16 @@ proc filter_rad {rc_varname} {
 	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
 	    continue;
 	}
-	filter_rad_queue_convert_nids rc $bundle;
+	#
+	# shp conversion will be done on-the-fly here, all the others
+	# will be dispatched to an external program (WCT).
+	#
+	set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
+	if {$fmt eq "shp"} {
+	    filter_rad_convert_nids_shp rc $bundle;
+	} else {
+	    filter_rad_queue_convert_nids rc $bundle;
+	}
     }
 }
 
@@ -52,7 +61,7 @@ proc filter_rad_create_nids {rc_varname} {
     set rc(fpath) $datafpath;
 }
 
-proc filter_rad_convert_nids {rc_varname bundle} {
+proc filter_rad_convert_nids_wct_unused {rc_varname bundle} {
 
     global gisfilter;
     upvar $rc_varname rc;
@@ -140,4 +149,59 @@ proc filter_rad_queue_convert_nids {rc_varname bundle} {
 	    set gisfilter(wct_listfile_fpath,rad,$fmt) $next_wct_listfile;
 	}
     }
+}
+
+proc filter_rad_convert_nids_shp {rc_varname bundle} {
+
+    global gisfilter;
+    upvar $rc_varname rc;
+
+    set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
+    if {$fmt ne "shp"} {
+        return -code error "filter_rad_convert_nids_shp called incorrectly.";
+    }
+
+    set nidsfpath $rc(fpath);
+
+    # shorthand
+    set fmtlist [list shp shx dbf];
+
+    foreach fmt $fmtlist {
+	set data_savedir($fmt) [subst $gisfilter(rad_outputfile_dirfmt,$fmt)];
+	set data_savename($fmt) \
+	    [subst $gisfilter(rad_outputfile_namefmt,$fmt)];
+	file mkdir $data_savedir($fmt);
+	set data_path($fmt) \
+	    [file join $data_savedir($fmt) $data_savename($fmt)];
+	set datafpath($fmt) [file join $gisfilter(datadir) $data_path{$fmt)];
+    }
+
+    set cmd [list "nbspdcnids" -b \
+		 -p $datafpath(shp) \
+		 -x $datafpath(shx) \
+		 -f $datafpath(dbf) \
+		 $nidsfpath];
+
+    set status [catch {
+	eval exec $cmd;
+    } errmsg];
+    
+    if {$status != 0} {
+	foreach fmt $fmtlist {
+	    file delete $datafpath($fmt);
+	}
+	log_msg "Could not exec nbspdcnids.";
+	return;
+    }
+
+    # Insert each one in the cleanup inventory
+    foreach fmt $fmtlist {
+	filter_rad_insert_inventory $data_savedir($fmt) $datafpath($fmt);
+    }
+
+    if {$gisfilter(rad_latest_enable) != 0} {
+	foreach fmt $fmtlist {
+	    make_rad_latest $data_savedir($fmt) $data_savename($fmt);
+	}
+    }    
 }
