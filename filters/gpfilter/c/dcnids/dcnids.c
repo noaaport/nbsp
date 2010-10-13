@@ -528,11 +528,11 @@ static void nids_decode_data(struct nids_data_st *nd){
        * mode.
        */
       polygon->code = run_code;
-      if(run_code == NIDS_PDB_MODE_PRECIPITATION)
+      if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION)
 	polygon->level = run_code * 5;
-      else if(run_code == NIDS_PDB_MODE_CLEAR)
+      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR)
 	polygon->level = (run_code * 4) - 32;
-      else if(run_code == NIDS_PDB_MODE_MAINTENANCE)
+      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
 	log_errx(1, "Radar is in maintenance mode.");
       else
 	log_errx(1, "Invalid value of radar operational mode.");
