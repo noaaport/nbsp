@@ -173,7 +173,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	file mkdir $data_savedir($fmt);
 	set data_path($fmt) \
 	    [file join $data_savedir($fmt) $data_savename($fmt)];
-	set datafpath($fmt) [file join $gisfilter(datadir) $data_path{$fmt)];
+	set datafpath($fmt) [file join $gisfilter(datadir) $data_path($fmt)];
     }
 
     set cmd [list "nbspdcnids" -b \
@@ -190,7 +190,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	foreach fmt $fmtlist {
 	    file delete $datafpath($fmt);
 	}
-	log_msg "Could not exec nbspdcnids.";
+	log_msg $errmsg;
 	return;
     }
 

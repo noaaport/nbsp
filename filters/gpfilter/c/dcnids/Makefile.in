@@ -7,7 +7,7 @@
 #
 DCSOURCES = dcnids_extract.c dcnids_transform.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c \
-	dcnids.c dbfwrite.c dbfread.c
+	dcnids.c dbfread.c dbfwrite.c
 DCHEADERS = dcnids.h dcnids_shp.h
 DCOBJECTS = dcnids_extract.o dcnids_transform.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o
@@ -19,8 +19,8 @@ SHAREDOBJECTS = err.o io.o util.o
 COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
 ALLOBJECTS = ${COMMONOBJECTS} dcnids.o dbfread.o dbfwrite.o
 
-# TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfwrite dcnids-test
-TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfwrite nbspdcnids-dbfread
+# TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfread nbspdcnids-dbfwrite
+TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfread
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -29,7 +29,6 @@ INSTALL =       @INSTALL@
 CC =		@CC@
 CCWFLAGS =	@CCWFLAGS@
 
-LIBDIRS +=	-lshp
 INCDIRS +=	-iquote ..
 
 CFLAGS +=	${DEBUGFLAGS} -c ${CCWFLAGS} ${INCDIRS}
