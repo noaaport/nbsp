@@ -11,8 +11,13 @@
 <head><title></title></head>
 
 <body>
-<h3>N0R - Base reflectivity 124 nmi range, 0.50 degree elevation angle</h3>
 
+<h3> GOES composites
+<ul>
+<li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li>
+</ul
+
+<h3>N0R - Base reflectivity 124 nmi range, 0.50 degree elevation angle</h3>
 <ul>
 <li><a href="rad/n0r_ak.tml">ak</a></li>
 <li><a href="rad/n0r_pr.tml">pr</a></li>
@@ -24,8 +29,43 @@
 <li><a href="rad/n0r_conus.tml">conus</a></li>
 </ul>
 
-<h3>N0Z - Base reflectivity 248 nmi range, 0.50 degree elevation angle</h3>
+<h3>N1R - Base reflectivity 124 nmi range, 1.45/1.5 degree elevation angle</h3>
+<ul>
+<li><a href="rad/n1r_ak.tml">ak</a></li>
+<li><a href="rad/n1r_pr.tml">pr</a></li>
+<li><a href="rad/n1r_hi.tml">hi</a></li>
+<li><a href="rad/n1r_west.tml">west</a></li>
+<li><a href="rad/n1r_south.tml">south</a></li>
+<li><a href="rad/n1r_central.tml">central</a></li>
+<li><a href="rad/n1r_east.tml">east</a></li>
+<li><a href="rad/n1r_conus.tml">conus</a></li>
+</ul>
 
+<h3>N2R - Base reflectivity 124 nmi range, 2.4/2.5 degree elevation angle</h3>
+<ul>
+<li><a href="rad/n2r_ak.tml">ak</a></li>
+<li><a href="rad/n2r_pr.tml">pr</a></li>
+<li><a href="rad/n2r_hi.tml">hi</a></li>
+<li><a href="rad/n2r_west.tml">west</a></li>
+<li><a href="rad/n2r_south.tml">south</a></li>
+<li><a href="rad/n2r_central.tml">central</a></li>
+<li><a href="rad/n2r_east.tml">east</a></li>
+<li><a href="rad/n2r_conus.tml">conus</a></li>
+</ul>
+
+<h3>N3R - Base reflectivity 124 nmi range, 3.35/3.5 degree elevation angle</h3>
+<ul>
+<li><a href="rad/n3r_ak.tml">ak</a></li>
+<li><a href="rad/n3r_pr.tml">pr</a></li>
+<li><a href="rad/n3r_hi.tml">hi</a></li>
+<li><a href="rad/n3r_west.tml">west</a></li>
+<li><a href="rad/n3r_south.tml">south</a></li>
+<li><a href="rad/n3r_central.tml">central</a></li>
+<li><a href="rad/n3r_east.tml">east</a></li>
+<li><a href="rad/n3r_conus.tml">conus</a></li>
+</ul>
+
+<h3>N0Z - Base reflectivity 248 nmi range, 0.50 degree elevation angle</h3>
 <ul>
 <li><a href="rad/n0z_ak.tml">ak</a></li>
 <li><a href="rad/n0z_pr.tml">pr</a></li>
@@ -36,11 +76,6 @@
 <li><a href="rad/n0z_east.tml">east</a></li>
 <li><a href="rad/n0z_conus.tml">conus</a></li>
 </ul>
-
-<h3> GOES composites
-<ul>
-<li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li>
-</ul
 
 </body>
 </html>

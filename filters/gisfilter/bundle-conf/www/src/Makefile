@@ -3,7 +3,8 @@
 #
 
 # These directories are relative to the www pub directory (www/htdocs/pub)
-GISMAPSDIR = gis/maps
+GISDIR = gis
+GISMAPSDIR = ${GISDIR}/maps
 DEFAULTSDIR = ${GISMAPSDIR}/defaults
 RADDIR = ${GISMAPSDIR}/defaults/rad
 SATDIR = ${GISMAPSDIR}/defaults/sat
@@ -17,5 +18,5 @@ all:
 	./mkrad.sh ../${RADDIR}
 
 clean:
-	cd ..; rm -rf ${GISMAPSDIR}
+	cd ..; rm -rf ${GISDIR}
 	rm -f *~ *.tml
