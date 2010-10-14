@@ -8,15 +8,13 @@
 @include@ @q@../../../Makefile.inc@q@
 
 SOURCES = nbspfile.c nbspsat.c nbspsatinfo.c nbspunz.c nbspz.c nbsppipe.c \
-	nbspgrib.c nbspgrib2.c nbspcat.c nbspradinfo.c nbsprad2info.c \
-	nbspradinfo-new.c \
+	nbspgrib.c nbspgrib2.c nbspcat.c nbsprad2info.c \
 	err.c util.c unz.c mfile.c io.c
 
 COMMONOBJECTS = err.o util.o unz.o io.o
 
 ALLOBJECTS = nbspfile.o nbspsat.o nbspsatinfo.o nbspunz.o nbspz.o nbsppipe.o \
-	nbspgrib.o nbspgrib2.o nbspcat.o nbspradinfo.o nbsprad2info.o \
-	nbspradinfo-new.o \
+	nbspgrib.o nbspgrib2.o nbspcat.o nbsprad2info.o \
 	${COMMONOBJECTS} ${SHAREDOBJECTS} mfile.o
 
 SHAREDHEADERS = common.h strsplit.h
