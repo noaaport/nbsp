@@ -2,6 +2,16 @@
 # $Id$
 #
 
+#
+# What will be copied to "enable" but avoiding duplicates (rad_conus
+# includes all conus sites).
+#
+RADENABLE = rad_conus.conf rad_ak.conf rad_hi.conf rad_pr.conf
+SATENABLE =
+#SATENABLE = sat_all.conf
+
+ENABLE = ${RADENABLE} ${SATENABLE}
+
 all: clean
 	cd ..; mkdir dist enable
 	cp sat_all.conf ../dist
@@ -13,9 +23,7 @@ all: clean
 	#
 	# Copy to enable but avoid duplicates
 	#
-	cd ../dist; \
-	cp sat_all.conf rad_conus.conf rad_ak.conf rad_hi.conf rad_pr.conf \
-	../enable
+	cd ../dist; cp ${ENABLE} ../enable
 
 clean:
 	cd ..; rm -rf *~ dist enable

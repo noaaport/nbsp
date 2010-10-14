@@ -32,14 +32,14 @@ geoc_bundle_clear;
 #       "1280,800" "img/tig01.png" "*.tif" \
 #	"sat/tif/tig/tigw01" "sat/tif/tig/tige01"; 
 #
-lappend nbspgismap(geoclist) {
-  id		sat_tig01_conus
-  maptmpl	map_sat_conus.tmpl
-  options	{extent	{-126 30 -66 50} size {1280 800}}
-  outputfile	img/sat/tig01_conus.png
-  inputpatt     *.tif
-  inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
-}
+# lappend nbspgismap(geoclist) {
+#  id		sat_tig01_conus
+#  maptmpl	map_sat_conus.tmpl
+#  options	{extent	{-126 30 -66 50} size {1280 800}}
+#  outputfile	img/sat/tig01_conus.png
+#  inputpatt     *.tif
+#  inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
+# }
 
 #
 # rad example
@@ -70,16 +70,16 @@ lappend nbspgismap(geoclist) {
 #
 # Better
 #
-lappend nbspgismap(geoclist) [subst {
-  id            rad_n0r_south
-  maptmpl	map_rad_bref.tmpl
-  options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\
-		size {800 600} awips1 n0r}
-  outputfile    img/rad/rad_n0r_south.png
-  inputpatt     *.shp
-  inputdirs     {[nbsp::radstations::inputdirs_bystate\
-		"rad/shp/%{sss}/n0r" ar la nm ok tx]}
-}];
+# lappend nbspgismap(geoclist) [subst {
+# id            rad_n0r_south
+#  maptmpl	map_rad_bref.tmpl
+#  options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\
+#		size {800 600} awips1 n0r}
+#  outputfile    img/rad/rad_n0r_south.png
+#  inputpatt     *.shp
+#  inputdirs     {[nbsp::radstations::inputdirs_bystate\
+#		"rad/shp/%{sss}/n0r" ar la nm ok tx]}
+# }];
 
 #
 # Load "gis/gismap-bundle.conf"
