@@ -62,6 +62,9 @@ int dcnids_csv_write(FILE *fp, struct dcnids_polygon_map_st *pm);
 /* dbf */
 int dcnids_dbf_write(char *dbfname, struct dcnids_polygon_map_st *pm);
 
+/* bunz */
+int dcnids_bunz(unsigned char **data, unsigned int *datasize, int *bzerror);
+
 #if 0
 int dcnids_dbf_write(char *dbfname,
 		     char *codename,

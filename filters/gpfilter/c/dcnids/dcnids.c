@@ -54,7 +54,9 @@
  *          nheader.pdb_lat, nheader.pdb_lon, nheader.pdb_height, seconds,
  *          nheader.pdb_mode, nheader.pdb_code
  *
- * If [-t] is given in which case only the "seconds" is printed.
+ * If [-t] is given then only the "seconds" is printed, and if [-l] is given
+ * then the m_msglength is also printed.
+ *
  * Otherwise anyone of
  *
  *  -v <csv file>
@@ -136,6 +138,7 @@ struct {
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
+  int opt_lengthonly;	/* -l => only extract and print the m_msglength */
   char *opt_dbffile;	/* -f => write dbf file */
   char *opt_shpfile;	/* -p => write shp file */
   char *opt_csvfile;	/* -v => write csv file */
@@ -144,7 +147,7 @@ struct {
   /* variables */
   int opt_fpvx;		/* set if anyone of fpvx is given */
   int fd;
-} g = {0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, -1};
+} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, -1};
 
 /* general functions */
 static int process_file(void);
@@ -172,9 +175,9 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bc:f:tp:v:x:";
-  char *usage = "nbspradinfo [-b] [-c count] [-f dbffile] "
-    "[-t] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
+  char *optstr = "bc:f:ltp:v:x:";
+  char *usage = "nbspdcnids [-b] [-c count] [-f dbffile] "
+    "[-l] [-t] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
   int status = 0;
   int c;
   int opt_px = 0;	/* -p and -x must be given together */
@@ -195,6 +198,9 @@ int main(int argc, char **argv){
     case 'f':
       g.opt_dbffile = optarg;
       g.opt_fpvx = 1;
+      break;
+    case 'l':
+      g.opt_lengthonly = 1;
       break;
     case 'p':
       g.opt_shpfile = optarg;
@@ -220,8 +226,8 @@ int main(int argc, char **argv){
     }
   }
 
-  if((g.opt_fpvx != 0) && (g.opt_timeonly != 0))
-    log_errx(1, "Invalid combination of options: t and fpvx");
+  if((g.opt_fpvx != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
+    log_errx(1, "Invalid combination of options: lt and fpvx");
 
   if((opt_px != 0) && (opt_px != 2))
     log_errx(1, "Invalid combination of options p and x.");
@@ -291,9 +297,15 @@ int process_file(void){
   test_print(&nids_data);
 #endif
 
-  if(g.opt_timeonly != 0){
+  if((g.opt_timeonly != 0) && (g.opt_lengthonly != 0))
+    fprintf(stdout, "%u %u",
+	    nids_data.nids_header.unixseconds,
+	    nids_data.nids_header.m_msglength);
+  else if(g.opt_timeonly != 0)
     fprintf(stdout, "%u", nids_data.nids_header.unixseconds);
-  }else if(g.opt_fpvx == 0){
+  else if(g.opt_lengthonly != 0)
+    fprintf(stdout, "%u", nids_data.nids_header.m_msglength);
+  else if(g.opt_fpvx == 0){
     fprintf(stdout, "%.3f %.3f %d %u %d %d",
 	    nids_data.nids_header.lat,
 	    nids_data.nids_header.lon,
@@ -320,18 +332,21 @@ int process_file(void){
    * Decode the polygon data
    */
 
-  nids_data.data = malloc(nids_data.nids_header.m_msglength);
-  if(nids_data.data == NULL)
-    log_err(1, "Error from malloc()");
-  
   n = nids_data.nids_header.m_msglength - NIDS_HEADER_SIZE;
   if(n <= 0)
     log_errx(1, "Corrupt file.");
 
-  if(read(fd, nids_data.data, n) == -1)
-     log_err(1, "Error from read()");     
+  nids_data.data = malloc(n);
+  if(nids_data.data == NULL)
+    log_err(1, "Error from malloc()");
 
   nids_data.data_size = n;
+  n = read(fd, nids_data.data, nids_data.data_size);
+  if(n == -1)
+    log_err(1, "Error from read()");     
+  else if((unsigned int)n != nids_data.data_size){
+    log_errx(1, "Corrupt file.");
+  }
 
   nids_decode_data(&nids_data);
 
@@ -394,6 +409,26 @@ static void nids_decode_data(struct nids_data_st *nd){
   double r1, r2, theta1, theta2;
   int numpoints = 0;
   int numpolygons = 0;
+  int divider;
+  int status, bzerror;
+
+  /*
+   * The "divider" should be -1 for legacy products, but for the new
+   * products that are bz2 compressed the first two bytes are "BZ".
+   * In the first case we continue, but if the divider is not -1
+   * we assume it is a new product and try to send it to libbz2.
+   */
+  divider = (int)extract_int16(b, 1);
+  if(divider != -1){
+    status = dcnids_bunz(&nd->data, &nd->data_size, &bzerror);
+    if(status == 1)
+      log_errx(1, "Error from libbz2: %d", bzerror);
+    else if(status == -1)
+      log_err(1, "Error from libbz2.");
+
+    /* repoint b */
+    b = nd->data;
+  }
   
   nd->psb.blockid = extract_uint16(b, 2);	/* should be 1 */
   nd->psb.blocklength = extract_uint32(b, 3);
