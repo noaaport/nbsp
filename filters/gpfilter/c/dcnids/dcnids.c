@@ -385,6 +385,17 @@ static void nids_decode_data(struct nids_data_st *nd){
 
   /* start of display packets */
   packet_code = extract_uint16(b, 1);
+  
+  /*
+   * XXX
+   * To find out the product and packet codes:
+   *  fprintf(stdout, "%d %d %d\n",
+   *	  nd->nids_header.m_code,
+   *	  nd->nids_header.pdb_code,
+   *	  packet_code);
+   * exit(0);
+   */
+
   if((packet_code != NIDS_PACKET_RADIALS_AF1F) &&
      (packet_code != NIDS_PACKET_DIGITAL_RADIALS_16))
     log_errx(1, "Unsupported packet code: %d", packet_code);
