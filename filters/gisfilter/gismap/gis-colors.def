@@ -1093,117 +1093,109 @@ namespace eval ::nbsp::gis {
 
     variable radcolor;
 
-    set radcolor(n0r,background) [::nbsp::gis::x11color white];
-    set radcolor(n0r,0) [::nbsp::gis::x11color white];
-    set radcolor(n0r,5) [::nbsp::gis::x11color aqua];
-    set radcolor(n0r,10) [::nbsp::gis::x11color deepskyblue];
-    set radcolor(n0r,15) [::nbsp::gis::x11color blue];
-    set radcolor(n0r,20) [::nbsp::gis::x11color lawngreen];
-    set radcolor(n0r,25) [::nbsp::gis::x11color limegreen];
-    set radcolor(n0r,30) [::nbsp::gis::x11color green];
-    set radcolor(n0r,35) [::nbsp::gis::x11color yellow];
-    set radcolor(n0r,40) [::nbsp::gis::x11color gold];
-    set radcolor(n0r,45) [::nbsp::gis::x11color orange];
-    set radcolor(n0r,50) [::nbsp::gis::x11color red];
-    set radcolor(n0r,55) [::nbsp::gis::x11color firebrick];
-    set radcolor(n0r,60) [::nbsp::gis::x11color brown];
-    set radcolor(n0r,65) [::nbsp::gis::x11color magenta];
-    set radcolor(n0r,70) [::nbsp::gis::x11color darkviolet];
-    set radcolor(n0r,75) [::nbsp::gis::x11color white];
+    set radcolor(bref,background) [::nbsp::gis::x11color white];
+    set radcolor(bref,0) [::nbsp::gis::x11color white];
+    set radcolor(bref,5) [::nbsp::gis::x11color aqua];
+    set radcolor(bref,10) [::nbsp::gis::x11color deepskyblue];
+    set radcolor(bref,15) [::nbsp::gis::x11color blue];
+    set radcolor(bref,20) [::nbsp::gis::x11color lawngreen];
+    set radcolor(bref,25) [::nbsp::gis::x11color limegreen];
+    set radcolor(bref,30) [::nbsp::gis::x11color green];
+    set radcolor(bref,35) [::nbsp::gis::x11color yellow];
+    set radcolor(bref,40) [::nbsp::gis::x11color gold];
+    set radcolor(bref,45) [::nbsp::gis::x11color orange];
+    set radcolor(bref,50) [::nbsp::gis::x11color red];
+    set radcolor(bref,55) [::nbsp::gis::x11color firebrick];
+    set radcolor(bref,60) [::nbsp::gis::x11color brown];
+    set radcolor(bref,65) [::nbsp::gis::x11color magenta];
+    set radcolor(bref,70) [::nbsp::gis::x11color darkviolet];
+    set radcolor(bref,75) [::nbsp::gis::x11color white];
 
     # New
-    set radcolor(n0r,background) [::nbsp::gis::x11color white];
+    set radcolor(bref,background) [::nbsp::gis::x11color white];
 
-    set radcolor(n0r,0) [::nbsp::gis::x11color white];
-    set radcolor(n0r,1) [::nbsp::gis::x11color white];
-    set radcolor(n0r,2) [::nbsp::gis::x11color white];
-    set radcolor(n0r,3) [::nbsp::gis::x11color white];
-    set radcolor(n0r,4) [::nbsp::gis::x11color white];
+    set radcolor(bref,0) [::nbsp::gis::x11color white];
+    set radcolor(bref,1) [::nbsp::gis::x11color white];
+    set radcolor(bref,2) [::nbsp::gis::x11color white];
+    set radcolor(bref,3) [::nbsp::gis::x11color white];
+    set radcolor(bref,4) [::nbsp::gis::x11color white];
 
-    set radcolor(n0r,5) [::nbsp::gis::rgbcolor blue 1];
-    set radcolor(n0r,6) [::nbsp::gis::rgbcolor blue 18];
-    set radcolor(n0r,7) [::nbsp::gis::rgbcolor blue 35];
-    set radcolor(n0r,8) [::nbsp::gis::rgbcolor blue 52];
-    set radcolor(n0r,9) [::nbsp::gis::rgbcolor blue 69];
-    set radcolor(n0r,10) [::nbsp::gis::rgbcolor blue 86];
-    set radcolor(n0r,11) [::nbsp::gis::rgbcolor blue 103];
-    set radcolor(n0r,12) [::nbsp::gis::rgbcolor blue 120];
-    set radcolor(n0r,13) [::nbsp::gis::rgbcolor blue 137];
-    set radcolor(n0r,14) [::nbsp::gis::rgbcolor blue 154];
-    set radcolor(n0r,15) [::nbsp::gis::rgbcolor blue 171];
-    set radcolor(n0r,16) [::nbsp::gis::rgbcolor blue 188];
-    set radcolor(n0r,17) [::nbsp::gis::rgbcolor blue 205];
-    set radcolor(n0r,18) [::nbsp::gis::rgbcolor blue 222];
-    set radcolor(n0r,19) [::nbsp::gis::rgbcolor blue 239];
+    set radcolor(bref,5) [::nbsp::gis::rgbcolor blue 1];
+    set radcolor(bref,6) [::nbsp::gis::rgbcolor blue 18];
+    set radcolor(bref,7) [::nbsp::gis::rgbcolor blue 35];
+    set radcolor(bref,8) [::nbsp::gis::rgbcolor blue 52];
+    set radcolor(bref,9) [::nbsp::gis::rgbcolor blue 69];
+    set radcolor(bref,10) [::nbsp::gis::rgbcolor blue 86];
+    set radcolor(bref,11) [::nbsp::gis::rgbcolor blue 103];
+    set radcolor(bref,12) [::nbsp::gis::rgbcolor blue 120];
+    set radcolor(bref,13) [::nbsp::gis::rgbcolor blue 137];
+    set radcolor(bref,14) [::nbsp::gis::rgbcolor blue 154];
+    set radcolor(bref,15) [::nbsp::gis::rgbcolor blue 171];
+    set radcolor(bref,16) [::nbsp::gis::rgbcolor blue 188];
+    set radcolor(bref,17) [::nbsp::gis::rgbcolor blue 205];
+    set radcolor(bref,18) [::nbsp::gis::rgbcolor blue 222];
+    set radcolor(bref,19) [::nbsp::gis::rgbcolor blue 239];
 
-    set radcolor(n0r,20) [::nbsp::gis::rgbcolor green 1];
-    set radcolor(n0r,21) [::nbsp::gis::rgbcolor green 9];
-    set radcolor(n0r,22) [::nbsp::gis::rgbcolor green 17];
-    set radcolor(n0r,23) [::nbsp::gis::rgbcolor green 25];
-    set radcolor(n0r,24) [::nbsp::gis::rgbcolor green 33];
-    set radcolor(n0r,25) [::nbsp::gis::rgbcolor green 41];
-    set radcolor(n0r,26) [::nbsp::gis::rgbcolor green 49];
-    set radcolor(n0r,27) [::nbsp::gis::rgbcolor green 57];
-    set radcolor(n0r,28) [::nbsp::gis::rgbcolor green 65];
-    set radcolor(n0r,29) [::nbsp::gis::rgbcolor green 73];
-    set radcolor(n0r,30) [::nbsp::gis::rgbcolor green 81];
-    set radcolor(n0r,31) [::nbsp::gis::rgbcolor green 89];
-    set radcolor(n0r,32) [::nbsp::gis::rgbcolor green 97];
-    set radcolor(n0r,33) [::nbsp::gis::rgbcolor green 105];
-    set radcolor(n0r,34) [::nbsp::gis::rgbcolor green 113];
+    set radcolor(bref,20) [::nbsp::gis::rgbcolor green 1];
+    set radcolor(bref,21) [::nbsp::gis::rgbcolor green 9];
+    set radcolor(bref,22) [::nbsp::gis::rgbcolor green 17];
+    set radcolor(bref,23) [::nbsp::gis::rgbcolor green 25];
+    set radcolor(bref,24) [::nbsp::gis::rgbcolor green 33];
+    set radcolor(bref,25) [::nbsp::gis::rgbcolor green 41];
+    set radcolor(bref,26) [::nbsp::gis::rgbcolor green 49];
+    set radcolor(bref,27) [::nbsp::gis::rgbcolor green 57];
+    set radcolor(bref,28) [::nbsp::gis::rgbcolor green 65];
+    set radcolor(bref,29) [::nbsp::gis::rgbcolor green 73];
+    set radcolor(bref,30) [::nbsp::gis::rgbcolor green 81];
+    set radcolor(bref,31) [::nbsp::gis::rgbcolor green 89];
+    set radcolor(bref,32) [::nbsp::gis::rgbcolor green 97];
+    set radcolor(bref,33) [::nbsp::gis::rgbcolor green 105];
+    set radcolor(bref,34) [::nbsp::gis::rgbcolor green 113];
 
-    set radcolor(n0r,35) [::nbsp::gis::rgbcolor yellow 1];
-    set radcolor(n0r,36) [::nbsp::gis::rgbcolor yellow 13];
-    set radcolor(n0r,37) [::nbsp::gis::rgbcolor yellow 25];
-    set radcolor(n0r,38) [::nbsp::gis::rgbcolor yellow 37];
-    set radcolor(n0r,39) [::nbsp::gis::rgbcolor yellow 49];
-    set radcolor(n0r,40) [::nbsp::gis::rgbcolor yellow 61];
-    set radcolor(n0r,41) [::nbsp::gis::rgbcolor yellow 73];
-    set radcolor(n0r,42) [::nbsp::gis::rgbcolor yellow 85];
-    set radcolor(n0r,43) [::nbsp::gis::rgbcolor yellow 97];
-    set radcolor(n0r,44) [::nbsp::gis::rgbcolor yellow 109];
+    set radcolor(bref,35) [::nbsp::gis::rgbcolor yellow 1];
+    set radcolor(bref,36) [::nbsp::gis::rgbcolor yellow 13];
+    set radcolor(bref,37) [::nbsp::gis::rgbcolor yellow 25];
+    set radcolor(bref,38) [::nbsp::gis::rgbcolor yellow 37];
+    set radcolor(bref,39) [::nbsp::gis::rgbcolor yellow 49];
+    set radcolor(bref,40) [::nbsp::gis::rgbcolor yellow 61];
+    set radcolor(bref,41) [::nbsp::gis::rgbcolor yellow 73];
+    set radcolor(bref,42) [::nbsp::gis::rgbcolor yellow 85];
+    set radcolor(bref,43) [::nbsp::gis::rgbcolor yellow 97];
+    set radcolor(bref,44) [::nbsp::gis::rgbcolor yellow 109];
 
-    set radcolor(n0r,45) [::nbsp::gis::rgbcolor orange 1];
-    set radcolor(n0r,46) [::nbsp::gis::rgbcolor orange 26];
-    set radcolor(n0r,47) [::nbsp::gis::rgbcolor orange 51];
-    set radcolor(n0r,48) [::nbsp::gis::rgbcolor orange 76];
-    set radcolor(n0r,49) [::nbsp::gis::rgbcolor orange 101];
+    set radcolor(bref,45) [::nbsp::gis::rgbcolor orange 1];
+    set radcolor(bref,46) [::nbsp::gis::rgbcolor orange 26];
+    set radcolor(bref,47) [::nbsp::gis::rgbcolor orange 51];
+    set radcolor(bref,48) [::nbsp::gis::rgbcolor orange 76];
+    set radcolor(bref,49) [::nbsp::gis::rgbcolor orange 101];
 
-    set radcolor(n0r,50) [::nbsp::gis::rgbcolor red 1];
-    set radcolor(n0r,51) [::nbsp::gis::rgbcolor red 18];
-    set radcolor(n0r,52) [::nbsp::gis::rgbcolor red 35];
-    set radcolor(n0r,53) [::nbsp::gis::rgbcolor red 52];
-    set radcolor(n0r,54) [::nbsp::gis::rgbcolor red 69];
-    set radcolor(n0r,55) [::nbsp::gis::rgbcolor red 86];
-    set radcolor(n0r,56) [::nbsp::gis::rgbcolor red 103];
-    set radcolor(n0r,57) [::nbsp::gis::rgbcolor red 120];
-    set radcolor(n0r,58) [::nbsp::gis::rgbcolor red 137];
-    set radcolor(n0r,59) [::nbsp::gis::rgbcolor red 154];
-    set radcolor(n0r,60) [::nbsp::gis::rgbcolor red 171];
-    set radcolor(n0r,61) [::nbsp::gis::rgbcolor red 188];
-    set radcolor(n0r,62) [::nbsp::gis::rgbcolor red 205];
-    set radcolor(n0r,63) [::nbsp::gis::rgbcolor red 222];
-    set radcolor(n0r,64) [::nbsp::gis::rgbcolor red 239];
+    set radcolor(bref,50) [::nbsp::gis::rgbcolor red 1];
+    set radcolor(bref,51) [::nbsp::gis::rgbcolor red 18];
+    set radcolor(bref,52) [::nbsp::gis::rgbcolor red 35];
+    set radcolor(bref,53) [::nbsp::gis::rgbcolor red 52];
+    set radcolor(bref,54) [::nbsp::gis::rgbcolor red 69];
+    set radcolor(bref,55) [::nbsp::gis::rgbcolor red 86];
+    set radcolor(bref,56) [::nbsp::gis::rgbcolor red 103];
+    set radcolor(bref,57) [::nbsp::gis::rgbcolor red 120];
+    set radcolor(bref,58) [::nbsp::gis::rgbcolor red 137];
+    set radcolor(bref,59) [::nbsp::gis::rgbcolor red 154];
+    set radcolor(bref,60) [::nbsp::gis::rgbcolor red 171];
+    set radcolor(bref,61) [::nbsp::gis::rgbcolor red 188];
+    set radcolor(bref,62) [::nbsp::gis::rgbcolor red 205];
+    set radcolor(bref,63) [::nbsp::gis::rgbcolor red 222];
+    set radcolor(bref,64) [::nbsp::gis::rgbcolor red 239];
 
-    set radcolor(n0r,65) [::nbsp::gis::rgbcolor magenta 1];
-    set radcolor(n0r,66) [::nbsp::gis::rgbcolor magenta 17];
-    set radcolor(n0r,67) [::nbsp::gis::rgbcolor magenta 33];
-    set radcolor(n0r,68) [::nbsp::gis::rgbcolor magenta 49];
-    set radcolor(n0r,69) [::nbsp::gis::rgbcolor magenta 65];
-    set radcolor(n0r,70) [::nbsp::gis::rgbcolor magenta 81];
-    set radcolor(n0r,71) [::nbsp::gis::rgbcolor magenta 97];
-    set radcolor(n0r,72) [::nbsp::gis::rgbcolor magenta 113];
-    set radcolor(n0r,73) [::nbsp::gis::rgbcolor magenta 129];
-    set radcolor(n0r,74) [::nbsp::gis::rgbcolor magenta 145];
-    set radcolor(n0r,75) [::nbsp::gis::rgbcolor magenta 160];
+    set radcolor(bref,65) [::nbsp::gis::rgbcolor magenta 1];
+    set radcolor(bref,66) [::nbsp::gis::rgbcolor magenta 17];
+    set radcolor(bref,67) [::nbsp::gis::rgbcolor magenta 33];
+    set radcolor(bref,68) [::nbsp::gis::rgbcolor magenta 49];
+    set radcolor(bref,69) [::nbsp::gis::rgbcolor magenta 65];
+    set radcolor(bref,70) [::nbsp::gis::rgbcolor magenta 81];
+    set radcolor(bref,71) [::nbsp::gis::rgbcolor magenta 97];
+    set radcolor(bref,72) [::nbsp::gis::rgbcolor magenta 113];
+    set radcolor(bref,73) [::nbsp::gis::rgbcolor magenta 129];
+    set radcolor(bref,74) [::nbsp::gis::rgbcolor magenta 145];
+    set radcolor(bref,75) [::nbsp::gis::rgbcolor magenta 160];
 
-    set radcolor(n0r,max_level) 75;
-
-    # foreach k [array names radcolor "n0r,*"] {
-    #	if {[regexp {^n0r,(.+)} $k match level]} {
-    #	    foreach t [list n0r n1r n2r n3r n0z] {
-    #		set radcolor($t,$level) $radcolor(n0r,$level);
-    #	    }
-    #	}
-    # }
+    set radcolor(bref,max_level) 75;
 }

@@ -76,16 +76,18 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first
 # (It is matched against awips1). Included are:
-#  n0r n1r n2r n3r n0z n0v n1v nce net nvw n0s n1s n2s n3s nvl n1p ntp tr[0-2] 
+#  dpa
+#  n0r n1r n2r n3r n0z n0v n1v n0s n1s n2s n3s n1p ncr net nst ntp nvl nvw
+#  tr[0-2] 
 #
 # The following have an uncompressed nids header.
 #
 # tv0-tv2, tzl, nmd, dhr, dsp (+ the dual pol below + new dual pol next)
 # n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u dvl eet (dual pol)
-# daa dod dpa dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
+# daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
 # (the new dual pol will be added between july 2010 and december 2012)
 #
-set filterslib(doradinfounz)	{tr[0-2]|n[0-3][prsvz]|n(cr|vl|et|tp|vw)};
+set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|et|st|tp|vl|vw)};
 
 # Global variables of the filtererr library.
 # By default the filters report errors using syslog.

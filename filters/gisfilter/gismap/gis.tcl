@@ -58,24 +58,24 @@ proc nbsp::gis::radcolor {awips1 level} {
 
     variable radcolor;
 
-    if {[regexp {^n([0-3]r|0z)$} $awips1]} {
-	set _awips1 "n0r";
+    if {[regexp {^n([0-3ab](r|q)|0z)$} $awips1]} {
+	set k "bref";
     } else {
 	return -code error "No color table for $awips1.";
     }
 
-    return $radcolor($_awips1,$level);
+    return $radcolor($k,$level);
 }
 
 proc nbsp::gis::radcolor_set {awips1 level rgb} {
 
     variable radcolor;
 
-    if {[regexp {^n([0-3]r|0z)$} $awips1]} {
-	set _awips1 "n0r";
+    if {[regexp {^n([0-3ab](r|q)|0z)$} $awips1]} {
+	set k "n0r";
     } else {
 	return -code error "No color table for $awips1.";
     }
 
-    set radcolor($_awips1,$level) $rgb;
+    set radcolor($k,$level) $rgb;
 }

@@ -4,19 +4,19 @@ set a {$map(awips1)};
 
 set body {
    CLASS
-     EXPRESSION (\[pixel\] >= $level1 && \[pixel\] < $level2)
+     EXPRESSION (\[level\] >= $level1 && \[level\] < $level2)
      STYLE
-       COLOR [::nbsp::gis::radcolor $a $level]
+       COLOR [::nbsp::gis::radcolor $a $i]
      END
    END
 }
 
 set level1 0;
-set level2 1;
-set level 0;
-while {$level <= 76} {
+set level2 5;
+set i 0;
+while {$i <= 76} {
     puts -nonewline [subst -nobackslashes -nocommands $body];
-    incr level1;
-    incr level2;
-    incr level;
+    incr level1 5;
+    incr level2 5;
+    incr i 5;
 }
