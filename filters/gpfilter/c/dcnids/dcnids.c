@@ -13,6 +13,7 @@
 #include <string.h>
 #include <libgen.h>
 #include <math.h>
+#include <sys/limits.h>	/* SCHAR_MAX, MIN */
 #include "err.h"
 #include "util.h"
 #include "dcnids.h"
@@ -69,12 +70,12 @@
  * will write the corresponding data file.
  */
 
-
 struct {
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
+  char *opt_minmax;	/* -m => filter "level" values */
   char *opt_dbffile;	/* -f => write dbf file */
   char *opt_shpfile;	/* -p => write shp file */
   char *opt_csvfile;	/* -v => write csv file */
@@ -83,7 +84,10 @@ struct {
   /* variables */
   int opt_fpvx;		/* set if anyone of fpvx is given */
   int fd;
-} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, -1};
+  int level_min;	/* data filter values */
+  int level_max;
+} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, -1,
+       SCHAR_MIN, SCHAR_MAX};
 
 /* general functions */
 static int process_file(void);
@@ -111,9 +115,9 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bc:f:ltp:v:x:";
-  char *usage = "nbspdcnids [-b] [-c count] [-f dbffile] "
-    "[-l] [-t] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
+  char *optstr = "bltc:f:m:p:v:x:";
+  char *usage = "nbspdcnids [-b] [-l] [-t] [-c count] [-f dbffile] "
+    "[-m min,max] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
   int status = 0;
   int c;
   int opt_px = 0;	/* -p and -x must be given together */
@@ -137,6 +141,12 @@ int main(int argc, char **argv){
       break;
     case 'l':
       g.opt_lengthonly = 1;
+      break;
+    case 'm':
+      g.opt_minmax = optarg;
+      if(sscanf(optarg, "%d,%d", &g.level_min, &g.level_max) != 2){
+	log_errx(1, "Invalid argument to -l option: %s", optarg);
+      }
       break;
     case 'p':
       g.opt_shpfile = optarg;
@@ -265,7 +275,7 @@ int process_file(void){
   }
   
   /*
-   * Decode the polygon data
+   * Decode the polygon data.
    */
 
   n = nids_data.nids_header.m_msglength - NIDS_HEADER_SIZE;
@@ -419,6 +429,13 @@ static void nids_decode_data(struct nids_data_st *nd){
 	  nd->radial_packet_header.scale,
 	  nd->radial_packet_header.numradials);
   */
+
+  /*
+   * Here we extract the polygon data. Only the polygons that have 
+   * level values within the specified limits will be included.
+   */
+  nd->polygon_map.level_min = g.level_min;
+  nd->polygon_map.level_max = g.level_max;
 
   /* 
    * The layout of the "run bins" in the radials depends on the packet type.

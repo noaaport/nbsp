@@ -179,12 +179,12 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     # The ccb, wmo/awips, gempak headers must be removed for nbsdcnids
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
 	set cmd [list nbspunz -c $gisfilter(rad_totalheadersize) $nidsfpath \
-		     | nbspdcnids -b \
+		     | nbspdcnids -b -m 1,96\
 		     -p $datafpath(shp) \
 		     -x $datafpath(shx) \
 		     -f $datafpath(dbf)];
     } else {
-	set cmd [list nbspdcnids -b \
+	set cmd [list nbspdcnids -b -m 1,96\
 		     -c $gisfilter(rad_wmoawipsgmpk_header_size) \
 		     -p $datafpath(shp) \
 		     -x $datafpath(shx) \

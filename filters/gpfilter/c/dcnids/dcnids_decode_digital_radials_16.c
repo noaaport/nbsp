@@ -37,6 +37,7 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
   double r1, r2, theta1, theta2;
   int numpoints = 0;
   int numpolygons = 0;
+  int run_level = 0;
 
   /*
    * We will run through the radials twice. The first time is just to
@@ -122,18 +123,29 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 			    nd->nids_header.lat,
 			    r1, r2, theta1, theta2, polygon);
       /*
-       * The correspondnece between the "level" and the "code" is
+       * The correspondence between the "level" and the "code" is
        * in the case of digital products does not depend
        * on the depend on the operational mode of the radar.
        */
-      polygon->code = run_code;
+
+      /* According to doc, 0 and 1 are not data values */
+      if(run_code < 2)
+	continue;
+
       if((nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION) ||
 	 (nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR))
-	polygon->level = run_code/2 - 32;
+	run_level = run_code/2 - 32;
       else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
 	log_errx(1, "Radar is in maintenance mode.");
       else
 	log_errx(1, "Invalid value of radar operational mode.");
+      
+      if((run_level < nd->polygon_map.level_min) ||
+	 (run_level > nd->polygon_map.level_max)){
+	continue;
+      }
+      polygon->code = run_code;
+      polygon->level = run_level;
 
       /* XXX
       int k;

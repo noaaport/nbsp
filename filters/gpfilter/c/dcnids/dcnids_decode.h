@@ -29,7 +29,6 @@
  */
 #define NIDS_PACKET_RADIALS_START_RUNS		30
 
-
 struct nids_header_st {
   unsigned char header[NIDS_HEADER_SIZE];
   int m_code;
