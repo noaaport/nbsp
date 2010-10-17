@@ -27,6 +27,7 @@ struct dcnids_polygon_map_st {
   double lat_max;
   int level_min;	/* These can be set to filter out data */
   int level_max;
+  int flag_usefilter;
 };
 
 struct dcnids_shp_st {

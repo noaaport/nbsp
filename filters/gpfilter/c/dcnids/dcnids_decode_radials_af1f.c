@@ -147,9 +147,11 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
       else
 	log_errx(1, "Invalid value of radar operational mode.");
 
-      if((run_level < nd->polygon_map.level_min) ||
-	 (run_level > nd->polygon_map.level_max)){
-	continue;
+      if(nd->polygon_map.flag_usefilter == 1){
+	if((run_level < nd->polygon_map.level_min) ||
+	   (run_level > nd->polygon_map.level_max)){
+	  continue;
+	}
       }
       polygon->code = run_code;
       polygon->level = run_level;

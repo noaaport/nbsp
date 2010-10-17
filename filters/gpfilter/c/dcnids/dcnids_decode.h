@@ -20,6 +20,10 @@
 #define NIDS_PACKET_RADIALS_AF1F		0xaf1f
 #define NIDS_PACKET_DIGITAL_RADIALS_16		16
 
+/* default filter min and max level values if the filtering option is set */
+#define NIDS_LEVEL_MIN_VAL	1
+#define NIDS_LEVEL_MAX_VAL	96
+
 /*
  * When decoding the data packets, we must go to the start of the
  * "individual radials". In bytes:

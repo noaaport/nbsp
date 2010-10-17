@@ -75,7 +75,9 @@ struct {
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
-  char *opt_minmax;	/* -m => filter "level" values */
+  int opt_filter;	/* -F => apply data filtering options */
+  char *opt_levelmin;	/* -m => filter "level" min value */
+  char *opt_levelmax;	/* -n => filter "level" max value */
   char *opt_dbffile;	/* -f => write dbf file */
   char *opt_shpfile;	/* -p => write shp file */
   char *opt_csvfile;	/* -v => write csv file */
@@ -86,8 +88,10 @@ struct {
   int fd;
   int level_min;	/* data filter values */
   int level_max;
-} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, 0, -1,
-       SCHAR_MIN, SCHAR_MAX};
+} g = {0, 0, 0, 0, 0,
+       NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+       0, -1,
+       NIDS_LEVEL_MIN_VAL, NIDS_LEVEL_MAX_VAL};
 
 /* general functions */
 static int process_file(void);
@@ -115,9 +119,9 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bltc:f:m:p:v:x:";
-  char *usage = "nbspdcnids [-b] [-l] [-t] [-c count] [-f dbffile] "
-    "[-m min,max] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
+  char *optstr = "bFltc:f:m:n:p:v:x:";
+  char *usage = "nbspdcnids [-b] [-F] [-l] [-t] [-c count] [-f dbffile] "
+    "[-m min] [-n max] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
   int status = 0;
   int c;
   int opt_px = 0;	/* -p and -x must be given together */
@@ -128,6 +132,9 @@ int main(int argc, char **argv){
     switch(c){
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'F':
+      g.opt_filter = 1;
       break;
     case 'c':
       status = strto_int(optarg, &g.opt_skipcount);
@@ -143,9 +150,14 @@ int main(int argc, char **argv){
       g.opt_lengthonly = 1;
       break;
     case 'm':
-      g.opt_minmax = optarg;
-      if(sscanf(optarg, "%d,%d", &g.level_min, &g.level_max) != 2){
-	log_errx(1, "Invalid argument to -l option: %s", optarg);
+      g.opt_levelmin = optarg;
+      if(sscanf(optarg, "%d", &g.level_min) != 1){
+	log_errx(1, "Invalid argument to -m option: %s", optarg);
+      }
+    case 'n':
+      g.opt_levelmax = optarg;
+      if(sscanf(optarg, "%d", &g.level_max) != 1){
+	log_errx(1, "Invalid argument to -n option: %s", optarg);
       }
       break;
     case 'p':
@@ -432,10 +444,15 @@ static void nids_decode_data(struct nids_data_st *nd){
 
   /*
    * Here we extract the polygon data. Only the polygons that have 
-   * level values within the specified limits will be included.
+   * level values within the specified limits will be included if
+   * the option to use the filter is set.
    */
-  nd->polygon_map.level_min = g.level_min;
-  nd->polygon_map.level_max = g.level_max;
+  if(g.opt_filter == 1){
+    nd->polygon_map.flag_usefilter = 1;
+    nd->polygon_map.level_min = g.level_min;
+    nd->polygon_map.level_max = g.level_max;
+  }else
+    nd->polygon_map.flag_usefilter = 0;
 
   /* 
    * The layout of the "run bins" in the radials depends on the packet type.

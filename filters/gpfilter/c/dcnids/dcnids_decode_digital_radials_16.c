@@ -139,10 +139,12 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 	log_errx(1, "Radar is in maintenance mode.");
       else
 	log_errx(1, "Invalid value of radar operational mode.");
-      
-      if((run_level < nd->polygon_map.level_min) ||
-	 (run_level > nd->polygon_map.level_max)){
-	continue;
+
+      if(nd->polygon_map.flag_usefilter == 1){
+	if((run_level < nd->polygon_map.level_min) ||
+	   (run_level > nd->polygon_map.level_max)){
+	  continue;
+	}
       }
       polygon->code = run_code;
       polygon->level = run_level;
