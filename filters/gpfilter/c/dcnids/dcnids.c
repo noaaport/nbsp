@@ -13,7 +13,7 @@
 #include <string.h>
 #include <libgen.h>
 #include <math.h>
-#include <sys/limits.h>	/* SCHAR_MAX, MIN */
+#include <limits.h>	/* SCHAR_MAX, MIN */
 #include "err.h"
 #include "util.h"
 #include "dcnids.h"
