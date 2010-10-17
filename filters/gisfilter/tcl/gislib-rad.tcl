@@ -188,7 +188,8 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 		     -c $gisfilter(rad_wmoawipsgmpk_header_size) \
 		     -p $datafpath(shp) \
 		     -x $datafpath(shx) \
-		     -f $datafpath(dbf)];
+		     -f $datafpath(dbf) \
+		     $nidsfpath];
     }
 
     set status [catch {
