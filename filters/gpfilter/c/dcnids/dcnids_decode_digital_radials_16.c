@@ -122,14 +122,14 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 			    nd->nids_header.lat,
 			    r1, r2, theta1, theta2, polygon);
       /*
-       * The "level" that corresponds to the code depends on the operational
-       * mode.
+       * The correspondnece between the "level" and the "code" is
+       * in the case of digital products does not depend
+       * on the depend on the operational mode of the radar.
        */
       polygon->code = run_code;
-      if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION)
-	polygon->level = (run_code * 5 * 15)/255;
-      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR)
-	polygon->level = (run_code * 4 * 15)/255 - 32;
+      if((nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION) ||
+	 (nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR))
+	polygon->level = run_code/2 - 32;
       else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
 	log_errx(1, "Radar is in maintenance mode.");
       else
