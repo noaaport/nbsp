@@ -63,14 +63,14 @@ LAYER
   STATUS ON
   TRANSPARENCY 100	# or OPACITY 0 (TRANSPARENCY is deprecated)
   #
-  # PROCESSING "SCALE=0,80"		# these are helpful for raster (asc)
-  # PROCESSING "SCALE_BUCKETS=16"
+  PROCESSING "SCALE=0,80"
+  PROCESSING "SCALE_BUCKETS=16"
   #
 
   CLASSITEM "level"
 
    CLASS
-     EXPRESSION (\[level\] == 0)
+     EXPRESSION (\[level\] <= 0)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) 0]
      END
