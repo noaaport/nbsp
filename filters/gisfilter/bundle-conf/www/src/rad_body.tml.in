@@ -6,7 +6,13 @@
 
 <h5>
   $_title -
-  [clock format [file mtime [file join $Config(docRoot) $_imgpath]] -gmt true]
+  [set __imgpath [file join $Config(docRoot) $_imgpath]
+    if {[file exists $__imgpath]} {
+      return [clock format [file mtime $__imgpath] -gmt true]
+    } else {
+      return ""
+    }
+  ]
 </h5>
 
 <table>
