@@ -12,10 +12,12 @@
 
 <body>
 
+<!--
 <h3> GOES composites
 <ul>
 <li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li>
-</ul
+</ul>
+-->
 
 <h3>N0R - Base reflectivity 124 nmi range, 0.50 degree elevation angle</h3>
 <ul>
