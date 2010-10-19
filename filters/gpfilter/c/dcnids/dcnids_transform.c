@@ -11,38 +11,46 @@
 #define KM_PER_DEG	111.111		/* R_E * pi/180 */
 #define RAD_PER_DEG	0.0174		/* pi/180 */
 
+void dcnids_sine_cosine(double theta_deg,
+			double *sin_theta, double *cos_theta){
+  /*
+   * theta_deg must be in degrees.
+   */
+  double theta;
+  
+  theta = theta_deg * RAD_PER_DEG;
+  *sin_theta = sin(theta);
+  *cos_theta = cos(theta);
+}
+
 void dcnids_define_polygon(double lon0, double lat0,
 			   double r1, double r2,
-			   double theta1_deg, double theta2_deg,
+			   double sin_theta1, double cos_theta1,
+			   double sin_theta2, double cos_theta2,
 			   struct dcnids_polygon_st *p){
   /*
-   * theta1_deg and theta2_deg must be in degrees.
    * r1, r2 in km.
    */
   double x, y;
-  double theta1, theta2;
   
-  theta1 = theta1_deg * RAD_PER_DEG;
-  theta2 = theta2_deg * RAD_PER_DEG;
-
   /* ll */
-  x = r1 * sin(theta1);
-  y = r1 * cos(theta1);
+  x = r1 * sin_theta1;
+  y = r1 * cos_theta1;
   dcnids_xytolatlon(lon0, lat0, x, y, &p->lon[0], &p->lat[0]);
 
   /* ul */
-  x = r2 * sin(theta1);
-  y = r2 * cos(theta1);
+  x = r2 * sin_theta1;
+  y = r2 * cos_theta1;
   dcnids_xytolatlon(lon0, lat0, x, y, &p->lon[1], &p->lat[1]);  
 
   /* ur */
-  x = r2 * sin(theta2);
-  y = r2 * cos(theta2);
+  x = r2 * sin_theta2;
+  y = r2 * cos_theta2;
   dcnids_xytolatlon(lon0, lat0, x, y, &p->lon[2], &p->lat[2]);  
 
   /* lr */
-  x = r1 * sin(theta2);
-  y = r1 * cos(theta2);
+  x = r1 * sin_theta2;
+  y = r1 * cos_theta2;
   dcnids_xytolatlon(lon0, lat0, x, y, &p->lon[3], &p->lat[3]);
 }
   

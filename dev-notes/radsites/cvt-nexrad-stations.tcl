@@ -26,7 +26,7 @@ foreach line $data {
     set name [join [lrange $plist 3 4] " "];
     
     set country $p2;
-    if {$country ne "united states"} {
+    if {($country ne "united states") && ($country ne "guam")} {
 	continue;
     }
 

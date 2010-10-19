@@ -45,9 +45,13 @@ int extract_int16(unsigned char *p, int halfwordid);
 int extract_int32(unsigned char *p, int halfwordid);
 
 /* transform */
+void dcnids_sine_cosine(double theta_deg,
+			double *sin_theta, double *cos_theta);
+
 void dcnids_define_polygon(double lon0, double lat0,
 			   double r1, double r2,
-			   double theta1_deg, double theta2_deg,
+			   double sin_theta1, double cos_theta1,
+			   double sin_theta2, double cos_theta2,
 			   struct dcnids_polygon_st *p);
 
 void dcnids_xytolatlon(double lon0, double lat0,

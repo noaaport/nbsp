@@ -35,6 +35,7 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
   int i, j;
   int run_code, run_bins, total_bins;
   double r1, r2, theta1, theta2;
+  double sin_theta1, cos_theta1, sin_theta2, cos_theta2;
   int numpoints = 0;
   int numpolygons = 0;
   int run_level = 0;	/* the level corresponding to a given code */
@@ -105,6 +106,12 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
 	    radial_packet.angle_delta_deg);
     */
 
+    /* theta1 and theta2 in degrees */
+    theta1 = radial_packet.angle_start_deg;
+    theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
+    dcnids_sine_cosine(theta1, &sin_theta1, &cos_theta1);
+    dcnids_sine_cosine(theta2, &sin_theta2, &cos_theta2);
+
     total_bins = 0;
     for(j = 0; j < radial_packet.num_rle_halfwords * 2; ++j){
       run_code = (b[0] & 0xf);
@@ -146,16 +153,14 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
       total_bins += run_bins;
       r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
 
-      /* theta1 and theta2 in degrees */
-      theta1 = radial_packet.angle_start_deg;
-      theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
-
       /*
        * The reference lat, lon are the site coordinates
        */
       dcnids_define_polygon(nd->nids_header.lon,
 			    nd->nids_header.lat,
-			    r1, r2, theta1, theta2, polygon);
+			    r1, r2,
+			    sin_theta1, cos_theta1, sin_theta2, cos_theta2,
+			    polygon);
 
       /* XXX
       int k;
