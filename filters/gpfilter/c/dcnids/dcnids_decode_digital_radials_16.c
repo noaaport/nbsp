@@ -107,21 +107,6 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 
       numpoints += run_bins;
 
-      /* radius in km */
-      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
-      total_bins += run_bins;
-      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
-
-      /* theta1 and theta2 in degrees */
-      theta1 = radial_packet.angle_start_deg;
-      theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
-
-      /*
-       * The reference lat, lon are the site coordinates
-       */
-      dcnids_define_polygon(nd->nids_header.lon,
-			    nd->nids_header.lat,
-			    r1, r2, theta1, theta2, polygon);
       /*
        * The correspondence between the "level" and the "code" is
        * in the case of digital products does not depend
@@ -148,6 +133,22 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
       }
       polygon->code = run_code;
       polygon->level = run_level;
+
+      /* radius in km */
+      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+      total_bins += run_bins;
+      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+
+      /* theta1 and theta2 in degrees */
+      theta1 = radial_packet.angle_start_deg;
+      theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
+
+      /*
+       * The reference lat, lon are the site coordinates
+       */
+      dcnids_define_polygon(nd->nids_header.lon,
+			    nd->nids_header.lat,
+			    r1, r2, theta1, theta2, polygon);
 
       /* XXX
       int k;
