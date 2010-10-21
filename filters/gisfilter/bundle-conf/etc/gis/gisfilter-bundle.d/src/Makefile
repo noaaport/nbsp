@@ -4,11 +4,12 @@
 
 #
 # What will be copied to "enable" but avoiding duplicates (rad_conus
-# includes all conus sites).
+# includes all conus sites, and "us" includes conus plus ak, hi and pr).
 #
-RADENABLE = rad_conus.conf rad_ak.conf rad_hi.conf rad_pr.conf
-SATENABLE =
+#RADENABLE = rad_conus.conf rad_ak.conf rad_hi.conf rad_pr.conf
+RADENABLE = rad_us.conf
 #SATENABLE = sat_all.conf
+SATENABLE =
 
 ENABLE = ${RADENABLE} ${SATENABLE}
 

@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+set _slist {al de ga fl in ky ma mi ms nc nj ny oh pa sc va vt wv\
+	ar la nm ok tx\
+	az ca id nv or ut wa\
+	co ia il ks mn mo mt nd ne sd wi wy\
+	ak hi pr};
+set _name "us";
