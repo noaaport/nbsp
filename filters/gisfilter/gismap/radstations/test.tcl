@@ -25,8 +25,8 @@ set g [subst {
 			size {800 600} awips1 n0r}
   outputfile img/rad/n0rwest.png
   inputpatt  *.tif
-  inputdirs  {[nbsp::radstations::inputdirs_bystate \
-		   "rad/tif/%{sss}/n0r" "az ca" "id nv or" "ut wa"]}
+    inputdirs  {[nbsp::radstations::inputdirs_bystate \
+		  "rad/tif/%{sss}/n0r" "az ca" "id nv or" "ut wa"]}
 }];
 
 puts $g;

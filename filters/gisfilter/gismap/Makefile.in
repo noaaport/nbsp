@@ -10,7 +10,10 @@
 TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
-TMPLSOURCES =	gis-colors.def \
+TMPLSOURCES =	gis-colors.def.in gis-colors-bref.def gis-colors-rvel.def
+TMPLOBJECTS =	gis-colors.def
+
+TMPLFILES =	${TMPLOBJECTS} \
 		map_sat_conus.tmpl \
 		map_rad_bref.tmpl \
 		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl
@@ -41,13 +44,19 @@ nbspgismap: nbspgismap.tcl
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
 
+gis-colors.def: gis-colors.def.in gis-colors-bref.def gis-colors-rvel.def
+	sed -e '/@gis-colors-bref@/r gis-colors-bref.def' \
+	-e '/@gis-colors-bref@/d' \
+	-e '/@gis-colors-rvel@/r gis-colors-rvel.def' \
+	-e '/@gis-colors-rvel@/d' gis-colors.def.in > gis-colors.def 
+
 #geodata-share.tgz:
 #	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
 
-${TMPLTARGET}: ${TMPLSOURCES}
+${TMPLTARGET}: ${TMPLFILES}
 	rm -rf ${TMPLPDIR}
 	mkdir -p ${TMPLDIR}
-	cp ${TMPLSOURCES} ${TMPLDIR}
+	cp ${TMPLFILES} ${TMPLDIR}
 	tar -czf ${TMPLTARGET} ${TMPLPDIR}
 
 install: ${TARGET}
@@ -57,5 +66,5 @@ install: ${TARGET}
 	${INSTALL} -m 644 ${LIBFILES} ${MYLIBEXECDIR}
 
 clean:
-	rm -f *~ Makefile ${TARGET}
+	rm -f *~ Makefile ${TARGET} ${TMPLOBJECTS}
 	rm -rf ${TMPLPDIR}
