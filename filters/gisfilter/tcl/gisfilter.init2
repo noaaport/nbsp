@@ -132,6 +132,9 @@ set gisfilter(rad_outputfile_namefmt,nids) \
 	{$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};
 set gisfilter(rad_outputfile_dirfmt,nids) "rad/nids/$gisfilter(rad_subdirfmt)";
 #
+set gisfilter(rad_outputfile_namefmt,info) "$gisfilter(rad_namefmt).info";
+set gisfilter(rad_outputfile_dirfmt,info) "rad/info/$gisfilter(rad_subdirfmt)";
+#
 set gisfilter(rad_outputfile_namefmt,tif) "$gisfilter(rad_namefmt).tif";
 set gisfilter(rad_outputfile_dirfmt,tif) "rad/tif/$gisfilter(rad_subdirfmt)";
 #

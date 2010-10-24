@@ -13,7 +13,6 @@
 #include <string.h>
 #include <libgen.h>
 #include <math.h>
-#include <limits.h>	/* SCHAR_MAX, MIN */
 #include "err.h"
 #include "util.h"
 #include "dcnids.h"
@@ -91,7 +90,7 @@ struct {
 } g = {0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL, NULL, NULL,
        0, -1,
-       NIDS_LEVEL_MIN_VAL, NIDS_LEVEL_MAX_VAL};
+       NIDS_BREF_LEVEL_MIN_VAL, NIDS_BREF_LEVEL_MAX_VAL};
 
 /* general functions */
 static int process_file(void);
@@ -445,14 +444,19 @@ static void nids_decode_data(struct nids_data_st *nd){
   /*
    * Here we extract the polygon data. Only the polygons that have 
    * level values within the specified limits will be included if
-   * the option to use the filter is set.
+   * the option to use the filter is set. The filter is used only
+   * for bref.
    */
-  if(g.opt_filter == 1){
-    nd->polygon_map.flag_usefilter = 1;
-    nd->polygon_map.level_min = g.level_min;
-    nd->polygon_map.level_max = g.level_max;
-  }else
-    nd->polygon_map.flag_usefilter = 0;
+  nd->polygon_map.flag_usefilter = 0;	/* default*/
+  if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
+     (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z) ||
+     (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ)){
+    if(g.opt_filter == 1){
+      nd->polygon_map.flag_usefilter = 1;
+      nd->polygon_map.level_min = g.level_min;
+      nd->polygon_map.level_max = g.level_max;
+    }
+  }
 
   /* 
    * The layout of the "run bins" in the radials depends on the packet type.

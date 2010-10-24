@@ -26,6 +26,9 @@ struct nids_radial_packet_st {
   /* runs */
 };
 
+static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
+static int nids_decode_rvel_codetolevel(int run_code);
+
 void nids_decode_radials_af1f(struct nids_data_st *nd){
 
   unsigned char *b = nd->data;
@@ -127,17 +130,19 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
       numpoints += run_bins;
 
       /*
-       * The "level" that corresponds to the code depends on the operational
-       * mode.
+       * Translate the code to a "level". The level that corresponds to the
+       * code depends on the product type (pdb_code) and if it is a bref,
+       * then it depends code on the operational mode.
        */
-      if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION)
-	run_level = run_code * 5;
-      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR)
-	run_level = (run_code * 4) - 32;
-      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
-	log_errx(1, "Radar is in maintenance mode.");
-      else
-	log_errx(1, "Invalid value of radar operational mode.");
+      if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
+	 (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z)){
+	run_level = nids_decode_bref_codetolevel(nd->nids_header.pdb_mode,
+						 run_code);
+      }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV){
+	run_level = nids_decode_rvel_codetolevel(run_code);
+      }else{
+	log_errx(1, "Unsupported value of nd->nids_header.pdb_code.");
+      }
 
       if(nd->polygon_map.flag_usefilter == 1){
 	if((run_level < nd->polygon_map.level_min) ||
@@ -189,4 +194,85 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
   fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
 	  numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
+}
+
+static int nids_decode_bref_codetolevel(int pdb_mode, int run_code){
+
+  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+
+  /*
+   * The "level" that corresponds to the code depends on the operational
+   * mode.
+   */
+  if(pdb_mode == NIDS_PDB_MODE_PRECIPITATION)
+    run_level = run_code * 5;
+  else if(pdb_mode == NIDS_PDB_MODE_CLEAR)
+    run_level = (run_code * 4) - 32;
+  else if(pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
+    log_errx(1, "Radar is in maintenance mode.");
+  else
+    log_errx(1, "Invalid value of radar operational mode.");
+
+  return(run_level);
+}
+
+static int nids_decode_rvel_codetolevel(int run_code){
+
+  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+
+  switch(run_code){
+  case 0:
+    run_level = NIDS_RVEL_LEVEL_MIN_VAL;
+    break;
+  case 1:
+    run_level = -64;
+    break;
+  case 2:
+    run_level = -50;
+    break;
+  case 3:
+    run_level = -36;
+    break;
+  case 4:
+    run_level = -26;
+    break;
+  case 5:
+    run_level = -20;
+    break;
+  case 6:
+    run_level = -10;
+    break;
+  case 7:
+    run_level = -1;
+    break;
+  case 8:
+    run_level = 0;
+    break;
+  case 9:
+    run_level = 10;
+    break;
+  case 10:
+    run_level = 20;
+    break;
+  case 11:
+    run_level = 26;
+    break;
+  case 12:
+    run_level = 36;
+    break;
+  case 13:
+    run_level = 50;
+    break;
+  case 14:
+    run_level = 64;
+    break;
+  case 15:
+    run_level = NIDS_RVEL_LEVEL_MAX_VAL;
+    break;
+  default:
+    log_errx(1, "Invalid value of run_code.");
+    break;
+  }
+
+  return(run_level);
 }

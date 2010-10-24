@@ -16,7 +16,8 @@ TMPLOBJECTS =	gis-colors.def
 TMPLFILES =	${TMPLOBJECTS} \
 		map_sat_conus.tmpl \
 		map_rad_bref.tmpl \
-		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl
+		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl \
+		map_rad_rvel.tmpl map_rad_rvel_1.tmpl
 
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis

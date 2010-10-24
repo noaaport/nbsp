@@ -32,8 +32,8 @@ legend_n2q="gis_rad_legend_bref"
 legend_n3q="gis_rad_legend_bref"
 legend_n0q="gis_rad_legend_bref"
 #
-legend_n0v="gis_rad_legend_brvel"
-legend_n1v="gis_rad_legend_brvel"
+legend_n0v="gis_rad_legend_rvel"
+legend_n1v="gis_rad_legend_rvel"
 
 #
 # main

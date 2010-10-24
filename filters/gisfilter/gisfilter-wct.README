@@ -5,11 +5,27 @@
 Installation -
 ==============
 
-1) Enable the "gisfilter" in features.conf.
+1) Enable the "gisfilter" in features.conf. In my gisfilter machine I disable
+   all the other filters (because the gisfilter is CPU consuming).
 
-2) Start nbspd as usual - You should start to see some data files in
+2) Install WCT as I have explained in several other places, i.e.,
 
-   /var/noaaport/data/gis/rad
+   cp wct-3.2.0.zip /usr/local/lib
+   unzip wct-3.2.0.zip
+   rm wct-3.2.0.zip
+
+3) Install the wct-export script (or something equivalent)
+   in "/usr/local/bin" (or somewhere in PATH):
+
+   install -m 0755 wct-export.sh /usr/local/bin/wct-export
+
+4) Start nbspd as usual - You should start to see some data files in
+
+   /var/noaaport/data/gis/{qf,sat,rad}
+
+   "sat" and "rad" will contain initially the gini and nids data files.
+   The files in qf will be processed every minute or so, and as a result
+   the asc, tif, nc, ... converted files will start to show up.
 
 5) After about 10 minutes you see an "img" subdirectory with
    the configured image files.
@@ -27,7 +43,7 @@ Play -
    It will output a list of the currently configured "bundles". In this
    test setup it will be
 
-   rad_n0r_pr
+   sat_conus_01
    rad_n0r_south
    <a few others>
 

@@ -52,11 +52,20 @@ int main(void){
   }
   */
 
-  /* magenta */
+  /* magenta
   r = 255;
   b = 255;
   g = 0;
   for(r = 255, b = 255; r >= 96; r -= step, b -= step){
+    fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
+  }
+  */
+
+  /* gray */
+  r = 205;
+  b = 205;
+  g = 205;
+  for(r = 205, b = 205, g = 205; r >= 118; r -= step, b -= step, g -= step){
     fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
   }
 

@@ -20,9 +20,20 @@
 #define NIDS_PACKET_RADIALS_AF1F		0xaf1f
 #define NIDS_PACKET_DIGITAL_RADIALS_16		16
 
+/* product types */
+#define NIDS_PDB_CODE_NXR		19
+#define NIDS_PDB_CODE_N0Z		20
+#define NIDS_PDB_CODE_NXQ		94
+#define NIDS_PDB_CODE_NXV		27
+#define NIDS_PDB_CODE_NXU		99
+
 /* default filter min and max level values if the filtering option is set */
-#define NIDS_LEVEL_MIN_VAL	1
-#define NIDS_LEVEL_MAX_VAL	96
+#define NIDS_BREF_LEVEL_MIN_VAL	1
+#define NIDS_BREF_LEVEL_MAX_VAL	96
+
+/* These are arbitrary values that we assign to the rvel codes 0 and 15 */
+#define NIDS_RVEL_LEVEL_MIN_VAL	-96
+#define NIDS_RVEL_LEVEL_MAX_VAL	96
 
 /*
  * When decoding the data packets, we must go to the start of the

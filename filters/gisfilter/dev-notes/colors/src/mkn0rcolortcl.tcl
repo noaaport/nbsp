@@ -1,6 +1,6 @@
 #!/usr/local/bin/tclsh8.6
 #
-# Used to make the entries in gis-colors.def
+# Used to make the n0r (bref) entries in gis-colors.def
 #
 # start   end    family   max_number num_n0r_levels
 # 5	19	blue	256	   15

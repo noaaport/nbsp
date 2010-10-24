@@ -26,6 +26,9 @@ struct nids_digital_radial_packet_st {
   /* runs */
 };
 
+static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
+static int nids_decode_rvel_codetolevel(int run_code);
+
 void nids_decode_digital_radials_16(struct nids_data_st *nd){
 
   unsigned char *b = nd->data;
@@ -114,23 +117,22 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 
       numpoints += run_bins;
 
-      /*
-       * The correspondence between the "level" and the "code" is
-       * in the case of digital products does not depend
-       * on the depend on the operational mode of the radar.
-       */
-
       /* According to doc, 0 and 1 are not data values */
       if(run_code < 2)
 	continue;
 
-      if((nd->nids_header.pdb_mode == NIDS_PDB_MODE_PRECIPITATION) ||
-	 (nd->nids_header.pdb_mode == NIDS_PDB_MODE_CLEAR))
-	run_level = run_code/2 - 32;
-      else if(nd->nids_header.pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
-	log_errx(1, "Radar is in maintenance mode.");
-      else
-	log_errx(1, "Invalid value of radar operational mode.");
+      /*
+       * Translate the code to a "level". The level that corresponds to the
+       * code depends on the product type (pdb_code).
+       */
+      if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ){
+	run_level = nids_decode_bref_codetolevel(nd->nids_header.pdb_mode,
+						 run_code);
+      }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXU){
+	run_level = nids_decode_rvel_codetolevel(run_code);
+      }else{
+	log_errx(1, "Unsupported value of nd->nids_header.pdb_code.");
+      }
 
       if(nd->polygon_map.flag_usefilter == 1){
 	if((run_level < nd->polygon_map.level_min) ||
@@ -182,4 +184,35 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
   fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
 	  numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
+}
+
+static int nids_decode_bref_codetolevel(int pdb_mode, int run_code){
+
+  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+
+  /*
+   * The correspondence between the "level" and the "code" is
+   * in the case of digital products does not depend
+   * on the depend on the operational mode of the radar.
+   */
+
+  if((pdb_mode == NIDS_PDB_MODE_PRECIPITATION) ||
+     (pdb_mode == NIDS_PDB_MODE_CLEAR))
+    run_level = run_code/2 - 32;
+  else if(pdb_mode == NIDS_PDB_MODE_MAINTENANCE)
+    log_errx(1, "Radar is in maintenance mode.");
+  else
+    log_errx(1, "Invalid value of radar operational mode.");
+
+  return(run_level);
+}
+
+static int nids_decode_rvel_codetolevel(int run_code){
+
+  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+
+  run_code -= 1;
+  run_level = (int)(0.5 * (double)run_code - 63.5);
+
+  return(run_level);
 }
