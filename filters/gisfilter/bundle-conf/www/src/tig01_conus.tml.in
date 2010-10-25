@@ -7,7 +7,7 @@
 #
 [Doc_Dynamic]
 
-[::html::set _docpath "/gis/data/img/sat/tig01_conus.png"]
+[::html::set _imgpath "gis/data/img/sat/tig01_conus.png"]
 [::html::set _headtitle "TIG01 CONUS"]
 [::html::set _title "tige01 and tigw01 composite"]
 
@@ -16,11 +16,20 @@
 
 <body>
 
-<h1> $_title - [clock format [file mtime $Config(docRoot)/$_docpath]] </h1>
+<h5>
+  $_title -
+  [set __imgpath [file join $Config(docRoot) $_imgpath]
+    if {[file exists $__imgpath]} {
+      return [clock format [file mtime $__imgpath] -gmt true]
+    } else {
+      return ""
+    }
+  ]
+</h5>
 
 <table>
 <tr>
-  <td><img src="$_docpath"</td>
+  <td><img src="/$_imgpath"</td>
 </tr>
 </table>
 

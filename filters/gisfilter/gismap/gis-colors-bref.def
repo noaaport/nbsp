@@ -86,4 +86,4 @@
     set radcolor(bref,74) [::nbsp::gis::rgbcolor magenta 145];
     set radcolor(bref,75) [::nbsp::gis::rgbcolor magenta 160];
 
-    set radcolor(bref,max_level) 75;
+    set radcolor(bref,max_level) [::nbsp::gis::rgbcolor magenta 160];

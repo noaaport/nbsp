@@ -3,7 +3,8 @@
 #
 
 RADENABLE = rad_conus.conf rad_ak.conf rad_pr.conf rad_hi.conf \
-	rad_east.conf rad_south.conf rad_central.conf rad_west.conf
+	rad_east.conf rad_south.conf rad_central.conf rad_west.conf \
+	rad_sites.conf
 SATENABLE =
 #SATENABLE = sat_conus.conf
 
@@ -12,6 +13,7 @@ ENABLE = ${RADENABLE} ${SATENABLE}
 all: clean
 	cd ..; mkdir dist enable
 	cp sat_conus.conf ../dist
+	cp rad_sites.conf ../dist
 	for file in *.in; \
 	do \
 	name=$${file%.in}; \

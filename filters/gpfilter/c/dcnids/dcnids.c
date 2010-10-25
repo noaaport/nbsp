@@ -90,7 +90,7 @@ struct {
 } g = {0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL, NULL, NULL,
        0, -1,
-       NIDS_BREF_LEVEL_MIN_VAL, NIDS_BREF_LEVEL_MAX_VAL};
+       0, 0};
 
 /* general functions */
 static int process_file(void);
@@ -448,11 +448,28 @@ static void nids_decode_data(struct nids_data_st *nd){
    * for bref.
    */
   nd->polygon_map.flag_usefilter = 0;	/* default*/
-  if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
-     (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z) ||
-     (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ)){
-    if(g.opt_filter == 1){
-      nd->polygon_map.flag_usefilter = 1;
+  if(g.opt_filter == 1){
+    nd->polygon_map.flag_usefilter = 1;
+
+    /*
+     * The limits depend on the product code.
+     */
+    if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
+       (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z) ||
+       (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ)){
+      nd->polygon_map.level_min = NIDS_BREF_LEVEL_MIN_VAL;
+      nd->polygon_map.level_max = NIDS_BREF_LEVEL_MAX_VAL;
+    }else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV) ||
+	     (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXU)){
+      nd->polygon_map.level_min = NIDS_RVEL_LEVEL_MIN_VAL;
+      nd->polygon_map.level_max = NIDS_RVEL_LEVEL_MAX_VAL;
+    }else
+      log_errx(1, "Invalid value of nd->nids_header.pdb_code.");
+
+    /*
+     * If the user specified min and max the use them.
+     */
+    if(g.level_min != g.level_max){
       nd->polygon_map.level_min = g.level_min;
       nd->polygon_map.level_max = g.level_max;
     }

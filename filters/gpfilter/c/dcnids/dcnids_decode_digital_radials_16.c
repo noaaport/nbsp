@@ -209,7 +209,7 @@ static int nids_decode_bref_codetolevel(int pdb_mode, int run_code){
 
 static int nids_decode_rvel_codetolevel(int run_code){
 
-  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+  int run_level;
 
   run_code -= 1;
   run_level = (int)(0.5 * (double)run_code - 63.5);

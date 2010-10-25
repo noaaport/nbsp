@@ -30,10 +30,12 @@
 /* default filter min and max level values if the filtering option is set */
 #define NIDS_BREF_LEVEL_MIN_VAL	1
 #define NIDS_BREF_LEVEL_MAX_VAL	96
+#define NIDS_RVEL_LEVEL_MIN_VAL	-64
+#define NIDS_RVEL_LEVEL_MAX_VAL	64
 
 /* These are arbitrary values that we assign to the rvel codes 0 and 15 */
-#define NIDS_RVEL_LEVEL_MIN_VAL	-96
-#define NIDS_RVEL_LEVEL_MAX_VAL	96
+#define NIDS_RVEL_LEVEL_ND_MIN	-65
+#define NIDS_RVEL_LEVEL_ND_MAX	65
 
 /*
  * When decoding the data packets, we must go to the start of the

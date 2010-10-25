@@ -4,6 +4,8 @@
 # proc nbsp::radstations::inputdirs_bystate {dir_tmpl args}
 # proc nbsp::radstations::bystate {args}
 # proc nbsp::radstations::extent_bystate {args}
+# proc nbsp::radstations::sitelist {}
+# proc nbsp::radstations::extent_bysite {site}
 #
 package provide nbsp::radstations 1.0;
 package require textutil::split;
@@ -477,6 +479,39 @@ proc nbsp::radstations::extent_bystate {args} {
     incr lat1 -2;
     incr lon2 2;
     incr lat2 2;
+
+    return [list $lon1 $lat1 $lon2 $lat2];
+}
+
+proc nbsp::radstations::sitelist {} {
+
+    variable radstations;
+
+    set r [list];
+    foreach site [lsort [array names radstations "site,*"]] {
+	lappend r [lindex [split $site ","] 1];
+    }
+
+    return $r;
+}
+
+proc nbsp::radstations::extent_bysite {site {shift 2}} {
+
+    variable radstations;
+
+    set data [split $radstations(site,$site) ","];
+    set lat [expr int([lindex $data 4])];
+    set lon [expr int([lindex $data 5])];
+
+    set lat1 $lat;
+    set lon1 $lon;
+    set lat2 $lat;
+    set lon2 $lon;
+
+    incr lon1 -$shift;
+    incr lat1 -$shift;
+    incr lon2 $shift;;
+    incr lat2 $shift;;
 
     return [list $lon1 $lat1 $lon2 $lat2];
 }

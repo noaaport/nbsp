@@ -1,7 +1,10 @@
 #
 # $Id$
 #
-    set radcolor(rvel,-65) [::nbsp::gis::x11color black];
+
+    set radcolor(rvel,background) [::nbsp::gis::x11color white];
+
+    set radcolor(rvel,-65) $radcolor(rvel,background);
 
     set radcolor(rvel,-64) [::nbsp::gis::rgbcolor blue 1];
     set radcolor(rvel,-63) [::nbsp::gis::rgbcolor blue 9];
@@ -138,4 +141,4 @@
     set radcolor(rvel,63) [::nbsp::gis::rgbcolor red 252];
     set radcolor(rvel,64) [::nbsp::gis::rgbcolor red 256];
 
-    set radcolor(rvel,65) [::nbsp::gis::rgbcolor magenta 160];
+    set radcolor(rvel,65) $radcolor(rvel,background);

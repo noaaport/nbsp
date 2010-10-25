@@ -50,11 +50,12 @@
 # D0300|2100/2  => run every other day at 3 am and 9 pm.
 #
 
-# Get the default list
+# The default list
 set geoclist [exec nbspgismap -L];
 
 foreach c $geoclist {
-    if {[regexp {^rad} $c]} {
+    # Include only bundles, exclude the individual sites
+    if {[regexp {^rad_.+_(ak|hi|pr|conus|central|east|south|west))} $c]} {
         schedule M/10 nbspgismap $c;
     } elseif {[regexp {^sat} $c]} {
         schedule M/30 nbspgismap $c;

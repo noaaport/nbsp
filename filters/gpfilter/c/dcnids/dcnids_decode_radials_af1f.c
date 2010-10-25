@@ -218,11 +218,11 @@ static int nids_decode_bref_codetolevel(int pdb_mode, int run_code){
 
 static int nids_decode_rvel_codetolevel(int run_code){
 
-  int run_level = NIDS_BREF_LEVEL_MIN_VAL;
+  int run_level = NIDS_RVEL_LEVEL_ND_MIN;
 
   switch(run_code){
   case 0:
-    run_level = NIDS_RVEL_LEVEL_MIN_VAL;
+    run_level = NIDS_RVEL_LEVEL_ND_MIN;
     break;
   case 1:
     run_level = -64;
@@ -267,7 +267,7 @@ static int nids_decode_rvel_codetolevel(int run_code){
     run_level = 64;
     break;
   case 15:
-    run_level = NIDS_RVEL_LEVEL_MAX_VAL;
+    run_level = NIDS_RVEL_LEVEL_ND_MAX;
     break;
   default:
     log_errx(1, "Invalid value of run_code.");
