@@ -117,6 +117,11 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
 
       numpoints += run_bins;
 
+      /* radius in km  - alspo update "total_bins */
+      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+      total_bins += run_bins;
+      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+
       /* According to doc, 0 and 1 are not data values */
       if(run_code < 2)
 	continue;
@@ -142,11 +147,6 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
       }
       polygon->code = run_code;
       polygon->level = run_level;
-
-      /* radius in km */
-      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
-      total_bins += run_bins;
-      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
 
       /*
        * The reference lat, lon are the site coordinates

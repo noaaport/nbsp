@@ -129,6 +129,11 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
 
       numpoints += run_bins;
 
+      /* radius in km - also update "total_bins" */
+      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+      total_bins += run_bins;
+      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+
       /*
        * Translate the code to a "level". The level that corresponds to the
        * code depends on the product type (pdb_code) and if it is a bref,
@@ -152,11 +157,6 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
       }
       polygon->code = run_code;
       polygon->level = run_level;
-
-      /* radius in km */
-      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
-      total_bins += run_bins;
-      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
 
       /*
        * The reference lat, lon are the site coordinates
