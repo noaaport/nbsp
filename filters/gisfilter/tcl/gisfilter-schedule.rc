@@ -53,6 +53,9 @@
 # The default list
 set geoclist [exec nbspgismap -L];
 
+# Instead of using .+ below, use something like (n0r|n0q|n0v|n0u) to choose
+# specific products.
+
 foreach c $geoclist {
     # Include only bundles, exclude the individual sites
     if {[regexp {^rad_.+_(ak|hi|pr|conus|central|east|south|west)$} $c]} {
