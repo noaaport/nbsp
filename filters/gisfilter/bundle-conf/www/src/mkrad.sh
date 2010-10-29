@@ -13,9 +13,11 @@ title_n3r="N3R Base reflectivity, 124 nmi, 3.35\/3.5 degree elevation"
 title_n0z="N0Z Base reflectivity, 248 nmi, 0.5 degree elevation"
 #
 title_n0q="N0Q Base reflectivity, 248 nmi, 0.5 degree elevation"
-title_n1q="N1Q Base reflectivity, 248 nmi, 1.45\/1.5 degree elevation"
+title_n0q="NAQ Base reflectivity, 248 nmi, 0.9 degree elevation"
+title_n1q="N1Q Base reflectivity, 248 nmi, 1.3\/1.5 degree elevation"
+title_n0q="NBQ Base reflectivity, 248 nmi, 1.8 degree elevation"
 title_n2q="N2Q Base reflectivity, 248 nmi, 2.4\/2.5 degree elevation"
-title_n3q="N3Q Base reflectivity, 248 nmi, 3.35\/3.5 degree elevation"
+title_n3q="N3Q Base reflectivity, 248 nmi, 3.1\/3.4\/3.5 degree elevation"
 #
 title_n0v="N0V Base radial velocity, 124 nmi, 0.5 degree elevation"
 title_n1v="N1V Base radial velocity, 124 nmi, 1.45\/1.5 degree elevation"
@@ -34,7 +36,9 @@ legend_n3r="gis_rad_legend_bref"
 legend_n0z="gis_rad_legend_bref"
 #
 legend_n0q="gis_rad_legend_bref"
+legend_naq="gis_rad_legend_bref"
 legend_n1q="gis_rad_legend_bref"
+legend_nbq="gis_rad_legend_bref"
 legend_n2q="gis_rad_legend_bref"
 legend_n3q="gis_rad_legend_bref"
 legend_n0q="gis_rad_legend_bref"
@@ -55,7 +59,9 @@ legend_n3u="gis_rad_legend_rvel"
 directory=
 [ $# -ne 0 ] && directory=$1
 
-for awips1 in n0r n1r n2r n3r n0z n0q n1q n2q n3q n0v n1v \
+for awips1 in n0r n1r n2r n3r n0z \
+    n0v n1v \
+    n0q naq n1q nbq n2q n3q \
     n0u nau n1u nbu n2u n3u
 do
   eval legend=\$legend_$awips1
