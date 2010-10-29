@@ -23,7 +23,7 @@ title_n1v="N1V Base radial velocity, 124 nmi, 1.45\/1.5 degree elevation"
 title_n0u="N0U Base radial velocity, 162 nmi, 0.5 degree elevation"
 title_nau="NAU Base radial velocity, 162 nmi, 0.9 degree elevation"
 title_n1u="N1U Base radial velocity, 162 nmi, 1.3\/1.5 degree elevation"
-title_nbu="NBU Base radial velocity, 162 nmi, 1.8 degree elevation
+title_nbu="NBU Base radial velocity, 162 nmi, 1.8 degree elevation"
 title_n2u="N2U Base radial velocity, 162 nmi, 2.5\/2.5 degree elevation"
 title_n3u="N3U Base radial velocity, 162 nmi, 3.1\/3.4\/3.5 degree elevation"
 
