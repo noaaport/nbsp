@@ -21,7 +21,11 @@ title_n0v="N0V Base radial velocity, 124 nmi, 0.5 degree elevation"
 title_n1v="N1V Base radial velocity, 124 nmi, 1.45\/1.5 degree elevation"
 #
 title_n0u="N0U Base radial velocity, 162 nmi, 0.5 degree elevation"
-title_n1u="N1U Base radial velocity, 162 nmi, 1.45\/1.5 degree elevation"
+title_nau="NAU Base radial velocity, 162 nmi, 0.9 degree elevation"
+title_n1u="N1U Base radial velocity, 162 nmi, 1.3\/1.5 degree elevation"
+title_nbu="NBU Base radial velocity, 162 nmi, 1.8 degree elevation
+title_n2u="N2U Base radial velocity, 162 nmi, 2.5\/2.5 degree elevation"
+title_n3u="N3U Base radial velocity, 162 nmi, 3.1\/3.4\/3.5 degree elevation"
 
 legend_n0r="gis_rad_legend_bref"
 legend_n1r="gis_rad_legend_bref"
@@ -39,7 +43,11 @@ legend_n0v="gis_rad_legend_rvel"
 legend_n1v="gis_rad_legend_rvel"
 #
 legend_n0u="gis_rad_legend_rvel"
+legend_nau="gis_rad_legend_rvel"
 legend_n1u="gis_rad_legend_rvel"
+legend_nbu="gis_rad_legend_rvel"
+legend_n2u="gis_rad_legend_rvel"
+legend_n3u="gis_rad_legend_rvel"
 
 #
 # main
@@ -47,7 +55,8 @@ legend_n1u="gis_rad_legend_rvel"
 directory=
 [ $# -ne 0 ] && directory=$1
 
-for awips1 in n0r n1r n2r n3r n0z n0q n1q n2q n3q n0v n1v n0u n1u
+for awips1 in n0r n1r n2r n3r n0z n0q n1q n2q n3q n0v n1v \
+    n0u nau n1u nbu n2u n3u
 do
   eval legend=\$legend_$awips1
   eval title=\$title_$awips1
