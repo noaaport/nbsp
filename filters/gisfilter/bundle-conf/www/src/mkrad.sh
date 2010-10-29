@@ -6,19 +6,22 @@
 rad_header="rad_header.tml.in"
 rad_body="rad_body.tml.in"
 
-title_n0r="N0R Base reflectivity, 124 nmi, 0.50 degree elevation"
+title_n0r="N0R Base reflectivity, 124 nmi, 0.5 degree elevation"
 title_n1r="N1R Base reflectivity, 124 nmi, 1.45\/1.5 degree elevation"
-title_n2r="N2R Base reflectivity, 124 nmi, 2.40\/2.50 degree elevation"
-title_n3r="N3R Base reflectivity, 124 nmi, 3.35\/3.50 degree elevation"
-title_n0z="N0Z Base reflectivity, 248 nmi, 0.50 degree elevation"
+title_n2r="N2R Base reflectivity, 124 nmi, 2.4\/2.5 degree elevation"
+title_n3r="N3R Base reflectivity, 124 nmi, 3.35\/3.5 degree elevation"
+title_n0z="N0Z Base reflectivity, 248 nmi, 0.5 degree elevation"
 #
-title_n0q="N0Q Base reflectivity, 248 nmi, 0.50 degree elevation"
+title_n0q="N0Q Base reflectivity, 248 nmi, 0.5 degree elevation"
 title_n1q="N1Q Base reflectivity, 248 nmi, 1.45\/1.5 degree elevation"
-title_n2q="N2Q Base reflectivity, 248 nmi, 2.40\/2.50 degree elevation"
-title_n3q="N3Q Base reflectivity, 248 nmi, 3.35\/3.50 degree elevation"
+title_n2q="N2Q Base reflectivity, 248 nmi, 2.4\/2.5 degree elevation"
+title_n3q="N3Q Base reflectivity, 248 nmi, 3.35\/3.5 degree elevation"
 #
-title_n0v="N0V Base radial velocity, 124 nmi, 0.50 degree elevation"
+title_n0v="N0V Base radial velocity, 124 nmi, 0.5 degree elevation"
 title_n1v="N1V Base radial velocity, 124 nmi, 1.45\/1.5 degree elevation"
+#
+title_n0u="N0U Base radial velocity, 162 nmi, 0.5 degree elevation"
+title_n1u="N1U Base radial velocity, 162 nmi, 1.45\/1.5 degree elevation"
 
 legend_n0r="gis_rad_legend_bref"
 legend_n1r="gis_rad_legend_bref"
@@ -34,6 +37,9 @@ legend_n0q="gis_rad_legend_bref"
 #
 legend_n0v="gis_rad_legend_rvel"
 legend_n1v="gis_rad_legend_rvel"
+#
+legend_n0u="gis_rad_legend_rvel"
+legend_n1u="gis_rad_legend_rvel"
 
 #
 # main
@@ -41,7 +47,7 @@ legend_n1v="gis_rad_legend_rvel"
 directory=
 [ $# -ne 0 ] && directory=$1
 
-for awips1 in n0r n1r n2r n3r n0z n0q n1q n2q n3q n0v n1v
+for awips1 in n0r n1r n2r n3r n0z n0q n1q n2q n3q n0v n1v n0u n1u
 do
   eval legend=\$legend_$awips1
   eval title=\$title_$awips1
