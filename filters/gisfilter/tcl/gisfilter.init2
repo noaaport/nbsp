@@ -46,7 +46,7 @@ unset _fmt;
 #
 # sat configuration
 #
-set gisfilter(sat_enable) 1;  # whether to generate the tif files
+set gisfilter(sat_enable) 0;  # whether to process the tig files
 set gisfilter(sat_regex)  {_tig(a|b|e|w|g|h|p|q)0[1-5]};   # fname
 set gisfilter(sat_latest_enable)        1; # make link to latest
 set gisfilter(sat_latestname)   "sn.last";

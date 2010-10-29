@@ -1,7 +1,7 @@
 #!/bin/sh
 
 requires="db47 tcl-8.6 tcllib tk-8.6 expect \
-png netpbm gnuplot gifsicle"
+png netpbm gnuplot gifsicle mapserver"
 
 # For FreeBSD-8.1 - add openjdk7
 

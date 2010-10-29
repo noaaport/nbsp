@@ -28,5 +28,5 @@ Requires = tcpd libdb-4_5 db-utils tcl tcllib tk expect libpng netpbm zlib gnupl
 endif
 
 ifeq (${FLAVOR}, centos)
-Requires =  tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib gnuplot gifsicle sharutils
+Requires =  sharutils tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib gnuplot gifsicle mapserver
 endif

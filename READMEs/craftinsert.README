@@ -14,11 +14,11 @@ Then perform the following:
 1) Make the user "ldm" a member of the group "noaaport"
    (so that ldm it can write to the nbspd input fifo)
 
-2) Change the group of the directory
+2) Be sure that the group of the directory
 
 	/var/noaaport/nbsp/spool
    
-   to the group "noaaport", and make it writable by that group:
+   is the group "noaaport", and make it writable by that group:
 
 	chmod 775 <dir>
 
