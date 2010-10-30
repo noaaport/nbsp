@@ -204,7 +204,8 @@ proc process_geoc_entry {id} {
 	# Don't exit so that other bundles can be processed
 	log_warn $errmsg;
     } elseif {$option(t) != 0} {
-	exec ln -s $outputfile $nbspgismap(geoclist,$id,outputfile);
+	exec ln -s [file join [pwd] $outputfile] \
+	    $nbspgismap(geoclist,$id,outputfile);
     }
 }
 
