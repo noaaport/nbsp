@@ -1,6 +1,6 @@
 [Doc_Dynamic]
 
-[::html::set _imgpath "gis/data/img/rad/@awips1@_@name@.png"]
+[::html::set _imgpath "gis/data/img/rad/latest/@awips1@_@name@.png"]
 [::html::set _headtitle "[string toupper "@awips1@ @name@"]"]
 [::html::set _title "@title@"]
 [::html::set _legendpath "include/@legend@.html"]

@@ -21,230 +21,230 @@
 
 <h3>N0R - Base reflectivity 124 nmi range, 0.50 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n0r_ak.tml">ak</a></li>
-<li><a href="rad/n0r_pr.tml">pr</a></li>
-<li><a href="rad/n0r_hi.tml">hi</a></li>
-<li><a href="rad/n0r_west.tml">west</a></li>
-<li><a href="rad/n0r_south.tml">south</a></li>
-<li><a href="rad/n0r_central.tml">central</a></li>
-<li><a href="rad/n0r_east.tml">east</a></li>
-<li><a href="rad/n0r_conus.tml">conus</a></li>
+<li><a href="rad/latest/n0r_ak.tml">ak</a></li>
+<li><a href="rad/latest/n0r_pr.tml">pr</a></li>
+<li><a href="rad/latest/n0r_hi.tml">hi</a></li>
+<li><a href="rad/latest/n0r_west.tml">west</a></li>
+<li><a href="rad/latest/n0r_south.tml">south</a></li>
+<li><a href="rad/latest/n0r_central.tml">central</a></li>
+<li><a href="rad/latest/n0r_east.tml">east</a></li>
+<li><a href="rad/latest/n0r_conus.tml">conus</a></li>
 </ul>
 
 <h3>N1R - Base reflectivity 124 nmi range, 1.45/1.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n1r_ak.tml">ak</a></li>
-<li><a href="rad/n1r_pr.tml">pr</a></li>
-<li><a href="rad/n1r_hi.tml">hi</a></li>
-<li><a href="rad/n1r_west.tml">west</a></li>
-<li><a href="rad/n1r_south.tml">south</a></li>
-<li><a href="rad/n1r_central.tml">central</a></li>
-<li><a href="rad/n1r_east.tml">east</a></li>
-<li><a href="rad/n1r_conus.tml">conus</a></li>
+<li><a href="rad/latest/n1r_ak.tml">ak</a></li>
+<li><a href="rad/latest/n1r_pr.tml">pr</a></li>
+<li><a href="rad/latest/n1r_hi.tml">hi</a></li>
+<li><a href="rad/latest/n1r_west.tml">west</a></li>
+<li><a href="rad/latest/n1r_south.tml">south</a></li>
+<li><a href="rad/latest/n1r_central.tml">central</a></li>
+<li><a href="rad/latest/n1r_east.tml">east</a></li>
+<li><a href="rad/latest/n1r_conus.tml">conus</a></li>
 </ul>
 
 <h3>N2R - Base reflectivity 124 nmi range, 2.4/2.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n2r_ak.tml">ak</a></li>
-<li><a href="rad/n2r_pr.tml">pr</a></li>
-<li><a href="rad/n2r_hi.tml">hi</a></li>
-<li><a href="rad/n2r_west.tml">west</a></li>
-<li><a href="rad/n2r_south.tml">south</a></li>
-<li><a href="rad/n2r_central.tml">central</a></li>
-<li><a href="rad/n2r_east.tml">east</a></li>
-<li><a href="rad/n2r_conus.tml">conus</a></li>
+<li><a href="rad/latest/n2r_ak.tml">ak</a></li>
+<li><a href="rad/latest/n2r_pr.tml">pr</a></li>
+<li><a href="rad/latest/n2r_hi.tml">hi</a></li>
+<li><a href="rad/latest/n2r_west.tml">west</a></li>
+<li><a href="rad/latest/n2r_south.tml">south</a></li>
+<li><a href="rad/latest/n2r_central.tml">central</a></li>
+<li><a href="rad/latest/n2r_east.tml">east</a></li>
+<li><a href="rad/latest/n2r_conus.tml">conus</a></li>
 </ul>
 
 <h3>N3R - Base reflectivity 124 nmi range, 3.35/3.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n3r_ak.tml">ak</a></li>
-<li><a href="rad/n3r_pr.tml">pr</a></li>
-<li><a href="rad/n3r_hi.tml">hi</a></li>
-<li><a href="rad/n3r_west.tml">west</a></li>
-<li><a href="rad/n3r_south.tml">south</a></li>
-<li><a href="rad/n3r_central.tml">central</a></li>
-<li><a href="rad/n3r_east.tml">east</a></li>
-<li><a href="rad/n3r_conus.tml">conus</a></li>
+<li><a href="rad/latest/n3r_ak.tml">ak</a></li>
+<li><a href="rad/latest/n3r_pr.tml">pr</a></li>
+<li><a href="rad/latest/n3r_hi.tml">hi</a></li>
+<li><a href="rad/latest/n3r_west.tml">west</a></li>
+<li><a href="rad/latest/n3r_south.tml">south</a></li>
+<li><a href="rad/latest/n3r_central.tml">central</a></li>
+<li><a href="rad/latest/n3r_east.tml">east</a></li>
+<li><a href="rad/latest/n3r_conus.tml">conus</a></li>
 </ul>
 
 <h3>N0Z - Base reflectivity 248 nmi range, 0.50 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n0z_ak.tml">ak</a></li>
-<li><a href="rad/n0z_pr.tml">pr</a></li>
-<li><a href="rad/n0z_hi.tml">hi</a></li>
-<li><a href="rad/n0z_west.tml">west</a></li>
-<li><a href="rad/n0z_south.tml">south</a></li>
-<li><a href="rad/n0z_central.tml">central</a></li>
-<li><a href="rad/n0z_east.tml">east</a></li>
-<li><a href="rad/n0z_conus.tml">conus</a></li>
+<li><a href="rad/latest/n0z_ak.tml">ak</a></li>
+<li><a href="rad/latest/n0z_pr.tml">pr</a></li>
+<li><a href="rad/latest/n0z_hi.tml">hi</a></li>
+<li><a href="rad/latest/n0z_west.tml">west</a></li>
+<li><a href="rad/latest/n0z_south.tml">south</a></li>
+<li><a href="rad/latest/n0z_central.tml">central</a></li>
+<li><a href="rad/latest/n0z_east.tml">east</a></li>
+<li><a href="rad/latest/n0z_conus.tml">conus</a></li>
 </ul>
 
 <h3>N0Q - Base reflectivity 248 nmi range, 0.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n0q_ak.tml">ak</a></li>
-<li><a href="rad/n0q_pr.tml">pr</a></li>
-<li><a href="rad/n0q_hi.tml">hi</a></li>
-<li><a href="rad/n0q_west.tml">west</a></li>
-<li><a href="rad/n0q_south.tml">south</a></li>
-<li><a href="rad/n0q_central.tml">central</a></li>
-<li><a href="rad/n0q_east.tml">east</a></li>
-<li><a href="rad/n0q_conus.tml">conus</a></li>
+<li><a href="rad/latest/n0q_ak.tml">ak</a></li>
+<li><a href="rad/latest/n0q_pr.tml">pr</a></li>
+<li><a href="rad/latest/n0q_hi.tml">hi</a></li>
+<li><a href="rad/latest/n0q_west.tml">west</a></li>
+<li><a href="rad/latest/n0q_south.tml">south</a></li>
+<li><a href="rad/latest/n0q_central.tml">central</a></li>
+<li><a href="rad/latest/n0q_east.tml">east</a></li>
+<li><a href="rad/latest/n0q_conus.tml">conus</a></li>
 </ul>
 
 <h3>NAQ - Base reflectivity 248 nmi range, 0.9 degree elevation angle</h3>
 <ul>
-<li><a href="rad/naq_ak.tml">ak</a></li>
-<li><a href="rad/naq_pr.tml">pr</a></li>
-<li><a href="rad/naq_hi.tml">hi</a></li>
-<li><a href="rad/naq_west.tml">west</a></li>
-<li><a href="rad/naq_south.tml">south</a></li>
-<li><a href="rad/naq_central.tml">central</a></li>
-<li><a href="rad/naq_east.tml">east</a></li>
-<li><a href="rad/naq_conus.tml">conus</a></li>
+<li><a href="rad/latest/naq_ak.tml">ak</a></li>
+<li><a href="rad/latest/naq_pr.tml">pr</a></li>
+<li><a href="rad/latest/naq_hi.tml">hi</a></li>
+<li><a href="rad/latest/naq_west.tml">west</a></li>
+<li><a href="rad/latest/naq_south.tml">south</a></li>
+<li><a href="rad/latest/naq_central.tml">central</a></li>
+<li><a href="rad/latest/naq_east.tml">east</a></li>
+<li><a href="rad/latest/naq_conus.tml">conus</a></li>
 </ul>
 
 <h3>N1Q - Base reflectivity 248 nmi range, 1.45/1.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n1q_ak.tml">ak</a></li>
-<li><a href="rad/n1q_pr.tml">pr</a></li>
-<li><a href="rad/n1q_hi.tml">hi</a></li>
-<li><a href="rad/n1q_west.tml">west</a></li>
-<li><a href="rad/n1q_south.tml">south</a></li>
-<li><a href="rad/n1q_central.tml">central</a></li>
-<li><a href="rad/n1q_east.tml">east</a></li>
-<li><a href="rad/n1q_conus.tml">conus</a></li>
+<li><a href="rad/latest/n1q_ak.tml">ak</a></li>
+<li><a href="rad/latest/n1q_pr.tml">pr</a></li>
+<li><a href="rad/latest/n1q_hi.tml">hi</a></li>
+<li><a href="rad/latest/n1q_west.tml">west</a></li>
+<li><a href="rad/latest/n1q_south.tml">south</a></li>
+<li><a href="rad/latest/n1q_central.tml">central</a></li>
+<li><a href="rad/latest/n1q_east.tml">east</a></li>
+<li><a href="rad/latest/n1q_conus.tml">conus</a></li>
 </ul>
 
 <h3>NBQ - Base reflectivity 248 nmi range, 1.8 degree elevation angle</h3>
 <ul>
-<li><a href="rad/nbq_ak.tml">ak</a></li>
-<li><a href="rad/nbq_pr.tml">pr</a></li>
-<li><a href="rad/nbq_hi.tml">hi</a></li>
-<li><a href="rad/nbq_west.tml">west</a></li>
-<li><a href="rad/nbq_south.tml">south</a></li>
-<li><a href="rad/nbq_central.tml">central</a></li>
-<li><a href="rad/nbq_east.tml">east</a></li>
-<li><a href="rad/nbq_conus.tml">conus</a></li>
+<li><a href="rad/latest/nbq_ak.tml">ak</a></li>
+<li><a href="rad/latest/nbq_pr.tml">pr</a></li>
+<li><a href="rad/latest/nbq_hi.tml">hi</a></li>
+<li><a href="rad/latest/nbq_west.tml">west</a></li>
+<li><a href="rad/latest/nbq_south.tml">south</a></li>
+<li><a href="rad/latest/nbq_central.tml">central</a></li>
+<li><a href="rad/latest/nbq_east.tml">east</a></li>
+<li><a href="rad/latest/nbq_conus.tml">conus</a></li>
 </ul>
 
 <h3>N2Q - Base reflectivity 248 nmi range, 2.4/2.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n2q_ak.tml">ak</a></li>
-<li><a href="rad/n2q_pr.tml">pr</a></li>
-<li><a href="rad/n2q_hi.tml">hi</a></li>
-<li><a href="rad/n2q_west.tml">west</a></li>
-<li><a href="rad/n2q_south.tml">south</a></li>
-<li><a href="rad/n2q_central.tml">central</a></li>
-<li><a href="rad/n2q_east.tml">east</a></li>
-<li><a href="rad/n2q_conus.tml">conus</a></li>
+<li><a href="rad/latest/n2q_ak.tml">ak</a></li>
+<li><a href="rad/latest/n2q_pr.tml">pr</a></li>
+<li><a href="rad/latest/n2q_hi.tml">hi</a></li>
+<li><a href="rad/latest/n2q_west.tml">west</a></li>
+<li><a href="rad/latest/n2q_south.tml">south</a></li>
+<li><a href="rad/latest/n2q_central.tml">central</a></li>
+<li><a href="rad/latest/n2q_east.tml">east</a></li>
+<li><a href="rad/latest/n2q_conus.tml">conus</a></li>
 </ul>
 
 <h3>N3Q - Base reflectivity 248 nmi range, 3.35/3.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n3q_ak.tml">ak</a></li>
-<li><a href="rad/n3q_pr.tml">pr</a></li>
-<li><a href="rad/n3q_hi.tml">hi</a></li>
-<li><a href="rad/n3q_west.tml">west</a></li>
-<li><a href="rad/n3q_south.tml">south</a></li>
-<li><a href="rad/n3q_central.tml">central</a></li>
-<li><a href="rad/n3q_east.tml">east</a></li>
-<li><a href="rad/n3q_conus.tml">conus</a></li>
+<li><a href="rad/latest/n3q_ak.tml">ak</a></li>
+<li><a href="rad/latest/n3q_pr.tml">pr</a></li>
+<li><a href="rad/latest/n3q_hi.tml">hi</a></li>
+<li><a href="rad/latest/n3q_west.tml">west</a></li>
+<li><a href="rad/latest/n3q_south.tml">south</a></li>
+<li><a href="rad/latest/n3q_central.tml">central</a></li>
+<li><a href="rad/latest/n3q_east.tml">east</a></li>
+<li><a href="rad/latest/n3q_conus.tml">conus</a></li>
 </ul>
 
 <h3>N0V - Base radial velocity 124 nmi range, 0.50 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n0v_ak.tml">ak</a></li>
-<li><a href="rad/n0v_pr.tml">pr</a></li>
-<li><a href="rad/n0v_hi.tml">hi</a></li>
-<li><a href="rad/n0v_west.tml">west</a></li>
-<li><a href="rad/n0v_south.tml">south</a></li>
-<li><a href="rad/n0v_central.tml">central</a></li>
-<li><a href="rad/n0v_east.tml">east</a></li>
-<li><a href="rad/n0v_conus.tml">conus</a></li>
+<li><a href="rad/latest/n0v_ak.tml">ak</a></li>
+<li><a href="rad/latest/n0v_pr.tml">pr</a></li>
+<li><a href="rad/latest/n0v_hi.tml">hi</a></li>
+<li><a href="rad/latest/n0v_west.tml">west</a></li>
+<li><a href="rad/latest/n0v_south.tml">south</a></li>
+<li><a href="rad/latest/n0v_central.tml">central</a></li>
+<li><a href="rad/latest/n0v_east.tml">east</a></li>
+<li><a href="rad/latest/n0v_conus.tml">conus</a></li>
 </ul>
 
 <h3>N1V - Base radial velocity 124 nmi range, 1.45/1.5 degree elevation</h3>
 <ul>
-<li><a href="rad/n1v_ak.tml">ak</a></li>
-<li><a href="rad/n1v_pr.tml">pr</a></li>
-<li><a href="rad/n1v_hi.tml">hi</a></li>
-<li><a href="rad/n1v_west.tml">west</a></li>
-<li><a href="rad/n1v_south.tml">south</a></li>
-<li><a href="rad/n1v_central.tml">central</a></li>
-<li><a href="rad/n1v_east.tml">east</a></li>
-<li><a href="rad/n1v_conus.tml">conus</a></li>
+<li><a href="rad/latest/n1v_ak.tml">ak</a></li>
+<li><a href="rad/latest/n1v_pr.tml">pr</a></li>
+<li><a href="rad/latest/n1v_hi.tml">hi</a></li>
+<li><a href="rad/latest/n1v_west.tml">west</a></li>
+<li><a href="rad/latest/n1v_south.tml">south</a></li>
+<li><a href="rad/latest/n1v_central.tml">central</a></li>
+<li><a href="rad/latest/n1v_east.tml">east</a></li>
+<li><a href="rad/latest/n1v_conus.tml">conus</a></li>
 </ul>
 
 <h3>N0U - Base radial velocity 162 nmi range, 0.5 degree elevation angle</h3>
 <ul>
-<li><a href="rad/n0u_ak.tml">ak</a></li>
-<li><a href="rad/n0u_pr.tml">pr</a></li>
-<li><a href="rad/n0u_hi.tml">hi</a></li>
-<li><a href="rad/n0u_west.tml">west</a></li>
-<li><a href="rad/n0u_south.tml">south</a></li>
-<li><a href="rad/n0u_central.tml">central</a></li>
-<li><a href="rad/n0u_east.tml">east</a></li>
-<li><a href="rad/n0u_conus.tml">conus</a></li>
+<li><a href="rad/latest/n0u_ak.tml">ak</a></li>
+<li><a href="rad/latest/n0u_pr.tml">pr</a></li>
+<li><a href="rad/latest/n0u_hi.tml">hi</a></li>
+<li><a href="rad/latest/n0u_west.tml">west</a></li>
+<li><a href="rad/latest/n0u_south.tml">south</a></li>
+<li><a href="rad/latest/n0u_central.tml">central</a></li>
+<li><a href="rad/latest/n0u_east.tml">east</a></li>
+<li><a href="rad/latest/n0u_conus.tml">conus</a></li>
 </ul>
 
 <h3>NAU - Base radial velocity 162 nmi range, 0.9 degree elevation</h3>
 <ul>
-<li><a href="rad/nau_ak.tml">ak</a></li>
-<li><a href="rad/nau_pr.tml">pr</a></li>
-<li><a href="rad/nau_hi.tml">hi</a></li>
-<li><a href="rad/nau_west.tml">west</a></li>
-<li><a href="rad/nau_south.tml">south</a></li>
-<li><a href="rad/nau_central.tml">central</a></li>
-<li><a href="rad/nau_east.tml">east</a></li>
-<li><a href="rad/nau_conus.tml">conus</a></li>
+<li><a href="rad/latest/nau_ak.tml">ak</a></li>
+<li><a href="rad/latest/nau_pr.tml">pr</a></li>
+<li><a href="rad/latest/nau_hi.tml">hi</a></li>
+<li><a href="rad/latest/nau_west.tml">west</a></li>
+<li><a href="rad/latest/nau_south.tml">south</a></li>
+<li><a href="rad/latest/nau_central.tml">central</a></li>
+<li><a href="rad/latest/nau_east.tml">east</a></li>
+<li><a href="rad/latest/nau_conus.tml">conus</a></li>
 </ul>
 
 <h3>N1U - Base radial velocity 162 nmi range, 1.3/1.5 degree elevation</h3>
 <ul>
-<li><a href="rad/n1u_ak.tml">ak</a></li>
-<li><a href="rad/n1u_pr.tml">pr</a></li>
-<li><a href="rad/n1u_hi.tml">hi</a></li>
-<li><a href="rad/n1u_west.tml">west</a></li>
-<li><a href="rad/n1u_south.tml">south</a></li>
-<li><a href="rad/n1u_central.tml">central</a></li>
-<li><a href="rad/n1u_east.tml">east</a></li>
-<li><a href="rad/n1u_conus.tml">conus</a></li>
+<li><a href="rad/latest/n1u_ak.tml">ak</a></li>
+<li><a href="rad/latest/n1u_pr.tml">pr</a></li>
+<li><a href="rad/latest/n1u_hi.tml">hi</a></li>
+<li><a href="rad/latest/n1u_west.tml">west</a></li>
+<li><a href="rad/latest/n1u_south.tml">south</a></li>
+<li><a href="rad/latest/n1u_central.tml">central</a></li>
+<li><a href="rad/latest/n1u_east.tml">east</a></li>
+<li><a href="rad/latest/n1u_conus.tml">conus</a></li>
 </ul>
 
 <h3>NBU - Base radial velocity 162 nmi range, 1.8 degree elevation</h3>
 <ul>
-<li><a href="rad/nbu_ak.tml">ak</a></li>
-<li><a href="rad/nbu_pr.tml">pr</a></li>
-<li><a href="rad/nbu_hi.tml">hi</a></li>
-<li><a href="rad/nbu_west.tml">west</a></li>
-<li><a href="rad/nbu_south.tml">south</a></li>
-<li><a href="rad/nbu_central.tml">central</a></li>
-<li><a href="rad/nbu_east.tml">east</a></li>
-<li><a href="rad/nbu_conus.tml">conus</a></li>
+<li><a href="rad/latest/nbu_ak.tml">ak</a></li>
+<li><a href="rad/latest/nbu_pr.tml">pr</a></li>
+<li><a href="rad/latest/nbu_hi.tml">hi</a></li>
+<li><a href="rad/latest/nbu_west.tml">west</a></li>
+<li><a href="rad/latest/nbu_south.tml">south</a></li>
+<li><a href="rad/latest/nbu_central.tml">central</a></li>
+<li><a href="rad/latest/nbu_east.tml">east</a></li>
+<li><a href="rad/latest/nbu_conus.tml">conus</a></li>
 </ul>
 
 <h3>N2U - Base radial velocity 162 nmi range, 2.4/2.5 degree elevation</h3>
 <ul>
-<li><a href="rad/n2u_ak.tml">ak</a></li>
-<li><a href="rad/n2u_pr.tml">pr</a></li>
-<li><a href="rad/n2u_hi.tml">hi</a></li>
-<li><a href="rad/n2u_west.tml">west</a></li>
-<li><a href="rad/n2u_south.tml">south</a></li>
-<li><a href="rad/n2u_central.tml">central</a></li>
-<li><a href="rad/n2u_east.tml">east</a></li>
-<li><a href="rad/n2u_conus.tml">conus</a></li>
+<li><a href="rad/latest/n2u_ak.tml">ak</a></li>
+<li><a href="rad/latest/n2u_pr.tml">pr</a></li>
+<li><a href="rad/latest/n2u_hi.tml">hi</a></li>
+<li><a href="rad/latest/n2u_west.tml">west</a></li>
+<li><a href="rad/latest/n2u_south.tml">south</a></li>
+<li><a href="rad/latest/n2u_central.tml">central</a></li>
+<li><a href="rad/latest/n2u_east.tml">east</a></li>
+<li><a href="rad/latest/n2u_conus.tml">conus</a></li>
 </ul>
 
 <h3>N3U - Base radial velocity 162 nmi range, 3.1/3.4/3.5 degree elevation</h3>
 <ul>
-<li><a href="rad/n3u_ak.tml">ak</a></li>
-<li><a href="rad/n3u_pr.tml">pr</a></li>
-<li><a href="rad/n3u_hi.tml">hi</a></li>
-<li><a href="rad/n3u_west.tml">west</a></li>
-<li><a href="rad/n3u_south.tml">south</a></li>
-<li><a href="rad/n3u_central.tml">central</a></li>
-<li><a href="rad/n3u_east.tml">east</a></li>
-<li><a href="rad/n3u_conus.tml">conus</a></li>
+<li><a href="rad/latest/n3u_ak.tml">ak</a></li>
+<li><a href="rad/latest/n3u_pr.tml">pr</a></li>
+<li><a href="rad/latest/n3u_hi.tml">hi</a></li>
+<li><a href="rad/latest/n3u_west.tml">west</a></li>
+<li><a href="rad/latest/n3u_south.tml">south</a></li>
+<li><a href="rad/latest/n3u_central.tml">central</a></li>
+<li><a href="rad/latest/n3u_east.tml">east</a></li>
+<li><a href="rad/latest/n3u_conus.tml">conus</a></li>
 </ul>
 
 </body>
