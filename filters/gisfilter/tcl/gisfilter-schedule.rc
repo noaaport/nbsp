@@ -53,12 +53,12 @@
 # The default list
 set geoclist [exec nbspgismap -L];
 
-# Instead of using .+ below, use something like (n0r|n0q|n0v|n0u) to choose
-# specific products.
-
 foreach c $geoclist {
-    # Include only bundles, exclude the individual sites
-    if {[regexp {^rad_.+_(ak|hi|pr|conus|central|east|south|west)$} $c]} {
+    #
+    # Include only bundles, exclude the individual sites, and only
+    # the lowest level of anything.
+    #
+    if {[regexp {^rad_n0._(ak|hi|pr|conus|central|east|south|west)$} $c]} {
         schedule M/10 nbspgismap $c;
     } elseif {[regexp {^sat} $c]} {
         schedule M/30 nbspgismap $c;

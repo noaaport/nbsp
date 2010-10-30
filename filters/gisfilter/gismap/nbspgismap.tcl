@@ -2,10 +2,11 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>] [-L] [<id_list>]
+# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>] [-L] [-t] [<id_list>]
 #
 # -b => background mode
 # -L => output the id list
+# -t => use time-stamped output file name
 #
 # This tool reads a "bundle configuration file"
 # (defined in gisfilter.{init,conf} and then calls nbspgismap1 with the
@@ -13,8 +14,9 @@
 
 package require cmdline;
 
-set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L] [<id_list>]};
-set optlist {b {d.arg ""} {c.arg ""} L};
+set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L]
+    [-t] [<id_list>]};
+set optlist {b {d.arg ""} {c.arg ""} L t};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
 # from filter.lib is used. This also allows templates to "require" locally
@@ -145,6 +147,7 @@ proc process_geoc_entry {id} {
     # nbspgismap(geoclist,$id,maptmpl)
     # nbspgismap(geoclist,$id,options)
     # nbspgismap(geoclist,$id,outputfile)
+    # nbspgismap(geoclist,$id,outputfilet)
     # nbspgismap(geoclist,$id,inputpatt)
     # nbspgismap(geoclist,$id,inputdirs)
 
@@ -166,8 +169,21 @@ proc process_geoc_entry {id} {
 	log_err "$nbspgismap(outputdir) does not exist.";
     }
 
+    # Check if "-t " was specified and set the output name accordingly
+    if {$option(t) != 0} {
+	set fmt $nbspgismap(geoclist,$id,outputfilet);
+	set outputfile [clock format [clock seconds] -format $fmt];
+	file mkdir [file join $nbspgismap(outputdir) \
+			[file dirname $outputfile]];
+    } else {
+	set outputfile $nbspgismap(geoclist,$id,outputfile);
+    }
+
+    # Create the default outputdir and delete the default output file
+    # in case it is a link.
     file mkdir [file join $nbspgismap(outputdir) \
 		    [file dirname $nbspgismap(geoclist,$id,outputfile)]];
+    file delete $nbspgismap(geoclist,$id,outputfile);
     
     set cmd [concat $cmd \
 		 [list -d $nbspgismap(outputdir) \
@@ -175,7 +191,7 @@ proc process_geoc_entry {id} {
 		      -f $nbspgismap(mapfonts_dir) \
 		      -g $nbspgismap(geodata_dir) \
 		      -m $map_tmplfile \
-		      -o $nbspgismap(geoclist,$id,outputfile) \
+		      -o $outputfile \
 		      -I $nbspgismap(inputdir) \
 		      -p $nbspgismap(geoclist,$id,inputpatt)] \
 		 $nbspgismap(geoclist,$id,inputdirs)];
@@ -183,10 +199,12 @@ proc process_geoc_entry {id} {
     set status [catch {
 	eval exec $cmd;
     } errmsg];
-    
+
     if {$status != 0} {
 	# Don't exit so that other bundles can be processed
 	log_warn $errmsg;
+    } elseif {$option(t) != 0} {
+	exec ln -s $outputfile $nbspgismap(geoclist,$id,outputfile);
     }
 }
 
