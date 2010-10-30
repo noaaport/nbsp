@@ -56,11 +56,12 @@ set geoclist [exec nbspgismap -L];
 foreach c $geoclist {
     #
     # Include only bundles, exclude the individual sites, and only
-    # the lowest level of anything.
+    # the lowest level of anything. The "-t" option creates time-stamped
+    # image file names.
     #
     if {[regexp {^rad_n0._(ak|hi|pr|conus|central|east|south|west)$} $c]} {
-        schedule M/10 nbspgismap $c;
+        schedule M/10 nbspgismap -t $c;
     } elseif {[regexp {^sat} $c]} {
-        schedule M/30 nbspgismap $c;
+        schedule M/30 nbspgismap -t $c;
     }
 }
