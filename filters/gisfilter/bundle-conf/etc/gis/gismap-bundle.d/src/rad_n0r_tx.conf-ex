@@ -7,8 +7,9 @@ lappend nbspgismap(geoclist) {
  id           rad_n0r_tx
  maptmpl      map_rad_bref.tmpl
  options      {extent {-104 23 -93 37} size {800 600} awips1 n0r}
- outputfile   img/rad/n0r_tx.png
- inputpatt     *.shp
+ outputfile   img/rad/latest/n0r_tx.png
+ outputfilet  img/rad/tx/n0r/n0r_tx.%Y%m%d_%H%M.png
+ inputpatt    *.shp
  inputdirs    {rad/shp/ama/n0r rad/shp/bro/n0r rad/shp/crp/n0r \
       rad/shp/dfx/n0r rad/shp/dyx/n0r rad/shp/ewx/n0r rad/shp/fws/n0r \
       rad/shp/grk/n0r rad/shp/hgx/n0r rad/shp/lbb/n0r rad/shp/maf/n0r \
