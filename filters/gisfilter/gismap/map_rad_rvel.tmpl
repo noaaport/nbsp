@@ -11,7 +11,7 @@ package require nbsp::gis;
 # Colors can be overriden here. For example this will set a light
 # grey background for n0r images.
 #
-# ::nbsp::gis::radcolor_set "n0r" "background" {196 196 196}
+# ::nbsp::gis::radcolor_set "n0v" "background" {196 196 196}
 
 # When this file is sourced (by nbspgismap1), the following parameters
 # will have been set:
@@ -84,42 +84,42 @@ LAYER
    END
 
    CLASS
-     EXPRESSION (\[level\] > -64 && \[level\] < -50)
+     EXPRESSION (\[level\] > -64 && \[level\] <= -50)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -58]
      END
    END
 
    CLASS
-     EXPRESSION (\[level\] >= -50 && \[level\] < -36)
+     EXPRESSION (\[level\] > -50 && \[level\] <= -36)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -44]
      END
    END
 
    CLASS
-     EXPRESSION (\[level\] >= -36 && \[level\] < -26)
+     EXPRESSION (\[level\] > -36 && \[level\] <= -26)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -30]
      END
    END
 
    CLASS
-     EXPRESSION (\[level\] >= -26 && \[level\] < -20)
+     EXPRESSION (\[level\] > -26 && \[level\] <= -20)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -24]
      END
    END
 
    CLASS
-     EXPRESSION (\[level\] >= -20 && \[level\] <= -10)
+     EXPRESSION (\[level\] > -20 && \[level\] <= -10)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -15]
      END
    END
 
    CLASS
-     EXPRESSION (\[level\] >= -10 && \[level\] <= -1)
+     EXPRESSION (\[level\] > -10 && \[level\] <= -1)
      STYLE
        COLOR [::nbsp::gis::radcolor $map(awips1) -5]
      END
@@ -142,28 +142,28 @@ LAYER
    CLASS
      EXPRESSION (\[level\] >= 20 && \[level\] < 26)
      STYLE
-       COLOR [::nbsp::gis::radcolor $map(awips1) 26]
+       COLOR [::nbsp::gis::radcolor $map(awips1) 25]
      END
    END
 
    CLASS
      EXPRESSION (\[level\] >= 26 && \[level\] < 36)
      STYLE
-       COLOR [::nbsp::gis::radcolor $map(awips1) 36]
+       COLOR [::nbsp::gis::radcolor $map(awips1) 35]
      END
    END
 
    CLASS
      EXPRESSION (\[level\] >= 36 && \[level\] < 50)
      STYLE
-       COLOR [::nbsp::gis::radcolor $map(awips1) 44]
+       COLOR [::nbsp::gis::radcolor $map(awips1) 45]
      END
    END
 
    CLASS
      EXPRESSION (\[level\] >= 50 && \[level\] < 64)
      STYLE
-       COLOR [::nbsp::gis::radcolor $map(awips1) 58]
+       COLOR [::nbsp::gis::radcolor $map(awips1) 55]
      END
    END
 

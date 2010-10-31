@@ -10,7 +10,8 @@
 TCLTARGET =	nbspgismap1 nbspgismap
 TCLSOURCES =	nbspgismap1.tcl nbspgismap.tcl
 
-TMPLSOURCES =	gis-colors.def.in gis-colors-bref.def gis-colors-rvel.def
+TMPLSOURCES =	gis-colors.def.in \
+		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def
 TMPLOBJECTS =	gis-colors.def
 
 TMPLFILES =	${TMPLOBJECTS} \
@@ -45,8 +46,11 @@ nbspgismap: nbspgismap.tcl
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
 
-gis-colors.def: gis-colors.def.in gis-colors-bref.def gis-colors-rvel.def
-	sed -e '/@gis-colors-bref@/r gis-colors-bref.def' \
+gis-colors.def: gis-colors.def.in \
+	gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def
+	sed -e '/@gis-colors-rgb@/r gis-colors-rgb.def' \
+	-e '/@gis-colors-rgb@/d' \
+	-e '/@gis-colors-bref@/r gis-colors-bref.def' \
 	-e '/@gis-colors-bref@/d' \
 	-e '/@gis-colors-rvel@/r gis-colors-rvel.def' \
 	-e '/@gis-colors-rvel@/d' gis-colors.def.in > gis-colors.def 
