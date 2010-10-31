@@ -65,7 +65,7 @@ puts "";
 set family "gray";
 set number 1;
 set level -9;
-set step 8;
+set step 4;      # We will use only the first half of them
 while {$level <= -1} {
     puts [subst -nobackslashes -nocommands $body];
     incr level;

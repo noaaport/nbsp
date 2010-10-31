@@ -64,14 +64,14 @@
     set radcolor(rvel,-10) [::nbsp::gis::rgbcolor green 101];
 
     set radcolor(rvel,-9) [::nbsp::gis::rgbcolor gray 1];
-    set radcolor(rvel,-8) [::nbsp::gis::rgbcolor gray 9];
-    set radcolor(rvel,-7) [::nbsp::gis::rgbcolor gray 17];
-    set radcolor(rvel,-6) [::nbsp::gis::rgbcolor gray 25];
-    set radcolor(rvel,-5) [::nbsp::gis::rgbcolor gray 33];
-    set radcolor(rvel,-4) [::nbsp::gis::rgbcolor gray 41];
-    set radcolor(rvel,-3) [::nbsp::gis::rgbcolor gray 49];
-    set radcolor(rvel,-2) [::nbsp::gis::rgbcolor gray 57];
-    set radcolor(rvel,-1) [::nbsp::gis::rgbcolor gray 65];
+    set radcolor(rvel,-8) [::nbsp::gis::rgbcolor gray 5];
+    set radcolor(rvel,-7) [::nbsp::gis::rgbcolor gray 9];
+    set radcolor(rvel,-6) [::nbsp::gis::rgbcolor gray 13];
+    set radcolor(rvel,-5) [::nbsp::gis::rgbcolor gray 17];
+    set radcolor(rvel,-4) [::nbsp::gis::rgbcolor gray 21];
+    set radcolor(rvel,-3) [::nbsp::gis::rgbcolor gray 25];
+    set radcolor(rvel,-2) [::nbsp::gis::rgbcolor gray 29];
+    set radcolor(rvel,-1) [::nbsp::gis::rgbcolor gray 33];
 
     set radcolor(rvel,0) [::nbsp::gis::rgbcolor beige 1];
     set radcolor(rvel,1) [::nbsp::gis::rgbcolor beige 5];
