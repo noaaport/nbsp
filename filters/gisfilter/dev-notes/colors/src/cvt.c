@@ -61,11 +61,21 @@ int main(void){
   }
   */
 
-  /* gray */
+  /* gray
   r = 205;
   b = 205;
   g = 205;
   for(r = 205, b = 205, g = 205; r >= 118; r -= step, b -= step, g -= step){
+    fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
+  }
+*/
+
+  /* baige */
+  r = 242;
+  g = 242;
+  b = 180;
+
+  for(r = 242, g = 242, b = 196; b >= 149; g -= step, b -= step){
     fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
   }
 

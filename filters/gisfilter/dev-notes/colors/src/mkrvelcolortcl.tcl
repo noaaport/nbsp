@@ -26,9 +26,8 @@
 # -65     xx     white
 # -64	  -36	 blue     256	   29
 # -35     -10    green    128	   26
-# -9      10     grey      88      20
-# 10      20     orange   128      10
-# 21      36     yellow   128      16
+# -9      9      gray      88      19
+# 10      35     orange   128      26
 # 36      64     red      256      29     
 # 65	  xx	 magenta
 #
@@ -66,7 +65,7 @@ set family "gray";
 set number 1;
 set level -9;
 set step 4;
-while {$level <= 10} {
+while {$level <= 9} {
     puts [subst -nobackslashes -nocommands $body];
     incr level;
     incr number $step;
@@ -76,31 +75,21 @@ puts "";
 
 set family "orange";
 set number 1;
-set level 11;
-set step 12;
-while {$level <= 20} {
+set level 10;
+set step 4;
+while {$level <= 35} {
     puts [subst -nobackslashes -nocommands $body];
     incr level;
     incr number $step;
 }
 
 puts "";
-
-set family "yellow";
-set number 1;
-set level 21;
-set step 8;
-while {$level <= 36} {
-    puts [subst -nobackslashes -nocommands $body];
-    incr level;
-    incr number $step;
-}
 
 puts "";
 
 set family "red";
-set number 148;
-set level 37;
+set number 140;
+set level 36;
 set step 4;
 while {$level <= 64} {
     puts [subst -nobackslashes -nocommands $body];
