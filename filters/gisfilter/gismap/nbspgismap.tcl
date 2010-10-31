@@ -2,11 +2,13 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>] [-L] [-t] [<id_list>]
+# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>]
+#                   [-L] [-t] [-v] [<id_list>]
 #
 # -b => background mode
 # -L => output the id list
 # -t => use time-stamped output file name
+# -v => print the name of the output file
 #
 # This tool reads a "bundle configuration file"
 # (defined in gisfilter.{init,conf} and then calls nbspgismap1 with the
@@ -15,8 +17,8 @@
 package require cmdline;
 
 set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L]
-    [-t] [<id_list>]};
-set optlist {b {d.arg ""} {c.arg ""} L t};
+    [-t] [-v] [<id_list>]};
+set optlist {b {d.arg ""} {c.arg ""} L t v};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
 # from filter.lib is used. This also allows templates to "require" locally
@@ -203,9 +205,16 @@ proc process_geoc_entry {id} {
     if {$status != 0} {
 	# Don't exit so that other bundles can be processed
 	log_warn $errmsg;
-    } elseif {$option(t) != 0} {
-	exec ln -s [file join [pwd] $outputfile] \
-	    $nbspgismap(geoclist,$id,outputfile);
+    } else {
+	if {$option(t) != 0} {
+	    exec ln -s [file join [pwd] $nbspgismap(outputdir) $outputfile] \
+		[file join \
+	          $nbspgismap(outputdir) $nbspgismap(geoclist,$id,outputfile)];
+	}
+
+	if {$option(v) != 0} {
+	    puts "$nbspgismap(outputdir) $nbspgismap(geoclist,$id,outputfile)";
+	}
     }
 }
 
