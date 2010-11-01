@@ -2,23 +2,29 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-c conffile] [-d <outputdir>]
-#                   [-L] [-t] [-v] [<id_list>]
+# Usage: nbspgismap [-b] [-c <conffile>] [-d <outputdir>]
+#                   [-L] [-n] [-o <outputfile>] [-t] [-v] [-w] [<id_list>]
 #
 # -b => background mode
+# -c => override the default configuration file
+# -d => override the output directory (implies -w)
 # -L => output the id list
+# -n => pick only the basename of the default output file
+# -o => override the output file name (useful only if there is one id
+#       given in the cmd line argument)
 # -t => use time-stamped output file name
 # -v => print the name of the output file
+# -w => use the output directory specified in the gisfilter configuration file
 #
 # This tool reads a "bundle configuration file"
-# (defined in gisfilter.{init,conf} and then calls nbspgismap1 with the
+# (defined in gisfilter.{init,conf}) and then calls nbspgismap1 with the
 # appropriate options for each configured composite bundle.
 
 package require cmdline;
 
 set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L]
-    [-t] [-v] [<id_list>]};
-set optlist {b {d.arg ""} {c.arg ""} L t v};
+    [-n] [-o <outputfile>] [-t] [-v] [-w] [<id_list>]};
+set optlist {b {d.arg ""} {c.arg ""} L n {o.arg ""} t v w};
 
 # Read the init (instead of conf) because the filterlib_find_conf() function
 # from filter.lib is used. This also allows templates to "require" locally
@@ -167,33 +173,61 @@ proc process_geoc_entry {id} {
 	lappend cmd "-b";
     }
 
-    if {[file isdirectory $nbspgismap(outputdir)] == 0} {
-	log_err "$nbspgismap(outputdir) does not exist.";
+    if {$option(o) ne ""} {
+	set nbspgismap(geoclist,$id,outputfile) $option(o);
     }
+
+    if {$option(n) != 0} {
+	set nbspgismap(geoclist,$id,outputfile) \
+	    [file tail $nbspgismap(geoclist,$id,outputfile)];
+	set nbspgismap(geoclist,$id,outputfilet) \
+	    [file tail $nbspgismap(geoclist,$id,outputfilet)];
+    }
+
+    if {$option(w) != 0} {
+	if {[file isdirectory $nbspgismap(outputdir)] == 0} {
+	    log_err "$nbspgismap(outputdir) does not exist.";
+	}
+    }
+
+    set outputfile $nbspgismap(geoclist,$id,outputfile);
+    if {$option(w) != 0} {
+	set outputpath [file join $nbspgismap(outputdir) $outputfile];
+    } else {
+	set outputpath $outputfile;
+    }
+    file mkdir [file dirname $outputpath];
+
+    # Delete the default output file in case it is a link.
+    file delete $outputpath;
 
     # Check if "-t " was specified and set the output name accordingly
     if {$option(t) != 0} {
 	set fmt $nbspgismap(geoclist,$id,outputfilet);
-	set outputfile [clock format [clock seconds] -format $fmt];
-	file mkdir [file join $nbspgismap(outputdir) \
-			[file dirname $outputfile]];
-    } else {
-	set outputfile $nbspgismap(geoclist,$id,outputfile);
+	set outputfilet [clock format [clock seconds] -format $fmt];
+	if {$option(w) != 0} {
+	    set outputpatht [file join $nbspgismap(outputdir) $outputfilet];
+	} else {
+	    set outputpatht $outputfilet;
+	}
+	file mkdir [file dirname $outputpatht];
     }
 
-    # Create the default outputdir and delete the default output file
-    # in case it is a link.
-    file mkdir [file join $nbspgismap(outputdir) \
-		    [file dirname $nbspgismap(geoclist,$id,outputfile)]];
-    file delete $nbspgismap(geoclist,$id,outputfile);
-    
+    if {$option(w) != 0} {
+	lappend cmd "-d" $nbspgismap(outputdir);
+    }
+
+    if {$option(t) != 0} {
+	lappend cmd -o $outputfilet;
+    } else {
+	lappend cmd -o $outputfile;
+    }
+
     set cmd [concat $cmd \
-		 [list -d $nbspgismap(outputdir) \
-		      -D $defs \
+		 [list -D $defs \
 		      -f $nbspgismap(mapfonts_dir) \
 		      -g $nbspgismap(geodata_dir) \
 		      -m $map_tmplfile \
-		      -o $outputfile \
 		      -I $nbspgismap(inputdir) \
 		      -p $nbspgismap(geoclist,$id,inputpatt)] \
 		 $nbspgismap(geoclist,$id,inputdirs)];
@@ -207,13 +241,11 @@ proc process_geoc_entry {id} {
 	log_warn $errmsg;
     } else {
 	if {$option(t) != 0} {
-	    exec ln -s [file join [pwd] $nbspgismap(outputdir) $outputfile] \
-		[file join \
-	          $nbspgismap(outputdir) $nbspgismap(geoclist,$id,outputfile)];
+	    exec ln -s [file join [pwd] $outputpatht] $outputpath;
 	}
 
 	if {$option(v) != 0} {
-	    puts "$nbspgismap(outputdir) $nbspgismap(geoclist,$id,outputfile)";
+	    puts $outputpath;
 	}
     }
 }
@@ -289,6 +321,7 @@ if {$option(c) ne ""} {
 
 if {$option(d) ne ""} {
     set nbspgismap(outputdir) $option(d);
+    set option(w) 1;
 }
 
 get_mapfonts_dir;

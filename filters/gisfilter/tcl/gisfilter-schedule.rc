@@ -57,11 +57,12 @@ foreach c $geoclist {
     #
     # Include only bundles, exclude the individual sites, and only
     # the lowest level of anything. The "-t" option creates time-stamped
-    # image file names.
+    # image file names, and -w uses the output directory specified
+    # in the gisfilter.conf file (/var/noaaport/data/gis).
     #
     if {[regexp {^rad_n0._(ak|hi|pr|conus|central|east|south|west)$} $c]} {
-        schedule M/10 nbspgismap -t $c;
+        schedule M/10 nbspgismap -t -w $c;
     } elseif {[regexp {^sat} $c]} {
-        schedule M/30 nbspgismap -t $c;
+        schedule M/30 nbspgismap -t -w $c;
     }
 }
