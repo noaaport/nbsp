@@ -1,9 +1,12 @@
 #
 # $Id$
 #
-# This file lives in
 #
-# /gis/defaults/tml/rad/index.tml
+#
+# If this page is named "awips_name.tml", then it should be referenced
+# in the form
+#
+#     http://...../awips_name.tml?awips1=n0r&name=jua
 #
 [Doc_Dynamic]
 
@@ -33,55 +36,41 @@
   set title(n3u) {N3U Base radial velocity,\
 	162 nmi, 3.1\/3.4\/3.5 degree elevation};
 
-  ::html::set _plist [list n0r n1r n2r n3r n0z n0v n1v \
-	n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u]];
-  ::html::set _radbundles [list ak pr hi west south central east conus]];
-  ::html::set _radsites [list\
-	abc abr abx acg aec ahg aih akc akq ama amx apd apx arx atx\
-	bbx bgm bhx bis blx bmx box bro buf byx\
-	cae cbw cbx ccx cle clx crp cxx cys\
-	dax ddc dfx dgx dix dlh dmx dox dtx dvn dyx\
-	eax emx enx eox epz esx evx ewx eyx\
-	fcx fdr fdx ffc fsd fsx ftg fws\
-	ggw gjx gld grb grk grr gsp gwx gyx\
-	hdx hgx hki hkm hmo hnx hpx htx hwa\
-	ict icx iln ilx ind inx iwa iwx\
-	jax jgx jkl jua lbb lch lix lnx lot lrx lsx ltx lvx lwx lzk\
-	maf max mbx mhx mkx mlb mob mpx mqt mrx msx mtx mux mvx mxx nkx nqa\
-	oax ohx okx otx pah pbz pdt poe pux rax rgx riw rlx rmx\
-	sfx sgf shv sjt sox srx tbw tfx tlh tlx twx tyx\
-	udx uex vax vbx vnx vtx vwx yux]];
+  set legend(n0r) {gis_rad_legend_bref};
+  set legend(n1r) {gis_rad_legend_bref};
+  set legend(n2r) {gis_rad_legend_bref};
+  set legend(n3r) {gis_rad_legend_bref};
+  set legend(n0z) {gis_rad_legend_bref};
+  set legend(n0v) {gis_rad_legend_rvel};
+  set legend(n1v) {gis_rad_legend_rvel};
+  set legend(n0q) {gis_rad_legend_bref};
+  set legend(naq) {gis_rad_legend_bref};
+  set legend(n1q) {gis_rad_legend_bref};
+  set legend(nbq) {gis_rad_legend_bref};
+  set legend(n2q) {gis_rad_legend_bref};
+  set legend(n3q) {gis_rad_legend_bref};
+  set legend(n0u) {gis_rad_legend_rvel};
+  set legend(nau) {gis_rad_legend_rvel};
+  set legend(n1u) {gis_rad_legend_rvel};
+  set legend(nbu) {gis_rad_legend_rvel};
+  set legend(n2u) {gis_rad_legend_rvel};
+  set legend(n3u) {gis_rad_legend_rvel};
+
+  set query(awips1) "";
+  set query(name) "";
+  if {[info exists page(query)]} {
+    array set query $page(query);
+  }
+  if {($query(awips1) ne "") && ($query(name) ne "")} {
+    set a $query(awips1);
+    set n $query(name);
+    set id "rad_${a}_${n}";
+    set _imgpath "gis/img/${id}.png";
+    exec nbspgismap -d $Config(docRoot) -o ${_imgpath} $id;
+  }
 ]
 
-<html>
-<head><title></title></head>
+[::html::set _headtitle "[string toupper "$a $n"]"]
+[::html::set _title "$title($a)"]
+[::html::set _legendpath "include/$legend($a).html"]
 
-<body>
-
-<!--
-<h3> GOES composites
-<ul>
-<li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li>
-</ul>
--->
-
-[::html::foreach p ${_plist} {
-  <h3>$title($p)</h3>
-  <ul>
-  [
-    ::html::foreach b ${_radbundles} {
-      <li><a href="rad/${p}_${b}.tml">${b}</a></li>
-    }
-  ]
-  <li>
-  [string trimright [
-    ::html::foreach s ${_radsites} {
-      <a href="rad/awips1_name.tml?awips1=${p}&name=${s}">$s</a>,
-    }] ","
-  ]
-  </li>
- </ul>
-]
-
-</body>
-</html>

@@ -3,8 +3,9 @@
 # $Id$
 #
 
-rad_header="rad_header.tml.in"
 rad_body="rad_body.tml.in"
+rad_header_static="rad_header_static.tml.in"
+rad_header_dynamic="rad_header_dynamic.tml.in"
 
 title_n0r="N0R Base reflectivity, 124 nmi, 0.5 degree elevation"
 title_n1r="N1R Base reflectivity, 124 nmi, 1.45\/1.5 degree elevation"
@@ -13,9 +14,9 @@ title_n3r="N3R Base reflectivity, 124 nmi, 3.35\/3.5 degree elevation"
 title_n0z="N0Z Base reflectivity, 248 nmi, 0.5 degree elevation"
 #
 title_n0q="N0Q Base reflectivity, 248 nmi, 0.5 degree elevation"
-title_n0q="NAQ Base reflectivity, 248 nmi, 0.9 degree elevation"
+title_naq="NAQ Base reflectivity, 248 nmi, 0.9 degree elevation"
 title_n1q="N1Q Base reflectivity, 248 nmi, 1.3\/1.5 degree elevation"
-title_n0q="NBQ Base reflectivity, 248 nmi, 1.8 degree elevation"
+title_nbq="NBQ Base reflectivity, 248 nmi, 1.8 degree elevation"
 title_n2q="N2Q Base reflectivity, 248 nmi, 2.4\/2.5 degree elevation"
 title_n3q="N3Q Base reflectivity, 248 nmi, 3.1\/3.4\/3.5 degree elevation"
 #
@@ -76,8 +77,15 @@ do
 	-e "/@title@/s//$title/g" \
 	-e "/@legend@/s//$legend/g" \
 	-e "/^#/d" \
-	$rad_header > $outputfile
+	$rad_header_static > $outputfile
 
     sed -e "/^#/d" $rad_body >> $outputfile
   done
+
 done
+
+# The dynamic template
+outputfile="awips1_name.tml"
+[ -n "$directory" ] && outputfile="$directory/$outputfile"
+sed -e "/^#/d" $rad_header_dynamic > $outputfile
+sed -e "/^#/d" $rad_body >> $outputfile
