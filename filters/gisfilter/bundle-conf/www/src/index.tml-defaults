@@ -65,6 +65,7 @@
 </ul>
 -->
 
+
 [::html::foreach p ${_plist} {
   <h3>$title($p)</h3>
   <ul>
@@ -80,7 +81,8 @@
     }] ","
   ]
   </li>
- </ul>
+  </ul>
+ }
 ]
 
 </body>
