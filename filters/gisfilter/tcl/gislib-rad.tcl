@@ -44,8 +44,11 @@ proc filter_rad_create_nids {rc_varname} {
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     set status [catch {
-	filterlib_cspool_nbspfile $seq $fpath $data_savedir $data_savename;
-	# filterlib_nbspfile $seq $fpath $data_savedir $data_savename;
+	#
+	# The files are saved without the gempak header/footer (-t)
+	#
+	filterlib_cspool_nbspfile $seq $fpath $data_savedir $data_savename -t;
+	## filterlib_nbspfile $seq $fpath $data_savedir $data_savename -t;
     } errmsg];
 
     if {$status != 0} {
@@ -164,7 +167,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     set nidsfpath $rc(fpath);
 
     # shorthand
-    set fmtlist [list shp shx dbf];
+    set fmtlist [list shp shx dbf info];
 
     foreach fmt $fmtlist {
 	set data_savedir($fmt) [subst $gisfilter(rad_outputfile_dirfmt,$fmt)];
@@ -189,8 +192,12 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 		     -x $datafpath(shx) \
 		     -f $datafpath(dbf)];
     } else {
+	#
+	# If the nids are saved with the gempak header then we have to use
+	# -c $gisfilter(rad_wmoawipsgmpk_header_size)
+	#
 	set cmd [list nbspdcnids -b -F \
-		     -c $gisfilter(rad_wmoawipsgmpk_header_size) \
+		     -c $gisfilter(rad_wmoawips_size) \
 		     -p $datafpath(shp) \
 		     -x $datafpath(shx) \
 		     -f $datafpath(dbf) \
@@ -200,7 +207,19 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     set status [catch {
 	eval exec $cmd;
     } errmsg];
-    
+
+    if {$status == 0} {
+	# Write the info file
+	set infodata "rootname: [file rootname $data_savename(info)]";
+	foreach k [list awips radseconds radmode] {
+	    append infodata "$k: $rc($k)\n";
+	}
+
+	set status [catch {
+	    ::fileutil::writeFile $datafpath(info) $infodata;
+	} errmsg];
+    }
+
     if {$status != 0} {
 	foreach fmt $fmtlist {
 	    file delete $datafpath($fmt);
@@ -215,8 +234,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     }
 
     if {$gisfilter(rad_latest_enable) != 0} {
-	foreach fmt $fmtlist {
-	    make_rad_latest $data_savedir($fmt) $data_savename($fmt);
-	}
+	# Create the link to the info file
+	make_rad_latest $data_savedir(info) $data_savename(info);
     }    
 }

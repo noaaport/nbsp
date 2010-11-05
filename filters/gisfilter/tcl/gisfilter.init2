@@ -117,8 +117,10 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 # the same purpose here as there.
 #
 set gisfilter(rad_totalheadersize)    $filterslib(totalheadersize);
-set gisfilter(rad_wmoawipsgmpk_header_size) \
-	$filterslib(wmoawipsgmpk_header_size);
+set gisfilter(rad_wmoawips_size) $filterslib(wmoawips_size);
+# set gisfilter(rad_wmoawipsgmpk_header_size) \
+#     $filterslib(wmoawipsgmpk_header_size);
+
 set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
 set gisfilter(rad_enable) 1;
@@ -160,6 +162,8 @@ set gisfilter(rad_outputfile_namefmt,shx) "$gisfilter(rad_namefmt).shx";
 set gisfilter(rad_outputfile_dirfmt,shx) "rad/shp/$gisfilter(rad_subdirfmt)";
 set gisfilter(rad_outputfile_namefmt,dbf) "$gisfilter(rad_namefmt).dbf";
 set gisfilter(rad_outputfile_dirfmt,dbf) "rad/shp/$gisfilter(rad_subdirfmt)";
+set gisfilter(rad_outputfile_namefmt,info) "$gisfilter(rad_namefmt).info";
+set gisfilter(rad_outputfile_dirfmt,info) "rad/shp/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_outputfile_namefmt,wkt) "$gisfilter(rad_namefmt).wkt";
 set gisfilter(rad_outputfile_dirfmt,wkt) "rad/wkt/$gisfilter(rad_subdirfmt)";
