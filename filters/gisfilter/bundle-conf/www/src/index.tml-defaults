@@ -9,29 +9,29 @@
 
 [
   set title(n0r) {N0R Base reflectivity, 124 nmi, 0.5 degree elevation};
-  set title(n1r) {N1R Base reflectivity, 124 nmi, 1.45\/1.5 degree elevation};
-  set title(n2r) {N2R Base reflectivity, 124 nmi, 2.4\/2.5 degree elevation};
-  set title(n3r) {N3R Base reflectivity, 124 nmi, 3.35\/3.5 degree elevation};
+  set title(n1r) {N1R Base reflectivity, 124 nmi, 1.45/1.5 degree elevation};
+  set title(n2r) {N2R Base reflectivity, 124 nmi, 2.4/2.5 degree elevation};
+  set title(n3r) {N3R Base reflectivity, 124 nmi, 3.35/3.5 degree elevation};
   set title(n0z) {N0Z Base reflectivity, 248 nmi, 0.5 degree elevation};
   set title(n0v) {N0V Base radial velocity, 124 nmi, 0.5 degree elevation};
   set title(n1v) {N1V Base radial velocity,\
-	124 nmi, 1.45\/1.5 degree elevation};
+	124 nmi, 1.45/1.5 degree elevation};
   set title(n0q) {N0Q Base reflectivity, 248 nmi, 0.5 degree elevation};
   set title(naq) {NAQ Base reflectivity, 248 nmi, 0.9 degree elevation};
-  set title(n1q) {N1Q Base reflectivity, 248 nmi, 1.3\/1.5 degree elevation};
+  set title(n1q) {N1Q Base reflectivity, 248 nmi, 1.3/1.5 degree elevation};
   set title(nbq) {NBQ Base reflectivity, 248 nmi, 1.8 degree elevation};
-  set title(n2q) {N2Q Base reflectivity, 248 nmi, 2.4\/2.5 degree elevation};
+  set title(n2q) {N2Q Base reflectivity, 248 nmi, 2.4/2.5 degree elevation};
   set title(n3q) {N3Q Base reflectivity,\
-	248 nmi, 3.1\/3.4\/3.5 degree elevation};
+	248 nmi, 3.1/3.4/3.5 degree elevation};
   set title(n0u) {N0U Base radial velocity, 162 nmi, 0.5 degree elevation};
   set title(nau) {NAU Base radial velocity, 162 nmi, 0.9 degree elevation};
   set title(n1u) {N1U Base radial velocity,\
-	162 nmi, 1.3\/1.5 degree elevation};
+	162 nmi, 1.3/1.5 degree elevation};
   set title(nbu) {NBU Base radial velocity, 162 nmi, 1.8 degree elevation};
   set title(n2u) {N2U Base radial velocity,\
-	162 nmi, 2.5\/2.5 degree elevation};
+	162 nmi, 2.5/2.5 degree elevation};
   set title(n3u) {N3U Base radial velocity,\
-	162 nmi, 3.1\/3.4\/3.5 degree elevation};
+	162 nmi, 3.1/3.4/3.5 degree elevation};
 
   ::html::set _plist [list n0r n1r n2r n3r n0z n0v n1v \
 	n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u];
