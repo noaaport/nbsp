@@ -8,27 +8,27 @@ rad_header_static="rad_header_static.tml.in"
 rad_header_dynamic="rad_header_dynamic.tml.in"
 
 title_n0r="N0R Base reflectivity, 124 nmi, 0.5 degree elevation"
-title_n1r="N1R Base reflectivity, 124 nmi, 1.45\/1.5 degree elevation"
-title_n2r="N2R Base reflectivity, 124 nmi, 2.4\/2.5 degree elevation"
-title_n3r="N3R Base reflectivity, 124 nmi, 3.35\/3.5 degree elevation"
+title_n1r="N1R Base reflectivity, 124 nmi, 1.45/1.5 degree elevation"
+title_n2r="N2R Base reflectivity, 124 nmi, 2.4/2.5 degree elevation"
+title_n3r="N3R Base reflectivity, 124 nmi, 3.35/3.5 degree elevation"
 title_n0z="N0Z Base reflectivity, 248 nmi, 0.5 degree elevation"
 #
 title_n0q="N0Q Base reflectivity, 248 nmi, 0.5 degree elevation"
 title_naq="NAQ Base reflectivity, 248 nmi, 0.9 degree elevation"
-title_n1q="N1Q Base reflectivity, 248 nmi, 1.3\/1.5 degree elevation"
+title_n1q="N1Q Base reflectivity, 248 nmi, 1.3/1.5 degree elevation"
 title_nbq="NBQ Base reflectivity, 248 nmi, 1.8 degree elevation"
-title_n2q="N2Q Base reflectivity, 248 nmi, 2.4\/2.5 degree elevation"
-title_n3q="N3Q Base reflectivity, 248 nmi, 3.1\/3.4\/3.5 degree elevation"
+title_n2q="N2Q Base reflectivity, 248 nmi, 2.4/2.5 degree elevation"
+title_n3q="N3Q Base reflectivity, 248 nmi, 3.1/3.4/3.5 degree elevation"
 #
 title_n0v="N0V Base radial velocity, 124 nmi, 0.5 degree elevation"
-title_n1v="N1V Base radial velocity, 124 nmi, 1.45\/1.5 degree elevation"
+title_n1v="N1V Base radial velocity, 124 nmi, 1.45/1.5 degree elevation"
 #
 title_n0u="N0U Base radial velocity, 162 nmi, 0.5 degree elevation"
 title_nau="NAU Base radial velocity, 162 nmi, 0.9 degree elevation"
-title_n1u="N1U Base radial velocity, 162 nmi, 1.3\/1.5 degree elevation"
+title_n1u="N1U Base radial velocity, 162 nmi, 1.3/1.5 degree elevation"
 title_nbu="NBU Base radial velocity, 162 nmi, 1.8 degree elevation"
-title_n2u="N2U Base radial velocity, 162 nmi, 2.5\/2.5 degree elevation"
-title_n3u="N3U Base radial velocity, 162 nmi, 3.1\/3.4\/3.5 degree elevation"
+title_n2u="N2U Base radial velocity, 162 nmi, 2.5/2.5 degree elevation"
+title_n3u="N3U Base radial velocity, 162 nmi, 3.1/3.4/3.5 degree elevation"
 
 legend_n0r="gis_rad_legend_bref"
 legend_n1r="gis_rad_legend_bref"
@@ -74,7 +74,7 @@ do
     [ -n "$directory" ] && outputfile="$directory/$outputfile"
     sed -e "/@awips1@/s//$awips1/g" \
 	-e "/@name@/s//$name/g" \
-	-e "/@title@/s//$title/g" \
+	-e "/@title@/s||$title|g" \
 	-e "/@legend@/s//$legend/g" \
 	-e "/^#/d" \
 	$rad_header_static > $outputfile
