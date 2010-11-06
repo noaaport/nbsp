@@ -416,6 +416,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(radmode) [lindex $radinfo 4];
 	    set rc(radcode) [lindex $radinfo 5];
 	    set rc(seconds) $rc(radseconds);
+	} else {
+	    log_msg $errmsg;
 	}
     }
 
@@ -444,6 +446,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(satres) [lindex $satinfo 4];
 	    set rc(satseconds) [lindex $satinfo 5];
 	    set rc(seconds) $rc(satseconds);
+	} else {
+	    log_msg $errmsg;
 	}
     }
 
