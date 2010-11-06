@@ -210,7 +210,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 
     if {$status == 0} {
 	# Write the info file
-	set infodata "rootname: [file rootname $data_savename(info)]";
+	set infodata "rootname: [file rootname $data_savename(info)]\n";
 	foreach k [list awips radseconds radmode] {
 	    append infodata "$k: $rc($k)\n";
 	}

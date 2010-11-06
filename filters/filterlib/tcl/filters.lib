@@ -403,7 +403,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
         } else {
 	    set radinfo_status [catch {
 	        set radinfo [split \
-		  [nbspradinfo -b -c $filterslib(totalheadersize) $rc(fpath)]];
+		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
+			$rc(fpath)]];
 	    } errmsg];
         }
 
