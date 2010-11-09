@@ -68,7 +68,7 @@ do
   eval legend=\$legend_$awips1
   eval title=\$title_$awips1
 
-  for name in ak hi pr west south central east conus
+  for name in ak gu hi pr west south central east conus
   do
     outputfile=${awips1}_${name}.tml
     [ -n "$directory" ] && outputfile="$directory/$outputfile"

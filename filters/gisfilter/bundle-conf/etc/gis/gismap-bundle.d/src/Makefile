@@ -2,7 +2,7 @@
 # $Id$
 #
 
-RADENABLE = rad_conus.conf rad_ak.conf rad_pr.conf rad_hi.conf \
+RADENABLE = rad_conus.conf rad_ak.conf rad_gu.conf rad_hi.conf rad_pr.conf \
 	rad_east.conf rad_south.conf rad_central.conf rad_west.conf \
 	rad_sites.conf
 SATENABLE =

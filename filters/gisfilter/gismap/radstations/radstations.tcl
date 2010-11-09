@@ -20,6 +20,8 @@ namespace eval nbsp::radstations {} {
       "pacg,sitka,ak,sitka,56.85278,-135.52917,270,+9";
     set radstations(site,aec) \
       "paec,nome,ak,nome,64.51139,-165.295,54,+9";
+    set radstations(site,afb) \
+      "pgua,andersen afb,gu,guam,13.45444,144.80833,264,+8";
     set radstations(site,ahg) \
       "pahg,anchorage,ak,kenai peninsula,60.72639,-151.34917,242,+9";
     set radstations(site,aih) \
@@ -331,6 +333,7 @@ namespace eval nbsp::radstations {} {
     set radstations(state,de) dox;
     set radstations(state,fl) amx,byx,evx,jax,mlb,tbw,tlh;
     set radstations(state,ga) ffc,jgx,vax;
+    set radstations(state,gu) afb;		# guam
     set radstations(state,hi) hki,hkm,hmo,hwa;
     set radstations(state,ia) dmx,dvn;
     set radstations(state,id) cbx,sfx;

@@ -35,9 +35,9 @@
 
   ::html::set _plist [list n0r n1r n2r n3r n0z n0v n1v \
 	n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u];
-  ::html::set _radbundles [list ak pr hi west south central east conus];
+  ::html::set _radbundles [list ak gu hi pr west south central east conus];
   ::html::set _radsites [list\
-	abc abr abx acg aec ahg aih akc akq ama amx apd apx arx atx\
+	abc abr abx acg aec afb ahg aih akc akq ama amx apd apx arx atx\
 	bbx bgm bhx bis blx bmx box bro buf byx\
 	cae cbw cbx ccx cle clx crp cxx cys\
 	dax ddc dfx dgx dix dlh dmx dox dtx dvn dyx\

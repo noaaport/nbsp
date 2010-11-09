@@ -1,0 +1,5 @@
+#
+# $Id$
+#
+set _slist {gu};
+set _name "gu";
