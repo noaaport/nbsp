@@ -37,13 +37,13 @@
 	n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u];
   ::html::set _radbundles [list ak gu hi pr west south central east conus];
   ::html::set _radsites [list\
-	abc abr abx acg aec afb ahg aih akc akq ama amx apd apx arx atx\
+	abc abr abx acg aec ahg aih akc akq ama amx apd apx arx atx\
 	bbx bgm bhx bis blx bmx box bro buf byx\
 	cae cbw cbx ccx cle clx crp cxx cys\
 	dax ddc dfx dgx dix dlh dmx dox dtx dvn dyx\
 	eax emx enx eox epz esx evx ewx eyx\
 	fcx fdr fdx ffc fsd fsx ftg fws\
-	ggw gjx gld grb grk grr gsp gwx gyx\
+	ggw gjx gld grb grk grr gsp gua gwx gyx\
 	hdx hgx hki hkm hmo hnx hpx htx hwa\
 	ict icx iln ilx ind inx iwa iwx\
 	jax jgx jkl jua lbb lch lix lnx lot lrx lsx ltx lvx lwx lzk\
