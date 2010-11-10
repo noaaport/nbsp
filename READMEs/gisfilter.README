@@ -3,105 +3,29 @@
 #
 
 The gisfilter is a special-purpose filter that transforms appropriate
-subsets of the noaaport data (sat, rad,..) to GIS-compatible formats
-using the WCT (http://www.ncdc.noaa.gov/oa/wct).
+subsets of the noaaport data (rad, sat,..) to GIS-compatible formats,
+such as shapefiles. It currently (nbsp-2.0.r4) converts radar level III
+nids files to shapefiles. The shapefiles are then used as data files
+in a set of mapserver scripts to produce the radar images that are
+displaped in the Nbsp web server. The advantage of this approch (shapefiles)
+is that other geographical data can be superimposed (layered) in
+the mapserver scripts. 
 
-It transforms the data and saves it in a separate directory
+The filter transforms the data and saves it in a separate directory
 
         /var/noaaport/data/gis
 
 ready for use by GIS aware applications, Google maps, etc.
-Everything runs out of the "gisfilter". Just setting
+Everything runs out of the "gisfilter".
 
-set feature(gisfilter) 0
 
-disables the entire module, and viceversa. Then particular features
-can be enabled, disabled, (re)configured by appropriate settings in
-the configuration file(s) gisfilter.conf and others.
-
-What follows is a short guide for enabling the filter.
-
-========
-1) WCT -
-========
-
-The gisfilter requires the WCT, version 3.1.4. This note
-
-	http://redmine.1-loop.net/boards/8/topics/show/63
-
-explains one easy way to install it.
-
-Briefly, WCT can be installed anywhere; I use
-
-	/usr/local/lib/wct-3.1.4
-
-For reference, we mention that inside that directory there should be the
-following files and directories
-
-	wctBatchConfig.xml  wct-export  wct-viewer dist lib
-
-Then I use the following (shell) script, that I save as
-
-	/usr/local/bin/wct-export
-
-The script can be in any directory in the PATH.
-
------------------- wct-export -----------------
-#!/bin/sh
-
-version="3.1.4"
-wctdir=/usr/local/lib/wct-${version}
-
-${wctdir}/wct-export "$@"
------------------- wct-export -----------------
-
-================
-2) Configuring -
-================
-
-The relevant file to edit is "site/gisfilter-bundle.conf", by adding entries
-of the form
-
-sat_bundle_add <wct_format> <wct_config_file> <fname_regex>
-
-For example,
-
-sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
-sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
-
-The parameters are
-
-         <wct_format> = tif, tif32, nc, cvs, ...
-         <wct_config_file> = wct xml config file
-                             The file is searched in the "defaults" and "site"
-                             subdirectories of the nbsp conf directory,
-                             and the last one is found is used.
-         <fname_regex> = regular exp that will be used to select the input
-                         Only the files whose fname match, are processed
-                         by that rule.
-
-The <fname_regex> is matched against the "fname" part of the input file,
-e.g., the root of the basename of the file. For example for 
-
-          /var/noaaport/nbsp/spool/knes/knes_tige04.230045_83360
-
-the fname is "knes_tige04".
-
-The default rules (the examples shown above) are in the file
-
-       defaults/gisfilter-bundle.conf
-
-Instead of editing that file, the best is to add the new rules in
-
-       site/gisfilter-bundle.conf
-
-so that they are not overwritten when the default file is
-reinstalled in an upgrade.
-
-=============
-2) Enabling -
-=============
-
-In "features.conf",
+1) Enabling the gisfilter
+=========================
 
 set feature(gisfilter) 1
+
+eables the entire module, and viceversa if set to 0. Then particular features
+can be enabled, disabled, (re)configured by appropriate settings in
+the configuration file(s) gisfilter.conf and other files.
+
+What follows is a short guide for configuring the filter.

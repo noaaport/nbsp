@@ -60,9 +60,9 @@ r4 -
 - Added option(s) to set servername to the wildcard address(es).
 - Added "digatmos" as default subdir for the catalog extension
   if no suubdir is specified in the /_catalog url.
-- Added the gisfilter.
-- Fixed syntaxerror in filters.lib when processing the new rad files
+- Fixed syntax error in filters.lib when processing the new rad files
   (nbspradinfo -> exec nbspradinfo). As a result of the error, the
   rc(rad...) variables were not being propoerly set for the new files.
   Some of the variables are used in the info files of the gisfilter
   shapefiles.
+- Added the gisfilter.
