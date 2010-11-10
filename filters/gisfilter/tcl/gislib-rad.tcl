@@ -188,9 +188,10 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
 	set cmd [list nbspunz -c $gisfilter(rad_totalheadersize) $nidsfpath \
 		     | nbspdcnids -b -F \
+		     -f $datafpath(dbf) \
+		     -o $datafpath(info) \
 		     -p $datafpath(shp) \
-		     -x $datafpath(shx) \
-		     -f $datafpath(dbf)];
+		     -x $datafpath(shx)];
     } else {
 	#
 	# If the nids are saved with the gempak header then we have to use
@@ -198,9 +199,10 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	#
 	set cmd [list nbspdcnids -b -F \
 		     -c $gisfilter(rad_wmoawips_size) \
+		     -f $datafpath(dbf) \
+		     -o $datafpath(info) \
 		     -p $datafpath(shp) \
 		     -x $datafpath(shx) \
-		     -f $datafpath(dbf) \
 		     $nidsfpath];
     }
 
@@ -209,14 +211,14 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     } errmsg];
 
     if {$status == 0} {
-	# Write the info file
+	# Append the wmo header data to the info file
 	set infodata "rootname: [file rootname $data_savename(info)]\n";
-	foreach k [list awips radseconds radmode] {
+	foreach k [list awips] {
 	    append infodata "$k: $rc($k)\n";
 	}
 
 	set status [catch {
-	    ::fileutil::writeFile $datafpath(info) $infodata;
+	    ::fileutil::appendToFile $datafpath(info) $infodata;
 	} errmsg];
     }
 

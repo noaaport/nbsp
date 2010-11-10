@@ -65,6 +65,7 @@
  *  -p <shp file>
  *  -x <shx file>
  *  -f <dbf file>
+ *  -o <info file> 
  *
  * will write the corresponding data file.
  */
@@ -78,17 +79,18 @@ struct {
   char *opt_levelmin;	/* -m => filter "level" min value */
   char *opt_levelmax;	/* -n => filter "level" max value */
   char *opt_dbffile;	/* -f => write dbf file */
+  char *opt_infofile;   /* -o => write info file */
   char *opt_shpfile;	/* -p => write shp file */
   char *opt_csvfile;	/* -v => write csv file */
   char *opt_shxfile;	/* -x => write shx file */
   char *opt_inputfile;
   /* variables */
-  int opt_fpvx;		/* set if anyone of fpvx is given */
+  int opt_fopvx;	/* set if anyone of fpvx is given */
   int fd;
   int level_min;	/* data filter values */
   int level_max;
 } g = {0, 0, 0, 0, 0,
-       NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
        0, -1,
        0, 0};
 
@@ -104,6 +106,7 @@ static void nids_decode_data(struct nids_data_st *nids_data);
 static void nids_csv_write(struct nids_data_st *nids_data);
 static void nids_shp_write(struct nids_data_st *nids_data);
 static void nids_dbf_write(struct nids_data_st *nids_data);
+static void nids_info_write(struct nids_data_st *nids_data);
 
 /* #define PRINT_TEST */
 #ifdef PRINT_TEST
@@ -118,9 +121,10 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bFltc:f:m:n:p:v:x:";
+  char *optstr = "bFltc:f:m:n:o:p:v:x:";
   char *usage = "nbspdcnids [-b] [-F] [-l] [-t] [-c count] [-f dbffile] "
-    "[-m min] [-n max] [-p shpfile] [-v csvfile] [-x shxfile] <file> | < file";
+    "[-m min] [-n max] [-o infofile] [-p shpfile] [-v csvfile] "
+    "[-x shxfile] <file> | < file";
   int status = 0;
   int c;
   int opt_px = 0;	/* -p and -x must be given together */
@@ -143,7 +147,7 @@ int main(int argc, char **argv){
       break;
     case 'f':
       g.opt_dbffile = optarg;
-      g.opt_fpvx = 1;
+      g.opt_fopvx = 1;
       break;
     case 'l':
       g.opt_lengthonly = 1;
@@ -159,9 +163,13 @@ int main(int argc, char **argv){
 	log_errx(1, "Invalid argument to -n option: %s", optarg);
       }
       break;
+    case 'o':
+      g.opt_infofile = optarg;
+      g.opt_fopvx = 1;
+      break;
     case 'p':
       g.opt_shpfile = optarg;
-      g.opt_fpvx = 1;
+      g.opt_fopvx = 1;
       ++opt_px;
       break;
     case 't':
@@ -169,11 +177,11 @@ int main(int argc, char **argv){
       break;
     case 'v':
       g.opt_csvfile = optarg;
-      g.opt_fpvx = 1;
+      g.opt_fopvx = 1;
       break;
     case 'x':
       g.opt_shxfile = optarg;
-      g.opt_fpvx = 1;
+      g.opt_fopvx = 1;
       ++opt_px;
       break;
     default:
@@ -183,8 +191,8 @@ int main(int argc, char **argv){
     }
   }
 
-  if((g.opt_fpvx != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
-    log_errx(1, "Invalid combination of options: lt and fpvx");
+  if((g.opt_fopvx != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
+    log_errx(1, "Invalid combination of options: lt and fopvx");
 
   if((opt_px != 0) && (opt_px != 2))
     log_errx(1, "Invalid combination of options p and x.");
@@ -262,7 +270,7 @@ int process_file(void){
     fprintf(stdout, "%u", nids_data.nids_header.unixseconds);
   else if(g.opt_lengthonly != 0)
     fprintf(stdout, "%u", nids_data.nids_header.m_msglength);
-  else if(g.opt_fpvx == 0){
+  else if(g.opt_fopvx == 0){
     fprintf(stdout, "%.3f %.3f %d %u %d %d",
 	    nids_data.nids_header.lat,
 	    nids_data.nids_header.lon,
@@ -272,7 +280,7 @@ int process_file(void){
 	    nids_data.nids_header.pdb_code);
   }
 
-  if(g.opt_fpvx == 0){
+  if(g.opt_fopvx == 0){
     /*
      * If reading from stdin, then consume the input to avoid generating
      * a pipe error in the tcl scripts.
@@ -316,6 +324,9 @@ int process_file(void){
 
   if(g.opt_dbffile != NULL)
     nids_dbf_write(&nids_data);
+
+  if(g.opt_infofile != NULL)
+    nids_info_write(&nids_data);
 
   return(0);
 }
@@ -560,4 +571,38 @@ static void nids_dbf_write(struct nids_data_st *nd){
 
   if(status != 0)
     log_errx(1, "Error writing dbf file: %d", status);
+}
+
+static void nids_info_write(struct nids_data_st *nd){
+
+  FILE *f;
+  int n;
+
+  f = fopen(g.opt_infofile, "w");
+  if(f == NULL)
+    log_err(1, "Error writing info file.");
+
+  n = fprintf(f, "radseconds: %u\n", nd->nids_header.unixseconds);
+  if(n > 0)
+    n = fprintf(f, "radmode: %d\n", nd->nids_header.pdb_mode);
+
+  if(n > 0)
+    n = fprintf(f, "prodcode: %d\n", nd->nids_header.pdb_code);
+
+  if(n > 0)
+    n = fprintf(f, "packetcode: %d\n", nd->radial_packet_header.packet_code);
+
+  if(n > 0)
+    n = fprintf(f, "lon: %f\n", nd->nids_header.lon);
+
+  if(n > 0)
+    n = fprintf(f, "lat: %f\n", nd->nids_header.lat);
+
+  if(n > 0)
+    n = fprintf(f, "lat: %d\n", nd->nids_header.pdb_height);
+
+  fclose(f);
+
+  if(n < 0)
+    log_err(1, "Error writing info file.");
 }
