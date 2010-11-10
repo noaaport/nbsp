@@ -593,10 +593,10 @@ static void nids_info_write(struct nids_data_st *nd){
     n = fprintf(f, "packetcode: %d\n", nd->radial_packet_header.packet_code);
 
   if(n > 0)
-    n = fprintf(f, "lon: %f\n", nd->nids_header.lon);
+    n = fprintf(f, "lon: %.3f\n", nd->nids_header.lon);
 
   if(n > 0)
-    n = fprintf(f, "lat: %f\n", nd->nids_header.lat);
+    n = fprintf(f, "lat: %.3f\n", nd->nids_header.lat);
 
   if(n > 0)
     n = fprintf(f, "height: %d\n", nd->nids_header.pdb_height);
