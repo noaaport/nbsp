@@ -25,7 +25,126 @@ in the "features.conf file". Then particular features
 can be enabled, disabled, (re)configured by appropriate settings in
 the configuration file(s) gisfilter.conf and other files.
 
-What follows is a short guide for configuring the filter.
+What follows is a short guide for enabling and configuring the filter.
 
-Configuration guide
-===================
+Quick guide
+===========
+
+1) Enabling -
+===========
+
+It is recommended to run the gisfilter with all the others filters
+disabled. Therefore, in the nbsp configuration directory
+
+	cp features.conf site
+
+then edit the "site/features.conf" to disable all the filters (except
+perhaps the inventory if desired) and enable only the gisfilter, 
+
+	set features(gisfilter) 1
+
+The other filters can be re-enabled selectively if desired after
+the performance has been evaluated.
+
+2) Scheduler -
+============
+
+The scheduler is not enabled by default, so that after step above,
+the gisfilter converts the (radar) data to shapefiles but does not
+create any images. The images are created by the program "nbspgismap"
+that can be executed manually or automatically by the scheduler.
+
+To create the configured default set of image maps, write the line
+
+set gisfilter(scheduler_enable) 1
+
+in the file "site/gisfilter.conf". Then, look at the file
+"gisfilter-schedule.rc" in the configuration directory. Only
+the radar images are created in the current default configuration.
+The line that starts with
+
+schedule M=20 nbspgismap
+	
+indicates that the images are created every hour at the minute 20. That
+may be too much load for the computer. If that is the case the
+schedule can be changed by replacing the M=20 by something like
+H00/2 which means to create the images at the minute 00 every two hours.
+
+For reference I mention that in my setup I have instead
+
+schedule H00/2 ssh dl360 nbspgismap
+
+which means that images are created at the minute 0 every two hours,
+but the nbspgismap program is actually run (by ssh) in another machine
+called dl360 (this setup requires nfs and ssh keys configuration).
+
+3) Manual -
+=========
+
+From a terminal execute
+
+nbspgismap -L
+
+and it will output a list of all the configured maps, or "bundles".
+This can be a single site like "jua", e.g.
+
+	rad_n0r_jua
+
+or a "bundle" of sites like
+
+	rad_n0r_south
+
+which would contain all the sites in TX, OK, ... Then passing any such bundle
+name as argument
+
+	nbspgiamap rad_n0r_jua
+
+or
+
+	nbspgiamap rad_n0r_south
+
+will create the a composite map that displays all the radar sites
+contained in the bundle.   
+
+
+4) Configuring a bundle -
+=======================
+
+Of course the interesting part is how do you configure your own bundles.
+The configuration takes place in the subdirectories of
+
+	/usr/local/etc/nbsp/defaults/gis/gismap-bundle.d
+
+The package comes with an example (the "Texas bundle") that can be used
+to develop your own. The relevant file is
+
+	rad_n0r_tx.conf-ex
+
+in the subdirectory "dist". Copy that file to "enable" and rename it as
+
+	rad_n0r_tx.conf
+
+After that you should be able to execute
+
+	nbspgismap rad_n0r_tx
+
+and produce the map image. Other bundles can be defined by mimicking the
+rad_n0r_tx.conf file.
+
+5) More -
+=======
+
+There is much more to this than what is contained in this short note,
+in particular the web template mechanism and the mapserver scripts
+that are used. Two relevant places to look inside are
+
+/usr/local/etc/nbsp/defaults/gis/maps
+
+and
+
+/var/noaaport/www/htdocs/pub/gis/maps
+
+until I can get time to document all this in more detail.
+
+-
+Jose F Nieves
