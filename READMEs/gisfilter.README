@@ -16,16 +16,16 @@ The filter transforms the data and saves it in a separate directory
         /var/noaaport/data/gis
 
 ready for use by GIS aware applications, Google maps, etc.
-Everything runs out of the "gisfilter".
-
-
-1) Enabling the gisfilter
-=========================
+Everything runs out of the "gisfilter". The filter is enabled by
+setting
 
 set feature(gisfilter) 1
 
-eables the entire module, and viceversa if set to 0. Then particular features
+in the "features.conf file". Then particular features
 can be enabled, disabled, (re)configured by appropriate settings in
 the configuration file(s) gisfilter.conf and other files.
 
 What follows is a short guide for configuring the filter.
+
+Configuration guide
+===================
