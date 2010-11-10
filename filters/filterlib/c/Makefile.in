@@ -23,7 +23,7 @@ SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h const.h io.h config.h ${SHAREDHEADERS}
 
 TARGET = nbspfile nbspsat nbspsatinfo nbspunz nbspz nbsppipe \
-	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspdcnids nbsprad2info
+	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspnidsshp nbsprad2info
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -82,9 +82,9 @@ nbspradinfo:
 	cd dcnids; ${MAKE}
 	cp dcnids/nbspradinfo .
 
-nbspdcnids:
+nbspnidsshp:
 	cd dcnids; ${MAKE}
-	cp dcnids/nbspdcnids .
+	cp dcnids/nbspnidsshp .
 
 nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
 	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}

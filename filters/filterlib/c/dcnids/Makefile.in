@@ -21,8 +21,8 @@ SHAREDOBJECTS = err.o io.o util.o
 COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
 ALLOBJECTS = ${COMMONOBJECTS} dcnids.o dbfread.o dbfwrite.o
 
-# TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfread nbspdcnids-dbfwrite
-TARGET = nbspdcnids nbspradinfo nbspdcnids-dbfread
+# TARGET = nbspsnidsshp nbspradinfo nbspnidsshp-dbfread nbspnidsshp-dbfwrite
+TARGET = nbspnidsshp nbspradinfo nbspnidsshp-dbfread
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -55,14 +55,14 @@ util.c: ../util.c
 nbspradinfo: nbspdcnids
 	cp nbspdcnids nbspradinfo
 
-nbspdcnids: dcnids.o ${COMMONOBJECTS}
-	${CC} -o nbspdcnids dcnids.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspnidsshp: dcnids.o ${COMMONOBJECTS}
+	${CC} -o nbspnidsshp dcnids.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspdcnids-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
-	${CC} -o nbspdcnids-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspnidsshp-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
+	${CC} -o nbspnidsshp-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspdcnids-dbfread: dbfread.o ${COMMONOBJECTS}
-	${CC} -o nbspdcnids-dbfread dbfread.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspnidsshp-dbfread: dbfread.o ${COMMONOBJECTS}
+	${CC} -o nbspnidsshp-dbfread dbfread.o ${COMMONOBJECTS} ${LDFLAGS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}

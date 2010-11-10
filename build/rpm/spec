@@ -36,7 +36,7 @@ make clean
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspradinfo
 /usr/local/bin/nbsprad2info
-/usr/local/bin/nbspdcnids
+/usr/local/bin/nbspnidsshp
 /usr/local/bin/nbspcat
 /usr/local/bin/nbspfile
 /usr/local/bin/nbspunz

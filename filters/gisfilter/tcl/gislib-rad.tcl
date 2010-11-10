@@ -181,13 +181,13 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 
     #
     # The ccb, wmo/awips, gempak headers must be removed for nbsdcnids.
-    # The -F option instructs nbspdcnids to apply the built-in filtering
+    # The -F option instructs nbspnidsshp to apply the built-in filtering
     # options of the data (e.g., ignoring polygons with level values
     # less than 1.
     #
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
 	set cmd [list nbspunz -c $gisfilter(rad_totalheadersize) $nidsfpath \
-		     | nbspdcnids -b -F \
+		     | nbspnidsshp -b -F \
 		     -f $datafpath(dbf) \
 		     -o $datafpath(info) \
 		     -p $datafpath(shp) \
@@ -197,7 +197,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	# If the nids are saved with the gempak header then we have to use
 	# -c $gisfilter(rad_wmoawipsgmpk_header_size)
 	#
-	set cmd [list nbspdcnids -b -F \
+	set cmd [list nbspnidsshp -b -F \
 		     -c $gisfilter(rad_wmoawips_size) \
 		     -f $datafpath(dbf) \
 		     -o $datafpath(info) \
