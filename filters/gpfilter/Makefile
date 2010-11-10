@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	c tcl radmos
+SUBDIRS =	tcl radmos
 
 all:
 	for dir in ${SUBDIRS}; do \
@@ -23,4 +23,3 @@ clean:
 	for dir in ${SUBDIRS}; do \
 	(cd $$dir; ${MAKE} clean) \
 	done
-

@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	tcl
+SUBDIRS =	c tcl
 
 all:
 	for dir in ${SUBDIRS}; do \
@@ -23,4 +23,3 @@ clean:
 	for dir in ${SUBDIRS}; do \
 	(cd $$dir; ${MAKE} clean) \
 	done
-

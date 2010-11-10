@@ -1,0 +1,38 @@
+#
+# $Id$
+#
+
+Example usage:
+
+
+1)	nbspsatinfo -e -i ~/tigw01_20100810_1800.gini
+2)	nbspsat -e -i ~/tigw01_20100810_1800.gini
+
+Outputs:
+
+1) 1 14 2 1 1 1281463214 \
+     3 121900 -1334588 -950000 10159 10159 4400 5120 1 250000 0 0 0 0
+
+2) 1 14 2 1 1 20100810_1800 tigw01_20100810_1800.png \
+     3 121900 -1334588 -950000 10159 10159 4400 5120 1 250000 0 0 0 0
+
+The "extended" parameters are in the second line (the output is always
+one line; I have split it for clarity).
+
+The "extended" parameters are as follows:
+
+    map_projection (map projection indicator)     (mercator=1, lc=3, polar=5)
+    lat1  (lat of first grid point) int x 10000   (south is negative)
+    lon1  (lon of first grid point) int x 10000   (west is negative)
+    lov   (orientation of grid)     int x 10000
+    dx    (x-direction increment)
+    dy    (y-direction increment)
+    nx    (number of points in x direction)
+    ny    (number of points in y direction)
+    res   (resolution)
+    latin (Earth tangent)           int x 10000
+    lat2  (lat of last grid point) int x 10000
+    lon2  (lon of last grid point) int x 10000
+    lat_ur  (upper right-hand corner lat) int x 10000
+    lon_ur  (upper right-hand corner lon) int x 10000
+-
