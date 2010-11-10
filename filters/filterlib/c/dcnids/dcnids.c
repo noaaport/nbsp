@@ -599,7 +599,7 @@ static void nids_info_write(struct nids_data_st *nd){
     n = fprintf(f, "lat: %f\n", nd->nids_header.lat);
 
   if(n > 0)
-    n = fprintf(f, "lat: %d\n", nd->nids_header.pdb_height);
+    n = fprintf(f, "height: %d\n", nd->nids_header.pdb_height);
 
   fclose(f);
 
