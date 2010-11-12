@@ -390,8 +390,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     # but it is overriden below when the data files contain a true time.
     set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
-    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1) && \
-	([regexp $filterslib(noradinfo) $rc(awips1)] == 0)} {
+    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
 	#
 	# Try first those that are transmitted compressed.
 	#
