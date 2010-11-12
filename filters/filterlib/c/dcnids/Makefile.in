@@ -52,8 +52,8 @@ io.c: ../io.c
 util.c: ../util.c
 	cp ../util.c .
 
-nbspradinfo: nbspdcnids
-	cp nbspdcnids nbspradinfo
+nbspradinfo: nbspnidsshp
+	cp nbspnidsshp nbspradinfo
 
 nbspnidsshp: dcnids.o ${COMMONOBJECTS}
 	${CC} -o nbspnidsshp dcnids.o ${COMMONOBJECTS} ${LDFLAGS}
