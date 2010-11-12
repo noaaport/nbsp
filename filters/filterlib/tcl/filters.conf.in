@@ -74,15 +74,17 @@ set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
 #
 set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
-# Which nids for nbspradinfo must be piped through nbspunz first
-# (It is matched against awips1). Included are:
+# Which nids for nbspradinfo must be piped through nbspunz first.
+# (Fri Nov 12 15:38:08 AST 2010 - nmd is now compressed)
+# Included are (matched against awips1):
+#
 #  dpa
-#  n0r n1r n2r n3r n0z n0v n1v n0s n1s n2s n3s n1p ncr net nst ntp nvl nvw
+#  n0r n1r n2r n3r n0z n0v n1v n0s n1s n2s n3s n1p ncr net nmd nst ntp nvl nvw
 #  tr[0-2] 
 #
 # The following have an uncompressed nids header.
 #
-# tv0-tv2, tzl, nmd, dhr, dsp (+ the dual pol below + new dual pol next)
+# tv0-tv2, tzl, dhr, dsp (+ the dual pol below + new dual pol next)
 # n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u dvl eet (dual pol)
 # daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
 # (the new dual pol will be added between july 2010 and december 2012)
