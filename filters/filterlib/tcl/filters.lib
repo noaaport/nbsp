@@ -400,7 +400,6 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	        set radinfo [split \
         	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
 			$rc(fpath) | nbspradinfo -b]];
-		set radinfo_retry 0;
 	    } errmsg];
         } else {
 	    set radinfo_status [catch {
@@ -408,7 +407,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
 			$rc(fpath)]];
 	    } errmsg];
-        } else {
+        }
 
 	if {$radinfo_status == 0} {
 	    set rc(radlat) [lindex $radinfo 0];
