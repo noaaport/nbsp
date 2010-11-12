@@ -401,7 +401,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
         	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
 			$rc(fpath) | nbspradinfo -b]];
 	    } errmsg];
-        } else {
+        }
+
+	if {([regexp $filterslib(doradinfounz) $rc(awips1)] == 0) || \
+	    ([regexp $filterslib(doradinfoboth) $rc(awips1)] && \
+	    ($radinfo_status != 0))} {
+
 	    set radinfo_status [catch {
 	        set radinfo [split \
 		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
