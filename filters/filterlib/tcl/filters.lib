@@ -390,15 +390,17 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     # but it is overriden below when the data files contain a true time.
     set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
-    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
+    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1) && \
+	([regexp $filterslib(noradinfo) $rc(awips1)] == 0)} {
 	#
-	# Process here only those that are transmitted compressed.
+	# Try first those that are transmitted compressed.
 	#
 	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
         	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
 			$rc(fpath) | nbspradinfo -b]];
+		set radinfo_retry 0;
 	    } errmsg];
         } else {
 	    set radinfo_status [catch {
@@ -406,7 +408,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
 			$rc(fpath)]];
 	    } errmsg];
-        }
+        } else {
 
 	if {$radinfo_status == 0} {
 	    set rc(radlat) [lindex $radinfo 0];
@@ -418,6 +420,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set rc(seconds) $rc(radseconds);
 	} else {
 	    log_msg $errmsg;
+	    log_msg "Error getting rc(radxxx) variables from $rc(fbasename)";
 	}
     }
 
