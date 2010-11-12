@@ -395,7 +395,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	#
 	# Try first those that are transmitted compressed.
 	#
-	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
+	if {[regexp $filterslib(doradinfounz) $rc(awips1)] || \
+		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
         	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
