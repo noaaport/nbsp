@@ -24,9 +24,9 @@ Conflicts = ${nameclient}
 
 ifeq (${FLAVOR}, opensuse)
 rpmroot = /usr/src/packages
-Requires = tcpd libdb-4_5 db-utils tcl tcllib tk expect libpng netpbm zlib gnuplot gifsicle sharutils
+Requires = sharutils tcpd libdb-4_5 db-utils tcl tcllib tk expect libpng netpbm zlib bzip2 gnuplot gifsicle
 endif
 
 ifeq (${FLAVOR}, centos)
-Requires =  sharutils tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib gnuplot gifsicle mapserver
+Requires =  sharutils tcp_wrappers tcl tcllib tk expect libpng netpbm-progs zlib bzip2 gnuplot gifsicle mapserver
 endif
