@@ -91,6 +91,8 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|et|st|tp|vl|vw)};
 set filterslib(doradinfoboth) {nmd};	 # use {^$} for empty
+# This actually disables extracting the rc(radxxx) variables for nmd.
+set filterslib(noradinfo) {nmd};	 # use {^$} for empty
 
 # Global variables of the filtererr library.
 # By default the filters report errors using syslog.
