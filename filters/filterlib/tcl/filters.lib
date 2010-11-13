@@ -390,8 +390,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     # but it is overriden below when the data files contain a true time.
     set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
-    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1) && \
-	([regexp $filterslib(noradinfo) $rc(awips1)] == 0)} {
+    if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
 	#
 	# Try first those that are transmitted compressed.
 	# Since the result from catch is 0 or a positive number, we use
@@ -408,19 +407,25 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
 	    if {($radinfo_status != 0) && \
 		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
-		set radinfo_status -1;
+		set radinfo_status -2;
+		log_msg "Retrying without uncompressing $rc(fbasename).";
 	    }
         }
 
 	# Now try those that were not seen above, and those that were seen
-	# but gave an error and are set to retry without unzip (nmd).
+	# but gave an error and are set to retry without unzip (nmd,net).
 
-	if {$radinfo_status == -1} {
+	if {$radinfo_status < 0} {
+	    set old_status $radinfo_status;
 	    set radinfo_status [catch {
 	        set radinfo [split \
 		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
 			$rc(fpath)]];
 	    } errmsg];
+
+	    if {($old_status == -2) && ($radinfo_status == 0)} {
+		log_msg "OK with uncompressed $rc(fbasename).";
+	    }
         }
 
 	if {$radinfo_status == 0} {

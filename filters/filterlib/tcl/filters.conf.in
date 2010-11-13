@@ -75,7 +75,7 @@ set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
 set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first.
-# (some sites send nmd compressed and others send it uncompressed)
+# (some sites send nmd,net compressed and others send it uncompressed)
 # Included are (matched against awips1):
 #
 #  dpa
@@ -89,10 +89,8 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 # daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
 # (the new dual pol will be added between july 2010 and december 2012)
 #
-set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|et|st|tp|vl|vw)};
-set filterslib(doradinfoboth) {nmd};	 # use {^$} for empty
-# This actually disables extracting the rc(radxxx) variables for nmd.
-set filterslib(noradinfo) {nmd};	 # use {^$} for empty
+set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|st|tp|vl|vw)};
+set filterslib(doradinfoboth) {nmd|net};  # use {^$} for empty, {} for all
 
 # Global variables of the filtererr library.
 # By default the filters report errors using syslog.
