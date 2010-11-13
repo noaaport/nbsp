@@ -393,7 +393,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     if {[regexp {^sdus} $rc(wmoid)] && ($dorad == 1)} {
 	#
 	# Try first those that are transmitted compressed.
+	# Since the result from catch is 0 or a positive number, we use
+	# -1 as a flag (instead of introducing another variable for the flag.)
 	#
+	set radinfo_status -1;
 	if {[regexp $filterslib(doradinfounz) $rc(awips1)] || \
 		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
 	    set radinfo_status [catch {
@@ -401,12 +404,17 @@ proc filterlib_get_rcvars {rc_name finfo args} {
         	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
 			$rc(fpath) | nbspradinfo -b]];
 	    } errmsg];
+
+	    if {($radinfo_status != 0) && \
+		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
+		set radinfo_status -1;
+	    }
         }
 
-	if {([regexp $filterslib(doradinfounz) $rc(awips1)] == 0) || \
-	    ([regexp $filterslib(doradinfoboth) $rc(awips1)] && \
-	    ($radinfo_status != 0))} {
+	# Now try those that were not seen above, and those that were seen
+	# but gave an error and are set to retry without unzip (nmd).
 
+	if {$radinfo_status == -1} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
 		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
