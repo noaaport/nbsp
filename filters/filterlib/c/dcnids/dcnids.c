@@ -13,14 +13,15 @@
 #include <string.h>
 #include <libgen.h>
 #include <math.h>
+#include "const.h"
 #include "err.h"
 #include "util.h"
 #include "dcnids.h"
 #include "dcnids_decode.h"
 
 /*
- * Usage: nbspradinfo [-c <count>] [output options] <file> | < <file>
- *        nbspdcnids  [-c <count>] [output options] <file> | < <file>
+ * Usage: nbspradinfo [-c <count> | -C] [output options] <file> | < <file>
+ *        nbspdcnids  [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
  * nids header (i.e., the ccb and wmo headers must have been removed;
@@ -47,9 +48,10 @@
  *               (41 = 30 + gempak header [const.h])
  *
  * If the file does not have the gempak header (as the tmp file used
- * by the rstfilter.lib), then
+ * by the rstfilter.lib and the nids files saved by the gisfilter), then
  *
  * nbspradinfo -c 30 n0qvnx_20100221_0224.tmp
+ * nbspradinfo -C n0qvnx_20100221_0224.tmp
  *
  * The default information printed is
  *
@@ -73,6 +75,7 @@
 struct {
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
+  int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
   int opt_filter;	/* -F => apply data filtering options */
@@ -89,7 +92,7 @@ struct {
   int fd;
   int level_min;	/* data filter values */
   int level_max;
-} g = {0, 0, 0, 0, 0,
+} g = {0, 0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
        0, -1,
        0, 0};
@@ -121,8 +124,8 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bFltc:f:m:n:o:p:v:x:";
-  char *usage = "nbspdcnids [-b] [-F] [-l] [-t] [-c count] [-f dbffile] "
+  char *optstr = "bCFltc:f:m:n:o:p:v:x:";
+  char *usage = "nbspdcnids [-b] [-C] [-F] [-l] [-t] [-c count] [-f dbffile] "
     "[-m min] [-n max] [-o infofile] [-p shpfile] [-v csvfile] "
     "[-x shxfile] <file> | < file";
   int status = 0;
@@ -138,6 +141,10 @@ int main(int argc, char **argv){
       break;
     case 'F':
       g.opt_filter = 1;
+      break;
+    case 'C':
+      g.opt_skipwmoawips = 1;  /* not used further */
+      g.opt_skipcount = WMOAWIPS_HEADERR_SIZE;
       break;
     case 'c':
       status = strto_int(optarg, &g.opt_skipcount);

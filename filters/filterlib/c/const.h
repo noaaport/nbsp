@@ -24,4 +24,6 @@
 #define GMPK_TRAILER_STR	"\r\r\n\003"
 #define GMPK_HEADER_SIZE	11
 
+#define WMOAWIPS_HEADERR_SIZE	30
+
 #endif
