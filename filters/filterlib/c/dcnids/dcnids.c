@@ -131,6 +131,7 @@ int main(int argc, char **argv){
   int status = 0;
   int c;
   int opt_px = 0;	/* -p and -x must be given together */
+  int opt_cC = 0;	/* c and C together is a conflict */
 
   set_progname(basename(argv[0]));
 
@@ -143,10 +144,12 @@ int main(int argc, char **argv){
       g.opt_filter = 1;
       break;
     case 'C':
+      ++opt_cC;
       g.opt_skipwmoawips = 1;  /* not used further */
       g.opt_skipcount = WMOAWIPS_HEADERR_SIZE;
       break;
     case 'c':
+      ++opt_cC;
       status = strto_int(optarg, &g.opt_skipcount);
       if((status == 1) || (g.opt_skipcount <= 0)){
 	log_errx(1, "Invalid argument to [-c] option.");
@@ -203,6 +206,9 @@ int main(int argc, char **argv){
 
   if((opt_px != 0) && (opt_px != 2))
     log_errx(1, "Invalid combination of options p and x.");
+
+  if(opt_cC >= 2)
+    log_errx(1, "Invalid combination of options: c and C.");
 
   if(g.opt_background == 1)
     set_usesyslog();
