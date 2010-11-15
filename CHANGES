@@ -66,3 +66,5 @@ r4 -
   Some of the variables are used in the info files of the gisfilter
   shapefiles.
 - Added the gisfilter.
+- Added "gis" subdir to the catalog extension - The nids files are
+  saved with the WCT naming conventions.
