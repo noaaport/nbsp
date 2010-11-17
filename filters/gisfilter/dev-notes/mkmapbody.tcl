@@ -6,7 +6,7 @@ set body {
    CLASS
      EXPRESSION (\[level\] >= $level1 && \[level\] < $level2)
      STYLE
-       COLOR [::nbsp::gis::radcolor $a $i]
+    COLOR [::nbsp::gis::radcolor $a $level1]
      END
    END
 }
