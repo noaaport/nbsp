@@ -30,7 +30,8 @@ set rstfilter(txt_regex)	{.*};      # matched against subdirectory name
 set rstfilter(txt_fext)		".txt";
 #
 set rstfilter(sat_enable)	1;
-set rstfilter(sat_regex)	{.*};
+set rstfilter(sat_regex)	\
+    {tig(0[1-7]|13|14|15|25|39|[41-59]),tic(0[1-7]|13|14|15|[61-65])};
 set rstfilter(sat_datext)	".gini";
 set rstfilter(sat_latest_enable)	1; # make link to latest gini and img
 set rstfilter(sat_latestname)	"latest";
@@ -38,7 +39,7 @@ set rstfilter(sat_namefmt)	{$rc(wmoid)_$rc(ymd_hm).png};
 set rstfilter(sat_dirfmt)     	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 #
 set rstfilter(satmap_enable)	0;	   # set to 1 to add map outlines
-set rstfilter(satmap_regex)	{.*};	   # to restrict for which tigexx
+set rstfilter(satmap_regex)	$rstfilter(sat_regex);
 set rstfilter(satmap_mapsize)	"800;600";
 set rstfilter(satmap_nopng)	0;         # set to 1 to keep only the gif
 set rstfilter(satmap_rcdirs)	$rstfilter(localconfdirs);
