@@ -448,7 +448,7 @@ static int write_pngdata(FILE *fp, int fd, int linesize, int numlines){
       status = -1;
       break;
     }else if(n != linesize){
-      status = -1;
+      status = 1;
       break;
     }
     png_write_row(png_ptr, row);
