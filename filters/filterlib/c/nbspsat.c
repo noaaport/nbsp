@@ -43,7 +43,7 @@
  *      dy    (y-direction increment)
  *	nx    (number of points in x direction)
  *	ny    (number of points in y direction)
- *	res   (same thing as above; duplicated for convenience)
+ *	res   (same thing as npdb->res; duplicated for convenience)
  *      latin (Earth tangent)           int x 10000
  *	lat2  (lat of last grid point) int x 10000
  *	lon2  (lon of last grid point) int x 10000
@@ -270,6 +270,7 @@ static int process_file(char *in_file){
     
     if((status = write_pngdata(fp, fd, npdb.linesize, npdb.numlines + 1))
        != 0){
+      unlink(fname);
       if(status == -1)
 	log_err(1, "Could not write to %s", fname);
       else
@@ -285,12 +286,13 @@ static int process_file(char *in_file){
     if(gempak_fd == -1)
       log_err(1, "Could not open %s", fname);
 
-    status = write_gempak(gempak_fd, fd, &npdb, &zstatus);
-    if(status == -1)
-      log_err(1, "Could not write to %s", fname);
-    else if(status == 1)
-      log_errx(1, "zip error %d compressing %s", zstatus, fname);
-
+    if((status = write_gempak(gempak_fd, fd, &npdb, &zstatus)) != 0){
+      unlink(fname);
+      if(status == -1)
+	log_err(1, "Could not write to %s", fname);
+      else if(status == 1)
+	log_errx(1, "zip error %d compressing %s", zstatus, fname);
+    }
     close(gempak_fd);
   }
 
@@ -336,7 +338,7 @@ static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
   npdb->linesize = (int)((p[6] << 8) + p[7]);
   */
   npdb->numlines = (int)unpack_uint16(p, 4);
-  npdb->linesize = (int)unpack_uint16(p, 4);
+  npdb->linesize = (int)unpack_uint16(p, 6);
 
   npdb->year = (int)p[8];
   npdb->year += 1900;
@@ -387,6 +389,10 @@ static void fill_nesdis_pdb(struct nesdis_product_def_block *npdb){
     npdb->lat_ur = unpack_int24(p, 55);
     npdb->lon_ur = unpack_int24(p, 58);
   }
+
+  /*
+  npdb->scan_mode = (int)p[37];
+  */
 
   for(n = 0; n <= WMOID_SIZE - 1; ++n)
     npdb->wmoid[n] = tolower(npdb->buffer[n]);
@@ -442,7 +448,7 @@ static int write_pngdata(FILE *fp, int fd, int linesize, int numlines){
 	       compression_type, filter_method);
   png_write_info(png_ptr, info_ptr);
 
-  for(i = 0; i <= numlines - 1; ++i){
+  for(i = 0; i < numlines; ++i){
     n = read(fd, row, linesize);
     if(n == -1){
       status = -1;
