@@ -16,4 +16,4 @@ put -O $pkgdir $pkglocaldir/$pkgfilename;
 put -O $updateindexdir $updateindexfile;
 quit"
 
-# rm -f $updateindexfile
+rm -f $updateindexfile
