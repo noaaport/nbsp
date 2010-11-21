@@ -7,7 +7,7 @@
 # config
 #
 plist_file="plist"
-deb_plist_file=deb_plist"
+deb_plist_file="deb_plist"
 
 #
 # main
