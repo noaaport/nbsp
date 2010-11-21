@@ -1,0 +1,11 @@
+/usr/local/bin/nbspgrib
+/usr/local/bin/nbspgrib2
+/usr/local/bin/nbspgribctl
+/usr/local/bin/nbspgradrsh
+/usr/local/bin/nbspgribrsh
+/usr/local/bin/nbspgribcat
+/usr/local/bin/nbspwgrib
+/usr/local/libexec/nbsp/nbspgribrsh.init
+/usr/local/etc/nbsp/dist/nbspgribrsh.conf-sample
+/usr/local/etc/nbsp/dist/nbspgribrsh.conf-user
+/usr/local/share/doc/nbsp/LICENSE

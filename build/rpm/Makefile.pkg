@@ -41,10 +41,14 @@ ${specfile}: pkginfo.mk postinstall Makefile
 	    -e "/@POSTINSTALL@/d" \
 	    -e "/@POSTUNINSTALL@/r postuninstall" \
 	    -e "/@POSTUNINSTALL@/d" \
+	    -e "/@PLIST@/r plist" \
+	    -e "/@PLIST@/d" \
 	    -e "/@POSTINSTALLCLIENT@/r postinstall-client" \
 	    -e "/@POSTINSTALLCLIENT@/d" \
 	    -e "/@POSTUNINSTALLCLIENT@/r postuninstall-client" \
-	    -e "/@POSTUNINSTALLCLIENT@/d" spec) > ${specfile}
+	    -e "/@POSTUNINSTALLCLIENT@/d
+	    -e "/@PLISTCLIENT@/r plist-client" \
+	    -e "/@PLISTCLIENT@/d" spec) > ${specfile}
 
 install: build
 	rm -r -f pkg
