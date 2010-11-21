@@ -11,7 +11,7 @@
 # Read until the line that starts with "re_len=" is found. Then read
 # up to the line with "HEADER=END" to get to the start of the records,
 # and then unpack each record until the line with "DATA=END" is found.
-# The records are unpacked by calling nbspdc, which essentially uses
+# The records are unpacked by calling nbspqdc, which essentially uses
 # the unpack() functions in the nbsp sources src/packfpu.{h,c}.
 
 # The directory of the db programs
