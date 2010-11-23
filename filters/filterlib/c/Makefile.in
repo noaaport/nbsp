@@ -7,13 +7,13 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-SOURCES = nbspfile.c nbspsat.c nbspsatinfo.c nbspunz.c nbspz.c nbsppipe.c \
+SOURCES = nbspfile.c nbspunz.c nbspz.c nbsppipe.c \
 	nbspgrib.c nbspgrib2.c nbspcat.c nbsprad2info.c \
 	err.c util.c unz.c mfile.c io.c
 
 COMMONOBJECTS = err.o util.o unz.o io.o
 
-ALLOBJECTS = nbspfile.o nbspsat.o nbspsatinfo.o nbspunz.o nbspz.o nbsppipe.o \
+ALLOBJECTS = nbspfile.o nbspunz.o nbspz.o nbsppipe.o \
 	nbspgrib.o nbspgrib2.o nbspcat.o nbsprad2info.o \
 	${COMMONOBJECTS} ${SHAREDOBJECTS} mfile.o
 
@@ -54,12 +54,6 @@ strsplit.h: ../../../src/strsplit.h
 nbspfile: nbspfile.o ${COMMONOBJECTS}
 	${CC} -o nbspfile nbspfile.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspsat: nbspsat.o ${COMMONOBJECTS}
-	${CC} -o nbspsat nbspsat.o ${COMMONOBJECTS} ${LDFLAGS}
-
-nbspsatinfo: nbspsatinfo.o ${COMMONOBJECTS}
-	${CC} -o nbspsatinfo nbspsatinfo.o ${COMMONOBJECTS} ${LDFLAGS}
-
 nbspunz: nbspunz.o ${COMMONOBJECTS} mfile.o
 	${CC} -o nbspunz nbspunz.o ${COMMONOBJECTS} mfile.o ${LDFLAGS}
 
@@ -78,6 +72,17 @@ nbspgrib2: nbspgrib2.o ${COMMONOBJECTS}
 nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 	${CC} -o nbspcat nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS} ${LDFLAGS}
 
+nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
+	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}
+
+nbspsatinfo:
+	cd dcgini; ${MAKE}
+	cp dcgini/nbspsatinfo .
+
+nbspsat:
+	cd dcgini; ${MAKE}
+	cp dcgini/nbspsat .
+
 nbspradinfo:
 	cd dcnids; ${MAKE}
 	cp dcnids/nbspradinfo .
@@ -86,13 +91,11 @@ nbspnidsshp:
 	cd dcnids; ${MAKE}
 	cp dcnids/nbspnidsshp .
 
-nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
-	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}
-
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}
 
 clean:
 	cd dcnids; ${MAKE} clean
+	cd dcgini; ${MAKE} clean
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} \
 	${SHAREDHEADERS} ${SHAREDSOURCES}
