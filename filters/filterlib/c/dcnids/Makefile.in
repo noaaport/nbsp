@@ -9,14 +9,16 @@ DCSOURCES = dcnids_extract.c dcnids_transform.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c dcnids_bunz.c \
 	dcnids_decode_radials_af1f.c dcnids_decode_digital_radials_16.c \
 	dcnids.c dbfread.c dbfwrite.c
-DCHEADERS = dcnids.h dcnids_types.h dcnids_shp.h
+DCHEADERS = dcnids.h dcnids_shp.h
 DCOBJECTS = dcnids_extract.o dcnids_transform.o \
 	dcnids_decode_radials_af1f.o dcnids_decode_digital_radials_16.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o dcnids_bunz.o
 
 SHAREDSOURCES = err.c io.c util.c
-SHAREDHEADERS = config.h const.h io.h err.h util.h
+SHAREDHEADERS = ../common.h ../config.h ../const.h ../io.h ../err.h ../util.h
 SHAREDOBJECTS = err.o io.o util.o
+
+HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
 COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
 ALLOBJECTS = ${COMMONOBJECTS} dcnids.o dbfread.o dbfwrite.o
@@ -42,6 +44,9 @@ all: ${TARGET}
 
 @SUFFIXRULES@ ${HEADERS}
 	${CC} ${CFLAGS} $<
+
+../common.h:
+	cd ..; ${MAKE} common.h
 
 err.c: ../err.c
 	cp ../err.c .
