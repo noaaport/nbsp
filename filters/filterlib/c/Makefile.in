@@ -78,12 +78,12 @@ nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
 nbspsatinfo:
 	cd dcgini-new; ${MAKE}
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspsatinfo .
+	cp dcgini-new/nbspsatinfo .
 
 nbspsat:
 	cd dcgini-new; ${MAKE}
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspsat .
+	cp dcgini-new/nbspsat .
 
 nbspradinfo:
 	cd dcnids; ${MAKE}
