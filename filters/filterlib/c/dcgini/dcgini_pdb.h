@@ -14,9 +14,6 @@
 #define NESDIS_WMOID_SIZE	WMO_ID_SIZE		/* common.h */
 #define NESDIS_PDB_SIZE		512
 #define NESDIS_DATA_BLOCKSIZE	5120
-#define GEMPAK_FNAME_SIZE	20	  /* e.g. tigp04_yyyymmdd_hhmm */
-#define PNG_FNAME_SIZE		24	  /* e.g. tigp04_yyyymmdd_hhmm.png */
-#define TIME_STR_SIZE		13	  /* yyyymmdd_hhmm */
 
 struct nesdis_pdb {
   char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];

@@ -17,6 +17,7 @@
 #include "err.h"
 #include "dcgini_pdb.h"
 #include "dcgini_util.h"
+#include "dcgini_name.h"
 
 /*
  * Usage:  nbspsatinfo [-i <fpath>] < <stdin>

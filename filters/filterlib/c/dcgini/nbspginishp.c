@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2010 Jose F. Nieves <nieves@ltp.upr.clu.edu>
  *
  * See LICENSE
  *
@@ -16,64 +16,36 @@
 #include <libgen.h>
 #include "err.h"
 #include "io.h"
-#include "unz.h"
 #include "dcgini_pdb.h"
 #include "dcgini_util.h"
-#include "dcgini_name.h"
 
 /*
- * Usage:
+ * Usage: nbspginishp [output options] <file> | < <file>
  *
- *  nbspsat [-C | -g | -i | -n] [options] file
+ * The program reads from a file or stdin, but the data must 
+ * be the uncompressed gini data. Only when it is invoked with [-i]
+ * to just extract the relevant info, it can take either the compressed
+ * or uncompresed file as input. The output options are:
  *
- * -C => check pdb header and exit
- * -i => print info and exit
- * -g => gempak output (compress file)
- * -n => png image output (default)
- *
- * This program assumes that the input file is the uncompressed gini data
- * file. Only when it is invoked with [-i] to just extract the relevant info,
- * it can take either the compressed or uncompresed file as input.
- * It prints to stdout
- *
- *	npdb->source, 
- *	npdb->creating_entity, 
- *	npdb->sector, 
- *	npdb->channel,
- *	npdb->res,
- *	time, (date-time string)
- *	fname
- *
- * With the [-e] option it prints the following additional values after those:
- *
- *	map_projection (map projection indicator)
- *	lat1  (lat of first grid point) int x 10000
- *	lon1  (lon of first grid point) int x 10000
- *      lov   (orientation of grid)     int x 10000
- *      dx    (x-direction increment)
- *      dy    (y-direction increment)
- *	nx    (number of points in x direction)
- *	ny    (number of points in y direction)
- *	res   (same thing as npdb->res; duplicated for convenience)
- *      latin (Earth tangent)           int x 10000
- *	lat2  (lat of last grid point) int x 10000
- *	lon2  (lon of last grid point) int x 10000
- *      lat_ur  (upper right-hand corner lat) int x 10000
- *      lon_ur  (upper right-hand corner lon) int x 10000
+ *  -a => do them all with the default names
+ *  -v <csv file>
+ *  -p <shp file>
+ *  -x <shx file>
+ *  -f <dbf file>
+ *  -o <info file>
  */
 
 struct {
   char *opt_output_dir;		/* -d */
-  char *opt_fname_prefix;	/* -p => change the default prefix name */
-  char *opt_output_fname;	/* -o */
-  int opt_C;			/* -C => check pdb */
-  int opt_silent;		/* -s */
-  int opt_gempak_output;	/* -g */
-  int opt_png_output;	        /* -n => default if none specified */
   int opt_background;		/* -b */
+  int opt_all;			/* -a */
   int opt_wrinfo;		/* -i => only extract and print info */
   int opt_extended_info;        /* -e => extended info output (when -i) */
+  int opt_silent;		/* -s */
 } g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0};
+
+#define NBSPSAT_DEFAULT_NAME_FMT "%s_%d%02d%02d_%02d%02d"
+#define NBSPSAT_DEFAULT_PNGNAME_FMT NBSPSAT_DEFAULT_NAME_FMT ".png"
 
 static int write_pngdata(FILE *fp, unsigned char *data,
 			 int linesize, int numlines);
@@ -86,6 +58,7 @@ static int verify_wmo_header(char *header);
 static void output(char *fname,
 		   struct nesdis_pdb *npdb,
 		   int option_extended_info);
+static char *make_default_pngname(struct nesdis_pdb *npdb);
 
 int main(int argc, char **argv){
 
@@ -235,7 +208,7 @@ static int process_file(char *in_file){
   }
 
   if(g.opt_output_fname == NULL){
-    fname = dcgini_default_name(&npdb, NULL, DCGINI_PNGEXT);
+    fname = make_default_pngname(&npdb);
     if(fname == NULL)
       log_err(1, "malloc()");
   }else{
@@ -450,7 +423,7 @@ static int write_file_info(char *in_file){
       log_err(1, "Error reading from stdin.");
 
     return(-1);
-  }else if(status != 0){
+  }else{
     if(status == 1)
       log_errx(1, "Error reading pdb. File too short.");
     else
@@ -459,12 +432,11 @@ static int write_file_info(char *in_file){
     return(1);
   }
 
-  output_fname = dcgini_default_name(&npdb, NULL, DCGINI_PNGEXT);
+  output_fname = make_default_pngname(&npdb);
   if(output_fname == NULL)
     log_err(1, "Error from malloc().");
 
   output(output_fname, &npdb, g.opt_extended_info);
-  free(output_fname);
 
   return(0);
 }
@@ -491,7 +463,7 @@ static void output(char *fname,
 		   struct nesdis_pdb *npdb,
 		   int option_extended_info){
 
-  char time[DCGINI_TIME_STR_SIZE + 1];
+  char time[TIME_STR_SIZE + 1];
 
   sprintf(time, "%d%02d%02d_%02d%02d",
 	    npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
@@ -563,4 +535,26 @@ static int verify_wmo_header(char *in_file){
   log_errx(1, "Incorrect header in file.");
 
   return(1);
+}
+
+static char *make_default_pngname(struct nesdis_pdb *npdb){
+
+  char *fname;
+  char prefix[NESDIS_WMOID_SIZE + 1];
+
+  fname = malloc(PNG_FNAME_SIZE + 1);
+  if(fname == NULL)
+    return(NULL);
+
+  if(g.opt_fname_prefix != NULL)
+    strncpy(prefix, g.opt_fname_prefix, NESDIS_WMOID_SIZE);
+  else
+    strncpy(prefix, npdb->wmoid, NESDIS_WMOID_SIZE);
+
+  prefix[NESDIS_WMOID_SIZE] = '\0';
+
+  sprintf(fname, NBSPSAT_DEFAULT_PNGNAME_FMT, prefix, 
+	  npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
+
+  return(fname);
 }

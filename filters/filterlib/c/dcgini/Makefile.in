@@ -5,9 +5,9 @@
 #
 # $Id$
 #
-DCSOURCES = dcgini.c dcgini_util.c dcgini_pdb.c
-DCHEADERS = dcgini_util.h dcgini_pdb.h
-DCOBJECTS = dcgini_util.o dcgini_pdb.o
+DCSOURCES = dcgini_util.c dcgini_pdb.c dcgini_name.c
+DCHEADERS = dcgini_util.h dcgini_pdb.h dcgini_name.c
+DCOBJECTS = dcgini_util.o dcgini_pdb.o dcgini_name.o
 
 SHAREDSOURCES = err.c io.c util.c unz.c
 SHAREDHEADERS = ../common.h \
