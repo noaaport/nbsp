@@ -133,7 +133,7 @@ int write_file_info(char *in_file){
       log_err(1, "Error reading from stdin.");
 
     return(-1);
-  }else{
+  }else if(status != 0){
     if(status == 1)
       log_errx(1, "Error reading pdb. File too short.");
     else
