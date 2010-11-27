@@ -17,9 +17,9 @@ SHAREDOBJECTS = err.o io.o util.o unz.o
 HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
 COMMONOBJECTS = ${SHAREDOBJECTS} ${DCOBJECTS}
-ALLOBJECTS = ${COMMONOBJECTS} nbspsat.o nbapsatinfo.o
+ALLOBJECTS = ${COMMONOBJECTS} nbspsat.o nbapsatinfo.o nbspginishp.o
 
-TARGET = nbspsat nbspsatinfo
+TARGET = nbspsat nbspsatinfo nbspginishp
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -60,6 +60,9 @@ nbspsat: nbspsat.o ${COMMONOBJECTS}
 
 nbspsatinfo: nbspsatinfo.o ${COMMONOBJECTS}
 	${CC} -o nbspsatinfo nbspsatinfo.o ${COMMONOBJECTS} ${LDFLAGS}
+
+nbspginishp: nbspginishp.o ${COMMONOBJECTS}
+	${CC} -o nbspginishp nbspginishp.o ${COMMONOBJECTS} ${LDFLAGS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}

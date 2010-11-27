@@ -109,3 +109,55 @@ int main(int argc, char **argv){
 
   return(status != 0 ? 1 : 0);
 }
+
+static int process_file(char *in_file){
+
+  struct dcgini_st dcg;
+  int status = 0;
+  int fd;
+  int n;
+
+  /* Initialize */
+  dcg.pdb.buffer_size = NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE;
+
+  fd = open(in_file, O_RDONLY);
+  if(fd == -1)
+    log_err(1, "Could not open %s", in_file);
+
+  status = read_nesdis_pdb(fd, &dcg.pdb);
+
+  if(status == -1)
+    log_err(1, "Error from read_nesdis_pdb(): %s", in_file);
+  else if(status == 1)
+    log_errx(1, "File too short: %s", in_file);
+  else if(status == 2)
+    log_errx(1, "File has invalid wmo header: %s", in_file);
+  
+  /*
+   * Read the data once and for all
+   */
+  dcg.ginidata.data_size = dcg.pdb.linesize * dcg.pdb.numlines;
+  dcg.ginidata.data = malloc(dcg.ginidata.data_size);
+  if(dcg.ginidata.data == NULL)
+    log_err(1, "malloc()");
+
+  n = read(fd, dcg.ginidata.data, dcg.ginidata.data_size);
+  if(n == -1)
+    log_err(1, "Error reading from %s", in_file);
+  else if((size_t)n != dcg.ginidata.data_size)
+    log_errx(1, "File is corrupt (short): %s", in_file);
+    
+  close(fd);
+      
+  if(g.opt_output_dir != NULL){
+    status = chdir(g.opt_output_dir);
+    if(status != 0)
+      log_err(1, "Cannot chdir to %s", g.opt_output_dir);
+  }
+
+  /* Fill out point data */
+  /* Construct output file names */
+  /* Output */
+
+  return(0);
+}

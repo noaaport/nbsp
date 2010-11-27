@@ -25,10 +25,9 @@ struct dcgini_point_map_st {
   double lat_max;
 };
 
-struct dcgini_data_st {
+struct gini_data_st {
   unsigned char *data;    /* file data excluding wmo and pdb headers */
   size_t data_size;       /* numlines * linesize */
-  struct nesdis_pdb pdb;
 };
 
 struct dcgini_shp_st {
@@ -36,6 +35,13 @@ struct dcgini_shp_st {
   uint32_t size;
   uint32_t shpsize;
   uint32_t shxsize;
+};
+
+struct dcgini_st {
+  struct nesdis_pdb pdb;
+  struct gini_data_st ginidata;
+  struct dcgini_point_map_st pointmap;
+  struct dcgini_shp_st shp;
 };
 
 #endif
