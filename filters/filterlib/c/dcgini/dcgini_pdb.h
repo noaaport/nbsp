@@ -17,8 +17,8 @@
 
 struct nesdis_pdb {
   char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];
-  char wmoid[NESDIS_WMOID_SIZE + 1];
   int  buffer_size;
+  char wmoid[NESDIS_WMOID_SIZE + 1];
   /* From AAO13008.pdf (p. 26) */
   int source;			/* should be 1 => NESDIS */
   int creating_entity;

@@ -10,13 +10,21 @@
 #include <string.h>
 #include <zlib.h>
 #include "unz.h"
-#include "dcgini_pdb.h"
 #include "dcgini_util.h"
+#include "dcgini_misc.h"
+#include "dcgini_pdb.h"
 
 #define RAD_PER_DEG     0.0174          /* pi/180 */
 
 int read_nesdis_pdb(int fd, struct nesdis_pdb *npdb){
-
+  /*
+   * Returns:
+   *
+   *  0 => ok
+   * -1 => read error
+   *  1 => corrupt file (short)
+   *  2 => invalid wmo header
+   */
   int n;
 
   n = read(fd, npdb->buffer, npdb->buffer_size);
@@ -24,6 +32,9 @@ int read_nesdis_pdb(int fd, struct nesdis_pdb *npdb){
     return(-1);
   else if(n != npdb->buffer_size)
     return(1);
+
+  if(dcgini_verify_wmo_header(npdb->buffer) != 0)
+    return(2);
 
   fill_nesdis_pdb(npdb);
 
@@ -42,14 +53,15 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
    *
    * returns:
    *
-   * 0 => ok
+   *  0 => ok
    * -1 => read error
-   * 1 => file too short
-   * 2 => zlib error
+   *  1 => file too short
+   *  2 => Invalid wmo header
+   *  3 => zlib error
    */
   int n;
   int i;
-  char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];
+  unsigned char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];
   int buffer_size = NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE;
   unsigned char *p;
   int status = 0;
@@ -61,7 +73,7 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
   if(n == -1)
     return(-1);
 
-  p = (unsigned char*)&buffer[NESDIS_WMO_HEADER_SIZE];
+  p = &buffer[NESDIS_WMO_HEADER_SIZE];
   if((p[0] == ZBYTE0) && (p[1] == ZBYTE1)){
     /*
      * Must decompress. Find the end of the compressed frame.
@@ -69,7 +81,7 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
     n -= NESDIS_WMO_HEADER_SIZE;  /* number of bytes in buffer after wmo */
     i = 0;
     status = Z_DATA_ERROR;
-    while(i <= n - 1){
+    while(i < n){
       ++i;
       if((p[i] == ZBYTE0) && (p[i + 1] == ZBYTE1)){
 	/*
@@ -85,7 +97,7 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
     }
 
     if(status != Z_OK){
-      return(2);	/* zlib error */
+      return(3);	/* zlib error */
     }
   }else{
     /*
@@ -96,6 +108,9 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
     }else
       memcpy(npdb->buffer, buffer, n);
   }
+
+  if(dcgini_verify_wmo_header(npdb->buffer) != 0)
+    return(2);
 
   fill_nesdis_pdb(npdb);
 

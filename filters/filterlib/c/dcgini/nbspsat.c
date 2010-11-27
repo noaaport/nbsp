@@ -17,9 +17,10 @@
 #include "err.h"
 #include "io.h"
 #include "unz.h"
+#include "dcgini_misc.h"
+#include "dcgini_name.h"
 #include "dcgini_pdb.h"
 #include "dcgini_util.h"
-#include "dcgini_name.h"
 
 /*
  * Usage:
@@ -73,8 +74,13 @@ struct {
   int opt_background;		/* -b */
   int opt_wrinfo;		/* -i => only extract and print info */
   int opt_extended_info;        /* -e => extended info output (when -i) */
-} g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0};
+  /*
+   * variables
+   */
+  int in_fd;
+} g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, -1};
 
+static void cleanup(void);
 static int write_pngdata(FILE *fp, unsigned char *data,
 			 int linesize, int numlines);
 static int write_gempak(int gempak_fd, int fd,
@@ -82,7 +88,6 @@ static int write_gempak(int gempak_fd, int fd,
 static int process_file(char *in_file);
 static int write_file_info(char *in_file);
 static void check(struct nesdis_pdb *npdb);
-static int verify_wmo_header(char *header);
 static void output(char *fname,
 		   struct nesdis_pdb *npdb,
 		   int option_extended_info);
@@ -100,6 +105,7 @@ int main(int argc, char **argv){
   int conflict_op = 0;
 
   set_progname(basename(argv[0]));
+  atexit(cleanup);
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
@@ -170,17 +176,20 @@ int main(int argc, char **argv){
   if(g.opt_background == 1)
     set_usesyslog();
 
-  if(status == 0)
-    status = verify_wmo_header(in_file);
-
-  if(status == 0){
-    if(g.opt_wrinfo == 1)
-      status = write_file_info(in_file);
-    else
-      status = process_file(in_file);
-  }
+  if(g.opt_wrinfo == 1)
+    status = write_file_info(in_file);
+  else
+    status = process_file(in_file);
 
   return(status != 0 ? 1 : 0);
+}
+
+static void cleanup(void){
+
+  if(g.in_fd != -1){
+    close(g.in_fd);
+    g.in_fd = -1;
+  }
 }
 
 static int process_file(char *in_file){
@@ -189,7 +198,6 @@ static int process_file(char *in_file){
   unsigned char *data = NULL;	/* records data (after pdb) */
   size_t data_size;		/* linesize * numlines */
   int n;
-  int fd;
   int gempak_fd;
   FILE *fp;
   int status = 0;
@@ -199,15 +207,20 @@ static int process_file(char *in_file){
   /* Initialize */
   npdb.buffer_size = NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE;
 
-  fd = open(in_file, O_RDONLY);
-  if(fd == -1)
+  g.in_fd = open(in_file, O_RDONLY);
+  if(g.in_fd == -1)
     log_err(1, "Could not open %s", in_file);
 
-  if(read_nesdis_pdb(fd, &npdb) == -1)
-    log_err(1, "Error from read_nesdis_pdb(): %s", in_file);
+  status = read_nesdis_pdb(g.in_fd, &npdb);
 
+  if(status == -1)
+    log_err(1, "Error from read_nesdis_pdb(): %s", in_file);
+  else if(status == 1)
+    log_errx(1, "File too short: %s", in_file);
+  else if(status == 2)
+    log_errx(1, "File has invalid wmo header: %s", in_file);
+  
   if(g.opt_C == 1){
-    close(fd);
     check(&npdb);
     return(0);
   }
@@ -221,7 +234,7 @@ static int process_file(char *in_file){
     if(data == NULL)
       log_err(1, "malloc()");
 
-    n = read(fd, data, data_size);
+    n = read(g.in_fd, data, data_size);
     if(n == -1)
       log_err(1, "Error reading from %s", in_file);
     else if((size_t)n != data_size)
@@ -267,7 +280,7 @@ static int process_file(char *in_file){
     if(gempak_fd == -1)
       log_err(1, "Could not open %s", fname);
 
-    if((status = write_gempak(gempak_fd, fd, &npdb, &zstatus)) != 0){
+    if((status = write_gempak(gempak_fd, g.in_fd, &npdb, &zstatus)) != 0){
       unlink(fname);
       if(status == -1)
 	log_err(1, "Could not write to %s", fname);
@@ -284,7 +297,6 @@ static int process_file(char *in_file){
     free(data);
 
   free(fname);
-  close(fd);
 
   return(0);
 }
@@ -452,7 +464,9 @@ static int write_file_info(char *in_file){
     return(-1);
   }else if(status != 0){
     if(status == 1)
-      log_errx(1, "Error reading pdb. File too short.");
+      log_errx(1, "File too short: %s", in_file);
+    else if(status == 2)
+      log_errx(1, "File has invalid wmo header: %s", in_file);
     else
       log_errx(1, "Could not read nesdis pdb. Error from zlib.");
 
@@ -525,42 +539,4 @@ static void output(char *fname,
 	  npdb->lon2,
 	  npdb->lat_ur,
 	  npdb->lon_ur);
-}
-
-static int verify_wmo_header(char *in_file){
-  /*
-   * Check the first NESDIS_WMO_HEADER_SIZE bytes to see if it consists of
-   * 18 ascii bytes plus the \r\r\n.
-   */
-  int i;
-  char *c;
-  char header[NESDIS_WMO_HEADER_SIZE];
-  int fd;
-  int n;
-
-  fd = open(in_file, O_RDONLY);
-  if(fd == -1){
-    log_err(1, "Could not open %s", in_file);
-    return(-1);
-  }
-
-  n = read(fd, header, NESDIS_WMO_HEADER_SIZE);
-  close(fd);
-
-  if(n < NESDIS_WMO_HEADER_SIZE)
-    goto end;
-
-  c = header;
-  for(i = 1; i <= NESDIS_WMO_HEADER_SIZE - 3; ++i){    
-    if(isascii(*c++) == 0)
-      goto end;
-  }
-
-  if((*c++ == '\r') && (*c++ == '\r') && (*c == '\n'))
-    return(0);
-
- end:
-  log_errx(1, "Incorrect header in file.");
-
-  return(1);
 }

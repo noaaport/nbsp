@@ -146,7 +146,7 @@ int main(int argc, char **argv){
     case 'C':
       ++opt_cC;
       g.opt_skipwmoawips = 1;  /* not used further */
-      g.opt_skipcount = WMOAWIPS_HEADERR_SIZE;
+      g.opt_skipcount = WMOAWIPS_HEADER_SIZE;
       break;
     case 'c':
       ++opt_cC;
