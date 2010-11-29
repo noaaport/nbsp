@@ -134,10 +134,13 @@ int write_file_info(char *in_file){
 
     return(-1);
   }else if(status != 0){
+    if(in_file != NULL)
+      log_warnx("Error reading pdb from %s:", in_file);
+
     if(status == 1)
-      log_errx(1, "Error reading pdb. File too short.");
+      log_errx(1, "File too short.");
     else
-      log_errx(1, "Could not read nesdis pdb. Error from zlib.");
+      log_errx(1, "Error from zlib.");
 
     return(1);
   }
