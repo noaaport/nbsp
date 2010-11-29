@@ -187,7 +187,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     #
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
 	set cmd [list nbspunz -c $gisfilter(rad_totalheadersize) $nidsfpath \
-		     | nbspnidsshp -b -F \
+		     | nbspnidsshp -b -D \
 		     -f $datafpath(dbf) \
 		     -o $datafpath(info) \
 		     -p $datafpath(shp) \
@@ -197,7 +197,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	# If the nids are saved with the gempak header then we have to use
 	# -c $gisfilter(rad_wmoawipsgmpk_header_size)
 	#
-	set cmd [list nbspnidsshp -b -F \
+	set cmd [list nbspnidsshp -b -D \
 		     -c $gisfilter(rad_wmoawips_size) \
 		     -f $datafpath(dbf) \
 		     -o $datafpath(info) \

@@ -65,6 +65,7 @@
  * Otherwise anyone of
  *
  *  -a => same as FOPVX (all) with the default names
+ *  -A => same as FOPX (excluding csv)
  *  -F => do dbf
  *  -O => do info
  *  -P => do shp
@@ -85,6 +86,7 @@ struct {
   char *opt_output_dir;	/* -d */
   char *opt_basename;   /* -n => default basename */
   int opt_all;          /* -a */
+  int opt_almostall;    /* -A */
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
@@ -109,7 +111,7 @@ struct {
   int level_min;	/* data filter values */
   int level_max;
 } g = {NULL, NULL, NULL,
-       0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0, 0, 0,
        NULL, NULL,
        0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL,
@@ -124,6 +126,9 @@ static void nids_decode_header(struct nids_header_st *nids_header);
 static void nids_decode_data(struct nids_data_st *nids_data);
 
 /* output functions */
+static char *nids_file_name(struct nids_header_st *nheader,
+			    char *opt_file,
+			    char *suffix);
 static void nids_csv_write(struct nids_data_st *nids_data);
 static void nids_shp_write(struct nids_data_st *nids_data);
 static void nids_dbf_write(struct nids_data_st *nids_data);
@@ -142,8 +147,8 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "abltCDFOPVXc:d:M:N:f:n:o:p:v:x:";
-  char *usage = "nbspdcnids [-a] [-b] [-C] [-D] [-FOPVX] [-l] [-t] "
+  char *optstr = "abltACDFOPVXc:d:M:N:f:n:o:p:v:x:";
+  char *usage = "nbspdcnids [-a] [-b] [-A] [-C] [-D] [-FOPVX] [-l] [-t] "
     "[-c count] [-d outputdir] [-M min_level] [-N min_level] "
     "[-f dbffile] [-o infofile] [-p shpfile] [-v csvfile] [-x shxfile] "
     "<file> | < file";
@@ -171,6 +176,14 @@ int main(int argc, char **argv){
       break;
     case 't':
       g.opt_timeonly = 1;
+      break;
+    case 'A':
+      ++g.opt_aFOPVX;
+      g.opt_dbf = 1;
+      g.opt_info = 1;
+      g.opt_shp = 1;
+      /* g.opt_csv = 1; */
+      g.opt_shx = 1;
       break;
     case 'C':
       ++opt_cC;
@@ -381,6 +394,12 @@ int process_file(void){
   nids_decode_data(&nids_data);
 
   /* Output data */
+
+  if(g.opt_output_dir != NULL){
+    if(chdir(g.opt_output_dir) != 0)
+      log_err(1, "Cannot chdir to %s", g.opt_output_dir);
+  }
+
   if(g.opt_csv != 0)
     nids_csv_write(&nids_data);
 
@@ -390,7 +409,7 @@ int process_file(void){
   if(g.opt_dbf != 0)
     nids_dbf_write(&nids_data);
 
-  if(g.opt_infofile != NULL)
+  if(g.opt_info != 0)
     nids_info_write(&nids_data);
 
   return(0);
@@ -432,8 +451,8 @@ static void nids_decode_header(struct nids_header_st *nheader){
   nheader->unixseconds = nheader->m_days * 24 * 3600 + nheader->m_seconds;
 
   (void)gmtime_r(&nheader->unixseconds, &tm);
-  nheader->year = tm.tm_year;
-  nheader->month = tm.tm_mon;
+  nheader->year = tm.tm_year + 1900;
+  nheader->month = tm.tm_mon + 1;
   nheader->day = tm.tm_mday;
   nheader->hour = tm.tm_hour;
   nheader->min = tm.tm_min;
@@ -573,6 +592,26 @@ static void nids_decode_data(struct nids_data_st *nd){
   }
 }
 
+static char *nids_file_name(struct nids_header_st *nheader,
+			   char *opt_file,
+			   char *suffix){
+  char *file;
+
+  if(opt_file != NULL)
+    file = opt_file;
+  else{
+    if(g.opt_basename != NULL)
+      file = dcnids_optional_name(g.opt_basename, suffix);
+    else
+      file = dcnids_default_name(nheader, suffix);
+
+    if(file == NULL)
+      log_err(1, "Cannot create nids_file_name()");
+  }
+
+  return(file);
+}
+
 static void nids_csv_write(struct nids_data_st *nd){
   /*
    * Output the polygon data.
@@ -581,22 +620,14 @@ static void nids_csv_write(struct nids_data_st *nd){
   FILE *fp;
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
 
-  if(g.opt_csvfile != NULL)
-    csvfile = g.opt_csvfile;
-  else{
-    if(g.opt_basename != NULL)
-      csvfile = dcnids_optional_name(g.opt_basename, DCNIDS_CSVEXT);
-    else
-      csvfile = dcnids_default_name(&nd->nids_header, DCNIDS_CSVEXT);
+  csvfile = nids_file_name(&nd->nids_header, g.opt_csvfile, DCNIDS_CSVEXT);
+  if(csvfile == NULL)
+    return;
 
-    if(csvfile == NULL)
-      log_err(1, "dcnids_default_name()");
-  }
-
-  if(strcmp(g.opt_csvfile, "-") == 0)
+  if(strcmp(csvfile, "-") == 0)
     fp = stdout;
   else
-    fp = fopen(g.opt_csvfile, "w");
+    fp = fopen(csvfile, "w");
 
   if(dcnids_csv_write(fp, pm) != 0)
     log_errx(1, "Cannot write to csv file.");
@@ -627,35 +658,19 @@ static void nids_shp_write(struct nids_data_st *nd){
   int shp_fd, shx_fd;
   int status;
 
-  if(g.opt_shpfile != NULL)
-    shpfile = g.opt_shpfile;
-  else{
-    if(g.opt_basename != NULL)
-      shpfile = dcnids_optional_name(g.opt_basename, DCNIDS_SHPEXT);
-    else
-      shpfile = dcnids_default_name(&nd->nids_header, DCNIDS_SHPEXT);
+  shpfile = nids_file_name(&nd->nids_header, g.opt_shpfile, DCNIDS_SHPEXT);
+  if(shpfile == NULL)
+    return;
 
-    if(shpfile == NULL)
-      log_err(1, "dcnids_default_name()");
-  }
-    
-  if(g.opt_shxfile != NULL)
-    shxfile = g.opt_shxfile;
-  else{
-    if(g.opt_basename != NULL)
-      shxfile = dcnids_optional_name(g.opt_basename, DCNIDS_SHXEXT);
-    else
-      shxfile = dcnids_default_name(&nd->nids_header, DCNIDS_SHXEXT);
+  shxfile = nids_file_name(&nd->nids_header, g.opt_shxfile, DCNIDS_SHXEXT);
+  if(shxfile == NULL)
+    return;
 
-    if(shxfile == NULL)
-      log_err(1, "dcnids_default_name()");
-  }
-
-  shp_fd = open(g.opt_shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+  shp_fd = open(shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
   if(shp_fd == -1)
     log_err(1, "Cannot open shp file.");
 
-  shx_fd = open(g.opt_shxfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+  shx_fd = open(shxfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
   if(shx_fd == -1){
     close(shp_fd);
     log_err(1, "Cannot open shx file.");
@@ -675,23 +690,15 @@ static void nids_dbf_write(struct nids_data_st *nd){
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
   int status;
 
-  if(g.opt_dbffile != NULL)
-    dbffile = g.opt_dbffile;
-  else{
-    if(g.opt_basename != NULL)
-      dbffile = dcnids_optional_name(g.opt_basename, DCNIDS_DBFEXT);
-    else
-      dbffile = dcnids_default_name(&nd->nids_header, DCNIDS_DBFEXT);
-
-    if(dbffile == NULL)
-      log_err(1, "dcnids_default_name()");
-  }
+  dbffile = nids_file_name(&nd->nids_header, g.opt_dbffile, DCNIDS_DBFEXT);
+  if(dbffile == NULL)
+    return;
 
   /*
-  status = dcnids_dbf_write(g.opt_dbffile,
+  status = dcnids_dbf_write(dbffile,
 			    NIDS_DBF_CODENAME, NIDS_DBF_LEVELNAME, pm);
   */
-  status = dcnids_dbf_write(g.opt_dbffile, pm);
+  status = dcnids_dbf_write(dbffile, pm);
 
   if(status != 0)
     log_errx(1, "Error writing dbf file: %d", status);
@@ -703,17 +710,9 @@ static void nids_info_write(struct nids_data_st *nd){
   FILE *f;
   int n;
 
-  if(g.opt_infofile != NULL)
-    infofile = g.opt_infofile;
-  else{
-    if(g.opt_basename != NULL)
-      infofile = dcnids_optional_name(g.opt_basename, DCNIDS_INFOEXT);
-    else
-      infofile = dcnids_default_name(&nd->nids_header, DCNIDS_INFOEXT);
-
-    if(infofile == NULL)
-      log_err(1, "dcnids_default_name()");
-  }
+  infofile = nids_file_name(&nd->nids_header, g.opt_infofile, DCNIDS_INFOEXT);
+  if(infofile == NULL)
+    return;
 
   f = fopen(infofile, "w");
   if(f == NULL)
