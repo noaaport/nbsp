@@ -9,10 +9,10 @@ DCSOURCES = dcgini_util.c dcgini_pdb.c dcgini_name.c dcgini_misc.c
 DCHEADERS = dcgini_util.h dcgini_pdb.h dcgini_name.h dcgini_misc.h
 DCOBJECTS = dcgini_util.o dcgini_pdb.o dcgini_name.o dcgini_misc.o
 
-SHAREDSOURCES = err.c io.c util.c unz.c
+SHAREDSOURCES = err.c io.c util.c unz.c misc.c
 SHAREDHEADERS = ../common.h \
-	../config.h ../const.h ../io.h ../err.h ../util.h ../unz.h
-SHAREDOBJECTS = err.o io.o util.o unz.o
+	../config.h ../const.h ../err.h ../io.h ../misc.h ../util.h ../unz.h
+SHAREDOBJECTS = err.o io.o misc.o util.o unz.o
 
 HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
@@ -48,6 +48,9 @@ err.c: ../err.c
 
 io.c: ../io.c
 	cp ../io.c .
+
+misc.c: ../misc.c
+	cp ../misc.c .
 
 util.c: ../util.c
 	cp ../util.c .

@@ -5,12 +5,12 @@
 #
 # $Id$
 #
-DCSOURCES = dcnids_extract.c dcnids_transform.c \
+DCSOURCES = dcnids_extract.c dcnids_name.c dcnids_transform.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c dcnids_bunz.c \
 	dcnids_decode_radials_af1f.c dcnids_decode_digital_radials_16.c \
 	dcnids.c dbfread.c dbfwrite.c
-DCHEADERS = dcnids.h dcnids_shp.h
-DCOBJECTS = dcnids_extract.o dcnids_transform.o \
+DCHEADERS = dcnids.h dcnids_header.h dcnids_name.h dcnids_shp.h
+DCOBJECTS = dcnids_extract.o dcnids_name.o dcnids_transform.o \
 	dcnids_decode_radials_af1f.o dcnids_decode_digital_radials_16.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o dcnids_bunz.o
 

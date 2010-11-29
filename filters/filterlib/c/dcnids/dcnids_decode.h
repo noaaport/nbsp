@@ -8,7 +8,8 @@
 #ifndef DCNIDS_DECODE_H
 #define DCNIDS_DECODE_H
 
-#define NIDS_HEADER_SIZE	120	/* message and pdb */
+#include "dcnids_header.h"
+
 #define NIDS_DBF_CODENAME	"code"  /* parameter name in dbf file */
 #define NIDS_DBF_LEVELNAME	"level" /* parameter name in dbf file */
 
@@ -45,30 +46,6 @@
  * radial packet header => 14
  */
 #define NIDS_PACKET_RADIALS_START_RUNS		30
-
-struct nids_header_st {
-  unsigned char header[NIDS_HEADER_SIZE];
-  int m_code;
-  int m_days;
-  unsigned int m_seconds;
-  unsigned int m_msglength;	/* file length without header or trailer */
-  int m_source;                 /* unused */
-  int m_destination;            /* unused */
-  int m_numblocks;              /* unused */
-  int pdb_lat;
-  int pdb_lon;
-  int pdb_height;
-  int pdb_code;
-  int pdb_mode;
-  int pdb_version;
-  unsigned int pdb_symbol_block_offset;
-  unsigned int pdb_graphic_block_offset;
-  unsigned int pdb_tabular_block_offset;
-  /* derived values */
-  unsigned int unixseconds;
-  double lat;
-  double lon;
-};
 
 struct nids_product_symbol_block_st {
   int blockid;		/* should be 1 */

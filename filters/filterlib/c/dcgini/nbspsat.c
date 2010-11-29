@@ -505,18 +505,13 @@ static void output(char *fname,
 		   struct nesdis_pdb *npdb,
 		   int option_extended_info){
 
-  char time[DCGINI_TIME_STR_SIZE + 1];
-
-  sprintf(time, "%d%02d%02d_%02d%02d",
-	    npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
-
-  fprintf(stdout, "%d %d %d %d %d %s %s",
+  fprintf(stdout, "%d %d %d %d %d " DCGINI_DEFAULT_TIME_FMT " %s",
 	  npdb->source, 
 	  npdb->creating_entity, 
 	  npdb->sector, 
 	  npdb->channel,
 	  npdb->res,
-	  time,
+	  npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min,
 	  fname);
 
   if(option_extended_info == 0){

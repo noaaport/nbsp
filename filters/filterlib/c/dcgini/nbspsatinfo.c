@@ -149,25 +149,13 @@ int write_file_info(char *in_file){
 
 void output(struct nesdis_pdb *npdb, int opt_extended_info){
 
-  struct tm tm;
-  time_t time;
-
-  tm.tm_sec = npdb->secs;
-  tm.tm_min = npdb->min;
-  tm.tm_hour = npdb->hour;
-  tm.tm_mday = npdb->day;
-  tm.tm_mon = npdb->month - 1;
-  tm.tm_year = npdb->year - 1900;
-
-  time = timegm(&tm);
-
-  fprintf(stdout, "%d %d %d %d %d " "%" PRIuMAX, 
-	  npdb->source, 
+  fprintf(stdout, "%d %d %d %d %d " "%" PRIuMAX,
+	  npdb->source,
 	  npdb->creating_entity, 
 	  npdb->sector, 
 	  npdb->channel,
 	  npdb->res,
-	  (uintmax_t)time);
+	  (uintmax_t)npdb->unixseconds);
 
   if(opt_extended_info == 0){
     fprintf(stdout, "\n");

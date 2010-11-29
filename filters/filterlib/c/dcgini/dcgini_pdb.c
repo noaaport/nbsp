@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 #include <zlib.h>
 #include "unz.h"
 #include "dcgini_util.h"
@@ -121,6 +122,12 @@ void fill_nesdis_pdb(struct nesdis_pdb *npdb){
 
   unsigned char *p;
   int n;
+  struct tm tm;
+
+  for(n = 0; n < NESDIS_WMOID_SIZE; ++n)
+    npdb->wmoid[n] = tolower(npdb->buffer[n]);
+
+  npdb->wmoid[NESDIS_WMOID_SIZE] = '\0';
 
   p = (unsigned char*)npdb->buffer;
   p += NESDIS_WMO_HEADER_SIZE;
@@ -191,14 +198,17 @@ void fill_nesdis_pdb(struct nesdis_pdb *npdb){
   npdb->scan_mode = (int)p[37];
   */
 
-  for(n = 0; n < NESDIS_WMOID_SIZE; ++n)
-    npdb->wmoid[n] = tolower(npdb->buffer[n]);
-
-  npdb->wmoid[NESDIS_WMOID_SIZE] = '\0';
-
   /*
    * derived
    */
+  tm.tm_sec = npdb->secs;
+  tm.tm_min = npdb->min;
+  tm.tm_hour = npdb->hour;
+  tm.tm_mday = npdb->day;
+  tm.tm_mon = npdb->month - 1;
+  tm.tm_year = npdb->year - 1900;
+  npdb->unixseconds = timegm(&tm);
+
   npdb->dx_meters = npdb->dx_meters/10.0;
   npdb->dy_meters = npdb->dy_meters/10.0;
 

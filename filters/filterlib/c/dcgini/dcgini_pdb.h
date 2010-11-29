@@ -8,6 +8,7 @@
 #ifndef DCGINI_PDB_H
 #define DCGINI_PDB_H
 
+#include <time.h>
 #include "const.h"
 
 #define NESDIS_WMO_HEADER_SIZE  CTRLHDR_WMO_SIZE	/* common.h */
@@ -51,6 +52,7 @@ struct nesdis_pdb {
   /*
    * derived
    */
+  time_t unixseconds;
   double dx_meters;
   double dy_meters;
   double lat1_deg;

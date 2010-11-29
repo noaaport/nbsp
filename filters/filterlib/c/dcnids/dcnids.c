@@ -18,6 +18,7 @@
 #include "util.h"
 #include "dcnids.h"
 #include "dcnids_decode.h"
+#include "dcnids_name.h"
 
 /*
  * Usage: nbspradinfo [-c <count> | -C] [output options] <file> | < <file>
@@ -63,39 +64,56 @@
  *
  * Otherwise anyone of
  *
- *  -v <csv file>
- *  -p <shp file>
- *  -x <shx file>
+ *  -a => same as FOPVX (all) with the default names
+ *  -F => do dbf
+ *  -O => do info
+ *  -P => do shp
+ *  -V => do csv
+ *  -X => do shx
  *  -f <dbf file>
- *  -o <info file> 
+ *  -n => default base name for files
+ *  -o <info file>
+ *  -p <shp file>
+ *  -v <csv file>
+ *  -x <shx file>
  *
  * will write the corresponding data file.
  */
 
 struct {
+  char *opt_inputfile;
+  char *opt_output_dir;	/* -d */
+  char *opt_basename;   /* -n => default basename */
+  int opt_all;          /* -a */
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
+  int opt_filter;	/* -D => apply data filtering options */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
-  int opt_filter;	/* -F => apply data filtering options */
-  char *opt_levelmin;	/* -m => filter "level" min value */
-  char *opt_levelmax;	/* -n => filter "level" max value */
+  char *opt_levelmin;	/* -M => filter "level" min value */
+  char *opt_levelmax;	/* -N => filter "level" max value */
+  int opt_dbf;		/* -F */
+  int opt_info;		/* -O */
+  int opt_shp;		/* -P */
+  int opt_shx;		/* -X */
+  int opt_csv;		/* -V */
   char *opt_dbffile;	/* -f => write dbf file */
   char *opt_infofile;   /* -o => write info file */
   char *opt_shpfile;	/* -p => write shp file */
   char *opt_csvfile;	/* -v => write csv file */
   char *opt_shxfile;	/* -x => write shx file */
-  char *opt_inputfile;
   /* variables */
-  int opt_fopvx;	/* set if anyone of fpvx is given */
+  int opt_aFOPVX;	/* set if anyone of FOPVX is given */
   int fd;
   int level_min;	/* data filter values */
   int level_max;
-} g = {0, 0, 0, 0, 0, 0,
-       NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-       0, -1,
-       0, 0};
+} g = {NULL, NULL, NULL,
+       0, 0, 0, 0, 0, 0, 0,
+       NULL, NULL,
+       0, 0, 0, 0, 0,
+       NULL, NULL, NULL, NULL, NULL,
+       0, -1, 0, 0};
 
 /* general functions */
 static int process_file(void);
@@ -124,29 +142,63 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bCFltc:f:m:n:o:p:v:x:";
-  char *usage = "nbspdcnids [-b] [-C] [-F] [-l] [-t] [-c count] [-f dbffile] "
-    "[-m min] [-n max] [-o infofile] [-p shpfile] [-v csvfile] "
-    "[-x shxfile] <file> | < file";
+  char *optstr = "abltCDFOPVXc:d:M:N:f:n:o:p:v:x:";
+  char *usage = "nbspdcnids [-a] [-b] [-C] [-D] [-FOPVX] [-l] [-t] "
+    "[-c count] [-d outputdir] [-M min_level] [-N min_level] "
+    "[-f dbffile] [-o infofile] [-p shpfile] [-v csvfile] [-x shxfile] "
+    "<file> | < file";
   int status = 0;
   int c;
-  int opt_px = 0;	/* -p and -x must be given together */
   int opt_cC = 0;	/* c and C together is a conflict */
 
   set_progname(basename(argv[0]));
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
+    case 'a':
+      ++g.opt_aFOPVX;
+      g.opt_dbf = 1;
+      g.opt_info = 1;
+      g.opt_shp = 1;
+      g.opt_csv = 1;
+      g.opt_shx = 1;
+      break;
     case 'b':
       g.opt_background = 1;
       break;
-    case 'F':
-      g.opt_filter = 1;
+    case 'l':
+      g.opt_lengthonly = 1;
+      break;
+    case 't':
+      g.opt_timeonly = 1;
       break;
     case 'C':
       ++opt_cC;
       g.opt_skipwmoawips = 1;  /* not used further */
       g.opt_skipcount = WMOAWIPS_HEADER_SIZE;
+      break;
+    case 'D':
+      g.opt_filter = 1;
+      break;
+    case 'F':
+      ++g.opt_aFOPVX;
+      g.opt_dbf = 1;
+      break;
+    case 'O':
+      ++g.opt_aFOPVX;
+      g.opt_info = 1;
+      break;
+    case 'P':
+      ++g.opt_aFOPVX;
+      g.opt_shp = 1;
+      break;
+    case 'V':
+      ++g.opt_aFOPVX;
+      g.opt_csv = 1;
+      break;
+    case 'X':
+      ++g.opt_aFOPVX;
+      g.opt_shx = 1;
       break;
     case 'c':
       ++opt_cC;
@@ -155,44 +207,47 @@ int main(int argc, char **argv){
 	log_errx(1, "Invalid argument to [-c] option.");
       }
       break;
-    case 'f':
-      g.opt_dbffile = optarg;
-      g.opt_fopvx = 1;
+    case 'd':
+      g.opt_output_dir = optarg;
       break;
-    case 'l':
-      g.opt_lengthonly = 1;
+    case 'n':
+      g.opt_basename = optarg;
       break;
-    case 'm':
+    case 'M':
       g.opt_levelmin = optarg;
       if(sscanf(optarg, "%d", &g.level_min) != 1){
-	log_errx(1, "Invalid argument to -m option: %s", optarg);
+	log_errx(1, "Invalid argument to -M option: %s", optarg);
       }
-    case 'n':
+    case 'N':
       g.opt_levelmax = optarg;
       if(sscanf(optarg, "%d", &g.level_max) != 1){
-	log_errx(1, "Invalid argument to -n option: %s", optarg);
+	log_errx(1, "Invalid argument to -N option: %s", optarg);
       }
       break;
+    case 'f':
+      g.opt_dbf = 1;
+      ++g.opt_aFOPVX;
+      g.opt_dbffile = optarg;
+      break;
     case 'o':
+      g.opt_info = 1;
+      ++g.opt_aFOPVX;
       g.opt_infofile = optarg;
-      g.opt_fopvx = 1;
       break;
     case 'p':
+      g.opt_shp = 1;
+      ++g.opt_aFOPVX;
       g.opt_shpfile = optarg;
-      g.opt_fopvx = 1;
-      ++opt_px;
-      break;
-    case 't':
-      g.opt_timeonly = 1;
       break;
     case 'v':
+      g.opt_csv = 1;
+      ++g.opt_aFOPVX;
       g.opt_csvfile = optarg;
-      g.opt_fopvx = 1;
       break;
     case 'x':
+      g.opt_shx = 1;
+      ++g.opt_aFOPVX;
       g.opt_shxfile = optarg;
-      g.opt_fopvx = 1;
-      ++opt_px;
       break;
     default:
       log_info(usage);
@@ -201,11 +256,8 @@ int main(int argc, char **argv){
     }
   }
 
-  if((g.opt_fopvx != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
-    log_errx(1, "Invalid combination of options: lt and fopvx");
-
-  if((opt_px != 0) && (opt_px != 2))
-    log_errx(1, "Invalid combination of options p and x.");
+  if((g.opt_aFOPVX != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
+    log_errx(1, "Invalid combination of options: lt and aFOPVX");
 
   if(opt_cC >= 2)
     log_errx(1, "Invalid combination of options: c and C.");
@@ -276,24 +328,24 @@ int process_file(void){
 #endif
 
   if((g.opt_timeonly != 0) && (g.opt_lengthonly != 0))
-    fprintf(stdout, "%u %u",
-	    nids_data.nids_header.unixseconds,
+    fprintf(stdout, "%" PRIuMAX " %u",
+	    (uintmax_t)nids_data.nids_header.unixseconds,
 	    nids_data.nids_header.m_msglength);
   else if(g.opt_timeonly != 0)
-    fprintf(stdout, "%u", nids_data.nids_header.unixseconds);
+    fprintf(stdout, "%" PRIuMAX, (uintmax_t)nids_data.nids_header.unixseconds);
   else if(g.opt_lengthonly != 0)
     fprintf(stdout, "%u", nids_data.nids_header.m_msglength);
-  else if(g.opt_fopvx == 0){
-    fprintf(stdout, "%.3f %.3f %d %u %d %d",
+  else if(g.opt_aFOPVX == 0){
+    fprintf(stdout, "%.3f %.3f %d " "%" PRIuMAX " %d %d",
 	    nids_data.nids_header.lat,
 	    nids_data.nids_header.lon,
 	    nids_data.nids_header.pdb_height,
-	    nids_data.nids_header.unixseconds,
+	    (uintmax_t)nids_data.nids_header.unixseconds,
 	    nids_data.nids_header.pdb_mode,
 	    nids_data.nids_header.pdb_code);
   }
 
-  if(g.opt_fopvx == 0){
+  if(g.opt_aFOPVX == 0){
     /*
      * If reading from stdin, then consume the input to avoid generating
      * a pipe error in the tcl scripts.
@@ -329,13 +381,13 @@ int process_file(void){
   nids_decode_data(&nids_data);
 
   /* Output data */
-  if(g.opt_csvfile != NULL)
+  if(g.opt_csv != 0)
     nids_csv_write(&nids_data);
 
-  if((g.opt_shpfile != NULL) && (g.opt_shxfile != NULL))
+  if((g.opt_shp != 0) || (g.opt_shx != 0))
     nids_shp_write(&nids_data);
 
-  if(g.opt_dbffile != NULL)
+  if(g.opt_dbf != 0)
     nids_dbf_write(&nids_data);
 
   if(g.opt_infofile != NULL)
@@ -350,6 +402,7 @@ int process_file(void){
 static void nids_decode_header(struct nids_header_st *nheader){
 
   unsigned char *b = nheader->header;
+  struct tm tm;
 
   nheader->m_code = extract_uint16(b, 1);
   nheader->m_days = extract_uint16(b, 2) - 1;
@@ -377,6 +430,14 @@ static void nids_decode_header(struct nids_header_st *nheader){
   nheader->lat = ((double)nheader->pdb_lat)/1000.0;
   nheader->lon = ((double)nheader->pdb_lon)/1000.0;
   nheader->unixseconds = nheader->m_days * 24 * 3600 + nheader->m_seconds;
+
+  (void)gmtime_r(&nheader->unixseconds, &tm);
+  nheader->year = tm.tm_year;
+  nheader->month = tm.tm_mon;
+  nheader->day = tm.tm_mday;
+  nheader->hour = tm.tm_hour;
+  nheader->min = tm.tm_min;
+  nheader->sec = tm.tm_sec;
 }
 
 static void nids_decode_data(struct nids_data_st *nd){
@@ -516,8 +577,21 @@ static void nids_csv_write(struct nids_data_st *nd){
   /*
    * Output the polygon data.
    */
+  char *csvfile;
   FILE *fp;
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
+
+  if(g.opt_csvfile != NULL)
+    csvfile = g.opt_csvfile;
+  else{
+    if(g.opt_basename != NULL)
+      csvfile = dcnids_optional_name(g.opt_basename, DCNIDS_CSVEXT);
+    else
+      csvfile = dcnids_default_name(&nd->nids_header, DCNIDS_CSVEXT);
+
+    if(csvfile == NULL)
+      log_err(1, "dcnids_default_name()");
+  }
 
   if(strcmp(g.opt_csvfile, "-") == 0)
     fp = stdout;
@@ -549,7 +623,33 @@ static void test_print(struct nids_data_st *nd){
 static void nids_shp_write(struct nids_data_st *nd){
 
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
+  char *shpfile, *shxfile;
   int shp_fd, shx_fd;
+  int status;
+
+  if(g.opt_shpfile != NULL)
+    shpfile = g.opt_shpfile;
+  else{
+    if(g.opt_basename != NULL)
+      shpfile = dcnids_optional_name(g.opt_basename, DCNIDS_SHPEXT);
+    else
+      shpfile = dcnids_default_name(&nd->nids_header, DCNIDS_SHPEXT);
+
+    if(shpfile == NULL)
+      log_err(1, "dcnids_default_name()");
+  }
+    
+  if(g.opt_shxfile != NULL)
+    shxfile = g.opt_shxfile;
+  else{
+    if(g.opt_basename != NULL)
+      shxfile = dcnids_optional_name(g.opt_basename, DCNIDS_SHXEXT);
+    else
+      shxfile = dcnids_default_name(&nd->nids_header, DCNIDS_SHXEXT);
+
+    if(shxfile == NULL)
+      log_err(1, "dcnids_default_name()");
+  }
 
   shp_fd = open(g.opt_shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
   if(shp_fd == -1)
@@ -561,20 +661,31 @@ static void nids_shp_write(struct nids_data_st *nd){
     log_err(1, "Cannot open shx file.");
   }
 
-  if(dcnids_shp_write(shp_fd, shx_fd, pm) != 0){
-    close(shp_fd);
-    close(shx_fd);
-    log_err(1, "Could not write shp or shx file.");
-  }
+  status = dcnids_shp_write(shp_fd, shx_fd, pm);
+  (void)close(shp_fd);
+  (void)close(shx_fd);
 
-  close(shp_fd);
-  close(shx_fd);
+  if(status != 0)
+    log_err(1, "Could not write shp or shx file.");
 }
 
 static void nids_dbf_write(struct nids_data_st *nd){
 
+  char *dbffile;
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
   int status;
+
+  if(g.opt_dbffile != NULL)
+    dbffile = g.opt_dbffile;
+  else{
+    if(g.opt_basename != NULL)
+      dbffile = dcnids_optional_name(g.opt_basename, DCNIDS_DBFEXT);
+    else
+      dbffile = dcnids_default_name(&nd->nids_header, DCNIDS_DBFEXT);
+
+    if(dbffile == NULL)
+      log_err(1, "dcnids_default_name()");
+  }
 
   /*
   status = dcnids_dbf_write(g.opt_dbffile,
@@ -588,14 +699,28 @@ static void nids_dbf_write(struct nids_data_st *nd){
 
 static void nids_info_write(struct nids_data_st *nd){
 
+  char *infofile;
   FILE *f;
   int n;
 
-  f = fopen(g.opt_infofile, "w");
+  if(g.opt_infofile != NULL)
+    infofile = g.opt_infofile;
+  else{
+    if(g.opt_basename != NULL)
+      infofile = dcnids_optional_name(g.opt_basename, DCNIDS_INFOEXT);
+    else
+      infofile = dcnids_default_name(&nd->nids_header, DCNIDS_INFOEXT);
+
+    if(infofile == NULL)
+      log_err(1, "dcnids_default_name()");
+  }
+
+  f = fopen(infofile, "w");
   if(f == NULL)
     log_err(1, "Error writing info file.");
 
-  n = fprintf(f, "radseconds: %u\n", nd->nids_header.unixseconds);
+  n = fprintf(f, "radseconds: %" PRIuMAX "\n",
+	      (uintmax_t)nd->nids_header.unixseconds);
   if(n > 0)
     n = fprintf(f, "radmode: %d\n", nd->nids_header.pdb_mode);
 

@@ -18,53 +18,95 @@
 #include "io.h"
 #include "dcgini_pdb.h"
 #include "dcgini_util.h"
+#include "dcgini_name.h"
 #include "dcgini_shp.h"
 
 /*
  * Usage: nbspginishp [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must 
- * be the uncompressed gini data. Only when it is invoked with [-i]
- * to just extract the relevant info, it can take either the compressed
- * or uncompresed file as input. The output options are:
+ * be the uncompressed gini file. The output options are:
  *
- *  -a => do them all with the default names
- *  -v <csv file>
- *  -p <shp file>
- *  -x <shx file>
+ *  -a => same as FOPVX (all) with the default names
+ *  -F => do dbf
+ *  -O => do info
+ *  -P => do shp
+ *  -V => do csv
+ *  -X => do shx
  *  -f <dbf file>
+ *  -n => default base name for files
  *  -o <info file>
+ *  -p <shp file>
+ *  -v <csv file>
+ *  -x <shx file>
+ *
+ * The default action is the same as specifying "-FOPX" (excluding csv).
  */
 
 struct {
+  char *opt_inputfile;
   char *opt_output_dir;		/* -d */
-  char *opt_shpfile;
-  char *opt_shxfile;
-  char *opt_dbffile;
-  char *opt_csvfile;
-  char *opt_infofile;
-  int opt_background;		/* -b */
+  char *opt_basename;           /* -n */
   int opt_all;			/* -a */
+  int opt_background;		/* -b */
   int opt_silent;		/* -s */
-} g = {NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0};
+  char *opt_dbffile;		/* -f */
+  char *opt_infofile;		/* -o */
+  char *opt_shpfile;		/* -p */
+  char *opt_shxfile;		/* -x */
+  char *opt_csvfile;		/* -v */
+  int opt_dbf;			/* -F */
+  int opt_info;			/* -O */
+  int opt_shp;			/* -P */
+  int opt_shx;			/* -X */
+  int opt_csv;			/* -V */
+  /* variables */
+  int fd;
+} g = {NULL, NULL, NULL,
+       0, 0, 0,
+       NULL, NULL, NULL, NULL, NULL,
+       0, 0, 0, 0, 0,
+       -1};
 
-static int process_file(char *in_file);
+static int process_file(void);
+static void cleanup(void);
+
+/* decoding functions */
+static void dcgini_decode_data(struct dcgini_st *dcg);
+
+/* output functions */
+static void dcgini_csv_write(struct dcgini_st *dcg);
+static void dcgini_shp_write(struct dcgini_st *dcg);
+static void dcgini_dbf_write(struct dcgini_st *dcg);
+static void dcgini_info_write(struct dcgini_st *dcg);
+
+static void cleanup(void){
+
+  if((g.fd != -1) && (g.opt_inputfile != NULL))
+    (void)close(g.fd);
+}
 
 int main(int argc, char **argv){
 
+  char *optstr = "absFOPVXd:f:n:o:p:v:x:";
+  char *usage = "nbspginishp [-a] [-b] [-s] [-FOPVX] [-d outputdir]"
+    " [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]"
+    " [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;
   int c;
-  char *in_file;
-  char *optstr = "absd:f:p:x:v:";
-  char *usage = "nbspginishp [-a] [-b] [-s] [-d outputdir]"
-    " [-f <dbfname>] [-p <shpname>] [-x <shxmname>] [-v <csvname>] <file>";
+  int opt_aFOPVX = 0;  /* set if any file output option is specified */
 
   set_progname(basename(argv[0]));
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
     case 'a':
-      g.opt_all = 1;
+      ++opt_aFOPVX;
+      g.opt_dbf = 1;
+      g.opt_info = 1;
+      g.opt_shp = 1;
+      g.opt_csv = 1;
+      g.opt_shx = 1;
       break;
     case 'b':
       g.opt_background = 1;
@@ -72,20 +114,56 @@ int main(int argc, char **argv){
     case 's':
       g.opt_silent = 1;
       break;
+    case 'F':
+      ++opt_aFOPVX;
+      g.opt_dbf = 1;
+      break;
+    case 'O':
+      ++opt_aFOPVX;
+      g.opt_info = 1;
+      break;
+    case 'P':
+      ++opt_aFOPVX;
+      g.opt_shp = 1;
+      break;
+    case 'V':
+      ++opt_aFOPVX;
+      g.opt_csv = 1;
+      break;
+    case 'X':
+      ++opt_aFOPVX;
+      g.opt_shx = 1;
+      break;
     case 'd':
       g.opt_output_dir = optarg;
       break;
+    case 'n':
+      g.opt_basename = optarg;
+      break;
     case 'f':
+      g.opt_dbf = 1;
+      ++opt_aFOPVX;
       g.opt_dbffile = optarg;
       break;
+    case 'o':
+      g.opt_info = 1;
+      ++opt_aFOPVX;
+      g.opt_infofile = optarg;
+      break;
     case 'p':
+      g.opt_shp = 1;
+      ++opt_aFOPVX;
       g.opt_shpfile = optarg;
       break;
-    case 'x':
-      g.opt_shxfile = optarg;
-      break;
     case 'v':
+      g.opt_csv = 1;
+      ++opt_aFOPVX;
       g.opt_csvfile = optarg;
+      break;
+    case 'x':
+      g.opt_shx = 1;
+      ++opt_aFOPVX;
+      g.opt_shxfile = optarg;
       break;
     default:
       log_info(usage);
@@ -94,23 +172,30 @@ int main(int argc, char **argv){
     }
   }
 
-  if(optind != argc - 1)
-    log_errx(1, "Needs one argument.");
-
-  in_file = argv[optind];
+  /* The default is to do everything except csv */
+  if(opt_aFOPVX == 0){
+      g.opt_dbf = 1;
+      g.opt_info = 1;
+      g.opt_shp = 1;
+      /* g.opt_csv = 1; */
+      g.opt_shx = 1;
+  }
 
   if(g.opt_background == 1)
     set_usesyslog();
 
-  if(g.opt_background == 1)
-    set_usesyslog();
+  if(optind < argc - 1)
+    log_errx(1, "Too many arguments.");
+  else if(optind == argc -1)
+    g.opt_inputfile = argv[optind++];
 
-  status = process_file(in_file);
+  atexit(cleanup);
+  status = process_file();
 
   return(status != 0 ? 1 : 0);
 }
 
-static int process_file(char *in_file){
+static int process_file(void){
 
   struct dcgini_st dcg;
   int status = 0;
@@ -120,18 +205,24 @@ static int process_file(char *in_file){
   /* Initialize */
   dcg.pdb.buffer_size = NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE;
 
-  fd = open(in_file, O_RDONLY);
-  if(fd == -1)
-    log_err(1, "Could not open %s", in_file);
+  if(g.opt_inputfile == NULL)
+    fd = fileno(stdin);
+  else{
+    fd = open(g.opt_inputfile, O_RDONLY);
+    if(fd == -1)
+      log_err_open(g.opt_inputfile);
+    else
+      g.fd = fd;
+  }
 
   status = read_nesdis_pdb(fd, &dcg.pdb);
 
   if(status == -1)
-    log_err(1, "Error from read_nesdis_pdb(): %s", in_file);
+    log_err(1, "Error from read_nesdis_pdb()");
   else if(status == 1)
-    log_errx(1, "File too short: %s", in_file);
+    log_errx(1, "Error from read_nesdis_pdb(). File short.");
   else if(status == 2)
-    log_errx(1, "File has invalid wmo header: %s", in_file);
+    log_errx(1, "Error from read_nesdis_pdb(). File has invalid wmo header");
   
   /*
    * Read the data once and for all
@@ -143,11 +234,12 @@ static int process_file(char *in_file){
 
   n = read(fd, dcg.ginidata.data, dcg.ginidata.data_size);
   if(n == -1)
-    log_err(1, "Error reading from %s", in_file);
+    log_err(1, "Error reading from file");
   else if((size_t)n != dcg.ginidata.data_size)
-    log_errx(1, "File is corrupt (short): %s", in_file);
+    log_errx(1, "Error reading from file. File is corrupt (short)");
     
   close(fd);
+  g.fd = -1;
       
   if(g.opt_output_dir != NULL){
     status = chdir(g.opt_output_dir);
@@ -159,5 +251,120 @@ static int process_file(char *in_file){
   /* Construct output file names */
   /* Output */
 
+  dcgini_decode_data(&dcg);
+
+  if(g.opt_dbf != 0)
+    dcgini_dbf_write(&dcg);
+
+  if(g.opt_info != 0)
+    dcgini_info_write(&dcg);
+
+  if((g.opt_shp != 0) || (g.opt_shx != 0))
+    dcgini_shp_write(&dcg);
+
+  if(g.opt_csv != 0)
+    dcgini_csv_write(&dcg);
+  
   return(0);
+}
+
+/* decoding functions */
+static void dcgini_decode_data(struct dcgini_st *dcg){
+
+  ;
+}
+
+
+/* output functions */
+static void dcgini_csv_write(struct dcgini_st *dcg){
+
+  char *csvfile;
+
+  if(g.opt_csvfile != NULL)
+    csvfile = g.opt_csvfile;
+  else{
+    if(g.opt_basename != NULL)
+      csvfile = dcgini_optional_name(g.opt_basename, DCGINI_CSVEXT);
+    else
+      csvfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_CSVEXT);
+
+    if(csvfile == NULL)
+      log_err(1, "dcgini_default_name()");
+  }
+
+  fprintf(stdout, "%s\n", csvfile);
+}
+
+static void dcgini_shp_write(struct dcgini_st *dcg){
+
+  char *shpfile;
+  char *shxfile;
+
+  if(g.opt_shpfile != NULL)
+    shpfile = g.opt_shpfile;
+  else{
+    if(g.opt_basename != NULL)
+      shpfile = dcgini_optional_name(g.opt_basename, DCGINI_SHPEXT);
+    else
+      shpfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_SHPEXT);
+
+    if(shpfile == NULL)
+      log_err(1, "dcgini_default_name()");
+  }
+    
+  if(g.opt_shxfile != NULL)
+    shxfile = g.opt_shxfile;
+  else{
+    if(g.opt_basename != NULL)
+      shxfile = dcgini_optional_name(g.opt_basename, DCGINI_SHXEXT);
+    else
+      shxfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_SHXEXT);
+
+    if(shxfile == NULL)
+      log_err(1, "dcgini_default_name()");
+  }
+
+  if(g.opt_shp != 0)
+    fprintf(stdout, "%s\n", shpfile);
+
+  if(g.opt_shx != 0)
+    fprintf(stdout, "%s\n", shxfile);
+}
+
+static void dcgini_dbf_write(struct dcgini_st *dcg){
+
+  char *dbffile;
+
+  if(g.opt_dbffile != NULL)
+    dbffile = g.opt_dbffile;
+  else{
+    if(g.opt_basename != NULL)
+      dbffile = dcgini_optional_name(g.opt_basename, DCGINI_DBFEXT);
+    else
+      dbffile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_DBFEXT);
+
+    if(dbffile == NULL)
+      log_err(1, "dcgini_default_name()");
+  }
+
+  fprintf(stdout, "%s\n", dbffile);
+}
+
+static void dcgini_info_write(struct dcgini_st *dcg){
+
+  char *infofile;
+
+  if(g.opt_infofile != NULL)
+    infofile = g.opt_infofile;
+  else{
+    if(g.opt_basename != NULL)
+      infofile = dcgini_optional_name(g.opt_basename, DCGINI_INFOEXT);
+    else
+      infofile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_INFOEXT);
+
+    if(infofile == NULL)
+      log_err(1, "dcgini_default_name()");
+  }
+
+  fprintf(stdout, "%s\n", infofile);
 }

@@ -24,16 +24,21 @@ char *dcgini_default_name(struct nesdis_pdb *npdb,
   int fname_size;
   int n;
   
-  fname_size = DCGINI_BASENAME_STR_SIZE;
   if(prefix == NULL)
     prefix = npdb->wmoid;
 
-  fname_size += strlen(prefix);
-
   if(suffix != NULL)
-    fname_size += strlen(suffix);
+    n = snprintf(NULL, 0, DCGINI_DEFAULT_NAME_FMT "%s",
+		 prefix, 
+		 npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min,
+		 suffix);
+  else
+    n = snprintf(NULL, 0, DCGINI_DEFAULT_NAME_FMT,
+		 prefix, 
+		 npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
 
-  fname = malloc(fname_size + 1);	/* include the '\0' */
+  fname_size = n;
+  fname = malloc(n + 1);    /* includes '\0' */
   if(fname == NULL)
     return(NULL);
 
@@ -46,6 +51,35 @@ char *dcgini_default_name(struct nesdis_pdb *npdb,
     n = snprintf(fname, fname_size + 1, DCGINI_DEFAULT_NAME_FMT,
 		 prefix, 
 		 npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
+
+  assert(n == fname_size);
+
+  return(fname);
+}
+
+char *dcgini_optional_name(char *base, char *suffix){
+
+  char *fname;
+  int fname_size;
+  int n;
+
+  assert(base != NULL);
+  if(base == NULL)
+    return(NULL);
+
+  fname_size = strlen(base);
+
+  if(suffix != NULL)
+    fname_size += strlen(suffix);
+
+  fname = malloc(fname_size + 1);	/* include the '\0' */
+  if(fname == NULL)
+    return(NULL);
+
+  if(suffix != NULL)
+    n = snprintf(fname, fname_size + 1, "%s%s", base, suffix);
+  else
+    n = snprintf(fname, fname_size + 1, "%s", base);
 
   assert(n == fname_size);
 

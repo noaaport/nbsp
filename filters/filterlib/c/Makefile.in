@@ -9,9 +9,9 @@
 
 SOURCES = nbspfile.c nbspunz.c nbspz.c nbsppipe.c \
 	nbspgrib.c nbspgrib2.c nbspcat.c nbsprad2info.c \
-	err.c util.c unz.c mfile.c io.c
+	err.c util.c unz.c mfile.c io.c misc.c
 
-COMMONOBJECTS = err.o util.o unz.o io.o
+COMMONOBJECTS = err.o util.o unz.o io.o misc.o
 
 ALLOBJECTS = nbspfile.o nbspunz.o nbspz.o nbsppipe.o \
 	nbspgrib.o nbspgrib2.o nbspcat.o nbsprad2info.o \
@@ -20,7 +20,8 @@ ALLOBJECTS = nbspfile.o nbspunz.o nbspz.o nbsppipe.o \
 SHAREDHEADERS = common.h strsplit.h
 SHAREDSOURCES = strsplit.c
 SHAREDOBJECTS =	strsplit.o
-HEADERS = err.h util.h unz.h mfile.h const.h io.h config.h ${SHAREDHEADERS}
+HEADERS = err.h util.h unz.h mfile.h io.h misc.h \
+	const.h config.h ${SHAREDHEADERS}
 
 TARGET = nbspfile nbspsat nbspsatinfo nbspunz nbspz nbsppipe \
 	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspnidsshp nbsprad2info
