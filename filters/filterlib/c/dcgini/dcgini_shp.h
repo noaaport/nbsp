@@ -8,6 +8,7 @@
 #ifndef DCGINI_SHP_H
 #define DCGINI_SHP_H
 
+#include <inttypes.h>
 #include "dcgini_pdb.h"
 
 struct dcgini_point_st {
