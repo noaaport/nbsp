@@ -20,7 +20,7 @@
 #include "dcgini_name.h"
 
 /*
- * Usage:  nbspsatinfo [-i <fpath>] < <stdin>
+ * Usage:  nbspsatinfo [-e] <fpath> | < <stdin>
  *
  * If no file is given in the argument, then it reads from stdin. It
  * can take either the compressed or uncompresed file as input,
@@ -66,8 +66,8 @@ int main(int argc, char **argv){
 
   int status = 0;
   int c;
-  char *optstr = "behi:";
-  char *usage = "nbspsatinfo [-b] [-e] [-h] [-i file]";
+  char *optstr = "beh";
+  char *usage = "nbspsatinfo [-b] [-e] [-h] file";
 
   set_progname(basename(argv[0]));
 
@@ -79,9 +79,6 @@ int main(int argc, char **argv){
     case 'e':
       g.opt_extended_info = 1;
       break;      
-    case 'i':
-      g.opt_inputfile = optarg;
-      break;
     case 'h':
     default:
       log_info(usage);
@@ -92,6 +89,11 @@ int main(int argc, char **argv){
 
   if(g.opt_background == 1)
     set_usesyslog();
+
+  if(optind < argc - 1)
+    log_errx(1, "Too many arguments.");
+  else if(optind == argc -1)
+    g.opt_inputfile = argv[optind++];
 
   status = write_file_info(g.opt_inputfile);
 
