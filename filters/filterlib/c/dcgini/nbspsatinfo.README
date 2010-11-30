@@ -5,7 +5,7 @@
 Example usage:
 
 
-1)	nbspsatinfo -e -i ~/tigw01_20100810_1800.gini
+1)	nbspsatinfo -e ~/tigw01_20100810_1800.gini
 2)	nbspsat -e -i ~/tigw01_20100810_1800.gini
 
 Outputs:

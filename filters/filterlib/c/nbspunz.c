@@ -18,6 +18,7 @@
 #include "util.h"
 #include "err.h"
 #include "mfile.h"
+#include "misc.h"
 #include "const.h"
 
 #define MAX_FRAME_SIZE	MAX_FRDATA_SIZE

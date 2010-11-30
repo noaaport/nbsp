@@ -37,13 +37,6 @@ struct dcnids_shp_st {
   uint32_t shxsize;
 };
 
-/* extract */
-int extract_uint8(unsigned char *p, int halfwordid);
-int extract_uint16(unsigned char *p, int halfwordid);
-uint32_t extract_uint32(unsigned char *p, int halfwordid);
-int extract_int16(unsigned char *p, int halfwordid);
-int extract_int32(unsigned char *p, int halfwordid);
-
 /* transform */
 void dcnids_sine_cosine(double theta_deg,
 			double *sin_theta, double *cos_theta);

@@ -5,7 +5,8 @@
  *
  * $Id$
  */
-#include "dcnids.h"
+#include <inttypes.h>
+#include "dcnids_extract.h"
 
 /*
  * extraction functions

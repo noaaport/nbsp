@@ -16,56 +16,23 @@
 #include "const.h"
 #include "err.h"
 #include "util.h"
+#include "misc.h"
 #include "dcnids.h"
+#include "dcnids_extract.h"
 #include "dcnids_decode.h"
 #include "dcnids_name.h"
+#include "dcnids_header.h"
 
 /*
- * Usage: nbspradinfo [-c <count> | -C] [output options] <file> | < <file>
- *        nbspdcnids  [-c <count> | -C] [output options] <file> | < <file>
+ * nbspnidsshp  [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
  * nids header (i.e., the ccb and wmo headers must have been removed;
- * but see below).
+ * see the usage instructions in nbspradinfo.c).
  *
- * The typical usage is therefore
- *
- * nbspunz -c 54 ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo
- * nbspunz -c 54 n0rsjt_20091002_0007.nids | nbspradinfo
- *  
- * In the first case the data file is one from the spool directory;
- * in the second, the data file is from the digatmos/nexrad directory.
- *
- * If the data does not start with nids header, the [-c <count>] options
- * can be used to instruct the program to ignore the first <count> bytes.
- * So an alternative usage is
- *
- * nbspunz ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo -c 54
- *
- * or, if the files that have an uncompressed nids header
- *
- * nbspradinfo -c 54 tjsj_sdus52-n0qjua.152011_99050818
- * nbspradinfo -c 41 n0qjua_20101015_1936.nids
- *               (41 = 30 + gempak header [const.h])
- *
- * If the file does not have the gempak header (as the tmp file used
- * by the rstfilter.lib and the nids files saved by the gisfilter), then
- *
- * nbspradinfo -c 30 n0qvnx_20100221_0224.tmp
- * nbspradinfo -C n0qvnx_20100221_0224.tmp
- *
- * The default information printed is
- *
- *          nheader.pdb_lat, nheader.pdb_lon, nheader.pdb_height, seconds,
- *          nheader.pdb_mode, nheader.pdb_code
- *
- * If [-t] is given then only the "seconds" is printed, and if [-l] is given
- * then the m_msglength is also printed.
- *
- * Otherwise anyone of
+ * The output options are:
  *
  *  -a => same as FOPVX (all) with the default names
- *  -A => same as FOPX (excluding csv)
  *  -F => do dbf
  *  -O => do info
  *  -P => do shp
@@ -78,7 +45,7 @@
  *  -v <csv file>
  *  -x <shx file>
  *
- * will write the corresponding data file.
+ * The default action is the same as specifying "-FOPX" (excluding csv).
  */
 
 struct {
@@ -91,8 +58,6 @@ struct {
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
   int opt_filter;	/* -D => apply data filtering options */
-  int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
-  int opt_lengthonly;	/* -l => only extract and print the m_msglength */
   char *opt_levelmin;	/* -M => filter "level" min value */
   char *opt_levelmax;	/* -N => filter "level" max value */
   int opt_dbf;		/* -F */
@@ -111,7 +76,7 @@ struct {
   int level_min;	/* data filter values */
   int level_max;
 } g = {NULL, NULL, NULL,
-       0, 0, 0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0,
        NULL, NULL,
        0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL,
@@ -122,7 +87,6 @@ static int process_file(void);
 static void cleanup(void);
 
 /* decoding functions */
-static void nids_decode_header(struct nids_header_st *nids_header);
 static void nids_decode_data(struct nids_data_st *nids_data);
 
 /* output functions */
@@ -147,8 +111,8 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "abltACDFOPVXc:d:M:N:f:n:o:p:v:x:";
-  char *usage = "nbspdcnids [-a] [-b] [-A] [-C] [-D] [-FOPVX] [-l] [-t] "
+  char *optstr = "abACDFOPVXc:d:M:N:f:n:o:p:v:x:";
+  char *usage = "nbspnidsshp [-a] [-b] [-A] [-C] [-D] [-FOPVX] "
     "[-c count] [-d outputdir] [-M min_level] [-N min_level] "
     "[-f dbffile] [-o infofile] [-p shpfile] [-v csvfile] [-x shxfile] "
     "<file> | < file";
@@ -170,20 +134,6 @@ int main(int argc, char **argv){
       break;
     case 'b':
       g.opt_background = 1;
-      break;
-    case 'l':
-      g.opt_lengthonly = 1;
-      break;
-    case 't':
-      g.opt_timeonly = 1;
-      break;
-    case 'A':
-      ++g.opt_aFOPVX;
-      g.opt_dbf = 1;
-      g.opt_info = 1;
-      g.opt_shp = 1;
-      /* g.opt_csv = 1; */
-      g.opt_shx = 1;
       break;
     case 'C':
       ++opt_cC;
@@ -269,14 +219,20 @@ int main(int argc, char **argv){
     }
   }
 
-  if((g.opt_aFOPVX != 0) && ((g.opt_timeonly != 0) || (g.opt_lengthonly != 0)))
-    log_errx(1, "Invalid combination of options: lt and aFOPVX");
-
-  if(opt_cC >= 2)
-    log_errx(1, "Invalid combination of options: c and C.");
+  /* The default is to do everything except csv */
+  if(g.opt_aFOPVX == 0){
+      g.opt_dbf = 1;
+      g.opt_info = 1;
+      g.opt_shp = 1;
+      /* g.opt_csv = 1; */
+      g.opt_shx = 1;
+  }
 
   if(g.opt_background == 1)
     set_usesyslog();
+
+  if(opt_cC >= 2)
+    log_errx(1, "Invalid combination of options: c and C.");
 
   if(optind < argc - 1)
     log_errx(1, "Too many arguments.");
@@ -295,10 +251,8 @@ int process_file(void){
   int n;
   unsigned char *b;
   struct nids_data_st nids_data;
-  char dummy[4096];
-  size_t dummy_size = 4096;
-  size_t nleft;
-  size_t ndummy_read;
+  char skipbuffer[4096];
+  size_t skipbuffer_size = 4096;
 
   memset(&nids_data, 0, sizeof(struct nids_data_st));
 
@@ -315,17 +269,12 @@ int process_file(void){
   b = &nids_data.nids_header.header[0];
 
   if(g.opt_skipcount != 0){
-    nleft = g.opt_skipcount;
-    while(nleft > 0){
-      ndummy_read = nleft;
-      if((size_t)nleft > dummy_size)
-	ndummy_read = dummy_size;
-
-      if(read(fd, dummy, ndummy_read) == -1)
-	log_err(1, "Error from read()");
-
-      nleft -= ndummy_read;
-    }
+    n = read_skip_count(fd, g.opt_skipcount,
+			skipbuffer, skipbuffer_size);
+    if(n == -1)
+      log_err(1, "Error from read_skip_count()");
+    else if(n != 0)
+      log_err(1, "Error from read_skip_count(). Short file.");
   }
 
   n = read(fd, b, NIDS_HEADER_SIZE);
@@ -334,42 +283,11 @@ int process_file(void){
   else if(n < NIDS_HEADER_SIZE)
     log_errx(1, "Corrupt file.");
 
-  nids_decode_header(&nids_data.nids_header);
+  dcnids_decode_header(&nids_data.nids_header);
 
 #ifdef PRINT_TEST
   test_print(&nids_data);
 #endif
-
-  if((g.opt_timeonly != 0) && (g.opt_lengthonly != 0))
-    fprintf(stdout, "%" PRIuMAX " %u",
-	    (uintmax_t)nids_data.nids_header.unixseconds,
-	    nids_data.nids_header.m_msglength);
-  else if(g.opt_timeonly != 0)
-    fprintf(stdout, "%" PRIuMAX, (uintmax_t)nids_data.nids_header.unixseconds);
-  else if(g.opt_lengthonly != 0)
-    fprintf(stdout, "%u", nids_data.nids_header.m_msglength);
-  else if(g.opt_aFOPVX == 0){
-    fprintf(stdout, "%.3f %.3f %d " "%" PRIuMAX " %d %d",
-	    nids_data.nids_header.lat,
-	    nids_data.nids_header.lon,
-	    nids_data.nids_header.pdb_height,
-	    (uintmax_t)nids_data.nids_header.unixseconds,
-	    nids_data.nids_header.pdb_mode,
-	    nids_data.nids_header.pdb_code);
-  }
-
-  if(g.opt_aFOPVX == 0){
-    /*
-     * If reading from stdin, then consume the input to avoid generating
-     * a pipe error in the tcl scripts.
-     * nbspunz should be called with the [-n] option.
-     */
-    if(g.opt_inputfile == NULL){
-      while(read(fd, dummy, dummy_size) > 0)
-	;
-    }
-    return(0);
-  }
   
   /*
    * Decode the polygon data.
@@ -418,47 +336,6 @@ int process_file(void){
 /*
  * decoding functions
  */
-static void nids_decode_header(struct nids_header_st *nheader){
-
-  unsigned char *b = nheader->header;
-  struct tm tm;
-
-  nheader->m_code = extract_uint16(b, 1);
-  nheader->m_days = extract_uint16(b, 2) - 1;
-  nheader->m_seconds = extract_uint32(b, 3);
-
-  /* msglength is the file length without headers or trailers */
-  nheader->m_msglength = extract_uint32(b, 5); 
-  nheader->m_source = extract_uint16(b, 7);
-  nheader->m_destination = extract_uint16(b, 8);
-  nheader->m_numblocks = extract_uint16(b, 9);
-
-  nheader->pdb_lat = extract_int32(b, 11);
-  nheader->pdb_lon = extract_int32(b, 13);
-
-  nheader->pdb_height = extract_uint16(b, 15);
-  nheader->pdb_code = extract_uint16(b, 16);    /* same as m_code */
-  nheader->pdb_mode = extract_uint16(b, 17);
-
-  nheader->pdb_version = extract_uint8(b, 54);
-  nheader->pdb_symbol_block_offset = extract_uint32(b, 55) * 2;
-  nheader->pdb_graphic_block_offset = extract_uint32(b, 57) * 2;
-  nheader->pdb_tabular_block_offset = extract_uint32(b, 59) * 2;
-
-  /* derived */
-  nheader->lat = ((double)nheader->pdb_lat)/1000.0;
-  nheader->lon = ((double)nheader->pdb_lon)/1000.0;
-  nheader->unixseconds = nheader->m_days * 24 * 3600 + nheader->m_seconds;
-
-  (void)gmtime_r(&nheader->unixseconds, &tm);
-  nheader->year = tm.tm_year + 1900;
-  nheader->month = tm.tm_mon + 1;
-  nheader->day = tm.tm_mday;
-  nheader->hour = tm.tm_hour;
-  nheader->min = tm.tm_min;
-  nheader->sec = tm.tm_sec;
-}
-
 static void nids_decode_data(struct nids_data_st *nd){
 
   unsigned char *b = nd->data;

@@ -42,4 +42,6 @@ struct nids_header_st {
   int sec;
 };
 
+void dcnids_decode_header(struct nids_header_st *nheader);
+
 #endif

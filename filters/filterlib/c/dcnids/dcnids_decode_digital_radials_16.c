@@ -14,6 +14,7 @@
 #include "err.h"
 #include "util.h"
 #include "dcnids.h"
+#include "dcnids_extract.h"
 #include "dcnids_decode.h"
 
 struct nids_digital_radial_packet_st {

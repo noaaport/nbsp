@@ -5,26 +5,30 @@
 #
 # $Id$
 #
-DCSOURCES = dcnids_extract.c dcnids_name.c dcnids_transform.c \
+DCSOURCES = dcnids_extract.c dcnid_header.c dcnids_name.c dcnids_transform.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c dcnids_bunz.c \
 	dcnids_decode_radials_af1f.c dcnids_decode_digital_radials_16.c \
-	dcnids.c dbfread.c dbfwrite.c
-DCHEADERS = dcnids.h dcnids_header.h dcnids_name.h dcnids_shp.h
-DCOBJECTS = dcnids_extract.o dcnids_name.o dcnids_transform.o \
+	dbfread.c dbfwrite.c \
+	nbspradinfo.c nbspnidsshp.c
+DCHEADERS = dcnids.h \
+	dcnids_extract.h dcnids_header.h dcnids_name.h dcnids_shp.h
+DCOBJECTS = dcnids_extract.o dcnids_header.o dcnids_name.o dcnids_transform.o \
 	dcnids_decode_radials_af1f.o dcnids_decode_digital_radials_16.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o dcnids_bunz.o
 
-SHAREDSOURCES = err.c io.c util.c
-SHAREDHEADERS = ../common.h ../config.h ../const.h ../io.h ../err.h ../util.h
-SHAREDOBJECTS = err.o io.o util.o
+SHAREDSOURCES = err.c io.c misc.c util.c
+SHAREDHEADERS = ../common.h ../config.h ../const.h \
+	../err.h ../io.h ../misc.h ../util.h
+SHAREDOBJECTS = err.o io.o misc.o util.o
 
 HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
 COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
-ALLOBJECTS = ${COMMONOBJECTS} dcnids.o dbfread.o dbfwrite.o
+ALLOBJECTS = ${COMMONOBJECTS} dbfread.o dbfwrite.o \
+	nbspradinfo.o nbspnidsshp.o
 
-# TARGET = nbspsnidsshp nbspradinfo nbspnidsshp-dbfread nbspnidsshp-dbfwrite
-TARGET = nbspnidsshp nbspradinfo nbspnidsshp-dbfread
+# TARGET = nbspradinfo nbspnidsshp nbspnidsshp-dbfread nbspnidsshp-dbfwrite
+TARGET = nbspradinfo nbspnidsshp nbspnidsshp-dbfread
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -54,14 +58,17 @@ err.c: ../err.c
 io.c: ../io.c
 	cp ../io.c .
 
+misc.c: ../misc.c
+	cp ../misc.c .
+
 util.c: ../util.c
 	cp ../util.c .
 
-nbspradinfo: nbspnidsshp
-	cp nbspnidsshp nbspradinfo
+nbspradinfo: nbspradinfo.o ${COMMONOBJECTS}
+	${CC} -o nbspradinfo nbspradinfo.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspnidsshp: dcnids.o ${COMMONOBJECTS}
-	${CC} -o nbspnidsshp dcnids.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspnidsshp: nbspnidsshp.o ${COMMONOBJECTS}
+	${CC} -o nbspnidsshp nbspnidsshp.o ${COMMONOBJECTS} ${LDFLAGS}
 
 nbspnidsshp-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
 	${CC} -o nbspnidsshp-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
