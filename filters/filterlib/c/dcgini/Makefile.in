@@ -17,7 +17,7 @@ SHAREDOBJECTS = err.o io.o misc.o util.o unz.o
 HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
 COMMONOBJECTS = ${SHAREDOBJECTS} ${DCOBJECTS}
-ALLOBJECTS = ${COMMONOBJECTS} nbspsat.o nbapsatinfo.o nbspginishp.o
+ALLOBJECTS = ${COMMONOBJECTS} nbspsat.o nbspsatinfo.o nbspginishp.o
 
 TARGET = nbspsat nbspsatinfo nbspginishp
 

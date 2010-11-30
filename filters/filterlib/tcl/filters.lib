@@ -457,7 +457,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     if {[regexp {^ti} $rc(wmoid)] && ($dosat == 1)} {
 	set satinfo_status [catch {
-	    set satinfo [split [exec nbspsatinfo -b -i $rc(fpath)]];
+	    set satinfo [split [exec nbspsatinfo -b $rc(fpath)]];
 	} errmsg];
 	
 	if {$satinfo_status == 0} {

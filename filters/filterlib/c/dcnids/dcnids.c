@@ -280,7 +280,7 @@ int main(int argc, char **argv){
 
   if(optind < argc - 1)
     log_errx(1, "Too many arguments.");
-  else if(optind == argc -1)
+  else if(optind == argc - 1)
     g.opt_inputfile = argv[optind++];
 
   atexit(cleanup);

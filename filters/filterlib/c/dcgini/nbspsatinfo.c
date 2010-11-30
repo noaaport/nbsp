@@ -20,10 +20,11 @@
 #include "dcgini_name.h"
 
 /*
- * Usage:  nbspsatinfo [-e] <fpath> | < <stdin>
+ * Usage:  nbspsatinfo [-b] [-e] <fpath> | < <stdin>
  *
- * If no file is given in the argument, then it reads from stdin. It
- * can take either the compressed or uncompresed file as input,
+ * If no file is given in the argument, then it reads from stdin.
+ * (The -i option is accepted for backwards compatibility.)
+ * It can take either the compressed or uncompresed file as input,
  * and it extract the relevant info to stdout.
  * The functionality is similar to nbspsat -i, but the output
  * does not contain the fname and the time is the unixseconds:
@@ -66,7 +67,7 @@ int main(int argc, char **argv){
 
   int status = 0;
   int c;
-  char *optstr = "beh";
+  char *optstr = "behi:";
   char *usage = "nbspsatinfo [-b] [-e] [-h] file";
 
   set_progname(basename(argv[0]));
@@ -78,7 +79,10 @@ int main(int argc, char **argv){
       break;
     case 'e':
       g.opt_extended_info = 1;
-      break;      
+      break;
+    case 'i':
+      g.opt_inputfile = optarg;
+      break;
     case 'h':
     default:
       log_info(usage);
@@ -90,10 +94,11 @@ int main(int argc, char **argv){
   if(g.opt_background == 1)
     set_usesyslog();
 
-  if(optind < argc - 1)
+  if((g.opt_inputfile == NULL) && (optind == argc - 1))
+      g.opt_inputfile = argv[optind++];
+
+  if(optind < argc)
     log_errx(1, "Too many arguments.");
-  else if(optind == argc -1)
-    g.opt_inputfile = argv[optind++];
 
   status = write_file_info(g.opt_inputfile);
 

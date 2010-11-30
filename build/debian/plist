@@ -5,6 +5,7 @@
 /usr/local/bin/nbspctl
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
+/usr/local/bin/nbspginishp
 /usr/local/bin/nbspradinfo
 /usr/local/bin/nbsprad2info
 /usr/local/bin/nbspnidsshp

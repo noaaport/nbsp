@@ -227,7 +227,7 @@ proc mk_ldm_sat_prodid {fname fpath} {
 
     # This command just extracts the information from the nesdis pdb
     set status [catch {
-        set params [exec nbspsatinfo -i $fpath]
+        set params [exec nbspsatinfo -b $fpath]
     } errmsg];
     
     if {$status != 0} {
