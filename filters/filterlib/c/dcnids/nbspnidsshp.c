@@ -271,6 +271,9 @@ int process_file(void){
   if(g.opt_skipcount != 0){
     n = read_skip_count(fd, g.opt_skipcount,
 			skipbuffer, skipbuffer_size);
+    if((n != 0) && (g.opt_inputfile != NULL))
+      log_warnx("Error reading from %s", g.opt_inputfile);
+
     if(n == -1)
       log_err(1, "Error from read_skip_count()");
     else if(n != 0)
@@ -278,6 +281,9 @@ int process_file(void){
   }
 
   n = read(fd, b, NIDS_HEADER_SIZE);
+  if((n < NIDS_HEADER_SIZE) && (g.opt_inputfile != NULL))
+    log_warnx("Error reading from %s", g.opt_inputfile);
+
   if(n == -1)
     log_err(1, "Error from read()");
   else if(n < NIDS_HEADER_SIZE)
