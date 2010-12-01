@@ -164,9 +164,9 @@ void fill_nesdis_pdb(struct nesdis_pdb *npdb){
 
   /* extended parameters */
   npdb->map_projection = (int)p[15];
-  if(npdb->map_projection == 1){
+  if(npdb->map_projection == NESDIS_MAP_PROJ_MERC){
     /*
-     * mercator
+     * mercator == 1
      */
     npdb->lat1 = dcgini_unpack_int24(p, 20);
     npdb->lon1 = dcgini_unpack_int24(p, 23);

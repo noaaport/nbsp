@@ -3,7 +3,7 @@
  *
  * See LICENSE
  *
- * $Id: dcnids.c 792 2010-11-30 02:29:34Z nieves $
+ * $Id$
  */
 #include <assert.h>
 #include <stdio.h>

@@ -16,6 +16,10 @@
 #define NESDIS_PDB_SIZE		512
 #define NESDIS_DATA_BLOCKSIZE	5120
 
+#define NESDIS_MAP_PROJ_MERC	1
+#define NESDIS_MAP_PROJ_LC	3
+#define NESDIS_MAP_PROJ_PSTR	5
+
 struct nesdis_pdb {
   char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];
   int  buffer_size;
