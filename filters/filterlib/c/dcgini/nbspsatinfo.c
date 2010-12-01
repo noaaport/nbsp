@@ -39,6 +39,8 @@
  * With the [-e] option it prints the following additional values after those:
  *
  *	map_projection (map projection indicator)
+ *	proj_center_flag (octet 37)
+ *	scan_mode	 (octet 38)
  *	lat1  (lat of first grid point) int x 10000
  *	lon1  (lon of first grid point) int x 10000
  *      lov   (orientation of grid)     int x 10000
@@ -61,7 +63,7 @@ struct {
 } g = {0, 0, NULL};
 
 int write_file_info(char *in_file);
-void output(struct nesdis_pdb *npdb, int opt_extended_info);
+void output(struct nesdis_pdb_st *npdb, int opt_extended_info);
 
 int main(int argc, char **argv){
 
@@ -116,7 +118,7 @@ int write_file_info(char *in_file){
    * and the pdb after it is uncompressed.
    */
   int fd;
-  struct nesdis_pdb npdb;
+  struct nesdis_pdb_st npdb;
   int status = 0;
 
   if(in_file != NULL){
@@ -157,7 +159,7 @@ int write_file_info(char *in_file){
   return(0);
 }
 
-void output(struct nesdis_pdb *npdb, int opt_extended_info){
+void output(struct nesdis_pdb_st *npdb, int opt_extended_info){
 
   fprintf(stdout, "%d %d %d %d %d " "%" PRIuMAX,
 	  npdb->source,
@@ -172,8 +174,10 @@ void output(struct nesdis_pdb *npdb, int opt_extended_info){
     return;
   }
 
-  fprintf(stdout, " %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf(stdout, " %d %d %#x %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	  npdb->map_projection,
+	  npdb->proj_center_flag,
+	  npdb->scan_mode,
 	  npdb->lat1,
 	  npdb->lon1,
 	  npdb->lov,

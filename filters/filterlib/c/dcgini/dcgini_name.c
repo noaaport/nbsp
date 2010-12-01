@@ -11,7 +11,7 @@
 #include <string.h>
 #include "dcgini_name.h"
 
-char *dcgini_default_name(struct nesdis_pdb *npdb,
+char *dcgini_default_name(struct nesdis_pdb_st *npdb,
 			  char *prefix,
 			  char *suffix){
   /*

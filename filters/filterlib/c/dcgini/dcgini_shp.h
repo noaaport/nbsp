@@ -39,7 +39,7 @@ struct dcgini_shp_st {
 };
 
 struct dcgini_st {
-  struct nesdis_pdb pdb;
+  struct nesdis_pdb_st pdb;
   struct gini_data_st ginidata;
   struct dcgini_point_map_st pointmap;
   struct dcgini_shp_st shp;

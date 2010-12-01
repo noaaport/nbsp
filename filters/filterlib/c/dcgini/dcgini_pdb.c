@@ -11,13 +11,12 @@
 #include <time.h>
 #include <zlib.h>
 #include "unz.h"
-#include "dcgini_util.h"
+#include "dcgini_const.h"
 #include "dcgini_misc.h"
+#include "dcgini_util.h"
 #include "dcgini_pdb.h"
 
-#define RAD_PER_DEG     0.0174          /* pi/180 */
-
-int read_nesdis_pdb(int fd, struct nesdis_pdb *npdb){
+int read_nesdis_pdb(int fd, struct nesdis_pdb_st *npdb){
   /*
    * Returns:
    *
@@ -42,7 +41,7 @@ int read_nesdis_pdb(int fd, struct nesdis_pdb *npdb){
   return(0);
 }
 
-int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
+int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb_st *npdb){
   /*
    * This function extracts the information from the nesdis pdb
    * that is used by the filters. It tries to
@@ -118,7 +117,7 @@ int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb){
   return(0);
 }
 
-void fill_nesdis_pdb(struct nesdis_pdb *npdb){
+void fill_nesdis_pdb(struct nesdis_pdb_st *npdb){
 
   unsigned char *p;
   int n;
@@ -164,6 +163,9 @@ void fill_nesdis_pdb(struct nesdis_pdb *npdb){
 
   /* extended parameters */
   npdb->map_projection = (int)p[15];
+  npdb->proj_center_flag = (p[36] >> 7); /* 1 if south pole is in proj plane */
+  npdb->scan_mode = (int)p[37];
+
   if(npdb->map_projection == NESDIS_MAP_PROJ_MERC){
     /*
      * mercator == 1
@@ -193,10 +195,6 @@ void fill_nesdis_pdb(struct nesdis_pdb *npdb){
     npdb->lat_ur = dcgini_unpack_int24(p, 55);
     npdb->lon_ur = dcgini_unpack_int24(p, 58);
   }
-
-  /*
-  npdb->scan_mode = (int)p[37];
-  */
 
   /*
    * derived

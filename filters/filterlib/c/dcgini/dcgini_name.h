@@ -20,7 +20,7 @@
 #define DCGINI_INFOEXT  ".info"
 #define DCGINI_CSVEXT   ".csv"
 
-char *dcgini_default_name(struct nesdis_pdb *npdb,
+char *dcgini_default_name(struct nesdis_pdb_st *npdb,
 			  char *prefix,
 			  char *suffix);
 char *dcgini_optional_name(char *base, char *suffix);

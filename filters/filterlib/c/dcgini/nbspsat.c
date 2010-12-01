@@ -48,6 +48,8 @@
  * With the [-e] option it prints the following additional values after those:
  *
  *	map_projection (map projection indicator)
+ *	proj_center_flag (octet 37)
+ *	scan_mode	 (octet 38)
  *	lat1  (lat of first grid point) int x 10000
  *	lon1  (lon of first grid point) int x 10000
  *      lov   (orientation of grid)     int x 10000
@@ -84,12 +86,12 @@ static void cleanup(void);
 static int write_pngdata(FILE *fp, unsigned char *data,
 			 int linesize, int numlines);
 static int write_gempak(int gempak_fd, int fd,
-       struct nesdis_pdb *npdb, int *unz_status);
+       struct nesdis_pdb_st *npdb, int *unz_status);
 static int process_file(char *in_file);
 static int write_file_info(char *in_file);
-static void check(struct nesdis_pdb *npdb);
+static void check(struct nesdis_pdb_st *npdb);
 static void output(char *fname,
-		   struct nesdis_pdb *npdb,
+		   struct nesdis_pdb_st *npdb,
 		   int option_extended_info);
 
 int main(int argc, char **argv){
@@ -194,7 +196,7 @@ static void cleanup(void){
 
 static int process_file(char *in_file){
 
-  struct nesdis_pdb npdb;
+  struct nesdis_pdb_st npdb;
   unsigned char *data = NULL;	/* records data (after pdb) */
   size_t data_size;		/* linesize * numlines */
   int n;
@@ -363,7 +365,7 @@ static int write_pngdata(FILE *fp, unsigned char *data,
 }
 
 static int write_gempak(int gempak_fd, int fd,
-			struct nesdis_pdb *npdb, int *zstatus){
+			struct nesdis_pdb_st *npdb, int *zstatus){
   /*
    * Returns:
    *  0 => no errors
@@ -437,7 +439,7 @@ static int write_file_info(char *in_file){
    * and the pdb after it is uncompressed.
    */
   int fd;
-  struct nesdis_pdb npdb;
+  struct nesdis_pdb_st npdb;
   char *output_fname;
   int status = 0;
 
@@ -483,7 +485,7 @@ static int write_file_info(char *in_file){
   return(0);
 }
 
-static void check(struct nesdis_pdb *npdb){
+static void check(struct nesdis_pdb_st *npdb){
   
   fprintf(stdout, "%d%02d%02d_%02d%02d\n", 
 	  npdb->year, npdb->month, npdb->day, npdb->hour, npdb->min);
@@ -502,7 +504,7 @@ static void check(struct nesdis_pdb *npdb){
 }
 
 static void output(char *fname,
-		   struct nesdis_pdb *npdb,
+		   struct nesdis_pdb_st *npdb,
 		   int option_extended_info){
 
   fprintf(stdout, "%d %d %d %d %d " DCGINI_DEFAULT_TIME_FMT " %s",
@@ -519,8 +521,10 @@ static void output(char *fname,
     return;
   }
 
-  fprintf(stdout, " %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf(stdout, " %d %d %#x %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	  npdb->map_projection,
+	  npdb->proj_center_flag,
+	  npdb->scan_mode,
 	  npdb->lat1,
 	  npdb->lon1,
 	  npdb->lov,

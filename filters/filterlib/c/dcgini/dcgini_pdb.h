@@ -20,7 +20,7 @@
 #define NESDIS_MAP_PROJ_LC	3
 #define NESDIS_MAP_PROJ_PSTR	5
 
-struct nesdis_pdb {
+struct nesdis_pdb_st {
   char buffer[NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE];
   int  buffer_size;
   char wmoid[NESDIS_WMOID_SIZE + 1];
@@ -42,7 +42,9 @@ struct nesdis_pdb {
   int ny;	/* octet 19, 20 */
   int res;	/* resolution */
   /* extended parameters */
-  int map_projection;
+  int map_projection;	/* octet 16 */
+  int proj_center_flag; /* octet 37 */
+  int scan_mode;	/* octet 38 */
   int dx;
   int dy;
   int lat1;
@@ -77,8 +79,8 @@ struct nesdis_pdb {
   double lon_ur_rad;
 };
 
-int read_nesdis_pdb(int fd, struct nesdis_pdb *npdb);
-int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb *npdb);
-void fill_nesdis_pdb(struct nesdis_pdb *npdb);
+int read_nesdis_pdb(int fd, struct nesdis_pdb_st *npdb);
+int read_nesdis_pdb_compressed(int fd, struct nesdis_pdb_st *npdb);
+void fill_nesdis_pdb(struct nesdis_pdb_st *npdb);
 
 #endif
