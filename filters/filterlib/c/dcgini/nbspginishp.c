@@ -16,9 +16,9 @@
 #include <libgen.h>
 #include "err.h"
 #include "io.h"
-#include "dcgini_pdb.h"
 #include "dcgini_util.h"
 #include "dcgini_name.h"
+#include "dcgini_transform.h"
 #include "dcgini_shp.h"
 
 /*
@@ -238,14 +238,8 @@ static int process_file(void){
   close(fd);
   g.fd = -1;
       
-  if(g.opt_output_dir != NULL){
-    status = chdir(g.opt_output_dir);
-    if(status != 0)
-      log_err(1, "Cannot chdir to %s", g.opt_output_dir);
-  }
-
-  /* Fill out point data - dcgini_shp.c */
-  status = dcgini_create_pointmap(&dcg);
+  /* Fill out point data - dcgini_transform.c */
+  status = dcgini_transform_data(&dcg);
 
   /* Create the shapefile data - dcgini_shp.c */
   if(status == 0)
@@ -255,6 +249,12 @@ static int process_file(void){
     return(status);
 
   /* Output the shp data */
+
+  if(g.opt_output_dir != NULL){
+    status = chdir(g.opt_output_dir);
+    if(status != 0)
+      log_err(1, "Cannot chdir to %s", g.opt_output_dir);
+  }
 
   if(g.opt_dbf != 0)
     dcgini_dbf_write(&dcg);
