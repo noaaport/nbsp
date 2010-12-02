@@ -34,10 +34,11 @@ struct nesdis_proj_llc_st {
 
 /* mercator */
 struct nesdis_proj_mer_st {
-  double s;
-  double lov_rad;	/* this is a copy from the pdb */
+  double lon0_rad;	/* center longitude */
   double x1;
   double y1;
+  double x2;
+  double y2;
   double dx;
   double dy;
 };

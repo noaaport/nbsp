@@ -101,10 +101,32 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
 
 void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
 			  struct nesdis_proj_mer_st *pmer){
-  double alpha;
-  double psi;
-  double a, b;
 
+  double r1, r2;
+  double b, d;
+  double n;
+
+  /* center longitude ? */
+  pmer->lon0_rad = 0.5 * (npdb->lon1_rad - npdb->lon2_rad);
+
+  d = npdb->lon1_rad - pmer->lon0_rad;
+  r1 = tan(npdb->lat1_rad);
+  r2 = cos(d);
+  b = cos(npdb->lat1_rad) * sin(d);  
+  pmer->x1 = 0.5 * log((1.0 + b)/(1.0 - b));
+  pmer->y1 = atan2(r1, r2);
+
+  d = npdb->lon2_rad - pmer->lon0_rad;
+  r1 = tan(npdb->lat2_rad);
+  r2 = cos(d);
+  b = cos(npdb->lat2_rad) * sin(d);
+  pmer->x2 = 0.5 * log((1.0 + b)/(1.0 - b));
+  pmer->y2 = atan2(r1, r2);
+
+  n = (double)npdb->nx - 1.0;
+  pmer->dx = (pmer->x2 - pmer->x1)/n;
+  n = (double)npdb->ny - 1.0;
+  pmer->dy = (pmer->y2 - pmer->y1)/n;
 }
 
 void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
@@ -114,9 +136,13 @@ void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
 			       double *lat_deg){
   double x, y;
   double lon_rad, lat_rad;
-  double rr;
-  double a;
-  
+
+  x = pmer->x1 + i * pmer->dx;
+  y = pmer->y1 + j * pmer->dy;
+
+  lon_rad = pmer->lon0_rad + atan2(sinh(x), cos(y));
+  lat_rad = asin(sin(y)/cosh(x));
+
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
 }

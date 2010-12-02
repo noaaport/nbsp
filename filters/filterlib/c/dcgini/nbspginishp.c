@@ -71,9 +71,6 @@ struct {
 static int process_file(void);
 static void cleanup(void);
 
-/* decoding functions */
-static void dcgini_decode_data(struct dcgini_st *dcg);
-
 /* output functions */
 static void dcgini_csv_write(struct dcgini_st *dcg);
 static void dcgini_shp_write(struct dcgini_st *dcg);
