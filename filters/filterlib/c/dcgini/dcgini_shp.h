@@ -19,7 +19,7 @@ struct dcgini_point_st {
 
 struct dcgini_point_map_st {
   struct dcgini_point_st *points;
-  int numpoints;
+  size_t numpoints;
   double lon_min;
   double lat_min;
   double lon_max;
@@ -44,5 +44,8 @@ struct dcgini_st {
   struct dcgini_point_map_st pointmap;
   struct dcgini_shp_st shp;
 };
+
+int dcgini_create_pointmap(struct dcgini_st *dcg);
+int dcgini_create_shp_data(struct dcgini_st *dcg);
 
 #endif

@@ -247,11 +247,17 @@ static int process_file(void){
       log_err(1, "Cannot chdir to %s", g.opt_output_dir);
   }
 
-  /* Fill out point data */
-  /* Construct output file names */
-  /* Output */
+  /* Fill out point data - dcgini_shp.c */
+  status = dcgini_create_pointmap(&dcg);
 
-  dcgini_decode_data(&dcg);
+  /* Create the shapefile data - dcgini_shp.c */
+  if(status == 0)
+    dcgini_create_shp_data(&dcg);
+
+  if(status != 0)
+    return(status);
+
+  /* Output the shp data */
 
   if(g.opt_dbf != 0)
     dcgini_dbf_write(&dcg);
@@ -267,13 +273,6 @@ static int process_file(void){
   
   return(0);
 }
-
-/* decoding functions */
-static void dcgini_decode_data(struct dcgini_st *dcg){
-
-  ;
-}
-
 
 /* output functions */
 static void dcgini_csv_write(struct dcgini_st *dcg){

@@ -20,7 +20,7 @@ struct nesdis_proj_str_st {
   double dy;
 };
 
-/* llc str */
+/* llc */
 struct nesdis_proj_llc_st {
   double s;
   double lov_rad;	/* this is a copy from the pdb */
@@ -32,9 +32,18 @@ struct nesdis_proj_llc_st {
   double dy;
 };
 
+/* mercator */
+struct nesdis_proj_mer_st {
+  double s;
+  double lov_rad;	/* this is a copy from the pdb */
+  double x1;
+  double y1;
+  double dx;
+  double dy;
+};
+
 void nesdis_proj_str_init(struct nesdis_pdb_st *npdb,
 			  struct nesdis_proj_str_st *pstr);
-
 void nesdis_proj_str_transform(struct nesdis_proj_str_st *pstr,
 			       int i,
 			       int j,
@@ -44,6 +53,14 @@ void nesdis_proj_str_transform(struct nesdis_proj_str_st *pstr,
 void nesdis_proj_llc_init(struct nesdis_pdb_st *npdb,
 			  struct nesdis_proj_llc_st *pllc);
 void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
+			       int i,
+			       int j,
+			       double *lon_deg,
+			       double *lat_deg);
+
+void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
+			  struct nesdis_proj_mer_st *pmer);
+void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
 			       int i,
 			       int j,
 			       double *lon_deg,

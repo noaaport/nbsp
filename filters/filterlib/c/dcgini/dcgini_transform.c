@@ -84,7 +84,7 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
   double x, y;
   double lon_rad, lat_rad;
   double rr;
-  double a, b;
+  double a;
   
   x = pllc->x1 + (double)i * pllc->dx;
   y = pllc->y1 + pllc->s * (double)j * pllc->dy;
@@ -94,6 +94,28 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
 
   lon_rad = pllc->lov_rad * atan2(x, -pllc->s * y) / pllc->cos_psi;
   lat_rad = pllc->s * (M_PI_2 - 2.0 * atan(pow(rr, a)));
+  
+  *lon_deg = lon_rad * DEG_PER_RAD;
+  *lat_deg = lat_rad * DEG_PER_RAD;
+}
+
+void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
+			  struct nesdis_proj_mer_st *pmer){
+  double alpha;
+  double psi;
+  double a, b;
+
+}
+
+void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
+			       int i,
+			       int j,
+			       double *lon_deg,
+			       double *lat_deg){
+  double x, y;
+  double lon_rad, lat_rad;
+  double rr;
+  double a;
   
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;

@@ -166,7 +166,7 @@ void fill_nesdis_pdb(struct nesdis_pdb_st *npdb){
   npdb->proj_center_flag = (p[36] >> 7); /* 1 if south pole is in proj plane */
   npdb->scan_mode = (int)p[37];
 
-  if(npdb->map_projection == NESDIS_MAP_PROJ_MERC){
+  if(npdb->map_projection == NESDIS_MAP_PROJ_MER){
     /*
      * mercator == 1
      */
