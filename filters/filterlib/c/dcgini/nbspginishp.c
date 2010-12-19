@@ -20,6 +20,7 @@
 #include "dcgini_name.h"
 #include "dcgini_transform.h"
 #include "dcgini_shp.h"
+#include "dcgini.h"
 
 /*
  * Usage: nbspginishp [output options] <file> | < <file>
@@ -227,7 +228,7 @@ static int process_file(void){
   dcg.ginidata.data_size = dcg.pdb.linesize * dcg.pdb.numlines;
   dcg.ginidata.data = malloc(dcg.ginidata.data_size);
   if(dcg.ginidata.data == NULL)
-    log_err(1, "malloc()");
+    log_err(1, "Cannot load data in memory.");
 
   n = read(fd, dcg.ginidata.data, dcg.ginidata.data_size);
   if(n == -1)
@@ -243,7 +244,7 @@ static int process_file(void){
 
   /* Create the shapefile data - dcgini_shp.c */
   if(status == 0)
-    dcgini_create_shp_data(&dcg);
+    status = dcgini_shp_create_data(&dcg);
 
   if(status != 0)
     return(status);
@@ -256,14 +257,14 @@ static int process_file(void){
       log_err(1, "Cannot chdir to %s", g.opt_output_dir);
   }
 
+  if((g.opt_shp != 0) || (g.opt_shx != 0))
+    dcgini_shp_write(&dcg);
+
   if(g.opt_dbf != 0)
     dcgini_dbf_write(&dcg);
 
   if(g.opt_info != 0)
     dcgini_info_write(&dcg);
-
-  if((g.opt_shp != 0) || (g.opt_shx != 0))
-    dcgini_shp_write(&dcg);
 
   if(g.opt_csv != 0)
     dcgini_csv_write(&dcg);
@@ -272,25 +273,6 @@ static int process_file(void){
 }
 
 /* output functions */
-static void dcgini_csv_write(struct dcgini_st *dcg){
-
-  char *csvfile;
-
-  if(g.opt_csvfile != NULL)
-    csvfile = g.opt_csvfile;
-  else{
-    if(g.opt_basename != NULL)
-      csvfile = dcgini_optional_name(g.opt_basename, DCGINI_CSVEXT);
-    else
-      csvfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_CSVEXT);
-
-    if(csvfile == NULL)
-      log_err(1, "dcgini_default_name()");
-  }
-
-  fprintf(stdout, "%s\n", csvfile);
-}
-
 static void dcgini_shp_write(struct dcgini_st *dcg){
 
   char *shpfile;
@@ -320,11 +302,15 @@ static void dcgini_shp_write(struct dcgini_st *dcg){
       log_err(1, "dcgini_default_name()");
   }
 
-  if(g.opt_shp != 0)
-    fprintf(stdout, "%s\n", shpfile);
+  if(g.opt_shp != 0){
+    if(dcgini_shp_write_data(shpfile, dcg) != 0)
+      log_errx(1, "Error in dcgini_shp_write_data()");
+  }
 
-  if(g.opt_shx != 0)
-    fprintf(stdout, "%s\n", shxfile);
+  if(g.opt_shx != 0){
+    if(dcgini_shx_write_data(shxfile, dcg) != 0)
+      log_errx(1, "Error in dcgini_shx_wtrite_data()");
+  }
 }
 
 static void dcgini_dbf_write(struct dcgini_st *dcg){
@@ -343,7 +329,8 @@ static void dcgini_dbf_write(struct dcgini_st *dcg){
       log_err(1, "dcgini_default_name()");
   }
 
-  fprintf(stdout, "%s\n", dbffile);
+  if(dcgini_dbf_write_data(dbffile, dcg) != 0)
+    log_errx(1, "Error in dcgini_dbf_write_data()");
 }
 
 static void dcgini_info_write(struct dcgini_st *dcg){
@@ -362,5 +349,26 @@ static void dcgini_info_write(struct dcgini_st *dcg){
       log_err(1, "dcgini_default_name()");
   }
 
-  fprintf(stdout, "%s\n", infofile);
+  if(dcgini_info_write_data(infofile, dcg) != 0)
+    log_errx(1, "Error in dcgini_info_write_data()");
+}
+
+static void dcgini_csv_write(struct dcgini_st *dcg){
+
+  char *csvfile;
+
+  if(g.opt_csvfile != NULL)
+    csvfile = g.opt_csvfile;
+  else{
+    if(g.opt_basename != NULL)
+      csvfile = dcgini_optional_name(g.opt_basename, DCGINI_CSVEXT);
+    else
+      csvfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_CSVEXT);
+
+    if(csvfile == NULL)
+      log_err(1, "Error from dcgini_default_name()");
+  }
+
+  if(dcgini_csv_write_data(csvfile, dcg) != 0)
+    log_errx(1, "Error in dcgini_csv_write_data()");
 }

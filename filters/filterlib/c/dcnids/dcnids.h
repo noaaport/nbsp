@@ -73,4 +73,3 @@ int dcnids_dbf_write(char *dbfname,
 #endif
 
 #endif
-

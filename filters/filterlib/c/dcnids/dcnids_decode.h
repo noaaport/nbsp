@@ -9,6 +9,7 @@
 #define DCNIDS_DECODE_H
 
 #include "dcnids_header.h"
+#include "dcnids.h"
 
 #define NIDS_DBF_CODENAME	"code"  /* parameter name in dbf file */
 #define NIDS_DBF_LEVELNAME	"level" /* parameter name in dbf file */

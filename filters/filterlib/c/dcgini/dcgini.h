@@ -45,4 +45,10 @@ struct dcgini_st {
   struct dcgini_shp_st shp;
 };
 
+int dcgini_shp_write_data(char *file, struct dcgini_st *dcg);
+int dcgini_shx_write_data(char *file, struct dcgini_st *dcg);
+int dcgini_dbf_write_data(char *file, struct dcgini_st *dcg);
+int dcgini_info_write_data(char *file, struct dcgini_st *dcg);
+int dcgini_csv_write_data(char *file, struct dcgini_st *dcg);
+
 #endif

@@ -10,6 +10,6 @@
 
 #include "dcgini.h"
 
-int dcgini_create_shp_data(struct dcgini_st *dcg);
+int dcgini_shp_create_data(struct dcgini_st *dcg);
 
 #endif

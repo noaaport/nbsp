@@ -22,6 +22,7 @@
 #include "dcnids_decode.h"
 #include "dcnids_name.h"
 #include "dcnids_header.h"
+#include "dcnids_info.h"
 
 /*
  * nbspnidsshp  [-c <count> | -C] [output options] <file> | < <file>
@@ -590,39 +591,13 @@ static void nids_dbf_write(struct nids_data_st *nd){
 static void nids_info_write(struct nids_data_st *nd){
 
   char *infofile;
-  FILE *f;
-  int n;
 
   infofile = nids_file_name(&nd->nids_header, g.opt_infofile, DCNIDS_INFOEXT);
-  if(infofile == NULL)
+  if(infofile == NULL){
+    log_err(1, "Error creating infofile name.");
     return;
+  }
 
-  f = fopen(infofile, "w");
-  if(f == NULL)
-    log_err(1, "Error writing info file.");
-
-  n = fprintf(f, "radseconds: %" PRIuMAX "\n",
-	      (uintmax_t)nd->nids_header.unixseconds);
-  if(n > 0)
-    n = fprintf(f, "radmode: %d\n", nd->nids_header.pdb_mode);
-
-  if(n > 0)
-    n = fprintf(f, "prodcode: %d\n", nd->nids_header.pdb_code);
-
-  if(n > 0)
-    n = fprintf(f, "packetcode: %d\n", nd->radial_packet_header.packet_code);
-
-  if(n > 0)
-    n = fprintf(f, "lon: %.3f\n", nd->nids_header.lon);
-
-  if(n > 0)
-    n = fprintf(f, "lat: %.3f\n", nd->nids_header.lat);
-
-  if(n > 0)
-    n = fprintf(f, "height: %d\n", nd->nids_header.pdb_height);
-
-  fclose(f);
-
-  if(n < 0)
+  if(dcnids_info_write(infofile, nd) != 0)
     log_err(1, "Error writing info file.");
 }
