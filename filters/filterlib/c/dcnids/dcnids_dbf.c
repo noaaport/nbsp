@@ -11,7 +11,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include "dcnids.h"
-#include "dcnids_shp.h"		/* some of the extract_xxx functions */
+#include "dcnids_shp.h"		/* some of the insert_uintxx functions */
 
 struct dcnids_dbfinfo_st {
   int numfields;

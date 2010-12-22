@@ -477,21 +477,17 @@ static void nids_decode_data(struct nids_data_st *nd){
 }
 
 static char *nids_file_name(struct nids_header_st *nheader,
-			   char *opt_file,
+			   char *opt_basename,
 			   char *suffix){
   char *file;
 
-  if(opt_file != NULL)
-    file = opt_file;
-  else{
-    if(g.opt_basename != NULL)
-      file = dcnids_optional_name(g.opt_basename, suffix);
-    else
-      file = dcnids_default_name(nheader, suffix);
-
-    if(file == NULL)
-      log_err(1, "Cannot create nids_file_name()");
-  }
+  if(opt_basename != NULL)
+    file = dcnids_optional_name(opt_basename, suffix);
+  else
+    file = dcnids_default_name(nheader, suffix);
+  
+  if(file == NULL)
+    log_err(1, "Cannot create nids_file_name()");
 
   return(file);
 }
@@ -504,7 +500,11 @@ static void nids_csv_write(struct nids_data_st *nd){
   FILE *fp;
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
 
-  csvfile = nids_file_name(&nd->nids_header, g.opt_csvfile, DCNIDS_CSVEXT);
+  if(g.opt_csvfile != NULL)
+    csvfile = g.opt_csvfile;
+  else
+    csvfile = nids_file_name(&nd->nids_header, g.opt_basename, DCNIDS_CSVEXT);
+
   if(csvfile == NULL)
     return;
 
@@ -537,35 +537,30 @@ static void test_print(struct nids_data_st *nd){
 
 static void nids_shp_write(struct nids_data_st *nd){
 
-  struct dcnids_polygon_map_st *pm = &nd->polygon_map;
-  char *shpfile, *shxfile;
-  int shp_fd, shx_fd;
-  int status;
+  int status = 0;
+  char *shpfile = NULL;
+  char *shxfile = NULL;
 
-  shpfile = nids_file_name(&nd->nids_header, g.opt_shpfile, DCNIDS_SHPEXT);
-  if(shpfile == NULL)
-    return;
-
-  shxfile = nids_file_name(&nd->nids_header, g.opt_shxfile, DCNIDS_SHXEXT);
-  if(shxfile == NULL)
-    return;
-
-  shp_fd = open(shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-  if(shp_fd == -1)
-    log_err(1, "Cannot open shp file.");
-
-  shx_fd = open(shxfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-  if(shx_fd == -1){
-    close(shp_fd);
-    log_err(1, "Cannot open shx file.");
+  if(g.opt_shpfile != NULL)
+    shpfile = g.opt_shpfile;
+  else if(g.opt_shp != 0){
+    shpfile = nids_file_name(&nd->nids_header, g.opt_basename, DCNIDS_SHPEXT);
+    if(shpfile == NULL)
+      return;
   }
 
-  status = dcnids_shp_write(shp_fd, shx_fd, pm);
-  (void)close(shp_fd);
-  (void)close(shx_fd);
+  if(g.opt_shxfile != NULL)
+    shxfile = g.opt_shxfile;
+  else if(g.opt_shx != 0){
+    shxfile = nids_file_name(&nd->nids_header, g.opt_basename, DCNIDS_SHXEXT);
+    if(shxfile == NULL)
+      return;
+  }
+
+  status = dcnids_shp_write(shpfile, shxfile, &nd->polygon_map);
 
   if(status != 0)
-    log_err(1, "Could not write shp or shx file.");
+    log_err(1, "Could not write shp data.");
 }
 
 static void nids_dbf_write(struct nids_data_st *nd){
@@ -574,7 +569,11 @@ static void nids_dbf_write(struct nids_data_st *nd){
   struct dcnids_polygon_map_st *pm = &nd->polygon_map;
   int status;
 
-  dbffile = nids_file_name(&nd->nids_header, g.opt_dbffile, DCNIDS_DBFEXT);
+  if(g.opt_dbffile != NULL)
+    dbffile = g.opt_dbffile;
+  else
+    dbffile = nids_file_name(&nd->nids_header, g.opt_basename, DCNIDS_DBFEXT);
+
   if(dbffile == NULL)
     return;
 
@@ -592,11 +591,13 @@ static void nids_info_write(struct nids_data_st *nd){
 
   char *infofile;
 
-  infofile = nids_file_name(&nd->nids_header, g.opt_infofile, DCNIDS_INFOEXT);
-  if(infofile == NULL){
-    log_err(1, "Error creating infofile name.");
+  if(g.opt_infofile != NULL)
+    infofile = g.opt_infofile;
+  else
+    infofile = nids_file_name(&nd->nids_header, g.opt_basename,
+			      DCNIDS_INFOEXT);
+  if(infofile == NULL)
     return;
-  }
 
   if(dcnids_info_write(infofile, nd) != 0)
     log_err(1, "Error writing info file.");

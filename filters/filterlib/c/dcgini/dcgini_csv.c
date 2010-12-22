@@ -10,7 +10,7 @@
 #include "err.h"
 #include "dcgini.h"
 
-int dcgini_csv_write_data(char *file, struct dcgini_st *dcg){
+int dcgini_csv_write(char *file, struct dcgini_point_map_st *pm){
 
   fprintf(stdout, "%s\n", file);
 

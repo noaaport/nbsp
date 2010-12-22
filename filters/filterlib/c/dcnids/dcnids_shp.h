@@ -37,4 +37,6 @@ void dcnids_shx_insert_content(unsigned char *p,
 struct dcnids_shp_st *dcnids_shp_create(struct dcnids_polygon_map_st *pm);
 void dcnids_shp_destroy(struct dcnids_shp_st *dcnids_shp);
 
+int dcnids_shp_write_data(int shp_fd, int shx_fd,
+			  struct dcnids_polygon_map_st *pm);
 #endif

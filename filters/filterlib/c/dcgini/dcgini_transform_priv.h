@@ -66,4 +66,5 @@ void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
 			       int j,
 			       double *lon_deg,
 			       double *lat_deg);
+
 #endif

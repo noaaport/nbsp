@@ -12,6 +12,8 @@
 #include "dcgini_transform.h"
 #include "dcgini_transform_priv.h"
 
+static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm);
+
 int dcgini_transform_data(struct dcgini_st *dcg){
 
   struct nesdis_proj_str_st pstr;
@@ -74,7 +76,33 @@ int dcgini_transform_data(struct dcgini_st *dcg){
     }
   }
 
+  dcgini_pointmap_bb(&dcg->pointmap);
+
   return(0);
+}
+
+static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
+
+  size_t i;
+
+  pm->lon_min = 180.0;
+  pm->lon_max = -180.0;
+  pm->lat_min = 180.0;
+  pm->lon_max = -180.0;
+  
+  for(i = 0; i < pm->numpoints; ++i){
+    if(pm->points[i].lon < pm->lon_min)
+      pm->lon_min = pm->points[i].lon;
+
+    if(pm->points[i].lon > pm->lon_max)
+      pm->lon_max = pm->points[i].lon;
+
+    if(pm->points[i].lat < pm->lat_min)
+      pm->lat_min = pm->points[i].lat;
+
+    if(pm->points[i].lat > pm->lat_max)
+      pm->lat_max = pm->points[i].lat;
+  }
 }
 
 void nesdis_proj_str_init(struct nesdis_pdb_st *npdb,

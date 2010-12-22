@@ -11,12 +11,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <err.h>
+#include "err.h"
 #include "dcnids.h"
 #include "dcnids_shp.h"
 
 #define SHAPEFILE_HEADER_SIZE_BYTES 100
 #define SHAPEFILE_HEADER_SIZE_WORDS 50
+#define SHAPETYPE_POLYGON	    5
 
 /*
  * Private functions
@@ -124,7 +125,7 @@ int dcnids_shp_insert_polygon(unsigned char *p, int pos,
   uint32_t record_length;
   int i;
 
-  shapetype = 5;
+  shapetype = SHAPETYPE_POLYGON;
   numparts = 1;
   numpoints = 5;
   partindex = 0;
@@ -202,7 +203,7 @@ void dcnids_shp_insert_header(unsigned char *p,
 
   filecode = 9994;
   version = 1000;
-  shapetype = 5;
+  shapetype = SHAPETYPE_POLYGON;
   unused = 0.0;
 
   filelength = dcnids_shp_polygon_file_size_words(numpolygons);
@@ -335,10 +336,6 @@ void dcnids_shx_insert_content(unsigned char *p,
   }
 }
 
-/*
- * Public functions (declared in dcnids.h)
- */
-
 struct dcnids_shp_st *dcnids_shp_create(struct dcnids_polygon_map_st *pm){
 
   struct dcnids_shp_st *dcnids_shp;
@@ -383,7 +380,8 @@ void dcnids_shp_destroy(struct dcnids_shp_st *dcnids_shp){
   free(dcnids_shp);
 }
 
-int dcnids_shp_write(int shp_fd, int shx_fd, struct dcnids_polygon_map_st *pm){
+int dcnids_shp_write_data(int shp_fd, int shx_fd,
+			  struct dcnids_polygon_map_st *pm){
 
   int status = 0;
   unsigned char *b;
@@ -394,20 +392,69 @@ int dcnids_shp_write(int shp_fd, int shx_fd, struct dcnids_polygon_map_st *pm){
     return(-1);
 
   b = dcnids_shp->b;
-  if(write(shp_fd, b, dcnids_shp->shpsize) == -1){
-    status = -1;
-    goto End;
+
+  if(shp_fd != -1){
+    if(write(shp_fd, b, dcnids_shp->shpsize) == -1){
+      status = -1;
+      goto End;
+    }
   }
 
   b += dcnids_shp->shpsize;
-  if(write(shx_fd, b, dcnids_shp->shxsize) == -1){
-    status = -1;
-    goto End;
+  
+  if(shx_fd != -1){
+    if(write(shx_fd, b, dcnids_shp->shxsize) == -1){
+      status = -1;
+      goto End;
+    }
   }
 
  End:
 
   dcnids_shp_destroy(dcnids_shp);
+
+  return(status);
+}
+
+/*
+ * Public (declared in dcnids.h)
+ */
+
+int dcnids_shp_write(char *shpfile, char *shxfile,
+		     struct dcnids_polygon_map_st *pm){
+
+  int status = 0;
+  int shp_fd = -1, shx_fd = -1;
+
+  if(shpfile != NULL){
+    shp_fd = open(shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+    if(shp_fd == -1){
+      log_err(1, "Cannot open %s", shpfile);
+      return(-1);
+    }
+  }
+
+  if(shxfile != NULL){
+    shx_fd = open(shxfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+    if(shx_fd == -1){
+      if(shp_fd != -1)
+	close(shp_fd);
+
+      log_err(1, "Cannot open %", shxfile);
+      return(-1);
+    }
+  }
+
+  status = dcnids_shp_write_data(shp_fd, shx_fd, pm);
+
+  if(shp_fd != -1)
+    (void)close(shp_fd);
+
+  if(shx_fd != -1)
+    (void)close(shx_fd);
+
+  if(status != 0)
+    log_err(1, "Could not write shp data");
 
   return(status);
 }

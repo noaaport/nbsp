@@ -54,7 +54,8 @@ void dcnids_xytolatlon(double lon0, double lat0,
 void dcnids_polygonmap_bb(struct dcnids_polygon_map_st *pm);
 
 /* shp */
-int dcnids_shp_write(int shp_fd, int shx_fd, struct dcnids_polygon_map_st *pm);
+int dcnids_shp_write(char *shpfile, char *shxfile,
+		     struct dcnids_polygon_map_st *pm);
 
 /* csv */
 int dcnids_csv_write(FILE *fp, struct dcnids_polygon_map_st *pm);
