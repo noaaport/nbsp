@@ -87,8 +87,7 @@ int dcgini_shp_insert_point(unsigned char *p, int pos,
   dcgini_shp_insert_uint32_big(b, 0, (uint32_t)record_number);
   b += 4;
   dcgini_shp_insert_uint32_big(b, 0, record_length);
-  b += 4;
-  
+  b += 4;  
   dcgini_shp_insert_uint32_little(b, 0, shapetype);
   b += 4;
 
