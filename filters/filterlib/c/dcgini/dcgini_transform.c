@@ -60,8 +60,15 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
   datap = dcg->ginidata.data;
 
+  /*
+   * XXX - Check the gempak doc to see if there is a flag in the
+   * transformation for west/east that we have to use.
+   *
   for(j = 0; j < dcg->pdb.ny; ++j){
     for(i = 0; i < dcg->pdb.nx; ++i){
+  */
+  for(j = dcg->pdb.ny - 1; j >= 0; --j){
+    for(i = dcg->pdb.nx - 1; i >= 0; --i){
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
 	nesdis_proj_str_transform(&pstr, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
@@ -171,6 +178,12 @@ void nesdis_proj_llc_init(struct nesdis_pdb_st *npdb,
   pllc->y1 = -pllc->s * pllc->r_E * a * cos(b);
   pllc->dx = alpha * npdb->dx_meters;
   pllc->dy = alpha * npdb->dy_meters;
+
+  /* XXX
+  fprintf(stdout, "%f %f %f %f %f\n", pllc->x1, pllc->y1, pllc->dx, pllc->dy,
+  pllc->s);
+  exit(0);
+  */
 }
 
 void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
