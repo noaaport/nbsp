@@ -5,7 +5,7 @@
  *
  * $Id$
  */
-#include <stdio.h>	/* XXX - only for debugging */
+/* #include <stdio.h>	XXX - only for debugging */
 #include <math.h>
 #include <stdlib.h>
 #include "err.h"
@@ -61,14 +61,11 @@ int dcgini_transform_data(struct dcgini_st *dcg){
   datap = dcg->ginidata.data;
 
   /*
-   * XXX - Check the gempak doc to see if there is a flag in the
-   * transformation for west/east that we have to use.
-   *
-  for(j = 0; j < dcg->pdb.ny; ++j){
-    for(i = 0; i < dcg->pdb.nx; ++i){
-  */
+   * Assume the scan is top to bottom, left to right; in principle
+   * we should check the pdb.scan_mode flag.
+   */
   for(j = dcg->pdb.ny - 1; j >= 0; --j){
-    for(i = dcg->pdb.nx - 1; i >= 0; --i){
+    for(i = 0; i < dcg->pdb.nx; ++i){
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
 	nesdis_proj_str_transform(&pstr, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
@@ -76,12 +73,14 @@ int dcgini_transform_data(struct dcgini_st *dcg){
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
 	nesdis_proj_mer_transform(&pmer, i, j, &lon_deg, &lat_deg);
 
+      /* XXX fprintf(stdout, "%f %f\n", lon_deg, lat_deg); */
       points->lon = lon_deg;
       points->lat = lat_deg;
       points->level = (int)*datap;
       ++points;
       ++datap;
     }
+    /* XXX exit(0); */
   }
 
   dcgini_pointmap_bb(&dcg->pointmap);
@@ -179,7 +178,7 @@ void nesdis_proj_llc_init(struct nesdis_pdb_st *npdb,
   pllc->dx = alpha * npdb->dx_meters;
   pllc->dy = alpha * npdb->dy_meters;
 
-  /* XXX
+  /*
   fprintf(stdout, "%f %f %f %f %f\n", pllc->x1, pllc->y1, pllc->dx, pllc->dy,
   pllc->s);
   exit(0);
@@ -202,11 +201,13 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
   rr = sqrt(pow(x, 2.0) + pow(y, 2.0)) / pllc->r_E;
   a = 1.0/pllc->cos_psi;
 
-  lon_rad = pllc->lov_rad * atan2(x, -pllc->s * y) / pllc->cos_psi;
+  lon_rad = pllc->lov_rad + atan2(x, -pllc->s * y) / pllc->cos_psi;
   lat_rad = pllc->s * (M_PI_2 - 2.0 * atan(pow(rr, a)));
   
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
+
+  /* XXX fprintf(stdout, "%f %f\n", x, *lon_deg); */
 }
 
 void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
