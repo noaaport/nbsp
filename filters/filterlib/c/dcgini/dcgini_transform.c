@@ -5,6 +5,7 @@
  *
  * $Id$
  */
+#include <stdio.h>	/* XXX - only for debugging */
 #include <math.h>
 #include <stdlib.h>
 #include "err.h"

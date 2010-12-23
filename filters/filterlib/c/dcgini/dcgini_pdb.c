@@ -207,8 +207,8 @@ void fill_nesdis_pdb(struct nesdis_pdb_st *npdb){
   tm.tm_year = npdb->year - 1900;
   npdb->unixseconds = timegm(&tm);
 
-  npdb->dx_meters = npdb->dx_meters/10.0;
-  npdb->dy_meters = npdb->dy_meters/10.0;
+  npdb->dx_meters = npdb->dx/10.0;
+  npdb->dy_meters = npdb->dy/10.0;
 
   /*
    * set klist [list lat1 lon1 lov latin lat2 lon2 lat_ur lon_ur];

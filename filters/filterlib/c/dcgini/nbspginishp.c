@@ -35,7 +35,7 @@
  *  -V => do csv
  *  -X => do shx
  *  -f <dbf file>
- *  -n => default base name for files
+ *  -n <base name> => default base name for files
  *  -o <info file>
  *  -p <shp file>
  *  -v <csv file>
@@ -338,7 +338,7 @@ static void gini_info_write(struct dcgini_st *dcg){
       log_err(1, "dcgini_default_name()");
   }
 
-  if(dcgini_info_write(infofile, &dcg->pointmap) != 0)
+  if(dcgini_info_write(infofile, dcg) != 0)
     log_errx(1, "Error in dcgini_info_write_data()");
 }
 

@@ -5,8 +5,12 @@
  *
  * $Id$
  */
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "err.h"
 #include "dcgini.h"
 #include "dcgini_shp.h"		/* some of the insert_uintxx functions */
@@ -130,15 +134,14 @@ static void dcgini_dbf_destroy(struct dcgini_dbf_st *dbf){
   free(dbf);
 }
 
-HERE
 static void dcgini_dbf_insert_content(struct dcgini_dbf_st *dbf,
-				      struct dcgini_polygon_map_st *pm){
+				      struct dcgini_point_map_st *pm){
   unsigned char *b;
 
   uint16_t recordsize;
   uint16_t headersize;
+  size_t i;
   int n;
-  int i;
   
   recordsize = (uint16_t)dcgini_dbf_record_size_bytes(&dbf->dbfinfo);
   headersize = (uint16_t)dcgini_dbf_header_size_bytes(&dbf->dbfinfo);
@@ -151,13 +154,7 @@ static void dcgini_dbf_insert_content(struct dcgini_dbf_st *dbf,
 
   /* Field descriptor array */
   b = &dbf->b[32];
-  strncpy((char*)b, DCGINI_DBF_FIELDNAME_0, DCGINI_DBF_FIELDNAME_LEN);
-  b[11] = 'N';
-  b[16] = DCGINI_DBF_FIELDWIDTH;
-  b[17] = 0;	/* decimal count */
-  b += 32;
-
-  strncpy((char*)b, DCGINI_DBF_FIELDNAME_1, DCGINI_DBF_FIELDNAME_LEN);
+  strncpy((char*)b, DCGINI_DBF_FIELDNAME, DCGINI_DBF_FIELDNAME_LEN);
   b[11] = 'N';
   b[16] = DCGINI_DBF_FIELDWIDTH;
   b[17] = 0;	/* decimal count */
@@ -170,23 +167,23 @@ static void dcgini_dbf_insert_content(struct dcgini_dbf_st *dbf,
   /*
    * records
    */
-  for(i = 0; i < pm->numpolygons; ++i){
+  for(i = 0; i < pm->numpoints; ++i){
     b[0] = DCGINI_DBF_RECORD_VALID_FLAG;
     ++b;
     /*
      * In the calculation of the totalsize we must ensure that the
      * last record has enough room for the terminating '\0'.
      */
-    n = snprintf((char*)b, 2*DCGINI_DBF_FIELDWIDTH + 1, "%3d%3d",
-		 pm->polygons[i].code, pm->polygons[i].level);
+    n = snprintf((char*)b, DCGINI_DBF_FIELDWIDTH + 1, "%3d",
+		 pm->points[i].level);
 
-    assert(n == 2*DCGINI_DBF_FIELDWIDTH);
+    assert(n == DCGINI_DBF_FIELDWIDTH);
 
     /*
      * This will overwite the terminating '\0' of the previous record,
      * which is how it should be.
      */
-    b += 2*DCGINI_DBF_FIELDWIDTH;
+    b += DCGINI_DBF_FIELDWIDTH;
   }
 }
 
@@ -197,13 +194,13 @@ int dcgini_dbf_write(char *file, struct dcgini_point_map_st *pm){
   struct dcgini_dbf_st *dbf;
   int status = 0;
 
-  dbf = dcgini_dbf_create(pm->numpolygons);
+  dbf = dcgini_dbf_create(pm->numpoints);
   if(dbf == NULL)
     return(-1);
 
   dcgini_dbf_insert_content(dbf, pm);
 
-  fd = open(dbfname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+  fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
   if(fd == -1){
     status = -1;
     goto End;

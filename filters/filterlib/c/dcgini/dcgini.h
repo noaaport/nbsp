@@ -48,7 +48,7 @@ struct dcgini_st {
 int dcgini_shp_write(char *shpfile, char *shxfile,
 		     struct dcgini_point_map_st *pm);
 int dcgini_dbf_write(char *file, struct dcgini_point_map_st *pm);
-int dcgini_info_write(char *file, struct dcgini_point_map_st *pm);
+int dcgini_info_write(char *file, struct dcgini_st *dcg);
 int dcgini_csv_write(char *file, struct dcgini_point_map_st *pm);
 
 #endif
