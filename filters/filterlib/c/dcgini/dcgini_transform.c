@@ -5,7 +5,7 @@
  *
  * $Id$
  */
-/* #include <stdio.h>	XXX - only for debugging */
+#include <stdio.h>	/* XXX - only for debugging */
 #include <math.h>
 #include <stdlib.h>
 #include "err.h"
@@ -131,7 +131,7 @@ void nesdis_proj_str_init(struct nesdis_pdb_st *npdb,
   }
   pstr->lov_rad = npdb->lov_rad;
 
-  alpha = 1.0/sin(M_PI/3.0);
+  alpha = 1.0/(1.0 + sin(M_PI/3.0));
   r = RE_METERS * tan(M_PI_4 - 0.5 * pstr->s * npdb->lat1_rad);
 
   pstr->x1 = r * sin(npdb->lon1_rad - npdb->lov_rad);
@@ -154,7 +154,7 @@ void nesdis_proj_str_transform(struct nesdis_proj_str_st *pstr,
   r = sqrt(pow(x, 2.0) + pow(y, 2.0));
  
   lon_rad = pstr->lov_rad + atan2(x, -pstr->s * y);
-  lat_rad = pstr->s * (M_PI_2 - atan2(r, RE_METERS));
+  lat_rad = pstr->s * (M_PI_2 - 2.0 * atan2(r, RE_METERS));
   
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
@@ -223,7 +223,7 @@ void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
   double n;
 
   /* center longitude ? */
-  pmer->lon0_rad = 0.5 * (npdb->lon1_rad - npdb->lon2_rad);
+  pmer->lon0_rad = 0.5 * (npdb->lon1_rad + npdb->lon2_rad);
 
   d = npdb->lon1_rad - pmer->lon0_rad;
   r1 = tan(npdb->lat1_rad);
@@ -253,8 +253,8 @@ void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
   double x, y;
   double lon_rad, lat_rad;
 
-  x = pmer->x1 + i * pmer->dx;
-  y = pmer->y1 + j * pmer->dy;
+  x = pmer->x1 + (double)i * pmer->dx;
+  y = pmer->y1 + (double)j * pmer->dy;
 
   lon_rad = pmer->lon0_rad + atan2(sinh(x), cos(y));
   lat_rad = asin(sin(y)/cosh(x));
