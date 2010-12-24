@@ -40,7 +40,7 @@
  *  -V => do csv
  *  -X => do shx
  *  -f <dbf file>
- *  -n => default base name for files
+ *  -n <base name> => default base name for files
  *  -o <info file>
  *  -p <shp file>
  *  -v <csv file>
