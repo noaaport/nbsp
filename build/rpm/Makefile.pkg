@@ -46,7 +46,7 @@ ${specfile}: pkginfo.mk postinstall Makefile
 	    -e "/@POSTINSTALLCLIENT@/r postinstall-client" \
 	    -e "/@POSTINSTALLCLIENT@/d" \
 	    -e "/@POSTUNINSTALLCLIENT@/r postuninstall-client" \
-	    -e "/@POSTUNINSTALLCLIENT@/d
+	    -e "/@POSTUNINSTALLCLIENT@/d" \
 	    -e "/@PLISTCLIENT@/r plist-client" \
 	    -e "/@PLISTCLIENT@/d" spec) > ${specfile}
 
