@@ -30,9 +30,15 @@ int dcgini_info_write(char *file, struct dcgini_st *dcg){
     n = fprintf(f, "channel: %d\n", dcg->pdb.channel);
 
   if(n > 0)
+    n = fprintf(f, "resolution: %d\n", dcg->pdb.res);
+
+  if(n > 0)
     n = fprintf(f, "bb: %f %f %f %f\n",
 		dcg->pointmap.lon_min, dcg->pointmap.lat_min,
 		dcg->pointmap.lon_max, dcg->pointmap.lat_max);
+
+  if(n > 0)
+    n = fprintf(f, "size: %d %d\n", dcg->pdb.nx, dcg->pdb.ny);
 
   fclose(f);
 
