@@ -1,5 +1,21 @@
 #include <stdio.h>
 
+void gini_gray(void){
+
+  int r, g, b;
+  int N = 255;
+  int i;
+
+  for(i = 0; i <= N; ++i){
+    r = i;
+    g = i;
+    b = i;
+    fprintf(stdout, "%d %d %d #%.2x%.2x%.2x\n", r, g, b, r, g, b);
+  }
+
+  return(0);
+}
+
 int main(void){
 
   int r, g, b;

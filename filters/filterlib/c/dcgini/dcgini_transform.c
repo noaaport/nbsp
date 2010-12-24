@@ -60,6 +60,9 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
   datap = dcg->ginidata.data;
 
+  /* Re-count the number of points after filtering */
+  numpoints = 0;
+
   /*
    * Assume the scan is top to bottom, left to right; in principle
    * we should check the pdb.scan_mode flag.
@@ -73,16 +76,20 @@ int dcgini_transform_data(struct dcgini_st *dcg){
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
 	nesdis_proj_mer_transform(&pmer, i, j, &lon_deg, &lat_deg);
 
-      /* XXX fprintf(stdout, "%f %f\n", lon_deg, lat_deg); */
+      /*
+       * We are not applying any filter so we insert the point
+       * unconditionally.
+       */
       points->lon = lon_deg;
       points->lat = lat_deg;
       points->level = (int)*datap;
       ++points;
+      ++numpoints;
       ++datap;
     }
-    /* XXX exit(0); */
   }
 
+  dcg->pointmap.numpoints = numpoints;
   dcgini_pointmap_bb(&dcg->pointmap);
 
   return(0);
@@ -206,8 +213,6 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
   
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
-
-  /* XXX fprintf(stdout, "%f %f\n", x, *lon_deg); */
 }
 
 void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
