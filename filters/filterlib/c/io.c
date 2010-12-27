@@ -103,3 +103,30 @@ int write_page(FILE *fp, void *page, int page_size){
   
   return(n);
 }
+
+ssize_t readf(int fd, void *buf, size_t nbytes){
+  /*
+   * This function can be used when we want to read an entire file
+   * in memory at once (e.g., in dcnids and dcgini) and the input file
+   * can come from a stdin pipe (e.g. the output of nbspunz). If we use
+   * FILE* pointers we could use fread() (or the above read_page()) instead.
+   */
+  size_t nleft;
+  ssize_t nread;
+  char *p;
+
+  p = (char*)buf;
+  nleft = nbytes;
+  while(nleft > 0){
+    nread = read(fd, p, nleft);
+    if(nread == -1)
+      return(-1);
+    else if(nread == 0)
+      break;
+    
+    nleft -= nread;
+    p += nread;
+  }
+
+  return(nbytes - nleft);
+}

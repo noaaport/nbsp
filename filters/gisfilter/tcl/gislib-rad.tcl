@@ -180,7 +180,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     }
 
     #
-    # The ccb, wmo/awips, gempak headers must be removed for nbsdcnids.
+    # The ccb, wmo/awips, gempak headers must be removed for nbsnidsshp.
     # The -F option instructs nbspnidsshp to apply the built-in filtering
     # options of the data (e.g., ignoring polygons with level values
     # less than 1.

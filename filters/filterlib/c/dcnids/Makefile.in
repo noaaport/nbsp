@@ -18,7 +18,7 @@ DCOBJECTS = dcnids_extract.o dcnids_header.o dcnids_name.o dcnids_transform.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o dcnids_info.o dcnids_bunz.o
 
 SHAREDSOURCES = err.c io.c misc.c util.c
-SHAREDHEADERS = ../common.h ../config.h ../const.h \
+SHAREDHEADERS = ../const.h \
 	../err.h ../io.h ../misc.h ../util.h
 SHAREDOBJECTS = err.o io.o misc.o util.o
 

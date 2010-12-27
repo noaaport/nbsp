@@ -223,20 +223,21 @@ static int process_file(void){
     log_errx(1, "Error from read_nesdis_pdb(). File has invalid wmo header");
   
   /*
-   * Read the data once and for all
+   * Read the data once and for all. Use readf() in case the input comes
+   * from a pipe.
    */
   dcg.ginidata.data_size = dcg.pdb.linesize * dcg.pdb.numlines;
   dcg.ginidata.data = malloc(dcg.ginidata.data_size);
   if(dcg.ginidata.data == NULL)
     log_err(1, "Cannot load data in memory.");
 
-  n = read(fd, dcg.ginidata.data, dcg.ginidata.data_size);
+  n = readf(fd, dcg.ginidata.data, dcg.ginidata.data_size);
   if(n == -1)
     log_err(1, "Error reading from file");
   else if((size_t)n != dcg.ginidata.data_size)
     log_errx(1, "Error reading from file. File is corrupt (short)");
     
-  close(fd);
+  (void)close(fd);
   g.fd = -1;
       
   /* Fill out point data - dcgini_transform.c */

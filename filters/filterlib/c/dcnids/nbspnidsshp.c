@@ -15,6 +15,7 @@
 #include <math.h>
 #include "const.h"
 #include "err.h"
+#include "io.h"
 #include "util.h"
 #include "misc.h"
 #include "dcnids.h"
@@ -281,14 +282,14 @@ int process_file(void){
       log_err(1, "Error from read_skip_count(). Short file.");
   }
 
-  n = read(fd, b, NIDS_HEADER_SIZE);
+  n = readf(fd, b, NIDS_HEADER_SIZE);
   if((n < NIDS_HEADER_SIZE) && (g.opt_inputfile != NULL))
     log_warnx("Error reading from %s", g.opt_inputfile);
 
   if(n == -1)
     log_err(1, "Error from read()");
   else if(n < NIDS_HEADER_SIZE)
-    log_errx(1, "Corrupt file.");
+    log_errx(1, "Corrupt file. Header too short.");
 
   dcnids_decode_header(&nids_data.nids_header);
 
@@ -302,19 +303,22 @@ int process_file(void){
 
   n = nids_data.nids_header.m_msglength - NIDS_HEADER_SIZE;
   if(n <= 0)
-    log_errx(1, "Corrupt file.");
+    log_errx(1, "Corrupt file header.");
 
   nids_data.data = malloc(n);
   if(nids_data.data == NULL)
-    log_err(1, "Error from malloc()");
+    log_err(1, "Cannot load data in memory");
 
   nids_data.data_size = n;
-  n = read(fd, nids_data.data, nids_data.data_size);
+  n = readf(fd, nids_data.data, nids_data.data_size);
   if(n == -1)
     log_err(1, "Error from read()");     
   else if((unsigned int)n != nids_data.data_size){
-    log_errx(1, "Corrupt file.");
+    log_errx(1, "File is corrupt (short)");
   }
+
+  (void)close(fd);
+  g.fd = -1;
 
   nids_decode_data(&nids_data);
 

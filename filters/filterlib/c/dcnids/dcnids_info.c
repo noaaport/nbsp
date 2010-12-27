@@ -11,6 +11,7 @@
 
 int dcnids_info_write(char *infofile, struct nids_data_st *nd){
 
+  struct dcnids_polygon_map_st *pm = &(nd->polygon_map);
   FILE *f;
   int n;
 
@@ -39,6 +40,10 @@ int dcnids_info_write(char *infofile, struct nids_data_st *nd){
 
   if(n > 0)
     n = fprintf(f, "height: %d\n", nd->nids_header.pdb_height);
+
+  if(n > 0)
+    n = fprintf(f, "bb: %f %f %f %f\n", pm->lon_min, pm->lat_min,
+		pm->lon_max, pm->lat_max);
 
   fclose(f);
 

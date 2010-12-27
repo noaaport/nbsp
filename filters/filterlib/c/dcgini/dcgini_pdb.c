@@ -10,6 +10,7 @@
 #include <string.h>
 #include <time.h>
 #include <zlib.h>
+#include "io.h"
 #include "unz.h"
 #include "dcgini_const.h"
 #include "dcgini_misc.h"
@@ -27,7 +28,7 @@ int read_nesdis_pdb(int fd, struct nesdis_pdb_st *npdb){
    */
   int n;
 
-  n = read(fd, npdb->buffer, npdb->buffer_size);
+  n = readf(fd, npdb->buffer, npdb->buffer_size);
   if(n == -1)
     return(-1);
   else if(n != npdb->buffer_size)

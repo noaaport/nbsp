@@ -15,10 +15,10 @@ DCOBJECTS = dcgini_misc.o dcgini_name.o dcgini_pdb.o \
 	dcgini_transform.o dcgini_util.o \
 	dcgini_shp.o dcgini_dbf.o dcgini_csv.o dcgini_info.o
 
-SHAREDSOURCES = err.c io.c util.c unz.c misc.c
-SHAREDHEADERS = ../common.h \
-	../config.h ../const.h ../err.h ../io.h ../misc.h ../util.h ../unz.h
-SHAREDOBJECTS = err.o io.o misc.o util.o unz.o
+SHAREDSOURCES = err.c io.c misc.c unz.c util.c
+SHAREDHEADERS = ../const.h \
+	../err.h ../io.h ../misc.h ../unz.h ../util.h
+SHAREDOBJECTS = err.o io.o misc.o unz.o util.o
 
 HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
