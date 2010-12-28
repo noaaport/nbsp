@@ -5,6 +5,14 @@
  *
  * $Id$
  */
+
+/*
+ * nbspunz [-b] [[-c skipcount] | -C] [-n nframes] [-o output] fname
+ *
+ * -c => cut <count> bytes from the output
+ * -C => cut ccb header (24 bytes) from the output
+ */
+
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -47,7 +55,7 @@ static int opt_background = 0;
 static int opt_skipcount = 0;	/* optionally strip ccb, wmo, ... or any */
 static int opt_nframes = 0;     /* process only this number of frames */
 static int gframenumber = 0;
-static char *usage = "nbspunz [-b] [-c skipcount] [-n nframes]"
+static char *usage = "nbspunz [-b] [[-c skipcount] | -C] [-n nframes]"
                      " [-o output] fname";
 
 static void cleanup(void){
@@ -302,9 +310,10 @@ int main(int argc, char ** argv){
 
 static int parse_args(int argc, char ** argv){
 
+  char *optstr = "bCc:n:o:";
   int status = 0;
   int c;
-  char *optstr = "bc:n:o:";
+  int opt_cC = 0;	/* to check for -c and -C conflict */
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
@@ -312,10 +321,15 @@ static int parse_args(int argc, char ** argv){
       opt_background = 1;
       break;
     case 'c':
+      ++opt_cC;
       status = strto_int(optarg, &opt_skipcount);
       if(status == 1){
 	log_errx(1, "Invalid argument to [-c] option.");
       }
+      break;
+    case 'C':
+      ++opt_cC;
+      opt_skipcount = CCB_SIZE;
       break;
     case 'n':
       status = strto_int(optarg, &opt_nframes);
@@ -332,6 +346,9 @@ static int parse_args(int argc, char ** argv){
       break;
     }
   }
+
+  if(opt_cC> 1)
+    log_errx(1, "Conflicting options -c and -C");
 
   if(optind <= argc - 1)
     ginputfname = argv[optind];

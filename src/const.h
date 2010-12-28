@@ -36,7 +36,7 @@
 /* #define WMO_ID_SIZE		6	   TTAAii (common.h) */
 #define WMO_STATION_SIZE	4	/* KKKK */
 #define WMO_TIME_SIZE		6	/* ddhhmm */
-#define WMO_AWIPS_SIZE		6	/* xxxxxx */
+/* #define WMO_AWIPS_SIZE	6	   xxxxxx (common.h) */
 #define WMO_NOTAWIPS_SIZE	6	/* maximum */
 #define FSEQNUM_SIZE		10	/* seqnum & ffffffff */
 #define FSEQKEY_SIZE		17	/* ddhhmm_seqnum[10] */

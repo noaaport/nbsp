@@ -6,14 +6,30 @@
  * $Id$
  */
 #include <time.h>
+#include <ctype.h>
 #include "util.h"
+#include "const.h"
 #include "dcnids_extract.h"
 #include "dcnids_header.h"
 
 void dcnids_decode_header(struct nids_header_st *nheader){
 
-  unsigned char *b = nheader->header;
+  unsigned char *b;
+  int n;
   struct tm tm;
+
+  /* Go past the wmo header and to the start of the awips line */
+  b = nheader->buffer;
+  b += CTRLHDR_WMO_SIZE;
+  
+  for(n = 0; n < WMO_AWIPS_SIZE; ++n)
+    nheader->awipsid[n] = tolower(*b++);
+
+  nheader->awipsid[WMO_AWIPS_SIZE] = '\0';
+
+  /* Go past the the wmo and awips headers */
+  b = nheader->buffer;
+  b += WMOAWIPS_HEADER_SIZE;
 
   nheader->m_code = extract_uint16(b, 1);
   nheader->m_days = extract_uint16(b, 2) - 1;

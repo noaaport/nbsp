@@ -9,35 +9,36 @@
 /*
  * Usage: nbspradinfo [-b] [-c <count> | -C] [-l] [-t] <file> | < <file>
  *
- * The program reads from a file or stdin, but the data must start with the
- * nids header (i.e., the ccb and wmo headers must have been removed;
- * but see below).
+ * The program reads from a file or stdin, but in either case the file
+ * must be the uncompressed file, including the wmo header, but with the
+ * ccb header removed.
  *
  * The typical usage is therefore
  *
- * nbspunz -c 54 ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo
- * nbspunz -c 54 n0rsjt_20091002_0007.nids | nbspradinfo
+ * nbspunz -c 24 ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo
+ * nbspunz -c 24 n0rsjt_20091002_0007.nids | nbspradinfo
  *  
  * In the first case the data file is one from the spool directory;
  * in the second, the data file is from the digatmos/nexrad directory.
  *
- * If the data does not start with nids header, the [-c <count>] options
+ * The same effect is achieved by
+ *
+ * nbspunz -C ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo
+ * nbspunz -C n0rsjt_20091002_0007.nids | nbspradinfo
+ *
+ * If the data does not start with the wmo header, the [-c <count>] options
  * can be used to instruct the program to ignore the first <count> bytes.
  * So an alternative usage is
  *
- * nbspunz ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo -c 54
+ * nbspunz ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo -c 24
+ * nbspunz ksjt_sdus54-n0rsjt.020131_16452648 | nbspradinfo -C
+ * nbspunz n0rsjt_20091002_0007.nids | nbspradinfo -C
  *
- * or, if the files have an uncompressed nids header
+ * If the files have an uncompressed nids header
  *
- * nbspradinfo -c 54 tjsj_sdus52-n0qjua.152011_99050818
- * nbspradinfo -c 41 n0qjua_20101015_1936.nids
- *               (41 = 30 + gempak header [const.h])
- *
- * If the file does not have the gempak header (as the tmp file used
- * by the rstfilter.lib and the nids files saved by the gisfilter), then
- *
- * nbspradinfo -c 30 n0qvnx_20100221_0224.tmp
- * nbspradinfo -C n0qvnx_20100221_0224.tmp
+ * nbspradinfo -c 24 tjsj_sdus52-n0qjua.152011_99050818  (from the spooldir)
+ * nbspradinfo -C tjsj_sdus52-n0qjua.152011_99050818
+ * nbspradinfo n0qjua_20101015_1936.nids (data dirs)
  *
  * The default information printed is
  *
@@ -56,23 +57,24 @@
 #include <string.h>
 #include <libgen.h>
 #include <inttypes.h>
+#include <ctype.h>
 #include "const.h"
 #include "err.h"
 #include "misc.h"
 #include "util.h"
 #include "dcnids_extract.h"
 #include "dcnids_header.h"
+#include "dcnids_misc.h"
 
 struct {
   char *opt_inputfile;
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
-  int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
   /* variables */
   int fd;
-} g = {NULL, 0, 0, 0, 0, 0, -1};
+} g = {NULL, 0, 0, 0, 0, -1};
 
 /* general functions */
 static int process_file(void);
@@ -107,8 +109,7 @@ int main(int argc, char **argv){
       break;
     case 'C':
       ++opt_cC;
-      g.opt_skipwmoawips = 1;  /* not used further */
-      g.opt_skipcount = WMOAWIPS_HEADER_SIZE;
+      g.opt_skipcount = CCB_SIZE;
       break;
     case 'c':
       ++opt_cC;
@@ -124,7 +125,7 @@ int main(int argc, char **argv){
     }
   }
 
-  if(opt_cC >= 2)
+  if(opt_cC > 1)
     log_errx(1, "Invalid combination of options: c and C.");
 
   if(g.opt_background == 1)
@@ -146,11 +147,13 @@ int process_file(void){
   int fd;
   int n;
   unsigned char *b;
+  int b_size;
   struct nids_header_st nheader;
   char skipbuffer[4096];
   size_t skipbuffer_size = 4096;
 
   memset(&nheader, 0, sizeof(struct nids_header_st));
+  nheader.buffer_size = WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE;
 
   if(g.opt_inputfile == NULL)
     fd = fileno(stdin);
@@ -162,7 +165,8 @@ int process_file(void){
       g.fd = fd;
   }
 
-  b = &nheader.header[0];
+  b = &nheader.buffer[0];
+  b_size = nheader.buffer_size;
 
   if(g.opt_skipcount != 0){
     n = read_skip_count(fd, g.opt_skipcount,
@@ -173,17 +177,46 @@ int process_file(void){
     if(n == -1)
       log_err(1, "Error from read_skip_count()");
     else if(n != 0)
-      log_err(1, "Error from read_skip_count(). Short file.");
+      log_errx(1, "Error from read_skip_count(). Short file.");
   }
 
-  n = read(fd, b, NIDS_HEADER_SIZE);
-  if((n < NIDS_HEADER_SIZE) && (g.opt_inputfile != NULL))
+  /*
+   * If the file has a gempak header, skip it.
+   */
+  n = read(fd, b, 1);
+  if(n != 1)
+    log_errx(1, "Corrupt file");
+
+  if(isalnum(*b) == 0){
+    /*
+     * Assume it is a gempak header
+     */
+    n = read_skip_count(fd, GMPK_HEADER_SIZE - 1,
+			skipbuffer, skipbuffer_size);
+    if(n == -1)
+      log_err(1, "Error from read_skip_count()");
+    else if(n != 0)
+      log_errx(1, "Error from read_skip_count(). Short file.");
+
+  }else{
+    /*
+     * Read what is left of the real header.
+     */ 
+    ++b;
+    --b_size;
+  }
+
+  n = read(fd, b, b_size);
+  if((n < nheader.buffer_size) && (g.opt_inputfile != NULL))
     log_warnx("Error reading from %s", g.opt_inputfile);
 
   if(n == -1)
     log_err(1, "Error from read()");
-  else if(n < NIDS_HEADER_SIZE)
-    log_errx(1, "Corrupt file.");
+  else if(n < b_size)
+    log_errx(1, "Corrupt file. Header short.");
+
+  if(dcnids_verify_wmoawips_header(nheader.buffer) != 0)
+    log_errx(1, "Invalid wmo header.");
 
   dcnids_decode_header(&nheader);
 

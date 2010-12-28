@@ -11,7 +11,7 @@
 #include "dcnids_header.h"
 
 #define DCNIDS_DEFAULT_TIME_FMT  "%d%02d%02d_%02d%02d"
-#define DCNIDS_DEFAULT_NAME_FMT  DCNIDS_DEFAULT_TIME_FMT
+#define DCNIDS_DEFAULT_NAME_FMT  "%s_" DCNIDS_DEFAULT_TIME_FMT
 
 #define DCNIDS_PNGEXT	".png"
 #define DCNIDS_SHPEXT   ".shp"
@@ -20,7 +20,9 @@
 #define DCNIDS_INFOEXT  ".info"
 #define DCNIDS_CSVEXT   ".csv"
 
-char *dcnids_default_name(struct nids_header_st *nheader, char *suffix);
+char *dcnids_default_name(struct nids_header_st *nheader,
+			  char *prefix,
+			  char *suffix);
 char *dcnids_optional_name(char *base, char *suffix);
 
 #endif

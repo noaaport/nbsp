@@ -11,22 +11,30 @@
 #include <string.h>
 #include "dcnids_name.h"
 
-char *dcnids_default_name(struct nids_header_st *nheader, char *suffix){
+char *dcnids_default_name(struct nids_header_st *nheader,
+			  char *prefix, char *suffix){
   /*
    * The base name is the time string defined in dcnids_name.h.
-   * The suffix is the file extension, and if it is NULL then nothing is used.
+   * The prefix can be NULL, in which case the default (awips + underscore,
+   * for example n0rjua_) is used. The suffix is the file extension,
+   * and if it is NULL then nothing is used.
    */
   char *fname;
   int fname_size;
   int n;
-  
+
+  if(prefix == NULL)
+    prefix = nheader->awipsid;
+
   if(suffix != NULL)
     n = snprintf(NULL, 0, DCNIDS_DEFAULT_NAME_FMT "%s",
+		 prefix,
 		 nheader->year, nheader->month, nheader->day,
 		 nheader->hour, nheader->min,
 		 suffix);
   else
     n = snprintf(NULL, 0, DCNIDS_DEFAULT_NAME_FMT,
+		 prefix,
 		 nheader->year, nheader->month, nheader->day,
 		 nheader->hour, nheader->min);
 
@@ -37,11 +45,13 @@ char *dcnids_default_name(struct nids_header_st *nheader, char *suffix){
 
   if(suffix != NULL)
     n = snprintf(fname, fname_size + 1, DCNIDS_DEFAULT_NAME_FMT "%s",
+		 prefix,
 		 nheader->year, nheader->month, nheader->day,
 		 nheader->hour, nheader->min,
 		 suffix);
   else
     n = snprintf(fname, fname_size + 1, DCNIDS_DEFAULT_NAME_FMT,
+		 prefix,
 		 nheader->year, nheader->month, nheader->day,
 		 nheader->hour, nheader->min);
 

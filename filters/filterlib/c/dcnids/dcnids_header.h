@@ -9,15 +9,19 @@
 #define DCNIDS_HEADER_H
 
 #include <time.h>
+#include "const.h"
 
 #define NIDS_HEADER_SIZE	120	/* message and pdb */
 
 struct nids_header_st {
-  unsigned char header[NIDS_HEADER_SIZE];
+  unsigned char gmpk_header[GMPK_HEADER_SIZE];
+  unsigned char buffer[WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE];
+  int buffer_size;
+  char awipsid[WMO_AWIPS_SIZE + 1];
   int m_code;
   int m_days;
   unsigned int m_seconds;
-  unsigned int m_msglength;	/* file length without header or trailer */
+  unsigned int m_msglength;	/* file length without wmo header or trailer */
   int m_source;                 /* unused */
   int m_destination;            /* unused */
   int m_numblocks;              /* unused */

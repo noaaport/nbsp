@@ -10,11 +10,11 @@
  * nbspnidsshp [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
- * nids header (i.e., the ccb and wmo headers must have been removed).
+ * wmo header (i.e., the ccb must have been removed).
  * Otherwise the [-c] or [-C] options can be used:
  *
  *  -c => skip the first <count> bytes from the input
- *  -C => skip wmo + awips header (30 bytes) from input
+ *  -C => skip ccb header (24 bytes) from input
  *
  * See the usage examples in nbspradinfo.c.
  *
@@ -43,6 +43,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <libgen.h>
+#include <ctype.h>
 #include <math.h>
 #include "const.h"
 #include "err.h"
@@ -52,6 +53,7 @@
 #include "dcnids.h"
 #include "dcnids_extract.h"
 #include "dcnids_decode.h"
+#include "dcnids_misc.h"
 #include "dcnids_name.h"
 #include "dcnids_header.h"
 #include "dcnids_info.h"
@@ -63,7 +65,6 @@ struct {
   int opt_all;          /* -a */
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
-  int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
   int opt_filter;	/* -D => apply data filtering options */
   char *opt_levelmin;	/* -M => filter "level" min value */
   char *opt_levelmax;	/* -N => filter "level" max value */
@@ -83,7 +84,7 @@ struct {
   int level_min;	/* data filter values */
   int level_max;
 } g = {NULL, NULL, NULL,
-       0, 0, 0, 0, 0,
+       0, 0, 0, 0,
        NULL, NULL,
        0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL,
@@ -144,8 +145,7 @@ int main(int argc, char **argv){
       break;
     case 'C':
       ++opt_cC;
-      g.opt_skipwmoawips = 1;  /* not used further */
-      g.opt_skipcount = WMOAWIPS_HEADER_SIZE;
+      g.opt_skipcount = CCB_SIZE;
       break;
     case 'D':
       g.opt_filter = 1;
@@ -257,11 +257,13 @@ int process_file(void){
   int fd;
   int n;
   unsigned char *b;
+  int b_size;
   struct nids_data_st nids_data;
   char skipbuffer[4096];
   size_t skipbuffer_size = 4096;
 
   memset(&nids_data, 0, sizeof(struct nids_data_st));
+  nids_data.nids_header.buffer_size = WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE;
 
   if(g.opt_inputfile == NULL)
     fd = fileno(stdin);
@@ -273,7 +275,8 @@ int process_file(void){
       g.fd = fd;
   }
 
-  b = &nids_data.nids_header.header[0];
+  b = &nids_data.nids_header.buffer[0];
+  b_size = nids_data.nids_header.buffer_size;
 
   if(g.opt_skipcount != 0){
     n = read_skip_count(fd, g.opt_skipcount,
@@ -287,14 +290,43 @@ int process_file(void){
       log_err(1, "Error from read_skip_count(). Short file.");
   }
 
-  n = readf(fd, b, NIDS_HEADER_SIZE);
-  if((n < NIDS_HEADER_SIZE) && (g.opt_inputfile != NULL))
+  /*
+   * If the file has a gempak header, skip it.
+   */
+  n = read(fd, b, 1);
+  if(n != 1)
+    log_errx(1, "Corrupt file");
+
+  if(isalnum(*b) == 0){
+    /*
+     * Assume it is a gempak header
+     */
+    n = read_skip_count(fd, GMPK_HEADER_SIZE - 1,
+			skipbuffer, skipbuffer_size);
+    if(n == -1)
+      log_err(1, "Error from read_skip_count()");
+    else if(n != 0)
+      log_errx(1, "Error from read_skip_count(). Short file.");
+
+  }else{
+    /*
+     * Read what is left of the real header.
+     */ 
+    ++b;
+    --b_size;
+  }
+
+  n = read(fd, b, b_size);
+  if((n < b_size) && (g.opt_inputfile != NULL))
     log_warnx("Error reading from %s", g.opt_inputfile);
 
   if(n == -1)
     log_err(1, "Error from read()");
-  else if(n < NIDS_HEADER_SIZE)
-    log_errx(1, "Corrupt file. Header too short.");
+  else if(n < b_size)
+    log_errx(1, "Corrupt file. Header short.");
+
+  if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0)
+    log_errx(1, "Invalid wmo header.");
 
   dcnids_decode_header(&nids_data.nids_header);
 
@@ -493,7 +525,7 @@ static char *nids_file_name(struct nids_header_st *nheader,
   if(opt_basename != NULL)
     file = dcnids_optional_name(opt_basename, suffix);
   else
-    file = dcnids_default_name(nheader, suffix);
+    file = dcnids_default_name(nheader, NULL, suffix);
   
   if(file == NULL)
     log_err(1, "Cannot create nids_file_name()");

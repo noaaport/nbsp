@@ -70,7 +70,7 @@ set filterslib(gmpk_header_fmt) "\001\r\r\n%03d \r\r\n";
 set filterslib(gmpk_trailer_str) "\r\r\n\003";
 set filterslib(gmpk_header_size) 11;	# gpfilter/c/const.h
 set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
-	$filterslib(gmpk_header_size)]; # used in nbspradmap and gisfilter
+	$filterslib(gmpk_header_size)]; # used in nbspradmap
 #
 set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #

@@ -402,8 +402,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
-        	  [exec nbspunz -b -c $filterslib(totalheadersize) -n 1 \
-			$rc(fpath) | nbspradinfo -b]];
+        	  [exec nbspunz -b -n 1 $rc(fpath) | nbspradinfo -b -C]];
 	    } errmsg];
 
 	    if {($radinfo_status != 0) && \
@@ -420,8 +419,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    set old_status $radinfo_status;
 	    set radinfo_status [catch {
 	        set radinfo [split \
-		  [exec nbspradinfo -b -c $filterslib(totalheadersize) \
-			$rc(fpath)]];
+		  [exec nbspradinfo -b -C $rc(fpath)]];
 	    } errmsg];
 
 	    if {($old_status == -2) && ($radinfo_status == 0)} {

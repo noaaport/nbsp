@@ -112,14 +112,6 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 #
 #   sn.NNNN     (and it depends on the number of N's)
 #   TJSJ_SDUS52_N0RJUA_200809220154
-#
-# These three parameters are copied from filters.conf and they serve
-# the same purpose here as there.
-#
-set gisfilter(rad_totalheadersize)    $filterslib(totalheadersize);
-set gisfilter(rad_wmoawips_size) $filterslib(wmoawips_size);
-# set gisfilter(rad_wmoawipsgmpk_header_size) \
-#     $filterslib(wmoawipsgmpk_header_size);
 
 set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
