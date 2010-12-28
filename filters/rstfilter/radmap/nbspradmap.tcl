@@ -2,14 +2,13 @@
 #
 # $Id$
 # 
-# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] [-h] \
+# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] \
 #        [-K] [-L <logfile>] [-o <outputname>] [-p] [-s <outputsize>]
 #        [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
 #
 # -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
 # -g => the name (or full path of the program)
-# -h => the input file does not have the gempak header
 # -d => output directory
 # -K => keep (don't delete) the logfile
 # -L => specify the logfile instead of the default
@@ -44,10 +43,10 @@
 #
 package require cmdline;
 
-set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-h] [-K] [-L logfile]
+set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
     [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>]
     <inputfile> [<rcfile>]};
-set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} h K {L.arg ""} {o.arg ""}
+set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} K {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
@@ -128,22 +127,9 @@ proc fill_gpmap_radinfo {doradinfounz_regexp} {
 
     if {[regexp $doradinfounz_regexp $gpmap(rad,awips)]} {
 	set radinfo [split \
-	    [exec nbspunz -c $filterslib(totalheadersize) -n 1 \
-		 $gpmap(inputfile) | nbspradinfo]];
+	    [exec nbspunz -C -n 1 $gpmap(inputfile) | nbspradinfo]];
     } else {
-	if {$option(h) == 0} {
-	    # The file has a gempak header (e.g., from digatmos/nexrad)
-	    set headersize $filterslib(wmoawipsgmpk_header_size);
-	} else {
-	    #
-	    # The file does not have the gtempak header; such as the
-	    # tmp files used by the rstfilter.
-	    #
-	    set headersize $filterslib(wmoawips_size);
-	}
-
-	set radinfo [split \
-			 [exec nbspradinfo -c $headersize $gpmap(inputfile)]];
+	set radinfo [split [exec nbspradinfo $gpmap(inputfile)]];
     }
 
     set gpmap(radinfo,lat) [lindex $radinfo 0];

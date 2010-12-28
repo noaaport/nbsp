@@ -11,7 +11,8 @@
  *
  * The program reads from a file or stdin, but in either case the file
  * must be the uncompressed file, including the wmo header, but with the
- * ccb header removed.
+ * ccb header removed (If the file has the gempak header, it will be
+ * detected and it will be skiped.)
  *
  * The typical usage is therefore
  *
@@ -145,15 +146,10 @@ int main(int argc, char **argv){
 int process_file(void){
 
   int fd;
-  int n;
-  unsigned char *b;
-  int b_size;
   struct nids_header_st nheader;
+  int status;
   char skipbuffer[4096];
   size_t skipbuffer_size = 4096;
-
-  memset(&nheader, 0, sizeof(struct nids_header_st));
-  nheader.buffer_size = WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE;
 
   if(g.opt_inputfile == NULL)
     fd = fileno(stdin);
@@ -165,55 +161,16 @@ int process_file(void){
       g.fd = fd;
   }
 
-  b = &nheader.buffer[0];
-  b_size = nheader.buffer_size;
-
-  if(g.opt_skipcount != 0){
-    n = read_skip_count(fd, g.opt_skipcount,
-			skipbuffer, skipbuffer_size);
-    if((n != 0) && (g.opt_inputfile != NULL))
-      log_warnx("Error reading from %s", g.opt_inputfile);
-
-    if(n == -1)
-      log_err(1, "Error from read_skip_count()");
-    else if(n != 0)
-      log_errx(1, "Error from read_skip_count(). Short file.");
+  status = dcnids_read_header(fd, g.opt_skipcount, &nheader);
+  if(status != 0){
+    if(g.opt_inputfile != NULL)
+      log_warnx("Error reading nids header from %s", g.opt_inputfile);
+  
+    if(status == -1)
+      log_err(1, "Error reading file.");
+    else
+      log_errx(1, "Error reading file. Short file.");
   }
-
-  /*
-   * If the file has a gempak header, skip it.
-   */
-  n = read(fd, b, 1);
-  if(n != 1)
-    log_errx(1, "Corrupt file");
-
-  if(isalnum(*b) == 0){
-    /*
-     * Assume it is a gempak header
-     */
-    n = read_skip_count(fd, GMPK_HEADER_SIZE - 1,
-			skipbuffer, skipbuffer_size);
-    if(n == -1)
-      log_err(1, "Error from read_skip_count()");
-    else if(n != 0)
-      log_errx(1, "Error from read_skip_count(). Short file.");
-
-  }else{
-    /*
-     * Read what is left of the real header.
-     */ 
-    ++b;
-    --b_size;
-  }
-
-  n = read(fd, b, b_size);
-  if((n < nheader.buffer_size) && (g.opt_inputfile != NULL))
-    log_warnx("Error reading from %s", g.opt_inputfile);
-
-  if(n == -1)
-    log_err(1, "Error from read()");
-  else if(n < b_size)
-    log_errx(1, "Corrupt file. Header short.");
 
   if(dcnids_verify_wmoawips_header(nheader.buffer) != 0)
     log_errx(1, "Invalid wmo header.");

@@ -7,10 +7,66 @@
  */
 #include <time.h>
 #include <ctype.h>
-#include "util.h"
+#include <unistd.h>
+#include <string.h>
 #include "const.h"
+#include "misc.h"
+#include "util.h"
 #include "dcnids_extract.h"
 #include "dcnids_header.h"
+
+int dcnids_read_header(int fd, int skipcount,
+		       struct nids_header_st *nheader){
+  int n;
+  int status;
+  unsigned char *b;
+  int b_size;
+  char skipbuffer[4096];
+  size_t skipbuffer_size = 4096;
+
+  memset(nheader, 0, sizeof(struct nids_header_st));
+  nheader->buffer_size = WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE;
+
+  b = &nheader->buffer[0];
+  b_size = nheader->buffer_size;
+
+  if(skipcount != 0){
+    status = read_skip_count(fd, skipcount, skipbuffer, skipbuffer_size);
+    if(status != 0)
+      return(status);
+  }
+
+  /*
+   * If the file has a gempak header, skip it.
+   */
+  n = read(fd, b, 1);
+  if(n != 1)
+    return(-1);
+
+  if(isalnum(*b) == 0){
+    /*
+     * Assume it is a gempak header
+     */
+    status = read_skip_count(fd, GMPK_HEADER_SIZE - 1,
+			skipbuffer, skipbuffer_size);
+    if(status != 0)
+      return(status);
+  }else{
+    /*
+     * Read what is left of the real header.
+     */ 
+    ++b;
+    --b_size;
+  }
+
+  n = read(fd, b, b_size);
+  if(n == -1)
+    return(-1);
+  else if(n < b_size)
+    return(1);
+
+  return(0);
+}
 
 void dcnids_decode_header(struct nids_header_st *nheader){
 

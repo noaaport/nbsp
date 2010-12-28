@@ -10,13 +10,8 @@
  * nbspnidsshp [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
- * wmo header (i.e., the ccb must have been removed).
- * Otherwise the [-c] or [-C] options can be used:
- *
- *  -c => skip the first <count> bytes from the input
- *  -C => skip ccb header (24 bytes) from input
- *
- * See the usage examples in nbspradinfo.c.
+ * wmo header (i.e., the ccb must have been removed). The [-c] amd [-C]
+ * options work as in nbspradinfo. ee nbspradinfo.c.
  *
  * The output options are:
  *
@@ -256,14 +251,8 @@ int process_file(void){
 
   int fd;
   int n;
-  unsigned char *b;
-  int b_size;
   struct nids_data_st nids_data;
-  char skipbuffer[4096];
-  size_t skipbuffer_size = 4096;
-
-  memset(&nids_data, 0, sizeof(struct nids_data_st));
-  nids_data.nids_header.buffer_size = WMOAWIPS_HEADER_SIZE + NIDS_HEADER_SIZE;
+  int status;
 
   if(g.opt_inputfile == NULL)
     fd = fileno(stdin);
@@ -275,65 +264,22 @@ int process_file(void){
       g.fd = fd;
   }
 
-  b = &nids_data.nids_header.buffer[0];
-  b_size = nids_data.nids_header.buffer_size;
-
-  if(g.opt_skipcount != 0){
-    n = read_skip_count(fd, g.opt_skipcount,
-			skipbuffer, skipbuffer_size);
-    if((n != 0) && (g.opt_inputfile != NULL))
-      log_warnx("Error reading from %s", g.opt_inputfile);
-
-    if(n == -1)
-      log_err(1, "Error from read_skip_count()");
-    else if(n != 0)
-      log_err(1, "Error from read_skip_count(). Short file.");
+  status = dcnids_read_header(fd, g.opt_skipcount, &nids_data.nids_header);
+  if(status != 0){
+    if(g.opt_inputfile != NULL)
+      log_warnx("Error reading nids header from %s", g.opt_inputfile);
+  
+    if(status == -1)
+      log_err(1, "Error reading file.");
+    else
+      log_errx(1, "Error reading file. Short file.");
   }
-
-  /*
-   * If the file has a gempak header, skip it.
-   */
-  n = read(fd, b, 1);
-  if(n != 1)
-    log_errx(1, "Corrupt file");
-
-  if(isalnum(*b) == 0){
-    /*
-     * Assume it is a gempak header
-     */
-    n = read_skip_count(fd, GMPK_HEADER_SIZE - 1,
-			skipbuffer, skipbuffer_size);
-    if(n == -1)
-      log_err(1, "Error from read_skip_count()");
-    else if(n != 0)
-      log_errx(1, "Error from read_skip_count(). Short file.");
-
-  }else{
-    /*
-     * Read what is left of the real header.
-     */ 
-    ++b;
-    --b_size;
-  }
-
-  n = read(fd, b, b_size);
-  if((n < b_size) && (g.opt_inputfile != NULL))
-    log_warnx("Error reading from %s", g.opt_inputfile);
-
-  if(n == -1)
-    log_err(1, "Error from read()");
-  else if(n < b_size)
-    log_errx(1, "Corrupt file. Header short.");
 
   if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0)
     log_errx(1, "Invalid wmo header.");
 
   dcnids_decode_header(&nids_data.nids_header);
 
-#ifdef PRINT_TEST
-  test_print(&nids_data);
-#endif
-  
   /*
    * Decode the polygon data.
    */
