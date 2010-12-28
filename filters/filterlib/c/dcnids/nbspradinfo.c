@@ -5,20 +5,6 @@
  *
  * $Id$
  */
-#include <assert.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <string.h>
-#include <libgen.h>
-#include <inttypes.h>
-#include "const.h"
-#include "err.h"
-#include "misc.h"
-#include "util.h"
-#include "dcnids_extract.h"
-#include "dcnids_header.h"
 
 /*
  * Usage: nbspradinfo [-b] [-c <count> | -C] [-l] [-t] <file> | < <file>
@@ -61,6 +47,21 @@
  * If [-t] is given then only the "seconds" is printed, and if [-l] is given
  * then the m_msglength is also printed.
  */
+
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <string.h>
+#include <libgen.h>
+#include <inttypes.h>
+#include "const.h"
+#include "err.h"
+#include "misc.h"
+#include "util.h"
+#include "dcnids_extract.h"
+#include "dcnids_header.h"
 
 struct {
   char *opt_inputfile;

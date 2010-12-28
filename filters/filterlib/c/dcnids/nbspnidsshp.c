@@ -5,6 +5,37 @@
  *
  * $Id$
  */
+
+/*
+ * nbspnidsshp [-c <count> | -C] [output options] <file> | < <file>
+ *
+ * The program reads from a file or stdin, but the data must start with the
+ * nids header (i.e., the ccb and wmo headers must have been removed).
+ * Otherwise the [-c] or [-C] options can be used:
+ *
+ *  -c => skip the first <count> bytes from the input
+ *  -C => skip wmo + awips header (30 bytes) from input
+ *
+ * See the usage examples in nbspradinfo.c.
+ *
+ * The output options are:
+ *
+ *  -a => same as FOPVX (all) with the default names
+ *  -F => do dbf
+ *  -O => do info
+ *  -P => do shp
+ *  -V => do csv
+ *  -X => do shx
+ *  -f <dbf file>
+ *  -n <base name> => default base name for files
+ *  -o <info file>
+ *  -p <shp file>
+ *  -v <csv file>
+ *  -x <shx file>
+ *
+ * The default action is the same as specifying "-FOPX" (excluding csv).
+ */
+
 #include <assert.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -25,37 +56,11 @@
 #include "dcnids_header.h"
 #include "dcnids_info.h"
 
-/*
- * nbspnidsshp  [-c <count> | -C] [output options] <file> | < <file>
- *
- * The program reads from a file or stdin, but the data must start with the
- * nids header (i.e., the ccb and wmo headers must have been removed;
- * see the usage instructions in nbspradinfo.c).
- *
- * The output options are:
- *
- *  -a => same as FOPVX (all) with the default names
- *  -F => do dbf
- *  -O => do info
- *  -P => do shp
- *  -V => do csv
- *  -X => do shx
- *  -f <dbf file>
- *  -n <base name> => default base name for files
- *  -o <info file>
- *  -p <shp file>
- *  -v <csv file>
- *  -x <shx file>
- *
- * The default action is the same as specifying "-FOPX" (excluding csv).
- */
-
 struct {
   char *opt_inputfile;
   char *opt_output_dir;	/* -d */
   char *opt_basename;   /* -n => default basename */
   int opt_all;          /* -a */
-  int opt_almostall;    /* -A */
   int opt_background;	/* -b */
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_skipwmoawips; /* -C => skip wmo + awips header (30 bytes) */
@@ -78,7 +83,7 @@ struct {
   int level_min;	/* data filter values */
   int level_max;
 } g = {NULL, NULL, NULL,
-       0, 0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0,
        NULL, NULL,
        0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL, NULL,
@@ -113,8 +118,8 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "abACDFOPVXc:d:M:N:f:n:o:p:v:x:";
-  char *usage = "nbspnidsshp [-a] [-b] [-A] [-C] [-D] [-FOPVX] "
+  char *optstr = "abCDFOPVXc:d:M:N:f:n:o:p:v:x:";
+  char *usage = "nbspnidsshp [-a] [-b] [-C] [-D] [-FOPVX] "
     "[-c count] [-d outputdir] [-M min_level] [-N min_level] "
     "[-f dbffile] [-o infofile] [-p shpfile] [-v csvfile] [-x shxfile] "
     "<file> | < file";

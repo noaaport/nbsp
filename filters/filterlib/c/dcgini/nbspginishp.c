@@ -5,28 +5,14 @@
  *
  * $Id$
  */
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <png.h>
-#include <zlib.h>
-#include <libgen.h>
-#include "err.h"
-#include "io.h"
-#include "dcgini_util.h"
-#include "dcgini_name.h"
-#include "dcgini_transform.h"
-#include "dcgini_shp.h"
-#include "dcgini.h"
 
 /*
  * Usage: nbspginishp [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must 
- * be the uncompressed gini file. The output options are:
+ * be the uncompressed gini file (including the nesdis wmo header).
+ *
+ * The output options are:
  *
  *  -a => same as FOPVX (all) with the default names
  *  -F => do dbf
@@ -44,29 +30,46 @@
  * The default action is the same as specifying "-FOPX" (excluding csv).
  */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <png.h>
+#include <zlib.h>
+#include <libgen.h>
+#include "err.h"
+#include "io.h"
+#include "dcgini_util.h"
+#include "dcgini_name.h"
+#include "dcgini_transform.h"
+#include "dcgini_shp.h"
+#include "dcgini.h"
+
 struct {
-  char *opt_inputfile;
-  char *opt_output_dir;		/* -d */
-  char *opt_basename;           /* -n */
   int opt_all;			/* -a */
   int opt_background;		/* -b */
   int opt_silent;		/* -s */
-  char *opt_dbffile;		/* -f */
-  char *opt_infofile;		/* -o */
-  char *opt_shpfile;		/* -p */
-  char *opt_shxfile;		/* -x */
-  char *opt_csvfile;		/* -v */
   int opt_dbf;			/* -F */
   int opt_info;			/* -O */
   int opt_shp;			/* -P */
   int opt_shx;			/* -X */
   int opt_csv;			/* -V */
+  char *opt_inputfile;
+  char *opt_output_dir;		/* -d */
+  char *opt_basename;           /* -n */
+  char *opt_dbffile;		/* -f */
+  char *opt_infofile;		/* -o */
+  char *opt_shpfile;		/* -p */
+  char *opt_shxfile;		/* -x */
+  char *opt_csvfile;		/* -v */
   /* variables */
   int fd;
-} g = {NULL, NULL, NULL,
-       0, 0, 0,
-       NULL, NULL, NULL, NULL, NULL,
+} g = {0, 0, 0,
        0, 0, 0, 0, 0,
+       NULL, NULL, NULL,
+       NULL, NULL, NULL, NULL, NULL,
        -1};
 
 static int process_file(void);

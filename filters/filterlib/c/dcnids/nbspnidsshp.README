@@ -1,0 +1,26 @@
+/*
+ * $Id$
+ *
+ * nbspnidsshp  [-c <count> | -C] [output options] <file> | < <file>
+ *
+ * The program reads from a file or stdin, but the data must start with the
+ * nids header (i.e., the ccb and wmo headers must have been removed;
+ * see the usage instructions in nbspradinfo.README).
+ *
+ * The output options are:
+ *
+ *  -a => same as FOPVX (all) with the default names
+ *  -F => do dbf
+ *  -O => do info
+ *  -P => do shp
+ *  -V => do csv
+ *  -X => do shx
+ *  -f <dbf file>
+ *  -n <base name> => default base name for files
+ *  -o <info file>
+ *  -p <shp file>
+ *  -v <csv file>
+ *  -x <shx file>
+ *
+ * The default action is the same as specifying "-FOPX" (excluding csv).
+ */
