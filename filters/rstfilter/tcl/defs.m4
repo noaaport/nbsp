@@ -57,7 +57,7 @@ lappend action {
 define(match_rad,
 lappend cond {
   ($rstfilter(rad_enable) == 1) && \
-	[regexp {^sdus[2357]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+	[regexp {^sdus[23578]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
 }
 lappend action {
   set rc_status 0;
@@ -67,7 +67,7 @@ lappend action {
 define(match_radloop,
 lappend cond {
   ($rstfilter(radloop_enable) == 1) && \
-	[regexp {^sdus[2357]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+	[regexp {^sdus[23578]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
 }
 lappend action {
   filter_radloop $3 $4 $5 $6;

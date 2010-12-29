@@ -5,19 +5,6 @@
  *
  * $Id$
  */
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <inttypes.h>
-#include <string.h>
-#include <time.h>
-#include <libgen.h>
-#include "err.h"
-#include "dcgini_pdb.h"
-#include "dcgini_util.h"
-#include "dcgini_name.h"
 
 /*
  * Usage:  nbspsatinfo [-b] [-e] <fpath> | < <stdin>
@@ -55,6 +42,20 @@
  *      lat_ur  (upper right-hand corner lat) int x 10000
  *      lon_ur  (upper right-hand corner lon) int x 10000
  */
+
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <inttypes.h>
+#include <string.h>
+#include <time.h>
+#include <libgen.h>
+#include "err.h"
+#include "dcgini_pdb.h"
+#include "dcgini_util.h"
+#include "dcgini_name.h"
 
 struct {
   int opt_background;

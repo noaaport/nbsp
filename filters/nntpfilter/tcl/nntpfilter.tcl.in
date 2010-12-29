@@ -126,7 +126,7 @@ proc process {finfo} {
     	    
 	    return;
     	}
-    } elseif {[regexp {^sdus[2357]} $rc(wmoid)]} {
+    } elseif {[regexp {^sdus} $rc(wmoid)]} {
 	if {!$nntpfilter(rad_enable) || \
 	    ![filterlib_uwildmat $nntpfilter(rad_regex) $rc(awips)]} {
 

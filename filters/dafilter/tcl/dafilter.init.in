@@ -69,7 +69,7 @@ set dafilter(aloft_csv_enable)   0;		# create the aloft csv files
 # Work-crew configuration
 set dafilter(slave) [file join $common(libdir) "dafilter"];
 set dafilter(slave,types) [list "rad" "sat" "grib" "default"];
-set dafilter(slave,rad,ure) {_sdus[2357]} ;
+set dafilter(slave,rad,ure) {_sdus[2-8]};  # 4 and 6 are status msgs
 set dafilter(slave,sat,ure) {_tig};
 set dafilter(slave,grib,ure) {\+grib};
 set dafilter(slave,default,ure) {.*};
