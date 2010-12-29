@@ -32,7 +32,9 @@ proc make_sat_latest {savedir savename} {
 
     global gisfilter;
 
-    if {$gisfilter(sat_latest_enable) == 0} {
+    if {($gisfilter(sat_latest_enable) == 0) || \
+	($gisfilter(sat_latestname) eq "")} {
+
 	return;
     }
 

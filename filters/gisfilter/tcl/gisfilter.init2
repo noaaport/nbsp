@@ -3,12 +3,6 @@
 #
 
 #
-# wct rc files location and options
-#
-set gisfilter(wct_rcdirs) $gisfilter(localconfdirs);
-set gisfilter(wct_rcsubdir) [file join "gis" "wct"];
-set gisfilter(wct_debug) 0;
-#
 # Parameters for the inventory database (for the cleanup script)
 #
 set gisfilter(invdir) [file join $common(datainvdir) "gis"];
@@ -17,36 +11,11 @@ set gisfilter(radinvsubdir) "rad";
 set gisfilter(satinvsubdir) "sat";
 set gisfilter(rad_inv_enable) 1;
 set gisfilter(sat_inv_enable) 1;
-#
-# Parameters for the wct list files.
-#
-# The qdir and ldir are not created by the gisfilter; they must exist.
-# The name of a list file is of the form <prefix>.<suffix> where <prefix>
-# is the format (tif, nc, ...) and suffix is the current minute.
-# For each wct supported format, there is a list variable
-# gisfilter(wct_listfile_list,<fmt>) that has the entries that will
-# be written to the list files. 
-#
-set gisfilter(wct_listfile_qdir) [file join $gisfilter(datadir) "qf"];
-set gisfilter(wct_listfile_qfext) ".qf";
-set gisfilter(wct_listfile_flush) 0;
-#
-# variables
-#
-foreach _type [list sat rad] {
-    foreach _fmt [list tif nc asc tif32 shp csv wkt] {
-        set gisfilter(wct_listfile_fpath,$_type,$_fmt) \
-	    [filter_make_next_qf $_type $_fmt];
-        set gisfilter(wct_listfile_list,$_type,$_fmt) [list];
-    }
-}
-unset _type;
-unset _fmt;
 
 #
 # sat configuration
 #
-set gisfilter(sat_enable) 0;  # whether to process the tig files
+set gisfilter(sat_enable) 1;  # whether to process the tig files
 set gisfilter(sat_regex)  {_tig(a|b|e|w|g|h|p|q)0[1-5]};   # fname
 set gisfilter(sat_latest_enable)        1; # make link to latest
 set gisfilter(sat_latestname)   "sn.last";
@@ -55,6 +24,18 @@ set gisfilter(sat_subdirfmt) {[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 #
 set gisfilter(sat_outputfile_namefmt,gini) "$gisfilter(sat_namefmt).gini";
 set gisfilter(sat_outputfile_dirfmt,gini) "sat/gini/$gisfilter(sat_subdirfmt)";
+#
+set gisfilter(sat_outputfile_namefmt,shp) "$gisfilter(sat_namefmt).shp";
+set gisfilter(sat_outputfile_dirfmt,shp) "sat/shp/$gisfilter(sat_subdirfmt)";
+set gisfilter(sat_outputfile_namefmt,shx) "$gisfilter(sat_namefmt).shx";
+set gisfilter(sat_outputfile_dirfmt,shx) "sat/shp/$gisfilter(sat_subdirfmt)";
+set gisfilter(sat_outputfile_namefmt,dbf) "$gisfilter(sat_namefmt).dbf";
+set gisfilter(sat_outputfile_dirfmt,dbf) "sat/shp/$gisfilter(sat_subdirfmt)";
+set gisfilter(sat_outputfile_namefmt,info) "$gisfilter(sat_namefmt).info";
+set gisfilter(sat_outputfile_dirfmt,info) "sat/shp/$gisfilter(sat_subdirfmt)";
+#
+set gisfilter(sat_outputfile_namefmt,csv) "$gisfilter(sat_namefmt).csv";
+set gisfilter(sat_outputfile_dirfmt,csv) "sat/csv/$gisfilter(sat_subdirfmt)";
 #
 set gisfilter(sat_outputfile_namefmt,tif) "$gisfilter(sat_namefmt).tif";
 set gisfilter(sat_outputfile_dirfmt,tif) "sat/tif/$gisfilter(sat_subdirfmt)";
@@ -65,88 +46,35 @@ set gisfilter(sat_outputfile_dirfmt,nc) "sat/nc/$gisfilter(sat_subdirfmt)";
 set gisfilter(sat_outputfile_namefmt,asc) "$gisfilter(sat_namefmt).asc";
 set gisfilter(sat_outputfile_dirfmt,asc) "sat/asc/$gisfilter(sat_subdirfmt)";
 #
-set gisfilter(sat_outputfile_namefmt,tif32) "$gisfilter(sat_namefmt).tif";
-set gisfilter(sat_outputfile_dirfmt,tif32) \
-	"sat/tif32/$gisfilter(sat_subdirfmt)";
-#
-set gisfilter(sat_outputfile_namefmt,rnc) "$gisfilter(sat_namefmt).rnc";
-set gisfilter(sat_outputfile_dirfmt,rnc) "sat/rnc/$gisfilter(sat_subdirfmt)";
-#
-set gisfilter(sat_outputfile_namefmt,csv) "$gisfilter(sat_namefmt).csv";
-set gisfilter(sat_outputfile_dirfmt,csv) "sat/csv/$gisfilter(sat_subdirfmt)";
-#
-set gisfilter(sat_outputfile_namefmt,shp) "$gisfilter(sat_namefmt).shp";
-set gisfilter(sat_outputfile_dirfmt,shp) "sat/shp/$gisfilter(sat_subdirfmt)";
-#
 set gisfilter(sat_outputfile_namefmt,wkt) "$gisfilter(sat_namefmt).wkt";
 set gisfilter(sat_outputfile_dirfmt,wkt) "sat/wkt/$gisfilter(sat_subdirfmt)";
-#
-##############################################################################
-#
-# Here would go the bundle configurations, for example
-#
-### set gisfilter(sat_bundlelist) [list "sat_conus_tif" "sat_conus_netcdf"];
-#
-### set gisfilter(sat_bundle,sat_conus_tif,outputfile_fmt) "tif";
-### set gisfilter(sat_bundle,sat_conus_tif,wctrc_name) "wct_sat_conus.xml";
-### set gisfilter(sat_bundle,sat_conus_tif,regex) {_tig(e|w)};
-### set gisfilter(sat_bundle,sat_conus_tif,wctrc_file) ""; # dynamic if unset
-#
-### set gisfilter(sat_bundle,sat_conus_netcdf,outputfile_fmt) "nc";
-### set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_name) "wct_sat_conus.xml";
-### set gisfilter(sat_bundle,sat_conus_netcdf,regex) {_tig(e|w)};
-### set gisfilter(sat_bundle,sat_conus_netcdf,wctrc_file) "";
-#
-# which should be specified instead by using the bundle functions defined
-# below.
-##############################################################################
 #
 set gisfilter(sat_bundlelist) [list];
 set gisfilter(sat_bundlelist_seqnum) 0;
 
+# Bundles are of the form
+#
+## set gisfilter(sat_bundle,<tag>,regex) {_tig(e|w)};  # matched against fname
+## set gisfilter(sat_bundle,<tag>,fmt) [list shp shx dbf info ...];
+#
+# which should be constructed with the bundle functions.
+
 #
 # rad configuration
 #
-# It seems that WCT is very, very picky about the name of the input
-# radar file; it must be one of two forms:
-#
-#   sn.NNNN     (and it depends on the number of N's)
-#   TJSJ_SDUS52_N0RJUA_200809220154
 
 set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
 set gisfilter(rad_enable) 1;
-set gisfilter(rad_regex)  {_sdus};  # matches against fname
+set gisfilter(rad_regex)  {_sdus[23578]};  # matches against fname
 set gisfilter(rad_latest_enable)        1; # make link to latest
 set gisfilter(rad_latestname)   "sn.last";
 set gisfilter(rad_namefmt)      {$rc(awips)_$rc(ymd_hm)}; # without extension
 set gisfilter(rad_subdirfmt)    {$rc(awips2)/$rc(awips1)};
 #
 set gisfilter(rad_outputfile_namefmt,nids) \
-	{$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};
+    {$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};  # for WCT
 set gisfilter(rad_outputfile_dirfmt,nids) "rad/nids/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,info) "$gisfilter(rad_namefmt).info";
-set gisfilter(rad_outputfile_dirfmt,info) "rad/info/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,tif) "$gisfilter(rad_namefmt).tif";
-set gisfilter(rad_outputfile_dirfmt,tif) "rad/tif/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,nc) "$gisfilter(rad_namefmt).nc";
-set gisfilter(rad_outputfile_dirfmt,nc) "rad/nc/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,asc) "$gisfilter(rad_namefmt).asc";
-set gisfilter(rad_outputfile_dirfmt,asc) "rad/asc/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,tif32) "$gisfilter(rad_namefmt).tif";
-set gisfilter(rad_outputfile_dirfmt,tif32) \
-	"rad/tif32/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,rnc) "$gisfilter(rad_namefmt).rnc";
-set gisfilter(rad_outputfile_dirfmt,rnc) "rad/rnc/$gisfilter(rad_subdirfmt)";
-#
-set gisfilter(rad_outputfile_namefmt,csv) "$gisfilter(rad_namefmt).csv";
-set gisfilter(rad_outputfile_dirfmt,csv) "rad/csv/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_outputfile_namefmt,shp) "$gisfilter(rad_namefmt).shp";
 set gisfilter(rad_outputfile_dirfmt,shp) "rad/shp/$gisfilter(rad_subdirfmt)";
@@ -157,9 +85,20 @@ set gisfilter(rad_outputfile_dirfmt,dbf) "rad/shp/$gisfilter(rad_subdirfmt)";
 set gisfilter(rad_outputfile_namefmt,info) "$gisfilter(rad_namefmt).info";
 set gisfilter(rad_outputfile_dirfmt,info) "rad/shp/$gisfilter(rad_subdirfmt)";
 #
+set gisfilter(rad_outputfile_namefmt,csv) "$gisfilter(rad_namefmt).csv";
+set gisfilter(rad_outputfile_dirfmt,csv) "rad/csv/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,tif) "$gisfilter(rad_namefmt).tif";
+set gisfilter(rad_outputfile_dirfmt,tif) "rad/tif/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,nc) "$gisfilter(rad_namefmt).nc";
+set gisfilter(rad_outputfile_dirfmt,nc) "rad/nc/$gisfilter(rad_subdirfmt)";
+#
+set gisfilter(rad_outputfile_namefmt,asc) "$gisfilter(rad_namefmt).asc";
+set gisfilter(rad_outputfile_dirfmt,asc) "rad/asc/$gisfilter(rad_subdirfmt)";
+#
 set gisfilter(rad_outputfile_namefmt,wkt) "$gisfilter(rad_namefmt).wkt";
 set gisfilter(rad_outputfile_dirfmt,wkt) "rad/wkt/$gisfilter(rad_subdirfmt)";
-#
 #
 set gisfilter(rad_bundlelist) [list];
 set gisfilter(rad_bundlelist_seqnum) 0;
@@ -173,13 +112,27 @@ set gisfilter(rad2_latest_enable)        1; # make link to latest
 set gisfilter(rad2_latestname)   "sn.last";
 set gisfilter(rad2_namefmt)      {$rc(STATION)_$rc(ymd_hm)};
 set gisfilter(rad2_subdirfmt)    {$rc(STATION)};
+#
 set gisfilter(rad2_outputfile_namefmt,nids) $gisfilter(rad2_namefmt);
 set gisfilter(rad2_outputfile_dirfmt,nids) \
 	"rad2/nids/$gisfilter(rad2_subdirfmt)";
 #
-set gisfilter(rad2_outputfile_namefmt,nids) "$gisfilter(rad2_namefmt).nids";
-set gisfilter(rad2_outputfile_dirfmt,nids) \
-	"rad2/nids/$gisfilter(rad2_subdirfmt)";
+set gisfilter(rad2_outputfile_namefmt,shp) "$gisfilter(rad2_namefmt).shp";
+set gisfilter(rad2_outputfile_dirfmt,shp) \
+	"rad2/shp/$gisfilter(rad2_subdirfmt)";
+set gisfilter(rad2_outputfile_namefmt,shx) "$gisfilter(rad2_namefmt).shx";
+set gisfilter(rad2_outputfile_dirfmt,shx) \
+	"rad2/shp/$gisfilter(rad2_subdirfmt)";
+set gisfilter(rad2_outputfile_namefmt,dbf) "$gisfilter(rad2_namefmt).dbf";
+set gisfilter(rad2_outputfile_dirfmt,dbf) \
+	"rad2/shp/$gisfilter(rad2_subdirfmt)";
+set gisfilter(rad2_outputfile_namefmt,info) "$gisfilter(rad2_namefmt).info";
+set gisfilter(rad2_outputfile_dirfmt,info) \
+	"rad2/shp/$gisfilter(rad2_subdirfmt)";
+#
+set gisfilter(rad2_outputfile_namefmt,csv) "$gisfilter(rad2_namefmt).csv";
+set gisfilter(rad2_outputfile_dirfmt,csv) \
+	"rad2/csv/$gisfilter(rad2_subdirfmt)";
 #
 set gisfilter(rad2_outputfile_namefmt,tif) "$gisfilter(rad2_namefmt).tif";
 set gisfilter(rad2_outputfile_dirfmt,tif) \
@@ -191,28 +144,6 @@ set gisfilter(rad2_outputfile_dirfmt,nc) "rad2/nc/$gisfilter(rad2_subdirfmt)";
 set gisfilter(rad2_outputfile_namefmt,asc) "$gisfilter(rad2_namefmt).asc";
 set gisfilter(rad2_outputfile_dirfmt,asc) \
 	"rad2/asc/$gisfilter(rad2_subdirfmt)";
-#
-set gisfilter(rad2_outputfile_namefmt,tif32) "$gisfilter(rad2_namefmt).tif";
-set gisfilter(rad2_outputfile_dirfmt,tif32) \
-	"rad2/tif32/$gisfilter(rad2_subdirfmt)";
-#
-set gisfilter(rad2_outputfile_namefmt,rnc) "$gisfilter(rad2_namefmt).rnc";
-set gisfilter(rad2_outputfile_dirfmt,rnc) \
-	"rad2/rnc/$gisfilter(rad2_subdirfmt)";
-#
-set gisfilter(rad2_outputfile_namefmt,csv) "$gisfilter(rad2_namefmt).csv";
-set gisfilter(rad2_outputfile_dirfmt,csv) \
-	"rad2/csv/$gisfilter(rad2_subdirfmt)";
-#
-set gisfilter(rad2_outputfile_namefmt,shp) "$gisfilter(rad2_namefmt).shp";
-set gisfilter(rad2_outputfile_dirfmt,shp) \
-	"rad2/shp/$gisfilter(rad2_subdirfmt)";
-set gisfilter(rad2_outputfile_namefmt,shx) "$gisfilter(rad2_namefmt).shx";
-set gisfilter(rad2_outputfile_dirfmt,shx) \
-	"rad2/shp/$gisfilter(rad2_subdirfmt)";
-set gisfilter(rad2_outputfile_namefmt,dbf) "$gisfilter(rad2_namefmt).dbf";
-set gisfilter(rad2_outputfile_dirfmt,dbf) \
-	"rad2/shp/$gisfilter(rad2_subdirfmt)";
 #
 set gisfilter(rad2_outputfile_namefmt,wkt) "$gisfilter(rad2_namefmt).wkt";
 set gisfilter(rad2_outputfile_dirfmt,wkt) \
@@ -229,69 +160,67 @@ if {[file exists $gisfilter(conf)]} {
 #
 # Bundle configuration functions
 #
-proc _wct_bundle_add {type wctfmt wctrc_name regex {wctrc_file ""}} {
+proc _bundle_add {type regex fmt} {
 #
 # type = rad|sat
-# wctfmt = tif,nc,...
-# wctrc_name = wct config file name; searched in default dirs
+# fmt = "shp,shx,..."
 # regex = matched against fname
-# wctrc_file = fpath to wct config file; used as is
 #
     global gisfilter;
-    
+
     append bundle_type $type "_bundle";
     append bundle_list $type "_bundlelist";
 
-    set name $gisfilter(${type}_bundlelist_seqnum);
+    set seqnum $gisfilter(${type}_bundlelist_seqnum);
     incr gisfilter(${type}_bundlelist_seqnum);
 
     # Construct a unique tag
-    set bundle_name [join [list $type $name $wctfmt] "."];
+    set bundle_name [join [list $type $seqnum] "."];
 
     lappend gisfilter($bundle_list) $bundle_name;
-    set gisfilter($bundle_type,$bundle_name,outputfile_fmt) $wctfmt;
-    set gisfilter($bundle_type,$bundle_name,wctrc_name) $wctrc_name;
+    set gisfilter($bundle_type,$bundle_name,fmt) [split $fmt ","];
     set gisfilter($bundle_type,$bundle_name,regex) $regex;
-    set gisfilter($bundle_type,$bundle_name,wctrc_file) $wctrc_file;
 }
 
-proc _wct_bundle_clear {type} {
+proc _bundle_clear {type} {
 
     global gisfilter;
-    
+
     append bundlelist $type "_bundlelist";
 
     set gisfilter($bundlelist) [list];
 }
 
-proc sat_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc sat_bundle_add {regex {fmt "shp,shx,dbf,info"}} {
 
-    _wct_bundle_add "sat" $wct_fmt $wctrcr_name $regex $wctrc_file;
+    _bundle_add "sat" $regex $fmt;
 }
 
 proc sat_bundle_clear {} {
 
-    _wct_bundle_clear "sat";
+    _bundle_clear "sat";
 }
 
-proc rad_bundle_add {wct_fmt wctrcr_name regex {wctrc_file ""}} {
+proc rad_bundle_add {regex {fmt "shp,shx,dbf,info"}} {
 
-    _wct_bundle_add "rad" $wct_fmt $wctrcr_name $regex $wctrc_file;
+    _bundle_add "rad" $regex $fmt;
 }
 
 proc rad_bundle_clear {} {
 
-    _wct_bundle_clear "rad";
+    _bundle_clear "rad";
 }
 
 #
 # Examples
 #
-### sat_bundle_add "tif" "wct_sat_conus.xml" {_tig(e|w)};
-### sat_bundle_add "nc" "wct_sat_conus.xml" {_tig(e|w)};
+# If fmt is not specified, then "shp" and friends is assumed.
 #
-### rad_bundle_add "tif" "wct_rad.xml" {-n0r};
-### rad_bundle_add "nc" "wct_rad.xml" {-n[0-3](r|s)jua};
+### sat_bundle_add {_tig(e|w)};
+### sat_bundle_add {_tig(e|w)} "shp,shx,dbf,info,csv";
+#
+### rad_bundle_add {-n0r} "csv";
+### rad_bundle_add {-n[0-3](r|s)jua};
 
 #
 # Dynamic initialization
@@ -300,30 +229,4 @@ proc rad_bundle_clear {} {
 # Read the bundle configurations
 if {[file exists $gisfilter(bundle_conf)]} {
     source $gisfilter(bundle_conf);
-}
-
-# Get the full paths of the wct rc files
-foreach t [list "rad" "sat"] {
-    foreach bundle $gisfilter(${t}_bundlelist) {
-	set rcfile $gisfilter(${t}_bundle,$bundle,wctrc_file);
-	if {$rcfile ne ""} {
-	    if {[file exists $rcfile] == 0} {
-		log_msg "$rcfile not found.";
-		return 1;
-	    }
-	    # If the specified file exists don't check the standard dirs.
-	    continue;
-	}
-
-	set rcname $gisfilter(${t}_bundle,$bundle,wctrc_name);
-	set rcfile [filterlib_find_conf $rcname \
-	    $gisfilter(wct_rcdirs) $gisfilter(wct_rcsubdir)];
-
-	if {$rcfile eq ""} {
-	    log_msg "$rcname not found.";
-	    return 1;
-	}
-
-	set gisfilter(${t}_bundle,$bundle,wctrc_file) $rcfile;
-    }
 }

@@ -38,8 +38,6 @@
 /usr/local/bin/nbspws-metartomdf
 /usr/local/bin/nbspws-metartomts
 /usr/local/bin/nbspws-uatomdf
-/usr/local/bin/nbspwct
-/usr/local/bin/nbspwctlist
 /usr/local/bin/nbspgismap1
 /usr/local/bin/nbspgismap
 /usr/local/bin/nbspstatplot

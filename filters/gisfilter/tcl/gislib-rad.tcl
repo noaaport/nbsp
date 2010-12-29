@@ -13,16 +13,7 @@ proc filter_rad {rc_varname} {
 	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
 	    continue;
 	}
-	#
-	# shp conversion will be done on-the-fly here, all the others
-	# will be dispatched to an external program (WCT).
-	#
-	set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
-	if {$fmt eq "shp"} {
-	    filter_rad_convert_nids_shp rc $bundle;
-	} else {
-	    filter_rad_queue_convert_nids rc $bundle;
-	}
+	filter_rad_convert_nids_shp rc $bundle;
     }
 }
 
@@ -60,98 +51,8 @@ proc filter_rad_create_nids {rc_varname} {
     filter_rad_insert_inventory $data_savedir $datafpath;
     make_rad_latest $data_savedir $data_savename;
 
-    # Reuse the rc(fpath) variable to point to the newly created gini file.
+    # Reuse the rc(fpath) variable to point to the newly created nids file.
     set rc(fpath) $datafpath;
-}
-
-proc filter_rad_convert_nids_wct_unused {rc_varname bundle} {
-
-    global gisfilter;
-    upvar $rc_varname rc;
-
-    set nidsfpath $rc(fpath);
-    set wctrcfile $gisfilter(rad_bundle,$bundle,wctrc_file);
-
-    # shorthand
-    set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
-
-    set data_savedir [subst $gisfilter(rad_outputfile_dirfmt,$fmt)];
-    set data_savename [subst $gisfilter(rad_outputfile_namefmt,$fmt)];
-
-    file mkdir $data_savedir;
-    set data_path [file join $data_savedir $data_savename];
-    set datafpath [file join $gisfilter(datadir) $data_path];
-
-    set cmd [list "nbspwct" -b -f $fmt -t rad -x $wctrcfile];
-    if {$gisfilter(wct_debug) != 0} {
-	lappend cmd "-V";
-    }
-    if {$gisfilter(rad_latest_enable) != 0} {
-	lappend cmd -l $gisfilter(rad_latestname);
-    }
-    lappend cmd -d $data_savedir -o $data_savename $nidsfpath;
-
-    # Because WCT takes some time to process the file, we will execute it
-    # in the background. 
-
-    eval exec $cmd &;
-
-    # Because of the background execution there is no way to know here if
-    # WCT actially succeeded, so we will insert it in the inventory anyway.
-    # filter_rad_insert_inventory $data_savedir $datafpath;
-}
-
-proc filter_rad_queue_convert_nids {rc_varname bundle} {
-
-    global gisfilter;
-    upvar $rc_varname rc;
-
-    set nidsfpath $rc(fpath);
-    set wctrcfile $gisfilter(rad_bundle,$bundle,wctrc_file);
-
-    # shorthand
-    set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
-
-    set data_savedir [subst $gisfilter(rad_outputfile_dirfmt,$fmt)];
-    set data_savename [subst $gisfilter(rad_outputfile_namefmt,$fmt)];
-
-    file mkdir $data_savedir;
-    set data_path [file join $data_savedir $data_savename];
-    set datafpath [file join $gisfilter(datadir) $data_path];
-
-    # Insert it in the inventory unconditionally. This actually
-    # almost usless because the wct output file is sometimes accompanied
-    # by several other files, and trying to anticipate here all of them
-    # is doomed to fail at some point.
-    #
-    # filter_rad_insert_inventory $data_savedir $datafpath;
-
-    # Write to the wct list
-    lappend gisfilter(wct_listfile_list,rad,$fmt) \
-	"$nidsfpath,[file dirname $datafpath],$wctrcfile" \
-	"#,rad,$nidsfpath,$datafpath";
-
-    # Write the file if the current listfile expired
-    set wct_listfile $gisfilter(wct_listfile_fpath,rad,$fmt);
-    set next_wct_listfile [filter_make_next_qf "rad" $fmt];
-    
-    if {($next_wct_listfile ne $wct_listfile) || \
-	($gisfilter(wct_listfile_flush) == 1)} {
-
-	# Use this function instead of ::fileutil::appendToFile to ensure
-	# that there is a newline inserted at the end so that if further
-	# appends are made thay will go in a new line.
-
-	filterlib_file_append $wct_listfile \
-	    [join $gisfilter(wct_listfile_list,rad,$fmt) "\n"];
-
-	set gisfilter(wct_listfile_list,rad,$fmt) [list];
-
-	if {$next_wct_listfile ne $wct_listfile} {
-	    filter_rad_process_listfile $wct_listfile $fmt;
-	    set gisfilter(wct_listfile_fpath,rad,$fmt) $next_wct_listfile;
-	}
-    }
 }
 
 proc filter_rad_convert_nids_shp {rc_varname bundle} {
@@ -159,17 +60,18 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     global gisfilter;
     upvar $rc_varname rc;
 
-    set fmt $gisfilter(rad_bundle,$bundle,outputfile_fmt);
-    if {$fmt ne "shp"} {
-        return -code error "filter_rad_convert_nids_shp called incorrectly.";
-    }
-
+    set fmtlist $gisfilter(rad_bundle,$bundle,fmt);
     set nidsfpath $rc(fpath);
 
-    # shorthand
-    set fmtlist [list shp shx dbf info];
-
-    foreach fmt $fmtlist {
+    # nbspnidsshp command line options
+    set option(dbf) "-f";
+    set option(info) "-o";
+    set option(shp) "-p";
+    set option(shx) "-x";
+    set option(csv) "-v";
+    set cmd_options [list];
+ 
+   foreach fmt $fmtlist {
 	set data_savedir($fmt) [subst $gisfilter(rad_outputfile_dirfmt,$fmt)];
 	set data_savename($fmt) \
 	    [subst $gisfilter(rad_outputfile_namefmt,$fmt)];
@@ -177,6 +79,10 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	set data_path($fmt) \
 	    [file join $data_savedir($fmt) $data_savename($fmt)];
 	set datafpath($fmt) [file join $gisfilter(datadir) $data_path($fmt)];
+
+	if {[info exists option($fmt)]} {
+	    lappend cmd_options $option($fmt) $datafpath($fmt);
+	}
     }
 
     #
@@ -186,23 +92,14 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     # less than 1.
     #
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
-	set cmd [list nbspunz -C $nidsfpath \
-		     | nbspnidsshp -b -D \
-		     -f $datafpath(dbf) \
-		     -o $datafpath(info) \
-		     -p $datafpath(shp) \
-		     -x $datafpath(shx)];
+	set cmd [concat [list nbspunz -C $nidsfpath | nbspnidsshp -b -D] \
+		     $cmd_options];
     } else {
 	#
 	# If the nids are saved with the gempak header then we have to use
 	# -c $filterslib(gmpk_header_size)
 	#
-	set cmd [list nbspnidsshp -b -D \
-		     -f $datafpath(dbf) \
-		     -o $datafpath(info) \
-		     -p $datafpath(shp) \
-		     -x $datafpath(shx) \
-		     $nidsfpath];
+	set cmd [concat [list nbspnidsshp -b -D] $cmd_options $nidsfpath];
     }
 
     set status [catch {

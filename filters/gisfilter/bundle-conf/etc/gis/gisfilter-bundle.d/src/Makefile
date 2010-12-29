@@ -8,8 +8,8 @@
 #
 #RADENABLE = rad_conus.conf rad_ak.conf rad_gu.conf rad_hi.conf rad_pr.conf
 RADENABLE = rad_us.conf
-#SATENABLE = sat_all.conf
-SATENABLE =
+SATENABLE = sat_all.conf
+# SATENABLE =
 
 ENABLE = ${RADENABLE} ${SATENABLE}
 

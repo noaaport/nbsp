@@ -11,7 +11,7 @@ FILTERTARGET =	gisfilter.tcl
 FILTERSOURCES =	gisfilter.tcl.in
 FILTERNAME =	gisfilter
 FILTERINIT =	gisfilter.init1 gisfilter.init2
-TOOLNAMES =	nbspwct nbspwctlist
+TOOLNAMES =
 
 SAMPLES =	gisfilter.conf-sample \
 		gisfilter-bundle.conf-sample \
@@ -23,8 +23,7 @@ FILTERLIBFILES = gislib-sat.tcl \
 		gislib-rad.tcl \
 		gislib-rad2.tcl \
 		gislib-latest.tcl \
-		gislib-inventory.tcl \
-		gislib-listfile.tcl
+		gislib-inventory.tcl
 
 FILTERLIBTMP = gislib.tmp
 
@@ -32,13 +31,7 @@ BUNDLE_ETC_TEMPLATES = gis-bundle-etc-templates.tgz
 BUNDLE_WWW_TEMPLATES = gis-bundle-www-templates.tgz
 BUNDLE_TEMPLATES = ${BUNDLE_ETC_TEMPLATES} ${BUNDLE_WWW_TEMPLATES}
 
-TMPLSOURCES =   wct_defaults.xml
-TMPLTARGET =    gisfilter-wct-templates.tgz
-TMPLPDIR =      gis
-TMPLDIR =       ${TMPLPDIR}/wct
-
-TARGET =	${FILTERTARGET} ${TOOLNAMES} ${SAMPLES} ${TMPLTARGET} \
-		${BUNDLE_TEMPLATES}
+TARGET =	${FILTERTARGET} ${SAMPLES} ${BUNDLE_TEMPLATES}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -61,20 +54,6 @@ gisfilter-bundle.conf-sample: gisfilter-bundle.conf
 gisfilter-schedule.rc-sample: gisfilter-schedule.rc
 	cp gisfilter-schedule.rc gisfilter-schedule.rc-sample
 
-nbspwct: nbspwct.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# \
-	-e '/@wct_defaults_xml@/r ${TMPLSOURCES}' -e '/@wct_defaults_xml@/d' \
-	nbspwct.tcl > nbspwct
-
-nbspwctlist: nbspwctlist.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspwctlist.tcl > nbspwctlist
-
-${TMPLTARGET}: ${TMPLSOURCES}
-	rm -rf ${TMPLDIR}
-	mkdir -p ${TMPLDIR}
-	cp ${TMPLSOURCES} ${TMPLDIR}
-	tar -czf ${TMPLTARGET} ${TMPLDIR}
-
 ${BUNDLE_TEMPLATES}:
 	cd ../bundle-conf/build; make
 	cp ../bundle-conf/build/${BUNDLE_ETC_TEMPLATES} .
@@ -83,13 +62,10 @@ ${BUNDLE_TEMPLATES}:
 install: ${TARGET}
 	${INSTALL} -m 755 ${FILTERTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
 	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
-	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${DEFAULTS} ${MYCONFDIR}
-	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
 	${INSTALL} -m 644 ${BUNDLE_ETC_TEMPLATES} ${MYCONFDIR}
 	${INSTALL} -m 644 ${BUNDLE_WWW_TEMPLATES} ${MYDOCDIR}
 
 clean:
 	rm -f *~ ${TARGET} ${SAMPLES} Makefile
-	rm -rf ${TMPLPDIR}
 	cd ../bundle-conf/build; make clean
