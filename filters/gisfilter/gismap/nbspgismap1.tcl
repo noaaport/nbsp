@@ -6,7 +6,7 @@
 #                  [-e fext] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-I <inputdir>] -m <map_template> [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <shp2img>]
-#                  <tif1> ... <tifn>
+#                  <file1> ... <filenn>
 #
 ############################################################################
 # Example
@@ -15,24 +15,24 @@
 #
 # outputdir="sat/img/tig"
 # outputfile="tig01.png"
-# inputdir="/var/noaaport/data/gis/sat/tif/tig"
+# inputdir="/var/noaaport/data/gis/sat/shp/tig"
 #
 ## cd /var/noaaport/data/gis
 # mkdir -p $outputdir
 #
 # ./nbspgismap -d $outputdir -o $outputfile \
-#    -f mapfonts -g geodata -m map_sat_conus.tmpl \
+#    -f mapfonts -g geodata -m map_sat.tmpl \
 #    -D extent=a;b;s;d,size=1200;800 \
-#    -I $inputdir -p "*.tif" tigw01 tige01
+#    -I $inputdir -p "*.shp" tigw01 tige01
 ############################################################################
 #
 # This is cmdline tool with no configuration file.
 #
-# -I => parent directory for the arguments <tif1> ...
-# -p => the <tif1> arguments are interpreted as directories. Then the list
-#       of files is constructed using the glob <patt>, sorted in decreasing
-#       order, and the -n <index> option is used to select the file.
-#       The default is the most recent file (index = 0).
+# -I => parent directory for the arguments to the program.
+# -p => the arguments are interpreted as subdirectories of the -I parent dir.
+#       Then the list of files is constructed using the glob <patt>, sorted
+#       in decreasing order, and the -n <index> option is used to select
+#       the file. The default is the most recent file (index = 0).
 # -b => background mode
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs

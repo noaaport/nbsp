@@ -15,7 +15,7 @@ TMPLSOURCES =	gis-colors.def.in \
 TMPLOBJECTS =	gis-colors.def
 
 TMPLFILES =	${TMPLOBJECTS} \
-		map_sat_conus.tmpl \
+		map_sat.tmpl \
 		map_rad_bref.tmpl \
 		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl \
 		map_rad_rvel.tmpl map_rad_rvel_1.tmpl

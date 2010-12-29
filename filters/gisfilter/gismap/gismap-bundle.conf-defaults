@@ -28,17 +28,17 @@ geoc_bundle_clear;
 # Use the function `geoc_bundle_add` to add buldles to the list, or
 # append them explicitly.
 #
-# geoc_sat_bundle_add "sat_conus_01" "map_sat_conus.tmpl" "-126,30,-66,50" \
+# geoc_sat_bundle_add "sat_conus_01" "map_sat.tmpl" "-126,30,-66,50" \
 #       "1280,800" "img/tig01.png" "*.tif" \
-#	"sat/tif/tig/tigw01" "sat/tif/tig/tige01"; 
+#	"sat/shp/tig/tigw01" "sat/shp/tig/tige01"; 
 #
 # lappend nbspgismap(geoclist) {
 #  id		sat_tig01_conus
-#  maptmpl	map_sat_conus.tmpl
+#  maptmpl	map_sat.tmpl
 #  options	{extent	{-126 30 -66 50} size {1280 800}}
 #  outputfile	img/sat/tig01_conus.png
-#  inputpatt     *.tif
-#  inputdirs	{sat/tif/tig/tigw01 sat/tif/tig/tige01}
+#  inputpatt     *.shp
+#  inputdirs	{sat/shp/tig/tigw01 sat/shp/tig/tige01}
 # }
 
 #
