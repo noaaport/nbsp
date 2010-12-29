@@ -99,25 +99,27 @@ proc filter_sat_unz {fpath savedir} {
 # to uncompress the file frames on the fly and then save it in uncompresed
 # form. Only the plain images are generated.
 
-    set output [filter_satplain $fpath $savedir];
+    # Pass the last flag argument as 1 to indicate that the file is
+    # the uncompressed gini file.
+    set output [filter_satplain $fpath $savedir 1];
 
     return $output;
 }
 
-proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
+proc filter_sat_oboselete {wmoid fpath imgsavedir datasavedir imgsavename} {
 
 # This function assumes that the input file (fpath) has been saved in
 # compressed form. It is to be used if the nbsp processor is configured
 # to save the file frames as they come, in compressed form. In this
 # case, the uncompressed data file is saved as well, with the extension
-# given by $rstfilter(sat_datext).
-# The name of the uncompressed file is copied from the generated image file.
+# given by $rstfilter(sat_datext). The name of the uncompressed file
+# is copied from the generated image file.
 #
 # The default names are;
 #
 # knes_tigp01.070101_1414381 (raw, compressed)
 # tigp01_20060307_0101.png   (image)
-# tigp01_20060307_0101.gini  (uncompressed data)
+# tigp01_20060307_0101.ugini  (uncompressed data)
 #
     global rstfilter;
 
@@ -127,7 +129,7 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
     set datafpath [file join $rstfilter(datadir) $datasavedir $datafbasename];
 
     set status [catch {
-	cd $rstfilter(datadir);
+    	cd $rstfilter(datadir);
 	file mkdir $datasavedir;	
 	exec nbspunz -o $datafpath $fpath;
     } errmsg];
@@ -179,9 +181,89 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
     return $output;
 }
 
-proc filter_satplain {fpath savedir savename} {
+proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
+
+# NOTE: In this version, the uncompressed file is not saved.
+# This function assumes that the input file (fpath) has been saved in
+# compressed form. It is to be used if the nbsp processor is configured
+# to save the file frames as they come, in compressed form. In this
+# case, the uncompressed data file is saved as well, with the extension
+# given by $rstfilter(sat_datext). The name of the uncompressed file
+# is copied from the generated image file.
 #
-# The input file to this function is the one with uncompresed frames.
+# The default names are;
+#
+# knes_tigp01.070101_1414381 (raw, compressed)
+# tigp01_20060307_0101.png   (image)
+#
+    global rstfilter;
+
+    # Assume that imgsavename contains the img file extension (png by default)
+    set datafbasename [file rootname $imgsavename];
+    append datafbasename $rstfilter(sat_datext);
+    set datafpath [file join $rstfilter(datadir) $datasavedir $datafbasename];
+
+    if {0} {
+	set status [catch {
+	    cd $rstfilter(datadir);
+	    file mkdir $datasavedir;	
+	    exec nbspunz -o $datafpath $fpath;
+	} errmsg];
+
+	if {$status != 0} {
+	    # In case the file was created
+	    file delete $datafpath;
+	    set output [list 1 ""];
+	    log_msg $errmsg;
+
+	    return $output;
+	}
+    }
+
+    if {($rstfilter(satmap_enable) == 1) && \
+	    [regexp $rstfilter(satmap_regex) $wmoid]} {
+	set output [filter_satmap $wmoid $fpath $imgsavedir $imgsavename];
+	set status [lindex $output 0];
+	if {$status != 0} {
+	    log_msg "Will try without map.";
+	}
+    }
+    # If the map option is unset, or if the map could not be
+    # generated, do the plain image.
+    if {($rstfilter(satmap_enable) == 0) || \
+	    ([regexp $rstfilter(satmap_regex) $wmoid] == 0) || \
+	    ($status != 0)} {
+	# The last argument indicates the input file is not uncompressed
+	## set output [filter_satplain $datafpath $imgsavedir $imgsavename];
+	set output [filter_satplain $fpath $imgsavedir $imgsavename 0];
+    }
+
+    set status [lindex $output 0];
+    set fpathout [lindex $output 1];
+
+    if {$status != 0} {
+	# filter_satplain and filter_satmap delete the image file in
+	# case of an error, but the data file must be deleted here.
+	## file delete $datafpath;
+
+	return $output;
+    }
+
+    # Insert both img and data files in sat inventory
+    ## filter_sat_insert_inventory $datasavedir $datafpath;
+    filter_sat_img_insert_inventory $imgsavedir $fpathout;
+
+    # Create the link to the latest
+    ## make_sat_latest $datasavedir [file tail $datafpath];
+    make_sat_latest $imgsavedir [file tail $fpathout];
+
+    return $output;
+}
+
+proc filter_satplain {fpath savedir savename {unzflag 0}} {
+#
+# If the input file to this function is the one with uncompresed frames, then
+# the flag must be set to 1.
 #
     global rstfilter;
 
@@ -190,7 +272,12 @@ proc filter_satplain {fpath savedir savename} {
     set fbasename "";
 
     set status [catch {
-	set params [exec nbspsat -n -d $savedir -o $savename $fpath];
+	if {$unzflag == 0} {
+	    set params [exec nbspunz $fpath | \
+		        nbspsat -n -d $savedir -o $savename];
+	} else {
+	    set params [exec nbspsat -n -d $savedir -o $savename $fpath];
+	}
     } errmsg];
 
     if {$status == 0} {

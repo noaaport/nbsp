@@ -70,7 +70,7 @@ int main(int argc, char **argv){
   int status = 0;
   int c;
   char *optstr = "behi:";
-  char *usage = "nbspsatinfo [-b] [-e] [-h] file";
+  char *usage = "nbspsatinfo [-b] [-e] [-h] [-i] file";
 
   set_progname(basename(argv[0]));
 

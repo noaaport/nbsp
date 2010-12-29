@@ -5,35 +5,20 @@
  *
  * $Id$
  */
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <png.h>
-#include <zlib.h>
-#include <libgen.h>
-#include "err.h"
-#include "io.h"
-#include "unz.h"
-#include "dcgini_misc.h"
-#include "dcgini_name.h"
-#include "dcgini_pdb.h"
-#include "dcgini_util.h"
 
 /*
  * Usage:
  *
- *  nbspsat [-C | -g | -i | -n] [options] file
+ *  nbspsat [-C | -g | -i | -n] [options] [file | < file]
  *
  * -C => check pdb header and exit
  * -i => print info and exit
  * -g => gempak output (compress file)
  * -n => png image output (default)
  *
- * This program assumes that the input file is the uncompressed gini data
- * file. Only when it is invoked with [-i] to just extract the relevant info,
+ * The program can read from a file or from stdin, but it assumes that
+ * the input is the uncompressed gini data file. Only when it is
+ * invoked with [-i] to just extract the relevant info,
  * it can take either the compressed or uncompresed file as input.
  * It prints to stdout
  *
@@ -65,7 +50,25 @@
  *      lon_ur  (upper right-hand corner lon) int x 10000
  */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <png.h>
+#include <zlib.h>
+#include <libgen.h>
+#include "err.h"
+#include "io.h"
+#include "unz.h"
+#include "dcgini_misc.h"
+#include "dcgini_name.h"
+#include "dcgini_pdb.h"
+#include "dcgini_util.h"
+
 struct {
+  char *opt_inputfile;
   char *opt_output_dir;		/* -d */
   char *opt_fname_prefix;	/* -p => change the default prefix name */
   char *opt_output_fname;	/* -o */
@@ -79,16 +82,16 @@ struct {
   /*
    * variables
    */
-  int in_fd;
-} g = {NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, -1};
+  int fd;
+} g = {NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, -1};
 
 static void cleanup(void);
 static int write_pngdata(FILE *fp, unsigned char *data,
 			 int linesize, int numlines);
 static int write_gempak(int gempak_fd, int fd,
        struct nesdis_pdb_st *npdb, int *unz_status);
-static int process_file(char *in_file);
-static int write_file_info(char *in_file);
+static int process_file(void);
+static int write_file_info(void);
 static void check(struct nesdis_pdb_st *npdb);
 static void output(char *fname,
 		   struct nesdis_pdb_st *npdb,
@@ -98,10 +101,9 @@ int main(int argc, char **argv){
 
   int status = 0;
   int c;
-  char *in_file;
   char *optstr = "hCbd:egino:p:s";
   char *usage = "nbspsat [-C|-i|-g|-n] [-b] [-o name] [-d outputdir] [-e]"
-    " [-p prefix] [-s] file";
+    " [-p prefix] [-s] [file | < file]";
   int conflict_Cign = 0;
   int conflict_is = 0;
   int conflict_op = 0;
@@ -170,32 +172,31 @@ int main(int argc, char **argv){
   if(conflict_op > 1)
     log_errx(1, "Conflicting options: op. %s", usage);
 
-  if(optind != argc - 1)
-    log_errx(1, "Needs one argument.");
-
-  in_file = argv[optind];
+  if(optind < argc - 1)
+    log_errx(1, "Too many arguments.");
+  else if(optind == argc - 1)
+    g.opt_inputfile = argv[optind];
 
   if(g.opt_background == 1)
     set_usesyslog();
 
   if(g.opt_wrinfo == 1)
-    status = write_file_info(in_file);
+    status = write_file_info();
   else
-    status = process_file(in_file);
+    status = process_file();
 
   return(status != 0 ? 1 : 0);
 }
 
 static void cleanup(void){
 
-  if(g.in_fd != -1){
-    close(g.in_fd);
-    g.in_fd = -1;
-  }
+  if((g.fd != -1) && (g.opt_inputfile != NULL))
+    (void)close(g.fd);
 }
 
-static int process_file(char *in_file){
+static int process_file(void){
 
+  int fd;
   struct nesdis_pdb_st npdb;
   unsigned char *data = NULL;	/* records data (after pdb) */
   size_t data_size;		/* linesize * numlines */
@@ -209,19 +210,29 @@ static int process_file(char *in_file){
   /* Initialize */
   npdb.buffer_size = NESDIS_WMO_HEADER_SIZE + NESDIS_PDB_SIZE;
 
-  g.in_fd = open(in_file, O_RDONLY);
-  if(g.in_fd == -1)
-    log_err(1, "Could not open %s", in_file);
+  if(g.opt_inputfile == NULL)
+    fd = fileno(stdin);
+  else{
+    fd = open(g.opt_inputfile, O_RDONLY);
+    if(fd == -1)
+      log_err_open(g.opt_inputfile);
+    else
+      g.fd = fd;
+  }
 
-  status = read_nesdis_pdb(g.in_fd, &npdb);
+  status = read_nesdis_pdb(fd, &npdb);
+  if(status != 0){
+    if(g.opt_inputfile != NULL)
+      log_warnx("Error reading nesdis header from %s", g.opt_inputfile);
 
-  if(status == -1)
-    log_err(1, "Error from read_nesdis_pdb(): %s", in_file);
-  else if(status == 1)
-    log_errx(1, "File too short: %s", in_file);
-  else if(status == 2)
-    log_errx(1, "File has invalid wmo header: %s", in_file);
-  
+    if(status == -1)
+      log_err(1, "Error from read_nesdis_pdb()");
+    else if(status == 1)
+      log_errx(1, "File too short");
+    else if(status == 2)
+      log_errx(1, "File has invalid wmo header");
+  }
+
   if(g.opt_C == 1){
     check(&npdb);
     return(0);
@@ -236,11 +247,12 @@ static int process_file(char *in_file){
     if(data == NULL)
       log_err(1, "malloc()");
 
-    n = read(g.in_fd, data, data_size);
+    /* Use readf in case the input comes from a pipe (stdin) */
+    n = readf(fd, data, data_size);
     if(n == -1)
-      log_err(1, "Error reading from %s", in_file);
+      log_err(1, "Error from read()");
     else if((size_t)n != data_size)
-      log_errx(1, "File is corrupt (short): %s", in_file);
+      log_errx(1, "File is corrupt (short)");
   }
 
   if(g.opt_output_dir != NULL){
@@ -282,7 +294,7 @@ static int process_file(char *in_file){
     if(gempak_fd == -1)
       log_err(1, "Could not open %s", fname);
 
-    if((status = write_gempak(gempak_fd, g.in_fd, &npdb, &zstatus)) != 0){
+    if((status = write_gempak(gempak_fd, fd, &npdb, &zstatus)) != 0){
       unlink(fname);
       if(status == -1)
 	log_err(1, "Could not write to %s", fname);
@@ -428,7 +440,7 @@ static int write_gempak(int gempak_fd, int fd,
   return(status);
 }
 
-static int write_file_info(char *in_file){
+static int write_file_info(void){
   /*
    * This function extracts and prints (to stdout) the information
    * from the nesdis pdb that is used by the filters. It tries to
@@ -443,36 +455,35 @@ static int write_file_info(char *in_file){
   char *output_fname;
   int status = 0;
 
-  if(in_file != NULL){
-    fd = open(in_file, O_RDONLY);
-    if(fd == -1){
-      log_err(1, "Could not open %s", in_file);
-      return(-1);
-    }
-  }else
+  if(g.opt_inputfile == NULL)
     fd = fileno(stdin);
-
-  status = read_nesdis_pdb_compressed(fd, &npdb);
-  if(in_file != NULL){
-    close(fd);
+  else{
+    fd = open(g.opt_inputfile, O_RDONLY);
+    if(fd == -1)
+      log_err_open(g.opt_inputfile);
+    else
+      g.fd = fd;
   }
 
-  if(status == -1){
-    if(in_file != NULL)
-      log_err(1, "Error reading from %s", in_file);
-    else
-      log_err(1, "Error reading from stdin.");
+  status = read_nesdis_pdb_compressed(fd, &npdb);
 
-    return(-1);
-  }else if(status != 0){
-    if(status == 1)
-      log_errx(1, "File too short: %s", in_file);
-    else if(status == 2)
-      log_errx(1, "File has invalid wmo header: %s", in_file);
-    else
-      log_errx(1, "Could not read nesdis pdb. Error from zlib.");
+  if(status != 0){
+    if(g.opt_inputfile != NULL)
+      log_warnx("Error reading nesdis header from %s", g.opt_inputfile);
 
-    return(1);
+    if(status == -1){
+      log_err(1, "Error from read()");
+      return(-1);
+    }else if(status != 0){
+      if(status == 1)
+	log_errx(1, "File too short");
+      else if(status == 2)
+	log_errx(1, "File has invalid wmo header");
+      else
+	log_errx(1, "Could not read nesdis pdb. Error from zlib.");
+      
+      return(1);
+    }
   }
 
   output_fname = dcgini_default_name(&npdb, NULL, DCGINI_PNGEXT);
