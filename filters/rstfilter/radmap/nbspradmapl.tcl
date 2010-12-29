@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# Usage: nbspradmapl [-d <output_subdir>] [-h] [-l <latestname>] \
+# Usage: nbspradmapl [-d <output_subdir>] [-l <latestname>] \
 #			<site> <type> <nids_subdir>
 #
 # Example: nbspradmapl jua n0r digatmos/nexrad/nids
@@ -11,15 +11,12 @@
 # images on the fly. In the web server, the tool is executed from the
 # Config(docRoot) so the <nids_subdir> must either be relative to that
 # or the full directory path.
-#
-# The files are assumed to have been saved with the gempak header. The [-h]
-# option must be given otherwise.
 # 
 package require cmdline;
 
-set usage {nbspradmapl [-d <output_subdir>] [-h] [-l <latestname>]
+set usage {nbspradmapl [-d <output_subdir>] [-l <latestname>]
     <site> <type> <nids_subdir>};
-set optlist {{d.arg ""} h {l.arg ""}};
+set optlist {{d.arg ""} {l.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 
 proc log_warn s {
@@ -72,10 +69,6 @@ set nidspath [file join $nidssubdir $site $type $option(l)];
 set opts [list "-D" "awips=${type}${site}"];
 if {$option(d) ne ""} {
     lappend opts "-d" $option(d) "-t" $option(d);
-}
-
-if {$option(h) == 1} {
-    lappend opts "-h";
 }
 
 set status [catch {
