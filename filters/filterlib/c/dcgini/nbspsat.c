@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2010 Jose F. Nieves <nieves@ltp.upr.clu.edu>
  *
  * See LICENSE
  *
