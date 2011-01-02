@@ -3,15 +3,15 @@
 #
 
 The gisfilter is a special-purpose filter that transforms appropriate
-subsets of the noaaport data (rad, sat,..) to GIS-compatible formats,
-such as shapefiles. It currently (nbsp-2.0.r4) converts radar level III
-nids files to shapefiles. The shapefiles are then used as data files
-in a set of mapserver scripts to produce the radar images that are
+subsets of the noaaport data to GIS-compatible formats,
+such as shapefiles. It currently (nbsp-2.1.r1) converts radar level III
+nids files and sat gini files to shapefiles. The shapefiles are then used
+as data input to some mapserver scripts to produce images that are
 displaped in the Nbsp web server. The advantage of this approch (shapefiles)
 is that other geographical data can be superimposed (layered) in
 the mapserver scripts. 
 
-The filter transforms the data and saves it in a separate directory
+The gisfilter transforms the data and saves it in a separate directory
 
         /var/noaaport/data/gis
 

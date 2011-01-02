@@ -126,13 +126,11 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	return;
     }
 
-    # Insert each one in the cleanup inventory
+    # Insert each one in the cleanup inventory and create the latest link
     foreach fmt $fmtlist {
 	filter_rad_insert_inventory $data_savedir($fmt) $datafpath($fmt);
+	if {$gisfilter(rad_latest_enable) != 0} {
+	    make_rad_latest $data_savedir($fmt) $data_savename($fmt);
+	}
     }
-
-    if {$gisfilter(rad_latest_enable) != 0} {
-	# Create the link to the info file
-	make_rad_latest $data_savedir(info) $data_savename(info);
-    }    
 }

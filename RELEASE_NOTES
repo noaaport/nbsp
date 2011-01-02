@@ -1,8 +1,8 @@
 $Id$
 
-- Wed Nov 10 06:02:49 AST 2010
+- Thu Dec 30 20:37:12 AST 2010
 
-This is the 4th release of the 2.0 version of the
+This is the ist release of the 2.1 version of the
 
     Noaaport Broadcast System Processor (Nbsp).
 
@@ -18,9 +18,9 @@ has an entirely new module for cretaing ``GIS ready'' applications,
 consisting of a new filter (``gisfilter'') and a library for converting
 the data to shapefiles. The library, which is being written from scratch
 and is still in development, currently decodes (converts)
-radar (level III nids) files to shapefiles; several other file types
-are being worked out. The library does the conversion faster
-than existing alternatives that we have tried by a factor of more than 100.
+radar level III nids and statellite gini files to shapefiles.
+The library does the conversion mich faster than existing alternatives
+that we have tried by a factor of more than 100.
 Some sample data and images created by the gisfilter are shown in
 
     http://www.opennoaaport.net:8015

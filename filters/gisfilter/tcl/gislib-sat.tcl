@@ -105,13 +105,11 @@ proc filter_sat_convert_gini_shp {rc_varname bundle} {
 	return;
     }
 
-    # Insert each one in the cleanup inventory
+    # Insert each one in the cleanup inventory and create the latest link
     foreach fmt $fmtlist {
 	filter_sat_insert_inventory $data_savedir($fmt) $datafpath($fmt);
-    }
-
-    if {$gisfilter(sat_latest_enable) != 0} {
-	# Create the link to the info file
-	make_sat_latest $data_savedir(info) $data_savename(info);
+	if {$gisfilter(sat_latest_enable) != 0} {
+	    make_sat_latest $data_savedir($fmt) $data_savename($fmt);
+	}
     }
 }

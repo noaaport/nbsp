@@ -45,13 +45,14 @@ proc make_latest {savedir savename latestname} {
 #
 # Create a link to the newest file.
 #
+    append linkpath $latestname [file extension $savename];
+    set latest $savename;
+
     set currentdir [pwd];
     cd $savedir;
 
-    set latest $savename;
-    set linkpath $latestname;
     if {[file exists $latest] == 0} {
- 	cd $currentdir;
+	cd $currentdir;
 	return;
     }
 

@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+The map scripts use the "latest" file in the data directories.
+
+Usage -
+
+  shp2img -m <type>.map -o <type>.png
+
+Requirement - 
+
+  Enable the gisfilter.

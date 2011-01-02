@@ -1,8 +1,14 @@
 #
 # $Id$
 #
+Sat Jan  1 21:41:47 AST 2011: This method for producing the radar mosaics
+is now superseeded by the GIS approach of the gisfilter.
+See gisfilter.README.
+
+Old contents -
+
 Nbsp comes with a set of scripts for producing radar mosaics out of the
-radar Level I data files. These scripts, apart from using some of the
+radar Level III data files. These scripts, apart from using some of the
 gempak programs, require that the gempak filter be enabled. In particular,
 "nbspgdradr" is the script that calls gdradr to collect the data and requires
 that the gpfilter processes the radar data files.

@@ -238,8 +238,15 @@ proc get_input_files_list {argv} {
 	    log_warn "Skiping $dir; not found.";
 	    continue;
 	}
-	set flist [lsort -decreasing \
-		       [glob -nocomplain -directory $dir $option(p)]];
+	# Exclude the latest links in the glob
+	set flist [list];
+	foreach f [lsort -decreasing \
+		       [glob -nocomplain -directory $dir $option(p)]] {
+	    if {[file type $f] ne "link"} {
+		lappend flist $f;
+	    }
+	}
+
 	set f [lindex $flist $option(n)];
 	if {$f ne ""} {
 	    lappend nbspgismap(input_files_list) $f;

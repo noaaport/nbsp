@@ -1,0 +1,1844 @@
+#
+# $Id$
+#
+# Sample map script for a tige02 data file
+# For other files, just change input file name, and the values
+# of the "extent" and "size" parameters.
+# 
+MAP
+    UNITS  DD
+    EXTENT -122 14 -49 61    # from tige02.info file
+    # SIZE 1280 1280           # from tige02.info file
+    SIZE 768 768
+    IMAGECOLOR 0 0 0
+    # FONTSET "mapfonts/fonts.list"
+
+    LAYER
+	NAME sat-1
+	DATA DATA /var/noaaport/data/gis/sat/shp/tig/tige02/latest.shp
+	TYPE POINT
+	STATUS ON
+	#TRANSPARENCY 100
+	OPACITY 100
+	#
+	# PROCESSING "SCALE=0,80"
+	# PROCESSING "SCALE_BUCKETS=16"
+	#
+
+	CLASSITEM "level"
+
+	CLASS
+	  EXPRESSION ([level] == 0)
+	  STYLE
+	  COLOR 0 0 0
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 1)
+	  STYLE
+	  COLOR 1 1 1
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 2)
+	  STYLE
+	  COLOR 2 2 2
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 3)
+	  STYLE
+	  COLOR 3 3 3
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 4)
+	  STYLE
+	  COLOR 4 4 4
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 5)
+	  STYLE
+	  COLOR 5 5 5
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 6)
+	  STYLE
+	  COLOR 6 6 6
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 7)
+	  STYLE
+	  COLOR 7 7 7
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 8)
+	  STYLE
+	  COLOR 8 8 8
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 9)
+	  STYLE
+	  COLOR 9 9 9
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 10)
+	  STYLE
+	  COLOR 10 10 10
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 11)
+	  STYLE
+	  COLOR 11 11 11
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 12)
+	  STYLE
+	  COLOR 12 12 12
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 13)
+	  STYLE
+	  COLOR 13 13 13
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 14)
+	  STYLE
+	  COLOR 14 14 14
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 15)
+	  STYLE
+	  COLOR 15 15 15
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 16)
+	  STYLE
+	  COLOR 16 16 16
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 17)
+	  STYLE
+	  COLOR 17 17 17
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 18)
+	  STYLE
+	  COLOR 18 18 18
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 19)
+	  STYLE
+	  COLOR 19 19 19
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 20)
+	  STYLE
+	  COLOR 20 20 20
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 21)
+	  STYLE
+	  COLOR 21 21 21
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 22)
+	  STYLE
+	  COLOR 22 22 22
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 23)
+	  STYLE
+	  COLOR 23 23 23
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 24)
+	  STYLE
+	  COLOR 24 24 24
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 25)
+	  STYLE
+	  COLOR 25 25 25
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 26)
+	  STYLE
+	  COLOR 26 26 26
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 27)
+	  STYLE
+	  COLOR 27 27 27
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 28)
+	  STYLE
+	  COLOR 28 28 28
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 29)
+	  STYLE
+	  COLOR 29 29 29
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 30)
+	  STYLE
+	  COLOR 30 30 30
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 31)
+	  STYLE
+	  COLOR 31 31 31
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 32)
+	  STYLE
+	  COLOR 32 32 32
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 33)
+	  STYLE
+	  COLOR 33 33 33
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 34)
+	  STYLE
+	  COLOR 34 34 34
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 35)
+	  STYLE
+	  COLOR 35 35 35
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 36)
+	  STYLE
+	  COLOR 36 36 36
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 37)
+	  STYLE
+	  COLOR 37 37 37
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 38)
+	  STYLE
+	  COLOR 38 38 38
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 39)
+	  STYLE
+	  COLOR 39 39 39
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 40)
+	  STYLE
+	  COLOR 40 40 40
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 41)
+	  STYLE
+	  COLOR 41 41 41
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 42)
+	  STYLE
+	  COLOR 42 42 42
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 43)
+	  STYLE
+	  COLOR 43 43 43
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 44)
+	  STYLE
+	  COLOR 44 44 44
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 45)
+	  STYLE
+	  COLOR 45 45 45
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 46)
+	  STYLE
+	  COLOR 46 46 46
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 47)
+	  STYLE
+	  COLOR 47 47 47
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 48)
+	  STYLE
+	  COLOR 48 48 48
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 49)
+	  STYLE
+	  COLOR 49 49 49
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 50)
+	  STYLE
+	  COLOR 50 50 50
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 51)
+	  STYLE
+	  COLOR 51 51 51
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 52)
+	  STYLE
+	  COLOR 52 52 52
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 53)
+	  STYLE
+	  COLOR 53 53 53
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 54)
+	  STYLE
+	  COLOR 54 54 54
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 55)
+	  STYLE
+	  COLOR 55 55 55
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 56)
+	  STYLE
+	  COLOR 56 56 56
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 57)
+	  STYLE
+	  COLOR 57 57 57
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 58)
+	  STYLE
+	  COLOR 58 58 58
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 59)
+	  STYLE
+	  COLOR 59 59 59
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 60)
+	  STYLE
+	  COLOR 60 60 60
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 61)
+	  STYLE
+	  COLOR 61 61 61
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 62)
+	  STYLE
+	  COLOR 62 62 62
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 63)
+	  STYLE
+	  COLOR 63 63 63
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 64)
+	  STYLE
+	  COLOR 64 64 64
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 65)
+	  STYLE
+	  COLOR 65 65 65
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 66)
+	  STYLE
+	  COLOR 66 66 66
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 67)
+	  STYLE
+	  COLOR 67 67 67
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 68)
+	  STYLE
+	  COLOR 68 68 68
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 69)
+	  STYLE
+	  COLOR 69 69 69
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 70)
+	  STYLE
+	  COLOR 70 70 70
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 71)
+	  STYLE
+	  COLOR 71 71 71
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 72)
+	  STYLE
+	  COLOR 72 72 72
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 73)
+	  STYLE
+	  COLOR 73 73 73
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 74)
+	  STYLE
+	  COLOR 74 74 74
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 75)
+	  STYLE
+	  COLOR 75 75 75
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 76)
+	  STYLE
+	  COLOR 76 76 76
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 77)
+	  STYLE
+	  COLOR 77 77 77
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 78)
+	  STYLE
+	  COLOR 78 78 78
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 79)
+	  STYLE
+	  COLOR 79 79 79
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 80)
+	  STYLE
+	  COLOR 80 80 80
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 81)
+	  STYLE
+	  COLOR 81 81 81
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 82)
+	  STYLE
+	  COLOR 82 82 82
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 83)
+	  STYLE
+	  COLOR 83 83 83
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 84)
+	  STYLE
+	  COLOR 84 84 84
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 85)
+	  STYLE
+	  COLOR 85 85 85
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 86)
+	  STYLE
+	  COLOR 86 86 86
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 87)
+	  STYLE
+	  COLOR 87 87 87
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 88)
+	  STYLE
+	  COLOR 88 88 88
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 89)
+	  STYLE
+	  COLOR 89 89 89
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 90)
+	  STYLE
+	  COLOR 90 90 90
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 91)
+	  STYLE
+	  COLOR 91 91 91
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 92)
+	  STYLE
+	  COLOR 92 92 92
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 93)
+	  STYLE
+	  COLOR 93 93 93
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 94)
+	  STYLE
+	  COLOR 94 94 94
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 95)
+	  STYLE
+	  COLOR 95 95 95
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 96)
+	  STYLE
+	  COLOR 96 96 96
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 97)
+	  STYLE
+	  COLOR 97 97 97
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 98)
+	  STYLE
+	  COLOR 98 98 98
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 99)
+	  STYLE
+	  COLOR 99 99 99
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 100)
+	  STYLE
+	  COLOR 100 100 100
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 101)
+	  STYLE
+	  COLOR 101 101 101
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 102)
+	  STYLE
+	  COLOR 102 102 102
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 103)
+	  STYLE
+	  COLOR 103 103 103
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 104)
+	  STYLE
+	  COLOR 104 104 104
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 105)
+	  STYLE
+	  COLOR 105 105 105
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 106)
+	  STYLE
+	  COLOR 106 106 106
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 107)
+	  STYLE
+	  COLOR 107 107 107
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 108)
+	  STYLE
+	  COLOR 108 108 108
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 109)
+	  STYLE
+	  COLOR 109 109 109
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 110)
+	  STYLE
+	  COLOR 110 110 110
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 111)
+	  STYLE
+	  COLOR 111 111 111
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 112)
+	  STYLE
+	  COLOR 112 112 112
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 113)
+	  STYLE
+	  COLOR 113 113 113
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 114)
+	  STYLE
+	  COLOR 114 114 114
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 115)
+	  STYLE
+	  COLOR 115 115 115
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 116)
+	  STYLE
+	  COLOR 116 116 116
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 117)
+	  STYLE
+	  COLOR 117 117 117
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 118)
+	  STYLE
+	  COLOR 118 118 118
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 119)
+	  STYLE
+	  COLOR 119 119 119
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 120)
+	  STYLE
+	  COLOR 120 120 120
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 121)
+	  STYLE
+	  COLOR 121 121 121
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 122)
+	  STYLE
+	  COLOR 122 122 122
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 123)
+	  STYLE
+	  COLOR 123 123 123
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 124)
+	  STYLE
+	  COLOR 124 124 124
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 125)
+	  STYLE
+	  COLOR 125 125 125
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 126)
+	  STYLE
+	  COLOR 126 126 126
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 127)
+	  STYLE
+	  COLOR 127 127 127
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 128)
+	  STYLE
+	  COLOR 128 128 128
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 129)
+	  STYLE
+	  COLOR 129 129 129
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 130)
+	  STYLE
+	  COLOR 130 130 130
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 131)
+	  STYLE
+	  COLOR 131 131 131
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 132)
+	  STYLE
+	  COLOR 132 132 132
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 133)
+	  STYLE
+	  COLOR 133 133 133
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 134)
+	  STYLE
+	  COLOR 134 134 134
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 135)
+	  STYLE
+	  COLOR 135 135 135
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 136)
+	  STYLE
+	  COLOR 136 136 136
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 137)
+	  STYLE
+	  COLOR 137 137 137
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 138)
+	  STYLE
+	  COLOR 138 138 138
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 139)
+	  STYLE
+	  COLOR 139 139 139
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 140)
+	  STYLE
+	  COLOR 140 140 140
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 141)
+	  STYLE
+	  COLOR 141 141 141
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 142)
+	  STYLE
+	  COLOR 142 142 142
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 143)
+	  STYLE
+	  COLOR 143 143 143
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 144)
+	  STYLE
+	  COLOR 144 144 144
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 145)
+	  STYLE
+	  COLOR 145 145 145
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 146)
+	  STYLE
+	  COLOR 146 146 146
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 147)
+	  STYLE
+	  COLOR 147 147 147
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 148)
+	  STYLE
+	  COLOR 148 148 148
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 149)
+	  STYLE
+	  COLOR 149 149 149
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 150)
+	  STYLE
+	  COLOR 150 150 150
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 151)
+	  STYLE
+	  COLOR 151 151 151
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 152)
+	  STYLE
+	  COLOR 152 152 152
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 153)
+	  STYLE
+	  COLOR 153 153 153
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 154)
+	  STYLE
+	  COLOR 154 154 154
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 155)
+	  STYLE
+	  COLOR 155 155 155
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 156)
+	  STYLE
+	  COLOR 156 156 156
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 157)
+	  STYLE
+	  COLOR 157 157 157
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 158)
+	  STYLE
+	  COLOR 158 158 158
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 159)
+	  STYLE
+	  COLOR 159 159 159
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 160)
+	  STYLE
+	  COLOR 160 160 160
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 161)
+	  STYLE
+	  COLOR 161 161 161
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 162)
+	  STYLE
+	  COLOR 162 162 162
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 163)
+	  STYLE
+	  COLOR 163 163 163
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 164)
+	  STYLE
+	  COLOR 164 164 164
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 165)
+	  STYLE
+	  COLOR 165 165 165
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 166)
+	  STYLE
+	  COLOR 166 166 166
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 167)
+	  STYLE
+	  COLOR 167 167 167
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 168)
+	  STYLE
+	  COLOR 168 168 168
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 169)
+	  STYLE
+	  COLOR 169 169 169
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 170)
+	  STYLE
+	  COLOR 170 170 170
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 171)
+	  STYLE
+	  COLOR 171 171 171
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 172)
+	  STYLE
+	  COLOR 172 172 172
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 173)
+	  STYLE
+	  COLOR 173 173 173
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 174)
+	  STYLE
+	  COLOR 174 174 174
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 175)
+	  STYLE
+	  COLOR 175 175 175
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 176)
+	  STYLE
+	  COLOR 176 176 176
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 177)
+	  STYLE
+	  COLOR 177 177 177
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 178)
+	  STYLE
+	  COLOR 178 178 178
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 179)
+	  STYLE
+	  COLOR 179 179 179
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 180)
+	  STYLE
+	  COLOR 180 180 180
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 181)
+	  STYLE
+	  COLOR 181 181 181
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 182)
+	  STYLE
+	  COLOR 182 182 182
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 183)
+	  STYLE
+	  COLOR 183 183 183
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 184)
+	  STYLE
+	  COLOR 184 184 184
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 185)
+	  STYLE
+	  COLOR 185 185 185
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 186)
+	  STYLE
+	  COLOR 186 186 186
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 187)
+	  STYLE
+	  COLOR 187 187 187
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 188)
+	  STYLE
+	  COLOR 188 188 188
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 189)
+	  STYLE
+	  COLOR 189 189 189
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 190)
+	  STYLE
+	  COLOR 190 190 190
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 191)
+	  STYLE
+	  COLOR 191 191 191
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 192)
+	  STYLE
+	  COLOR 192 192 192
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 193)
+	  STYLE
+	  COLOR 193 193 193
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 194)
+	  STYLE
+	  COLOR 194 194 194
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 195)
+	  STYLE
+	  COLOR 195 195 195
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 196)
+	  STYLE
+	  COLOR 196 196 196
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 197)
+	  STYLE
+	  COLOR 197 197 197
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 198)
+	  STYLE
+	  COLOR 198 198 198
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 199)
+	  STYLE
+	  COLOR 199 199 199
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 200)
+	  STYLE
+	  COLOR 200 200 200
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 201)
+	  STYLE
+	  COLOR 201 201 201
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 202)
+	  STYLE
+	  COLOR 202 202 202
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 203)
+	  STYLE
+	  COLOR 203 203 203
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 204)
+	  STYLE
+	  COLOR 204 204 204
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 205)
+	  STYLE
+	  COLOR 205 205 205
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 206)
+	  STYLE
+	  COLOR 206 206 206
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 207)
+	  STYLE
+	  COLOR 207 207 207
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 208)
+	  STYLE
+	  COLOR 208 208 208
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 209)
+	  STYLE
+	  COLOR 209 209 209
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 210)
+	  STYLE
+	  COLOR 210 210 210
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 211)
+	  STYLE
+	  COLOR 211 211 211
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 212)
+	  STYLE
+	  COLOR 212 212 212
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 213)
+	  STYLE
+	  COLOR 213 213 213
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 214)
+	  STYLE
+	  COLOR 214 214 214
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 215)
+	  STYLE
+	  COLOR 215 215 215
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 216)
+	  STYLE
+	  COLOR 216 216 216
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 217)
+	  STYLE
+	  COLOR 217 217 217
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 218)
+	  STYLE
+	  COLOR 218 218 218
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 219)
+	  STYLE
+	  COLOR 219 219 219
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 220)
+	  STYLE
+	  COLOR 220 220 220
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 221)
+	  STYLE
+	  COLOR 221 221 221
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 222)
+	  STYLE
+	  COLOR 222 222 222
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 223)
+	  STYLE
+	  COLOR 223 223 223
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 224)
+	  STYLE
+	  COLOR 224 224 224
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 225)
+	  STYLE
+	  COLOR 225 225 225
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 226)
+	  STYLE
+	  COLOR 226 226 226
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 227)
+	  STYLE
+	  COLOR 227 227 227
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 228)
+	  STYLE
+	  COLOR 228 228 228
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 229)
+	  STYLE
+	  COLOR 229 229 229
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 230)
+	  STYLE
+	  COLOR 230 230 230
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 231)
+	  STYLE
+	  COLOR 231 231 231
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 232)
+	  STYLE
+	  COLOR 232 232 232
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 233)
+	  STYLE
+	  COLOR 233 233 233
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 234)
+	  STYLE
+	  COLOR 234 234 234
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 235)
+	  STYLE
+	  COLOR 235 235 235
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 236)
+	  STYLE
+	  COLOR 236 236 236
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 237)
+	  STYLE
+	  COLOR 237 237 237
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 238)
+	  STYLE
+	  COLOR 238 238 238
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 239)
+	  STYLE
+	  COLOR 239 239 239
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 240)
+	  STYLE
+	  COLOR 240 240 240
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 241)
+	  STYLE
+	  COLOR 241 241 241
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 242)
+	  STYLE
+	  COLOR 242 242 242
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 243)
+	  STYLE
+	  COLOR 243 243 243
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 244)
+	  STYLE
+	  COLOR 244 244 244
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 245)
+	  STYLE
+	  COLOR 245 245 245
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 246)
+	  STYLE
+	  COLOR 246 246 246
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 247)
+	  STYLE
+	  COLOR 247 247 247
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 248)
+	  STYLE
+	  COLOR 248 248 248
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 249)
+	  STYLE
+	  COLOR 249 249 249
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 250)
+	  STYLE
+	  COLOR 250 250 250
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 251)
+	  STYLE
+	  COLOR 251 251 251
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 252)
+	  STYLE
+	  COLOR 252 252 252
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 253)
+	  STYLE
+	  COLOR 253 253 253
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 254)
+	  STYLE
+	  COLOR 254 254 254
+	  END
+	END
+
+	CLASS
+	  EXPRESSION ([level] == 255)
+	  STYLE
+	  COLOR 255 255 255
+	  END
+	END
+    END
+
+    LAYER
+	TYPE POLYGON
+	NAME "world"
+	STATUS ON
+	DATA "data/geodata/world/world.shp"
+	CLASS
+	    NAME "world-outline"
+	    OUTLINECOLOR 255 255 255
+	END
+    END
+
+    LAYER
+	TYPE POLYGON
+	NAME "states"
+	STATUS ON
+	DATA "data/geodata/s_01au07/s_01au07.shp"
+	CLASS
+	    NAME "states-outline"
+	    OUTLINECOLOR 255 255 255
+	END
+    END
+END

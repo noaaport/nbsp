@@ -17,8 +17,8 @@ set gisfilter(sat_inv_enable) 1;
 #
 set gisfilter(sat_enable) 1;  # whether to process the tig files
 set gisfilter(sat_regex)  {_tig(a|b|e|w|g|h|p|q)0[1-5]};   # fname
-set gisfilter(sat_latest_enable)        1; # make link to latest
-set gisfilter(sat_latestname)   "sn.last";
+set gisfilter(sat_latest_enable) 1; # make link to latest
+set gisfilter(sat_latestname)   "latest";   # without the extension
 set gisfilter(sat_namefmt) {$rc(wmoid)_$rc(ymd_hm)}; # without the extension
 set gisfilter(sat_subdirfmt) {[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 #
@@ -67,10 +67,10 @@ set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
 set gisfilter(rad_enable) 1;
 set gisfilter(rad_regex)  {_sdus[23578]};  # matches against fname
-set gisfilter(rad_latest_enable)        1; # make link to latest
-set gisfilter(rad_latestname)   "sn.last";
-set gisfilter(rad_namefmt)      {$rc(awips)_$rc(ymd_hm)}; # without extension
-set gisfilter(rad_subdirfmt)    {$rc(awips2)/$rc(awips1)};
+set gisfilter(rad_latest_enable) 1; # make link to latest
+set gisfilter(rad_latestname)    "latest";
+set gisfilter(rad_namefmt)       {$rc(awips)_$rc(ymd_hm)}; # without extension
+set gisfilter(rad_subdirfmt)     {$rc(awips2)/$rc(awips1)};
 #
 set gisfilter(rad_outputfile_namefmt,nids) \
     {$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};  # for WCT

@@ -7,7 +7,7 @@
 # nbspgismap1. In practice, they are set in the "bundle configuration file".
 #
 set _map(extent) {-126 30 -66 50};
-set _map(size) {800 600};
+set _map(size) {512 512};
 #
 foreach _k [list extent size] {
     if {[info exists map($_k)] == 0} {
@@ -28,7 +28,7 @@ MAP
      FONTSET "$map(mapfonts)/fonts.list"
 }
 
-# sat layer. One for each sat image.
+# Sat layer. One for each sat image.
 set sat {
 
 LAYER
@@ -1858,7 +1858,7 @@ LAYER
     STATUS ON
     DATA "$map(geodata)/s_01au07/s_01au07.shp"
     CLASS
-	NAME "states-outline'
+	NAME "states-outline"
 	OUTLINECOLOR 255 255 255
     END
 END
@@ -1884,16 +1884,15 @@ set map(scriptstr) $MAP;
 #
 # Test
 #
-# set map(wmoid) "tige02";
 # set map(geodata) "/usr/local/share/nbsp/defaults/geodata";
 # set map(mapfonts) "/usr/local/share/nbsp/defaults/mapfonts";
-# set map(inputfile,1) "/var/noaaport/data/gis/1.shp";
-# set map(inputfile,2) "/var/noaaport/data/gis/2.shp";
+# set map(inputfile,1) "/var/noaaport/data/gis/sat/shp/1.shp";
+# set map(inputfile,2) "/var/noaaport/data/gis/sat/shp/2.shp";
 #
 # Use the defaults for these two:
 #
 # map(extent)
 # map(size)
 #
-# source "map_sat_conus.tmpl";
+# source "map_sat.tmpl";
 # puts $map(scriptstr);
