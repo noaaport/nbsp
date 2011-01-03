@@ -58,13 +58,14 @@
 
 <body>
 
-<!--
-<h3> GOES composites
+<h3> GOES
 <ul>
-<li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li>
+  <li> <a href="sat/tige02.tml">tige02</a></li>
+  <li> <a href="sat/tigw02.tml">tigw02</a></li>
+  <li> <a href="sat/tigp02.tml">tigp02</a></li>
+  <li> <a href="sat/tigq02.tml">tigq02</a></li>
+  <!-- <li><a href="sat/tig01_conus.tml">tige01 and tigw01</a></li> -->
 </ul>
--->
-
 
 [::html::foreach p ${_plist} {
   <h3>$title($p)</h3>

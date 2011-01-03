@@ -7,9 +7,9 @@
 #
 [Doc_Dynamic]
 
-[::html::set _imgpath "gis/data/img/sat/tig01_conus.png"]
-[::html::set _headtitle "TIG01 CONUS"]
-[::html::set _title "tige01 and tigw01 composite"]
+[::html::set _imgpath "gis/data/img/sat/latest/@name@.png"]
+[::html::set _headtitle "[string toupper "@name@"]"]
+[::html::set _title "@title@"]
 
 <html>
 <head><title> $_headtitle </title></head>

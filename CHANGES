@@ -62,9 +62,10 @@ r4 -
   if no suubdir is specified in the /_catalog url.
 - Fixed syntax error in filters.lib when processing the new rad files
   (nbspradinfo -> exec nbspradinfo). As a result of the error, the
-  rc(rad...) variables were not being propoerly set for the new files.
+  rc(rad...) variables were not being properly set for the new files.
   Some of the variables are used in the info files of the gisfilter
   shapefiles.
 - Added the gisfilter.
 - Added "gis" subdir to the catalog extension - The nids files are
   saved with the WCT naming conventions.
+- Completed the gini to shapefile conversion in the nbspshp library.

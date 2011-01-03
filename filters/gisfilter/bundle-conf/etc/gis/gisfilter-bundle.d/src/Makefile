@@ -8,14 +8,14 @@
 #
 #RADENABLE = rad_conus.conf rad_ak.conf rad_gu.conf rad_hi.conf rad_pr.conf
 RADENABLE = rad_us.conf
-SATENABLE = sat_all.conf
+SATENABLE = sat.conf
 # SATENABLE =
 
 ENABLE = ${RADENABLE} ${SATENABLE}
 
 all: clean
 	cd ..; mkdir dist enable
-	cp sat_all.conf ../dist
+	cp sat.conf ../dist
 	for file in *.in;\
 	do \
 	name=$${file%.in};\
