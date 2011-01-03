@@ -5,10 +5,10 @@
 
 sat_tml="sat.tml.in"
 
-title_tige02="IR 4 km @ 25N, 11 microns"
-title_tigw02="IR 4 km @ 25N, 11 microns"
-title_tigp02="IR 4 km @ 25N, 11 microns"
-title_tigq02="IR 4 km @ 25N, 11 microns"
+title_tige02="TIGE02 - IR 4 km @ 25N, 11 microns"
+title_tigw02="TIGW02 - IR 4 km @ 25N, 11 microns"
+title_tigp02="TIGP02 - IR 4 km @ 20N, 11 microns"
+title_tigq02="TIGQ02 - IR 8 km @ 60N, 11 microns"
 #
 
 #
@@ -22,8 +22,8 @@ do
   eval title=\$title_$name
   outputfile=${name}.tml
   [ -n "$directory" ] && outputfile="$directory/$outputfile"
-  sed -e "/@name1@/s//$name/g" \
-      -e "/@title@/s||$title|g" \
+  sed -e "/@name@/s//$name/g" \
+      -e "/@title@/s//$title/g" \
       -e "/^#/d" \
       $sat_tml > $outputfile
 done
