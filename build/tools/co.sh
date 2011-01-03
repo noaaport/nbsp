@@ -1,7 +1,8 @@
 #!/bin/sh
 
 project=nbsp
-masterhost="http://svn.1-loop.net"
+#masterhost="http://svn.1-loop.net"
+masterhost="svn+ssh://jfnieves@svn.1-loop.net/home/jfnieves/svn"
 masterrepo="nbsprepo"
 tag=trunk
 #
