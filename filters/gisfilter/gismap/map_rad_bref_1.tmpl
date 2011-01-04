@@ -22,6 +22,7 @@ package require nbsp::gis;
 # map(inputfile,<i>)
 # map(extent)
 # map(size)
+# map(imagetype) = png, gif, ...
 #
 # These (extent and size) defaults can (should) be overriden via
 # the -D switch to nbspgismap1. In practice, they are set in the
@@ -29,6 +30,7 @@ package require nbsp::gis;
 #
 set _map(extent) {-126 30 -66 50};
 set _map(size) {800 600};
+set _map(imagetype) png;
 #
 foreach _k [list extent size] {
     if {[info exists map($_k)] == 0} {
@@ -42,9 +44,10 @@ MAP
 	# Allow the possibility that the extent parameters are
 	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
 	#
+        UNITS DD
 	EXTENT [string map [list ";" " "] $map(extent)]
-	UNITS  DD
 	SIZE [string map [list ";" " "] $map(size)]
+	IMAGETYPE $map(imagetype)
 	IMAGECOLOR [::nbsp::gis::radcolor $map(awips1) background]
 	FONTSET "$map(mapfonts)/fonts.list"
 	#

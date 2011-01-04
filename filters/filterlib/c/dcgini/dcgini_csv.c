@@ -45,7 +45,7 @@ static int dcgini_csv_write_data(FILE *fp, struct dcgini_point_map_st *pm){
   size_t i;
 
   for(i = 0; i < pm->numpoints; ++i){
-    if(fprintf(fp, "%.3f %.3f,%d", point->lon, point->lat, point->level) < 0)
+    if(fprintf(fp, "%.3f %.3f,%d\n", point->lon, point->lat, point->level) < 0)
       return(-1);
     
     ++point;

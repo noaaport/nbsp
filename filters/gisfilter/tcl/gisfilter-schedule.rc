@@ -8,7 +8,10 @@
 # The scheduler looks for this file first in the main directory,
 # then in "defaults" and "site" and it uses the last one found.
 #
-# This file is run by "nbspscheduler -m". 
+# This file is run every minute by "nbspscheduler -m". Editing changes
+# made to this file are detected automatically without having to restart
+# nbspd or reload the gisfilter (by pkill -HUP nbspd).
+#
 # The current date-time is calculated in gmt if the <spec> ends with "g";
 # otherwise local time is used. The "spec" argument is a time
 # specification in one of the following forms, optionally followed by "g"

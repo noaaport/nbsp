@@ -10,12 +10,14 @@
 # map(inputfile,<i>)
 # map(extent)
 # map(size)
+# map(imagetype) = png, gif, ...
 #
 # These defaults can (should) be overriden via the -D switch to
 # nbspgismap1. In practice, they are set in the "bundle configuration file".
 #
 set _map(extent) {-126 30 -66 50};
 set _map(size) {512 512};
+set _map(imagetype) png;
 #
 foreach _k [list extent size] {
     if {[info exists map($_k)] == 0} {
@@ -25,15 +27,16 @@ foreach _k [list extent size] {
 
 set header {
 MAP
-     #
-     # Allow the possibility that the extent parameters are
-     # specified as "a b c d" or "a;b;c;d", and similarly with the size.
-     #
-     EXTENT [string map [list ";" " "] $map(extent)]
-     UNITS  DD
-     SIZE [string map [list ";" " "] $map(size)]
-     IMAGECOLOR 0 0 0
-     FONTSET "$map(mapfonts)/fonts.list"
+    #
+    # Allow the possibility that the extent parameters are
+    # specified as "a b c d" or "a;b;c;d", and similarly with the size.
+    #
+    UNITS  DD
+    EXTENT [string map [list ";" " "] $map(extent)]
+    SIZE [string map [list ";" " "] $map(size)]
+    IMAGETYPE $map(imagetype)
+    IMAGECOLOR 0 0 0
+    FONTSET "$map(mapfonts)/fonts.list"
 }
 
 # Sat layer. One for each sat image.

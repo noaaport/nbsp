@@ -22,7 +22,7 @@
 #
 # ./nbspgismap -d $outputdir -o $outputfile \
 #    -f mapfonts -g geodata -m map_sat.tmpl \
-#    -D extent=a;b;s;d,size=1200;800 \
+#    -D extent=a;b;s;d,size=1200;800,imagetype=png \
 #    -I $inputdir -p "*.shp" tigw01 tige01
 ############################################################################
 #
@@ -132,7 +132,7 @@ proc run_map_rcfile {} {
 	    set p [split $pair "="];
 	    set var [lindex $p 0];
 	    set val [lindex $p 1];
-	    set map($var) "$val";    # extent and size contain spaces 
+	    set map($var) "$val";    # extent and size can contain spaces 
 	}
     }
 
@@ -150,13 +150,20 @@ proc run_map_rcfile {} {
 	}
     } errmsg];
 
+    if {$status != 0} {
+	log_warn $errmsg;
+    }
+
     if {[info exists F]} {
-	close $F;
+	if {[catch {close $F} errmsg] != 0} {
+	    set status 1;
+	    log_warn $errmsg;
+	}
     }
 
     if {$status != 0} {
 	file delete $nbspgismap(map_rcfile);
-	log_err $errmsg;
+	log_err "Could not create map script $nbspgismap(map_rcfile)";
     }
 
     exec_shp2img;
