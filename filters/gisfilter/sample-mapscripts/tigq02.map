@@ -11,6 +11,7 @@ MAP
     # SIZE 1012 874             # from tigq02.info file
     EXTENT -114 0 -30 57
     SIZE 662 662
+    IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "mapfonts/fonts.list"
 

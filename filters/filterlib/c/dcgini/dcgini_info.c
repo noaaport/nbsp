@@ -38,6 +38,11 @@ int dcgini_info_write(char *file, struct dcgini_st *dcg){
 		dcg->pointmap.lon_max, dcg->pointmap.lat_max);
 
   if(n > 0)
+    n = fprintf(f, "llur: %f %f %f %f\n",
+		dcg->pdb.lon1_deg, dcg->pdb.lat1_deg,
+		dcg->pdb.lon2_deg, dcg->pdb.lat2_deg);
+
+  if(n > 0)
     n = fprintf(f, "size: %d %d\n", dcg->pdb.nx, dcg->pdb.ny);
 
   fclose(f);

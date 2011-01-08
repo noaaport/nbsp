@@ -10,12 +10,15 @@
 
 #include <inttypes.h>
 #include "dcgini_pdb.h"
+#include "dcgini_grid.h"
 
+/* raw data */
 struct gini_data_st {
   unsigned char *data;    /* file data excluding wmo and pdb headers */
   size_t data_size;       /* numlines * linesize */
 };
 
+/* projection-transformed data to lon/lat */
 struct dcgini_point_st {
   double lon;
   double lat;
@@ -31,6 +34,7 @@ struct dcgini_point_map_st {
   double lat_max;
 };
 
+/* in-memory shapefile */
 struct dcgini_shp_st {
   unsigned char *b;     /* buffer */
   uint32_t size;
@@ -42,6 +46,7 @@ struct dcgini_st {
   struct nesdis_pdb_st pdb;
   struct gini_data_st ginidata;
   struct dcgini_point_map_st pointmap;
+  struct dcgini_grid_map_st gridmap;		/* from dcgini_grid.h */
   struct dcgini_shp_st shp;
 };
 
@@ -50,5 +55,6 @@ int dcgini_shp_write(char *shpfile, char *shxfile,
 int dcgini_dbf_write(char *file, struct dcgini_point_map_st *pm);
 int dcgini_info_write(char *file, struct dcgini_st *dcg);
 int dcgini_csv_write(char *file, struct dcgini_point_map_st *pm);
+int dcgini_asc_write(char *file, struct dcgini_grid_map_st *gm);
 
 #endif

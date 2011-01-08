@@ -19,6 +19,7 @@
 #define DCGINI_DBFEXT   ".dbf"
 #define DCGINI_INFOEXT  ".info"
 #define DCGINI_CSVEXT   ".csv"
+#define DCGINI_ASCEXT   ".asc"
 
 char *dcgini_default_name(struct nesdis_pdb_st *npdb,
 			  char *prefix,

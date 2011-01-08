@@ -18,12 +18,14 @@
  *  -F => do dbf
  *  -O => do info
  *  -P => do shp
+ *  -S => do asc
  *  -V => do csv
  *  -X => do shx
  *  -f <dbf file>
  *  -n <base name> => default base name for files
  *  -o <info file>
  *  -p <shp file>
+ *  -s <asc file>
  *  -v <csv file>
  *  -x <shx file>
  *
@@ -50,10 +52,11 @@
 struct {
   int opt_all;			/* -a */
   int opt_background;		/* -b */
-  int opt_silent;		/* -s */
+  int opt_quiet;		/* -q */
   int opt_dbf;			/* -F */
   int opt_info;			/* -O */
   int opt_shp;			/* -P */
+  int opt_asc;			/* -S */
   int opt_shx;			/* -X */
   int opt_csv;			/* -V */
   char *opt_inputfile;
@@ -62,14 +65,15 @@ struct {
   char *opt_dbffile;		/* -f */
   char *opt_infofile;		/* -o */
   char *opt_shpfile;		/* -p */
+  char *opt_ascfile;		/* -s */
   char *opt_shxfile;		/* -x */
   char *opt_csvfile;		/* -v */
   /* variables */
   int fd;
 } g = {0, 0, 0,
-       0, 0, 0, 0, 0,
+       0, 0, 0, 0, 0, 0,
        NULL, NULL, NULL,
-       NULL, NULL, NULL, NULL, NULL,
+       NULL, NULL, NULL, NULL, NULL, NULL,
        -1};
 
 static int process_file(void);
@@ -80,6 +84,7 @@ static void gini_shp_write(struct dcgini_st *dcg);
 static void gini_dbf_write(struct dcgini_st *dcg);
 static void gini_info_write(struct dcgini_st *dcg);
 static void gini_csv_write(struct dcgini_st *dcg);
+static void gini_asc_write(struct dcgini_st *dcg);
 
 static void cleanup(void){
 
@@ -89,50 +94,55 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "absFOPVXd:f:n:o:p:v:x:";
-  char *usage = "nbspginishp [-a] [-b] [-s] [-FOPVX] [-d outputdir]"
+  char *optstr = "abqFOPSVXd:f:n:o:p:s:v:x:";
+  char *usage = "nbspginishp [-a] [-b] [-q] [-FOPSVX] [-d outputdir]"
     " [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]"
-    " [-v <csvname>] [-x <shxmname>] [<file>]";
+    " [-s <ascfile>] [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;
   int c;
-  int opt_aFOPVX = 0;  /* set if any file output option is specified */
+  int opt_aFOPSVX = 0;  /* set if any file output option is specified */
 
   set_progname(basename(argv[0]));
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
     case 'a':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_dbf = 1;
       g.opt_info = 1;
       g.opt_shp = 1;
-      g.opt_csv = 1;
       g.opt_shx = 1;
+      g.opt_csv = 1;
+      g.opt_asc = 1;
       break;
     case 'b':
       g.opt_background = 1;
       break;
-    case 's':
-      g.opt_silent = 1;
+    case 'q':
+      g.opt_quiet = 1;
       break;
     case 'F':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_dbf = 1;
       break;
     case 'O':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_info = 1;
       break;
     case 'P':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_shp = 1;
       break;
+    case 'S':
+      ++opt_aFOPSVX;
+      g.opt_asc = 1;
+      break;
     case 'V':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_csv = 1;
       break;
     case 'X':
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_shx = 1;
       break;
     case 'd':
@@ -143,27 +153,32 @@ int main(int argc, char **argv){
       break;
     case 'f':
       g.opt_dbf = 1;
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_dbffile = optarg;
       break;
     case 'o':
       g.opt_info = 1;
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_infofile = optarg;
       break;
     case 'p':
       g.opt_shp = 1;
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_shpfile = optarg;
+      break;
+    case 's':
+      g.opt_asc = 1;
+      ++opt_aFOPSVX;
+      g.opt_ascfile = optarg;
       break;
     case 'v':
       g.opt_csv = 1;
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_csvfile = optarg;
       break;
     case 'x':
       g.opt_shx = 1;
-      ++opt_aFOPVX;
+      ++opt_aFOPSVX;
       g.opt_shxfile = optarg;
       break;
     default:
@@ -173,13 +188,14 @@ int main(int argc, char **argv){
     }
   }
 
-  /* The default is to do everything except csv */
-  if(opt_aFOPVX == 0){
+  /* The default is to do everything except csv and asc */
+  if(opt_aFOPSVX == 0){
       g.opt_dbf = 1;
       g.opt_info = 1;
       g.opt_shp = 1;
-      /* g.opt_csv = 1; */
       g.opt_shx = 1;
+      /* g.opt_csv = 1; */
+      /* g.opt_asc = 1; */
   }
 
   if(g.opt_background == 1)
@@ -244,12 +260,18 @@ static int process_file(void){
   g.fd = -1;
       
   /* Fill out point data - dcgini_transform.c */
-  status = dcgini_transform_data(&dcg);
+  if((g.opt_shp != 0) || (g.opt_shx != 0) || (g.opt_dbf != 0) ||
+     (g.opt_info != 0) || (g.opt_csv != 0)){
+    status = dcgini_transform_data(&dcg);
+  }
+
+  if((status == 0) && (g.opt_asc != 0))
+    status = dcgini_regrid_data_asc(&dcg);
 
   if(status != 0)
     return(status);
 
-  /* Output the shp data */
+  /* Output the data */
 
   if(g.opt_output_dir != NULL){
     status = chdir(g.opt_output_dir);
@@ -268,6 +290,9 @@ static int process_file(void){
 
   if(g.opt_csv != 0)
     gini_csv_write(&dcg);
+
+  if(g.opt_asc != 0)
+    gini_asc_write(&dcg);
   
   return(0);
 }
@@ -364,4 +389,24 @@ static void gini_csv_write(struct dcgini_st *dcg){
 
   if(dcgini_csv_write(csvfile, &dcg->pointmap) != 0)
     log_errx(1, "Error in dcgini_csv_write_data()");
+}
+
+static void gini_asc_write(struct dcgini_st *dcg){
+
+  char *ascfile;
+
+  if(g.opt_ascfile != NULL)
+    ascfile = g.opt_ascfile;
+  else{
+    if(g.opt_basename != NULL)
+      ascfile = dcgini_optional_name(g.opt_basename, DCGINI_ASCEXT);
+    else
+      ascfile = dcgini_default_name(&dcg->pdb, NULL, DCGINI_ASCEXT);
+
+    if(ascfile == NULL)
+      log_err(1, "Error from dcgini_default_name()");
+  }
+
+  if(dcgini_asc_write(ascfile, &dcg->gridmap) != 0)
+    log_errx(1, "Error in dcgini_asc_write_data()");
 }

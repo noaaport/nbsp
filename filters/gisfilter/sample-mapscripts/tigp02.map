@@ -11,6 +11,7 @@ MAP
     SIZE 480 480           # from tigp02.info file
     # EXTENT -77 15 -62.5 25    
     # SIZE 360 300
+    IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "mapfonts/fonts.list"
 

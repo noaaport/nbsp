@@ -5,6 +5,10 @@
  *
  * $Id$
  */
+/* XXX 
+#include <stdio.h>
+#include <stdlib.h>
+*/
 #include <ctype.h>
 #include <unistd.h>
 #include <string.h>
@@ -226,6 +230,12 @@ void fill_nesdis_pdb(struct nesdis_pdb_st *npdb){
   npdb->lov_rad = npdb->lov_deg * RAD_PER_DEG;
   npdb->latin_deg = npdb->latin/10000.0;
   npdb->latin_rad = npdb->latin_deg * RAD_PER_DEG;
+  /*
+   * For the str and llc projections the last grid point is not given
+   * in the header. So, these are all zero (for str and llc) at this point,
+   * but they will be updated in the transformation functions
+   * (in dcgini_transform.c).
+   */
   npdb->lat2_deg = npdb->lat2/10000.0;
   npdb->lat2_rad = npdb->lat2_deg * RAD_PER_DEG;
   npdb->lon2_deg = npdb->lon2/10000.0;
@@ -234,4 +244,15 @@ void fill_nesdis_pdb(struct nesdis_pdb_st *npdb){
   npdb->lat_ur_rad = npdb->lat_ur_deg * RAD_PER_DEG;
   npdb->lon_ur_deg = npdb->lon_ur/10000.0;
   npdb->lon_ur_rad = npdb->lon_ur_deg * RAD_PER_DEG;
+
+  /* XXX
+  fprintf(stdout, "%f %f %f %f %f %f\n",
+	  npdb->lon1_deg,
+	  npdb->lat1_deg,
+	  npdb->lon2_deg,
+	  npdb->lat2_deg,
+	  npdb->lon_ur_deg,
+	  npdb->lat_ur_deg);
+  exit(0);
+  */
 }

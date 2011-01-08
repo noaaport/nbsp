@@ -8,6 +8,7 @@
 #include <stdio.h>	/* XXX - only for debugging */
 #include <math.h>
 #include <stdlib.h>
+#include <limits.h>	/*  SIZE_T_MAX */
 #include "err.h"
 #include "dcgini_const.h"
 #include "dcgini_transform.h"
@@ -70,11 +71,11 @@ int dcgini_transform_data(struct dcgini_st *dcg){
   for(j = dcg->pdb.ny - 1; j >= 0; --j){
     for(i = 0; i < dcg->pdb.nx; ++i){
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-	nesdis_proj_str_transform(&pstr, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_str_ij_lonlat(&pstr, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-	nesdis_proj_llc_transform(&pllc, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_llc_ij_lonlat(&pllc, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-	nesdis_proj_mer_transform(&pmer, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_mer_ij_lonlat(&pmer, i, j, &lon_deg, &lat_deg);
 
       /*
        * We are not applying any filter so we insert the point
@@ -91,6 +92,17 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
   dcg->pointmap.numpoints = numpoints;
   dcgini_pointmap_bb(&dcg->pointmap);
+
+  /* XXX
+  fprintf(stdout, "%f %f %f %f %f %f\n",
+	  dcg->pdb.lon1_deg,
+	  dcg->pdb.lat1_deg,
+	  dcg->pdb.lon2_deg,
+	  dcg->pdb.lat2_deg,
+	  dcg->pdb.lon_ur_deg,
+	  dcg->pdb.lat_ur_deg);
+  exit(0);
+  */
 
   return(0);
 }
@@ -119,10 +131,187 @@ static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
   }
 }
 
+int dcgini_regrid_data(struct dcgini_st *dcg){
+
+  struct nesdis_proj_str_st pstr;
+  struct nesdis_proj_llc_st pllc;
+  struct nesdis_proj_mer_st pmer;
+  size_t numpoints;
+  unsigned char *datap;
+  size_t i, j, k, l;
+  double ii, jj, lon_deg, lat_deg;
+
+  /* Initialize, imitating dcgini_transform_data() */
+
+  if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
+    nesdis_proj_str_init(&dcg->pdb, &pstr);
+  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
+    nesdis_proj_llc_init(&dcg->pdb, &pllc);
+  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
+    nesdis_proj_mer_init(&dcg->pdb, &pmer);
+  else{
+    log_warnx("Unsupported map projection: %d", dcg->pdb.map_projection);
+    return(1);
+  }
+
+  /* Allocate storage for the levels array */
+  numpoints = dcg->pdb.nx * dcg->pdb.ny;
+
+  if(dcg->ginidata.data_size < numpoints){
+    log_warnx("The data size is smaller than nx * ny");
+    return(1);
+  }
+
+  dcg->gridmap.level = calloc(numpoints, sizeof(*dcg->gridmap.level));
+  if(dcg->gridmap.level == NULL){
+    log_err(1, "Cannot allocate memory for gridmap");
+    return(-1);
+  }
+
+  dcg->gridmap.numpoints = numpoints;
+  dcg->gridmap.nlon = dcg->pdb.nx;
+  dcg->gridmap.nlat = dcg->pdb.ny;
+  dcg->gridmap.lon1_deg = dcg->pdb.lon1_deg;
+  dcg->gridmap.lat1_deg = dcg->pdb.lat1_deg;
+  dcg->gridmap.lon2_deg = dcg->pdb.lon2_deg;
+  dcg->gridmap.lat2_deg = dcg->pdb.lat2_deg;
+  dcg->gridmap.dlon_deg = 
+    (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/(dcg->gridmap.nlon - 1);
+  dcg->gridmap.dlat_deg =
+    (dcg->gridmap.lat2_deg - dcg->gridmap.lat1_deg)/(dcg->gridmap.nlat - 1);
+
+  datap = dcg->gridmap.level;
+
+  /*
+   * Store the values in the order defined by the ArcInfo ASCII Grid format:
+   * the origin of the grid is the upper left and terminus at the lower right.
+   * (http://docs.codehaus.org/display/GEOTOOLS/ArcInfo+ASCII+Grid+format)
+   *
+   * Since l is unsigned, we replace the for(...; l >= 0; ...) by
+   * what appears below.
+   */ 
+  for(l = dcg->gridmap.nlat - 1; l < SIZE_T_MAX; --l){
+    for(k = 0; k < dcg->gridmap.nlon; ++k){
+      lon_deg = dcg->gridmap.lon1_deg + (double)k * dcg->gridmap.dlon_deg;
+      lat_deg = dcg->gridmap.lat1_deg + (double)l * dcg->gridmap.dlat_deg;
+
+      if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
+	nesdis_proj_str_lonlat_ij(&pstr, lon_deg, lat_deg, &ii, &jj);
+      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
+	nesdis_proj_llc_lonlat_ij(&pllc, lon_deg, lat_deg, &ii, &jj);
+      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
+	nesdis_proj_mer_lonlat_ij(&pmer, lon_deg, lat_deg, &ii, &jj);
+
+      if((ii < 0.0) || (ii > (double)dcg->gridmap.nlon - 1))
+	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      else if((jj < 0.0) || (jj > (double)dcg->gridmap.nlat - 1))
+	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      else{
+	i = (size_t)lround(ii);
+	j = (size_t)lround(jj);
+	*datap = dcg->ginidata.data[j * dcg->pdb.ny + i];
+      }
+      ++datap;
+    }
+  }
+
+  return(0);
+}
+
+int dcgini_regrid_data_asc(struct dcgini_st *dcg){
+
+  struct nesdis_proj_str_st pstr;
+  struct nesdis_proj_llc_st pllc;
+  struct nesdis_proj_mer_st pmer;
+  size_t numpoints;
+  unsigned char *datap;
+  size_t i, j, k, l;
+  double ii, jj, lon_deg, lat_deg;
+  double cellsize;	/* asc format requires square cell size */
+  double dlon, dlat;
+
+  /* Initialize, imitating dcgini_transform_data() */
+
+  if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
+    nesdis_proj_str_init(&dcg->pdb, &pstr);
+  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
+    nesdis_proj_llc_init(&dcg->pdb, &pllc);
+  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
+    nesdis_proj_mer_init(&dcg->pdb, &pmer);
+  else{
+    log_warnx("Unsupported map projection: %d", dcg->pdb.map_projection);
+    return(1);
+  }
+
+  dlon = (dcg->pdb.lon2_deg - dcg->pdb.lon1_deg)/(dcg->pdb.nx - 1);
+  dlat = (dcg->pdb.lat2_deg - dcg->pdb.lat1_deg)/(dcg->pdb.ny - 1);
+  if(dlat < dlon)
+    cellsize = dlat;
+  else
+    cellsize = dlon;
+
+  dcg->gridmap.lon1_deg = dcg->pdb.lon1_deg;
+  dcg->gridmap.lat1_deg = dcg->pdb.lat1_deg;
+  dcg->gridmap.lon2_deg = dcg->pdb.lon2_deg;
+  dcg->gridmap.lat2_deg = dcg->pdb.lat2_deg;
+  dcg->gridmap.dlon_deg = cellsize;
+  dcg->gridmap.dlat_deg = cellsize;
+  dcg->gridmap.cellsize_deg = cellsize;
+  dcg->gridmap.nlon =
+    (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/(double)cellsize + 1;
+  dcg->gridmap.nlat =
+    (dcg->gridmap.lat2_deg - dcg->gridmap.lat1_deg)/(double)cellsize + 1;
+
+  /* Allocate storage for the levels array */
+  numpoints = dcg->gridmap.nlon * dcg->gridmap.nlat;
+
+  dcg->gridmap.level = calloc(numpoints, sizeof(*dcg->gridmap.level));
+  if(dcg->gridmap.level == NULL){
+    log_err(1, "Cannot allocate memory for gridmap");
+    return(-1);
+  }
+
+  datap = dcg->gridmap.level;
+  dcg->gridmap.numpoints = numpoints;
+
+  /*
+   * Store the values in the order defined by the ArcInfo ASCII Grid format:
+   * the origin of the grid is the upper left and terminus at the lower right.
+   * (http://docs.codehaus.org/display/GEOTOOLS/ArcInfo+ASCII+Grid+format)
+   *
+   * Since l is unsigned, we replace the for(...; l >= 0; ...) by
+   * what appears below.
+   */ 
+  for(l = dcg->gridmap.nlat - 1; l < SIZE_T_MAX; --l){
+    for(k = 0; k < dcg->gridmap.nlon; ++k){
+      lon_deg = dcg->gridmap.lon1_deg + (double)k * dcg->gridmap.dlon_deg;
+      lat_deg = dcg->gridmap.lat1_deg + (double)l * dcg->gridmap.dlat_deg;
+
+      if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
+	nesdis_proj_str_lonlat_ij(&pstr, lon_deg, lat_deg, &ii, &jj);
+      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
+	nesdis_proj_llc_lonlat_ij(&pllc, lon_deg, lat_deg, &ii, &jj);
+      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
+	nesdis_proj_mer_lonlat_ij(&pmer, lon_deg, lat_deg, &ii, &jj);
+
+      if((ii < 0.0) || (ii > (double)dcg->gridmap.nlon - 1))
+	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      else if((jj < 0.0) || (jj > (double)dcg->gridmap.nlat - 1))
+	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      else{
+	i = (size_t)lround(ii);
+	j = (size_t)lround(jj);
+	*datap = dcg->ginidata.data[j * dcg->pdb.ny + i];
+      }
+      ++datap;
+    }
+  }
+
+  return(0);
+}
+
 void nesdis_proj_str_init(struct nesdis_pdb_st *npdb,
 			  struct nesdis_proj_str_st *pstr){
-
-  double alpha;
   double r;
 
   pstr->s = 1.0;
@@ -130,17 +319,35 @@ void nesdis_proj_str_init(struct nesdis_pdb_st *npdb,
     pstr->s = -1.0;
   }
   pstr->lov_rad = npdb->lov_rad;
+  pstr->alpha = 1.0/(1.0 + sin(M_PI/3.0));
 
-  alpha = 1.0/(1.0 + sin(M_PI/3.0));
   r = RE_METERS * tan(M_PI_4 - 0.5 * pstr->s * npdb->lat1_rad);
+  pstr->x1 = r * sin(npdb->lon1_rad - pstr->lov_rad);
+  pstr->y1 = -pstr->s * r * cos(npdb->lon1_rad - pstr->lov_rad);
+  pstr->dx = pstr->alpha * npdb->dx_meters;
+  pstr->dy = pstr->alpha * npdb->dy_meters;
 
-  pstr->x1 = r * sin(npdb->lon1_rad - npdb->lov_rad);
-  pstr->y1 = -pstr->s * r * cos(npdb->lon1_rad - npdb->lov_rad);
-  pstr->dx = alpha * npdb->dx_meters;
-  pstr->dy = alpha * npdb->dy_meters;
+  /*
+   * Update the lon2/lat2 values in the pdb (see note in fill_nesdis_pdb()
+   * in dcgini_pdb.c.
+   */
+
+  /*
+   * The i, j coordinates of the "last" (ur) grid point are
+   * i = dcg->pdb.nx - 1;
+   * j = dcg->pdb.ny - 1;;
+   */
+  nesdis_proj_str_ij_lonlat(pstr, npdb->nx - 1, npdb->ny - 1,
+			    &npdb->lon2_deg, &npdb->lat2_deg);
+  npdb->lon2_rad = npdb->lon2_deg * RAD_PER_DEG;
+  npdb->lat2_rad = npdb->lat2_deg * RAD_PER_DEG;
+  npdb->lon_ur_deg = npdb->lon2_deg;
+  npdb->lat_ur_deg = npdb->lat2_deg;
+  npdb->lon_ur_rad = npdb->lon2_rad;
+  npdb->lat_ur_rad = npdb->lat2_rad;
 }
 
-void nesdis_proj_str_transform(struct nesdis_proj_str_st *pstr,
+void nesdis_proj_str_ij_lonlat(struct nesdis_proj_str_st *pstr,
 			       int i,
 			       int j,
 			       double *lon_deg,
@@ -160,9 +367,28 @@ void nesdis_proj_str_transform(struct nesdis_proj_str_st *pstr,
   *lat_deg = lat_rad * DEG_PER_RAD;
 }
 
+void nesdis_proj_str_lonlat_ij(struct nesdis_proj_str_st *pstr,
+			       double lon_deg,
+			       double lat_deg,
+			       double *ii,
+			       double *jj){
+  double lon_rad, lat_rad;
+  double x, y;
+  double r;
+
+  lon_rad = lon_deg * RAD_PER_DEG;
+  lat_rad = lat_deg * RAD_PER_DEG;
+
+  r = RE_METERS * tan(M_PI_4 - 0.5 * pstr->s * lat_rad);
+  x = r * sin(lon_rad - pstr->lov_rad);
+  y = -pstr->s * r * cos(lon_rad - pstr->lov_rad);
+
+  *ii = (x - pstr->x1)/pstr->dx;
+  *jj = (y - pstr->y1)/pstr->dy;
+}
+
 void nesdis_proj_llc_init(struct nesdis_pdb_st *npdb,
 			  struct nesdis_proj_llc_st *pllc){
-  double alpha;
   double psi;
   double a, b;
 
@@ -175,24 +401,42 @@ void nesdis_proj_llc_init(struct nesdis_pdb_st *npdb,
   psi = M_PI_2 - fabs(npdb->latin_rad);
   pllc->cos_psi = cos(psi);
   pllc->r_E = RE_METERS/pllc->cos_psi;
+  pllc->alpha = pow(tan(psi/2.0), pllc->cos_psi) / sin(psi);
 
-  alpha = pow(tan(psi/2.0), pllc->cos_psi) / sin(psi);
   a = pow(tan(M_PI_4 - 0.5 * pllc->s * npdb->lat1_rad), pllc->cos_psi);
-  b = pllc->cos_psi * (npdb->lon1_rad - npdb->lov_rad);
-
+  b = pllc->cos_psi * (npdb->lon1_rad - pllc->lov_rad);
   pllc->x1 = pllc->r_E * a * sin(b);
   pllc->y1 = -pllc->s * pllc->r_E * a * cos(b);
-  pllc->dx = alpha * npdb->dx_meters;
-  pllc->dy = alpha * npdb->dy_meters;
+  pllc->dx = pllc->alpha * npdb->dx_meters;
+  pllc->dy = pllc->alpha * npdb->dy_meters;
 
   /*
   fprintf(stdout, "%f %f %f %f %f\n", pllc->x1, pllc->y1, pllc->dx, pllc->dy,
   pllc->s);
   exit(0);
   */
+
+  /*
+   * Update the lon2/lat2 values in the pdb (see note in fill_nesdis_pdb()
+   * in dcgini_pdb.c.
+   */
+
+  /*
+   * The i, j coordinates of the "last" (ur) grid point are
+   * i = dcg->pdb.nx - 1;
+   * j = dcg->pdb.ny - 1;
+   */
+  nesdis_proj_llc_ij_lonlat(pllc, npdb->nx - 1, npdb->ny - 1,
+			    &npdb->lon2_deg, &npdb->lat2_deg);
+  npdb->lon2_rad = npdb->lon2_deg * RAD_PER_DEG;
+  npdb->lat2_rad = npdb->lat2_deg * RAD_PER_DEG;
+  npdb->lon_ur_deg = npdb->lon2_deg;
+  npdb->lat_ur_deg = npdb->lat2_deg;
+  npdb->lon_ur_rad = npdb->lon2_rad;
+  npdb->lat_ur_rad = npdb->lat2_rad;
 }
 
-void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
+void nesdis_proj_llc_ij_lonlat(struct nesdis_proj_llc_st *pllc,
 			       int i,
 			       int j,
 			       double *lon_deg,
@@ -213,6 +457,28 @@ void nesdis_proj_llc_transform(struct nesdis_proj_llc_st *pllc,
   
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
+}
+
+
+void nesdis_proj_llc_lonlat_ij(struct nesdis_proj_llc_st *pllc,
+			       double lon_deg,
+			       double lat_deg,
+			       double *ii,
+			       double *jj){
+  double lon_rad, lat_rad;
+  double x, y;
+  double a, b;
+
+  lon_rad = lon_deg * RAD_PER_DEG;
+  lat_rad = lat_deg * RAD_PER_DEG;
+
+  a = pow(tan(M_PI_4 - 0.5 * pllc->s * lat_rad), pllc->cos_psi);
+  b = pllc->cos_psi * (lon_rad - pllc->lov_rad);
+  x = pllc->r_E * a * sin(b);
+  y = -pllc->s * pllc->r_E * a * cos(b);
+
+  *ii = (x - pllc->x1)/pllc->dx;
+  *jj = (y - pllc->y1)/pllc->dy;
 }
 
 void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
@@ -245,7 +511,7 @@ void nesdis_proj_mer_init(struct nesdis_pdb_st *npdb,
   pmer->dy = (pmer->y2 - pmer->y1)/n;
 }
 
-void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
+void nesdis_proj_mer_ij_lonlat(struct nesdis_proj_mer_st *pmer,
 			       int i,
 			       int j,
 			       double *lon_deg,
@@ -261,4 +527,28 @@ void nesdis_proj_mer_transform(struct nesdis_proj_mer_st *pmer,
 
   *lon_deg = lon_rad * DEG_PER_RAD;
   *lat_deg = lat_rad * DEG_PER_RAD;
+}
+
+void nesdis_proj_mer_lonlat_ij(struct nesdis_proj_mer_st *pmer,
+			       double lon_deg,
+			       double lat_deg,
+			       double *ii,
+			       double *jj){
+  double lon_rad, lat_rad;
+  double r1, r2;
+  double b, d;
+  double x, y;
+
+  lon_rad = lon_deg * RAD_PER_DEG;
+  lat_rad = lat_deg * RAD_PER_DEG;
+
+  d = lon_rad - pmer->lon0_rad;
+  r1 = tan(lat_rad);
+  r2 = cos(d);
+  b = cos(lat_rad) * sin(d);  
+  x = 0.5 * log((1.0 + b)/(1.0 - b));
+  y = atan2(r1, r2);
+
+  *ii = (x - pmer->x1)/pmer->dx;
+  *jj = (y - pmer->y1)/pmer->dy;
 }

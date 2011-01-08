@@ -10,6 +10,7 @@ MAP
     EXTENT -152 12 -91 61    # from tigw02.info file
     # SIZE 1024 1024           # from tigw02.info file
     SIZE 768 768
+    IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "mapfonts/fonts.list"
 

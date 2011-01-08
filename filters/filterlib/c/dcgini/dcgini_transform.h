@@ -11,5 +11,7 @@
 #include "dcgini.h"
 
 int dcgini_transform_data(struct dcgini_st *dcg);
+int dcgini_regrid_data(struct dcgini_st *dcg);
+int dcgini_regrid_data_asc(struct dcgini_st *dcg);
 
 #endif

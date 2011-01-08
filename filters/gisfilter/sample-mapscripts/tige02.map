@@ -10,6 +10,7 @@ MAP
     EXTENT -122 14 -49 61    # from tige02.info file
     # SIZE 1280 1280           # from tige02.info file
     SIZE 768 768
+    IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "mapfonts/fonts.list"
 
