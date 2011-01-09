@@ -8,6 +8,6 @@ lappend nbspgismap(geoclist) {
   options       {extent {-126 30 -66 50} size {1280 800} imagetype png}
   outputfile    img/sat/tig01_conus.png
   outputfilet   img/sat/tig01_conus.%Y%m%d_%H%M.png
-  inputpatt     *.shp
-  inputdirs     {sat/shp/tig/tigw01 sat/shp/tig/tige01}
+  inputpatt     *.asc
+  inputdirs     {sat/asc/tig/tigw01 sat/asc/tig/tige01}
 }

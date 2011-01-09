@@ -29,9 +29,19 @@
  *  -v <csv file>
  *  -x <shx file>
  *
- * The default action is the same as specifying "-FOPX" (excluding csv).
+ * The default action is the same as specifying "-FOPX" (excluding csv, asc).
+ * When -S is specified (asc format) the [-r] can be used to specify the
+ * coordinates of the bounding box to use. The default is the bb of
+ * the raw image. The argument to the "-r" option is a string made of
+ * the letters "lrbt" to limit each side of the box to the coordinates of the
+ * "maximum enclosing rectangle". For example, to make a tige-tigw composite,
+ * the following cut appropriately the left of tige and the right side of tigw:
+ *
+ * nbspunz tige.gini | nbspginishp -S -r "l"
+ * nbspunz tigw.gini | nbspginishp -S -r "r"
+ *
+ * The -R option is the same as "-r lrbt".
  */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -56,12 +66,14 @@ struct {
   int opt_dbf;			/* -F */
   int opt_info;			/* -O */
   int opt_shp;			/* -P */
+  int opt_use_llur;		/* -R */
   int opt_asc;			/* -S */
   int opt_shx;			/* -X */
   int opt_csv;			/* -V */
   char *opt_inputfile;
   char *opt_output_dir;		/* -d */
   char *opt_basename;           /* -n */
+  char *opt_llur_str;		/* -r */
   char *opt_dbffile;		/* -f */
   char *opt_infofile;		/* -o */
   char *opt_shpfile;		/* -p */
@@ -71,10 +83,12 @@ struct {
   /* variables */
   int fd;
 } g = {0, 0, 0,
-       0, 0, 0, 0, 0, 0,
-       NULL, NULL, NULL,
+       0, 0, 0, 0, 0, 0, 0,
+       NULL, NULL, NULL, NULL,
        NULL, NULL, NULL, NULL, NULL, NULL,
        -1};
+
+#define DEFAULT_LLUR_STR "lbrt"
 
 static int process_file(void);
 static void cleanup(void);
@@ -94,13 +108,14 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "abqFOPSVXd:f:n:o:p:s:v:x:";
-  char *usage = "nbspginishp [-a] [-b] [-q] [-FOPSVX] [-d outputdir]"
+  char *optstr = "abqRFOPSVXd:f:n:o:p:r:s:v:x:";
+  char *usage = "nbspginishp [-a] [-b] [-q] [-R] [-FOPSVX] [-d outputdir]"
     " [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]"
-    " [-s <ascfile>] [-v <csvname>] [-x <shxmname>] [<file>]";
+    " [-r <llurstr>] [-s <ascfile>] [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;
   int c;
   int opt_aFOPSVX = 0;  /* set if any file output option is specified */
+  int opt_rR = 0;
 
   set_progname(basename(argv[0]));
 
@@ -120,6 +135,11 @@ int main(int argc, char **argv){
       break;
     case 'q':
       g.opt_quiet = 1;
+      break;
+    case 'R':
+      ++opt_rR;
+      g.opt_use_llur = 1;   /* use the max. enc. rectangle in asc format */
+      g.opt_llur_str = DEFAULT_LLUR_STR;
       break;
     case 'F':
       ++opt_aFOPSVX;
@@ -166,6 +186,10 @@ int main(int argc, char **argv){
       ++opt_aFOPSVX;
       g.opt_shpfile = optarg;
       break;
+    case 'r':
+      ++opt_rR;
+      g.opt_llur_str = optarg;
+      break;
     case 's':
       g.opt_asc = 1;
       ++opt_aFOPSVX;
@@ -187,6 +211,9 @@ int main(int argc, char **argv){
       break;
     }
   }
+
+  if(opt_rR > 1)
+    log_errx(1, "Invalid combination of options: r, R");
 
   /* The default is to do everything except csv and asc */
   if(opt_aFOPSVX == 0){
@@ -259,14 +286,16 @@ static int process_file(void){
   (void)close(fd);
   g.fd = -1;
       
-  /* Fill out point data - dcgini_transform.c */
-  if((g.opt_shp != 0) || (g.opt_shx != 0) || (g.opt_dbf != 0) ||
-     (g.opt_info != 0) || (g.opt_csv != 0)){
-    status = dcgini_transform_data(&dcg);
-  }
+  /*
+   * Fill out point data - This function must be called unconditionally,
+   * even if other data formats besised shp, csv, are needed, in order
+   * to initalize properly the projection transformations and the
+   * bounding box.
+   */
+  status = dcgini_transform_data(&dcg);
 
   if((status == 0) && (g.opt_asc != 0))
-    status = dcgini_regrid_data_asc(&dcg);
+    status = dcgini_regrid_data_asc(&dcg, g.opt_llur_str);
 
   if(status != 0)
     return(status);

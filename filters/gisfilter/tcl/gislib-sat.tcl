@@ -13,7 +13,7 @@ proc filter_sat {rc_varname} {
 	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
 	    continue;
 	}
-	filter_sat_convert_gini_shp rc $bundle;
+	filter_sat_convert_gini rc $bundle;
     }
 }
 
@@ -49,7 +49,7 @@ proc filter_sat_create_gini {rc_varname} {
     set rc(fpath) $datafpath;
 }
 
-proc filter_sat_convert_gini_shp {rc_varname bundle} {
+proc filter_sat_convert_gini {rc_varname bundle} {
 
     global gisfilter;
     upvar $rc_varname rc;
@@ -61,6 +61,7 @@ proc filter_sat_convert_gini_shp {rc_varname bundle} {
     set option(dbf) "-f";
     set option(info) "-o";
     set option(shp) "-p";
+    set option(asc) "-s";
     set option(shx) "-x";
     set option(csv) "-v";
     set cmd_options [list];

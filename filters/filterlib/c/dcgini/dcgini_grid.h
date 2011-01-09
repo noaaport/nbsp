@@ -42,14 +42,14 @@
  *
  * Then we store in level[l * nlon + k], the value of datap[j * ny + i] if
  * the computed (i, j) fall within the original (nx, ny) bounds, or
- * DCGINI_GRID_MAP_OUTOFBOUNDS otherwise.
+ * DCGINI_GRID_MAP_NODATA otherwise.
  */
 
 /* level value for points that lie outside the original array bounds */
-#define DCGINI_GRID_MAP_OUTOFBOUNDS 0
+#define DCGINI_GRID_MAP_NODATA -1
 
 struct dcgini_grid_map_st {
-  unsigned char *level;
+  int *level;		/* declared int so that NODATA can be used */
   size_t numpoints;     /* nlon * nlat */
   size_t nlon;
   size_t nlat;

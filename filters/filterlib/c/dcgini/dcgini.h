@@ -11,6 +11,8 @@
 #include <inttypes.h>
 #include "dcgini_pdb.h"
 #include "dcgini_grid.h"
+#include "dcgini_projections.h"
+
 
 /* raw data */
 struct gini_data_st {
@@ -32,6 +34,13 @@ struct dcgini_point_map_st {
   double lat_min;
   double lon_max;
   double lat_max;
+  /*
+   * The "maximum enclosing rectangle"
+   */ 
+  double lon_ll;
+  double lat_ll;
+  double lon_ur;
+  double lat_ur;
 };
 
 /* in-memory shapefile */
@@ -48,6 +57,9 @@ struct dcgini_st {
   struct dcgini_point_map_st pointmap;
   struct dcgini_grid_map_st gridmap;		/* from dcgini_grid.h */
   struct dcgini_shp_st shp;
+  struct nesdis_proj_str_st pstr;
+  struct nesdis_proj_llc_st pllc;
+  struct nesdis_proj_mer_st pmer;
 };
 
 int dcgini_shp_write(char *shpfile, char *shxfile,

@@ -8,6 +8,7 @@
 #include <stdio.h>	/* XXX - only for debugging */
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 #include <limits.h>	/*  SIZE_T_MAX */
 #include "err.h"
 #include "dcgini_const.h"
@@ -15,12 +16,11 @@
 #include "dcgini_transform_priv.h"
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm);
+static void dcgini_pointmap_rectangle(struct dcgini_point_map_st *pm,
+				      int nx, int ny);
 
 int dcgini_transform_data(struct dcgini_st *dcg){
 
-  struct nesdis_proj_str_st pstr;
-  struct nesdis_proj_llc_st pllc;
-  struct nesdis_proj_mer_st pmer;
   struct dcgini_point_st *points;
   size_t numpoints;
   unsigned char *datap;
@@ -32,11 +32,11 @@ int dcgini_transform_data(struct dcgini_st *dcg){
    * nesdis_proj_xxx_transform() repeatedly to transform each point.
    */
   if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-    nesdis_proj_str_init(&dcg->pdb, &pstr);
+    nesdis_proj_str_init(&dcg->pdb, &dcg->pstr);
   else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-    nesdis_proj_llc_init(&dcg->pdb, &pllc);
+    nesdis_proj_llc_init(&dcg->pdb, &dcg->pllc);
   else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-    nesdis_proj_mer_init(&dcg->pdb, &pmer);
+    nesdis_proj_mer_init(&dcg->pdb, &dcg->pmer);
   else{
     log_warnx("Unsupported map projection: %d", dcg->pdb.map_projection);
     return(1);
@@ -45,7 +45,7 @@ int dcgini_transform_data(struct dcgini_st *dcg){
   /* Allocate storage for the pointmap */
   numpoints = dcg->pdb.nx * dcg->pdb.ny;
 
-  if(dcg->ginidata.data_size < numpoints){
+  if(numpoints > dcg->ginidata.data_size){
     log_warnx("The data size is smaller than nx * ny");
     return(1);
   }
@@ -71,11 +71,11 @@ int dcgini_transform_data(struct dcgini_st *dcg){
   for(j = dcg->pdb.ny - 1; j >= 0; --j){
     for(i = 0; i < dcg->pdb.nx; ++i){
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-	nesdis_proj_str_ij_lonlat(&pstr, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_str_ij_lonlat(&dcg->pstr, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-	nesdis_proj_llc_ij_lonlat(&pllc, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_llc_ij_lonlat(&dcg->pllc, i, j, &lon_deg, &lat_deg);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-	nesdis_proj_mer_ij_lonlat(&pmer, i, j, &lon_deg, &lat_deg);
+	nesdis_proj_mer_ij_lonlat(&dcg->pmer, i, j, &lon_deg, &lat_deg);
 
       /*
        * We are not applying any filter so we insert the point
@@ -92,6 +92,7 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
   dcg->pointmap.numpoints = numpoints;
   dcgini_pointmap_bb(&dcg->pointmap);
+  dcgini_pointmap_rectangle(&dcg->pointmap, dcg->pdb.nx, dcg->pdb.ny);
 
   /* XXX
   fprintf(stdout, "%f %f %f %f %f %f\n",
@@ -108,7 +109,9 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 }
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
-
+  /*
+   * This function determines the limits of the raw data.
+   */
   size_t i;
 
   pm->lon_min = 180.0;
@@ -131,33 +134,91 @@ static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
   }
 }
 
-int dcgini_regrid_data(struct dcgini_st *dcg){
+static void dcgini_pointmap_rectangle(struct dcgini_point_map_st *pm,
+				      int nx, int ny){
+  /*
+   * This function determines the maximum enclosing rectangle
+   * (the largest rectangle excluding level 0 (no data) points).
+   */
+  int i;
+  int j;
+  size_t k;
 
-  struct nesdis_proj_str_st pstr;
-  struct nesdis_proj_llc_st pllc;
-  struct nesdis_proj_mer_st pmer;
+  pm->lon_ll = pm->lon_min;
+  pm->lat_ll = pm->lat_min;
+  pm->lon_ur = pm->lon_max;
+  pm->lat_ur = pm->lat_max;
+
+  for(j = 0; j < ny; ++j){
+    for(i = 0; i < nx; ++i){
+      k = j*nx + i;
+      if(pm->points[k].level != 0){
+	if(pm->points[k].lon > pm->lon_ll)
+	  pm->lon_ll = pm->points[k].lon;
+
+	break;
+      }
+    }
+  }
+
+  for(j = 0; j < ny; ++j){
+    for(i = nx - 1; i >= 0; --i){
+      k = j*nx + i;
+      if(pm->points[k].level != 0){
+	if(pm->points[k].lon < pm->lon_ur)
+	  pm->lon_ur = pm->points[k].lon;
+
+	break;
+      }
+    }
+  }
+
+  for(i = 0; i < nx; ++i){
+    for(j = 0; j < ny; ++j){
+      k = j*nx + i;
+      if(pm->points[k].level != 0){
+	if(pm->points[k].lat < pm->lat_ur)
+	  pm->lat_ur = pm->points[k].lat;
+
+	break;
+      }
+    }
+  }
+
+  for(i = 0; i < nx; ++i){
+    for(j = ny - 1; j >= 0; --j){
+      k = j*nx + i;
+      if(pm->points[k].level != 0){
+	if(pm->points[k].lat > pm->lat_ll)
+	  pm->lat_ll = pm->points[k].lat;
+
+	break;
+      }
+    }
+  }
+}
+
+int dcgini_regrid_data(struct dcgini_st *dcg){
+  /*
+   * In this function, dlon and dlat are not the the same; i.e.,
+   * the cells are not squared. The cells in the dcgini_regrid_data_asc()
+   * function are squared (as required by the asc format).
+   *
+   * This function assumes that dcgini_transform_data() has already been
+   * called, so that the projection has been initialized, and in particular
+   * the bounding box has been determined. Note that we do not use
+   * the lon1/lat1, lon2/lat2 values from the pdb because that would cut
+   * portions of the image.
+   */
   size_t numpoints;
-  unsigned char *datap;
+  int *datap;
   size_t i, j, k, l;
   double ii, jj, lon_deg, lat_deg;
-
-  /* Initialize, imitating dcgini_transform_data() */
-
-  if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-    nesdis_proj_str_init(&dcg->pdb, &pstr);
-  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-    nesdis_proj_llc_init(&dcg->pdb, &pllc);
-  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-    nesdis_proj_mer_init(&dcg->pdb, &pmer);
-  else{
-    log_warnx("Unsupported map projection: %d", dcg->pdb.map_projection);
-    return(1);
-  }
 
   /* Allocate storage for the levels array */
   numpoints = dcg->pdb.nx * dcg->pdb.ny;
 
-  if(dcg->ginidata.data_size < numpoints){
+  if(numpoints > dcg->ginidata.data_size){
     log_warnx("The data size is smaller than nx * ny");
     return(1);
   }
@@ -171,10 +232,10 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
   dcg->gridmap.numpoints = numpoints;
   dcg->gridmap.nlon = dcg->pdb.nx;
   dcg->gridmap.nlat = dcg->pdb.ny;
-  dcg->gridmap.lon1_deg = dcg->pdb.lon1_deg;
-  dcg->gridmap.lat1_deg = dcg->pdb.lat1_deg;
-  dcg->gridmap.lon2_deg = dcg->pdb.lon2_deg;
-  dcg->gridmap.lat2_deg = dcg->pdb.lat2_deg;
+  dcg->gridmap.lon1_deg = dcg->pointmap.lon_min;
+  dcg->gridmap.lat1_deg = dcg->pointmap.lat_min;
+  dcg->gridmap.lon2_deg = dcg->pointmap.lon_max;
+  dcg->gridmap.lat2_deg = dcg->pointmap.lat_max;
   dcg->gridmap.dlon_deg = 
     (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/(dcg->gridmap.nlon - 1);
   dcg->gridmap.dlat_deg =
@@ -183,9 +244,8 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
   datap = dcg->gridmap.level;
 
   /*
-   * Store the values in the order defined by the ArcInfo ASCII Grid format:
-   * the origin of the grid is the upper left and terminus at the lower right.
-   * (http://docs.codehaus.org/display/GEOTOOLS/ArcInfo+ASCII+Grid+format)
+   * Store the values in the order top to bottom, right to left,
+   * similar to the ArcInfo ASCII Grid format (see the regrid_asc function).
    *
    * Since l is unsigned, we replace the for(...; l >= 0; ...) by
    * what appears below.
@@ -196,20 +256,20 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
       lat_deg = dcg->gridmap.lat1_deg + (double)l * dcg->gridmap.dlat_deg;
 
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-	nesdis_proj_str_lonlat_ij(&pstr, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_str_lonlat_ij(&dcg->pstr, lon_deg, lat_deg, &ii, &jj);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-	nesdis_proj_llc_lonlat_ij(&pllc, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_llc_lonlat_ij(&dcg->pllc, lon_deg, lat_deg, &ii, &jj);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-	nesdis_proj_mer_lonlat_ij(&pmer, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_mer_lonlat_ij(&dcg->pmer, lon_deg, lat_deg, &ii, &jj);
 
-      if((ii < 0.0) || (ii > (double)dcg->gridmap.nlon - 1))
-	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
-      else if((jj < 0.0) || (jj > (double)dcg->gridmap.nlat - 1))
-	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      if((ii < 0.0) || (ii > (double)dcg->pdb.nx - 1))
+	*datap = DCGINI_GRID_MAP_NODATA;
+      else if((jj < 0.0) || (jj > (double)dcg->pdb.ny - 1))
+	*datap = DCGINI_GRID_MAP_NODATA;
       else{
 	i = (size_t)lround(ii);
-	j = (size_t)lround(jj);
-	*datap = dcg->ginidata.data[j * dcg->pdb.ny + i];
+	j = dcg->pdb.ny - 1 - (size_t)lround(jj); /* from top to bottom */
+	*datap = (int)dcg->ginidata.data[j * dcg->pdb.nx + i];
       }
       ++datap;
     }
@@ -218,45 +278,53 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
   return(0);
 }
 
-int dcgini_regrid_data_asc(struct dcgini_st *dcg){
-
-  struct nesdis_proj_str_st pstr;
-  struct nesdis_proj_llc_st pllc;
-  struct nesdis_proj_mer_st pmer;
+int dcgini_regrid_data_asc(struct dcgini_st *dcg,  char *llur_str){
+  /*
+   * The distinctive feature in this function is that here we define
+   * the cellsize (dlon, dlat) such that it is a square cell, as 
+   * required by the "asc" format.
+   *
+   * This function assumes that dcgini_transform_data() has already been
+   * called, so that the projection has been initialized, and in particular
+   * the bounding box and the maximum enclosing rectangle have been determined.
+   */
   size_t numpoints;
-  unsigned char *datap;
+  int *datap;
   size_t i, j, k, l;
   double ii, jj, lon_deg, lat_deg;
   double cellsize;	/* asc format requires square cell size */
   double dlon, dlat;
 
-  /* Initialize, imitating dcgini_transform_data() */
-
-  if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-    nesdis_proj_str_init(&dcg->pdb, &pstr);
-  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-    nesdis_proj_llc_init(&dcg->pdb, &pllc);
-  else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-    nesdis_proj_mer_init(&dcg->pdb, &pmer);
-  else{
-    log_warnx("Unsupported map projection: %d", dcg->pdb.map_projection);
-    return(1);
-  }
-
-  dlon = (dcg->pdb.lon2_deg - dcg->pdb.lon1_deg)/(dcg->pdb.nx - 1);
-  dlat = (dcg->pdb.lat2_deg - dcg->pdb.lat1_deg)/(dcg->pdb.ny - 1);
+  dlon = (dcg->pointmap.lon_max - dcg->pointmap.lon_min)/(dcg->pdb.nx - 1);
+  dlat = (dcg->pointmap.lat_max - dcg->pointmap.lat_min)/(dcg->pdb.ny - 1);
   if(dlat < dlon)
     cellsize = dlat;
   else
     cellsize = dlon;
 
-  dcg->gridmap.lon1_deg = dcg->pdb.lon1_deg;
-  dcg->gridmap.lat1_deg = dcg->pdb.lat1_deg;
-  dcg->gridmap.lon2_deg = dcg->pdb.lon2_deg;
-  dcg->gridmap.lat2_deg = dcg->pdb.lat2_deg;
   dcg->gridmap.dlon_deg = cellsize;
   dcg->gridmap.dlat_deg = cellsize;
   dcg->gridmap.cellsize_deg = cellsize;
+
+  /* the default limits */
+  dcg->gridmap.lon1_deg = dcg->pointmap.lon_min;
+  dcg->gridmap.lat1_deg = dcg->pointmap.lat_min;
+  dcg->gridmap.lon2_deg = dcg->pointmap.lon_max;
+  dcg->gridmap.lat2_deg = dcg->pointmap.lat_max;
+
+  /* optional limits */
+  if((llur_str != NULL) && (strchr(llur_str, 'l') != NULL))
+    dcg->gridmap.lon1_deg = dcg->pointmap.lon_ll;
+
+  if((llur_str != NULL) && (strchr(llur_str, 'b') != NULL))
+    dcg->gridmap.lat1_deg = dcg->pointmap.lat_ll;
+
+  if((llur_str != NULL) && (strchr(llur_str, 'r') != NULL))
+    dcg->gridmap.lon2_deg = dcg->pointmap.lon_ur;
+
+  if((llur_str != NULL) && (strchr(llur_str, 't') != NULL))
+    dcg->gridmap.lat2_deg = dcg->pointmap.lat_ur;
+
   dcg->gridmap.nlon =
     (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/(double)cellsize + 1;
   dcg->gridmap.nlat =
@@ -288,20 +356,20 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg){
       lat_deg = dcg->gridmap.lat1_deg + (double)l * dcg->gridmap.dlat_deg;
 
       if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-	nesdis_proj_str_lonlat_ij(&pstr, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_str_lonlat_ij(&dcg->pstr, lon_deg, lat_deg, &ii, &jj);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-	nesdis_proj_llc_lonlat_ij(&pllc, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_llc_lonlat_ij(&dcg->pllc, lon_deg, lat_deg, &ii, &jj);
       else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-	nesdis_proj_mer_lonlat_ij(&pmer, lon_deg, lat_deg, &ii, &jj);
+	nesdis_proj_mer_lonlat_ij(&dcg->pmer, lon_deg, lat_deg, &ii, &jj);
 
-      if((ii < 0.0) || (ii > (double)dcg->gridmap.nlon - 1))
-	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
-      else if((jj < 0.0) || (jj > (double)dcg->gridmap.nlat - 1))
-	*datap = DCGINI_GRID_MAP_OUTOFBOUNDS;
+      if((ii < 0.0) || (ii > (double)dcg->pdb.nx - 1))
+	*datap = DCGINI_GRID_MAP_NODATA;
+      else if((jj < 0.0) || (jj > (double)dcg->pdb.ny - 1))
+	*datap = DCGINI_GRID_MAP_NODATA;
       else{
 	i = (size_t)lround(ii);
-	j = (size_t)lround(jj);
-	*datap = dcg->ginidata.data[j * dcg->pdb.ny + i];
+	j = dcg->pdb.ny - 1 - (size_t)lround(jj);    /* from top to bottom */
+	*datap = (int)dcg->ginidata.data[j * dcg->pdb.nx + i];
       }
       ++datap;
     }

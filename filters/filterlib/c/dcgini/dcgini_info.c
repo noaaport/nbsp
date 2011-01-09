@@ -38,12 +38,15 @@ int dcgini_info_write(char *file, struct dcgini_st *dcg){
 		dcg->pointmap.lon_max, dcg->pointmap.lat_max);
 
   if(n > 0)
-    n = fprintf(f, "llur: %f %f %f %f\n",
-		dcg->pdb.lon1_deg, dcg->pdb.lat1_deg,
-		dcg->pdb.lon2_deg, dcg->pdb.lat2_deg);
+    n = fprintf(f, "bbsize: %d %d\n", dcg->pdb.nx, dcg->pdb.ny);
 
+  /*
+   * This is the maximum enclosing rectangle.
+   */
   if(n > 0)
-    n = fprintf(f, "size: %d %d\n", dcg->pdb.nx, dcg->pdb.ny);
+    n = fprintf(f, "llur: %f %f %f %f\n",
+		dcg->pointmap.lon_ll, dcg->pointmap.lat_ll,
+		dcg->pointmap.lon_ur, dcg->pointmap.lat_ur);
 
   fclose(f);
 
