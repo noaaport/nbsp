@@ -16,8 +16,6 @@
 #include "dcgini_transform_priv.h"
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm);
-static void dcgini_pointmap_rectangle(struct dcgini_point_map_st *pm,
-				      int nx, int ny);
 
 int dcgini_transform_data(struct dcgini_st *dcg){
 
@@ -92,7 +90,6 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
   dcg->pointmap.numpoints = numpoints;
   dcgini_pointmap_bb(&dcg->pointmap);
-  dcgini_pointmap_rectangle(&dcg->pointmap, dcg->pdb.nx, dcg->pdb.ny);
 
   /* XXX
   fprintf(stdout, "%f %f %f %f %f %f\n",
@@ -110,7 +107,9 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
   /*
-   * This function determines the limits of the raw data.
+   * This function determines the boundinx box that limits of the raw data.
+   * as well as the smallest rectangle that encloses
+   * all data points, i.e., points for which the level is not zero.
    */
   size_t i;
 
@@ -118,6 +117,11 @@ static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
   pm->lon_max = -180.0;
   pm->lat_min = 180.0;
   pm->lon_max = -180.0;
+
+  pm->lon_ll = pm->lon_min;
+  pm->lat_ll = pm->lat_min;
+  pm->lon_ur = pm->lon_max;
+  pm->lat_ur = pm->lat_max;
   
   for(i = 0; i < pm->numpoints; ++i){
     if(pm->points[i].lon < pm->lon_min)
@@ -131,70 +135,22 @@ static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
 
     if(pm->points[i].lat > pm->lat_max)
       pm->lat_max = pm->points[i].lat;
-  }
-}
 
-static void dcgini_pointmap_rectangle(struct dcgini_point_map_st *pm,
-				      int nx, int ny){
-  /*
-   * This function determines the maximum enclosing rectangle
-   * (the largest rectangle excluding level 0 (no data) points).
-   */
-  int i;
-  int j;
-  size_t k;
+    /* exclude background points in the determination of the limits */
+    if(pm->points[i].level == 0)
+      continue;
 
-  pm->lon_ll = pm->lon_min;
-  pm->lat_ll = pm->lat_min;
-  pm->lon_ur = pm->lon_max;
-  pm->lat_ur = pm->lat_max;
+    if(pm->points[i].lon < pm->lon_ll)
+      pm->lon_ll = pm->points[i].lon;
 
-  for(j = 0; j < ny; ++j){
-    for(i = 0; i < nx; ++i){
-      k = j*nx + i;
-      if(pm->points[k].level != 0){
-	if(pm->points[k].lon > pm->lon_ll)
-	  pm->lon_ll = pm->points[k].lon;
+    if(pm->points[i].lon > pm->lon_ur)
+      pm->lon_ur = pm->points[i].lon;
 
-	break;
-      }
-    }
-  }
+    if(pm->points[i].lat < pm->lat_ll)
+      pm->lat_ll = pm->points[i].lat;
 
-  for(j = 0; j < ny; ++j){
-    for(i = nx - 1; i >= 0; --i){
-      k = j*nx + i;
-      if(pm->points[k].level != 0){
-	if(pm->points[k].lon < pm->lon_ur)
-	  pm->lon_ur = pm->points[k].lon;
-
-	break;
-      }
-    }
-  }
-
-  for(i = 0; i < nx; ++i){
-    for(j = 0; j < ny; ++j){
-      k = j*nx + i;
-      if(pm->points[k].level != 0){
-	if(pm->points[k].lat < pm->lat_ur)
-	  pm->lat_ur = pm->points[k].lat;
-
-	break;
-      }
-    }
-  }
-
-  for(i = 0; i < nx; ++i){
-    for(j = ny - 1; j >= 0; --j){
-      k = j*nx + i;
-      if(pm->points[k].level != 0){
-	if(pm->points[k].lat > pm->lat_ll)
-	  pm->lat_ll = pm->points[k].lat;
-
-	break;
-      }
-    }
+    if(pm->points[i].lat > pm->lat_ur)
+      pm->lat_ur = pm->points[i].lat;
   }
 }
 
@@ -294,6 +250,7 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,  char *llur_str){
   double ii, jj, lon_deg, lat_deg;
   double cellsize;	/* asc format requires square cell size */
   double dlon, dlat;
+  double rlon1, rlat1, rlon2, rlat2;
 
   dlon = (dcg->pointmap.lon_max - dcg->pointmap.lon_min)/(dcg->pdb.nx - 1);
   dlat = (dcg->pointmap.lat_max - dcg->pointmap.lat_min)/(dcg->pdb.ny - 1);
@@ -307,31 +264,38 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,  char *llur_str){
   dcg->gridmap.cellsize_deg = cellsize;
 
   /* the default limits */
-  dcg->gridmap.lon1_deg = dcg->pointmap.lon_min;
-  dcg->gridmap.lat1_deg = dcg->pointmap.lat_min;
-  dcg->gridmap.lon2_deg = dcg->pointmap.lon_max;
-  dcg->gridmap.lat2_deg = dcg->pointmap.lat_max;
+  dcg->gridmap.lon1_deg = dcg->pointmap.lon_ll;
+  dcg->gridmap.lat1_deg = dcg->pointmap.lat_ll;
+  dcg->gridmap.lon2_deg = dcg->pointmap.lon_ur;
+  dcg->gridmap.lat2_deg = dcg->pointmap.lat_ur;
 
   /* optional limits */
-  if((llur_str != NULL) && (strchr(llur_str, 'l') != NULL))
-    dcg->gridmap.lon1_deg = dcg->pointmap.lon_ll;
+  if(llur_str != NULL){
+    if(sscanf(llur_str, "%lf,%lf,%lf,%lf",
+	      &rlon1, &rlat1, &rlon2, &rlat2) != 4){
+      log_errx(1, "Invalid value of enclosing rectangle limits");
+      return(1);
+    }
 
-  if((llur_str != NULL) && (strchr(llur_str, 'b') != NULL))
-    dcg->gridmap.lat1_deg = dcg->pointmap.lat_ll;
-
-  if((llur_str != NULL) && (strchr(llur_str, 'r') != NULL))
-    dcg->gridmap.lon2_deg = dcg->pointmap.lon_ur;
-
-  if((llur_str != NULL) && (strchr(llur_str, 't') != NULL))
-    dcg->gridmap.lat2_deg = dcg->pointmap.lat_ur;
+    /* shrink the rectangle by the specified amouns */
+    dcg->gridmap.lon1_deg += rlon1;
+    dcg->gridmap.lat1_deg += rlat1;
+    dcg->gridmap.lon2_deg -= rlon2;
+    dcg->gridmap.lat2_deg -= rlat2;
+  }
 
   dcg->gridmap.nlon =
-    (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/(double)cellsize + 1;
+    (dcg->gridmap.lon2_deg - dcg->gridmap.lon1_deg)/cellsize + 1.0;
   dcg->gridmap.nlat =
-    (dcg->gridmap.lat2_deg - dcg->gridmap.lat1_deg)/(double)cellsize + 1;
+    (dcg->gridmap.lat2_deg - dcg->gridmap.lat1_deg)/cellsize + 1.0;
 
   /* Allocate storage for the levels array */
   numpoints = dcg->gridmap.nlon * dcg->gridmap.nlat;
+
+  /* XXX
+  fprintf(stdout, "%f %f", dcg->gridmap.lat2_deg, dcg->gridmap.lat1_deg);
+  fprintf(stdout, "%u %u\n", dcg->gridmap.nlon, dcg->gridmap.nlat);
+  */
 
   dcg->gridmap.level = calloc(numpoints, sizeof(*dcg->gridmap.level));
   if(dcg->gridmap.level == NULL){
