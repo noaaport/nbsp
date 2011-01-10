@@ -34,12 +34,23 @@
  * When -S is specified (asc format) the [-r] can be used to specify the
  * coordinates of the bounding box to use. The default is the "smallest
  * enclosing rectangle" The argument to the "-r" option is a string of
- * the form "rlon1,rlat1,rlon2,rlat2", where the values in the string
- * will be used to shrink the default enclosing rectangle.
+ * the form "lon1,lat1,lon2,lat2". For example,
  *
- * For example, to shrink the left hand side of a tige file by 5 degrees
+ *	nbspunz tige02.gini | nbspginishp -S -r "-75,16,-64,24"
  *
- *	nbspunz tige02.gini | nbspginishp -S -r "5,0,0,0"
+ * specifies the rectangle
+ *
+ *	lon1,lat1 = (-75,16)
+ *	lon2,lat2 = (-64,24)
+ *
+ * If, in addition, the [-q] option is specified, then the values 
+ * are interpreted asthe amount by which to shrink the default
+ * rectangle. For example, to shrink the left hand side of a tige file
+ * by 5 degrees
+ *
+ *	nbspunz tige02.gini | nbspginishp -S -q -r "5,0,0,0"
+ *
+ * Negative values will have the net effect of expanding the rectangle.
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -61,7 +72,7 @@
 struct {
   int opt_all;			/* -a */
   int opt_background;		/* -b */
-  int opt_quiet;		/* -q */
+  int opt_llur_str_diff;	/* -q */
   int opt_dbf;			/* -F */
   int opt_info;			/* -O */
   int opt_shp;			/* -P */
@@ -71,13 +82,13 @@ struct {
   char *opt_inputfile;
   char *opt_output_dir;		/* -d */
   char *opt_basename;           /* -n */
-  char *opt_llur_str;		/* -r */
   char *opt_dbffile;		/* -f */
   char *opt_infofile;		/* -o */
   char *opt_shpfile;		/* -p */
+  char *opt_llur_str;		/* -r */
   char *opt_ascfile;		/* -s */
-  char *opt_shxfile;		/* -x */
   char *opt_csvfile;		/* -v */
+  char *opt_shxfile;		/* -x */
   /* variables */
   int fd;
 } g = {0, 0, 0,
@@ -129,7 +140,7 @@ int main(int argc, char **argv){
       g.opt_background = 1;
       break;
     case 'q':
-      g.opt_quiet = 1;
+      g.opt_llur_str_diff = 1;
       break;
     case 'F':
       ++opt_aFOPSVX;
@@ -281,7 +292,7 @@ static int process_file(void){
   status = dcgini_transform_data(&dcg);
 
   if((status == 0) && (g.opt_asc != 0))
-    status = dcgini_regrid_data_asc(&dcg, g.opt_llur_str);
+    status = dcgini_regrid_data_asc(&dcg, g.opt_llur_str, g.opt_llur_str_diff);
 
   if(status != 0)
     return(status);

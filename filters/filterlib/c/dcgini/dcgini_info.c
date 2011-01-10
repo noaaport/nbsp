@@ -38,10 +38,13 @@ int dcgini_info_write(char *file, struct dcgini_st *dcg){
 		dcg->pointmap.lon_max, dcg->pointmap.lat_max);
 
   if(n > 0)
-    n = fprintf(f, "bbsize: %d %d\n", dcg->pdb.nx, dcg->pdb.ny);
+    n = fprintf(f, "nx: %d\n", dcg->pdb.nx);
+
+  if(n > 0)
+    n = fprintf(f, "ny: %d\n", dcg->pdb.ny);
 
   /*
-   * This is the maximum enclosing rectangle.
+   * This is the smallest enclosing rectangle.
    */
   if(n > 0)
     n = fprintf(f, "llur: %f %f %f %f\n",

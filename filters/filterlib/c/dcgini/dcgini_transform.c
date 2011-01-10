@@ -152,6 +152,14 @@ static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
     if(pm->points[i].lat > pm->lat_ur)
       pm->lat_ur = pm->points[i].lat;
   }
+
+  /* XXX
+  fprintf(stdout, "%f %f %f %f\n", pm->lon_min, pm->lat_min,
+	  pm->lon_max, pm->lat_max);
+
+  fprintf(stdout, "%f %f %f %f\n", pm->lon_ll, pm->lat_ll,
+	  pm->lon_ur, pm->lat_ur);
+  ***/
 }
 
 int dcgini_regrid_data(struct dcgini_st *dcg){
@@ -234,7 +242,9 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
   return(0);
 }
 
-int dcgini_regrid_data_asc(struct dcgini_st *dcg,  char *llur_str){
+int dcgini_regrid_data_asc(struct dcgini_st *dcg,
+			   char *llur_str,
+			   int f_llur_str_diff){
   /*
    * The distinctive feature in this function is that here we define
    * the cellsize (dlon, dlat) such that it is a square cell, as 
@@ -277,11 +287,18 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,  char *llur_str){
       return(1);
     }
 
-    /* shrink the rectangle by the specified amouns */
-    dcg->gridmap.lon1_deg += rlon1;
-    dcg->gridmap.lat1_deg += rlat1;
-    dcg->gridmap.lon2_deg -= rlon2;
-    dcg->gridmap.lat2_deg -= rlat2;
+    if(f_llur_str_diff != 0){
+      /* shrink the rectangle by the specified amouns */
+      dcg->gridmap.lon1_deg += rlon1;
+      dcg->gridmap.lat1_deg += rlat1;
+      dcg->gridmap.lon2_deg -= rlon2;
+      dcg->gridmap.lat2_deg -= rlat2;
+    }else{
+      dcg->gridmap.lon1_deg = rlon1;
+      dcg->gridmap.lat1_deg = rlat1;
+      dcg->gridmap.lon2_deg = rlon2;
+      dcg->gridmap.lat2_deg = rlat2;
+    }
   }
 
   dcg->gridmap.nlon =
