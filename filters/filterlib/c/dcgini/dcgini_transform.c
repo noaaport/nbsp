@@ -6,14 +6,27 @@
  * $Id$
  */
 #include <stdio.h>	/* XXX - only for debugging */
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>	/*  SIZE_T_MAX */
+#include <math.h>
 #include "err.h"
 #include "dcgini_const.h"
 #include "dcgini_transform.h"
 #include "dcgini_transform_priv.h"
+
+/* linux defines SIZE_MAX and freebsd SIZE_T_MAX */
+#if defined(SIZE_MAX) && !defined(SIZE_T_MAX)
+#define SIZE_T_MAX SIZE_MAX
+#endif
+
+/*
+ * We could use lround(), but in linux it seems to be a pain
+ * to include it (define -fno-bultiin, or -std=c99, etc). It is
+ * assumed that the argument x has already been checked to be positive
+ * and within bounds.
+ */
+#define LROUND_SIZE_T(x) (size_t)(x + 0.5)
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm);
 
@@ -231,8 +244,8 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
       else if((jj < 0.0) || (jj > (double)dcg->pdb.ny - 1))
 	*datap = DCGINI_GRID_MAP_NODATA;
       else{
-	i = (size_t)lround(ii);
-	j = dcg->pdb.ny - 1 - (size_t)lround(jj); /* from top to bottom */
+	i = LROUND_SIZE_T(ii);
+	j = dcg->pdb.ny - 1 - LROUND_SIZE_T(jj); /* from top to bottom */
 	*datap = (int)dcg->ginidata.data[j * dcg->pdb.nx + i];
       }
       ++datap;
@@ -348,8 +361,8 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,
       else if((jj < 0.0) || (jj > (double)dcg->pdb.ny - 1))
 	*datap = DCGINI_GRID_MAP_NODATA;
       else{
-	i = (size_t)lround(ii);
-	j = dcg->pdb.ny - 1 - (size_t)lround(jj);    /* from top to bottom */
+	i = LROUND_SIZE_T(ii);
+	j = dcg->pdb.ny - 1 - LROUND_SIZE_T(jj);    /* from top to bottom */
 	*datap = (int)dcg->ginidata.data[j * dcg->pdb.nx + i];
       }
       ++datap;

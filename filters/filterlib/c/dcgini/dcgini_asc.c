@@ -57,9 +57,9 @@ static int dcgini_asc_write_data(FILE *fp, struct dcgini_grid_map_st *gm){
   int n;
   int c;
 
-  n = fprintf(fp, "ncols %" PRIuMAX "\n", (uintmax_t)gm->nlon);
+  n = fprintf(fp, "ncols %zu\n", gm->nlon);
   if(n > 0)
-    n = fprintf(fp, "nrows %" PRIuMAX "\n", (uintmax_t)gm->nlat);
+    n = fprintf(fp, "nrows %zu\n", gm->nlat);
 
   if(n > 0)
     n = fprintf(fp, "xllcorner %f\n", gm->lon1_deg);
