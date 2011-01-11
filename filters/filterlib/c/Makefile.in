@@ -23,8 +23,8 @@ SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h io.h misc.h \
 	const.h config.h ${SHAREDHEADERS}
 
-TARGET = nbspfile nbspsat nbspsatinfo nbspginishp nbspunz nbspz nbsppipe \
-	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspnidsshp nbsprad2info
+TARGET = nbspfile nbspsat nbspsatinfo nbspsatgis nbspunz nbspz nbsppipe \
+	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspradgis nbsprad2info
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -84,17 +84,17 @@ nbspsat:
 	cd dcgini; ${MAKE}
 	cp dcgini/nbspsat .
 
-nbspginishp:
+nbspsatgis:
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspginishp .
+	cp dcgini/nbspsatgis .
 
 nbspradinfo:
 	cd dcnids; ${MAKE}
 	cp dcnids/nbspradinfo .
 
-nbspnidsshp:
+nbspradgis:
 	cd dcnids; ${MAKE}
-	cp dcnids/nbspnidsshp .
+	cp dcnids/nbspradgis .
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}

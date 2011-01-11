@@ -57,7 +57,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set fmtlist $gisfilter(sat_bundle,$bundle,fmt);
     set ginifpath $rc(fpath);
 
-    # nbspginishp command line options
+    # nbspsatgis command line options
     set option(dbf) "-f";
     set option(info) "-o";
     set option(shp) "-p";
@@ -80,7 +80,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
 	}
     }
 
-    set cmd [concat [list nbspunz $ginifpath | nbspginishp -b] $cmd_options];
+    set cmd [concat [list nbspunz $ginifpath | nbspsatgis -b] $cmd_options];
 
     set status [catch {
 	eval exec $cmd;

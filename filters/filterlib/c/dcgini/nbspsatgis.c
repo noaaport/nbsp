@@ -7,7 +7,7 @@
  */
 
 /*
- * Usage: nbspginishp [output options] <file> | < <file>
+ * Usage: nbspsatgis [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must 
  * be the uncompressed gini file (including the nesdis wmo header).
@@ -36,7 +36,7 @@
  * enclosing rectangle" The argument to the "-r" option is a string of
  * the form "lon1,lat1,lon2,lat2". For example,
  *
- *	nbspunz tige02.gini | nbspginishp -S -r "-75,16,-64,24"
+ *	nbspunz tige02.gini | nbspsatgis -S -r "-75,16,-64,24"
  *
  * specifies the rectangle
  *
@@ -48,7 +48,7 @@
  * rectangle. For example, to shrink the left hand side of a tige file
  * by 5 degrees
  *
- *	nbspunz tige02.gini | nbspginishp -S -q -r "5,0,0,0"
+ *	nbspunz tige02.gini | nbspsatgis -S -q -r "5,0,0,0"
  *
  * Negative values will have the net effect of expanding the rectangle.
  */
@@ -116,7 +116,7 @@ static void cleanup(void){
 int main(int argc, char **argv){
 
   char *optstr = "abqFOPSVXd:f:n:o:p:r:s:v:x:";
-  char *usage = "nbspginishp [-a] [-b] [-q] [-R] [-FOPSVX] [-d outputdir]"
+  char *usage = "nbspsatgis [-a] [-b] [-q] [-R] [-FOPSVX] [-d outputdir]"
     " [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]"
     " [-r <llurstr>] [-s <ascfile>] [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;

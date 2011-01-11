@@ -63,7 +63,7 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     set fmtlist $gisfilter(rad_bundle,$bundle,fmt);
     set nidsfpath $rc(fpath);
 
-    # nbspnidsshp command line options
+    # nbspradgis command line options
     set option(dbf) "-f";
     set option(info) "-o";
     set option(shp) "-p";
@@ -87,19 +87,19 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 
     #
     # The ccb header must be removed for nbsnidsshp (use -C).
-    # The -F option instructs nbspnidsshp to apply the built-in filtering
+    # The -F option instructs nbspradgis to apply the built-in filtering
     # options of the data (e.g., ignoring polygons with level values
     # less than 1.
     #
     if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
-	set cmd [concat [list nbspunz -C $nidsfpath | nbspnidsshp -b -D] \
+	set cmd [concat [list nbspunz -C $nidsfpath | nbspradgis -b -D] \
 		     $cmd_options];
     } else {
 	#
 	# If the nids are saved with the gempak header then we have to use
 	# -c $filterslib(gmpk_header_size)
 	#
-	set cmd [concat [list nbspnidsshp -b -D] $cmd_options $nidsfpath];
+	set cmd [concat [list nbspradgis -b -D] $cmd_options $nidsfpath];
     }
 
     set status [catch {

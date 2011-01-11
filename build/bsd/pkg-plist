@@ -7,10 +7,10 @@ bin/nbsppanic
 bin/nbspctl
 bin/nbspsat
 bin/nbspsatinfo
-bin/nbspginishp
+bin/nbspsatgis
 bin/nbspradinfo
 bin/nbsprad2info
-bin/nbspnidsshp
+bin/nbspradgis
 bin/nbspcat
 bin/nbspfile
 bin/nbspunz

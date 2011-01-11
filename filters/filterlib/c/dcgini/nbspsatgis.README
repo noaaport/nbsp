@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Usage: nbspginishp [-a] [-b] [-s] [-FOPVX] [-d outputdir]
+ * Usage: nbspsatgis [-a] [-b] [-s] [-FOPVX] [-d outputdir]
  *   [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]
  *   [-v <csvname>] [-x <shxmname>] [<file>]
  *

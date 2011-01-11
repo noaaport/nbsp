@@ -5,10 +5,10 @@
 /usr/local/bin/nbspctl
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
-/usr/local/bin/nbspginishp
+/usr/local/bin/nbspsatgis
 /usr/local/bin/nbspradinfo
 /usr/local/bin/nbsprad2info
-/usr/local/bin/nbspnidsshp
+/usr/local/bin/nbspradgis
 /usr/local/bin/nbspcat
 /usr/local/bin/nbspfile
 /usr/local/bin/nbspunz

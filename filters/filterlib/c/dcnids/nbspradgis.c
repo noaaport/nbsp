@@ -7,7 +7,7 @@
  */
 
 /*
- * nbspnidsshp [-c <count> | -C] [output options] <file> | < <file>
+ * nbspradgis [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
  * wmo header (i.e., the ccb must have been removed). The [-c] amd [-C]
@@ -115,7 +115,7 @@ static void cleanup(void){
 int main(int argc, char **argv){
 
   char *optstr = "abCDFOPVXc:d:M:N:f:n:o:p:v:x:";
-  char *usage = "nbspnidsshp [-a] [-b] [-C] [-D] [-FOPVX] "
+  char *usage = "nbspradgis [-a] [-b] [-C] [-D] [-FOPVX] "
     "[-c count] [-d outputdir] [-M min_level] [-N min_level] "
     "[-f dbffile] [-o infofile] [-p shpfile] [-v csvfile] [-x shxfile] "
     "<file> | < file";

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * nbspnidsshp  [-c <count> | -C] [output options] <file> | < <file>
+ * nbspradgis  [-c <count> | -C] [output options] <file> | < <file>
  *
  * The program reads from a file or stdin, but the data must start with the
  * nids header (i.e., the ccb and wmo headers must have been removed;

@@ -10,7 +10,7 @@ DCSOURCES = dcnids_extract.c dcnid_header.c dcnids_misc.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c dcnids_info.c dcnids_bunz.c \
 	dcnids_decode_radials_af1f.c dcnids_decode_digital_radials_16.c \
 	dbfread.c dbfwrite.c \
-	nbspradinfo.c nbspnidsshp.c
+	nbspradinfo.c nbspradgis.c
 DCHEADERS = dcnids.h dcnids_extract.h dcnids_header.h dcnids_misc.h \
 	dcnids_info.h dcnids_name.h dcnids_shp.h
 
@@ -28,10 +28,10 @@ HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
 
 COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
 ALLOBJECTS = ${COMMONOBJECTS} dbfread.o dbfwrite.o \
-	nbspradinfo.o nbspnidsshp.o
+	nbspradinfo.o nbspradgis.o
 
-# TARGET = nbspradinfo nbspnidsshp nbspnidsshp-dbfread nbspnidsshp-dbfwrite
-TARGET = nbspradinfo nbspnidsshp nbspnidsshp-dbfread
+# TARGET = nbspradinfo nbspradgis nbspradgis-dbfread nbspradgis-dbfwrite
+TARGET = nbspradinfo nbspradgis nbspradgis-dbfread
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -70,14 +70,14 @@ util.c: ../util.c
 nbspradinfo: nbspradinfo.o ${COMMONOBJECTS}
 	${CC} -o nbspradinfo nbspradinfo.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspnidsshp: nbspnidsshp.o ${COMMONOBJECTS}
-	${CC} -o nbspnidsshp nbspnidsshp.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradgis: nbspradgis.o ${COMMONOBJECTS}
+	${CC} -o nbspradgis nbspradgis.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspnidsshp-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
-	${CC} -o nbspnidsshp-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradgis-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
+	${CC} -o nbspradgis-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspnidsshp-dbfread: dbfread.o ${COMMONOBJECTS}
-	${CC} -o nbspnidsshp-dbfread dbfread.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradgis-dbfread: dbfread.o ${COMMONOBJECTS}
+	${CC} -o nbspradgis-dbfread dbfread.o ${COMMONOBJECTS} ${LDFLAGS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}
