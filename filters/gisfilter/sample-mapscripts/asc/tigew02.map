@@ -1,0 +1,63 @@
+#
+# $Id$
+#
+# Sample map script for a tige02 data file
+# For other files, just change input file name, and the values
+# of the "extent" and "size" parameters.
+# 
+MAP
+    UNITS  DD
+    EXTENT -152.293999 14.2814 -49.165293 61.207503
+    SIZE 1024 768
+    IMAGETYPE png
+    IMAGECOLOR 0 0 0
+    # FONTSET "mapfonts/fonts.list"
+
+    LAYER
+	NAME sat-1
+	DATA data/sat/tige02.asc	# shapefile
+	TYPE RASTER
+	STATUS ON
+	#TRANSPARENCY 100
+	OPACITY 100
+	#
+	# PROCESSING "SCALE=0,80"
+	# PROCESSING "SCALE_BUCKETS=16"
+	#
+    END
+
+    LAYER
+	NAME sat-2
+	DATA data/sat/tigw02.asc	# shapefile
+	TYPE RASTER
+	STATUS ON
+	#TRANSPARENCY 100
+	OPACITY 100
+	#
+	# PROCESSING "SCALE=0,80"
+	# PROCESSING "SCALE_BUCKETS=16"
+	#
+    END
+
+    LAYER
+	TYPE POLYGON
+	NAME "world"
+	STATUS ON
+	DATA "data/geodata/world/world.shp"
+	CLASS
+	    NAME "world-outline"
+	    OUTLINECOLOR 255 255 255
+	END
+    END
+
+    LAYER
+	TYPE POLYGON
+	NAME "states"
+	STATUS ON
+	DATA "data/geodata/s_01au07/s_01au07.shp"
+	CLASS
+	    NAME "states-outline"
+	    OUTLINECOLOR 255 255 255
+	END
+    END
+END

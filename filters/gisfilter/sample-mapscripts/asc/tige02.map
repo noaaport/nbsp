@@ -7,16 +7,15 @@
 # 
 MAP
     UNITS  DD
-    EXTENT -122 14 -49 61    # from tige02.info file
-    # SIZE 1280 1280           # from tige02.info file
-    SIZE 768 768
+    EXTENT -122.611168 14.281463 -49.151143 61.225463
+    SIZE 2003 1280
     IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "mapfonts/fonts.list"
 
     LAYER
 	NAME sat-1
-	DATA DATA /var/noaaport/data/gis/sat/asc/tig/tige02/latest.asc
+	DATA data/sat/tige02.asc	# shapefile
 	TYPE RASTER
 	STATUS ON
 	#TRANSPARENCY 100
@@ -25,6 +24,8 @@ MAP
 	# PROCESSING "SCALE=0,80"
 	# PROCESSING "SCALE_BUCKETS=16"
 	#
+	FILTER ([pixel] > 0)
+    END
 
     LAYER
 	TYPE POLYGON
