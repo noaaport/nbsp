@@ -15,28 +15,28 @@
  * The output options are:
  *
  *  -a => same as FOPVX (all) with the default names
+ *  -C => do asc
  *  -F => do dbf
  *  -O => do info
  *  -P => do shp
- *  -S => do asc
  *  -V => do csv
  *  -X => do shx
+ *  -c <asc file>
  *  -f <dbf file>
  *  -n <base name> => default base name for files
  *  -o <info file>
  *  -p <shp file>
- *  -s <asc file>
  *  -v <csv file>
  *  -x <shx file>
  *
  * The default action is the same as specifying "-FOPX" (excluding csv, asc).
  *
- * When -S is specified (asc format) the [-r] can be used to specify the
+ * When -C is specified (asc format) the [-r] can be used to specify the
  * coordinates of the bounding box to use. The default is the "smallest
  * enclosing rectangle" The argument to the "-r" option is a string of
  * the form "lon1,lat1,lon2,lat2". For example,
  *
- *	nbspunz tige02.gini | nbspsatgis -S -r "-75,16,-64,24"
+ *	nbspunz tige02.gini | nbspsatgis -C -r "-75,16,-64,24"
  *
  * specifies the rectangle
  *
@@ -48,7 +48,7 @@
  * rectangle. For example, to shrink the left hand side of a tige file
  * by 5 degrees
  *
- *	nbspunz tige02.gini | nbspsatgis -S -q -r "5,0,0,0"
+ *	nbspunz tige02.gini | nbspsatgis -C -q -r "5,0,0,0"
  *
  * Negative values will have the net effect of expanding the rectangle.
  */
@@ -73,20 +73,20 @@ struct {
   int opt_all;			/* -a */
   int opt_background;		/* -b */
   int opt_llur_str_diff;	/* -q */
+  int opt_asc;			/* -C */
   int opt_dbf;			/* -F */
   int opt_info;			/* -O */
   int opt_shp;			/* -P */
-  int opt_asc;			/* -S */
   int opt_shx;			/* -X */
   int opt_csv;			/* -V */
   char *opt_inputfile;
   char *opt_output_dir;		/* -d */
   char *opt_basename;           /* -n */
+  char *opt_ascfile;		/* -c */
   char *opt_dbffile;		/* -f */
   char *opt_infofile;		/* -o */
   char *opt_shpfile;		/* -p */
   char *opt_llur_str;		/* -r */
-  char *opt_ascfile;		/* -s */
   char *opt_csvfile;		/* -v */
   char *opt_shxfile;		/* -x */
   /* variables */
@@ -115,20 +115,20 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "abqFOPSVXd:f:n:o:p:r:s:v:x:";
-  char *usage = "nbspsatgis [-a] [-b] [-q] [-R] [-FOPSVX] [-d outputdir]"
-    " [-f <dbfname>] [-n <basename>] [-o <infofile>] [-p <shpname>]"
-    " [-r <llurstr>] [-s <ascfile>] [-v <csvname>] [-x <shxmname>] [<file>]";
+  char *optstr = "abqCFOPVXc:d:f:n:o:p:r:v:x:";
+  char *usage = "nbspsatgis [-a] [-b] [-q] [-R] [-CFOPVX] [-d outputdir]"
+    " [-c <ascfile>] [-f <dbfname>] [-n <basename>] [-o <infofile>] "
+    " [-p <shpname>] [-r <llurstr>] [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;
   int c;
-  int opt_aFOPSVX = 0;  /* set if any file output option is specified */
+  int opt_aCFOPVX = 0;  /* set if any file output option is specified */
 
   set_progname(basename(argv[0]));
 
   while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
     switch(c){
     case 'a':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_dbf = 1;
       g.opt_info = 1;
       g.opt_shp = 1;
@@ -142,29 +142,34 @@ int main(int argc, char **argv){
     case 'q':
       g.opt_llur_str_diff = 1;
       break;
+    case 'C':
+      ++opt_aCFOPVX;
+      g.opt_asc = 1;
+      break;
     case 'F':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_dbf = 1;
       break;
     case 'O':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_info = 1;
       break;
     case 'P':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_shp = 1;
       break;
-    case 'S':
-      ++opt_aFOPSVX;
-      g.opt_asc = 1;
-      break;
     case 'V':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_csv = 1;
       break;
     case 'X':
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_shx = 1;
+      break;
+    case 'c':
+      g.opt_asc = 1;
+      ++opt_aCFOPVX;
+      g.opt_ascfile = optarg;
       break;
     case 'd':
       g.opt_output_dir = optarg;
@@ -174,35 +179,30 @@ int main(int argc, char **argv){
       break;
     case 'f':
       g.opt_dbf = 1;
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_dbffile = optarg;
       break;
     case 'o':
       g.opt_info = 1;
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_infofile = optarg;
       break;
     case 'p':
       g.opt_shp = 1;
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_shpfile = optarg;
       break;
     case 'r':
       g.opt_llur_str = optarg;	/* for the enclosing rectangle in asc */
       break;
-    case 's':
-      g.opt_asc = 1;
-      ++opt_aFOPSVX;
-      g.opt_ascfile = optarg;
-      break;
     case 'v':
       g.opt_csv = 1;
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_csvfile = optarg;
       break;
     case 'x':
       g.opt_shx = 1;
-      ++opt_aFOPSVX;
+      ++opt_aCFOPVX;
       g.opt_shxfile = optarg;
       break;
     default:
@@ -213,7 +213,7 @@ int main(int argc, char **argv){
   }
 
   /* The default is to do everything except csv and asc */
-  if(opt_aFOPSVX == 0){
+  if(opt_aCFOPVX == 0){
       g.opt_dbf = 1;
       g.opt_info = 1;
       g.opt_shp = 1;
