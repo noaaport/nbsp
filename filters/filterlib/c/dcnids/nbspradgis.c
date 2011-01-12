@@ -278,7 +278,8 @@ int process_file(void){
   if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0)
     log_errx(1, "Invalid wmo header.");
 
-  dcnids_decode_header(&nids_data.nids_header);
+  if(dcnids_decode_header(&nids_data.nids_header) != 0)
+    log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
 
   /*
    * Decode the polygon data.

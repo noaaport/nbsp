@@ -89,7 +89,7 @@ struct {
   char *opt_shxfile;		/* -x */
   /* variables */
   int fd;
-} g = {0, 0, 0,
+} g = {0, 0,
        0, 0, 0, 0, 0, 0,
        NULL, NULL, NULL, NULL,
        NULL, NULL, NULL, NULL, NULL, NULL,

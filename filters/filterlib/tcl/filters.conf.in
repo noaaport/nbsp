@@ -75,7 +75,8 @@ set filterslib(wmoawipsgmpk_header_size) [expr $filterslib(wmoawips_size) + \
 set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first.
-# (some sites send nmd,net compressed and others send it uncompressed)
+# Some sites send nmd,net compressed and others send it uncompressed.
+# (Wed Jan 12 16:40:13 AST 2011 - even phfo_sdus50-dvlhkm is zlib compressed).
 # Included are (matched against awips1):
 #
 #  dpa

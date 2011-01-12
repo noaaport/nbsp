@@ -24,6 +24,7 @@ struct nids_header_st {
   int m_source;                 /* unused */
   int m_destination;            /* unused */
   int m_numblocks;              /* unused */
+  int pdb_divider;			/* should be -1 */
   int pdb_lat;
   int pdb_lon;
   int pdb_height;
@@ -47,6 +48,6 @@ struct nids_header_st {
 
 int dcnids_read_header(int fd, int skip_count,
 		       struct nids_header_st *nheader);
-void dcnids_decode_header(struct nids_header_st *nheader);
+int dcnids_decode_header(struct nids_header_st *nheader);
 
 #endif

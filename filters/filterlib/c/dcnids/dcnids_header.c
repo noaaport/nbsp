@@ -15,6 +15,8 @@
 #include "dcnids_extract.h"
 #include "dcnids_header.h"
 
+static int nids_verify_pdb_header(struct nids_header_st *nheader);
+
 int dcnids_read_header(int fd, int skipcount,
 		       struct nids_header_st *nheader){
   int n;
@@ -68,8 +70,12 @@ int dcnids_read_header(int fd, int skipcount,
   return(0);
 }
 
-void dcnids_decode_header(struct nids_header_st *nheader){
-
+int dcnids_decode_header(struct nids_header_st *nheader){
+  /*
+   * This function returns the same error codes as nids_verify_header(),
+   * namely 0, or a positive error code indicative of the failure.
+   */
+  int status;
   unsigned char *b;
   int n;
   struct tm tm;
@@ -97,6 +103,8 @@ void dcnids_decode_header(struct nids_header_st *nheader){
   nheader->m_destination = extract_uint16(b, 8);
   nheader->m_numblocks = extract_uint16(b, 9);
 
+  nheader->pdb_divider = extract_int16(b, 10);
+
   nheader->pdb_lat = extract_int32(b, 11);
   nheader->pdb_lon = extract_int32(b, 13);
 
@@ -121,4 +129,25 @@ void dcnids_decode_header(struct nids_header_st *nheader){
   nheader->hour = tm.tm_hour;
   nheader->min = tm.tm_min;
   nheader->sec = tm.tm_sec;
+
+  status = nids_verify_pdb_header(nheader);
+
+  return(status);
+}
+
+static int nids_verify_pdb_header(struct nids_header_st *nheader){
+  /*
+   * We should try to do a thorough consistency check of the hader,
+   * but at the moment we only do some very simple and heuristic checks.
+   * Mostly we try to detect the possibility that the header that has
+   * been passsed is not decompresed and things like that.
+   *
+   * This function should return 0, or a positive error code indicative
+   * of the failure.
+   */
+  
+  if(nheader->pdb_divider != -1)
+    return(1);
+
+  return(0);
 }

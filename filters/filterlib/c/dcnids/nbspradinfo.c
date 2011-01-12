@@ -175,7 +175,8 @@ int process_file(void){
   if(dcnids_verify_wmoawips_header(nheader.buffer) != 0)
     log_errx(1, "Invalid wmo header.");
 
-  dcnids_decode_header(&nheader);
+  if(dcnids_decode_header(&nheader) != 0)
+    log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
 
   if((g.opt_timeonly != 0) && (g.opt_lengthonly != 0))
     fprintf(stdout, "%" PRIuMAX " %u",
