@@ -424,7 +424,24 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
 	    if {($old_status == -2) && ($radinfo_status == 0)} {
 		log_msg "OK with uncompressed $rc(fbasename).";
-	    }
+	    } elseif {($old_status == -1) && ($radinfo_status != 0)} {
+                #
+	        # This catches the files that were not processed by nbspunz
+                # above (because they are supposed to be uncompressed) but
+                # nbspradinfo has returned an error, and we try to see if it
+                # is the case of a site that is transmiting it zlib compressed.
+                # This is happening (Wed Jan 12 17:30:38 AST 2011) with
+                # some dsp, dvl, eet files (and maybe others).
+                #
+                log_msg "Retrying with zlib compressed $rc(fbasename).";
+	        set radinfo_status [catch {
+	            set radinfo [split \
+        	      [exec nbspunz -b -n 1 $rc(fpath) | nbspradinfo -b -C]];
+	        } errmsg];
+                if {$radinfo_status == 0} {
+                    log_msg "OK with zlib compressed $rc(fbasename).";
+                }
+            }
         }
 
 	if {$radinfo_status == 0} {
