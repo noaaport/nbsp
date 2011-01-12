@@ -58,7 +58,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
     set ginifpath $rc(fpath);
 
     # nbspsatgis command line options
-    set option(asc) "-c";
+    set option(asc) "-a";
     set option(dbf) "-f";
     set option(info) "-o";
     set option(shp) "-p";
