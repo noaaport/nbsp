@@ -2,8 +2,8 @@
 # $Id$
 #
 
-r3 -
-===
+2.0r3 -
+=====
 
 - Revised nbspradmap to define the gpmap(radinfo,xxx) variables that
   can be used in the radmap.rc script (xx = lat, lon, height, seconds,
@@ -49,8 +49,8 @@ r3 -
 - Added the ability to specify the queue_read_timeout_ms on a per-client
   basis (via the clientoptions string in nbspd.conf).
 
-r4 -
-===
+2.1.r1 -
+======
 
 - Revised nbspmtr plot scripts and tclhttpd metar functions to
   plot the wind direction as well (suggested by Scott <ssshoema@gmail.com>).
@@ -68,4 +68,5 @@ r4 -
 - Added the gisfilter.
 - Added "gis" subdir to the catalog extension - The nids files are
   saved with the WCT naming conventions.
-- Completed the gini to shapefile conversion in the nbspshp library.
+- Completed the gini to shapefile conversion in the nbspgis library.
+- Added gni to asc conversion to the nbspgis librray.
