@@ -76,25 +76,25 @@ nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
 	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspsatinfo:
+nbspsatinfo: dcgini/nbspsatinfo
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspsatinfo .
+	mv dcgini/nbspsatinfo .
 
-nbspsat:
+nbspsat: dcgini/nbspsat
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspsat .
+	mv dcgini/nbspsat .
 
-nbspsatgis:
+nbspsatgis: dcgini/nbspsatgis
 	cd dcgini; ${MAKE}
-	cp dcgini/nbspsatgis .
+	mv dcgini/nbspsatgis .
 
-nbspradinfo:
+nbspradinfo: dcnids/nbspradinfo
 	cd dcnids; ${MAKE}
-	cp dcnids/nbspradinfo .
+	mv dcnids/nbspradinfo .
 
-nbspradgis:
+nbspradgis: dcnids/nbspradgis
 	cd dcnids; ${MAKE}
-	cp dcnids/nbspradgis .
+	mv dcnids/nbspradgis .
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}
