@@ -4,7 +4,7 @@
 . ../../../configure.inc
 
 # defaults (FreeBSD)
-INCDIRS="-iquote . -iquote ../../../src $LOCAL_INCDIR"
+INCDIRS="-iquote . $LOCAL_INCDIR"
 LIBDIRS=$LOCAL_LIBDIR
 LIBS="-lpng -lz"
 

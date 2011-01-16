@@ -23,8 +23,12 @@ SHAREDOBJECTS =	strsplit.o
 HEADERS = err.h util.h unz.h mfile.h io.h misc.h \
 	const.h config.h ${SHAREDHEADERS}
 
-TARGET = nbspfile nbspsat nbspsatinfo nbspsatgis nbspunz nbspz nbsppipe \
-	nbspgrib nbspgrib2 nbspcat nbspradinfo nbspradgis nbsprad2info
+TARGET_DCNIDS = nbspradinfo nbspradgis
+TARGET_DCGINI = nbspsat nbspsatinfo nbspsatgis
+TARGET = nbspfile nbspcat nbsppipe nbspunz nbspz \
+	nbspgrib nbspgrib2 \
+	nbsprad2info \
+	${TARGET_DCNIDS} ${TARGET_DCGINI}
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -76,24 +80,15 @@ nbspcat: nbspcat.o ${COMMONOBJECTS} ${SHAREDOBJECTS}
 nbsprad2info: nbsprad2info.o ${COMMONOBJECTS}
 	${CC} -o nbsprad2info nbsprad2info.o ${COMMONOBJECTS} ${LDFLAGS}
 
-nbspsatinfo: dcgini/nbspsatinfo
+${TARGET_DCGINI}:
 	cd dcgini; ${MAKE}
 	mv dcgini/nbspsatinfo .
-
-nbspsat: dcgini/nbspsat
-	cd dcgini; ${MAKE}
+	mv dcgini/nbspsatgis .
 	mv dcgini/nbspsat .
 
-nbspsatgis: dcgini/nbspsatgis
-	cd dcgini; ${MAKE}
-	mv dcgini/nbspsatgis .
-
-nbspradinfo: dcnids/nbspradinfo
+${TARGET_DCNIDS}:
 	cd dcnids; ${MAKE}
 	mv dcnids/nbspradinfo .
-
-nbspradgis: dcnids/nbspradgis
-	cd dcnids; ${MAKE}
 	mv dcnids/nbspradgis .
 
 install:
