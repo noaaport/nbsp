@@ -5,31 +5,44 @@
 #
 # $Id$
 #
-DCSOURCES = dcgini_misc.c dcgini_name.c dcgini_pdb.c \
+TARGET = nbspsat nbspsatinfo nbspsatgis
+TARGET_OBJECTS = nbspsat.o nbspsatinfo.o nbspsatgis.o
+
+SAT_OBJECTS = nbspsat.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+SATINFO_OBJECTS = nbspsatinfo.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+SATGIS_OBJECTS = nbspsatgis.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+
+SAT_LIBS = -lz -lpng
+SATINFO_LIBS = -lz
+SATGIS_LIBS = -lz -lm
+
+DC_SOURCES = dcgini_misc.c dcgini_name.c dcgini_pdb.c \
 	dcgini_transform.c dcgini_util.c \
 	dcgini_asc.c dcgini_shp.c dcgini_dbf.c dcgini_csv.c dcgini_info.c
-DCHEADERS = dcgini.h dcgini_const.h dcgini_grid.h dcgini_projections.h \
+DC_HEADERS = dcgini.h dcgini_const.h dcgini_grid.h dcgini_projections.h \
 	dcgini_misc.h dcgini_name.h dcgini_pdb.h dcgini_shp.h \
 	dcgini_transform.h dcgini_transform_priv.h dcgini_util.h
-DCOBJECTS = dcgini_misc.o dcgini_name.o dcgini_pdb.o \
+DC_OBJECTS = dcgini_misc.o dcgini_name.o dcgini_pdb.o \
 	dcgini_transform.o dcgini_util.o \
 	dcgini_asc.o dcgini_shp.o dcgini_dbf.o dcgini_csv.o dcgini_info.o
 
-SHAREDSOURCES = err.c io.c misc.c unz.c util.c
-SHAREDHEADERS = ../const.h \
-	../err.h ../io.h ../misc.h ../unz.h ../util.h
-SHAREDOBJECTS = err.o io.o misc.o unz.o util.o
+COMMON_DIR = ..
+COMMON_SOURCES = err.c io.c misc.c unz.c util.c
+COMMON_OBJECTS = err.o io.o misc.o unz.o util.o
+COMMON_HEADERS = ${COMMON_DIR}/common.h \
+	${COMMON_DIR}/const.h \
+	${COMMON_DIR}/err.h \
+	${COMMON_DIR}/io.h \
+	${COMMON_DIR}/misc.h \
+	${COMMON_DIR}/unz.h \
+	${COMMON_DIR}/util.h
 
-HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
+HEADERS = ${DC_HEADERS} ${COMMON_HEADERS}
 
-COMMONOBJECTS = ${SHAREDOBJECTS} ${DCOBJECTS}
-ALLOBJECTS = ${COMMONOBJECTS} nbspsat.o nbspsatinfo.o nbspsatgis.o
-
-TARGET = nbspsat nbspsatinfo nbspsatgis
+ALL_OBJECTS = ${TARGET_OBJECTS} ${DC_OBJECTS} ${COMMON_OBJECTS}
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
-LIBS =          @LIBS@
 INSTALL =       @INSTALL@
 CC =		@CC@
 CCWFLAGS =	@CCWFLAGS@
@@ -46,32 +59,32 @@ all: ${TARGET}
 @SUFFIXRULES@ ${HEADERS}
 	${CC} ${CFLAGS} $<
 
-../common.h:
-	cd ..; ${MAKE} common.h
+${COMMON_DIR}/common.h:
+	cd ${COMMON_DIR}; ${MAKE} common.h
 
-err.c: ../err.c
-	cp ../err.c .
+err.c: ${COMMON_DIR}/err.c
+	cp ${COMMON_DIR}/err.c .
 
-io.c: ../io.c
-	cp ../io.c .
+io.c: ${COMMON_DIR}/io.c
+	cp ${COMMON_DIR}/io.c .
 
-misc.c: ../misc.c
-	cp ../misc.c .
+misc.c: ${COMMON_DIR}/misc.c
+	cp ${COMMON_DIR}/misc.c .
 
-util.c: ../util.c
-	cp ../util.c .
+util.c: ${COMMON_DIR}/util.c
+	cp ${COMMON_DIR}/util.c .
 
-unz.c: ../unz.c
-	cp ../unz.c .
+unz.c: ${COMMON_DIR}/unz.c
+	cp ${COMMON_DIR}/unz.c .
 
-nbspsat: nbspsat.o ${COMMONOBJECTS}
-	${CC} -o nbspsat nbspsat.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspsat: ${SAT_OBJECTS}
+	${CC} -o nbspsat ${SAT_OBJECTS} ${LDFLAGS} ${SAT_LIBS}
 
-nbspsatinfo: nbspsatinfo.o ${COMMONOBJECTS}
-	${CC} -o nbspsatinfo nbspsatinfo.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspsatinfo: ${SATINFO_OBJECTS}
+	${CC} -o nbspsatinfo ${SATINFO_OBJECTS} ${LDFLAGS} ${SATINFO_LIBS}
 
-nbspsatgis: nbspsatgis.o ${COMMONOBJECTS}
-	${CC} -o nbspsatgis nbspsatgis.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspsatgis: ${SATGIS_OBJECTS}
+	${CC} -o nbspsatgis ${SATGIS_OBJECTS} ${LDFLAGS} ${SATGIS_LIBS}
 
 clean:
-	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}
+	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}

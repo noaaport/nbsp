@@ -5,37 +5,49 @@
 #
 # $Id$
 #
-DCSOURCES = dcnids_extract.c dcnid_header.c dcnids_misc.c \
+TARGET = nbspradinfo nbspradgis nbspradgis-dbfread
+## TARGET = nbspradinfo nbspradgis nbspradgis-dbfread nbspradgis-dbfwrite
+TARGET_OBJECTS = nbspradinfo.o nbspradgis.o dbfread.o
+
+RADINFO_OBJECTS = nbspradinfo.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+RADGIS_OBJECTS = nbspradgis.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+RADGIS_DBFREAD_OBJECTS = dbfread.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+
+RADINFO_LIBS = -lz -lbz2 -lm
+RADGIS_LIBS = -lz -lbz2 -lm
+RADGIS_DBFREAD_LIBS = -lz -lbz2 -lm
+
+DC_SOURCES = dcnids_extract.c dcnid_header.c dcnids_misc.c \
 	dcnids_name.c dcnids_transform.c \
 	dcnids_shp.c dcnids_csv.c dcnids_dbf.c dcnids_info.c dcnids_bunz.c \
 	dcnids_decode_radials_af1f.c dcnids_decode_digital_radials_16.c \
 	dbfread.c dbfwrite.c \
 	nbspradinfo.c nbspradgis.c
-DCHEADERS = dcnids.h dcnids_extract.h dcnids_header.h dcnids_misc.h \
+DC_HEADERS = dcnids.h dcnids_extract.h dcnids_header.h dcnids_misc.h \
 	dcnids_info.h dcnids_name.h dcnids_shp.h
 
-DCOBJECTS = dcnids_extract.o dcnids_header.o dcnids_name.o dcnids_misc.o \
+DC_OBJECTS = dcnids_extract.o dcnids_header.o dcnids_name.o dcnids_misc.o \
 	dcnids_transform.o \
 	dcnids_decode_radials_af1f.o dcnids_decode_digital_radials_16.o \
 	dcnids_shp.o dcnids_csv.o dcnids_dbf.o dcnids_info.o dcnids_bunz.o
 
-SHAREDSOURCES = err.c io.c misc.c util.c
-SHAREDHEADERS = ../const.h \
-	../err.h ../io.h ../misc.h ../util.h
-SHAREDOBJECTS = err.o io.o misc.o util.o
+COMMON_DIR = ..
+COMMON_SOURCES = err.c io.c misc.c unz.c util.c
+COMMON_OBJECTS = err.o io.o misc.o unz.o util.o
+COMMON_HEADERS = ${COMMON_DIR}/common.h \
+	${COMMON_DIR}/const.h \
+	${COMMON_DIR}/err.h \
+	${COMMON_DIR}/io.h \
+	${COMMON_DIR}/misc.h \
+	${COMMON_DIR}/unz.h \
+	${COMMON_DIR}/util.h
 
-HEADERS = ${DCHEADERS} ${SHAREDHEADERS}
+HEADERS = ${DC_HEADERS} ${COMMON_HEADERS}
 
-COMMONOBJECTS = ${DCOBJECTS} ${SHAREDOBJECTS}
-ALLOBJECTS = ${COMMONOBJECTS} dbfread.o dbfwrite.o \
-	nbspradinfo.o nbspradgis.o
-
-# TARGET = nbspradinfo nbspradgis nbspradgis-dbfread nbspradgis-dbfwrite
-TARGET = nbspradinfo nbspradgis nbspradgis-dbfread
+ALL_OBJECTS = ${TARGET_OBJECTS} ${DC_OBJECTS} ${COMMON_OBJECTS}
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
-LIBS =          @LIBS@ -lbz2
 INSTALL =       @INSTALL@
 CC =		@CC@
 CCWFLAGS =	@CCWFLAGS@
@@ -45,39 +57,45 @@ INCDIRS +=	-iquote ..
 CFLAGS +=	${DEBUGFLAGS} -c ${CCWFLAGS} ${INCDIRS}
 DEBUGFLAGS =	-g
 #DEBUGFLAGS =	-DNDEBUG
-LDFLAGS +=	${LIBDIRS} ${LIBS}
+LDFLAGS +=	${LIBDIRS}
 
 all: ${TARGET}
 
 @SUFFIXRULES@ ${HEADERS}
 	${CC} ${CFLAGS} $<
 
-../common.h:
-	cd ..; ${MAKE} common.h
 
-err.c: ../err.c
-	cp ../err.c .
+${COMMON_DIR}/common.h:
+	cd ${COMMON_DIR}; ${MAKE} common.h
 
-io.c: ../io.c
-	cp ../io.c .
+err.c: ${COMMON_DIR}/err.c
+	cp ${COMMON_DIR}/err.c .
 
-misc.c: ../misc.c
-	cp ../misc.c .
+io.c: ${COMMON_DIR}/io.c
+	cp ${COMMON_DIR}/io.c .
 
-util.c: ../util.c
-	cp ../util.c .
+misc.c: ${COMMON_DIR}/misc.c
+	cp ${COMMON_DIR}/misc.c .
 
-nbspradinfo: nbspradinfo.o ${COMMONOBJECTS}
-	${CC} -o nbspradinfo nbspradinfo.o ${COMMONOBJECTS} ${LDFLAGS}
+util.c: ${COMMON_DIR}/util.c
+	cp ${COMMON_DIR}/util.c .
 
-nbspradgis: nbspradgis.o ${COMMONOBJECTS}
-	${CC} -o nbspradgis nbspradgis.o ${COMMONOBJECTS} ${LDFLAGS}
+unz.c: ${COMMON_DIR}/unz.c
+	cp ${COMMON_DIR}/unz.c .
 
-nbspradgis-dbfwrite: dbfwrite.o ${COMMONOBJECTS}
-	${CC} -o nbspradgis-dbfwrite dbfwrite.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradinfo: ${RADINFO_OBJECTS}
+	${CC} -o nbspradinfo ${RADINFO_OBJECTS} ${LDFLAGS} ${RADINFO_LIBS}
 
-nbspradgis-dbfread: dbfread.o ${COMMONOBJECTS}
-	${CC} -o nbspradgis-dbfread dbfread.o ${COMMONOBJECTS} ${LDFLAGS}
+nbspradgis: ${RADGIS_OBJECTS}
+	${CC} -o nbspradgis ${RADGIS_OBJECTS} ${LDFLAGS} ${RADGIS_LIBS}
+
+nbspradgis-dbfread: ${RADGIS_DBFREAD_OBJECTS}
+	${CC} -o nbspradgis-dbfread ${RADGIS_DBFREAD_OBJECTS} \
+	${LDFLAGS} ${RADGIS_DBFREAD_LIBS}
+
+nbspradgis-dbfwrite: ${RADGIS_DBFWRITE_OBJECTS}
+	${CC} -o nbspradgis-dbfread ${RADGIS_DBFREAD_OBJECTS} \
+	${LDFLAGS} ${RADGIS_DBFWRITE_LIBS}
 
 clean:
-	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} ${SHAREDSOURCES}
+	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}
