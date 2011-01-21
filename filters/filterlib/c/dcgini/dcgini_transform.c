@@ -206,6 +206,12 @@ int dcgini_regrid_data(struct dcgini_st *dcg){
     return(-1);
   }
 
+  if(DCGINI_GRID_MAP_NODATA != 0){
+    for(k = 0; k < numpoints; ++k){
+      dcg->gridmap.level[k] = DCGINI_GRID_MAP_NODATA;
+    }
+  }
+
   dcg->gridmap.numpoints = numpoints;
   dcg->gridmap.nlon = dcg->pdb.nx;
   dcg->gridmap.nlat = dcg->pdb.ny;
@@ -331,6 +337,12 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,
   if(dcg->gridmap.level == NULL){
     log_err(1, "Cannot allocate memory for gridmap");
     return(-1);
+  }
+
+  if(DCGINI_GRID_MAP_NODATA != 0){
+    for(k = 0; k < numpoints; ++k){
+      dcg->gridmap.level[k] = DCGINI_GRID_MAP_NODATA;
+    }
   }
 
   datap = dcg->gridmap.level;

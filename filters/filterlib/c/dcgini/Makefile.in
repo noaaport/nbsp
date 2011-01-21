@@ -13,7 +13,7 @@ SATINFO_OBJECTS = nbspsatinfo.o ${COMMON_OBJECTS} ${DC_OBJECTS}
 SATGIS_OBJECTS = nbspsatgis.o ${COMMON_OBJECTS} ${DC_OBJECTS}
 
 SAT_LIBS = -lz -lpng
-SATINFO_LIBS = -lz
+SATINFO_LIBS = -lz -lm
 SATGIS_LIBS = -lz -lm
 
 DC_SOURCES = dcgini_misc.c dcgini_name.c dcgini_pdb.c \

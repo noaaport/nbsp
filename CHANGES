@@ -69,4 +69,7 @@
 - Added "gis" subdir to the catalog extension - The nids files are
   saved with the WCT naming conventions.
 - Completed the gini to shapefile conversion in the nbspgis library.
-- Added gni to asc conversion to the nbspgis librray.
+- Added gini to asc conversion to the nbspgis librray.
+
+2.1.p2.1
+-
