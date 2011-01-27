@@ -17,6 +17,8 @@
 #include "dcnids_extract.h"
 #include "dcnids_decode.h"
 
+#define DEG_PER_RAD     57.2173
+
 struct nids_digital_radial_packet_st {
   int num_bytes;
   int angle_start;	/* in tenth of degree */
@@ -27,10 +29,13 @@ struct nids_digital_radial_packet_st {
   /* runs */
 };
 
+static void nids_decode_digital_radials_16_grided(struct nids_data_st *nd);
+static void nids_count_polygons_radials_16(struct nids_data_st *nd);
 static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
 static int nids_decode_rvel_codetolevel(int run_code);
 
-void nids_decode_digital_radials_16(struct nids_data_st *nd){
+#if 0
+void nids_decode_digital_radials_16_orig(struct nids_data_st *nd){
 
   unsigned char *b = nd->data;
   unsigned char *bsave;		/* used when counting the polygons */
@@ -190,6 +195,262 @@ void nids_decode_digital_radials_16(struct nids_data_st *nd){
   fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
 	  numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
+}
+#endif
+
+void nids_decode_digital_radials_16(struct nids_data_st *nd){
+
+  nids_decode_digital_radials_16_grided(nd);
+}
+
+static void nids_decode_digital_radials_16_grided(struct nids_data_st *nd){
+
+  unsigned char *b = nd->data;
+  struct dcnids_polygon_st *polygon;
+  struct nids_digital_radial_packet_st radial_packet;
+  int i, j;
+  int run_code, run_bins, total_bins;
+  double r1, r2, theta1, theta2;
+  double sin_theta1, cos_theta1, sin_theta2, cos_theta2;
+  double dtheta;
+  double theta1p, sin_theta1p, cos_theta1p;
+  double theta2p, sin_theta2p, cos_theta2p;
+  int numpoints = 0;
+  int numpolygons = 0;
+  int run_level = 0;
+
+  /*
+   * Go to the start of the "individual radials"
+   */
+  b += NIDS_PACKET_RADIALS_START_RUNS;
+
+  /*
+   * We will run through the radials twice. The first time is just to
+   * count the number of polygons, and the second time to actually
+   * fill in the polygons. In other words, we must compute the total
+   * number of "run bins".
+   */
+  nids_count_polygons_radials_16(nd);
+
+  /*
+   * Allocate space for all the polygons.
+   */
+  nd->polygon_map.polygons = malloc(sizeof(struct dcnids_polygon_st) *
+				    nd->polygon_map.numpolygons);
+  if(nd->polygon_map.polygons == NULL)
+    log_err(1, "Error from malloc()");
+
+  /* XXX 
+  fprintf(stdout, "numpolygons = %d\n", nd->polygon_map.numpolygons);
+  */
+
+  /*
+   * Initialize the polygon pointer to the start of the polygon array,
+   * and count them again to check.
+   */
+  polygon = nd->polygon_map.polygons;
+  numpolygons = 0;
+
+  for(i = 0; i < nd->radial_packet_header.numradials; ++i){
+    radial_packet.num_bytes = extract_uint16(b, 1);
+    radial_packet.angle_start = extract_int16(b, 2);
+    radial_packet.angle_delta = extract_uint16(b, 3);
+    b += 6;
+
+    radial_packet.angle_start_deg = (double)radial_packet.angle_start/10.0;
+    radial_packet.angle_delta_deg = (double)radial_packet.angle_delta/10.0;
+
+    /* XXX
+    fprintf(stdout, "%d %d %f %f\n",
+	    nd->radial_packet_header.numradials,
+	    radial_packet.num_bytes,
+	    radial_packet.angle_start_deg,
+	    radial_packet.angle_delta_deg);
+    */
+
+    /* theta1 and theta2 in degrees */
+    theta1 = radial_packet.angle_start_deg;
+    theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
+    dcnids_sine_cosine(theta1, &sin_theta1, &cos_theta1);
+    dcnids_sine_cosine(theta2, &sin_theta2, &cos_theta2);
+
+    total_bins = 0;
+    for(j = 0; j < radial_packet.num_bytes; ++j){
+      run_code = b[0];
+      run_bins = 1;
+      ++b;      
+
+      numpoints += run_bins;
+
+      /* radius in km  - alspo update "total_bins */
+      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+      total_bins += run_bins;
+      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+
+      /* According to doc, 0 and 1 are not data values */
+      if(run_code < 2)
+	continue;
+
+      /* XXX
+      fprintf(stdout, "%f\n", r2);
+      */
+
+      /*
+       * Translate the code to a "level". The level that corresponds to the
+       * code depends on the product type (pdb_code).
+       */
+      if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ){
+	run_level = nids_decode_bref_codetolevel(nd->nids_header.pdb_mode,
+						 run_code);
+      }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXU){
+	run_level = nids_decode_rvel_codetolevel(run_code);
+      }else{
+	log_errx(1, "Unsupported value of nd->nids_header.pdb_code.");
+      }
+
+      if(nd->polygon_map.flag_usefilter == 1){
+	if((run_level < nd->polygon_map.level_min) ||
+	   (run_level > nd->polygon_map.level_max)){
+	  continue;
+	}
+      }
+
+      dtheta = DEG_PER_RAD/r2;
+      if(radial_packet.angle_delta_deg < dtheta)
+	dtheta = radial_packet.angle_delta_deg;
+
+      theta1p = theta1;
+      sin_theta1p = sin_theta1;
+      cos_theta1p = cos_theta1;
+      theta2p = theta1;
+
+      while(theta2p < theta2){
+	theta2p += dtheta;
+	if(theta2p > theta2)
+	  theta2p = theta2;
+
+	/* XXX fprintf(stdout, "\t%f\n", theta2p); */
+
+	dcnids_sine_cosine(theta2p, &sin_theta2p, &cos_theta2p);
+
+	/*
+	 * The reference lat, lon are the site coordinates
+	 */
+	dcnids_define_polygon(nd->nids_header.lon,
+			      nd->nids_header.lat,
+			      r1, r2,
+			      sin_theta1p, cos_theta1p,
+			      sin_theta2p, cos_theta2p,
+			      polygon);
+	polygon->code = run_code;
+	polygon->level = run_level;
+
+	/* XXX
+	   int k;
+	   for(k = 0; k < 4; ++k){
+	   fprintf(stdout, "%.2f:%.2f,", polygon->lon[k], polygon->lat[k]);
+	   }
+	   fprintf(stdout, "%d\n", polygon->level);
+	*/
+
+	++polygon;
+	++numpolygons;
+
+	theta1p = theta2p;
+	sin_theta1p = sin_theta2p;
+	cos_theta1p = cos_theta2p;
+      }
+    }
+
+    /* XXX
+    fprintf(stdout, "\ntotal_bins: %d\n", total_bins);
+    fprintf(stdout, "\n");
+    */
+  }
+
+  assert(numpolygons <= nd->polygon_map.numpolygons);
+  nd->polygon_map.numpolygons = numpolygons;
+
+  dcnids_polygonmap_bb(&nd->polygon_map);
+
+  /* XXX
+  fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
+	  numpoints, numpolygons, nd->polygon_map.numpolygons);
+  */
+}
+
+static void nids_count_polygons_radials_16(struct nids_data_st *nd){
+
+  unsigned char *b = nd->data;
+  struct nids_digital_radial_packet_st radial_packet;
+  int i, j;
+  int run_code, run_bins, total_bins;
+  double r1, r2, theta1, theta2;
+  double dtheta;
+  double theta1p, theta2p;
+  int numpolygons = 0;
+
+  /*
+   * We will run through the radials twice. The first time is just to
+   * count the number of polygons, and the second time to actually
+   * fill in the polygons. In other words, we must compute the total
+   * number of "run bins".
+   */
+
+  /*
+   * Go to the start of the "individual radials"
+   */
+  b += NIDS_PACKET_RADIALS_START_RUNS;
+  numpolygons = 0;
+
+  for(i = 0; i < nd->radial_packet_header.numradials; ++i){
+    radial_packet.num_bytes = extract_uint16(b, 1);
+    radial_packet.angle_start = extract_int16(b, 2);
+    radial_packet.angle_delta = extract_uint16(b, 3);
+    b += 6;
+
+    radial_packet.angle_start_deg = (double)radial_packet.angle_start/10.0;
+    radial_packet.angle_delta_deg = (double)radial_packet.angle_delta/10.0;
+
+    /* theta1 and theta2 in degrees */
+    theta1 = radial_packet.angle_start_deg;
+    theta2 = radial_packet.angle_start_deg + radial_packet.angle_delta_deg;
+
+    total_bins = 0;
+    for(j = 0; j < radial_packet.num_bytes; ++j){
+      run_code = b[0];
+      run_bins = 1;
+      ++b;      
+
+      /* radius in km  - alspo update "total_bins */
+      r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+      total_bins += run_bins;
+      r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
+
+      /* According to doc, 0 and 1 are not data values */
+      if(run_code < 2)
+	continue;
+
+      dtheta = DEG_PER_RAD/r2;
+      if(radial_packet.angle_delta_deg < dtheta)
+	dtheta = radial_packet.angle_delta_deg;
+
+      theta1p = theta1;
+      theta2p = theta1;
+
+      while(theta2p < theta2){
+	theta2p += dtheta;
+	if(theta2p > theta2)
+	  theta2p = theta2;
+
+	++numpolygons;
+
+	theta1p = theta2p;
+      }
+    }
+  }
+
+  nd->polygon_map.numpolygons = numpolygons;
 }
 
 static int nids_decode_bref_codetolevel(int pdb_mode, int run_code){

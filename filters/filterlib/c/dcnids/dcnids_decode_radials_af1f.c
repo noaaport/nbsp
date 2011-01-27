@@ -30,11 +30,13 @@ struct nids_radial_packet_st {
   /* runs */
 };
 
+static void nids_decode_radials_af1f_grided(struct nids_data_st *nd);
 static void nids_count_polygons_radials_af1f(struct nids_data_st *nd);
 static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
 static int nids_decode_rvel_codetolevel(int run_code);
 
-void nids_decode_radials_af1f(struct nids_data_st *nd){
+#if 0
+void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
 
   unsigned char *b = nd->data;
   unsigned char *bsave;		/* used when counting the polygons */
@@ -204,9 +206,20 @@ void nids_decode_radials_af1f(struct nids_data_st *nd){
 	  numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
 }
+#endif
 
-void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
+void nids_decode_radials_af1f(struct nids_data_st *nd){
 
+  nids_decode_radials_af1f_grided(nd);
+}
+
+static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
+  /*
+   * If this function is used, and in particular if we make it the
+   * default, then the -D option should be passed to nbspradgis in order
+   * to discard the data beyond the thresholds and avoid unnecessary
+   * processing and large shapefiles.
+   */
   unsigned char *b = nd->data;
   struct dcnids_polygon_st *polygon;
   struct nids_radial_packet_st radial_packet;
@@ -214,7 +227,8 @@ void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
   int run_code, run_bins, total_bins;
   double r1, r2, theta1, theta2;
   double sin_theta1, cos_theta1, sin_theta2, cos_theta2;
-  double r, theta1p, dtheta, sin_theta1p, cos_theta1p;
+  double r, dtheta;
+  double theta1p, sin_theta1p, cos_theta1p;
   double theta2p, sin_theta2p, cos_theta2p;
   int numpoints = 0;
   int numpolygons = 0;
@@ -326,29 +340,29 @@ void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 	}
       }
 
-      dtheta = DEG_PER_RAD/r2;
-      if(radial_packet.angle_delta_deg < dtheta)
-	dtheta = radial_packet.angle_delta_deg;
+      r = r1;
+      while(r < r2){
+	++r;
 
-      theta1p = theta1;
-      sin_theta1p = sin_theta1;
-      cos_theta1p = cos_theta1;
-      theta2p = theta1;
+	/* XXX fprintf(stdout, "%f\n", r - 1); */
 
-      while(theta2p < theta2){
-	theta2p += dtheta;
-	if(theta2p > theta2)
-	  theta2p = theta2;
+	dtheta = DEG_PER_RAD/r;
+	if(radial_packet.angle_delta_deg < dtheta)
+	  dtheta = radial_packet.angle_delta_deg;
 
-	/* XXX fprintf(stdout, "%f\n", theta2p); */
+	theta1p = theta1;
+	sin_theta1p = sin_theta1;
+	cos_theta1p = cos_theta1;
+	theta2p = theta1;
 
-	dcnids_sine_cosine(theta2p, &sin_theta2p, &cos_theta2p);
+	while(theta2p < theta2){
+	  theta2p += dtheta;
+	  if(theta2p > theta2)
+	    theta2p = theta2;
 
-	r = r1;
-	while(r < r2){
-	  ++r;
+	  /* XXX fprintf(stdout, "%f\n", theta2p); */
 
-	  /* XXX fprintf(stdout, "\t%f\n", r - 1); */
+	  dcnids_sine_cosine(theta2p, &sin_theta2p, &cos_theta2p);
 
 	  /*
 	   * The reference lat, lon are the site coordinates
@@ -372,11 +386,11 @@ void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 
 	  ++polygon;
 	  ++numpolygons;
-	}
 
-	theta1p = theta2p;
-	sin_theta1p = sin_theta2p;
-	cos_theta1p = cos_theta2p;
+	  theta1p = theta2p;
+	  sin_theta1p = sin_theta2p;
+	  cos_theta1p = cos_theta2p;
+	}
       }
     }
 
@@ -396,7 +410,6 @@ void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 	  numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
 }
-
 
 static void nids_count_polygons_radials_af1f(struct nids_data_st *nd){
 
@@ -454,25 +467,26 @@ static void nids_count_polygons_radials_af1f(struct nids_data_st *nd){
       total_bins += run_bins;
       r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
 
-      /*
-       * Choose dtheta such that it corresponds to an arc of 1.
-       *
-       * dtheta_rad = 1/r2
-       */
-      dtheta = DEG_PER_RAD/r2;
+      r = r1;
+      while(r < r2){
+	++r;
 
-      if(radial_packet.angle_delta_deg < dtheta)
-	dtheta = radial_packet.angle_delta_deg;
+	/*
+	 * Choose dtheta such that it corresponds to an arc of 1.
+	 *
+	 * dtheta_rad = 1/r2
+	 */
+	dtheta = DEG_PER_RAD/r;
 
-      theta = theta1;
-      while(theta < theta2){
-	theta += dtheta;
-	if(theta > theta2)
-	  theta = theta2;
+	if(radial_packet.angle_delta_deg < dtheta)
+	  dtheta = radial_packet.angle_delta_deg;
+	
+	theta = theta1;
+	while(theta < theta2){
+	  theta += dtheta;
+	  if(theta > theta2)
+	    theta = theta2;
 
-	r = r1;
-	while(r < r2){
-	  ++r;
 	  ++numpolygons;
 	}
       }

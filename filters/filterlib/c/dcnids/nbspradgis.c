@@ -241,6 +241,15 @@ int main(int argc, char **argv){
   else if(optind == argc - 1)
     g.opt_inputfile = argv[optind++];
 
+  /*
+   * The -D option is on by default since we use the "grided" version
+   * of the nids->shapefile decode functions. This option is needed for the
+   * legacy types (n0r, ...) otherwise the unnecesary processing of data
+   * slows down the conversion and makes the files much larger.
+   * (nids_decode_radials_af1f_grided())
+   */
+  g.opt_filter = 1;
+
   atexit(cleanup);
   status = process_file();
 

@@ -75,7 +75,6 @@ struct nids_data_st {
 };
 
 void nids_decode_radials_af1f(struct nids_data_st *nd);
-void nids_decode_radials_af1f_grided(struct nids_data_st *nd);
 void nids_decode_digital_radials_16(struct nids_data_st *nd);
 
 #endif
