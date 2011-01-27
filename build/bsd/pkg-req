@@ -1,6 +1,9 @@
 #!/bin/sh
 
-requires="db47 tcl86 tcllib tk85 expect png netpbm gnuplot gifsicle mapserver"
+# To install tcl, pkg_add must be invoked as "pkg_add -r tcl86", but to
+# check for the package, it must be in the form "tcl-8.6".
+#
+requires="db47 tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot gifsicle mapserver"
 
 conflict="nbspgribrsh"
 
