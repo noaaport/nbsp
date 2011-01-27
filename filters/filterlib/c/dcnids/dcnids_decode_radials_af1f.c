@@ -202,8 +202,8 @@ void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
   dcnids_polygonmap_bb(&nd->polygon_map);
 
   /* XXX
-  fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
-	  numpoints, numpolygons, nd->polygon_map.numpolygons);
+     fprintf(stdout, "\nnumpoints= %d, numpolygons = %d:%d\n",
+     numpoints, numpolygons, nd->polygon_map.numpolygons);
   */
 }
 #endif
@@ -230,7 +230,6 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
   double r, dtheta;
   double theta1p, sin_theta1p, cos_theta1p;
   double theta2p, sin_theta2p, cos_theta2p;
-  int numpoints = 0;
   int numpolygons = 0;
   int run_level = 0;	/* the level corresponding to a given code */
 
@@ -259,7 +258,7 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
     log_err(1, "Error from malloc()");
 
   /* XXX 
-  fprintf(stdout, "numpolygons = %d\n", nd->polygon_map.numpolygons);
+     fprintf(stdout, "numpolygons = %d\n", nd->polygon_map.numpolygons);
   */
 
   /*
@@ -307,15 +306,13 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
       if(run_bins == 0)
 	continue;  /* should be the last byte and the loop will break itself */
 
-      numpoints += run_bins;
-
       /* radius in km - also update "total_bins" */
       r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
       total_bins += run_bins;
       r2 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
 
       /* XXX
-      fprintf(stdout, "\t%f %f\n", r1, r2);
+	 fprintf(stdout, "\t%f %f\n", r1, r2);
       */
 
       /*
@@ -394,9 +391,24 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
       }
     }
 
+  /*
+   * XXX - regrid
+   *
+   * This is where the "regrid" function would be called to regrid
+   * the data to a regular grid. The function can use the "totalbins"
+   * as a measure how many points to use.
+   *
+   * dlat = (lat2 - lat1)/(2 * totalbins)
+   * dlon = (lon2 - lon1)/(2 * totalbins)
+   *
+   * choose the smaller of the two as the "cell size" (call it dl),
+   * and then compute the numebr of points in each axis (nlat, nlon)
+   * for that dl. The rest would be similar to what is done in the sat case.
+   */
+
     /* XXX
-    fprintf(stdout, "\ntotal_bins: %d\n", total_bins);
-    fprintf(stdout, "\n");
+       fprintf(stdout, "\ntotal_bins: %d\n", total_bins);
+       fprintf(stdout, "\n");
     */
   }
 
