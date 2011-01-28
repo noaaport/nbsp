@@ -106,8 +106,8 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	eval exec $cmd;
     } errmsg];
 
-    if {$status == 0} {
-	# Append the wmo header data to the info file
+    # Append the wmo header data to the info file (if "info" is in fmtlist)
+    if {([lsearch $fmtlist info] != -1) && ($status == 0)} {
 	set infodata "rootname: [file rootname $data_savename(info)]\n";
 	foreach k [list awips] {
 	    append infodata "$k: $rc($k)\n";
