@@ -14,7 +14,7 @@
 # in the default package).
 # We must build our own.
 #
-requires="db47 tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot gifsicle\
+requires="db47 tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot gifsicle \
     mapserver"
 
 conflict="nbspgribrsh"
@@ -25,28 +25,6 @@ key=$2
 [ "$key" = "DEINSTALL" ] && exit 0
 
 exit_status=0
-suggest=
-for p in $requires
-do
-    result=`pkg_info -I ${p}* 2> /dev/null`
-    status=$?
-    if [ $status -ne 0 ]
-    then
-	echo "$p not found."
-	exit_status=1
-    fi
-done
-
-[ $exit_status -ne 0 ] && { echo "
-To install tcl-8.6, pkg_add must be invoked as pkg_add -r tcl86,
-the same with tk.
-
-There is no standard package for gnuplot because the default requires pdflib,
-which is not free. A suitable package is in the optional-packages directory.
-
-The gisfilter requires mapserver with the gdal option (which is not in the
-default package). A suitable package is in the optional-packages directory."; }
-
 for p in $conflict
 do
     result=`pkg_info -I ${p}* 2> /dev/null`
@@ -54,6 +32,17 @@ do
     if [ $status -eq 0 ]
     then
 	echo "$p conflict"
+	exit_status=1
+    fi
+done
+
+for p in $requires
+do
+    result=`pkg_info -I ${p}* 2> /dev/null`
+    status=$?
+    if [ $status -ne 0 ]
+    then
+	echo "$p not found."
 	exit_status=1
     fi
 done
