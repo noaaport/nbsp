@@ -16,8 +16,8 @@ tcllibs="tclgrads tclgempak tclmetar tclssh tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 
-# Override tag with the cmd line argument ("tags/nbsp-2.0.r1")
-[ $# -ne 0 ] && tag=$1
+# Override tag with the cmd line argument (e.g. "nbsp-2.1.2r")
+[ $# -ne 0 ] && tag=tags/$1
 
 svn co $mastersite/$project/$tag $project
 cd $project
