@@ -16,4 +16,4 @@ mastersite=${masterhost}/${masterrepo}
 [ $# -ne 0 ] && tag=$1
 
 cd ../../../
-echo svn copy $project $mastersite/$project/tags/$tag
+svn copy $project $mastersite/$project/tags/$tag
