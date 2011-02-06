@@ -7,7 +7,7 @@
 #
 # -b => background mode
 # -c => override the default configuration file
-# -d => override the output directory (implies -w)
+# -d => implies -w, but override the gisfilter configuration file output dir
 # -L => output the id list
 # -n => pick only the basename of the default output file
 # -o => override the output file name (useful only if there is one id
