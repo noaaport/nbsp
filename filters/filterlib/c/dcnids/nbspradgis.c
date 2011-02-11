@@ -11,7 +11,7 @@
  *
  * The program reads from a file or stdin, but the data must start with the
  * wmo header (i.e., the ccb must have been removed). The [-c] amd [-C]
- * options work as in nbspradinfo. ee nbspradinfo.c.
+ * options work as in nbspradinfo. See nbspradinfo.c.
  *
  * The output options are:
  *
