@@ -39,7 +39,9 @@ Then perform the following:
    pqact.conf-craftinsert.README
 
 
-6) Note that the files that are written to the nbsp spool directory
+6) Spool cleanup -
+
+   Note that the files that are written to the nbsp spool directory
    by the craftinsert script in ldm, are not processed by Nbsp and
    therefore they are not inserted in the spooldb for handling their
    deletion. The assumption is that those files are not "owned" by Nbsp,
@@ -56,4 +58,8 @@ Then perform the following:
    approach, and it requires TclX).
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
+
+   The level2 data fills about 2 Gb per hour. It is important to adjust
+   the spool retention time and the run period of the spool entry in
+   the cleanup script according to the size of the spool directory. 
 -

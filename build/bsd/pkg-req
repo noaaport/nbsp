@@ -14,8 +14,8 @@
 # in the default package).
 # We must build our own.
 #
-requires="db48 tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot gifsicle \
-    mapserver"
+requires="db48 tcl-8.6:tcl86 tcllib tk-8.6:tk86 expect png netpbm gifsicle \
+    gnuplot mapserver"
 
 conflict="nbspgribrsh"
 
@@ -38,13 +38,20 @@ done
 
 for p in $requires
 do
-    result=`pkg_info -I ${p}* 2> /dev/null`
-    status=$?
-    if [ $status -ne 0 ]
-    then
-	echo "$p not found."
-	exit_status=1
-    fi
+  pkg=`echo $p | cut -f 1 -d :`
+  port=`echo $p | cut -f 2 -d :`
+  result=`pkg_info -I ${pkg}* 2> /dev/null`
+  status=$?
+  if [ $status -ne 0 ]
+  then
+      if [ -n "$port" ]
+      then
+	  echo "$port not found"
+      else
+	  echo "$pkg not found"
+      fi
+      exit_status=1
+  fi
 done
 
 exit $exit_status

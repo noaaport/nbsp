@@ -7,8 +7,14 @@
 package require Tclx;	# umask
 
 proc err {s} {
-    
-    puts stderr $s;
+
+    global argv0;
+
+    set name [file tail $argv0];
+
+    puts stderr "$name: $s";
+    exec logger -t $name $s;
+
     exit 1;
 }
 
@@ -108,5 +114,11 @@ if {[file exists $tmppath]} {
 }
 
 if {$craftinsert(nbspd_enable) == 1} {
-    proc_nbsp $ppath;
+    set status [catch {
+	proc_nbsp $ppath;
+    } errmsg];
+
+    if {$status != 0} {
+	err $errmsg;
+    }
 }
