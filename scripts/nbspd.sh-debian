@@ -26,8 +26,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 [ -x $DAEMON ] || exit 0
 
 # Include nbsp defaults if available
-if [ -f /etc/default/${NAME}d ] ; then
-	. /etc/default/${NAME}d
+if [ -f /etc/default/${NAME} ] ; then
+	. /etc/default/${NAME}
 fi
 
 case "$1" in
