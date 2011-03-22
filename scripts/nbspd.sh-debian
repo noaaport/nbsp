@@ -15,34 +15,37 @@
 
 NAME=nbsp
 DESC=nbsp
-DAEMON=/usr/local/sbin/${NAME}d
+DAEMON=${NAME}d
+CMD=/usr/local/sbin/${DAEMON}
 RUNDIR=/var/run/$NAME
-PIDFILE=$RUNDIR/${NAME}d.pid
+PIDFILE=$RUNDIR/${DAEMON}.pid
+RC=/etc/init.d/${DAEMON}
+DEFAULTS=/etc/default/${DAEMON}
 OWNER=noaaport
 GROUP=noaaport
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-[ -x $DAEMON ] || exit 0
+[ -x $CMD ] || exit 0
 
-# Include nbsp defaults if available
-if [ -f /etc/default/${NAME}d ] ; then
-	. /etc/default/${NAME}d
+# Include npstats defaults if available
+if [ -f $DEFAULTS ] ; then
+	. $DEFAULTS
 fi
 
 case "$1" in
   start)
-	# In Ubuntu /var/run/<subdir> must be recreated
-	[ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
+        # In Ubuntu /var/run/<subdir> must be recreated
+        [ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
 
 	echo -n "Starting $DESC:"
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
-	    -- $DAEMON_OPTS
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $CMD \
+	    -- $CMD_OPTS
 	echo " done"
 	;;
   stop)
 	echo -n "Stopping $DESC:"
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $DAEMON
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $CMD
 
 	i=0
 	while [ -f $PIDFILE ]
@@ -55,8 +58,7 @@ case "$1" in
 	echo " done"
 	;;
   *)
-	N=/etc/init.d/${NAME}d
-	echo "Usage: $N {start|stop}" >&2
+	echo "Usage: $RC {start|stop}" >&2
 	exit 1
 	;;
 esac
