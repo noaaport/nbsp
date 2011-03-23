@@ -149,8 +149,12 @@ int write_file_info(char *in_file){
 
     if(status == 1)
       log_errx(1, "File too short.");
-    else
+    else if(status == 2)
+      log_errx(1, "Invalid wmo header.");
+    else if(status == 3)
       log_errx(1, "Error from zlib.");
+    else
+      log_errx(1, "Undocumented error from read_nesdis_pdb_compressed()");
 
     return(1);
   }
