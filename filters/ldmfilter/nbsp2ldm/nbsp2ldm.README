@@ -6,13 +6,11 @@ The nbsp2ldm program should be compiled and installed
 (after compiling and installing ldm), by executing
 
 # make LDMHOME=/home/ldm
-# make LDMHOME=/home/ldm install
+# make install
 
 or substituting for /home/ldm the base directory of ldm (i.e., the parent
-directory of the ldm include and lib subdirectories).
-
-If the ldmpak package is installed, the appropriate commands are
+directory of the ldm include and lib subdirectories), for example
 
 # make LDMHOME=/usr/local/lib/ldm
-# make LDMHOME=/usr/local/lib/ldm install
+# make install
 -
