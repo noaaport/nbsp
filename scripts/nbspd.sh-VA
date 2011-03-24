@@ -1,0 +1,72 @@
+#! /bin/sh
+# 
+# $Id$
+#
+# rc script for nbspd (debian)
+#
+### BEGIN INIT INFO
+# Provides:          nbsp
+# Required-Start:    $ALL
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Noaaport server
+### END INIT INFO
+
+NAME=nbsp
+DESC=nbsp
+DAEMON=${NAME}d
+CMD=/usr/local/sbin/${DAEMON}
+RUNDIR=/var/run/$NAME
+PIDFILE=$RUNDIR/${DAEMON}.pid
+RC=/etc/init.d/${DAEMON}
+DEFAULTS=/etc/default/${DAEMON}
+OWNER=noaaport
+GROUP=noaaport
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+[ -x $CMD ] || exit 0
+
+# Include npstats defaults if available
+if [ -f $DEFAULTS ] ; then
+	. $DEFAULTS
+fi
+
+case "$1" in
+  start)
+        # In Ubuntu /var/run/<subdir> must be recreated
+        [ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
+
+	# start ldm before nbspd
+	sudo -u ldm -H /usr/local/lib/ldm/bin/ldmadmin start
+
+	echo -n "Starting $DESC:"
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $CMD \
+	    -- $CMD_OPTS
+	echo " done"
+	;;
+  stop)
+	echo -n "Stopping $DESC:"
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --exec $CMD
+
+	i=0
+	while [ -f $PIDFILE ]
+	do
+	  sleep 1
+	  i=`expr $i + 1`
+	  [ $i -eq 4 ] && { printf " %s" "."; i=0; }
+	done
+
+	# stop ldm after npemwind
+	sudo -u ldm -H /usr/local/lib/ldm/bin/ldmadmin stop
+
+	echo " done"
+	;;
+  *)
+	echo "Usage: $RC {start|stop}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
