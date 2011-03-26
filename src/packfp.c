@@ -21,7 +21,7 @@
  * to the server and filter queues (the fpath of the file, NBS2).
  * (The unpack functions are in packfpu.{h,c}.
  * The functions to support the transmission of the entire files (NBS1)
- * are in nbs.{c,h}.
+ * are in nbs1{r,s}.{c,h}.
  */
 
 int nbsfp_pack_fpath(struct packet_info_st *packetinfo,

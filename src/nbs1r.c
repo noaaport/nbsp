@@ -25,8 +25,8 @@
 /*
  * Functions to support the transmission of the entire files (NBS1).
  * The functions for NBS2 (fpath) are in packfp.{h,c}. This file
- * contains the "receive" functions, which are not used by the server.
- * The "send" functions (which are used by the server) are in nbs1s.c.
+ * contains the "receive" functions(used by the "slave").
+ * The "send" functions (used by the master) are in nbs1s.c.
  */
 
 int unpack_nbs1_header(struct nbs1_packet_st *nbs){

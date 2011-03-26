@@ -28,8 +28,8 @@
 /*
  * Functions to support the transmission of the entire files (NBS1).
  * The functions for NBS2 (fpath) are in packfp.{h,c}. This file
- * contains the "send" fucntions. The "receive" functions are in nbs1r.c
- * but they are not used by the nbspd server.
+ * contains the "send" fucntions (used by the "master").
+ * The "receive" functions are in nbs1r.c (used by the "slave").
  */
 
 static off_t get_num_blocks(off_t fsize);
