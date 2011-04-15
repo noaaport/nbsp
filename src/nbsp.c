@@ -160,7 +160,17 @@ static void *processor_thread_main(void *data __attribute__((unused))){
   status = open_nbsproc();
   if(status != 0){
     set_quit_flag();
-    return(NULL);
+    /*
+     * Should not call here
+     *
+     * return(NULL);
+     *
+     * so that clean_pop() is allowed to be called below even when
+     * open_nbsproc() returns an error.
+     * (For example the return() gives a seg fault (11) if the spooldb slots
+     * is reduced in the config file; in that case open_nbsproc()
+     * gives an error (from spooldb_open).
+     */
   }
 
   while(get_quit_flag() == 0){

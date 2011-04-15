@@ -1,5 +1,5 @@
-nbsp (2.1.3p1-1) stable; urgency=low
+nbsp (2.1.3p2-1) stable; urgency=low
 
   * Initial debian package release
 
- -- Jose F Nieves <nieves@ltp.upr.clu.edu>  Mon, 07 Feb 2011 12:34:32 -0400
+ -- Jose F Nieves <nieves@ltp.upr.clu.edu>  Fri, 15 Apr 2011 15:42:21 -0400
