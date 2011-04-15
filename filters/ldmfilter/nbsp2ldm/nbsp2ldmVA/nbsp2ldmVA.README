@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+1) Follow the instructions in nbsp2ld.README
+
+2) In the VA, to configure Gempak as well,
+
+   cp gempaksh.conf /usr/local/gempak/site

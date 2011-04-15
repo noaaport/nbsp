@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+
+These files will configure nbsp to feed ldm and disable all the
+other standard filters.
+
+1) ldmfilter.conf and features.conf should be copied to
+
+  /usr/local/etc/nbsp/site
+
+2) nbsp2ldm should be copied to
+
+  /usr/local/bin
+
+  and chmod 755.
+
+3) nbspd.sh should be copied to
+
+   /etc/init.d
+
+   renamed as "nbspd" and chmod 755.
