@@ -107,24 +107,22 @@ static void *slavenet_main(void *arg){
   pthread_cleanup_push(slavenet_try_close, arg);
 
   status = slavenet_init_info(slave);
-  if(status != 0){
+  if(status != 0)
     set_quit_flag();
-    return(NULL);
+  else{
+    status = slavenet_open(slave);
+    /*
+     * If slavenet_open() returns 2, it is a configuration error and we quit
+     * the application. Otherwise we assume that, if there is an error,
+     * it is a temporary situation and try to reopen the connection in
+     * the loop.
+     */
+    if(status == 2)
+      set_quit_flag();
   }
 
-  status = slavenet_open(slave);
-  /*
-   * If slavenet_open() returns 2, it is a configuration error and we quit
-   * the application. Otherwise we assume that, if there is an error,
-   * it is a temporary situation and try to reopen the connection in
-   * the loop.
-   */
   if(status == 0)
     slave_stats_connect(slave);
-  else if(status == 2){
-    set_quit_flag();
-    return(NULL);
-  }
 
   while(get_quit_flag() == 0){
     /*

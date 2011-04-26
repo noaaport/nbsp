@@ -105,16 +105,11 @@ static void *slavein_main(void *arg){
   pthread_cleanup_push(slavein_try_close, arg);
 
   status = slavein_init_info(slave);
-  if(status != 0){
-    set_quit_flag();
-    return(NULL);
-  }
+  if(status == 0)
+    status = slavein_open(slave);
 
-  status = slavein_open(slave);
-  if(status != 0){
+  if(status != 0)
     set_quit_flag();
-    return(NULL);
-  }
 
   while(get_quit_flag() == 0){
     /*

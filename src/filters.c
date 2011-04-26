@@ -193,8 +193,10 @@ static void *filter_main(void *data __attribute__ ((unused))){
 
   status = open_filter_server();
   if(status != 0){
+    /*
+     * See comment in processor_thread_main() in nbsp.c.
+     */
     set_quit_flag();
-    return(NULL);
   }
 
   while(get_quit_flag() == 0){
