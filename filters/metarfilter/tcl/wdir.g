@@ -28,7 +28,7 @@ set gnuplot(script) {
   set xtics $gplot(xtics)
 
   plot [][0:360] \
-      "$gplot(datafile)" using 5 notitle with linespoints 1
+      "$gplot(datafile)" using 5 notitle with linespoints ls 1
 
   quit
 }

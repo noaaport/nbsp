@@ -30,7 +30,7 @@ set gnuplot(script) {
   # Column 8 is the pressure in inHg, while 10 is in mb.
   # (Column 9 is slp in mb, but it is not always available)
   plot \
-      "$gplot(datafile)" using 10 notitle with linespoints 1
+      "$gplot(datafile)" using 10 notitle with linespoints ls 1
 
   quit
 }

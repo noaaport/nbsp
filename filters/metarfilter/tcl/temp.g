@@ -29,10 +29,9 @@ set gnuplot(script) {
   set xtics $gplot(xtics)
 
   plot \
-      "$gplot(datafile)" using 6 title "T" with linespoints 1,\
-      "$gplot(datafile)" using 7 title "D" with linespoints 3,\
-      "$gplot(datafile)" using 11 title "H" with linespoints 4
+      "$gplot(datafile)" using 6 title "T" with linespoints ls 1,\
+      "$gplot(datafile)" using 7 title "D" with linespoints ls 3,\
+      "$gplot(datafile)" using 11 title "H" with linespoints ls 4
 
   quit
 }
-

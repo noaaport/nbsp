@@ -28,7 +28,7 @@ set gnuplot(script) {
   set xtics $gplot(xtics)
 
   plot \
-      "$gplot(datafile)" using 4 notitle with linespoints 1
+      "$gplot(datafile)" using 4 notitle with linespoints ls 1
 
   quit
 }
