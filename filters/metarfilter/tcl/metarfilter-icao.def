@@ -10,6 +10,16 @@
 #
 # The file is not used by the filter itself, but by the metar functions in
 # the web server.
+#
+# - Sat Apr 30 11:23:51 AST 2011
+#
+# Added kgge by hand because it does not appear in nsd_ccc.
+# These links by Scott Shoemaker <ssshoema@gmail.com>:
+#
+# http://www.airnav.com/airport/KGGE
+# http://weather.gladstonefamily.net/site/KGGE
+# http://www.gcmap.com/airport/KGGE
+# http://www.acukwik.com/airportinfo/KGGE
 
 set metarfilter(icao,bix1) "30-24-07N, 088-55-04W, Biloxi, Keesler Air Force Base, Navu, MS"
 set metarfilter(icao,bix2) "30-24-34N, 088-55-08W, Biloxi, Keesler Air Force Base, Navu, MS"
@@ -1019,6 +1029,7 @@ set metarfilter(icao,kgfa) "47-30N, 111-11W, Malmstrom Air Force Base, MT"
 set metarfilter(icao,kgfk) "47-56-53N, 097-10-57W, Grand Forks, Grand Forks International Airport, ND"
 set metarfilter(icao,kgfl) "43-20-28N, 073-36-38W, Glens Falls, Floyd Bennett Memorial Airport, NY"
 set metarfilter(icao,kggb) "37-49N, 122-28W, Golden Gate Bridge, CA"
+set metarfilter(icao,kgge) "33-18-41.0465N, 79-19-13.1301W, Georgetown, SC"
 set metarfilter(icao,kggg) "32-23-26N, 094-42-50W, Longview, Gregg County Airport, TX"
 set metarfilter(icao,kggw) "48-12-50N, 106-37-17W, Glasgow, Glasgow International Airport, MT"
 set metarfilter(icao,kghw) "45-39N, 095-19W, Glenwood, Glenwood Municipal Airport, MN"
