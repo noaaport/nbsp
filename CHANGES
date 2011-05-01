@@ -74,3 +74,4 @@
 2.1.3p3
 -
 - Added kgge to metarfilter (icao and st files)
+- Added linespoints style (ls) keywords to gnuplot templates in metarfilter
