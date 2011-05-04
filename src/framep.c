@@ -175,11 +175,14 @@ static void update_framep_info(struct sbn_frame *sbnf){
 
   if((last > 0) && (current > last + 1)){
     if(sbnf->fh.sbn_command == SBN_COMMAND_DATA_TRANSFER)
-      log_errx("While processing %u.%d: SBN seq number jumped from %u to %u", 
+      log_errx("While processing %d.%u.%d: SBN seqnum jumped from %u to %u",
+	       sbnf->np_channel_index,
 	       sbnf->pdh.product_seq_number, sbnf->pdh.block_number,
 	       last, current);
     else
-      log_errx("SBN seq number jumped from %u to %u", last, current);
+      log_errx("While processing %d: SBN seqnum jumped from %u to %u",
+	       sbnf->np_channel_index,
+	       last, current);
 
     update_stats_frames_jumps();
   }	       	       
