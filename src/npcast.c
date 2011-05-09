@@ -13,6 +13,7 @@
 #include <sys/socket.h>		/* the two below need this */
 #include <netinet/in.h>		/* INET_ADDRSTRLEN */
 #include <net/if.h>		/* IFNAMSIZ */
+#include <netdb.h>		/* gai_strerror codes */
 #include "util.h"
 #include "strsplit.h"
 #include "err.h"
@@ -272,8 +273,16 @@ static int open_channel(int id){
 
   sfd = mcast_rcv(ip, port, gifname, gifip, udprcvsize,
 		  &sa, &sa_len, &gai_code);
-  if(sfd < 0)
-    return(-1);
+
+  if(sfd < 0){
+    if((gai_code == 0) || (gai_code == EAI_SYSTEM))
+      return(-1);
+    else{
+      log_errx("getaddrinfo gai_code %d: %s",
+	       gai_code, gai_strerror(gai_code));
+      return(1);
+    }
+  }
 
   sender_sa = malloc(sa_len);
   if(sender_sa == NULL)
@@ -403,4 +412,3 @@ int get_npcast_channel_enable(int i){
 
   return(gnpcast.channel[i].f_enable);
 }
-
