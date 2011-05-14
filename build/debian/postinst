@@ -216,4 +216,13 @@ NOTE:
   If you are uprading from an older version, those commands must be
   executed manually.
 --
+
+In Linux it is recommended to set
+
+    sysctl -w net.ipv4.ipfrag_max_dist=0
+
+or better
+
+    echo 'net.ipv4.ipfrag_max_dist = 0' > /etc/sysctl.d/noaaport.conf
+
 __EOF__
