@@ -71,7 +71,8 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p3
+2.1.3p4
 -
 - Added kgge to metarfilter (icao and st files)
 - Added linespoints style (ls) keywords to gnuplot templates in metarfilter
+- Added inbsp extension for exporting stats data via web interface

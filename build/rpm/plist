@@ -279,6 +279,7 @@
 /usr/local/etc/nbsp/dist/npstats.conf-defaults
 /usr/local/etc/nbsp/dist/catalog.conf-sample
 /usr/local/etc/nbsp/dist/catalog-templates.def-sample
+/usr/local/etc/nbsp/dist/inbsp.conf-sample
 /usr/local/share/doc/nbsp/weatherscope-extension.tgz
 /usr/local/share/doc/nbsp/www.tgz
 /usr/local/libexec/nbsp/httpd
@@ -352,3 +353,4 @@
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope/nids.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/npstats.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/catalog.tcl
+/usr/local/libexec/nbsp/tclhttpd/extensions/inbsp.tcl
