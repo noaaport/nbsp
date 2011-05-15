@@ -14,6 +14,7 @@
 # Without [-s] the <datafile> is the output from nbspstatplotdata.
 # With [-s] the <inputfile> must an nbspd.status file, and then
 # this tool calls nbspstatplodat to produce (and delete) the data file.
+# If no inputfile is given with [-s], the default nbspd.status is used.
 # With [-s], the options [-m] and [-h] are passed to nbspstatplotdata
 # to produce minute data ([-m]) and give a backwards cutoff hour ([-h]).
 
@@ -21,10 +22,8 @@ package require cmdline;
 package require fileutil;
 
 set usage {nbspstatplot [-b basedir] [-d subdir] [-f fmt]
-    [-s [-m] [-h]] <datafile>};
+    [-s [-m] [-h <hh>]] <datafile>};
 set optlist {{b.arg ""} {d.arg ""} {f.arg ""} {g.arg ""} s m {h.arg ""}};
-
-array set option [::cmdline::getoptions argv $optlist $usage];
 
 ## The common defaults
 set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -45,15 +44,30 @@ if {[file exists $inv_init_file] == 0} {
 source $inv_init_file;
 unset inv_init_file;
 
+# Same with nbspd.init, which is needed for nbspd.status
+set nbspd_init_file [file join $common(libdir) nbspd.init];
+if {[file exists $nbspd_init_file] == 0} {
+    puts stderr "$nbspd_init_file not found.";
+    return 1;
+}
+source $nbspd_init_file;
+unset nbspd_init_file;
+
 #
 # main
 #
+array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
-if {$argc != 1} {
+
+if {$argc > 1} {
     puts stderr $usage;
     exit 1;
+} elseif {$argc == 1} {
+    set inputfile [lindex $argv 0];
+} else {
+    set inputfile $nbspd(statusfile);
+    set option(s) 1;
 }
-set inputfile [lindex $argv 0];
 
 if {$option(s) == 0} {
     if {($option(m) != 0) || ($option(h) ne "")} {
