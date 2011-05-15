@@ -3,24 +3,27 @@
 # $Id$
 #
 # Usage: nbspstatplot1 [-o <plotname>] [-f fmt] [-g fmtopts]
-#	[-M|-t|-r|-m] <datafile>
+#	[-t|-r|-m|-R|-J|-M] <datafile>
 #
-# [-M] => plot (M)bytes received
 # [-t] => files transmitted
 # [-r] => files retransmitted
 # [-m] => files missed
+# [-R] => frames received
+# [-J] => frames jumps
+# [-M] => (M)bytes received
 #
-# The <datafile> is the output from nbspstatplotdat. It can be an hourly
+# The <datafile> is the output from nbspstatplotdata. It can be an hourly
 # or minutely data file. The templates know how to to deal with both.
 # Without options, [-t] is the default. The tool will 
-# save the data in <plotname>.<fmt> or with the name
+# save the file in <plotname>.<fmt> or with the name
 # $inventory(plotfname).<fmt>.
 
 package require cmdline;
 
 set usage {nbspstatplot1 [-o outputfile [-b basedir] [-d subdir]]
-    [-f fmt] [-g fmtoptions] [-M|-t|-r|-m] [-n] <datafile>};
-set optlist {{o.arg ""} {b.arg ""} {d.arg ""} {f.arg ""} {g.arg ""} M t r m n};
+    [-f fmt] [-g fmtoptions] [-t|-r|-m|-R|-J|-M] <datafile>};
+set optlist {{o.arg ""} {b.arg ""} {d.arg ""} {f.arg ""} {g.arg ""}
+    t r m R J M};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 
@@ -28,23 +31,15 @@ proc check_option_conflict optionarray {
 
     upvar $optionarray option; 
 
-    set Mtrm_conflict 0;
+    set trmRJM_conflict 0;
 
-    if {$option(M) == 1} {
-	incr Mtrm_conflict;
-    }
-    if {$option(t) == 1} {
-	incr Mtrm_conflict;
-    }
-    if {$option(r) == 1} {
-	incr Mtrm_conflict;
-    }
-
-    if {$option(m) == 1} {
-	incr Mtrm_conflict;
+    foreach key [list t r m R J M] {
+	if {$option($key) == 1} {
+	    incr trmRJM_conflict;
+	}
     }
     
-    if {$Mtrm_conflict > 1} {
+    if {$trmRJM_conflict > 1} {
 	return 1
     }
 
@@ -56,19 +51,23 @@ proc choose_plot_template {optionarray} {
     upvar $optionarray option;
     global inventory;
 
+    set _template(t) $inventory(plotftransrc);
+    set _template(r) $inventory(plotftransrc);
+    set _template(m) $inventory(plotfmissrc);
+    set _template(R) $inventory(plotframesrcvrc);
+    set _template(J) $inventory(plotframesjumpsrc);
+    set _template(M) $inventory(plotbytesrc);
+
     set templatename "";
     # First get the name of the template based on the option argument.
-    if {$option(M) == 1} {
-	set templatename $inventory(plotbytesrc);
-    } elseif {$option(t) == 1} {
-	set templatename $inventory(plotftransrc);
-    } elseif {$option(r) == 1} {
-	set templatename $inventory(plotfretransrc);
-    } elseif {$option(m) == 1} {
-	set templatename $inventory(plotfmissrc);
+    foreach key [list t r m R J M] {
+	if {$option($key) == 1} {
+	    set templatename $_template($key);
+	    break;
+	}
     }
 
-    if {$templatename == ""} {
+    if {$templatename eq ""} {
 	set templatename $inventory(plotftransrc);
     }
 
@@ -81,7 +80,7 @@ proc choose_plot_template {optionarray} {
 	}
     }
 
-    if {${_tmpl} == ""} {
+    if {${_tmpl} eq ""} {
 	puts "$templatename not found.";
 	exit 1;
     }
@@ -102,8 +101,8 @@ unset _defaultsfile;
 # and therefore it is in a separate file that is read by both.
 set inv_init_file [file join $common(libdir) inventory.init];
 if {[file exists $inv_init_file] == 0} {
-        puts "$inv_init_file not found.";
-        return 1;
+    puts "$inv_init_file not found.";
+    return 1;
 }
 source $inv_init_file;
 unset inv_init_file;
@@ -137,7 +136,7 @@ if {$option(g) ne ""} {
     set gplot(fmtoptions) $option(g);
 }
 
-if {$option(o) != ""} {
+if {$option(o) ne ""} {
     set gplot(output) $option(o).$gplot(fmt);
 } else {
     set gplot(output) $inventory(plotfname).$gplot(fmt);

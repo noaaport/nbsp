@@ -42,7 +42,7 @@
 /usr/local/bin/nbspgismap
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
-/usr/local/bin/nbspstatplotdat
+/usr/local/bin/nbspstatplotdata
 /usr/local/bin/nbspstatcounters
 /usr/local/bin/nbspbatch
 /usr/local/bin/nbspgribctl

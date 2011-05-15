@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# Usage: nbspstatplotdat [-o outputfile [-b basedir] [-d subdir]]
+# Usage: nbspstatplotdata [-o outputfile [-b basedir] [-d subdir]]
 #			[-h <hh>] [-m] [-D mday] [statusfile]
 #
 # Without options, the data is written to stdout. Otherwise, 
@@ -18,14 +18,16 @@
 #
 # The order of the columns is
 #
-# <files transmitted> <files retransmitted> <files missed> <MBytes>
+# <frames received> <frames jumps> \
+# <files transmitted> <files retransmitted> <files missed> \
+# <MBytes>
 #
 # This preceeded by <hh> (for hourly files) or <hh:mm> for minutely files.
 
 package require cmdline;
 package require fileutil;
 
-set usage {nbspstatplotdat [-o outputfile [-b basedir] [-d subdir]]
+set usage {nbspstatplotdata [-o outputfile [-b basedir] [-d subdir]]
     [-h <hh>] [-m] [-D mday] [statusfile]};
 set optlist {{o.arg ""} {b.arg ""} {d.arg ""} {h.arg ""} m {D.arg ""}};
 
@@ -42,8 +44,8 @@ unset _defaultsfile;
 # and therefore it is in a separate file that is read by both.
 set inv_init_file [file join $common(libdir) inventory.init];
 if {[file exists $inv_init_file] == 0} {
-        puts stderr "$inv_init_file not found.";
-        return 1;
+    puts stderr "$inv_init_file not found.";
+    return 1;
 }
 source $inv_init_file;
 unset inv_init_file;
@@ -51,8 +53,8 @@ unset inv_init_file;
 # Same with nbspd.init, which is needed for nbspd.status
 set nbspd_init_file [file join $common(libdir) nbspd.init];
 if {[file exists $nbspd_init_file] == 0} {
-        puts stderr "$nbspd_init_file not found.";
-        return 1;
+    puts stderr "$nbspd_init_file not found.";
+    return 1;
 }
 source $nbspd_init_file;
 unset nbspd_init_file;
@@ -72,7 +74,7 @@ if {$argc > 1} {
 set body [split [string trimright [exec cat $datafile]] "\n"];
 
 set seconds [clock seconds];
-if {$option(D) == ""} {
+if {$option(D) eq ""} {
     set mday [clock format $seconds -format "%d"];
 } else {
     set mday $option(D);
@@ -105,6 +107,18 @@ foreach line $body {
 	set hh [clock format $seconds -format "%H:%M"];
     }
 
+    if {[info exists frames_rcv($hh)]} {
+	incr frames_rcv($hh) [lindex $line 1];
+    } else {
+	set frames_rcv($hh) [lindex $line 1];
+    }
+
+    if {[info exists frames_jumps($hh)]} {
+	incr frames_jumps($hh) [lindex $line 3];
+    } else {
+	set frames_jumps($hh) [lindex $line 3];
+    }
+
     if {[info exists files_tx($hh)]} {
 	incr files_tx($hh) [lindex $line 6];
     } else {
@@ -132,20 +146,20 @@ foreach line $body {
 
 set result [list];
 foreach hh [lsort [array names bytes]] {
-    lappend result "$hh $files_tx($hh) $files_rtx($hh) \
-	$files_missed($hh) $bytes($hh)";
+    lappend result "$hh $frames_rcv($hh) $frames_jumps($hh) \
+        $files_tx($hh) $files_rtx($hh) $files_missed($hh) $bytes($hh)";
 }
 
-if {$option(b) != ""} {
+if {$option(b) ne ""} {
     cd $option(b);
 }
 
-if {$option(d) != ""} {    
+if {$option(d) ne ""} {    
     file mkdir $option(d);
     cd $option(d);
 }
 
-if {$option(o) == ""} {
+if {$option(o) eq ""} {
     puts [join $result "\n"];
     return;
 }

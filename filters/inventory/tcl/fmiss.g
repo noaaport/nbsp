@@ -38,7 +38,7 @@ set gnuplot(script) {
   set style fill solid 1.0
 
   plot \
-      "$gplot(datafile)" using 1:4 notitle with boxes
+      "$gplot(datafile)" using 1:6 notitle with boxes
 
   quit
 }

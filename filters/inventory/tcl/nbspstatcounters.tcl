@@ -2,17 +2,20 @@
 #
 # $Id$
 #
-# Usage: nbspstatcounters [-f statusfile] [-n numlines]
+# Usage: nbspstatcounters [-f <fmt>] [<statusfile>]
 #
-# If no [-f] is given the default nbspd.status file is used.
-# By default only the last line is output, unless [-n] is given.
-# The data is written to stdout; the order of the columns is given below.
+# nbsp counters in the last minute (ending at "unix_seconds").
+#
+# If no <statusfile> is given the default nbspd.status file is used.
+# The last line is written to stdout; the order of the columns is given below.
+# The <fmt> can be: std (default), xml, csv, csvk
 # The motivation for the existence of this tool is to use it for extracting
-# and feeding the data to rrdtool or similar programs.
+# and feeding the data to rrdtool or similar programs (it is used
+# by the _inbsp extension in the web interface).
 
 package require cmdline;
-set usage {nbspstatcounters [-f statusfile] [-n numlines]};
-set optlist {{f.arg ""} {n.arg ""}};
+set usage {nbspstatcounters [-f <fmt>] [<statusfile>]};
+set optlist {{f.arg "std"}};
 
 ## The common defaults
 set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -26,8 +29,8 @@ unset _defaultsfile;
 # nbspd.init is needed for nbspd.status
 set nbspd_init_file [file join $common(libdir) nbspd.init];
 if {[file exists $nbspd_init_file] == 0} {
-        puts "$nbspd_init_file not found.";
-        return 1;
+    puts "$nbspd_init_file not found.";
+    return 1;
 }
 source $nbspd_init_file;
 unset nbspd_init_file;
@@ -35,16 +38,17 @@ unset nbspd_init_file;
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
-if {$option(f) == ""} {
-    set datafile $nbspd(statusfile);
+set fmt $option(f);
+if {$argc >= 1} {
+    set datafile [lindex $argv 0];
 } else {
-    set datafile $option(f);
+    set datafile $nbspd(statusfile);
 }
 
 #
 # These are the fields of the nbspd.status file.
 #
-set variables [list \
+set keywords [list \
 unix_seconds \
 frames_received \
 frames_processed \
@@ -63,27 +67,31 @@ products_rejected \
 products_aborted \
 products_bad];
 
-if {$option(n) == ""} {
-    set values [split [exec tail -n 1 $datafile]];
-    
-puts {#
+set values [split [exec tail -n 1 $datafile]];
+
+if {$fmt eq "std" } {    
+    puts {#
 # nbsp counters in the last minute (ending at "unix_seconds").
 #
 DATA_START};
 
-    set i 0;
-    foreach k $variables {
-      set v [lindex $values $i];
-      puts "$k = $v";
-	incr i;
+    foreach k $keywords v $values {
+	puts "$k = $v";
     }
-
     puts "DATA_END";
-} else {
-    if {$option(n) <= 0} {
-    puts {Bad value of [-n].};
-    return 1;
-    } else {
-	puts [exec tail -n $option(n) $datafile];
+} elseif {$fmt eq "csv"} {
+    puts [join $values ","];
+} elseif {$fmt eq "csvk"} {
+    set r "";
+    foreach k $keywords v $values {
+	append r "$k=$v,";
     }
+    puts [string trim $r ","];
+} elseif {$fmt eq "xml"} {
+    foreach k $keywords v $values {
+	puts "<$k>$v</$k>";
+    }
+} else {
+    puts "Invalid format: $fmt";
+    return 1;
 }

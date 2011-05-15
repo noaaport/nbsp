@@ -153,10 +153,19 @@ static int loop_channel(int channel_index){
   pthread_testcancel();
   load_ave_cond_sleep(channel_index);
 
+  /*
   n = recvfrom_channel_nowait(channel_index, sbnf->rawdata, SBN_FRAME_SIZE);
   if(n <= 0)
     n = recvfrom_channel_timed(channel_index, sbnf->rawdata, SBN_FRAME_SIZE,
 			       g.broadcast_read_timeout_secs);
+  */
+
+  /*
+   * Calling it directly seems to work better with the dvb-s2
+   * Sat May 14 19:33:28 AST 2011
+   */
+  n = recvfrom_channel_timed(channel_index, sbnf->rawdata, SBN_FRAME_SIZE,
+			     g.broadcast_read_timeout_secs);
 
   if(n == -1){
     log_err2u("Error reading from noaaport channel", 

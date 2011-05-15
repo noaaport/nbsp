@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-# gnuplot template
+# gnuplot template for frames received
 #
 
 # The data file can be an hourly summary or the minutely data, and
@@ -23,7 +23,7 @@ set gnuplot(script) {
   set terminal $gplot(fmt) $gplot(fmtoptions)
   set output "$gplot(output)"
 
-  set title "Files Transmitted"
+  set title "Frames Received"
   set xlabel "Local Hour"
 
   set size 0.5,0.5
@@ -38,7 +38,7 @@ set gnuplot(script) {
   set style fill solid 1.0
 
   plot \
-      "$gplot(datafile)" using 1:4 notitle with boxes
+      "$gplot(datafile)" using 1:2 notitle with boxes
 
   quit
 }

@@ -44,7 +44,7 @@ bin/nbspgismap1
 bin/nbspgismap
 bin/nbspstatplot
 bin/nbspstatplot1
-bin/nbspstatplotdat
+bin/nbspstatplotdata
 bin/nbspstatcounters
 bin/nbspbatch
 bin/nbspgribctl

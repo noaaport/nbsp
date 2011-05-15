@@ -21,6 +21,8 @@ set inventory(plotbytesrc) "bytes.g";
 set inventory(plotftransrc) "ftrans.g";
 set inventory(plotfretransrc) "fretrans.g";
 set inventory(plotfmissrc) "fmiss.g";
+set inventory(plotframesrcvrc) "framesrcv.g";
+set inventory(plotframesjumpsrc) "framesjumps.g";
 
 # The optional configuration file
 if {[file exists $inventory(conf)] == 1} {

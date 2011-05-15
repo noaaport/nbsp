@@ -65,8 +65,8 @@
 
 /* 
  * In FreeBSD the default is around 41 KB and the maximum 221 KB.
- * (net.inet.udp.recvspace: 42080)
- * In linux the default is around 109 KB and the maximum 255 KB.
+ * In linux the default is around 109 KB and the maximum 255 KB, but
+ * it has autotuning and manually setting it is not recommended.
  * In MacOSX the default is 262 KB and the maximum around 7450 KB.
  * In windows the default can be as low as 8 KB, so a setting
  * such as this is more reasonable:

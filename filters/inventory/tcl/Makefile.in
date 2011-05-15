@@ -11,10 +11,10 @@ TCLSOURCES =	inventory.tcl.in batch.tcl.in
 FILTERNAMES =	inventory batch
 FILTERINIT =    inventory.init
 TCLTARGET =	${FILTERNAMES}
-TOOLNAMES =	nbspstatplotdat nbspstatplot1 nbspstatplot nbspstatcounters \
+TOOLNAMES =	nbspstatplotdata nbspstatplot1 nbspstatplot nbspstatcounters \
 		nbspbatch
 SAMPLES =	inventory.conf-sample batch.conf-sample
-GPLOTSOURCES =	bytes.g fretrans.g fmiss.g ftrans.g
+GPLOTSOURCES =	bytes.g fretrans.g fmiss.g ftrans.g framesrcv.g framesjumps.g
 GPLOTTARGET =	statplot-templates.tgz
 GPLOTPDIR =	gnuplot
 GPLOTDIR =	${GPLOTPDIR}/stat
@@ -38,8 +38,8 @@ batch: batch.tcl.in
 batch.conf-sample: batch.conf
 	cp batch.conf batch.conf-sample
 
-nbspstatplotdat: nbspstatplotdat.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplotdat.tcl > nbspstatplotdat
+nbspstatplotdata: nbspstatplotdata.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplotdata.tcl > nbspstatplotdata
 
 nbspstatplot1: nbspstatplot1.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspstatplot1.tcl > nbspstatplot1

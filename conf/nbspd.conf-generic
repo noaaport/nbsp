@@ -4,5 +4,14 @@
 # This file contains configuration settings that are different for
 # the various operating systems.
 
-# See the note in nbspd.conf
-set udprcvsize	[expr 192 * 1024]
+# In linux the default udp buffer is around 109 KB and the maximum 255 KB,
+# but manually setting it would disable autotuning and therefore it is
+# not recommended to change the defaults.
+#
+# set udprcvsize	[expr 192 * 1024]
+#
+# Instead, the recommendation is to set the sysctl variable
+#
+# net.ipv4.ipfrag_max_dist = 0
+#
+# in /etc/sysctl.conf or /etc/sysctl.d/noaaport.conf.

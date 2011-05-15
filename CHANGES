@@ -73,6 +73,12 @@
 
 2.1.3p4
 -
+- Elinated setting of usprcvsize in linux (to enable autotuning) - instead
+  output a message at package installation regerding the setting of
+  sysctl -w net.ipv4.ipfrag_max_dist=0
 - Added kgge to metarfilter (icao and st files)
 - Added linespoints style (ls) keywords to gnuplot templates in metarfilter
-- Added inbsp extension for exporting stats data via web interface
+- Revised nbspstatcounters to output stats data in various formats (std, xml,
+  csv, csvk) for use locally by e.g., collectd, rrdtool, npstats.
+- Added inbsp extension for exporting nbspstatcounters data via web interface
+  (for use remotely in, e.g., collectd, rrdtool, npstats)

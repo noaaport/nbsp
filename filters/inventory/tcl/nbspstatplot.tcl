@@ -7,11 +7,14 @@
 #
 # The tool will cd to the "basedir", create "subdir", and save the plot files
 # with the default names
-#	mbytes.<fmt>, ftrans.<fmt>, fretrans.<fmt> and fmiss.<fmt>.
-# Without [-s] the <datafile> is the output from nbspstatplotdat.
+#
+#	ftrans.<fmt>, fretrans.<fmt>, fmiss.<fmt>.
+#       framesrcv.<fmt>, framesjumps.<fmt>, mbytes.<fmt>
+#
+# Without [-s] the <datafile> is the output from nbspstatplotdata.
 # With [-s] the <inputfile> must an nbspd.status file, and then
 # this tool calls nbspstatplodat to produce (and delete) the data file.
-# With [-s], the options [-m] and [-h] are passed to nbspstatplotdat
+# With [-s], the options [-m] and [-h] are passed to nbspstatplotdata
 # to produce minute data ([-m]) and give a backwards cutoff hour ([-h]).
 
 package require cmdline;
@@ -36,8 +39,8 @@ unset _defaultsfile;
 # and therefore it is in a separate file that is read by both.
 set inv_init_file [file join $common(libdir) inventory.init];
 if {[file exists $inv_init_file] == 0} {
-        puts stderr "$inv_init_file not found.";
-        return 1;
+    puts stderr "$inv_init_file not found.";
+    return 1;
 }
 source $inv_init_file;
 unset inv_init_file;
@@ -59,7 +62,7 @@ if {$option(s) == 0} {
     }
     # It is a data file. If the directory will be changed, get
     # the full path.
-    if {($option(b) != "") || ($option(d) != "")} {
+    if {($option(b) ne "") || ($option(d) ne "")} {
 	set inputfile [file join [pwd] $inputfile];
     }
 } else {
@@ -71,24 +74,24 @@ if {$option(s) == 0} {
     if {$option(h) ne ""} {
 	lappend _opts "-h" $option(h);
     }
-    set databody [eval exec nbspstatplotdat ${_opts} $inputfile];
+    set databody [eval exec nbspstatplotdata ${_opts} $inputfile];
 }
 
-if {$option(b) != ""} {
+if {$option(b) ne ""} {
     cd $option(b);
 }
 
-if {$option(d) != ""} {
+if {$option(d) ne ""} {
     file mkdir $option(d);
     cd $option(d);
 }
 
-if {$option(f) != ""} {
+if {$option(f) ne ""} {
     set fmtoption "-f $option(f)";
 } else {
     set fmtoption "";
 }
-if {$option(g) != ""} {
+if {$option(g) ne ""} {
     append fmtoption "-g $option(g)";
 }
 
@@ -107,7 +110,8 @@ if {$option(s) == 1} {
 # there is only one data point so that there is no range). To let gnuplot
 # continue with the other plots we "catch" errors separately.
 
-foreach {type name} {-t ftrans -r fretrans -m fmiss -M mbytes} {
+foreach {type name} {-t ftrans -r fretrans -m fmiss 
+    -R framesrcv -J framesjumps -M mbytes} {
     set status [catch {
 	eval exec nbspstatplot1 $type -o $name $fmtoption $inputfile;
     } errmsg];
