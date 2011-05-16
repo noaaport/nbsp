@@ -225,4 +225,5 @@ or better
 
     echo 'net.ipv4.ipfrag_max_dist = 0' > /etc/sysctl.d/noaaport.conf
 
+for correct reception of the dvb-s2 data.
 __EOF__

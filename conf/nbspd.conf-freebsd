@@ -5,4 +5,4 @@
 # the various operating systems.
 
 # See the note in nbspd.conf
-set udprcvsize	[expr 192 * 1024]
+set udprcvsize	[expr 224 * 1024]
