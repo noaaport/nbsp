@@ -12,3 +12,10 @@
 #
 # The file "dist/sysctl.conf-ex" has recommendations for correct
 # dvb-s2 reception.
+
+# Source all .conf files in the subdirectory "defaults/nbspd.conf.d"
+foreach f [glob -nocomplain \
+	-directory [file join [file dirname [info script]] "nbspd.conf.d"] \
+	*.conf] {
+    source $f
+}
