@@ -1,0 +1,10 @@
+#
+# $Id
+#
+# For correct reception of the dvb-s2 data this file should be saved as
+#
+# /etc/sysctl.d/noaaport.conf
+#
+# so that the setting takes effect every time that the computer boots.
+#
+net.ipv4.ipfrag_max_dist = 0

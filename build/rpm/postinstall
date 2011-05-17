@@ -215,13 +215,9 @@ NOTE:
   executed manually.
 --
 
-In Linux it is recommended to set
+See the files
 
-    sysctl -w net.ipv4.ipfrag_max_dist=0
-
-or better
-
-    echo 'net.ipv4.ipfrag_max_dist = 0' >> /etc/sysctl.conf
-
-for correct reception of the dvb-s2 data.
+	/usr/local/etc/nbsp/defaults/nbspd.conf
+	/usr/local/etc/nbsp/dist/sysctl.conf-ex
+-
 __EOF__

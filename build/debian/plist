@@ -154,6 +154,7 @@
 /usr/local/etc/nbsp/dist/CONFIGURING
 /usr/local/etc/nbsp/dist/nbspd.conf-sample
 /usr/local/etc/nbsp/dist/nbspd.conf-defaults
+/usr/local/etc/nbsp/dist/sysctl.conf-ex
 /usr/local/etc/nbsp/dist/features.conf-sample
 /usr/local/etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
 /usr/local/etc/nbsp/dist/features-tier1.conf-ex

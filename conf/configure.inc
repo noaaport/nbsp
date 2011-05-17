@@ -4,15 +4,15 @@
 . ../configure.inc
 
 NBSPDDEFAULTS=nbspd.conf-freebsd
+SYSCTLDEFAULTS=sysctl.conf-freebsd
 
 case $os in
     *BSD) 
     	;;
-    SunOS)
-	NBSPDDEFAULTS=nbspd.conf-generic
-    	;;
     Linux)
-	NBSPDDEFAULTS=nbspd.conf-generic
+	NBSPDDEFAULTS=nbspd.conf-linux
+	[ $flavor = centos ] && SYSCTLDEFAULTS=sysctl.conf-linux
+	[ $flavor = debian ] && SYSCTLDEFAULTS=sysctl.conf-debian
     	;;
     Darwin)
 	NBSPDDEFAULTS=nbspd.conf-macosx

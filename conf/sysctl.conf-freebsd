@@ -1,0 +1,23 @@
+#
+# $Id
+#
+# For correct reception of dvb-s2, the sysctl settings given below
+# are recommended. This file can be saved as
+#
+#  /etc/sysctl.conf.local
+#
+# so that the settings take effect every time that computer boots.
+# To take advantage of these settings, the file
+#
+# /usr/local/etc/nbsp/defaults/nbspd.conf
+#
+# should be edited as indicated there.
+
+# Maximum udp buffer size (256 * 1024 * 4)
+kern.ipc.maxsockbuf=1048576
+
+# Maximum number of fragments in queue (-1 => no limit)
+net.inet.ip.maxfragpackets=-1
+
+# Maximum fragments per packet (the default is 16)
+net.inet.ip.maxfragsperpacket=32

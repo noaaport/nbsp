@@ -6,4 +6,5 @@ sed -e "/@include@/ s||$INCLUDE|" \
     -e "/@q@/ s||$Q|g" \
     -e "/@INSTALL@/ s||$INSTALL|" \
     -e "/@NBSPDDEFAULTS@/s||$NBSPDDEFAULTS|" \
+    -e "/@SYSCTLDEFAULTS@/s||$SYSCTLDEFAULTS|" \
     Makefile.in > Makefile

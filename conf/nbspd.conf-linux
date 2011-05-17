@@ -8,11 +8,7 @@
 # but manually setting it would disable autotuning and therefore it is
 # not recommended to change the defaults.
 #
-# set udprcvsize	[expr 255 * 1024]
+### set udprcvsize	[expr 255 * 1024]
 #
-# For correct reception of the dvb-s2 data, the recommendation is to
-# set the sysctl variable
-#
-# net.ipv4.ipfrag_max_dist = 0
-#
-# in /etc/sysctl.conf (or /etc/sysctl.d/noaaport.conf).
+# The file "dist/sysctl.conf-ex" has recommendations for correct
+# dvb-s2 reception.

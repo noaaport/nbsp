@@ -17,8 +17,10 @@ can be created upon request.
 
 In this update:
 
-- Eliminated setting of usprcvsize in linux (to enable autotuning) -
+- In Linux , eliminated setting of udprcvsize (to enable autotuning) -
   The recommendation is to set `sysctl -w net.ipv4.ipfrag_max_dist=0`
+- In FreeBSD, revised the recommended value of udprcvsize (along with
+  a note about the relevant sysctl setiing to make).
 - Added kgge to metarfilter (icao and st files)
 - Revised nbspstatcounters to output stats data in various formats (std, xml,
   csv, csvk) for use locally by e.g., collectd, rrdtool, npstats.

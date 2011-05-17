@@ -10,12 +10,14 @@ SAMPLES =	nbspd.conf-sample features.conf-sample \
 
 DEFAULTS =	nbspd.conf-defaults
 EXAMPLES =	nbspd-mspoolbdb.conf-ex \
-		nbspd-tier1.conf-ex features-tier1.conf-ex
+		nbspd-tier1.conf-ex features-tier1.conf-ex \
+		sysctl.conf-ex
 DOCSAMPLES =	macosx-launchd.plist-sample
 READMES =	README CONFIGURING
 INITS =		features.init nbspd.init
 
 NBSPDDEFAULTS =	@NBSPDDEFAULTS@
+SYSCTLDEFAULTS = @SYSCTLDEFAULTS@
 
 INSTALL =	@INSTALL@
 
@@ -26,6 +28,9 @@ nbspd.conf-sample: nbspd.conf
 
 nbspd.conf-defaults: ${NBSPDDEFAULTS}
 	cp ${NBSPDDEFAULTS} nbspd.conf-defaults
+
+sysctl.conf-ex: ${SYSCTLDEFAULTS}
+	cp ${SYSCTLDEFAULTS} sysctl.conf-ex
 
 newsyslog.conf-sample: newsyslog.tmpl mksyslconf.sh
 	./mksyslconf.sh

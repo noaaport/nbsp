@@ -4,5 +4,19 @@
 # This file contains configuration settings that are different for
 # the various operating systems.
 
-# See the note in nbspd.conf
+# See the note in nbspd.conf for explanation of this setting
 set udprcvsize	[expr 224 * 1024]
+
+# For correct reception of dvb-s2, the recommended setting is
+#
+### set udprcvsize [expr 224 * 1024 * 4]
+#
+# However this requires some sysctl settings that are not in the default
+# kernel. See the file
+#
+#     dist/sysctl.conf-ex
+#
+# for indications.
+#
+# After the sysctl.conf.local file is installed, then the second
+# udprcvsize setting above can be used (uncommented).
