@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: tclgempak.README 90 2009-10-18 22:17:21Z nieves $
 #
 TclGempak is a separate package, written purely in Tcl, for executing
 Gempak programs from a Tcl script. There are many example scripts

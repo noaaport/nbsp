@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: da-gp-custom.README 2 2009-09-11 16:26:26Z nieves $
 #
 The dafilter and gpfilter are both heavy in terms of the use of
 resources, disk and cpu. They both have a mechanism for disabling

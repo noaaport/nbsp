@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: workcrew-filters.README 2 2009-09-11 16:26:26Z nieves $
 #
 As of version 1.6.r9, some filters can spawn multiple copies of themselves
 to work in parallel. This "work-crew" configuration is currently supported

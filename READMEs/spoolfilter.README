@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: spoolfilter.README 109 2009-11-22 03:40:52Z nieves $
 #
 
 The nbspd daemon saves the files temporarily in the spool directory

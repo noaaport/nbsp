@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: nbspsatmap.README 2 2009-09-11 16:26:26Z nieves $
 #
 
 The rc file is a tcl script is "sourced" by the nbspsatmap tool that is

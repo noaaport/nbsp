@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: radar-mosaic.README 831 2011-01-02 03:48:32Z jfnieves $
 #
 Sat Jan  1 21:41:47 AST 2011: This method for producing the radar mosaics
 is now superseeded by the GIS approach of the gisfilter.

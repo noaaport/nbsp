@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: grads-grib.README 2 2009-09-11 16:26:26Z nieves $
 #
 
 nbsp has a "gribfilter" to process grib files. It can create the control

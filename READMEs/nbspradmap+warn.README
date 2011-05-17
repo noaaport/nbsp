@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: nbspradmap+warn.README 2 2009-09-11 16:26:26Z nieves $
 #
 The nbspradmap tools (see nbspradmap.README) can use the ability
 of the gempak programs to draw WWA area polygons with radar

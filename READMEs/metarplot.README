@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: metarplot.README 2 2009-09-11 16:26:26Z nieves $
 #
 
 The "metarfilter" now contains a ploting module. It is used by

@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: device-monitor.README 2 2009-09-11 16:26:26Z nieves $
 #
 The Nbsp web server can display the status of devices that are
 monitored by the Npstats package. The devices show up by selecting

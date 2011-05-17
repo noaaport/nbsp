@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: nbspradmap.README 2 2009-09-11 16:26:26Z nieves $
 #
 
 The rc file is a tcl script that is "sourced" by the nbspradmap tool that is
