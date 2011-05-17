@@ -54,27 +54,30 @@ int main(int argc, char **argv){
 
   r_size = (socklen_t)sizeof(int);
   status = getsockopt(fd, SOL_SOCKET, sock_opt_name, &r, &r_size);
+  old_r = r;
   if(status == -1)
     err(1, "getsockopt");
 
   fprintf(stdout, "%d\n", r);
 
   while(status == 0){
-    r += 10240;
+    r += 1024;
     status = setsockopt(fd, SOL_SOCKET, sock_opt_name, &r, r_size);
     if(status != 0)
       err(1, "setsockopt");
+
+    fprintf(stdout, "set %d: ", r);
 
     status = getsockopt(fd, SOL_SOCKET, sock_opt_name, &r, &r_size);
     if(status != 0)
       err(1, "getsockopt");
 
+    fprintf(stdout, "get %d\n", r);
+
     if(r == old_r)
       break;
     else
       old_r = r;
-
-    fprintf(stdout, "%d\n", r);
   }
 
   close(fd);

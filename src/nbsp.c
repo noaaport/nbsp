@@ -518,10 +518,9 @@ static int pce_spool_product(struct pctl_element_st *pce){
   }	
 
   if(status == 0){
-    if(spooltype_fsspool()){
-      /* NOSPOOL status = pce_savefs_memfile(pce, mf); */
-      status = 0;
-    }else if(spooltype_mspool())
+    if(spooltype_fsspool())
+      status = pce_savefs_memfile(pce, mf);
+    else if(spooltype_mspool())
       status = pce_savembdb_memfile(pce, mf);
     else if(spooltype_cspool()){
       status = pce_savecbdb_memfile(pce, mf);
