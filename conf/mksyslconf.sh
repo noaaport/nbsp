@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: mksyslconf.sh 227 2010-04-02 00:00:36Z nieves $
+# $Id$
 #
 
 template=newsyslog.tmpl

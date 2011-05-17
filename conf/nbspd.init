@@ -1,5 +1,5 @@
 #
-# $Id: nbspd.init 173 2010-02-27 19:09:00Z nieves $
+# $Id$
 #
 
 # This file is not read by the nbspd daemon. It contains those settings

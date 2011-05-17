@@ -1,5 +1,5 @@
 #
-# $Id: configure.inc 957 2011-05-17 19:38:12Z jfnieves $
+# $Id$
 #
 . ../configure.inc
 
