@@ -20,4 +20,4 @@ kern.ipc.maxsockbuf=1048576
 net.inet.ip.maxfragpackets=-1
 
 # Maximum fragments per packet (the default is 16)
-net.inet.ip.maxfragsperpacket=32
+net.inet.ip.maxfragsperpacket=64
