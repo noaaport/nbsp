@@ -1,5 +1,5 @@
 #
-# $Id
+# $Id$
 #
 # For correct reception of the dvb-s2 data, the recommendation is to
 # add the line given below to "/etc/sysctl.conf" so that it takes
