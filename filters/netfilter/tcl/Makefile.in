@@ -11,7 +11,7 @@ TCLTARGET =	netfilter.tcl
 TCLSOURCES =	netfilter.tcl.in
 FILTERNAME =	netfilter
 RCSOURCE =	netfilter.rc
-RCDEFAULTS =	netfilter.rc-defaults
+DEFAULTS =	netfilter.rc-defaults netfilter.conf-defaults
 SAMPLES =	netfilter.conf-sample \
 		netfilter.rc-sample
 EXAMPLES =	netfilter-mspoolbdb.conf-ex \
@@ -35,7 +35,7 @@ netfilter.rc-sample: netfilter.rc
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
-	${INSTALL} -m 644 ${SAMPLES} ${RCDEFAULTS} ${EXAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${DEFAULTS} ${EXAMPLES} ${MYCONFDIR}
 
 clean:
 	rm -f *~ ${TARGET} Makefile

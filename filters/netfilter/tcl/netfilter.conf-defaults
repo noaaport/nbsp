@@ -1,0 +1,6 @@
+# Source any config file set by nbspreconfigure
+foreach f [glob -nocomplain \
+        -directory [file join [file dirname [info script]] "configs"] \
+        netfilter-*.conf] {
+    source $f
+}

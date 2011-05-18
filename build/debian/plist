@@ -69,6 +69,7 @@
 /usr/local/bin/nbsptrackplot
 /usr/local/bin/nbspscheduler
 /usr/local/bin/nbspcspoolr
+/usr/local/bin/nbspreconfigure
 /usr/local/libexec/nbsp/features.init
 /usr/local/libexec/nbsp/nbspd.init
 /usr/local/libexec/nbsp/nbspfilter
@@ -229,6 +230,7 @@
 /usr/local/etc/nbsp/dist/gribfilter.rc-defaults
 /usr/local/etc/nbsp/dist/gribfilter-schedule.rc-sample
 /usr/local/etc/nbsp/dist/netfilter.conf-sample
+/usr/local/etc/nbsp/dist/netfilter.conf-defaults
 /usr/local/etc/nbsp/dist/netfilter.rc-sample
 /usr/local/etc/nbsp/dist/netfilter.rc-defaults
 /usr/local/etc/nbsp/dist/netfilter-mspoolbdb.conf-ex

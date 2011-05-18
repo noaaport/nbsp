@@ -38,4 +38,19 @@ See the files
 
 	/usr/local/etc/nbsp/defaults/nbspd.conf
 	/usr/local/etc/nbsp/dist/sysctl.conf-ex
+
+for sysctl notes.
+-
+
+To configure Nbsp with a memory based spool for a pure ingest role
+(no processing but network aware and the inventory enabled), execute
+
+	nbspreconfigure mspoolbdb
+
+and check the files in
+
+	defaults/configs
+
+Executing 'nbspreconfigure' without arguments, will revert to the
+standard default configuration.
 -

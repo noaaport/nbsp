@@ -71,6 +71,7 @@ bin/nbsptrackdata
 bin/nbsptrackplot
 bin/nbspscheduler
 bin/nbspcspoolr
+bin/nbspreconfigure
 libexec/nbsp/features.init
 libexec/nbsp/nbspd.init
 libexec/nbsp/nbspfilter
@@ -231,6 +232,7 @@ etc/nbsp/dist/gribfilter.rc-sample
 etc/nbsp/dist/gribfilter.rc-defaults
 etc/nbsp/dist/gribfilter-schedule.rc-sample
 etc/nbsp/dist/netfilter.conf-sample
+etc/nbsp/dist/netfilter.conf-defaults
 etc/nbsp/dist/netfilter.rc-sample
 etc/nbsp/dist/netfilter.rc-defaults
 etc/nbsp/dist/netfilter-mspoolbdb.conf-ex

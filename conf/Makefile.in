@@ -3,7 +3,7 @@
 #
 @include@ @q@../Makefile.inc@q@
 
-TARGET =	${SAMPLES} ${DEFAULTS} ${EXAMPLES} ${DOCSAMPLES}
+TARGET =	${SAMPLES} ${DEFAULTS} ${EXAMPLES} ${DOCSAMPLES} ${TOOLNAMES}
 
 SAMPLES =	nbspd.conf-sample features.conf-sample \
 		newsyslog.conf-sample logrotate.conf-sample
@@ -15,10 +15,12 @@ EXAMPLES =	nbspd-mspoolbdb.conf-ex \
 DOCSAMPLES =	macosx-launchd.plist-sample
 READMES =	README CONFIGURING
 INITS =		features.init nbspd.init
+TOOLNAMES =	nbspreconfigure
 
 NBSPDDEFAULTS =	@NBSPDDEFAULTS@
 SYSCTLDEFAULTS = @SYSCTLDEFAULTS@
 
+TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 
 all: ${TARGET}
@@ -54,6 +56,9 @@ features-tier1.conf-ex: features-tier1.conf
 nbspd-tier1.conf-ex: nbspd-tier1.conf
 	cp nbspd-tier1.conf nbspd-tier1.conf-ex
 
+nbspreconfigure: nbspreconfigure.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspreconfigure.tcl > nbspreconfigure
+
 install:
 	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}
 	${INSTALL} -m 644 ${DEFAULTS} ${MYCONFDIR}
@@ -61,6 +66,7 @@ install:
 	${INSTALL} -m 644 ${READMES} ${MYCONFDIR}
 	${INSTALL} -m 644 ${INITS} ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${DOCSAMPLES} ${MYDOCDIR}
+	${INSTALL} -m 755 ${TOOLNAMES} ${BINDIR}
 
 clean:
 	rm -f *~ ${TARGET} Makefile

@@ -19,3 +19,10 @@ foreach f [glob -nocomplain \
 	*.conf] {
     source $f
 }
+
+# Source any config file set by nbspreconfigure
+foreach f [glob -nocomplain \
+	-directory [file join [file dirname [info script]] "configs"] \
+	nbspd-*.conf] {
+    source $f
+}
