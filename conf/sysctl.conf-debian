@@ -3,7 +3,7 @@
 #
 # For correct reception of the dvb-s2 data this file should be saved as
 #
-# /etc/sysctl.d/noaaport.conf
+# /etc/sysctl.d/local-noaaport.conf
 #
 # so that the setting takes effect every time that the computer boots.
 #

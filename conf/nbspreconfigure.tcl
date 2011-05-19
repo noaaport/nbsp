@@ -22,6 +22,7 @@ if {[file exists $g(conffile)]} {
 
 #
 # functions
+#
 proc proc_remove_configs {} {
 
     global g;
