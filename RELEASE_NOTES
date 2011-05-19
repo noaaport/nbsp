@@ -28,6 +28,8 @@ In this update:
 - Added inbsp extension for exporting nbspstatcounters data via web interface
   (for use remotely in, e.g., collectd, rrdtool, npstats)
   (see nbspstats.README)
+- A news script "nbspreconfigure" for use as an easy way to configure
+  Nbsp for pure ingest mode and back to the default mode.
 
 Previous Notes -
 
