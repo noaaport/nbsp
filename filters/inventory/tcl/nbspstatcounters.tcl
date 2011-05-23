@@ -44,11 +44,11 @@ set fmt $option(f);
 set qstatefile $nbspd(qstatelogfile);
 set statusfile $nbspd(statusfile);
 
-if {$option(q) == 1} {
+if {$option(q) ne ""} {
     set qstatefile $option(q);
 }
 
-if {$option(s) == 1} {
+if {$option(s) ne ""} {
     set statusfile $option(s);
 }
 

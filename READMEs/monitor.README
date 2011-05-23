@@ -1,0 +1,64 @@
+#
+# $Id$
+#
+
+There are several scripts that extract or process the data that is written
+to the various files in
+
+	/var/noaaport/nbsp/stats
+
+Most of that data is displayed in several ways in the built-in
+web server pages.
+
+In addition, the folowing scripts can be used from the command line
+
+	- nbspstatcounters
+	- nbspstats
+
+and the last minute data can also be retrieved remotely by a url such as
+
+	http://<host.domain>:8015/_inbsp/stats
+
+The two scripts are useful for local monitoring, while the web
+interface can be used for remote monitoring.
+
+Quick description
+=================
+
+- nbspstatcounters 
+
+  Usage: nbspstatcounters [-f <fmt>] [-q <qstatefile>] [-s <statusfile>]
+
+Output the nbsp counters in the last minute (ending at "unix_seconds").
+
+If no <statusfile> is given the default nbspd.status file is used.
+If no <qstatefile> is given the default nbspd.qstate file is used.
+The <fmt> can be: std (default), xml, csv, csvk
+The motivation for the existence of this tool is to use it for extracting
+and feeding the data to rrdtool or similar programs.
+
+- nbspstats
+
+  Usage: nbspstats [-l <statsawkscript>] -q <statefile>] [-s <statusfile>]
+                 [stats|qstate]
+
+Output a "stats" summary report (stats) or the state of the
+processor, filter and server queues (qstate).
+
+If no command is given, "stats" is assumed. The -l option can be used
+to specify an awk script for the "stats" report.
+
+- http://<host.domain>:8015/_inbsp/stats
+
+For example
+
+  curl -s -S http://<host.domain>:8015/_inbsp/stats
+
+will output the last minuta date in the same format as the
+nbspstatcounters script. Similarly, 
+
+    curl -s -S http://<host.domain>:8015/_inbsp/stats?format=xxx
+
+can be used to retrieve the data in the same formats as described
+above for nbspstatcounters (replacing xxx by the appropriate value,
+csv, xml, ...). The data can be used to feed rrdtool or similar programs.

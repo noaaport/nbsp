@@ -12,7 +12,7 @@ FILTERNAMES =	inventory batch
 FILTERINIT =    inventory.init
 TCLTARGET =	${FILTERNAMES}
 TOOLNAMES =	nbspstatplotdata nbspstatplot1 nbspstatplot nbspstatcounters \
-		nbspbatch
+		nbspstats nbspbatch
 SAMPLES =	inventory.conf-sample batch.conf-sample
 GPLOTSOURCES =	bytes.g fretrans.g fmiss.g ftrans.g framesrcv.g framesjumps.g
 GPLOTTARGET =	statplot-templates.tgz
@@ -49,6 +49,9 @@ nbspstatplot: nbspstatplot.tcl
 
 nbspstatcounters: nbspstatcounters.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspstatcounters.tcl > nbspstatcounters
+
+nbspstats: nbspstats.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspstats.tcl > nbspstats
 
 nbspbatch: nbspbatch.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspbatch.tcl > nbspbatch
