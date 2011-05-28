@@ -35,4 +35,5 @@ lappend subscribers {
 #
 # Add a subscriber list from a flat file (see msgfilter-subscriber.txt-ex)
 #
-msgfilter_add_flat_file "/usr/local/etc/npemwin/site/msgfilter-subscribers.txt";
+msgfilter_add_flat_file \
+	"/usr/local/etc/npemwin/site/msgfilter-subscribers.txt";

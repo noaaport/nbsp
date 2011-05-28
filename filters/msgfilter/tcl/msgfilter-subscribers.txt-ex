@@ -11,12 +11,17 @@ smtp://nieves@noaaport.net
 	F;
 
 # I want them all
-smtp://nieves@ltp.upr.clu.edu ._. F;
+smtp://nieves@ltp.upr.clu.edu ._. F;  # any product, any zone
+smtp://nieves@ltp.upr.clu.edu ._.* F; # any product, any zone,
+                                      # including products with no zones
 
 # Only summaries for all warnings everywhere
 smtp://nieves@ltp.upr.clu.edu
 	(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)_.
 	S;
+
+# or if the product has no zones
+smtp://nieves@ltp.upr.clu.edu afd_.* F;
 
 # General form
 #

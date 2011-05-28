@@ -84,3 +84,5 @@
   (for use remotely in, e.g., collectd, rrdtool, npstats)
 - Added nbspreconfigure script
 - Added nbspstats script
+- Revised msgfilter: convert crlf -> nl, corrected REAME, added options
+  for smtp when needed.
