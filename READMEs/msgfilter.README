@@ -60,13 +60,13 @@ lappend subscribers {
 Here <prodzone_spec> is a comma-separated list of terms where each term
 has the form
 	
-	<prod_code_regex>-<zone_code_regex>
+	<prod_code_regex>_<zone_code_regex>
 
 For example, given
 
 lappend subscribers {
 	smtp://nieves@noaaport.net
-	(svs|tor)-txz14[5-9],svr-vaz014
+	(svs|tor)_txz14[5-9],svr_vaz014
 	<flags>
 }
 
