@@ -2,17 +2,18 @@
 #
 # $Id$
 #
-# Usage: nbspstats [-l <statsawkscript>] -q <statefile>] [-s <statusfile>]
-#                 [stats|qstate]
+# Usage: nbspstats [-l <statsawkscript>] [-p <logperiod>] [-q <statefile>]
+#        [-s <statusfile>] [stats|qstate]
 #
 # If no command is given, "stats" is assumed. The -l option can be used
-# to specify an awk script for the "stats" report.
+# to specify an awk script for the "stats" report. The logperiod in -p
+# is used only for the stats summary (to calculate the lbytes/s).
 #
 package require cmdline;
 
-set usage {nbspstats [-l <statsawkscript>] [-q <statefile>] [-s <statusfile>]
-[stats|qstate]};
-set optlist {{l.arg ""} {q.arg ""} {s.arg ""}};
+set usage {nbspstats [-l <statsawkscript>] [-p <logperiod>]
+           [-q <statefile>] [-s <statusfile>] [stats|qstate]};
+set optlist {{l.arg ""} {p.arg 60} {q.arg ""} {s.arg ""}};
 
 # functions
 proc proc_nbspstats_qstate {} {
@@ -43,7 +44,9 @@ proc proc_set_stats_awk_script {} {
     if {$option(l) ne ""} {
 	return [exec cat $option(l)];
     }
-	
+
+    # The "logperiod" is passed as a variable with -v
+
     return {
 	BEGIN {
 	  prod_total = 0;
@@ -87,7 +90,7 @@ proc proc_set_stats_awk_script {} {
 	  printf(fmt, "frames jumps", frames_jumps, frames_jumps/NR,
 		 last_frames_jumps);
 	  printf(fmt1, "bytes received", bytes_received, bytes_received/NR,
-		 last_bytes_received, last_bytes_received/60000);
+		 last_bytes_received, last_bytes_received/(logperiod*1000));
 	  printf(fmt2, "fraction missing", prod_missed_fraction);
 	}
 
@@ -146,6 +149,10 @@ set nbspstats(statusfile) $nbspd(statusfile);
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
+# The default log period is 60 seconds but that can be changed with the
+# -p option.
+set logperiod $option(p);
+
 if {$option(q) ne ""} {
     set nbspstats(qstatefile) $option(q);
 }
@@ -157,8 +164,9 @@ if {$option(s) ne ""} {
 set stats_awk_script [proc_set_stats_awk_script];
 #
 set nbspstats(qstate,proc) "proc_nbspstats_qstate";
-set nbspstats(stats,cmd) \
-    [list awk $stats_awk_script $nbspstats(statusfile)];
+set nbspstats(stats,cmd) [list awk -v logperiod=$logperiod \
+			      $stats_awk_script \
+			      $nbspstats(statusfile)];
 
 if {$argc > 1} {
     puts $usage;

@@ -190,10 +190,10 @@ proc msgfilter_dispatch {transport flags recipients \
     }
 
     set prod_summary [msgfilter_prod_summary $prod_code];
-    if {$flags eq "F"} {
+    if {[string first $flags "F"] >= 0} {
 	append subject $prod_name " - " $prod_summary;
 	set body $prod_body;
-    } elseif {$flags eq "S"} {
+    } elseif {[string first $flags "S"] >= 0} {
 	set subject $prod_name;
 	append body $prod_summary;
     } else {

@@ -74,8 +74,8 @@ void nbspstats_report(char *fname){
     return;
   }
 
-  fprintf(f, "%u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n",
-	  (unsigned int)g.nbspstats.time,
+  fprintf(f, "%ju %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u %u\n",
+	  (uintmax_t)g.nbspstats.time,
 	  g.nbspstats.frames_received,
 	  g.nbspstats.frames_processed,
 	  g.nbspstats.frames_jumps,

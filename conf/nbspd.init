@@ -19,9 +19,13 @@ slave eval {
     set mspoolbdb_dbstats_logfile "/var/noaaport/nbsp/stats/nbspd.mdbstats";
     set serveractivefile "/var/noaaport/nbsp/stats/nbspd.active"    
     set slavestatsfile "/var/noaaport/nbsp/stats/nbspd.slavestats";
-
+    #
     set spooldir	"/var/noaaport/nbsp/spool";
     set infeedfifo	"/var/run/nbsp/infeed.fifo"
+    
+    # The log periods related to the stats files
+    set nbspstats_logperiod_secs	60;
+    set qstate_logperiod_secs		60;
 
     # These are used by the nbsppanic script
     set bdbdir		"/var/noaaport/nbsp/db";
@@ -47,6 +51,10 @@ set nbspd(slavestatsfile)       [slave eval {return $slavestatsfile}];
 
 set nbspd(spooldir)		[slave eval {return $spooldir}];
 set nbspd(infeedfifo)		[slave eval {return $infeedfifo}];
+
+set nbspd(nbspstats_logperiod_secs) \
+	[slave eval {return $nbspstats_logperiod_secs}];
+set nbspd(qstate_logperiod_secs) [slave eval {return $qstate_logperiod_secs}];
 
 set nbspd(bdbdir)		[slave eval {return $bdbdir}];
 set nbspd(rundir)		[slave eval {return $rundir}];
