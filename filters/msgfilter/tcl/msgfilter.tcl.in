@@ -123,8 +123,10 @@ proc process {finfo} {
     set prod_type "txt";
 
     set prod_code $rc(awips1);
+    set prod_site_code $rc(awips);
     if {$prod_code eq ""} {
 	set prod_code $rc(wmoid);
+        set prod_site_code $rc(wmoid);
     }
 
     set prod_name $rc(fname);
@@ -140,9 +142,15 @@ proc process {finfo} {
     #	<destination> <prodzonespcec> <flags>;
     #
     # The <prodzonespcec> is a comma separated list of
-    # products and zone regexes:
+    # products and zone regexes, or product and site regexes
     #
-    # <prod_regex1>_<zone_regex1>,<prod_regex2>_<zone_regex2>,...
+    #     <prod_regex1>_<zone_regex1>,<prod_regex2>_<zone_regex2>,...
+    #
+    # or
+    #
+    #     <prod_regex1><site_regex1>,<prod_regex2><site_regex2>,...
+    #
+    # The two forms can be mixed in the comma-separated list.
 
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
@@ -158,10 +166,20 @@ proc process {finfo} {
 			[split $s_prodzone $msgfilter(pzseparator)];
 		set s_prod_code_regex [lindex $s_prodzone_parts 0];
 		set s_zone_code_regex [lindex $s_prodzone_parts 1];
-		if {[regexp $s_prod_code_regex $prod_code] && \
-			[regexp $s_zone_code_regex $ugczones]} {
-		    lappend sendtolist($s_addr_transp,$s_flags) $s_addr_dest;
 
+		if {$s_zone_code_regex eq ""} {
+	 	    #
+		    # The spec is <prod><site> without zones, and in this case
+	 	    # the match is tried with the awips code.
+		    #
+		    set match [regexp $s_prod_code_regex $prod_site_code];
+		} else {
+		    set match [expr [regexp $s_prod_code_regex $prod_code] && \
+			[regexp $s_zone_code_regex $ugczones]];
+		}
+
+		if {$match == 1} {
+		    lappend sendtolist($s_addr_transp,$s_flags) $s_addr_dest;
 		    break;
 		}
 	    }

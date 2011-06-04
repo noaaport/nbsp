@@ -85,7 +85,8 @@
 - Added nbspreconfigure script
 - Added nbspstats script
 - Revised msgfilter: convert crlf -> nl, corrected README, added options
-  for smtp when needed.
+  for smtp when needed. Revised specification to allow
+  <prod_regex><site_regexp> in addition to the old <prod_regex>_<zone_regexp>.
 - Added output of logperiods (for stats and qstate) in nbspstatcounters
   and in the "_inbsp/stats" web interface. The script nbspstats was revised
   to accept a "-p <logperiod>" option.

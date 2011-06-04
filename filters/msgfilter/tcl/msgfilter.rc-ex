@@ -3,10 +3,14 @@
 #
 
 #
+# See the file msgfilter.README for the operating principles.
+#
+
+#
 # Example for sending the full file (F flag)
 #
 lappend subscribers {
-	smtp://nieves@ltp.upr.clu.edu
+	smtp://nieves@noaaport.net
 	(svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0
 	F
 }
@@ -37,3 +41,7 @@ lappend subscribers {
 #
 msgfilter_add_flat_file \
 	"/usr/local/etc/npemwin/site/msgfilter-subscribers.txt";
+
+#
+# See the file "msgfilter-subscribers.txt-ex" for more examples
+#

@@ -11,17 +11,34 @@ smtp://nieves@noaaport.net
 	F;
 
 # I want them all
-smtp://nieves@ltp.upr.clu.edu ._. F;  # any product, any zone
-smtp://nieves@ltp.upr.clu.edu ._.* F; # any product, any zone,
-                                      # including products with no zones
+smtp://nieves@ltp.upr.clu.edu .* F;   # has same effect as above
 
 # Only summaries for all warnings everywhere
 smtp://nieves@ltp.upr.clu.edu
-	(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)_.
+	^(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)
 	S;
 
-# or if the product has no zones
-smtp://nieves@ltp.upr.clu.edu afd_.* F;
+# Only summaries for all warnings from San Juan
+smtp://nieves@ltp.upr.clu.edu
+	^(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)jsj
+	S;
+
+# Same as above for several sites
+smtp://nieves@ltp.upr.clu.edu
+	^(cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw)(jsj|arx|lix)
+	S;
+
+# Everything from San Juan
+smtp://nieves@ltp.upr.clu.edu jsj$ F;
+
+# The above is the same as
+smtp://nieves@ltp.upr.clu.edu ...jsj F;
+
+# afd from everywhere
+smtp://nieves@ltp.upr.clu.edu ^afd F;
+
+# or
+smtp://nieves@ltp.upr.clu.edu afd... F;
 
 # General form
 #
@@ -34,3 +51,16 @@ smtp://nieves@ltp.upr.clu.edu afd_.* F;
 ## <transport>://<destination>
 ##   <prodzone_spec>
 ##   <flags>;
+#
+# where
+#
+#     <flags> = F or S  (F => full file, S => sumary
+#
+# <prodzone_spec> is a comma-separated list of terms where each term is
+# of the form
+#
+#     <prod_code_regex>_<zone_code_regex>
+#
+# or
+#
+#     <prod_code_regex><site_regex>

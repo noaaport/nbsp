@@ -30,10 +30,10 @@ and perhaps some flags. Currently, the only transport is smtp and the
 flags are "F" or "S" for sending the full file or a summary, respectively.
 In this case (smtp), the "who" is an email address.
 
-What each subscriber gets is specified by a combination of product
-codes and zones using a regular expression syntax. For each incoming
-product, the filter scans the subscriber list and it builds up
-a list of recipients according to the regexp matching rules.
+What each subscriber gets is specified by a combination of product codes
+and zones, or product codes and sites, using a regular expression syntax.
+For each incoming product, the filter scans the subscriber list and it
+builds up a list of recipients according to the regexp matching rules.
 
 Once the filter has collected the recipients list(s), one for the
 F flag and another for the S flag, it composes the messages and hands off
@@ -49,7 +49,7 @@ Subscriber list configuration -
 
 The list of "subscribers" is specified in the following form, one
 such term for each "subscriber", in the file
-"/usr/local/etc/npemwin/msgfilter.rc" (but see below):
+"/usr/local/etc/nbsp/msgfilter.rc" (but see below):
 
 lappend subscribers {
 	<transport>://<destination>
@@ -61,6 +61,8 @@ Here <prodzone_spec> is a comma-separated list of terms where each term
 has the form
 	
 	<prod_code_regex>_<zone_code_regex>
+or
+	<prod_code_regex><size_code_regex>
 
 For example, given
 
@@ -74,18 +76,42 @@ then I would receive all svs and tor for TX zones 145 to 149, and also
 all SVR for VA zone 014. The comma separated list of product-zone
 combinations can be extended indefinitely.
 
+Another form is
+
+lappend subscribers {
+	smtp://nieves@noaaport.net
+	(svs|tor)jsj
+	<flags>
+}
+
+to specify a site instead of zones. Several sites can be combined in this way
+
+lappend subscribers {
+	smtp://nieves@noaaport.net
+	(svs|tor)(jsj|lix)
+	<flags>
+}
+
+and so on. The two forms can be combined in one spec
+
+lappend subscribers {
+	smtp://nieves@noaaport.net
+	(svs|tor)_txz14[5-9],svr_vaz014,afd(jsj|lix)
+	<flags>
+}
+
 The <flags> depend on the particular transport. For smtp
 it can be "F" or "S" to send the full file or the summary. Each
 transport defines its own set flags (for transports could be empty).
 
 As already mentioned, the filter reads reads the file
 
-	/usr/local/etc/npemwin/msgfilter.rc
+	/usr/local/etc/nbsp/msgfilter.rc
 
 to get the list of subscribers. In practice the list should be written
 instead in the "site" file (the filter looks for it as well)
 
-	/usr/local/etc/npemwin/site/msgfilter.rc
+	/usr/local/etc/nbsp/site/msgfilter.rc
 
 Flat text files -
 ---------------
@@ -102,11 +128,11 @@ smtp://<phonenumber>@tms.suncom.com (svs|tor)-txz14[5-9] S;
 
 If such a flat list is kept in the file
 
-	/usr/local/etc/npemwin/site/msgfilter-subscribers.txt
+	/usr/local/etc/nbsp/site/msgfilter-subscribers.txt
 
 then it can be imported by "site/msgfilter.rc" file by writing in that file
 
-msgfilter_add_flat_file "/usr/local/etc/npemwin/site/msgfilter-subscribers.txt"
+msgfilter_add_flat_file "/usr/local/etc/nbsp/site/msgfilter-subscribers.txt"
 
 Examples -
 -------
@@ -116,3 +142,4 @@ examples illustrating all this.
 
 -
 Jose - Tue Jul  8 18:23:42 AST 2008
+     - Fri Jun  3 11:58:25 AST 2011
