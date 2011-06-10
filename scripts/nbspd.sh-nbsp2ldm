@@ -23,6 +23,8 @@ RC=/etc/init.d/${DAEMON}
 DEFAULTS=/etc/default/${DAEMON}
 OWNER=noaaport
 GROUP=noaaport
+#
+LDMADMIN="/usr/local/lib/ldm/bin/ldmadmin"
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
@@ -39,7 +41,7 @@ case "$1" in
         [ ! -d $RUNDIR ] && install -d -m 755 -o $OWNER -g $GROUP $RUNDIR
 
 	# start ldm before nbspd
-	sudo -u ldm -H /usr/local/lib/ldm/bin/ldmadmin start
+	sudo -u ldm -H $LDMADMIN start
 
 	echo -n "Starting $DESC:"
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $CMD \
@@ -58,8 +60,8 @@ case "$1" in
 	  [ $i -eq 4 ] && { printf " %s" "."; i=0; }
 	done
 
-	# stop ldm after npemwind
-	sudo -u ldm -H /usr/local/lib/ldm/bin/ldmadmin stop
+	# stop ldm after nbspd
+	sudo -u ldm -H $LDMADMIN stop
 
 	echo " done"
 	;;
