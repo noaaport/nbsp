@@ -1,0 +1,54 @@
+#
+# $Id$
+#
+
+Quick step guide to configure NFS between an Nbsp a server and a workstation.
+(For FreeBSD)
+
+0) Install nbsp in the server in the standard way.
+Install nbsp in the workstation. It is not necessary to make zpools
+and all that since nbspd will not be runing there.  Install also
+Gempak.
+
+1) In the /etc/hosts file of both machines involved add these lines:
+
+192.168.2.2    server.noaaport.net server
+192.168.2.3    workstation.noaaport.net workstation
+
+substituting the correct IP as well as machine and domain names.
+
+2) In the /etc/exports file in the server,
+
+/var/noaaport/data -alldirs -ro workstation
+
+3) In the /etc/fstab file in the workstation
+
+server:/var/noaaport/data/gempak /var/noaaport/data/gempak nfs ro,noauto 0 0
+
+4) In the /etc/rc.conf file in the server
+
+nfs_server_enable="YES"
+mountd_enable="YES"
+rpcbind_enable="YES"
+rpc_lockd_enable="YES"
+rpc_statd_enable="YES"
+
+5) In the /etc/rc.conf file in the workstation
+
+nfs_client_enable="YES"
+rpc_lockd_enable="YES"
+rpc_statd_enable="YES"
+
+6) The best way to make the changes take effect is to reboot both
+computers.
+
+7) After they are up, in the worksation execute (as root)
+
+   mount /var/noaaport/data/gempak
+
+If you go to the directory
+
+   /var/noaaport/data/gempak
+
+you should see the gempak data files there and you can use Gempak
+from the workstation.

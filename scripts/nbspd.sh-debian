@@ -28,9 +28,14 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 [ -x $CMD ] || exit 0
 
-# Include npstats defaults if available
+# Include nbspd defaults if available
 if [ -f $DEFAULTS ] ; then
-	. $DEFAULTS
+    . $DEFAULTS
+fi
+
+if [ "$ENABLE" = "0" ] ; then
+    echo "nbspd disabled in $DEFAULTS"
+    exit 0
 fi
 
 case "$1" in
