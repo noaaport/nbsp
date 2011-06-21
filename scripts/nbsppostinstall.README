@@ -1,0 +1,6 @@
+#
+# $Id$
+#
+
+nbsppostinstall is created by the configure script from the
+postinstall scripts in each build/os subdirectory.

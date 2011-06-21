@@ -46,9 +46,6 @@ nbspctl: nbspctl.tcl
 	-e /%RCFPATH%/s##${RCFPATH}# \
 	nbspctl.tcl > nbspctl
 
-# nbsppostinstall is created by the configure script from the
-# postinstall scripts in each build/os subdirectory
-
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop
 
