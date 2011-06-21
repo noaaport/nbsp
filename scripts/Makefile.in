@@ -15,7 +15,7 @@ STARTSTOPRC = 	@STARTSTOPRC@
 
 SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
 		startstop.rc-sample
-BINTOOLS =	nbspcleanup nbspversion nbsppanic nbspctl
+BINTOOLS =	nbspcleanup nbspversion nbsppanic nbspctl nbsppostinstall
 LIBTOOLS =	startstop
 LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
 DOCS =		nbspd.sh-sample
@@ -45,6 +45,9 @@ nbspctl: nbspctl.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# \
 	-e /%RCFPATH%/s##${RCFPATH}# \
 	nbspctl.tcl > nbspctl
+
+# nbsppostinstall is created by the configure script from the
+# postinstall scripts in each build/os subdirectory
 
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop

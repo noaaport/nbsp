@@ -5,6 +5,7 @@ bin/nbspcleanup
 bin/nbspversion
 bin/nbsppanic
 bin/nbspctl
+bin/nbsppostinstall
 bin/nbspsat
 bin/nbspsatinfo
 bin/nbspsatgis

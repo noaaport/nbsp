@@ -3,6 +3,7 @@
 /usr/local/bin/nbspversion
 /usr/local/bin/nbsppanic
 /usr/local/bin/nbspctl
+/usr/local/bin/nbsppostinstall
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspsatgis

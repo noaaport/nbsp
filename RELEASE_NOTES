@@ -28,8 +28,13 @@ In this update:
 - Added inbsp extension for exporting nbspstatcounters data via web interface
   (for use remotely in, e.g., collectd, rrdtool, npstats)
   (see nbspstats.README)
+- Added a script "nbspstats" to summarize the stats counters and the
+  state of the queues
+  (see nbspstats.README)
 - A news script "nbspreconfigure" for use as an easy way to configure
   Nbsp for pure ingest mode and back to the default mode.
+- Added the script nbsppostinstall (the same postinstall script that
+  is executed by the package managers).
 - Added nbspstats script. Can be invoked from a terminal to print out
   a statistics summary.
 

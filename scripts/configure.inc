@@ -10,6 +10,8 @@ HOURLYCONF=hourly-cleanup.conf-freebsd
 CLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
 STARTSTOPRC=startstop.rc-freebsd
+POSTINSTALL_SRC=../build/bsd/pkg-postinstall
+POSTINSTALL_TARGET=nbsppostinstall
 
 case $os in
     FreeBSD) 
@@ -33,13 +35,15 @@ case $os in
 
 	[ $flavor = debian ] && STARTSTOPRC=startstop.rc-debian
 	[ $flavor = debian ] && RCCONF=nbspd.sh.conf-debian
+	[ $flavor = debian ] && POSTINSTALL_SRC=../build/debian/postinst
 
-	# Centos does not have tcl-8.5 and cannot the dicts version of
+	# Centos does not have tcl-8.5 and cannot use the dicts version of
 	# the nbspcleanup script
 	if [ $flavor = centos ]
 	then
 	    CLEANUP=nbspcleanup.tcl-8.4
 	    HOURLYCONF=hourly-cleanup.conf-generic-8.4
+	    POSTINSTALL_SRC=../build/rpm/postinstall
 	fi
     	;;
     Darwin)

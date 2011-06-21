@@ -1,0 +1,34 @@
+#
+# $Id$
+#
+
+Nbsp can run into problems from time to time, in particular
+if the bdb gets corrupted or a file system becomes full. The scripts
+
+	nbsppanic
+	nbsppostinstall
+
+can help in some situations. 
+
+nbsppanic -
+
+Will clean the 
+
+	/var/noaaport/nbsp/db
+
+directory and make some more consistency checks.
+
+nbsppostinstall -
+
+If the situation is so bad (e.g., corrupted file system
+or a disk replacement or repartitioning) that the entire
+
+	/var/noaaport
+
+directory (or some significant subdirectory) must be deleted, then
+the entire directory tree rooted there must recreated.
+
+One (drastic) option in that case is to deinstll and reinstall the
+Nbsp package. Another option is to use the  nbsppostinstall script,
+which is exactly the same script that is executed by the package
+manager after Nbsp is installed.

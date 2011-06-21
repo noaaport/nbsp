@@ -15,3 +15,11 @@ sed \
     -e "/@STARTCLEANCONF@/s||$STARTCLEANCONF|" \
     -e "/@STARTSTOPRC@/s||$STARTSTOPRC|" \
     Makefile.in > Makefile
+
+if [ `grep '#!/bin/sh' $POSTINSTALL_SRC` ]
+then
+    cat $POSTINSTALL_SRC > $POSTINSTALL_TARGET
+else
+    echo '#!/bin/sh' > $POSTINSTALL_TARGET
+    cat $POSTINSTALL_SRC >> $POSTINSTALL_TARGET
+fi
