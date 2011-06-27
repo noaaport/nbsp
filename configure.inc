@@ -80,7 +80,7 @@ case $os in
 
 	DB_INCDIR=
 	DB_BINDIR=
-	DB_LIB="db-4.6"
+	DB_LIB="db-4.8"
 
 	LOCAL_INCDIR=
 	LOCAL_LIBDIR=
@@ -90,8 +90,8 @@ case $os in
 	   TCL_INCDIR=
 	   TCL_LIB="tcl8.4"
 	   TCLSH=/usr/bin/tclsh8.4
-	   DB_INCDIR="-I /usr/local/include/db46"
-	   DB_LIB="db-4.6"
+	   DB_INCDIR="-I /usr/local/include/db48"
+	   DB_LIB="db-4.8"
 	elif [ $flavor = debian ]
 	then
 	   TCL_INCDIR="-I /usr/include/tcl8.5"
