@@ -71,7 +71,7 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p5
+2.1.3p6
 -
 - Eliminated setting of usprcvsize in linux (to enable autotuning) - instead
   output a message at package installation regerding the setting of
@@ -90,3 +90,5 @@
 - Added output of logperiods (for stats and qstate) in nbspstatcounters
   and in the "_inbsp/stats" web interface. The script nbspstats was revised
   to accept a "-p <logperiod>" option.
+- Fixed problem with filter queue growing with several slaves in
+  mempsool mode (spoolslots.c missig a pthred_cond_signal() call).
