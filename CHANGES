@@ -92,3 +92,4 @@
   to accept a "-p <logperiod>" option.
 - Fixed problem with filter queue growing with several slaves in
   mempsool mode (spoolslots.c missig a pthred_cond_signal() call).
+- In the gpfilter, each decoder is opened with a "permanent" pipe.

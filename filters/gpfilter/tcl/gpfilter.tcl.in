@@ -501,23 +501,27 @@ proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
 		set gpfilter(pipe_F,$pipe_name) [open "|$cmd_name" w];
 		log_msg "Opened $pipe_name";
 	    }
-	    set fout $gpfilter(pipe_F,$pipe_name);
 
-	    filterlib_nbsppipe_F $seq $fpath $fout "-g";
-	    flush $fout;
+	    filterlib_nbsppipe_F $seq $fpath $gpfilter(pipe_F,$pipe_name) "-g";
+	    flush $gpfilter(pipe_F,$pipe_name);
 	} errmsg];
 
-	if {($status != 0) && [info exists fout]} {
-	    catch {close $fout};
+	if {$status == 0} {
+	    if {$retry == 0} {
+		log_msg "Wrote to $pipe_name";
+	    }
+	    break;
+	} elseif {[info exists gpfilter(pipe_F,$pipe_name)]} {
+	    catch {close $gpfilter(pipe_F,$pipe_name)};
 	    unset gpfilter(pipe_F,$pipe_name);
 	    if {$retry > 0} {
-		log_msg "$errmsg. Will try to reopen $pipe_name";
+		log_msg "Could not write to $pipe_name. $errmsg. Retrying";
 	    }
 	}
     }
 
     if {$status != 0} {
-	log_msg $errmsg;
+	log_msg "Could not write to $pipe_name. $errmsg";
     }
 }
 
