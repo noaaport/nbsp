@@ -75,6 +75,10 @@ if {[file exists $gpfilter(conf)] == 1} {
 #
 set gpfilter(manager) 0;
 
+# For each decoder, a variable "gpfilter(pipe_F,<decoder>) is created
+# by the function filter_pipe_noclose, and is used only in that function
+# and at the end of the main script (to close the pipes so opened).
+
 #
 # This function is called by the manager (when in work-crew configuration)
 # or by the stand alone filter.

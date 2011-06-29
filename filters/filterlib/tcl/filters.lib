@@ -728,6 +728,32 @@ proc filterlib_nbsppipe {seq inputfile cmd_line args} {
 
     global filterslib;
 
+    set status [catch {
+	set fout [open "|$cmd_line" "w"];
+	fconfigure $fout -translation binary -encoding binary;
+	filterlib_nbsppipe_F $seq $inputfile $fout $args;
+    } errmsg];
+
+    if {[info exists fout]} {
+	close $fout;
+    }
+
+    if {$status != 0} {
+        log_msg $errmsg;
+	return;
+    }    
+}
+
+proc filterlib_nbsppipe_F {seq inputfile fout args} {
+    #
+    # The args are flags:
+    #
+    # [-g] => add gmpk header and trailer
+    #
+    # $fout is the return value of a previous pipe open
+
+    global filterslib;
+
     set gmpk_header_fmt $filterslib(gmpk_header_fmt);
     set gmpk_trailer_str $filterslib(gmpk_trailer_str);
 
@@ -742,10 +768,8 @@ proc filterlib_nbsppipe {seq inputfile cmd_line args} {
     }
 
     set status [catch {
-	set fout [open "|$cmd_line" "w"];
 	set fin  [open $inputfile "r"];
 	fconfigure $fin -translation binary -encoding binary;
-	fconfigure $fout -translation binary -encoding binary;
 
         if {$filterslib(ccbsaved) == 1} {
             set ccb [read $fin $filterslib(ccbsize)];     # this is discarded
@@ -761,16 +785,12 @@ proc filterlib_nbsppipe {seq inputfile cmd_line args} {
 	}
     } errmsg];
 
-    if {[info exists fout]} {
-	close $fout;
-    }
-
     if {[info exists fin]} {
 	close $fin;
     }
 
     if {$status != 0} {
-        log_msg $errmsg;
+        return error -code $errmsg;
     }
 }
 
@@ -917,7 +937,7 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
 # Similar to the above, but calling nbsppipe with a pipeline to
 # another program (e.g., a gempak decoder). Since the gempak decoders
 # do not lock the output file (or do they?), they are not executed
-# in the background even if ilterslib(background_processing) is set.
+# in the background even if filterslib(background_processing) is set.
 #
 proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
     #

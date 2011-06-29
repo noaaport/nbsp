@@ -446,7 +446,6 @@ proc filter_sat {seq fpath} {
 proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 
     global gpfilter;
-    global filtersprogs;
 
     if {[is_decoder_rule_enabled $pipe_name] == 0} {
 	return;
@@ -470,7 +469,8 @@ proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 #    }
 
     set status [catch {
-	filterlib_cspool_nbsppipe $seq $fpath $cmd_name "-g";
+	filter_pipe_noclose $seq $fpath $pipe_name $cmd_name $fullsavename;
+#	filterlib_cspool_nbsppipe $seq $fpath $cmd_name "-g";
 #	filterlib_nbsppipe $seq $fpath $cmd_name "-g";
 #       eval exec nbsppipe $opts -s $seq < $fpath | \
 #                $cmd_name $cmd_options $fullsavename > /dev/null;
@@ -478,6 +478,46 @@ proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 
     if {$status != 0} {
 	log_msg "Error piping $fpath to $pipe_name: $errmsg"; 
+    }
+}
+
+#
+# This is the "noclose" version of the filter_pipe
+# 
+proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
+
+    global gpfilter;
+
+    # The gempak decoders close after some minutes of inactivity. In that
+    # case the flush command will return an error. We try to detect that
+    # and retry when that happens.
+
+    set retry 2;
+    while {$retry > 0} {
+	incr retry -1;
+
+	set status [catch {
+	    if {[info exists gpfilter(pipe_F,$pipe_name)] == 0} {
+		set gpfilter(pipe_F,$pipe_name) [open "|$cmd_name" w];
+		log_msg "Opened $pipe_name";
+	    }
+	    set fout $gpfilter(pipe_F,$pipe_name);
+
+	    filterlib_nbsppipe_F $seq $fpath $fout "-g";
+	    flush $fout;
+	} errmsg];
+
+	if {($status != 0) && [info exists fout]} {
+	    catch {close $fout};
+	    unset gpfilter(pipe_F,$pipe_name);
+	    if {$retry > 0} {
+		log_msg "$errmsg. Will try to reopen $pipe_name";
+	    }
+	}
+    }
+
+    if {$status != 0} {
+	log_msg $errmsg;
     }
 }
 
@@ -620,3 +660,8 @@ if {$option(s) == 0} {
 filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
+
+# Close the decoders pipes
+foreach key [array names gpfilter "pipe_F,*"] {
+    close $gpfilter($key);
+}
