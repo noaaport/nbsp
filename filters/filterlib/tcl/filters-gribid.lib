@@ -34,7 +34,6 @@ proc get_grib_model_params {fpath station wmoid} {
 # the simpler string we use (without the grid) is sufficient to catch the rule.
 
     global filterslib;
-    global filtersprogs;
     global filtersgribid;
 
     # Return empty list if there are errors reading the file.
@@ -42,9 +41,9 @@ proc get_grib_model_params {fpath station wmoid} {
 
     set status [catch {
 	if {$filterslib(ccbsaved) == 1} {
-            set gribinfo [exec $filtersprogs(nbspgrib) -b -e $fpath];
+            set gribinfo [exec nbspgrib -b -e $fpath];
 	} else {
-	    set gribinfo [exec $filtersprogs(nbspgrib) -b -n -e $fpath];
+	    set gribinfo [exec nbspgrib -b -n -e $fpath];
 	}
     } errmsg];
     
@@ -58,9 +57,9 @@ proc get_grib_model_params {fpath station wmoid} {
     if {$gribedition == 2} {
 	set status [catch {
 	    if {$filterslib(ccbsaved) == 1} {
-		set gribinfo [exec $filtersprogs(nbspgrib2) -b -e $fpath];
+		set gribinfo [exec nbspgrib2 -b -e $fpath];
 	    } else {
-		set gribinfo [exec $filtersprogs(nbspgrib2) -b -e -n $fpath];
+		set gribinfo [exec nbspgrib2 -b -e -n $fpath];
 	    }
 	} errmsg];
     }

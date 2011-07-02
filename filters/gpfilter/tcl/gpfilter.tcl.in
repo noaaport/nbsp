@@ -143,7 +143,6 @@ proc filter_file_noappend {seq fpath savedir savename {pass_through 0}} {
 # needs to know the return status.
 #
     global gpfilter;
-    global filtersprogs;
 
     if {$pass_through == 0} {
 	if {[is_file_rule_enabled $savedir] == 0} {
@@ -159,7 +158,6 @@ proc filter_file_noappend {seq fpath savedir savename {pass_through 0}} {
 proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 
     global gpfilter;
-    global filtersprogs;
 
     cd $gpfilter(dec_datadir);
     file mkdir $savedir;
@@ -196,7 +194,6 @@ proc filter_file_compress {seq fpath savedir savename} {
 # This function is no longer used - Tue Apr 28 20:26:10 AST 2009
 #
     global gpfilter;
-    global filtersprogs;
 
     if {[is_file_rule_enabled $savedir] == 0} {
 	return;
@@ -211,8 +208,7 @@ proc filter_file_compress {seq fpath savedir savename} {
     }
 
     set status [catch {
-	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
-	    $fpath $seq;
+	eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
     } errmsg];
 
     if {$status != 0} {
@@ -309,7 +305,6 @@ proc filter_sat_unz {seq fpath} {
 # form.
 
     global gpfilter;
-    global filtersprogs;
 
     if {$gpfilter(satdef_sourced) == 0} {
 	return;
@@ -321,7 +316,7 @@ proc filter_sat_unz {seq fpath} {
     file mkdir $sattmpdir
 
     set status [catch {
-        set params [exec $filtersprogs(nbspsat) -g -d $sattmpdir $fpath]
+        set params [exec nbspsat -g -d $sattmpdir $fpath]
     } errmsg];
 
     if {$status == 0} {
@@ -380,7 +375,6 @@ proc filter_sat {seq fpath} {
 # to save the file frames as they come, in compressed form.
 
     global gpfilter;
-    global filtersprogs;
 
     if {$gpfilter(satdef_sourced) == 0} {
 	return;
@@ -391,7 +385,7 @@ proc filter_sat {seq fpath} {
 
     # This command just extracts the information from the nesdis pdb
     set status [catch {
-        set params [exec $filtersprogs(nbspsat) -i $fpath]
+        set params [exec nbspsat -i $fpath]
     } errmsg];
 
     if {$status == 0} {
@@ -489,7 +483,7 @@ proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
     global gpfilter;
 
     # The gempak decoders close after some minutes of inactivity. In that
-    # case the flush command will return an error. We try to detect that
+    # case the write/flush command will return an error. We try to detect that
     # and retry when that happens.
 
     set retry 2;
@@ -511,17 +505,39 @@ proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
 		log_msg "Wrote to $pipe_name";
 	    }
 	    break;
-	} elseif {[info exists gpfilter(pipe_F,$pipe_name)]} {
-	    catch {close $gpfilter(pipe_F,$pipe_name)};
-	    unset gpfilter(pipe_F,$pipe_name);
-	    if {$retry > 0} {
-		log_msg "Could not write to $pipe_name. $errmsg. Retrying";
+	} else {
+	    if {[info exists gpfilter(pipe_F,$pipe_name)]} {
+		catch {close $gpfilter(pipe_F,$pipe_name)};
+		unset gpfilter(pipe_F,$pipe_name);
+		if {$retry > 0} {
+		    log_msg "Could not write to $pipe_name. $errmsg. Retrying";
+		}
 	    }
+	    # Take the opportunity to "wait" for any other decoder
+	    # that have timed out (zombies).
+	    close_all_decoder_zombies;
 	}
     }
 
     if {$status != 0} {
 	log_msg "Could not write to $pipe_name. $errmsg";
+    }
+}
+
+proc close_all_decoder_zombies {} {
+    
+    global gpfilter;
+
+    foreach key [array names gpfilter "pipe_F,*"] {
+       set status [catch {
+            puts $gpfilter($key) "";
+            flush $gpfilter($key);
+        }];
+
+	if {$status != 0} {
+            catch {close $gpfilter($key)};
+	    unset gpfilter($key);
+    	}
     }
 }
 
@@ -667,5 +683,5 @@ filterlib_end;		# close the cpool if enabled
 
 # Close the decoders pipes
 foreach key [array names gpfilter "pipe_F,*"] {
-    close $gpfilter($key);
+    catch {close $gpfilter($key)};
 }

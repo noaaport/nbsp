@@ -71,7 +71,7 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p6
+2.1.3p9
 -
 - Eliminated setting of usprcvsize in linux (to enable autotuning) - instead
   output a message at package installation regerding the setting of

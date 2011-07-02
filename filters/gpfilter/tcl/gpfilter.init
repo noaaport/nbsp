@@ -50,6 +50,9 @@ set gpfilter(dec_logdir)	$filterserrlib(logdir);
 set gpfilter(dec_GEMPAK)	[file join $gempak(homedir) "gempak"];
 set gpfilter(dec_GEMTBL)	[file join $gempak(homedir) "gempak" "tables"];
 
+# Argument to -t (timeout in seconds) option
+set gpfilter(dec_timeout) 60;   
+
 # What to enable/disable
 set gpfilter(decoder_enable) 1;
 set gpfilter(decoder_regex) {.*};

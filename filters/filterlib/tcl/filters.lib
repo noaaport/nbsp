@@ -925,9 +925,10 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     }
 
     if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-        set cmd [concat "nbspfile" $opts];
 	if {$filterslib(background_processing) == 1} {
-	    lappend cmd "&";
+	    set cmd [concat "nbspexec" "nbspfile" $opts];
+	} else {
+            set cmd [concat "nbspfile" $opts];
 	}
         filterlib_exec $cmd;
     }
