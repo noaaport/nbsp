@@ -52,7 +52,7 @@ proc choose_plot_template {optionarray} {
     global inventory;
 
     set _template(t) $inventory(plotftransrc);
-    set _template(r) $inventory(plotftransrc);
+    set _template(r) $inventory(plotfretransrc);
     set _template(m) $inventory(plotfmissrc);
     set _template(R) $inventory(plotframesrcvrc);
     set _template(J) $inventory(plotframesjumpsrc);

@@ -27,7 +27,6 @@ set gnuplot(script) {
   set xlabel "Local Hour"
   set title "Throughput"
 
-  set size 0.5,0.5
   set lmargin 12
 
   # time series specification for x axis.

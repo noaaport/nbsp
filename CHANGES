@@ -71,7 +71,7 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p9
+2.1.3p10
 -
 - Eliminated setting of usprcvsize in linux (to enable autotuning) - instead
   output a message at package installation regerding the setting of
@@ -93,3 +93,6 @@
 - Fixed problem with filter queue growing with several slaves in
   mempsool mode (spoolslots.c missig a pthred_cond_signal() call).
 - In the gpfilter, each decoder is opened with a "permanent" pipe.
+- Revised (and corrected) the statistic plots: Added size in fmtoptions
+  in inventory.conf (and removed set size in template files), and
+  corrected the template setting for the -r option in nbspstatplot1.

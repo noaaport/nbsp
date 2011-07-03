@@ -26,7 +26,6 @@ set gnuplot(script) {
   set title "Files Transmitted"
   set xlabel "Local Hour"
 
-  set size 0.5,0.5
   set lmargin 8
 
   # time series specification for x axis.
