@@ -12,7 +12,7 @@ set gnuplot(script) {
   set y2label "H(%)"
   set title "$gplot(STATION)\n$gplot(start) - $gplot(end)"
 
-  set size 0.5,0.5
+  # set size 0.5,0.5
   set lmargin 8
   set bmargin 4
 
