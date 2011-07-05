@@ -10,7 +10,7 @@ SAMPLES =	nbspd.conf-sample features.conf-sample \
 
 DEFAULTS =	nbspd.conf-defaults
 EXAMPLES =	nbspd-mspoolbdb.conf-ex \
-		nbspd-tier1.conf-ex features-tier1.conf-ex \
+		nbspd-tier1.conf-ex \
 		sysctl.conf-ex
 DOCSAMPLES =	macosx-launchd.plist-sample
 READMES =	README CONFIGURING

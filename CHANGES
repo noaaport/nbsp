@@ -82,7 +82,7 @@
   csv, csvk) for use locally by e.g., collectd, rrdtool, npstats.
 - Added inbsp extension for exporting nbspstatcounters data via web interface
   (for use remotely in, e.g., collectd, rrdtool, npstats)
-- Added nbspreconfigure script
+- Added nbspreconfigure script (mspoolbdb, reconfigure)
 - Added nbspstats script
 - Revised msgfilter: convert crlf -> nl, corrected README, added options
   for smtp when needed. Revised specification to allow

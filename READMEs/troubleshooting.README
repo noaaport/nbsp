@@ -28,7 +28,7 @@ or a disk replacement or repartitioning) that the entire
 directory (or some significant subdirectory) must be deleted, then
 the entire directory tree rooted there must recreated.
 
-One (drastic) option in that case is to deinstll and reinstall the
-Nbsp package. Another option is to use the  nbsppostinstall script,
+One (drastic) option in that case is to deinstall and reinstall the
+Nbsp package. Another option is to use the nbsppostinstall script,
 which is exactly the same script that is executed by the package
 manager after Nbsp is installed.

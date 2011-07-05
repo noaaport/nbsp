@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+
+nbspreconfigure is a script that can be executed to reconfigure nbsp
+for different purpose.
+
+nbspreconfigure mspoolbdb
+nbspreconfigure tier1
+nbspreconfigure
+
+In the first form, nbsp wil be configured to act in an ingest only mode
+with a bdb based spool.
+
+In the second form it will configure nbsp as a tier1 slave off the
+inoaaport servers.
+
+In the third form it will reset it to the default configuration.
+
+All the files are installed in the directory
+
+	/usr/local/etc/nbsp/defaults/configs
+

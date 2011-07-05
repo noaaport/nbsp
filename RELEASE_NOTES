@@ -32,11 +32,14 @@ In this update:
   state of the queues
   (see nbspstats.README)
 - A news script "nbspreconfigure" for use as an easy way to configure
-  Nbsp for pure ingest mode and back to the default mode.
+  Nbsp for pure ingest mode or a tier1 slave and back to the default mode.
+  (see nbspreconfigure.README)
 - Added the script nbsppostinstall (the same postinstall script that
   is executed by the package managers).
+  (see troubleshooting.README)
 - Added nbspstats script. Can be invoked from a terminal to print out
   a statistics summary.
+  (see nbspstats.README)
 
 Previous Notes -
 
