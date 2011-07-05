@@ -18,14 +18,14 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 # default configuration
-set panfilter(conf)	"$common(confdir)/panfilter.conf";
-set panfilter(rc)	"$common(confdir)/panfilter.rc";
-set panfilter(rcdir)	"$common(rcdir)/pan";
-set panfilter(lib)	"$common(libdir)/panfilter.lib";
+set panfilter(conf)	[file join $common(confdir) "panfilter.conf"];
+set panfilter(rc)	[file join $common(confdir) "panfilter.rc"];
+set panfilter(rcdir)	[file join $common(rcdir) "pan"];
+set panfilter(lib)	[file join $common(libdir) "panfilter.lib"];
 set panfilter(rcfiles) [list];
 set panfilter(localconfdirs) $common(localconfdirs);
-set panfilter(prerc)  "$common(confdir)/panfilterpre.rc";
-set panfilter(postrc)  "$common(confdir)/panfilterpost.rc";
+set panfilter(prerc)  [file join $common(confdir) "panfilterpre.rc"];
+set panfilter(postrc)  [file join $common(confdir) "panfilterpost.rc"];
 #
 # Variables
 #
@@ -102,16 +102,16 @@ proc process {finfo} {
     }
 
     if {$udp(status) == 0} {
-	panfilter_udp $rc(WMOHEADER) $rc(AWIPS) $rc(fbasename) $udp(host);
+	panfilter_udp $rc(wmoheader) $rc(awips) $rc(fbasename) $udp(host);
     }    
 }
 
-proc panfilter_udp {WMOHEADER AWIPS fbasename udphost} {
+proc panfilter_udp {wmoheader awips fbasename udphost} {
 
-    if {$AWIPS != ""} {
-        set str [join [list $WMOHEADER $AWIPS $fbasename]];
+    if {$awips ne ""} {
+        set str [join [list $wmoheader $awips $fbasename]];
     } else {
-        set str [join [list $WMOHEADER $fbasename]];
+        set str [join [list $wmoheader $fbasename]];
     }
 
     foreach _hostport $udphost {

@@ -10,8 +10,6 @@
 # from the panfilter via udp on port 5000.
 #
 # It requires the tcludp package.
-#
-# See "nbspudpread.pl" for explanations.
 
 package require udp;
 
@@ -30,14 +28,14 @@ proc read_message {f} {
     set wmotime [lindex $mlist 2];
     if {[llength $mlist] == 5} {
         set awips [lindex $mlist 3];
-        set fname [lindex $mlist 4];
+        set fbasename [lindex $mlist 4];
     } else {
         set awips "";
-        set fname [lindex $mlist 3];
+        set fbasename [lindex $mlist 3];
     }
 
-    puts "From $remoteip: $wmoid $fname";
-#   exec "wget http://<server>:8015/_get/spool/$fname";
+    puts "From $remoteip: $wmoid $fbasename";
+#   exec "wget http://$remoteip:8015/_get/spool/$fbasename";
 }
 
 set s [udp_open 5000];

@@ -29,7 +29,7 @@ lappend action {
 #
 #
 lappend cond {
-  [regexp {^sdus} $rc(wmoid)] && ($rc(station) == "tjsj")
+  [regexp {^sdus} $rc(wmoid)] && ($rc(station) eq "tjsj")
 }
 lappend action {
   set udp(status) 0;
@@ -59,7 +59,7 @@ lappend action {
 # machine
 #
 lappend cond {
-  ($rc(station) == "tjsj")
+  ($rc(station) eq "tjsj")
 }
 lappend action {
   set udp(status) 0;
@@ -85,7 +85,7 @@ lappend action {
 }
 
 lappend cond {
-  ($rc(station) == "tjsj")
+  ($rc(station) eq "tjsj")
 }
 lappend action {
   set udp(status) 0;
