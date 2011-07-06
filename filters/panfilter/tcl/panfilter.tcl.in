@@ -102,16 +102,20 @@ proc process {finfo} {
     }
 
     if {$udp(status) == 0} {
-	panfilter_udp $rc(wmoheader) $rc(awips) $rc(fbasename) $udp(host);
+	panfilter_udp rc $udp(host);
     }    
 }
 
-proc panfilter_udp {wmoheader awips fbasename udphost} {
+proc panfilter_udp {rc_var udphost} {
+
+    upvar $rc_var rc;
 
     if {$awips ne ""} {
-        set str [join [list $wmoheader $awips $fbasename]];
+        set str [join [list $rc(wmoid) $rc(station) $rc(wmotime) \
+	    $rc(awips) $rc(fbasename)]];
     } else {
-        set str [join [list $wmoheader $fbasename]];
+        set str [join [list $rc(wmoid) $rc(station) $rc(wmotime) \
+	    $rc(fbasename)]];
     }
 
     foreach _hostport $udphost {
