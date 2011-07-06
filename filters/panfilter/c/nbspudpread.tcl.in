@@ -35,7 +35,12 @@ proc read_message {f} {
     }
 
     puts "From $remoteip: $wmoid $fbasename";
+
 #   exec "wget http://$remoteip:8015/_get/spool/$fbasename";
+#
+#   For text files
+#   puts [exec curl -s -S "http://$remoteip:8015/_get/spool/$fbasename" \
+#       | tail -n +25 | tr -d {\r\001\003}];
 }
 
 set s [udp_open 5000];
