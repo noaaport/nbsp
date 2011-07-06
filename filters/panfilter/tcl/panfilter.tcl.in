@@ -110,7 +110,7 @@ proc panfilter_udp {rc_var udphost} {
 
     upvar $rc_var rc;
 
-    if {$awips ne ""} {
+    if {$rc(awips) ne ""} {
         set str [join [list $rc(wmoid) $rc(station) $rc(wmotime) \
 	    $rc(awips) $rc(fbasename)]];
     } else {
