@@ -105,8 +105,11 @@ static int loop(int s, socklen_t sa_len){
     n = recvfrom(s, buf, g.size, 0, sa, &len);
     if(n == -1)
       status = -1;
-    else
+    else{
       fprintf(stdout, "%s %s\n", sock_ntop(sa), buf);
+      fflush(stdout);
+    }
+
   }
 
   if(status == -1)

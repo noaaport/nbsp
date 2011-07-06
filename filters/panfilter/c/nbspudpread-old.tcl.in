@@ -33,5 +33,11 @@ while {[gets $f message] >= 0} {
     }
 
     puts "From $remoteip: $fname";
-#   exec "wget http://<server>:8015/_get/spool/$fname";
+    puts "From: $remoteip: $fbasename";
+    set F [open "|curl -s -S http://$remoteip:8015/_get/spool/$fbasename" r];
+    fconfigure $F -encoding binary -translation binary;
+    read $F 24;   # discard ccb
+    set data [read $F];
+    close $F;
+    puts [string map {\r ""} $data];
 }

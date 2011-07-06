@@ -38,5 +38,5 @@ while {1} {
     }
 
     puts "From $remotehost: $wmoid $fname";
-#   exec "wget http://<server>:8015/_get/spool/$fname";
+#   exec wget "http://<server>:8015/_get/spool/$fname";
 }
