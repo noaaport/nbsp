@@ -9,10 +9,8 @@
 
 TCLTARGET1 =     nbspradmap
 TCLSOURCES1 =    nbspradmap.tcl
-TCLTARGET2 =     nbspradmapl
-TCLSOURCES2 =    nbspradmapl.tcl
-TCLTARGET3 =     nbspradmapc
-TCLSOURCES3 =    nbspradmapc.tcl
+TCLTARGET2 =     nbspradmapc
+TCLSOURCES2 =    nbspradmapc.tcl
 
 TMPLSOURCES =	radmap.rc \
 		radmap-cities.rc radmap-cities.tbl \
@@ -22,7 +20,7 @@ TMPLTARGET =	radmap-templates.tgz
 TMPLPDIR =	gpmap
 TMPLDIR =	${TMPLPDIR}/rad
 
-TARGET =        ${TCLTARGET1} ${TCLTARGET2} ${TCLTARGET3} ${TMPLTARGET}
+TARGET =        ${TCLTARGET1} ${TCLTARGET2} ${TMPLTARGET}
 
 TCLSH =         @TCLSH@
 INSTALL =	@INSTALL@
@@ -37,9 +35,6 @@ ${TCLTARGET1}: ${TCLSOURCES1}
 ${TCLTARGET2}: ${TCLSOURCES2}
 	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES2} > ${TCLTARGET2}
 
-${TCLTARGET3}: ${TCLSOURCES3}
-	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES3} > ${TCLTARGET3}
-
 ${TMPLTARGET}: ${TMPLSOURCES}
 	rm -rf ${TMPLDIR}
 	mkdir -p ${TMPLDIR}
@@ -47,7 +42,7 @@ ${TMPLTARGET}: ${TMPLSOURCES}
 	tar -czf ${TMPLTARGET} ${TMPLDIR}
 
 install: ${TARGET}
-	${INSTALL} -m 755 ${TCLTARGET1} ${TCLTARGET2} ${TCLTARGET3} ${BINDIR}
+	${INSTALL} -m 755 ${TCLTARGET1} ${TCLTARGET2} ${BINDIR}
 	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
 
 clean:

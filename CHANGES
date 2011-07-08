@@ -71,7 +71,7 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p10
+2.1.3p12
 -
 - Eliminated setting of usprcvsize in linux (to enable autotuning) - instead
   output a message at package installation regerding the setting of
@@ -96,3 +96,7 @@
 - Revised (and corrected) the statistic plots: Added size in fmtoptions
   in inventory.conf (and removed set size in template files), and
   corrected the template setting for the -r option in nbspstatplot1.
+- Revised nbspradmap and nbspradmapc such that the later can create
+  loops from the individual images.
+- Added nbspsatmapc for similar purposes and revised the web server
+  to generate radar and sat loops dynamically.

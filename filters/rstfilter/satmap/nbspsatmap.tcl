@@ -18,7 +18,7 @@
 # -q => silent (no normal output) [except for errors]
 # -s => image size. It is specified as, e.g, "1024;768".
 #	If it is ";" then the original image size is used.
-#	The default is "800;600" if nothing is specified.
+#       The default is "800;600".
 # -t => tmp dir (all paths are relative to current directory)
 #
 # The input file can the one with the compressed frames
@@ -34,8 +34,6 @@ set usage {nbspsatmap [-b] [-d outputdir] [-D <defs>] [-g gmap_gif]
     [-s outputsize] [-t <tmpdir>] <inputfile> [<rcfile>]};
 set optlist {b {d.arg ""} {D.arg ""} {g.arg "gpmap_gif"} k K {L.arg ""}
     {o.arg ""} p q {s.arg "800;600"} {t.arg ""} };
-
-array set option [::cmdline::getoptions argv $optlist $usage];
 
 proc log_warn s {
 
@@ -82,6 +80,8 @@ source $gpenvfile;
 #
 # main
 #
+array set option [::cmdline::getoptions argv $optlist $usage];
+
 set argc [llength $argv];
 if {$argc == 2} {
     set gpmap(inputfile) [lindex $argv 0];
@@ -141,15 +141,17 @@ if {$option(o) ne ""} {
     if {$option(p) == 1} {
 	# This will be the temporary gif file name which later
 	# will be converted to png and renamed.
-	append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+	append gpmap(outputfile) $outrootname "." $gpmap(fmt);
     } else {
 	set gpmap(outputfile) $option(o);
     }
 } else {
     # nbspsat creates png files and the outfname parameter here has the .png.
     set outrootname [file rootname $nbspsat_outfbasename];
-    append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+    append gpmap(outputfile) $outrootname "." $gpmap(fmt);
 }
+
+file mkdir [file dirname $gpmap(outputfile)];
 
 if {$option(L) eq ""} {
     append logfile $outrootname ".log";

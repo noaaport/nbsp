@@ -2,13 +2,12 @@
 #
 # $Id$
 #
-# Usage: nbspradmapc [-d <output_subdir>] [-l <first,last>] \
-#			[-n <nids_subdir>] [-o <outputfile>] [-r <rcfile>] \
-#			[-R <rcfile_path>] [-v]
-#                       [-L] [-K] <site> <type>
+# Usage: nbspsatmapc [-d <output_subdir>] [-l <first,last>] \
+#			[-n <gini_subdir>] [-o <outputfile>] [-r <rcfile>] \
+#			[-R <rcfile_path>] [-v] [-L] [-K] <wmoid>
 #
-# Examples: nbspradmapc jua n0r
-#           nbspradmapc -l end-3,end jua n0r
+# Examples: nbspsatmapc tige01
+#           nbspsatmapc -l end-3,end tige01
 #
 # This tool is designed for use from the command line.
 # It can create individual images and/or a loop from them.
@@ -16,11 +15,11 @@
 # that are in the specified directory. When -L is not given, the default
 # is "-l end,end". When -L is given, the default is "-l 0,end".
 # If the value of -l is a single number n, then it is interpreted as end-n,end.
-# The [-n] <nids_subdirectory> argument is relative to the dafilter
-# data directory (e.g., nexrad/nids). If -L is not given and there is only
+# The [-n] <gini_subdirectory> argument is relative to the dafilter
+# data directory (e.g., sat/gini/tig). If -L is not given and there is only
 # one output image, the [-o] option can be used to specify the name
 # of the output image. If -L is given then -o gives the name of the loop image
-# file. The default is ${awips}.gif in any case.
+# file. The default is ${wmoid}.gif in any case.
 #
 # -L => create a loop from those images.
 # -K => if -L is specidied, keep (do not delete) the individual images
@@ -29,9 +28,9 @@
 
 package require cmdline;
 
-set usage {nbspradmapc [-v] [-d <output_subdir>] [-l <first,last>]
-    [-n <nids_subdir>] [-o <outputfile>] [-r <rcfile>] [-R <rcfile_path>]
-    [-L] [-K] <site> <type>};
+set usage {nbspsatmapc [-v] [-d <output_subdir>] [-l <first,last>]
+    [-n <gini_subdir>] [-o <outputfile>] [-r <rcfile>] [-R <rcfile_path>]
+    [-L] [-K] <wmoid>};
 
 set optlist {v {d.arg ""} {l.arg ""} {n.arg ""} {o.arg ""}
     {r.arg ""} K L {R.arg ""}};
@@ -41,7 +40,7 @@ set optlist {v {d.arg ""} {l.arg ""} {n.arg ""} {o.arg ""}
 #
 set option(range,0) "end,end";     # if option(L) == 0
 set option(range,1) "0,end";       # if option(L) == 1
-set option(nidssubdir) [file join "nexrad" "nids"];
+set option(ginisubdir) [file join "sat" "gini" "tig"];
 set option(fext) ".gif";
 
 proc log_warn s {
@@ -71,9 +70,9 @@ proc make_loop {flist loopdir loopfile} {
     set looppath [file join $loopdir $loopfile];
 
     set status [catch {
-      eval exec $rstfilter(radloop_program) \
-	$rstfilter(radloop_program_preoptions) $flist \
-	$rstfilter(radloop_program_postoptions)  > $looppath;
+      eval exec $rstfilter(satloop_program) \
+	$rstfilter(satloop_program_preoptions) $flist \
+	$rstfilter(satloop_program_postoptions)  > $looppath;
     } errmsg];
 
     if {$status != 0} {
@@ -102,7 +101,7 @@ unset f;
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
-if {$argc < 2} {
+if {$argc < 1} {
     log_err $usage;
 }
 
@@ -113,32 +112,31 @@ if {$option(R) ne ""} {
     set rcfile [filterlib_find_conf $option(r) \
         $rstfilter(radmap_rcdirs) $rstfilter(radmap_rcsubdir)];
 } else {
-    # This will make nbspradmap use the configuration file defaults.
+    # This will make nbspsatmap use the configuration file defaults.
     set rcfile "";
 }
 
 if {$option(n) eq ""} {
-    set option(n) $option(nidssubdir);
+    set option(n) $option(ginisubdir);
 }
 
 if {$option(l) eq ""} {
-    if {($option(L) == 1) && ($rstfilter(radloop_count) > 0)} {
-	set option(l) "end-$rstfilter(radloop_count),end";
+    if {($option(L) == 1) && ($rstfilter(satloop_count) > 0)} {
+	set option(l) "end-$rstfilter(satloop_count),end";
     } else {
 	set option(l) $option(range,$option(L));
     }
 }
 
-set site [lindex $argv 0];
-set type [lindex $argv 1];
-set nidsdir [file join $dafilter(datadir) $option(n) $site $type];
+set wmoid [lindex $argv 0];
+set ginidir [file join $dafilter(datadir) $option(n) $wmoid];
 
 if {$option(o) eq ""} {
-    append option(o) $type $site $option(fext);
+    append option(o) $wmoid $option(fext);
 }
 
 # Get the data file extension
-set fext [file extension $dafilter(rad_namefmt)];
+set fext [file extension $dafilter(sat_namefmt)];
 
 set frange_list [split $option(l) ","];
 if {[llength $frange_list] == 1} {
@@ -149,14 +147,14 @@ if {[llength $frange_list] == 1} {
     set last [lindex $frange_list 1];
 }
 set flist [lrange [lsort \
-          [glob -directory $nidsdir -tails -nocomplain *$fext] \
+          [glob -directory $ginidir -tails -nocomplain *$fext] \
     ] $first $last];
 
 if {[llength $flist] == 0} {
     log_err "Empty file list.";
 }
 
-set opts [list "-D" "awips=${type}${site}"];
+set opts [list "-D" "wmoid=$wmoid"];
 if {$option(d) ne ""} {
     lappend opts "-d" $option(d) "-t" $option(d);
 }
@@ -167,15 +165,15 @@ if {($option(L) == 0) && ([llength $flist] == 1)} {
 
 set output_flist [list];
 foreach f $flist {
-    set nidspath [file join $nidsdir $f];
+    set ginipath [file join $ginidir $f];
 
     if {$option(v) == 1} {
 	puts -nonewline "$f ... ";
     }
 
     set status [catch {
-	lappend output_flist \
-	    [eval exec nbspradmap -v $opts $nidspath $rcfile];
+	set params [split [eval exec nbspsatmap $opts $ginipath $rcfile]];
+	lappend output_flist [lindex $params end];
     } errmsg];
 
     if {$status != 0} {

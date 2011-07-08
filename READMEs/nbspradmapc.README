@@ -2,7 +2,9 @@
 # $Id: nbspradmapc.README 2 2009-09-11 16:26:26Z nieves $
 #
 nbspradmapc is a (tcl script) utility that will generate radar image files
-from the command line.
+from the command line. It can create severalk individual images at once
+and/or a loop of all those images. The loop generation is invoked
+by giving the -L command line option.
 
 In the simplest case it can be executed as
 
@@ -32,6 +34,21 @@ will process the first (oldest) four files, while
 
 will process the last (most recent) four files.
 
+If called with the -L option it will create a "loop" of the all the
+images. The [-l] option can be specified as above to restrict which
+images are used to make the loop.
+
+For example
+
+	nbspradmapc -L jua n0r
+
+will create a loop file "n0rjua.gif" consisting of all the n0rjua data files
+found, while
+
+	nbspradmapc -L -l end-10,end jua n0r
+
+will use the ten most recent files.
+
 The "-r" option can be used to specify a different rc file instead
 of the default. The available rc files are
 
@@ -59,3 +76,4 @@ which is specially useful when processing a list of files
 
 -
 Wed Dec 31 15:32:38 AST 2008
+hu Jul  7 21:34:01 AST 2011

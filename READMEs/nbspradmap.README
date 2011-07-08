@@ -2,6 +2,9 @@
 # $Id: nbspradmap.README 2 2009-09-11 16:26:26Z nieves $
 #
 
+This README explains how "nbspradmap" operates. For most purposes
+the script "nbspradmapc" is more useful. See nbspradmapc.README.
+
 The rc file is a tcl script that is "sourced" by the nbspradmap tool that is
 executed by the rstfilter for each radar data file received.
 The filter defines the following variables that the script can use:

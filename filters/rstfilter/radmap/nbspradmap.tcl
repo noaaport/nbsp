@@ -51,8 +51,6 @@ set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
 set optlist {b p v K {d.arg ""} {g.arg "gpmap_gif"} {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
-array set option [::cmdline::getoptions argv $optlist $usage];
-
 proc log_warn s {
 
     global argv0;
@@ -142,7 +140,7 @@ proc fill_gpmap_radinfo {doradinfounz_regexp} {
     set gpmap(radinfo,code) [lindex $radinfo 5];
 }
 
-## The common defaults (e.g., netpbm progs and filterslib(doradinfounz))
+## The common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
 if {[file exists $defaultsfile] == 0} {
    log_err "$defaultsfile not found.";
@@ -158,7 +156,9 @@ source $gpenvfile;
 #
 # main
 #
+array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
+
 if {$argc == 2} {
     set gpmap(inputfile) [lindex $argv 0];
     set option(rcfile) [lindex $argv 1];
@@ -216,8 +216,10 @@ if {$option(o) ne ""} {
     set outrootname [file rootname [file tail $gpmap(outputfile)]];
 } else {
     set outrootname [file rootname [file tail $gpmap(inputfile)]];
-    append  gpmap(outputfile) $outrootname "." $gpmap(fmt);
+    append gpmap(outputfile) $outrootname "." $gpmap(fmt);
 }
+
+file mkdir [file dirname $gpmap(outputfile)];
 
 if {$option(L) eq ""} {
     append logfile $outrootname ".log";

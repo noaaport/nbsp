@@ -18,9 +18,9 @@
 /usr/local/bin/nbspgrib
 /usr/local/bin/nbspgrib2
 /usr/local/bin/nbspradmap
-/usr/local/bin/nbspradmapl
 /usr/local/bin/nbspradmapc
 /usr/local/bin/nbspsatmap
+/usr/local/bin/nbspsatmapc
 /usr/local/bin/nbspgdradr
 /usr/local/bin/nbspradmos
 /usr/local/bin/nbspradmosl
@@ -351,6 +351,7 @@
 /usr/local/libexec/nbsp/tclhttpd/nbsp/functionsrss.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbspget.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsprad.tcl
+/usr/local/libexec/nbsp/tclhttpd/nbsp/nbspsat.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/export.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope/metar.tcl

@@ -410,16 +410,14 @@ proc filter_rad {awips fpath savedir savename} {
 proc nbspradmapproc {awips inputfile outputfile} {
 
     global rstfilter;
-    global filtersprogs;
 
     # Create the inputfile without the ccb.
-    set tmpfile $outputfile.tmp;
+    set tmpfile ${outputfile}.tmp;
 
-    set status [catch {exec $filtersprogs(nbsppipe) \
-	-o $tmpfile $inputfile} errmsg];
+    set status [catch {exec nbsppipe -o $tmpfile $inputfile} errmsg];
 
     if {$status == 0} {
-	set status [catch {exec $filtersprogs(nbspradmap) -b \
+	set status [catch {exec nbspradmap -b \
 	   -o $outputfile -s $rstfilter(rad_mapsize) -D awips=$awips \
 	   $tmpfile $rstfilter(radmap_rcfile_fpath)} errmsg];
     }

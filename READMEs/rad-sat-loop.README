@@ -6,6 +6,9 @@ The rstfilter can produce loop sequences of the radar
 and satellite images. The relevant settings are commented out
 in the ``rstfilter.conf'' file.
 
+(For generating radar image loop image files using the command line scripts
+see nbspradmapc.README).
+
 The functionality is enabled by setting the variables
 
 	set rstfilter(radloop_enable) 1

@@ -7,22 +7,27 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	nbspsatmap
-TCLSOURCES =	nbspsatmap.tcl
+TCLTARGET1 =	nbspsatmap
+TCLSOURCES1 =	nbspsatmap.tcl
+TCLTARGET2 =	nbspsatmapc
+TCLSOURCES2 =	nbspsatmapc.tcl
 TMPLSOURCES =	satmap.rc
 TMPLTARGET =	satmap-templates.tgz
 TMPLPDIR =	gpmap
 TMPLDIR =	${TMPLPDIR}/sat
 
-TARGET =	${TCLTARGET} ${TMPLTARGET}
+TARGET =	${TCLTARGET1} ${TCLTARGET2} ${TMPLTARGET}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 
 all: ${TARGET}
 
-${TCLTARGET}: ${TCLSOURCES}
-	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES} > ${TCLTARGET}
+${TCLTARGET1}: ${TCLSOURCES1}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES1} > ${TCLTARGET1}
+
+${TCLTARGET2}: ${TCLSOURCES2}
+	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCES2} > ${TCLTARGET2}
 
 ${TMPLTARGET}: ${TMPLSOURCES}
 	rm -rf ${TMPLDIR}
@@ -31,7 +36,7 @@ ${TMPLTARGET}: ${TMPLSOURCES}
 	tar -czf ${TMPLTARGET} ${TMPLDIR}
 
 install: ${TARGET}
-	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 755 ${TCLTARGET1} ${TCLTARGET2} ${BINDIR}
 	${INSTALL} -m 644 ${TMPLTARGET} ${MYCONFDIR}
 
 clean:
