@@ -4,29 +4,53 @@
 #
 # Usage: nbspradmapc [-d <output_subdir>] [-f <fext>] [-l <first,last>] \
 #			[-n <nids_subdir>] [-r <rcfile>] \
-#			[-R <rcfile_path>] [-v] <site> <type>
+#			[-R <rcfile_path>] [-v]
+#                       [-L] [-K] [-O <loop_file>] <site> <type>
 #
 # Examples: nbspradmapc jua n0r
 #           nbspradmapc -l end-3,end jua n0r
 #
 # This tool is designed for use from the command line.
+# It can create individual images and/or a loop from them.
 # The [-l] argument specifies a range of files to process from the list
 # that are in the specified directory. The [-n] <nids_subdirectory> argument
 # is relative to the dafilter data directory (e.g., nexrad/nids).
-# The [-f] option specifies the file extension of the data files (e.g., nids)
-# to distinguish them from other files (e.g, latest, ...).
+# The [-f] option specifies the file extension of the data files
+# to distinguish them from other files (e.g, latest, ...). The default
+# extension is "nids".
 #
+# -L => create a loop from those images.
+# -K => if -L is specidied, keep (do not delete) the individual images
+# -O => if -L is given, this is the loop file name
+#       (default is ${awips}.gif)
+#
+# Requires "gifsicle"
+
 package require cmdline;
 
 set usage {nbspradmapc [-d <output_subdir>] [-f <fext>] [-l <first,last>]
-    [-n <nids_subdir>] [-r <rcfile>] [-R <rcfile_path>] [-v] <site> <type>};
-set optlist {v {d.arg ""} {f.arg ".nids"} {l.arg "end,end"} {n.arg ""}
-    {r.arg ""} {R.arg ""}};
+    [-n <nids_subdir>] [-r <rcfile>] [-R <rcfile_path>] [-v]
+    [-L] [-K] [-O <loop_file>] <site> <type>};
+
+set optlist {v {d.arg ""} {f.arg ".nids"} {l.arg ""} {n.arg ""}
+    {r.arg ""} K L {O.arg ""} {R.arg ""}};
+
 array set option [::cmdline::getoptions argv $optlist $usage];
+
+# defaults
+if {$option(l) eq ""} {
+    if {$option(L) == 0} {
+	set option(l) "end,end";
+    } else {
+	set option(l) "0,end";
+    }
+}
 
 if {$option(n) eq ""} {
     set option(n) [file join "nexrad" "nids"];
 }
+
+set option(loop_fext) ".gif";
 
 proc log_warn s {
 
@@ -41,6 +65,28 @@ proc log_err s {
 
     log_warn $s;
     exit 1;
+}
+
+proc make_loop {flist loopdir loopfile} {
+
+    global rstfilter;
+
+    if {[llength $flist] == 0} {
+	return;
+    }
+
+    file mkdir [file dirname $loopfile];
+    set looppath [file join $loopdir $loopfile];
+
+    set status [catch {
+      eval exec $rstfilter(radloop_program) \
+	$rstfilter(radloop_program_preoptions) $flist \
+	$rstfilter(radloop_program_postoptions)  > $looppath;
+    } errmsg];
+
+    if {$status != 0} {
+	log_err $errmsg;
+    } 
 }
 
 #
@@ -98,6 +144,7 @@ if {$option(d) ne ""} {
     lappend opts "-d" $option(d) "-t" $option(d);
 }
 
+set output_flist [list];
 foreach f $flist {
     set nidspath [file join $nidsdir $f];
 
@@ -106,12 +153,33 @@ foreach f $flist {
     }
 
     set status [catch {
-	eval exec nbspradmap $opts $nidspath $rcfile;
+	lappend output_flist \
+	    [eval exec nbspradmap -v $opts $nidspath $rcfile];
     } errmsg];
 
     if {$status != 0} {
 	log_err $errmsg;
     } elseif {$option(v) == 1} {
 	puts "OK";
+    }
+}
+
+# Make a loop if requested
+if {$option(L) == 0} {
+    return;
+}
+
+set loopfile $option(O);
+if {$loopfile eq ""} {
+    append loopfile $type $site $option(loop_fext);
+}
+
+set loopdir $option(d);
+
+make_loop $output_flist $loopdir $loopfile;
+
+if {$option(K) == 0} {
+    foreach outputfile $output_flist {
+	file delete $outputfile;
     }
 }
