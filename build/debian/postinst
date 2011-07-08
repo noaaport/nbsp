@@ -162,6 +162,7 @@ cd htdocs/pub
 [ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
 [ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot
 [ -d "radmap" ] || install -d -m 755 -o $user -g $user radmap
+[ -d "satmap" ] || install -d -m 755 -o $user -g $user satmap
 [ -d "npstats" ] || install -d -m 755 -o $user -g $user npstats
 [ -d "weatherscope/conf" ] || \
     install -d -m 755 -o $user -g $user weatherscope/conf
