@@ -4,7 +4,7 @@
 # 
 # Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] \
 #        [-K] [-L <logfile>] [-o <outputname>] [-p] [-s <outputsize>]
-#        [-t <tmpdir>] [-D <defs>] <inputfile> [<rcfile>]
+#        [-t <tmpdir>] [-v] [-D <defs>] <inputfile> [<rcfile>]
 #
 # -D => key=value,... comma separated list of gpmap(key)=var pairs
 # -b => background mode
@@ -19,6 +19,8 @@
 #	The default is "800;600" if nothing is specified.
 # -t => cd to tmp directory (all partial paths are still relative
 #       to the current directory.
+# -v => puts to stdout the name of the outputfile (this is used by
+#       nbspradmapc when asked to build a loop from the outputfile list.
 #
 # The input file can be the one with the compressed or uncompressed frames,
 # but without the CCB, and it can have the gempak header. This is what
@@ -44,9 +46,9 @@
 package require cmdline;
 
 set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
-    [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-D <defs>]
+    [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-v] [-D <defs>]
     <inputfile> [<rcfile>]};
-set optlist {b p {d.arg ""} {g.arg "gpmap_gif"} K {L.arg ""} {o.arg ""}
+set optlist {b p v K {d.arg ""} {g.arg "gpmap_gif"} {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
@@ -294,4 +296,8 @@ if {$option(p) == 1} {
 
 if {[info exists gpmap(post)]} {
     eval $gpmap(post);
+}
+
+if {$option(v) == 1} {
+    puts $gpmap(outputfile);
 }
