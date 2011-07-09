@@ -221,7 +221,7 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
     }
 
     if {($rstfilter(satmap_enable) == 1) && \
-	    [regexp $rstfilter(satmap_regex) $wmoid]} {
+	    [filterlib_uwildmat $rstfilter(satmap_regex) $wmoid]} {
 	set output [filter_satmap $wmoid $fpath $imgsavedir $imgsavename];
 	set status [lindex $output 0];
 	if {$status != 0} {
@@ -231,7 +231,7 @@ proc filter_sat {wmoid fpath imgsavedir datasavedir imgsavename} {
     # If the map option is unset, or if the map could not be
     # generated, do the plain image.
     if {($rstfilter(satmap_enable) == 0) || \
-	    ([regexp $rstfilter(satmap_regex) $wmoid] == 0) || \
+	    ([filterlib_uwildmat $rstfilter(satmap_regex) $wmoid] == 0) || \
 	    ($status != 0)} {
 	# The last argument indicates the input file is not uncompressed
 	## set output [filter_satplain $datafpath $imgsavedir $imgsavename];
@@ -328,11 +328,6 @@ proc filter_satmap {wmoid fpath savedir savename} {
     }
     set outdir [file join $rstfilter(datadir) $savedir];
 
-    # We assume that "savename" contains a file extension. Since nbspsatmap
-    # only makes gif, change it.
-    set outname [file rootname $savename];
-    append outname ".gif";
-
     # If the png file should be created pass [-p], and in that case
     # if loops are requested, ask nbspsatmaprc to keep the gif file.
     set pngopts "";
@@ -348,7 +343,7 @@ proc filter_satmap {wmoid fpath savedir savename} {
     # Use eval to split pngopts, and then in this case must quote the
     # rstfilter(satmap_mapsize) because it contains special (;) characters.
     set status [catch {
-	set params [eval exec nbspsatmap -b $pngopts -d $outdir -o $outname \
+	set params [eval exec nbspsatmap -b $pngopts -d $outdir -o $savename \
 		-s \"$rstfilter(satmap_mapsize)\" -D wmoid=$wmoid \
 		$fpath $rcfile];
     } errmsg];

@@ -100,3 +100,5 @@
   loops from the individual images.
 - Added nbspsatmapc for similar purposes and revised the web server
   to generate radar and sat loops dynamically.
+- Fixed error in rstfilter.lib creating sat maps (reported by Bill Dosser);
+  check of rstfilter(satmap_regex) should be with uwildmat and not just regex.
