@@ -105,10 +105,10 @@ H=02:/var/noaaport/data/metar/weatherscope: -c 7 -d
 H=02:/var/noaaport/data/upperair/weatherscope: -c 7 -d
 H=02:/var/noaaport/data/weatherscope: -c 7 -d
 #
-H/2:/var/noaaport/data/gis/img/rad: -mtime +4h
-H/2:/var/noaaport/data/inv/gis/rad: -i -mtime +4h
-H/6:/var/noaaport/data/gis/img/sat: -mtime +1
-H/6:/var/noaaport/data/inv/gis/sat: -i -mtime +1
+H:/var/noaaport/data/gis/img/rad: -mtime +2h
+H:/var/noaaport/data/inv/gis/rad: -i -mtime +2h
+H/6:/var/noaaport/data/gis/img/sat: -mtime +6h
+H/6:/var/noaaport/data/inv/gis/sat: -i -mtime +6h
 
 # Keep a week of the old www logfiles
 H=01:/var/log/nbsp/www: -mtime +7
