@@ -12,16 +12,41 @@ rad_bundle_clear;
 #
 # sat - example
 #
-# sat_bundle_add {_tig(a|e|h|i|w|p|q)0[1-5],!_tiga05};
-# sat_bundle_add {_tig(a|b|e|h|i|w|p|q)0[1-5]} "csv";
-# sat_bundle_add {_tig(a|b|e|h|i|w|p|q)0[1-5]} "shp,shx,dbf,info,csv";
+# sat_bundle_add {tig(a|e|h|i|w|p|q)0[1-5],!tiga05};
+# sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "csv";
+# sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "shp,shx,dbf,info,csv";
 
 #
 # rad - examples
 #
-# rad_bundle_add "-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])"
-# rad_bundle_add \
-#     "-n0r([join [nbsp::radstations::bystate ar la nm ok tx] "|"])" "csv";
+# This will create n0r shapefiles for a bunch of stations in tx
+#
+## rad_bundle_add "n0r(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+#
+# Similar, but more types
+#
+## rad_bundle_add "n0(r|s|v)(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add "n(0|1|2)r(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add "n(0|1|2)(r|s|v)(ama|bro|crp|dfx|dyx);
+#
+# A shorthand for specifying all the sites in a given state is to use
+# the function
+#
+#      nbsp::radstations::bystate tx
+#
+# which returns the tcl list of all tx sites. More generally,
+#
+#      nbsp::radstations::bystate ar la nm ok tx
+#
+# will return a tcl list of all the sites in those states. Then we can "join"
+# them by invoking the function thus
+#
+#      join [nbsp::radstations::bystate ar la nm ok tx] "|"
+#
+# and, for example,
+#
+## rad_bundle_add "n0r([join [nbsp::radstations::bystate ar la nm ok tx] |])"
+#
 
 #
 # Load "gis/gisfilter-bundle.conf"

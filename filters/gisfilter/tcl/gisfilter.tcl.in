@@ -88,13 +88,13 @@ proc process {finfo} {
     eval ${_cmd};
 
     if {($gisfilter(sat_enable) != 0) && \
-	([filterlib_uwildmat $gisfilter(sat_regex) $rc(fname)] == 1)} {
+	([filterlib_uwildmat $gisfilter(sat_regex) $rc(wmoid)] == 1)} {
 	filter_sat rc;
     } elseif {($gisfilter(rad_enable) != 0) && \
-	([filterlib_uwildmat $gisfilter(rad_regex) $rc(fname)] == 1)} {
+	([filterlib_uwildmat $gisfilter(rad_regex) $rc(wmoid)] == 1)} {
 	filter_rad rc;
     } elseif {($gisfilter(rad2_enable) != 0) && \
-	([filterlib_uwildmat $gisfilter(rad2_regex) $rc(fname)] == 1)} {
+	([filterlib_uwildmat $gisfilter(rad2_regex) $rc(wmoid)] == 1)} {
 	filter_rad2 rc;
     }
 

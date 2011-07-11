@@ -10,7 +10,7 @@ proc filter_rad {rc_varname} {
 
     foreach bundle $gisfilter(rad_bundlelist) {
 	set regex $gisfilter(rad_bundle,$bundle,regex);
-	if {[filterlib_uwildmat $regex $rc(fname)] == 0} {
+	if {[filterlib_uwildmat $regex $rc(awips)] == 0} {
 	    continue;
 	}
 	filter_rad_convert_nids_shp rc $bundle;

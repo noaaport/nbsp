@@ -16,7 +16,7 @@ set gisfilter(sat_inv_enable) 1;
 # sat configuration
 #
 set gisfilter(sat_enable) 1;  # whether to process the tig files
-set gisfilter(sat_regex)  {_tig(a|b|e|w|g|h|p|q)0[1-5]};   # fname
+set gisfilter(sat_regex)  {tig(a|b|e|w|g|h|p|q)0[1-5]};   # wmoid
 set gisfilter(sat_latest_enable) 1; # make link to latest
 set gisfilter(sat_latestname)   "latest";   # without the extension
 set gisfilter(sat_namefmt) {$rc(wmoid)_$rc(ymd_hm)}; # without the extension
@@ -55,7 +55,7 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 
 # Bundles are of the form
 #
-## set gisfilter(sat_bundle,<tag>,regex) {_tig(e|w)};  # matched against fname
+## set gisfilter(sat_bundle,<tag>,regex) {tig(e|w)};  # matched against wmoid
 ## set gisfilter(sat_bundle,<tag>,fmt) [list shp shx dbf info ...];
 #
 # which should be constructed with the bundle functions.
@@ -67,7 +67,7 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
 set gisfilter(rad_enable) 1;
-set gisfilter(rad_regex)  {_sdus[23578]};  # matches against fname
+set gisfilter(rad_regex)  {sdus[23578]};  # wmoid
 set gisfilter(rad_latest_enable) 1; # make link to latest
 set gisfilter(rad_latestname)    "latest";
 set gisfilter(rad_namefmt)       {$rc(awips)_$rc(ymd_hm)}; # without extension
@@ -108,7 +108,7 @@ set gisfilter(rad_bundlelist_seqnum) 0;
 # rad2
 #
 set gisfilter(rad2_enable) 0;
-set gisfilter(rad2_regex)  {-level2};  # matches against fname
+set gisfilter(rad2_regex)  {level2};  # wmoid
 set gisfilter(rad2_latest_enable)        1; # make link to latest
 set gisfilter(rad2_latestname)   "sn.last";
 set gisfilter(rad2_namefmt)      {$rc(STATION)_$rc(ymd_hm)};
@@ -165,7 +165,7 @@ proc _bundle_add {type regex fmt} {
 #
 # type = rad|sat
 # fmt = "shp,shx,..."
-# regex = matched against fname
+# regex = matched against: awips(rad), wmoid(sat), site(level2)
 #
     global gisfilter;
 
@@ -217,12 +217,12 @@ proc rad_bundle_clear {} {
 #
 # If fmt is not specified, then "shp" and friends is assumed.
 #
-### sat_bundle_add {_tig(e|w)};
-### sat_bundle_add {_tig(e|w)} "shp,shx,dbf,info,csv";
-### sat_bundle_add {_tig(e|w)} "asc";
+### sat_bundle_add {tig(e|w)};
+### sat_bundle_add {tig(e|w)} "shp,shx,dbf,info,csv";
+### sat_bundle_add {tig(e|w)} "asc";
 #
-### rad_bundle_add {-n0r} "csv";
-### rad_bundle_add {-n[0-3](r|s)jua};
+### rad_bundle_add {n0r} "csv";
+### rad_bundle_add {n[0-3](r|s)jua};
 
 #
 # Dynamic initialization
