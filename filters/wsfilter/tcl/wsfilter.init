@@ -19,14 +19,37 @@ set wsfilter(ws_gribdir) "model";
 set wsfilter(schedule) [file join $common(confdir) "wsfilter-schedule.rc"];
 set wsfilter(schedule_run_period) "minutely";	# run every minute
 
-# The default configuration settings below depend on the da, metar, ua,
-# and grib filters.
+# The default configuration settings below that depend on the
+# metar, ua, and grib filters, cannot be modified in the configuration file.
+
+interp create slave;
+slave eval {
+
+    source "/usr/local/etc/nbsp/filters.conf";
+
+    foreach _i [list metarfilter uafilter gribfilter] {
+	set _init ${_i}.init;
+        source [file join $common(libdir) ${_init}];
+    }
+}
 
 # metar
-set wsfilter(metar_basedir) [file join $common(datadir) metar weatherscope];
-set wsfilter(metar_hourly_basedir) "hourly";
-set wsfilter(metar_daily_basedir) "daily";
-set wsfilter(metar_fext) ".metar";
+set wsfilter(metar_basedir) [slave eval {
+    return [file join $metarfilter(datadir) $metarfilter(ws_dir)];
+}];
+
+set wsfilter(metar_daily_basedir) [slave eval {
+    return $metarfilter(ws_daily_subdir);
+}];
+
+set wsfilter(metar_hourly_basedir) [slave eval {
+    return $metarfilter(ws_hourly_subdir);
+}];
+
+set wsfilter(metar_fext) [slave eval {
+    return $metarfilter(mwfext);
+}];
+
 set wsfilter(metar_mdf_fext) ".mdf";
 set wsfilter(metar_mts_fext) ".mts";
 set wsfilter(metar_undef) "-996";
@@ -37,21 +60,37 @@ set wsfilter(metar_siteloc) [file join $common(confdir) \
 ##	"wsfilter-metar-sitenames.def"];
 
 # upperair
-set wsfilter(upperair_basedir) \
-	[file join $common(datadir) upperair weatherscope];
-set wsfilter(upperair_hourly_basedir) "hourly";
-set wsfilter(upperair_daily_basedir) "daily";
-set wsfilter(upperair_fext) ".upperair";
+set wsfilter(upperair_basedir) [slave eval {
+    return [file join $uafilter(datadir) $uafilter(ws_dir)];
+}];
+
+set wsfilter(upperair_daily_basedir) [slave eval {
+    return $uafilter(ws_daily_subdir);
+}];
+
+set wsfilter(upperair_hourly_basedir) [slave eval {
+    return $uafilter(ws_hourly_subdir);
+}];
+
+set wsfilter(upperair_fext) [slave eval {
+    return $uafilter(fext);
+}];
+
 set wsfilter(upperair_mdf_fext) ".mdf";
 set wsfilter(upperair_undef) "-996";
 set wsfilter(upperair_siteloc) [file join $common(confdir) \
 	"wsfilter-upperair-siteloc.def"];
 
 # grib
-set wsfilter(grib_ctl_basedir) [file join $common(datadir) grib ctl];
+set wsfilter(grib_ctl_basedir)  [slave eval {
+    return [file join $gribfilter(datadir) $gribfilter(ctldatadir)];
+}];
+
 set wsfilter(grib_mdf_fext) ".mdf";
 set wsfilter(grib_undef) "-996";
 set wsfilter(grads_undef_regex) {9.999e\+20|\?};
+
+interp delete slave;
 
 #
 # configuration of model parameters
