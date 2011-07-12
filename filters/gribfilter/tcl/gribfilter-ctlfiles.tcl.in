@@ -7,7 +7,7 @@
 # The file names in the list should be relative to that gribfilter(datadir);
 # i.e., like
 #
-# grb/<model>/<date>/<filename>
+# data/grb/<model>/<date>/<filename>
 #
 # This is a "helper" script for the gribfilter to support the generation of
 # ctl and idx files for GrADS. The generation of ctl files can take several
@@ -57,11 +57,14 @@ foreach grbfile [split $dirtygrbfiles] {
 
     log_msg "Processing $grbfile.";
 
-    # Get the relative path without the "grb" parent dir,
-    # and then the same without the extension. This assumes
-    # that the idx, ctl, ..., subdirectories are all at the same
-    # level.
-    set rpath [join [lreplace [split $grbfile "/"] 0 0] "/"];
+    # Get the relative path without the "data/grb" parent dir,
+    # and then the same without the extension.
+    set rpath [::fileutil::stripPath $gribfilter(grbdatadir) $grbfile];
+    if {$rpath eq $grbfile} {
+	# If no prefix was stripped, then try the other prefix
+	set rpath [::fileutil::stripPath $gribfilter(gridsdatadir) $grbfile];
+    }
+
     set rfname [file rootname $rpath];
 
     set ctlfile [file join $gribfilter(ctldatadir) \

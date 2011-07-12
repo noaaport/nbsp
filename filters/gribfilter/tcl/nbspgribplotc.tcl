@@ -28,7 +28,7 @@
 #       otherwise it is searched for first in the current directory,
 #       and only if it is not found, then the standard directories are used.
 # -t => The script is a tclgrads script. A script is also assumed to be a
-#       tclgrads script also if it has the extension ".tgs".
+#       tclgrads script if it has the extension ".tgs".
 # -n => Do not use the extension ".tgs" as indication that the script is
 #       a tclgrads script.
 # -o => The value of gsplot(imgfile) that is passed to the script. Otherwise
@@ -50,7 +50,7 @@ set option(default_I) "end";  # the last model run for the given ymd
 
 proc run_tclgrads_script {gsfile} {
 #
-# In this version of the function the script is should be a tclgrads
+# In this version of the function the script should be a tclgrads
 # script.
 #
     global gsplot;

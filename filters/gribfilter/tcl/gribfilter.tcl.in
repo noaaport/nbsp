@@ -11,14 +11,14 @@ set optlist {s};
 ## The common defaults initialization
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
 if {[file exists $filters_init_file] == 0} {
-	puts "gribfilter disabled: $filters_init_file not found.";
-	return 1;
+    puts "gribfilter disabled: $filters_init_file not found.";
+    return 1;
 }
 source $filters_init_file;
 unset filters_init_file;
 
 if {$filters_init_status == 1} {
-	return 1;
+    return 1;
 }
 unset filters_init_status;
 
@@ -151,7 +151,6 @@ proc process {finfo} {
 proc filter_file {seq fpath savedir savename} {
 
     global gribfilter;
-    global filtersprogs;
 
     cd $gribfilter(datadir);
     file mkdir $savedir;
@@ -206,10 +205,9 @@ proc gribfilter_control_files_old {} {
 	}
 
 	# Get the relative path without the "grb" parent dir,
-	# and then the same without the extension. This assumes
-	# that the idx, ctl, ..., subdirectories are all at the same
-        # level.
-	set rfname [file rootname [::fileutil::stripN $grbfile 1]];
+	# and then the same without the extension.
+    	set rpath [::fileutil::stripPath $gribfilter(grbdatadir) $grbfile];
+	set rfname [file rootname $rpath];
 
 	set ctlfile [file join $gribfilter(ctldatadir) \
 		${rfname}$gribfilter(ctlfext)];
