@@ -4,7 +4,7 @@
 
 To complete the configuration:
 
-1) In the ".d" subdirectories copy (or symlink) the files from "avail"
+1) In the ".d" subdirectories copy (or symlink) the files from "dist"
    to "enable".
 
    NOTE: Only conus needs to be enabled in gisfilter-bundle.d/enable since

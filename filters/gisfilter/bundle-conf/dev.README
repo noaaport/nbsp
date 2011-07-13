@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+At this moment (2.1.3p14 - 2011jul13), the configuration in the
+gismap www interface is not tied to the bundle configuration in etc.
+Eventually the index.tml-defaults page should read the bundle-config
+file and display only the configured bundles.

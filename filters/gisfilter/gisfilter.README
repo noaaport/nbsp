@@ -11,8 +11,8 @@ Installation -
 
    /var/noaaport/data/gis/rad
 
-5) After about 10 minutes you see an "img" subdirectory with
-   the configured image files.
+5) At approximately 10 after the hour minutes you see an "img"
+   subdirectory with the configured image files.
 
    The data files and the images are accesisble from the web server
    under the "GIS" item in the right-hand side menu.
