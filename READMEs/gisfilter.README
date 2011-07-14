@@ -59,13 +59,12 @@ To create the configured default set of image maps, write the line
 set gisfilter(scheduler_enable) 1
 
 in the file "site/gisfilter.conf". Then, look at the file
-"gisfilter-schedule.rc" in the configuration directory. Only
-the radar images are created in the current default configuration.
-The line that starts with
+"gisfilter-schedule.rc" in the configuration directory.
+For example, the line that starts with
 
-schedule M=20 nbspgismap
+schedule M=10 nbspgismap
 	
-indicates that the images are created every hour at the minute 20. That
+indicates that the radar images are created every hour at the minute 10. That
 may be too much load for the computer. If that is the case the
 schedule can be changed by replacing the M=20 by something like
 H00/2 which means to create the images at the minute 00 every two hours.
