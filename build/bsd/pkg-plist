@@ -37,6 +37,7 @@ bin/nbspmtrplot
 bin/nbspmtrplot1
 bin/nbspmtrplotdat
 bin/nbspfm35d
+bin/nbspuatocsv
 bin/nbspws-gribtomdf
 bin/nbspws-metartomdf
 bin/nbspws-metartomts

@@ -13,7 +13,7 @@ source $filters_init_file;
 unset filters_init_file;
 
 if {$filters_init_status == 1} {
-	return 1;
+    return 1;
 }
 unset filters_init_status;
 
@@ -22,8 +22,8 @@ package require nbsp::util;
 
 set ua_init_file [file join $common(libdir) "uafilter.init"];
 if {[file exists $ua_init_file] == 0} {
-	log_msg "uafilter disabled: $ua_init_file not found.";
-	return 1;
+    log_msg "uafilter disabled: $ua_init_file not found.";
+    return 1;
 }
 source $ua_init_file;
 unset ua_init_file;
@@ -74,7 +74,7 @@ proc process {finfo} {
     }
 
     set status [catch {
-        save_rawdata rc;
+        save_data rc;
     } errmsg];
 
     if {$status != 0} {
@@ -82,7 +82,7 @@ proc process {finfo} {
     }
 }
 
-proc save_rawdata {rc_name} {
+proc save_data {rc_name} {
 
     upvar $rc_name rc;
     global uafilter;
@@ -91,12 +91,15 @@ proc save_rawdata {rc_name} {
     set wmotime $rc(wmotime);
 
     set rawdata [exec nbspfm35d -s $uafilter(FS) $fpath];
+    set dcdata [exec nbspfm35d -d -s $uafilter(FS) $fpath];
 
     if {$rawdata eq ""} {
 	# nbspfm35d returns an empty string if the file does not contain
 	# a valid report.
 	return;
     }
+
+    save_csv_data $wmotime $dcdata;
 
     # Extract the data and save it in the daily/hourly archives.
     if {$uafilter(ws_daily_enable) == 1} {
@@ -121,6 +124,30 @@ proc save_rawdata {rc_name} {
 	if {$status != 0} {
 	    log_msg $errmsg;
 	}
+    }
+}
+
+proc save_csv_data {wmotime dcdata} {
+
+    global uafilter;
+
+    set seconds [::nbsp::util::date::clock_seconds $wmotime];
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+
+    # dcdata contains <station>,<time> <level>,<data> <level>,<data>... 
+    set dcdata_list [split $dcdata "\n"];
+    foreach data $dcdata_list {
+	set info [lindex $data 0];
+	set level_data [lrange $data 1 end];
+        set station [lindex [split $info $uafilter(FS)] 0];
+	set arcvfname ${station}_${ymd};
+	append arcvfname $uafilter(csvfext);
+
+	set savesubdir [file join $uafilter(csvdir) $ymd];
+	file mkdir $savesubdir;
+	set arcvfile [file join $savesubdir $arcvfname];
+	set csvoutput [exec nbspuatocsv -i $data -s $uafilter(FS)];
+	filterlib_file_append $arcvfile $csvoutput;
     }
 }
 

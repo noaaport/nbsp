@@ -35,6 +35,7 @@
 /usr/local/bin/nbspmtrplot1
 /usr/local/bin/nbspmtrplotdat
 /usr/local/bin/nbspfm35d
+/usr/local/bin/nbspuatocsv
 /usr/local/bin/nbspws-gribtomdf
 /usr/local/bin/nbspws-metartomdf
 /usr/local/bin/nbspws-metartomts

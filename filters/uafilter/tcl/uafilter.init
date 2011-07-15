@@ -9,8 +9,12 @@ set uafilter(sitelocdef) [file join $common(confdir) "uafilter-siteloc.def"];
 set uafilter(datadir)	[file join $common(datadir) "upperair"];
 set uafilter(postfilter) "";
 
+# decoded csv data files produced by the uatocsv uitlity from the fm35 library
+set uafilter(csvdir)    "csv";    # subdir of uafilter(datadir)
+set uafilter(csvfext)   ".csv";
+
 # Daily and hourly archives to support Weatherscope, enabled by default.
-# If enabled, than an entry must be included in the hourly conf file
+# If enabled, then an entry must be included in the hourly conf file
 # (which is included in the default configuration).
 #
 set uafilter(ws_daily_enable) 1;

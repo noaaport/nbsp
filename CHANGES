@@ -102,3 +102,4 @@
   to generate radar and sat loops dynamically.
 - Fixed error in rstfilter.lib creating sat maps (reported by Bill Dosser);
   check of rstfilter(satmap_regex) should be with uwildmat and not just regex.
+- Revised default bundle configuration of gisfilter.
