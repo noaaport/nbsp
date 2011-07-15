@@ -8,13 +8,13 @@
 #                [-u <undef>] [-y] [-Y <Y>] [<name>]
 #
 #         If <name> is not given, process the (last) most recent
-#         file in the standard directory "<upperair>/<ws>/ymd/hourly", except
+#         file in the standard directory "<datadir>/ymd/hourly", except
 #         as modified by "-n" and "-y":
 # [-n]    Choose a different file (end, end-1, ...).
 # [-y]    As above, but use the ymd for the previous day, or <Y> days before
 #         if "-Y <Y>" is given.
 #         If name is given, it is assumed to be a date yyyymmddhh and the file
-#         yyyymmddhh.<fext> in the "archive/ymd/hourly" is processed.
+#         yyyymmddhh.<fext> in the "<datadir>/ymd/hourly" is processed.
 # [-f]    Take <name> as the inputfile name as is.         
 # [-d] => Write outputfile in the given directory.
 #         By default output is to a file with the same name as the input file
@@ -42,11 +42,14 @@
 #
 # The data should be in the format such as
 #
-# 42410,2112|surface,1000,26.4,-85.6,3,270|1000,54,26.4,-85.6,3,270
-# 42410,2112 surface,1000,26.4,-85.6,3,270 1000,54,26.4,-85.6,3,270
+# dems,211200,42410,2112|surface,1000,26.4,-85.6,3,270|1000,54,26.4,-85.6,3,270
+# dems,211200,42410,2112 surface,1000,26.4,-85.6,3,270 1000,54,26.4,-85.6,3,270
 #
 # as returned by the dcfm35 decoder, with the <separator> in the argument
 # of the function indicating what character separates the different levels.
+
+package require cmdline;
+package require fileutil;
 
 #
 # Functions
@@ -65,8 +68,9 @@ proc uatomdf_cvt {ref_dd data na_val {separator " "}} {
 
     set info_list [split $info ","];
     set stid [lindex $info_list 0];
+    set wmotime [lindex $info_list 1];	# not used
     set stnm [lindex $info_list 2];
-    set ddhh $stnm;	          # ddhh => convert to whole hour minutes
+    set ddhh [lindex $info_list 3];	# ddhh => convert to whole hour minutes
 
     if {[regexp {(\d{2})(\d{2})} $ddhh match dd hh] == 0} {
 	return "";
@@ -192,7 +196,7 @@ proc uatomdf_hourly {date inputfile undef} {
 
     # The data is run through the fm35 decoder, and the result is then
     # sent line by line to the cvt function above to translate it to
-    # the WS format. The "-c" flag indicates that it is not a raw (.upa) data
+    # the WS format. The "-c" flag to indicate that it is not a raw (.upa) data
     # file but a cleaned up (.upperair) data file (also produced by the
     # decoder as run by the uafilter).
 
@@ -215,12 +219,8 @@ proc uatomdf_hourly {date inputfile undef} {
 }
 
 #
-# main
-#
-package require cmdline;
-package require fileutil;
-
 ## The common defaults
+#
 set defaults_file "/usr/local/etc/nbsp/filters.conf";
 if {[file exists $defaults_file] == 0} {
     puts "wsfilter disabled: $defaults_file not found.";
@@ -245,15 +245,19 @@ if {[file exists $wsfilter(upperair_siteloc)]} {
 
 set usage {uatomdf [-d <dir>] [-f] [-n <n>] [-o <outputfile>] [-u <undef>]
     [-y] [-Y <Y>] [<name>]};
-set optlist {{d.arg ""} {f} {n.arg "end"} {o.arg ""} {u.arg ""}
-    {y} {Y.arg "1"}};
 
-# Defaults unless given in cmd line
-set g(undef) $wsfilter(upperair_undef);
+set optlist {f y {d.arg ""} {n.arg "end"} {o.arg ""} {u.arg ""}
+    {Y.arg "1"}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
+# Defaults unless given in cmd line
+set g(undef) $wsfilter(upperair_undef);
+
+#
+# main
+#
 if {$option(u) ne ""} {
     set g(undef) $option(u);
 }

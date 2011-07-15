@@ -134,12 +134,14 @@ proc save_csv_data {wmotime dcdata} {
     set seconds [::nbsp::util::date::clock_seconds $wmotime];
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
 
-    # dcdata contains <station>,<time> <level>,<data> <level>,<data>... 
     set dcdata_list [split $dcdata "\n"];
+
+    # Each member of the list is of the form
+    # <wmostation>,<wmotime>,<stnumber>,<obtime> <leveldata>
+
     foreach data $dcdata_list {
-	set info [lindex $data 0];
-	set level_data [lrange $data 1 end];
-        set station [lindex [split $info $uafilter(FS)] 0];
+	set info [lindex [split $data] 0];
+        set station [lindex [split $info $uafilter(FS)] end-1];
 	set arcvfname ${station}_${ymd};
 	append arcvfname $uafilter(csvfext);
 
