@@ -99,15 +99,15 @@ proc save_data {rc_name} {
 	return;
     }
 
-    save_csv_data $wmotime $dcdata;
+    save_csv $wmotime $dcdata;
 
     # Extract the data and save it in the daily/hourly archives.
-    if {$uafilter(ws_daily_enable) == 1} {
-	save_data_wsdaily $wmotime $rawdata;
+    if {$uafilter(fm35_daily_enable) == 1} {
+	save_fm35_daily $wmotime $rawdata;
     }
 
-    if {$uafilter(ws_hourly_enable) == 1} {
-	save_data_wshourly $wmotime $rawdata;
+    if {$uafilter(fm35_hourly_enable) == 1} {
+	save_fm35_hourly $wmotime $rawdata;
     }
 
     # Call the post (user) filter if it is has been defined.
@@ -127,7 +127,7 @@ proc save_data {rc_name} {
     }
 }
 
-proc save_csv_data {wmotime dcdata} {
+proc save_csv {wmotime dcdata} {
 
     global uafilter;
 
@@ -143,9 +143,9 @@ proc save_csv_data {wmotime dcdata} {
 	set info [lindex [split $data] 0];
         set station [lindex [split $info $uafilter(FS)] end-1];
 	set arcvfname ${station}_${ymd};
-	append arcvfname $uafilter(csvfext);
+	append arcvfname $uafilter(csv_fext);
 
-	set savesubdir [file join $uafilter(csvdir) $ymd];
+	set savesubdir [file join $uafilter(csv_dir) $ymd];
 	file mkdir $savesubdir;
 	set arcvfile [file join $savesubdir $arcvfname];
 	set csvoutput [exec nbspuatocsv -i $data -s $uafilter(FS)];
@@ -153,7 +153,7 @@ proc save_csv_data {wmotime dcdata} {
     }
 }
 
-proc save_data_wsdaily {wmotime rawdata} {
+proc save_fm35_daily {wmotime rawdata} {
 
     global uafilter;
 
@@ -165,10 +165,11 @@ proc save_data_wsdaily {wmotime rawdata} {
   	set data_parts [split $data $uafilter(FS)];
         set station [lindex $data_parts 2];
 	set arcvfname ${station}_${ymd};
-	append arcvfname $uafilter(fext);
+	append arcvfname $uafilter(fm35_fext);
 
-	set savesubdir [file join $uafilter(ws_dir) $ymd \
-	    $uafilter(ws_daily_subdir)];
+	# The wsfilter (uatomdf) depdens on this structure
+	set savesubdir [file join $uafilter(fm35_dir) $ymd \
+	    $uafilter(fm35_daily_subdir)];
 	file mkdir $savesubdir;
 
 	set arcvfile [file join $savesubdir $arcvfname];
@@ -176,7 +177,7 @@ proc save_data_wsdaily {wmotime rawdata} {
     }
 }
 
-proc save_data_wshourly {wmotime rawdata} {
+proc save_fm35_hourly {wmotime rawdata} {
 
     global uafilter;
 
@@ -185,10 +186,11 @@ proc save_data_wshourly {wmotime rawdata} {
     set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
   
     set arcvfname $ymdh;
-    append arcvfname $uafilter(fext);
+    append arcvfname $uafilter(fm35_fext);
 
-    set savesubdir [file join $uafilter(ws_dir) $ymd \
-	$uafilter(ws_hourly_subdir)];
+    # The wsfilter (uatomdf) depdens on this structure
+    set savesubdir [file join $uafilter(fm35_dir) $ymd \
+	$uafilter(fm35_hourly_subdir)];
     file mkdir $savesubdir;
 
     set arcvfile [file join $savesubdir $arcvfname];

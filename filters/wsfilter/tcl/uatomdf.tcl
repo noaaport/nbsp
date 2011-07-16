@@ -274,8 +274,12 @@ if {$argc != 0} {
 	    exit 1;
 	}
 	set ymd ${yyyy}${mm}${dd};
+
+	# This depends on the directory structure of the uafilter data
+	# (and below)
 	set g(inputfile) [file join $wsfilter(upperair_basedir) $ymd \
-			  $wsfilter(upperair_hourly_basedir) $ymdh];
+			  $wsfilter(upperair_hourly_subdir) $ymdh];
+
 	append g(inputfile) $wsfilter(upperair_fext);
     }
 } else {
@@ -284,8 +288,9 @@ if {$argc != 0} {
 	set seconds [expr $seconds - $option(Y)*24*3600];
     }
     set ymd [clock format $seconds -format "%Y%m%d" -gmt true];
+    # Same comment as above
     set dir [file join $wsfilter(upperair_basedir) $ymd \
-		 $wsfilter(upperair_hourly_basedir)];
+		 $wsfilter(upperair_hourly_subdir)];
     set flist [lsort -dictionary [glob -nocomplain -directory $dir "*"]];
     if {[llength $flist] == 0} {
 	return -code error "$dir is empty.";

@@ -10,19 +10,21 @@ set uafilter(datadir)	[file join $common(datadir) "upperair"];
 set uafilter(postfilter) "";
 
 # decoded csv data files produced by the uatocsv uitlity from the fm35 library
-set uafilter(csvdir)    "csv";    # subdir of uafilter(datadir)
-set uafilter(csvfext)   ".csv";
+set uafilter(csv_dir)    "csv";    # subdir of uafilter(datadir)
+set uafilter(csv_fext)   ".csv";
 
-# Daily and hourly archives to support Weatherscope, enabled by default.
-# If enabled, then an entry must be included in the hourly conf file
+# Daily and hourly data files to support Weatherscope and other applications,
+# are enabled by default. These files contain the original fm35 format data,
+# but parsed and the entire data record in one line.
+# If enabled, then an entry must be included in the hourly cleanup conf file
 # (which is included in the default configuration).
 #
-set uafilter(ws_daily_enable) 1;
-set uafilter(ws_hourly_enable) 1;
-set uafilter(ws_dir) "weatherscope";
-set uafilter(ws_daily_subdir) "daily";
-set uafilter(ws_hourly_subdir) "hourly";
-set uafilter(fext) ".upperair";
+set uafilter(fm35_daily_enable) 1;
+set uafilter(fm35_hourly_enable) 1;
+set uafilter(fm35_dir) "fm35";
+set uafilter(fm35_daily_subdir) "daily";
+set uafilter(fm35_hourly_subdir) "hourly";
+set uafilter(fm35_fext) ".fm35";
 
 # Overrides in the configuration file.
 if {[file exists $uafilter(conf)] == 1} {

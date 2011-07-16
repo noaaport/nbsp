@@ -205,7 +205,7 @@ if {$option(f) == 1} {
 } else {
     set stid [lindex $argv 0];
     set dir [file join $wsfilter(metar_basedir) $ymd \
-		 $wsfilter(metar_daily_basedir)];
+		 $wsfilter(metar_daily_subdir)];
     # The file is inside a collective, si we must search for it.
     set flist [exec find $dir -name "*$stid*"];
     if {[llength $flist] == 0} {

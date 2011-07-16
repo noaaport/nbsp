@@ -38,11 +38,11 @@ set wsfilter(metar_basedir) [slave eval {
     return [file join $metarfilter(datadir) $metarfilter(ws_dir)];
 }];
 
-set wsfilter(metar_daily_basedir) [slave eval {
+set wsfilter(metar_daily_subdir) [slave eval {
     return $metarfilter(ws_daily_subdir);
 }];
 
-set wsfilter(metar_hourly_basedir) [slave eval {
+set wsfilter(metar_hourly_subdir) [slave eval {
     return $metarfilter(ws_hourly_subdir);
 }];
 
@@ -61,19 +61,19 @@ set wsfilter(metar_siteloc) [file join $common(confdir) \
 
 # upperair
 set wsfilter(upperair_basedir) [slave eval {
-    return [file join $uafilter(datadir) $uafilter(ws_dir)];
+    return [file join $uafilter(datadir) $uafilter(fm35_dir)];
 }];
 
-set wsfilter(upperair_daily_basedir) [slave eval {
-    return $uafilter(ws_daily_subdir);
+set wsfilter(upperair_daily_subdir) [slave eval {
+    return $uafilter(fm35_daily_subdir);
 }];
 
-set wsfilter(upperair_hourly_basedir) [slave eval {
-    return $uafilter(ws_hourly_subdir);
+set wsfilter(upperair_hourly_subdir) [slave eval {
+    return $uafilter(fm35_hourly_subdir);
 }];
 
 set wsfilter(upperair_fext) [slave eval {
-    return $uafilter(fext);
+    return $uafilter(fm35_fext);
 }];
 
 set wsfilter(upperair_mdf_fext) ".mdf";

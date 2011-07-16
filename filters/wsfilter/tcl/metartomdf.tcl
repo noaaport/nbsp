@@ -197,7 +197,7 @@ if {$argc != 0} {
 	}
 	set ymd ${yyyy}${mm}${dd};
 	set g(inputfile) [file join $wsfilter(metar_basedir) $ymd \
-			      $wsfilter(metar_hourly_basedir) $ymdh];
+			      $wsfilter(metar_hourly_subdir) $ymdh];
 	append g(inputfile) $wsfilter(metar_fext);
     }
 } else {
@@ -207,7 +207,7 @@ if {$argc != 0} {
     }
     set ymd [clock format $seconds -format "%Y%m%d" -gmt true];
     set dir [file join $wsfilter(metar_basedir) $ymd \
-		 $wsfilter(metar_hourly_basedir)];
+		 $wsfilter(metar_hourly_subdir)];
     set flist [lsort -dictionary [glob -nocomplain -directory $dir "*"]];
     if {[llength $flist] == 0} {
 	return -code error "$dir is empty.";
