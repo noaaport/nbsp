@@ -1,0 +1,82 @@
+#
+# $Id$
+#
+
+# default configuration file
+set rmtfilter(conf) [file join $common(confdir) "rmtfilter.conf"];
+
+set rmtfilter(defaults,filter_dir) $common(libdir);
+set rmtfilter(defaults,sshopts) [list];
+set rmtfilter(defaults,fname_uregex) {.*};
+
+#
+# Variables
+#
+set rmtfilter(nodes) [list];
+
+# Overrides in the configuration file.
+if {[file exists $rmtfilter(conf)] == 1} {
+    source $rmtfilter(conf);
+}
+
+#
+# Dynamic initialization
+#
+
+#
+# Fill the rmtfilter(filter_list,<node>) for each node
+#
+foreach node $rmtfilter(nodes) {
+    set flist [list];
+    if {[info exists rmtfilter(filters,$node)] == 0} {
+	foreach k [array names rmtfilter "enable,$node,*"] {
+	    set filter_name [lindex [split $k ","] 2];
+	    if {$rmtfilter($k) == 0} {
+		continue;
+	    } elseif {$rmtfilter($k) == 2} {
+		append filter_name "-manager";
+	    }
+	    lappend rmtfilter(filters,$node) $filter_name;
+	}
+    }
+    
+    foreach filter_name $rmtfilter(filters,$node) {
+	set filter_path [file join $rmtfilter(defaults,filter_dir) \
+			     $filter_name];
+	lappend flist $filter_path;
+    }
+
+    set rmtfilter(filter_list,$node) $flist;
+}
+
+#
+# Test
+#
+if {0} {
+   foreach h $rmtfilter(nodes) {
+       puts $h;
+       foreach f $rmtfilter(filter_list,$h) {
+           puts "\t$f";
+        }
+    }
+}
+
+#
+# Set the optional parameters to the default values if they were
+# not specified.
+#
+foreach node $rmtfilter(nodes) {
+    foreach filter $rmtfilter(filter_list,$node) {
+	set filter_name [file tail $filter];
+        foreach key [list sshopts fname_uregex] {
+	    if {[info exists rmtfilter($key,$node,$filter_name)]} {
+		set val $rmtfilter($key,$node,$filter_name);
+	    } elseif {[info exists rmtfilter($key,$node)]} {
+		set val $rmtfilter($key,$node);
+	    } else {
+                set val $rmtfilter(defaults,$key);
+	    }
+	    set rmtfilter($key,$node,$filter) $val;
+        }
+    }
+}

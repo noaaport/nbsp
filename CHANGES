@@ -104,3 +104,4 @@
   check of rstfilter(satmap_regex) should be with uwildmat and not just regex.
 - Revised default bundle configuration of gisfilter.
 - Revised and corrected: tclupperair, uafilter and wsfilter
+- Added rmtfilter (executes filters in remote nodes).

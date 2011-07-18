@@ -122,6 +122,8 @@
 /usr/local/libexec/nbsp/trackfilter
 /usr/local/libexec/nbsp/trackfilter.init
 /usr/local/libexec/nbsp/masterfilter
+/usr/local/libexec/nbsp/rmtfilter
+/usr/local/libexec/nbsp/rmtfilter.init
 /usr/local/libexec/nbsp/craftinsert
 /usr/local/libexec/nbsp/filters.init
 /usr/local/libexec/nbsp/filters.lib
@@ -245,6 +247,8 @@
 /usr/local/etc/nbsp/dist/msgfilter-subscribers.txt-ex
 /usr/local/etc/nbsp/dist/trackfilter.conf-sample
 /usr/local/etc/nbsp/dist/masterfilter.conf-sample
+/usr/local/etc/nbsp/dist/rmtfilter.conf-sample
+/usr/local/etc/nbsp/dist/rmtfilter.conf-ex
 /usr/local/etc/nbsp/dist/craftinsert.conf-sample
 /usr/local/etc/nbsp/dist/grib-templates.tgz
 /usr/local/etc/nbsp/dist/metarplot-templates.tgz
