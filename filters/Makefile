@@ -10,7 +10,7 @@ SUBDIRS = nbspfilter gpfilter rstfilter dafilter nntpfilter rstnntpfilter \
 	inventory rssfilter filterlib ldmfilter metarfilter uafilter wsfilter \
 	gisfilter panfilter gribfilter netfilter spoolfilter msgfilter \
 	trackfilter craftfilter masterfilter \
-	scheduler recover
+	scheduler recover rmtfilter
 
 all:
 	for dir in ${SUBDIRS}; do \

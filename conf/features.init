@@ -15,6 +15,7 @@ set feature(gisfilter) 0
 set feature(gpfilter) 0
 set feature(ldmfilter) 0
 set feature(nntpfilter) 0
+set feature(rmtfilter) 0
 set feature(msgfilter) 0
 set feature(panfilter) 0
 set feature(trackfilter) 0

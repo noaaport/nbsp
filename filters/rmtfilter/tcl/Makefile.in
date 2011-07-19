@@ -10,6 +10,7 @@
 TCLTARGET =	rmtfilter.tcl
 TCLSOURCES =	rmtfilter.tcl.in
 FILTERNAME =	rmtfilter
+FILTERINIT =	rmtfilter.init
 CONFEXAMPLE =	rmtfilter.conf-ex
 TARGET =	${TCLTARGET} ${SAMPLES}
 SAMPLES =	rmtfilter.conf-sample
@@ -27,6 +28,7 @@ rmtfilter.conf-sample: rmtfilter.conf
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${FILTERINIT} ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${CONFEXAMPLE} ${MYCONFDIR}
 
 clean:

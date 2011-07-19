@@ -23,7 +23,8 @@ trackfilter
 craftfilter
 masterfilter
 scheduler
-recover"
+recover
+rmtfilter"
 
 for d in $subdirs
 do
