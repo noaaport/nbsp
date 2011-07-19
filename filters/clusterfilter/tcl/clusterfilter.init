@@ -1,0 +1,120 @@
+#
+# $Id$
+#
+
+# default configuration file
+set clusterfilter(conf) [file join $common(confdir) "clusterfilter.conf"];
+
+#
+# Defaults - can be overriden in the node configuration by
+#
+#  clusterfilter(filter_dir,<node>))
+#  clusterfilter(sshopts,<node>)
+#  clusterfilter(fname_uregex,<node>,<filter_name>)
+#
+# The complete filter_path that is built dynamically for each filter,
+# can be overriden by specifying
+#
+#  clusterfilter(filter_path,<node>,<filter_name>) 
+#
+#
+set clusterfilter(defaults,filter_dir) $common(libdir);
+set clusterfilter(defaults,sshopts) [list];
+set clusterfilter(defaults,fname_uregex) {.*};
+
+set clusterfilter(nodes) [list];
+
+# These variables are computed below
+#
+# set clusterfilter(masterlist)
+# set clusterfilter(filter_listn,<node>)          # list of filter_name
+#
+# If these are not set, they are computed
+#
+# set clusterfilter(filter_path,<node>,<filter_name>)
+# set clusterfilter(sshopts,<node>,<filter_name>)
+# set clusterfilter(fname_uregex,<node>,<filter_name>)
+
+#
+# Variables
+#
+set clusterfilter(masterlist) [list];
+
+# Overrides in the configuration file.
+if {[file exists $clusterfilter(conf)] == 1} {
+    source $clusterfilter(conf);
+}
+
+#
+# Dynamic initialization
+#
+
+#
+# The master list is a list in which each member is a three-element list
+# {node filter_name filter_path}.
+#
+foreach node $clusterfilter(nodes) {
+    set flist [list];
+
+    foreach k [array names clusterfilter "enable,$node,*"] {
+	set filter_name [lindex [split $k ","] 2];
+	if {$clusterfilter($k) == 0} {
+	    continue;
+	} elseif {$clusterfilter($k) == 2} {
+	    append filter_name "-manager";
+	}
+	lappend clusterfilter(filter_listn,$node) $filter_name;
+    }
+    
+    foreach filter_name $clusterfilter(filter_listn,$node) {
+	if {[info exists clusterfilter(filter_path,$node,$filter_name)]} {
+	    set filter_path $clusterfilter(filter_path,$node,$filter_name);
+        } else {
+	    if {[info exists clusterfilter(filter_dir,$node)]} {
+	        set filter_path [file join $clusterfilter(filter_dir,$node) \
+	            $filter_name];
+	    } else {
+	        set filter_path [file join $clusterfilter(defaults,filter_dir) \
+	            $filter_name];
+	    }
+	    set clusterfilter(filter_path,$node,$filter_name) $filter_path;
+        }
+	lappend flist $filter_path;
+	lappend clusterfilter(masterlist) [list $node $filter_name];
+    }
+}
+
+#
+# Test
+#
+if {0} {
+   foreach h $clusterfilter(nodes) {
+       puts $h;
+       foreach f $clusterfilter(filter_listn,$h) {
+           puts "\t$f";
+        }
+    }
+}
+
+#
+# Set the optional parameters to the default values if they were
+# not specified.
+#
+foreach entry $clusterfilter(masterlist) {
+    set node [lindex $entry 0];
+    set filter_name [lindex $entry 1];
+    set filter_path $clusterfilter(filter_path,$node,$filter_name);
+
+    foreach key [list sshopts fname_uregex] {
+	if {[info exists clusterfilter($key,$node,$filter_name)]} {
+	    continue;
+	}
+
+	if {[info exists clusterfilter($key,$node)]} {
+	    set val $clusterfilter($key,$node);
+	} else {
+	    set val $clusterfilter(defaults,$key);
+	}
+	set clusterfilter($key,$node,$filter_name) $val;
+    }
+}

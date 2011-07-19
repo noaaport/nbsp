@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+#
+# Two working nodes, "dl385a" and "dl385b"
+#
+set clusterfilter(nodes) [list "dl385a" "dl385b"];
+
+#
+# dl385a
+#
+# The filters can be specified in the following form
+# or indidually as given in the next two lines
+#
+## set clusterfilter(filters,dl385a) [list gpfilter-manager gisfilter];
+#
+set clusterfilter(enable,dl385a,gpfilter) 2;
+set clusterfilter(enable,dl385a,gisfilter) 1;
+
+# Possible ssh options
+#
+# set clusterfilter(sshopts,dl385a) "-p 2222";
+
+# What to send to this filter (see more examples below)
+# set clusterfilter(fname_uregex,dl385a) ".*";    # all
+# set clusterfilter(fname_uregex,dl385a) "_sdus";    # radar
+
+#
+# dl385b
+#
+# set clusterfilter(filters,dl385b) [list dafilter-manager rstfilter];
+set clusterfilter(enable,dl385b,dafilter) 2;
+set clusterfilter(enable,dl385b,rstfilter) 1;
+set clusterfilter(sshopts,dl385a) [list -p 2222];
+set clusterfilter(fname_uregex,dl385a) {_sdus};

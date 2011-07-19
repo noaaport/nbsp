@@ -1,0 +1,235 @@
+#!%TCLSH%
+#
+# $Id$
+#
+# Open any number of filters in any number of remote hosts.
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "clusterfilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+    return 1;
+}
+unset filters_init_status;
+
+#
+# packages
+#
+## package require nbsp::util;
+
+#
+# For testing
+#
+## set common(libdir) ".";
+## set common(confdir) ".";
+## set common(localconfdirs) [list site];
+
+set _init_file [file join $common(libdir) "clusterfilter.init"];
+if {[file exists $_init_file] == 0} {
+    log_msg "clusterfilter disabled: $rmt_init_file not found.";
+    return 1;
+}
+source $_init_file;
+unset _init_file;
+
+#
+# Functions
+#
+
+proc clusterfilter_open_filter {node filter_name} {
+
+    global clusterfilter;
+
+    set filter_path $clusterfilter(filter_path,$node,$filter_name);
+
+    set cmd [join [concat "|ssh" $clusterfilter(sshopts,$node,$filter_name) \
+		       $node $filter_path] " "];
+
+    set status [catch {
+	set F [open $cmd w];
+	fconfigure $F -buffering line -encoding binary -translation binary;
+    } errmsg];
+
+    if {$status == 0} {
+	set clusterfilter(F,$node,$filter_name) $F;
+	log_msg "Opened $node:$filter_name";
+    } else {
+	log_errc "Could not open $node:$filter_name. $errmsg";
+    }
+
+    return $status;
+}
+
+proc clusterfilter_close_filter {node filter_name} {
+    
+    global clusterfilter;
+
+    set status 0;
+
+    if {[info exists clusterfilter(F,$node,$filter_name)]} {
+	set status [catch {close $clusterfilter(F,$node,$filter_name)} errmsg];
+	unset clusterfilter(F,$node,$filter_name);
+    }
+
+    if {$status != 0} {
+	log_errc $errmsg;
+    } else {
+	log_msg "Closed $node:$filter_name";
+    }
+}
+
+proc clusterfilter_isopen_filter {node filter_name} {
+
+    global clusterfilter;
+
+    if {[info exists clusterfilter(F,$node,$filter_name)]} {
+	return 1;
+    } else {
+	return 0;
+    }
+}
+
+proc clusterfilter_writeto_filter {node filter_name data} {
+
+    global clusterfilter;
+
+    if {[clusterfilter_isopen_filter $node $filter_name] == 0} {
+	clusterfilter_open_filter $node $filter_name;
+    }
+
+    if {[clusterfilter_isopen_filter $node $filter_name] == 0} {
+	return 1;
+    }
+
+    set status [catch {
+	puts $clusterfilter(F,$node,$filter_name) $data;
+    } errmsg];
+
+    if {$status != 0} {
+	clusterfilter_close_filter $node $filter_name;
+	log_errc "Could not write to $node:$filter_name. $errmsg";
+    }
+
+    return $status;
+}
+
+proc clusterfilter_remove_filter {node filter_name} {
+
+    global clusterfilter;
+
+    set filter_path $clusterfilter(filter_path,$node,$filter_name);
+
+    set i [lsearch -exact $clusterfilter(filter_listn,$node) $filter_name];
+    if {$i != -1} {
+	set $clusterfilter(filter_listn,$node) \
+	    [lreplace $clusterfilter(filter_listn,$node) $i $i];
+    }
+
+    set i [lsearch -exact $clusterfilter(filter_listp,$node) $filter_path];
+    if {$i != -1} {
+	set $clusterfilter(filter_listp,$node) \
+	    [lreplace $clusterfilter(filter_listp,$node) $i $i];
+    }
+
+    set clusterfilter(masterlist) [list];
+    foreach node $clusterfilter(nodes) {
+	foreach filter_name $clusterfilter(filter_listn,$node) {
+    	    set filter_path $clusterfilter(filter_path,$node,$filter_name);
+	    
+            lappend clusterfilter(masterlist)\
+		[list $node $filter_name $filter_path];
+	}
+    }
+}
+
+proc clusterfilter_open_all_filters {} {
+
+    global clusterfilter;
+
+    foreach entry $clusterfilter(masterlist) {
+	set node [lindex $entry 0];
+	set filter_name [lindex $entry 1];
+	set filter_path $clusterfilter(filter_path,$node,$filter_name);
+	set status [clusterfilter_open_filter $node $filter_name];
+	if {$status != 0} {
+	    clusterfilter_remove_filter $node $filter_path;
+	    log_msg "Removed $node:$filter_name";
+	}
+    }
+}
+
+proc clusterfilter_close_all_filters {} {
+
+    global clusterfilter;
+
+    foreach entry $clusterfilter(masterlist) {
+	set node [lindex $entry 0];
+	set filter_name [lindex $entry 1];
+	set filter_path $clusterfilter(filter_path,$node,$filter_name);
+	clusterfilter_close_filter $node $filter_name;
+    }
+}
+
+proc main {argc argv} {
+
+    global errorInfo;
+    while {[gets stdin finfo] >= 0} {
+        if {$finfo == ""} {
+            log_msg "Received request to quit.";
+            break;
+        }
+
+        set status [catch {process $finfo} errmsg];
+        if {$status == 1} {
+            log_msg "Error processing $finfo";
+            log_msg $errmsg;
+            log_msg $errorInfo;
+        }
+    }
+}
+
+proc process {finfo} {
+
+    global clusterfilter;
+
+    # Since we need only the fname, bypass this call
+    #
+    # filterlib_get_rcvars rc $finfo -nobody;
+    #
+    # and instead do it explicitly
+
+    set rc(fname) [lindex [split $finfo] 5];
+
+    foreach entry $clusterfilter(masterlist) {
+	set node [lindex $entry 0];
+	set filter_name [lindex $entry 1];
+
+	if {[filterlib_uwildmat \
+	    $clusterfilter(fname_uregex,$node,$filter_name) $rc(fname)] == 0} {
+	    continue;
+	}
+
+	set status [clusterfilter_writeto_filter $node $filter_name $finfo];
+	if {$status != 0} {
+	    # Retry
+	    set status [clusterfilter_writeto_filter $node $filter_name $finfo];
+	    if {$status == 0} {
+		log_msg "Retrying suceeded writing to $node:$filter_name";
+	    }
+	}
+    }
+}
+
+#
+# main
+#
+clusterfilter_open_all_filters;
+main $argc $argv
+clusterfilter_close_all_filters;
