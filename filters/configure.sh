@@ -24,7 +24,7 @@ craftfilter
 masterfilter
 scheduler
 recover
-rmtfilter"
+clusterfilter"
 
 for d in $subdirs
 do
