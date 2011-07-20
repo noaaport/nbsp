@@ -6,14 +6,14 @@
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
 if {[file exists $filters_init_file] == 0} {
-        puts "rssfilter disabled: $filters_init_file not found.";
-        return 1;
+    puts "rssfilter disabled: $filters_init_file not found.";
+    return 1;
 }
 source $filters_init_file;
 unset filters_init_file;
 
 if {$filters_init_status == 1} {
-        return 1;
+    return 1;
 }
 unset filters_init_status;
 
@@ -24,8 +24,8 @@ package require nbsp::util;
 #
 set init_file [file join $common(libdir) "rssfilter.init"];
 if {[file exists $init_file] == 0} {
-        log_msg "rssfilter disabled: $init_file not found.";
-        return 1;
+    log_msg "rssfilter disabled: $init_file not found.";
+    return 1;
 }
 source $init_file;
 unset init_file;
@@ -104,7 +104,7 @@ proc process {finfo} {
     # definition.
     set _station_defined 0;
     foreach cname [array names rsscollective] {
-	if {($rsscollective($cname) != "") && \
+	if {($rsscollective($cname) ne "") && \
             [regexp $rsscollective($cname) $rc(station)]} {
                 set _station_defined 1;
 	}
