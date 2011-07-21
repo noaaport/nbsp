@@ -2,14 +2,14 @@
 #
 # $Id$
 #
-# usage: nbspcleanup [-f] <configfile>
+# usage: nbspcleanup [-f] [-l <logfile>] <configfile>
 #
-# The <configfie> file is searched first in the main configuration directory,
+# The <configfile> file is searched first in the main configuration directory,
 # then in the "defaults" and "site" subdirectories, and the last one found
 # is used.
 #
 # -f => Use the <confgfile> "as is" without searching the config directories
-#
+# -l => Write output (and errors) to logfile instead of stdout
 
 ## Common defaults
 set defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -23,12 +23,41 @@ unset defaultsfile;
 package require cmdline;
 package require nbsp::hscheduler;
 
-set usage {usage: nbspcleanup [-f] <configfile>};
-set optlist {{f}};
+set usage {usage: nbspcleanup [-f] [-l <logfile>] <configfile>};
+set optlist {f {l.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
 set schedule [dict create];
+
+if {$option(l) ne ""} {
+    package require fileutil;
+
+    rename puts _puts;
+    rename exit _exit;
+
+    set g(logfile) $option(l);
+    set g(output) [list];
+
+    proc puts {s} {
+
+	global g;
+
+	lappend g(output) $s;
+    }
+
+    proc exit {c} {
+
+	global g;
+
+	# Restore the original puts
+	rename puts "";
+	rename _puts puts;
+
+	::fileutil::writeFile $g(logfile) [join $g(output) "\n"];
+	_exit $c;
+    }
+}
 
 proc process_dir {dir expression} {
 
@@ -288,3 +317,7 @@ dict for {dir line} $schedule {
 	}
     }
 }
+
+# Normally would not be needed but in this script this ensures that
+# the g(output) is written to the logfile when the -l option is specified.
+exit 0;
