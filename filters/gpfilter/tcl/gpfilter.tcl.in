@@ -464,7 +464,7 @@ proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 
     set status [catch {
 	filter_pipe_noclose $seq $fpath $pipe_name $cmd_name $fullsavename;
-#	filterlib_cspool_nbsppipe $seq $fpath $cmd_name "-g";
+#	filterlib_cspool_nbsppipe $seq $fpath $cmd_name -g -w;
 #	filterlib_nbsppipe $seq $fpath $cmd_name "-g";
 #       eval exec nbsppipe $opts -s $seq < $fpath | \
 #                $cmd_name $cmd_options $fullsavename > /dev/null;

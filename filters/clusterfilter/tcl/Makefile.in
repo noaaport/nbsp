@@ -13,7 +13,8 @@ FILTERNAME =	clusterfilter
 FILTERINIT =	clusterfilter.init
 CONFEXAMPLE =	clusterfilter.conf-ex
 TARGET =	${TCLTARGET} ${SAMPLES}
-SAMPLES =	clusterfilter.conf-sample
+SAMPLES =	clusterfilter.conf-sample \
+		clusterfilter-schedule.rc-sample
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -25,6 +26,9 @@ ${TCLTARGET}: ${TCLSOURCES}
 
 clusterfilter.conf-sample: clusterfilter.conf
 	cp clusterfilter.conf clusterfilter.conf-sample
+
+clusterfilter-schedule.rc-sample: clusterfilter-schedule.rc
+	cp clusterfilter-schedule.rc clusterfilter-schedule.rc-sample
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}

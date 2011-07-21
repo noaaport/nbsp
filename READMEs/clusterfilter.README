@@ -1,0 +1,78 @@
+#
+# $Id$
+#
+
+The "clusterfilter" receives the files like another filter but,
+instead of processing the files, it sends them to other computers
+for processing.
+
+Terminology:
+
+  1) master - The computer that runs the clusterfilter.
+  2) nodes -  The computers that will run the usual Nbsp filters,
+              as configured in the master.
+
+Requirements:
+
+  1) The master must (NFS) export the spool directory (it can be rdonly).
+     Each node must mount the master spool directory.
+
+  2) The master must export the Nbsp data directory (rw), and each node
+     mounts it.
+
+     Another option is that each node exports the apropriate
+     subdirectory of the data directory and the master mounts all of them.
+     This is more complicated and requires that the hourly cleanup script
+     be run in each node.
+
+  3) The noaaport user in the master must be able to login via ssh without
+     a password in each node. In practice this means creating the ssh key
+     in the master and copying it to the .ssh directory of the noaaport user
+     in each node
+
+         /var/noaaport/.ssh
+
+Configuration:
+
+  In the master
+
+      set features(clusterfilter) 1
+
+  in the features.conf file, and the appropriate entries in
+  "clusterfilter.conf" as explained below. In each node, the
+  filters that it will execute must be configured as usual,
+  but no further configuration is required.
+
+Configuration of clusterfilter.conf:
+
+  The best is to consider an example of two nodes, each executing
+a couple of filters.
+  
+#
+# Two working nodes, "diablo" and "caribe"
+#
+set clusterfilter(nodes) [list "caribe" "diablo"];
+
+#
+# caribe
+#
+set clusterfilter(enable,caribe,gpfilter) 2;   # enable work-crew mode
+set clusterfilter(enable,caribe,gisfilter) 1;
+
+# Possible ssh options
+#
+# set clusterfilter(sshopts,caribe) "-p 2222";  # if ssh runs in another port
+
+# What to send to this filter (see more examples below). If nothing is set
+# then the default is equivalent to the first option (all)
+#
+# set clusterfilter(fname_uregex,caribe) ".*";       # all
+# set clusterfilter(fname_uregex,caribe) "_sdus";    # radar
+# set clusterfilter(fname_uregex,caribe) "-n(0|1|2|3)(r|s|v)jua"; # jua radar
+
+#
+# diablo
+#
+set clusterfilter(enable,diablo,dafilter) 2;   # work-crew mode
+set clusterfilter(enable,diablo,rstfilter) 1;
+set clusterfilter(fname_uregex,diablo) {_tig}; # all sat image data files

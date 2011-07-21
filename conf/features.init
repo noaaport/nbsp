@@ -21,7 +21,7 @@ set feature(trackfilter) 0
 set feature(spoolfilter) 0
 set feature(nbspfilter) 0
 
-set feature(rmtfilter) 0
+set feature(clusterfilter) 0
 
 set feature(netfilter)		1
 set feature(nbs1server)		0
@@ -80,7 +80,7 @@ if {$feature(inventory) == 1} {
 }
 foreach k [list rst da grib metar ua \
 	ws gis gp ldm nntp \
-        msg pan track spool nbsp rmt] {
+        msg pan track spool nbsp cluster] {
 
     if {[info exists feature(${k}filter)] == 0} {
 	continue;

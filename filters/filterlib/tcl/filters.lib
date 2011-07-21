@@ -908,10 +908,22 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     #
     # [-a] => append
     # [-t] => do not add gempak header and footer
+    # [-w] => wait for completion (ignoring filterslib(background_processing)) 
 
     global filterslib;
 
     set opts $args;
+
+    # The -w flag, if given, overrides the setting of
+    # filterslib(background_processing), and that flag must be removed
+    # from the option string that is passed to nbspfile.
+
+    set f_background_processing $filterslib(background_processing);
+    set i [lsearch -exact $opts "-w"];
+    if {$i != -1} {
+	set f_background_processing 0;
+	set opts [lreplace $opts $i $i];
+    }
 
     if {$filterslib(ccbsaved) == 0} {
 	lappend opts "-n";
@@ -925,7 +937,7 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
     }
 
     if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-	if {$filterslib(background_processing) == 1} {
+	if {$f_background_processing == 1} {
 	    set cmd [concat "nbspexec" "nbspfile" $opts];
 	} else {
             set cmd [concat "nbspfile" $opts];
@@ -937,14 +949,15 @@ proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
 #
 # Similar to the above, but calling nbsppipe with a pipeline to
 # another program (e.g., a gempak decoder). Since the gempak decoders
-# do not lock the output file (or do they?), they are not executed
-# in the background even if filterslib(background_processing) is set.
+# do not lock the output file (or do they?), this function should be
+# invoked with the -w flag.
 #
 proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
     #
     # The args are flags for nbsppipe:
     #
     # [-g] => instructs nbsppipe to add gempak header/footer
+    # [-w] => wait for completion (ignoring filterslib(background_processing)) 
     #
     # pipe_cmd is the whole command line for the decoder program to which
     # nbsppipe will pipe the data. So, when it has to read from the fs spool,
@@ -964,6 +977,14 @@ proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
 
     set opts $args;
 
+    # Same as in the previous function
+    set f_background_processing $filterslib(background_processing);
+    set i [lsearch -exact $opts "-w"];
+    if {$i != -1} {
+	set f_background_processing 0;
+	set opts [lreplace $opts $i $i];
+    }
+
     if {$filterslib(ccbsaved) == 0} {
 	lappend opts "-n";
     }
@@ -975,10 +996,13 @@ proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
     }
 
     if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-        set cmd [concat "nbsppipe" $opts "-s" $seq "<" $fpath "|" $pipe_cmd];
-	# if {$filterslib(background_processing) == 1} {
-	#    lappend cmd "&";
-	# }
+	if {$f_background_processing == 1} {
+            set cmd [list "nbspexec" "nbsppipe"];
+	} else {
+	    set cmd [list "nbsppipe"];
+	}
+
+	set cmd [concat $cmd $opts "-s" $seq "<" $fpath "|" $pipe_cmd];
 	filterlib_exec $cmd;
     }
 }

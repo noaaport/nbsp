@@ -20,11 +20,6 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 #
-# packages
-#
-## package require nbsp::util;
-
-#
 # For testing
 #
 ## set common(libdir) ".";
@@ -177,6 +172,17 @@ proc clusterfilter_close_all_filters {} {
     }
 }
 
+proc clusterfilter_run_scheduler {} {
+
+    global clusterfilter;
+
+    if {$clusterfilter(scheduler_enable) == 0} {
+        return;
+    }
+
+    ::nbsp::periodic::scheduler $clusterfilter(schedule);
+}
+
 proc main {argc argv} {
 
     global errorInfo;
@@ -192,6 +198,8 @@ proc main {argc argv} {
             log_msg $errmsg;
             log_msg $errorInfo;
         }
+
+	::nbsp::periodic::run;
     }
 }
 
@@ -219,7 +227,8 @@ proc process {finfo} {
 	set status [clusterfilter_writeto_filter $node $filter_name $finfo];
 	if {$status != 0} {
 	    # Retry
-	    set status [clusterfilter_writeto_filter $node $filter_name $finfo];
+	    set status \
+		[clusterfilter_writeto_filter $node $filter_name $finfo];
 	    if {$status == 0} {
 		log_msg "Retrying suceeded writing to $node:$filter_name";
 	    }
@@ -230,6 +239,9 @@ proc process {finfo} {
 #
 # main
 #
+::nbsp::periodic::register \
+        clusterfilter_run_scheduler $clusterfilter(schedule_run_period);
+
 clusterfilter_open_all_filters;
 main $argc $argv
 clusterfilter_close_all_filters;

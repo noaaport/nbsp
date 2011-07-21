@@ -2,6 +2,9 @@
 # $Id$
 #
 
+# package require nbsp::util;
+package require nbsp::periodic;
+
 # default configuration file
 set clusterfilter(conf) [file join $common(confdir) "clusterfilter.conf"];
 
@@ -21,7 +24,12 @@ set clusterfilter(conf) [file join $common(confdir) "clusterfilter.conf"];
 set clusterfilter(defaults,filter_dir) $common(libdir);
 set clusterfilter(defaults,sshopts) [list];
 set clusterfilter(defaults,fname_uregex) {.*};
-
+#
+set clusterfilter(scheduler_enable) 0;
+set clusterfilter(schedule) [file join $common(confdir) \
+        "clusterfilter-schedule.rc"];
+set clusterfilter(schedule_run_period) "minutely";       # run every minute
+#
 set clusterfilter(nodes) [list];
 
 # These variables are computed below
@@ -74,8 +82,8 @@ foreach node $clusterfilter(nodes) {
 	        set filter_path [file join $clusterfilter(filter_dir,$node) \
 	            $filter_name];
 	    } else {
-	        set filter_path [file join $clusterfilter(defaults,filter_dir) \
-	            $filter_name];
+	        set filter_path [file join \
+		    $clusterfilter(defaults,filter_dir) $filter_name];
 	    }
 	    set clusterfilter(filter_path,$node,$filter_name) $filter_path;
         }

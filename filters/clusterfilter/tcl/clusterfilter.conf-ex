@@ -3,34 +3,35 @@
 #
 
 #
-# Two working nodes, "dl385a" and "dl385b"
+# Two working nodes, "nodea" and "nodeb"
 #
-set clusterfilter(nodes) [list "dl385a" "dl385b"];
+set clusterfilter(nodes) [list "nodea" "nodeb"];
 
 #
-# dl385a
+# nodea
 #
 # The filters can be specified in the following form
 # or indidually as given in the next two lines
 #
-## set clusterfilter(filters,dl385a) [list gpfilter-manager gisfilter];
-#
-set clusterfilter(enable,dl385a,gpfilter) 2;
-set clusterfilter(enable,dl385a,gisfilter) 1;
+set clusterfilter(enable,nodea,gpfilter) 2;   # work-crew mode
+set clusterfilter(enable,nodea,gisfilter) 1;
+set clusterfilter(sshopts,nodea) [list -p 2222];  # non-standard ssh port
 
-# Possible ssh options
+# What to send to this filter (see more examples below). The default is "all"
+# if nothing is specified.
 #
-# set clusterfilter(sshopts,dl385a) "-p 2222";
-
-# What to send to this filter (see more examples below)
-# set clusterfilter(fname_uregex,dl385a) ".*";    # all
-# set clusterfilter(fname_uregex,dl385a) "_sdus";    # radar
+# set clusterfilter(fname_uregex,nodea) ".*";    # all
+# set clusterfilter(fname_uregex,nodea) "_sdus";    # radar
 
 #
-# dl385b
+# nodeb
 #
-# set clusterfilter(filters,dl385b) [list dafilter-manager rstfilter];
-set clusterfilter(enable,dl385b,dafilter) 2;
-set clusterfilter(enable,dl385b,rstfilter) 1;
-set clusterfilter(sshopts,dl385a) [list -p 2222];
-set clusterfilter(fname_uregex,dl385a) {_sdus};
+set clusterfilter(enable,nodeb,dafilter) 2;
+set clusterfilter(enable,nodeb,rstfilter) 1;
+set clusterfilter(sshopts,nodeb) [list -p 2222];
+set clusterfilter(fname_uregex,nodeb) {_tig(e|w|p|q)};  # some sat data
+
+# Examples  
+#
+# set clusterfilter(fname_uregex,nodeb) {klix_};    # anything from klix
+# set clusterfilter(fname_uregex,nodeb) {-n(0|1|2)(r|s)jua};  # some jua radar
