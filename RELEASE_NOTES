@@ -15,7 +15,21 @@ Packages, sources and documentation are available from
 Packages for other operating systems or distributions not found there
 can be created upon request.
 
-In this update:
+On the presentation side, the radar and satellite images, as well as
+the loops, can now be generated dynamically from the web interface.
+Regarding the package, Expect is no longer required so it is not a
+pre-requisite (it was needed for tclgrads which is used in the gribfilter).
+In terms of peformance, the gempak filter now opens a permanent separate
+connection to each gempak decoder and the performance is so improved 
+in SMP machines) that the filter can be added to the 
+default configuration without any problem.
+
+The biggest new addition is the "clusterfilter" for running any of the
+filters in any of a set of nodes, as if they were local. I will probably
+build a separate package "nbsp-cluster" to facilitate the configuration.
+
+
+Other updates:
 
 - In Linux , eliminated setting of udprcvsize (to enable autotuning) -
   The recommendation is to set `sysctl -w net.ipv4.ipfrag_max_dist=0`

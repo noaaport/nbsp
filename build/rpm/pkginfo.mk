@@ -7,8 +7,8 @@
 FLAVOR = $(shell ./flavor.sh)
 
 package_build = 1
-#rpmroot = /usr/local/src/redhat
-rpmroot = /usr/src/redhat
+#rpmroot = /usr/src/redhat
+rpmroot = /home/nieves/rpmbuild
 
 # empty variables will be filled by make
 Summary = Noaaport Broadcast System Processor 

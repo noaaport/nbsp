@@ -88,10 +88,10 @@ case $os in
 	if [ $flavor = centos ]
 	then
 	   TCL_INCDIR=
-	   TCL_LIB="tcl8.4"
-	   TCLSH=/usr/bin/tclsh8.4
-	   DB_INCDIR="-I /usr/local/include/db48"
-	   DB_LIB="db-4.8"
+	   TCL_LIB="tcl8.5"
+	   TCLSH=/usr/bin/tclsh
+	   DB_INCDIR=
+	   DB_LIB="db-4.7"
 	elif [ $flavor = debian ]
 	then
 	   TCL_INCDIR="-I /usr/include/tcl8.5"

@@ -58,7 +58,7 @@ install: build
 		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
 
 package: ${specfile}
-	rpmbuild -bb ${specfile}
+	rpmbuild -bb ${specfile} --buildroot ${BuildRoot}
 	cp ${rpmroot}/RPMS/${arch}/${pkg_file} .
 	cp ${rpmroot}/RPMS/${arch}/${pkg_file_client} .
 

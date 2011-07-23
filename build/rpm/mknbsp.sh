@@ -2,6 +2,8 @@
 
 name=nbsp
 
+rpmroot=$HOME/rpmbuild
+
 tgzfile=${name}.tgz
 
 rm -rf $name
@@ -13,6 +15,6 @@ rm -rf $name-${version}
 
 cp -r $name $name-${version}
 tar -czf $name-$version.tgz $name-$version
-cp $name-$version.tgz /usr/src/redhat/SOURCES
+cp $name-$version.tgz $rpmroot/SOURCES
 cd $name/build/rpm
 make package

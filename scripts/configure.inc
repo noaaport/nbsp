@@ -37,14 +37,7 @@ case $os in
 	[ $flavor = debian ] && RCCONF=nbspd.sh.conf-debian
 	[ $flavor = debian ] && POSTINSTALL_SRC=../build/debian/postinst
 
-	# Centos does not have tcl-8.5 and cannot use the dicts version of
-	# the nbspcleanup script
-	if [ $flavor = centos ]
-	then
-	    CLEANUP=nbspcleanup.tcl-8.4
-	    HOURLYCONF=hourly-cleanup.conf-generic-8.4
-	    POSTINSTALL_SRC=../build/rpm/postinstall
-	fi
+	[ $flavor = centos ] && POSTINSTALL_SRC=../build/rpm/postinstall
     	;;
     Darwin)
 	RCINIT=nbspd.sh-macosx

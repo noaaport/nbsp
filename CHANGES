@@ -91,7 +91,7 @@
   and in the "_inbsp/stats" web interface. The script nbspstats was revised
   to accept a "-p <logperiod>" option.
 - Fixed problem with filter queue growing with several slaves in
-  mempsool mode (spoolslots.c missig a pthred_cond_signal() call).
+  mempsool mode (spoolslots.c missing a pthred_cond_signal() call).
 - In the gpfilter, each decoder is opened with a "permanent" pipe.
 - Revised (and corrected) the statistic plots: Added size in fmtoptions
   in inventory.conf (and removed set size in template files), and
