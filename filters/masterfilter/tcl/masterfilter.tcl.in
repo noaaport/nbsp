@@ -181,12 +181,17 @@ proc masterfilter_slave_open {filtername} {
     }
 }
 
-proc masterfilter_slave_close {filtername} {
+proc masterfilter_slave_close {filtername {msg ""}} {
 
     global masterfilter;
 
     if {$masterfilter($filtername,open) == 0} {
 	return;
+    }
+
+    # The only message the filters accept is a quit request
+    if {$msg eq "quit"} {
+	catch {puts $masterfilter($filtername,F) ""};
     }
 
     set status [catch {close $masterfilter($filtername,F)} errmsg];
@@ -246,5 +251,6 @@ main $argc $argv;
 
 # Close all the filters
 foreach f $masterfilter(filterlist) {
-    masterfilter_slave_close $f;
+    # Send a quit request to the filter and close
+    masterfilter_slave_close $f "quit";
 }

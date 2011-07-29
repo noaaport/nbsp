@@ -17,13 +17,19 @@ Requirements:
   1) The master must (NFS) export the spool directory (it can be rdonly).
      Each node must mount the master spool directory.
 
-  2) The master must export the Nbsp data directory (rw), and each node
-     mounts it.
+  2) The Nbsp data directories must be shared between the master
+     and the nodes, and there are two options:
 
-     Another option is that each node exports the apropriate
-     subdirectory of the data directory and the master mounts all of them.
-     This is more complicated and requires that the hourly cleanup script
-     be run in each node.
+     A) The master exports the Nbsp data directory (rw), and each node
+     mounts it.
+     This is probably the best option but it requires a good central
+     data server.
+
+     B) Each node exports the apropriate subdirectory of the data
+     directory and the master mounts all of them. This is economical
+     and good in terms of performance because the nodea write tha processed
+     data to their local disks, and the master pulls from them what
+     it needs when it needs.
 
   3) The noaaport user in the master must be able to login via ssh without
      a password in each node. In practice this means creating the ssh key
@@ -76,3 +82,27 @@ set clusterfilter(enable,caribe,gisfilter) 1;
 set clusterfilter(enable,diablo,dafilter) 2;   # work-crew mode
 set clusterfilter(enable,diablo,rstfilter) 1;
 set clusterfilter(fname_uregex,diablo) {_tig}; # all sat image data files
+
+Configuration of clusterfilter-schedule.conf
+
+  If the Nbsp data directories are setup following option (2A) above
+then nothing else is required. But if option (2B) is followed,
+then the clusterfilter scheduler must be enable to execute
+the hourly cleanup script in each node in order to maintain the
+data directories of the nodes.
+
+  First, in "clusterfilter.conf" (or prerefably in the "site" copy
+of this file "site/clusterfilter.conf")
+
+   set clusterfilter(scheduler_enable) 1
+
+must be set. Then the file "clusterfilter-schedule.rc" must be created
+with an entry for each node. A sample file provided in
+the Nbsp confguration directory, and it only requires that the
+setting
+
+set nodelist [list]
+
+be edited to include the appropriate list of nodes. As usual a better strategy
+is to copy this file to the "site" subdirectory, and in this way the local
+settings will not be overwitten during an upgrade.

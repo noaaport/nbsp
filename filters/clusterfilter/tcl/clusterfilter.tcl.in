@@ -62,14 +62,20 @@ proc clusterfilter_open_filter {node filter_name} {
     return $status;
 }
 
-proc clusterfilter_close_filter {node filter_name} {
+proc clusterfilter_close_filter {node filter_name {msg ""}} {
     
     global clusterfilter;
 
     set status 0;
 
     if {[info exists clusterfilter(F,$node,$filter_name)]} {
-	set status [catch {close $clusterfilter(F,$node,$filter_name)} errmsg];
+	if {$msg eq "quit"} {
+	    catch {puts $clusterfilter(F,$node,$filter_name) ""};
+	}
+
+	set status [catch {
+	    close $clusterfilter(F,$node,$filter_name);
+	} errmsg];
 	unset clusterfilter(F,$node,$filter_name);
     }
 
@@ -160,7 +166,7 @@ proc clusterfilter_open_all_filters {} {
     }
 }
 
-proc clusterfilter_close_all_filters {} {
+proc clusterfilter_close_all_filters {{msg ""}} {
 
     global clusterfilter;
 
@@ -168,7 +174,7 @@ proc clusterfilter_close_all_filters {} {
 	set node [lindex $entry 0];
 	set filter_name [lindex $entry 1];
 	set filter_path $clusterfilter(filter_path,$node,$filter_name);
-	clusterfilter_close_filter $node $filter_name;
+	clusterfilter_close_filter $node $filter_name $msg;
     }
 }
 
@@ -244,4 +250,4 @@ proc process {finfo} {
 
 clusterfilter_open_all_filters;
 main $argc $argv
-clusterfilter_close_all_filters;
+clusterfilter_close_all_filters "quit";
