@@ -250,6 +250,10 @@ if {$option(K) == 0} {
     file delete $logfile;
 }
 
+# Temporary file names
+set outputfile $gpmap(outputfile);
+set gpmap(outputfile) ${outputfile}.lock.[pid];
+
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
@@ -278,7 +282,10 @@ if {$status != 0} {
 
 # It is possible that gpmap_gif did not produce the image.
 if {[file exists $gpmap(outputfile)] == 0} {
-    log_err "gpmap_gif did not produce $gpmap(outputfile).";
+    log_err "gpmap_gif did not produce $outputfile.";
+} else {
+    file rename -force $gpmap(outputfile) $outputfile;
+    set gpmap(outputfile) $outputfile;
 }
 
 if {$option(p) == 1} {

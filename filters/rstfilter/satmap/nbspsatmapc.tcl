@@ -68,14 +68,20 @@ proc make_loop {flist loopdir loopfile} {
 
     file mkdir [file dirname $loopfile];
     set looppath [file join $loopdir $loopfile];
+    set looplock ${looppath}.lock.[pid];
 
     set status [catch {
       eval exec $rstfilter(satloop_program) \
 	$rstfilter(satloop_program_preoptions) $flist \
-	$rstfilter(satloop_program_postoptions)  > $looppath;
+	$rstfilter(satloop_program_postoptions)  > $looplock;
     } errmsg];
 
-    if {$status != 0} {
+    if {$status == 0} {
+	if {[file exists $looplock]} {
+	    file rename -force $looplock $looppath;
+	}
+    } else {
+	file delete $looplock;
 	log_err $errmsg;
     } 
 }

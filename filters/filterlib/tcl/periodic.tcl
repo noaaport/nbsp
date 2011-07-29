@@ -73,7 +73,8 @@ proc ::nbsp::periodic::set_run_period {run_period} {
     set now [clock seconds];
 
     set periodic(run_period) $run_period;
-    set periodic(run_time) [::nbsp::periodic::_run_time_reset $now $run_period];
+    set periodic(run_time) \
+	[::nbsp::periodic::_run_time_reset $now $run_period];
 }
 
 proc ::nbsp::periodic::get_run_period {} {

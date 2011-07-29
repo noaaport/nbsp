@@ -188,14 +188,22 @@ proc exec_shp2img {} {
     # and always use full paths in the map scripts.
 
     set outputfile [file join [pwd] $nbspgismap(outputfile)];
+    set outputlock ${outputfile}.lock.[pid];
+
+    # Delete any older version
+    file delete $outputfile;
 
     set status [catch {
 	exec $nbspgismap(shp2img_bin) \
 	    -m $nbspgismap(map_rcfile) \
-	    -o $outputfile;
+	    -o $outputlock;
     } errmsg];
 
     file delete $nbspgismap(map_rcfile);
+
+    if {[file exists $outputlock]} {
+	file rename -force $outputlock $outputfile;
+    }
 
     if {[file exists $nbspgismap(outputfile)] == 0} {
 	log_err $errmsg;

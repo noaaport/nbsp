@@ -182,6 +182,10 @@ if {$option(K) == 0} {
     file delete $logfile;
 }
 
+# Temporary file names
+set outputfile $gpmap(outputfile);
+set gpmap(outputfile) ${outputfile}.lock.[pid];
+
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
@@ -211,9 +215,12 @@ if {$status != 0} {
 # It is possible that gpmap_gif did not produce the image.
 if {[file exists $gpmap(outputfile)] == 0} {
     set _msg "Inputfile: $gpmap(inputfile).\n";
-    append _msg "gpmap_gif did not produce a map for $gpmap(outputfile).\n";
+    append _msg "gpmap_gif did not produce a map for $outputfile.\n";
     append _msg "Probably: No entry in the image type table, imgtyp.tbl.";
     log_err ${_msg};
+} else {
+    file rename -force $gpmap(outputfile) $outputfile;
+    set gpmap(outputfile) $outputfile;
 }
 
 if {$option(p) == 1} {
