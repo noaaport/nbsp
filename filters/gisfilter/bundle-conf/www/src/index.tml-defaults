@@ -38,9 +38,14 @@
   set title(n3u) {N3U Base radial velocity,\
 	162 nmi, 3.1/3.4/3.5 degree elevation};
 
+  # The configuration here of the product list must match what is
+  # iset in the bundle-plist.conf file
+  #
   # ::html::set _plist [list n0r n1r n2r n3r n0z n0v n1v \
   #        n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u];
-  ::html::set _plist [list n0r n0z n0q n0u];
+
+  ::html::set _plist [list n0r n0z n0v n0q];
+
   ::html::set _radbundles [list ak gu hi pr west south central east conus];
   ::html::set _radsites [list\
 	abc abr abx acg aec ahg aih akc akq ama amx apd apx arx atx\

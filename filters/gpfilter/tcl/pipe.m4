@@ -50,7 +50,7 @@ mos/YYYYMMDDHH_gmos.gem)
 
 match_pipe($rc(wmoid), feus2[1-6]|feak3[7-9]|fepa20,
 dcxmos, 
-m4DCOPTS(dcxmos) -v 2m4GEMPAK,
+m4DCOPTS(dcxmos) -v 2 m4GEMPAK,
 mos/YYYYMMDDHH_xmos.gem)
 
 match_pipe($rc(wmoid), ^fzxx41,

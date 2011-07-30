@@ -84,14 +84,21 @@ proc ::nbsp::periodic::get_run_period {} {
     return $periodic(run_period);
 }
 
-proc ::nbsp::periodic::register {cmd run_period} {
+proc ::nbsp::periodic::register {cmd {run_period ""}} {
 #
-# run_period is a number in seconds, or the keyword "hourly". In this case
-# the command is run on the hour every hour.
+# run_period is a number in seconds, or:
+#   - the keyword "hourly", in this case the command is run every hour
+#     at minute 0
+#   - the keyword "minutely", in which case the command is run every minute
+#     at second 0.
 # 
     variable periodic;
 
     set now [clock seconds];
+
+    if {$run_period eq ""} {
+	set run_period $periodic(run_period);
+    }
 
     set run_time [::nbsp::periodic::_run_time_reset $now $run_period];
 
