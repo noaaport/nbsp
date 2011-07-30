@@ -71,8 +71,9 @@
 - Completed the gini to shapefile conversion in the nbspgis library.
 - Added gini to asc conversion to the nbspgis librray.
 
-2.1.3p12
+2.2.1r
 -
+- Added the clusterfilter (executes filters in remote nodes).
 - Eliminated setting of usprcvsize in linux (to enable autotuning) - instead
   output a message at package installation regerding the setting of
   sysctl -w net.ipv4.ipfrag_max_dist=0
@@ -104,6 +105,6 @@
   check of rstfilter(satmap_regex) should be with uwildmat and not just regex.
 - Revised default bundle configuration of gisfilter.
 - Revised and corrected: tclupperair, uafilter and wsfilter
-- Added the clusterfilter (executes filters in remote nodes).
 - Revised tclgrads such that Expect is no longer used. (The Expect
-  package is no longer required)
+  package is no longer required in the main package. It is still used
+  in the sample shell applications.)
