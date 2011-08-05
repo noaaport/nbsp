@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS =	c tcl
+SUBDIRS =	tcl examples
 
 all:
 	for dir in ${SUBDIRS}; do \

@@ -7,7 +7,7 @@
 # $Id$
 #
 
-subdirs="c tcl"
+subdirs="tcl examples"
 
 for d in $subdirs
 do
