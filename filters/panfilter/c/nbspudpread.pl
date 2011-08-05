@@ -48,7 +48,7 @@ print "PAN reader started on port $port\n";
 while(1){
     $paddr = recv(Server, $message, $message_size, 0);
     ($port, $iaddr) = sockaddr_in($paddr);
-    $name = gethostbyaddr($iaddr, AF_INET);
+    $server = gethostbyaddr($iaddr, AF_INET);
 
     @fields = split(/\s+/, $message);
 
@@ -57,11 +57,11 @@ while(1){
     $wmotime = $fields[2];
     if($#fields == 4) {
 	$awips = $fields[3];
-	$fname = $fields[4];
+	$fbasename = $fields[4];
     } else {
-	$fname = $fields[3];
+	$fbasename = $fields[3];
     }
     
-    print "$wmoid $fname\n";
-#    system("wget http://<server>:8015/_get/spool/$fname");
+    print "$message\n";
+#    system("wget http://$server:8015/_get/spool/$fbasename");
 }
