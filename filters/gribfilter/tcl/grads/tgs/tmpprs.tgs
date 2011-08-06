@@ -19,6 +19,9 @@ if {$outputfile eq ""} {
 ::grads::init;
 ::grads::open $gsplot(ctlfile);
 
+::grads::exec set display color white;
+::grads::exec clear;
+
 ::grads::exec set gxout shaded;
 ::grads::exec d (tmpprs - 273)*9/5 + 32;
 ::grads::exec set gxout contour;

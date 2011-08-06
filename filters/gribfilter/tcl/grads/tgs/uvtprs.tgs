@@ -19,6 +19,9 @@ if {$outputfile eq ""} {
 ::grads::init;
 ::grads::open $gsplot(ctlfile);
 
+::grads::exec set display color	white;
+::grads::exec clear;
+
 # semicolons must be hidden from tcl
 ::grads::exec d "skip(ugrdprs,3);skip(vgrdprs,3);tmpprs";
 ::grads::exec draw title \

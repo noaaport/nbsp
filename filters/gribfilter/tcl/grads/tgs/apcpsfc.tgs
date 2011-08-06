@@ -18,6 +18,9 @@ if {$outputfile eq ""} {
 ::grads::init;
 ::grads::open $gsplot(ctlfile);
 
+::grads::exec set display color	white;
+::grads::exec clear;
+
 ::grads::exec set lat 10 35;
 ::grads::exec set lon -90 -50;
 ::grads::exec set gxout shaded;

@@ -9,7 +9,7 @@ explanations of the most common or useful features.
 GENERAL -
 
 The scripts are based on the Tclgrads library.
-When a gs file is executed, the following variables are defined:
+When a tgs file is executed, the following variables are defined:
 
 	gsplot(ctlfile)
 	gsplot(ctlfname)
