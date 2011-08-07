@@ -253,12 +253,19 @@ if {$option(K) == 0} {
 # Temporary file names
 set outputfile $gpmap(outputfile);
 set gpmap(outputfile) ${outputfile}.lock.[pid];
+set _savedir "";
 
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
 	return;
     }
+
+    # To work around the gempak path length limitation
+    set _savedir [pwd];
+    cd [file dirname $gpmap(outputfile)];
+    set gpmap(outputfile) [file tail $gpmap(outputfile)];
+
     set fout [open "|$gpmapbin >& $logfile" w];
     fconfigure $fout -translation binary -encoding binary;
     set script [subst $gpmap(script)];
@@ -274,6 +281,12 @@ if {$option(K) == 0} {
     file delete $logfile;
 }
 
+# Restore working directory
+if {${_savedir} ne ""} {
+    set gpmap(outputfile) [file join [pwd] $gpmap(outputfile)];
+    cd ${_savedir};
+}
+
 if {$status != 0} {
     # In case gpmap created the file.
     file delete $gpmap(outputfile);
@@ -282,7 +295,7 @@ if {$status != 0} {
 
 # It is possible that gpmap_gif did not produce the image.
 if {[file exists $gpmap(outputfile)] == 0} {
-    log_err "gpmap_gif did not produce $outputfile.";
+    log_err "gpmap_gif did not produce $gpmap(outputfile)";
 } else {
     file rename -force $gpmap(outputfile) $outputfile;
     set gpmap(outputfile) $outputfile;

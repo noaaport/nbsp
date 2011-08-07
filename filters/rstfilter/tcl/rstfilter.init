@@ -55,7 +55,7 @@ set rstfilter(satmap_rcfile_fpath) ""; # initialized dynamically if not set
 # instead of the jpg.
 #
 set rstfilter(rad_enable)	0;
-set rstfilter(rad_regex)	{.*};
+set rstfilter(rad_regex)	{^n(0|1|2|3)(p|q|r|s|u|v|z)};
 set rstfilter(rad_latest_enable)	1; # make link to latest img
 set rstfilter(rad_latestname)	"latest";
 set rstfilter(rad_namefmt)	{$rc(awips)_$rc(ymd_hm).gif};
