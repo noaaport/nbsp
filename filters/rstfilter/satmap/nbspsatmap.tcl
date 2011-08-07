@@ -185,12 +185,19 @@ if {$option(K) == 0} {
 # Temporary file names
 set outputfile $gpmap(outputfile);
 set gpmap(outputfile) ${outputfile}.lock.[pid];
+set _savedir "";
 
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
 	log_err "gpmap(script) undefined.";
     }
+
+    # To work around the gempak path length limitation
+    set _savedir [pwd];
+    cd [file dirname $gpmap(outputfile)];
+    set gpmap(outputfile) [file tail $gpmap(outputfile)];
+
     set fout [open "|$gpmapbin >& $logfile" w];
     fconfigure $fout -translation binary -encoding binary;
     set script [subst $gpmap(script)];
@@ -204,6 +211,12 @@ if {[info exists fout]} {
 file delete "gemglb.nts" "last.nts";
 if {$option(K) == 0} {
     file delete $logfile;
+}
+
+# Restore working directory
+if {${_savedir} ne ""} {
+    set gpmap(outputfile) [file join [pwd] $gpmap(outputfile)];
+    cd ${_savedir};
 }
 
 if {$status != 0} {
