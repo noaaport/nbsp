@@ -40,8 +40,9 @@
 /usr/local/bin/nbspws-metartomdf
 /usr/local/bin/nbspws-metartomts
 /usr/local/bin/nbspws-uatomdf
-/usr/local/bin/nbspgismap1
 /usr/local/bin/nbspgismap
+/usr/local/bin/nbspgisbundlemap
+/usr/local/bin/nbspgisradmap
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
 /usr/local/bin/nbspstatplotdata
@@ -52,8 +53,6 @@
 /usr/local/bin/nbspgribctlfiles
 /usr/local/bin/nbspgribplot
 /usr/local/bin/nbspgribplotc
-/usr/local/bin/nbspgradsh
-/usr/local/bin/nbspgradrsh
 /usr/local/bin/nbspgribsh
 /usr/local/bin/nbspgribrsh
 /usr/local/bin/nbspgribcat

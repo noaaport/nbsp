@@ -4,7 +4,7 @@
 #
 # Usage: gribfilter-ctlfiles < <grb_file_list>
 #
-# The file names in the list should be relative to that gribfilter(datadir);
+# The file names in the list should be relative to the gribfilter(datadir);
 # i.e., like
 #
 # data/grb/<model>/<date>/<filename>

@@ -118,15 +118,6 @@ set filterserrlib(errorInfo)	$common(debug);
 #
 set common(filtersgribiddef) [file join $common(confdir) "filters-gribid.def"];
 
-# The following problem arose with the gisfilter using wct. WCT writes
-# the cache dir in the home dir of user noaaport, but tcl seems to interpret
-# ~/ and env(HOME) as the home of root (or the real user), or maybe
-# juts the old (previous to forking) value of env(HOME). This creates
-# a problem in nbspwctlist when it tries to delete the cache dir, unless
-# we redefine HOME somehere.
-#
-set env(HOME) $common(homedir);
-
 # Location of the external programs used by the filters.
 #
 set env(PATH)	 "%PATH%";

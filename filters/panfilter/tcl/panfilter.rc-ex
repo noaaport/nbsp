@@ -52,11 +52,13 @@ lappend action {
 	tropical.noaaport.net:5000
   };
 
+  # This is the same thing
+  set udp(host) [list caribe.noaaport.net:5000 tropical.noaaport.net:5000];
+
   break;
 }
 
-# To send all the data files from the TJSJ station to a particular
-# machine
+# To send all the data files from the TJSJ station to a particular machine
 #
 lappend cond {
   ($rc(station) eq "tjsj")
@@ -68,9 +70,10 @@ lappend action {
   break;
 }
 
-# In many cases one sets up only one rule for each type of file received.
-# The "break" statement above enforces that. But there are cases
-# in which it is necessary that the file is processed in two or more
+# In some cases one sets up only one rule for each type of file received.
+# The "break" statement above enforces that. But in some cases (with many
+# hosts) it is best to setup a rule for each host, and in that case
+# it is necessary that the file is processed in two or more
 # rules. Then the "break" statement must be omitted and the udp(host)
 # must be set as follows. (In the example below the file will be sent to
 # "caribe" and "tropical" because it is an sdus file, and to "diablo"
@@ -81,7 +84,7 @@ lappend cond {
 }
 lappend action {
   set udp(status) 0;
-  set udp(host) {caribe.noaaport.net:5000 tropical.noaaport.net:5000};
+  set udp(host) [list caribe.noaaport.net:5000 tropical.noaaport.net:5000];
 }
 
 lappend cond {

@@ -13,7 +13,7 @@ package require nbsp::gis;
 #
 # ::nbsp::gis::radcolor_set "n0v" "background" {196 196 196}
 
-# When this file is sourced (by nbspgismap1), the following parameters
+# When this file is sourced (by nbspgismap), the following parameters
 # will have been set:
 #
 # map(awips1)	= e.g., n0v
@@ -25,14 +25,14 @@ package require nbsp::gis;
 # map(imagetype) = png, gif, ...
 #
 # These (extent and size) defaults can (should) be overriden via
-# the -D switch to nbspgismap1. In practice, they are set in the
+# the -D switch to nbspgismap. In practice, they are set in the
 # "bundle configuration file".
 #
 set _map(extent) {-126 30 -66 50};
 set _map(size) {800 600};
 set _map(imagetype) png;
 #
-foreach _k [list extent size] {
+foreach _k [list extent size imagetype] {
     if {[info exists map($_k)] == 0} {
         set map($_k) $_map($_k);
     }

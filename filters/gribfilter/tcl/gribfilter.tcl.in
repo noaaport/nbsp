@@ -105,7 +105,7 @@ proc process {finfo} {
 
     global gribfilter;
 
-    filterlib_get_rcvars rc $finfo -dogrib;
+    filterlib_get_rcvars rc $finfo -dogrib -nobody;
 
     # This filter handles only grib files.
     if {[regexp {^grib} $rc(nawips)] == 0} {

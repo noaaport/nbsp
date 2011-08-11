@@ -108,3 +108,9 @@
 - Revised tclgrads such that Expect is no longer used. (The Expect
   package is no longer required in the main package. It is still used
   in the sample shell applications.)
+
+2.2.2r
+-
+- Revision of nbspgribrsh (and the companion catalog tools)
+- Added -nobody in call to filterslib in gribfilter
+- Added nbspgisradmap

@@ -2,61 +2,87 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-c <conffile>] [-d <outputdir>]
-#                   [-L] [-n] [-o <outputfile>] [-t] [-v] [-w] [<id_list>]
+# Usage: nbspgismap [-b] [-d <outputdir>] [-D <defines>]
+#                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
+#                  [-I <inputdir>] -m <map_template> [-n <index>]
+#                  [-o <outputfile>] [-p <patt>] [-s <size>] [-t <imgtype>]
+#                  <file1> ... <filenn>
 #
+# The <filen> arguments can be given in the command line or in stdin.
+#
+############################################################################
+# Example
+#
+# !/bin/sh
+#
+# outputdir="sat/img/tig"
+# outputfile="tig01.png"
+# inputdir="/var/noaaport/data/gis/sat/shp/tig"
+#
+## cd /var/noaaport/data/gis
+# mkdir -p $outputdir
+#
+# ./nbspgismap -d $outputdir -o $outputfile \
+#    -f mapfonts -g geodata -m map_sat.tmpl \
+#    -D extent=a;b;s;d,size=1200;800,imagetype=png \
+#    -I $inputdir -p "*.shp" tigw01 tige01
+############################################################################
+#
+# This is cmdline tool with no configuration file.
+#
+# -I => parent directory for the arguments to the program.
+# -p => the arguments are interpreted as subdirectories of the -I parent dir.
+#       Then the list of files is constructed using the glob <patt>, sorted
+#       in decreasing order, and the -n <index> option is used to select
+#       the file. The default is the most recent file (index = 0).
 # -b => background mode
-# -c => override the default configuration file
-# -d => implies -w, but override the gisfilter configuration file output dir
-# -L => output the id list
-# -n => pick only the basename of the default output file
-# -o => override the output file name (useful only if there is one id
-#       given in the cmd line argument)
-# -t => use time-stamped output file name
-# -v => print the name of the output file
-# -w => use the output directory specified in the gisfilter configuration file
-#
-# This tool reads a "bundle configuration file"
-# (defined in gisfilter.{init,conf}) and then calls nbspgismap1 with the
-# appropriate options for each configured composite bundle.
+# -d => output directory
+# -D => key=value,... comma separated list of map(key)=var pairs
+#       (in practice, extent=...,size=...
+#	The extent size values can be separated by spaces or ";", for example
+#	-D size="sx sy",extent="a b c d" or -D size=sx;sy,extent=a;b;c;d
+# -e => extent
+# -f => map fonts directory (required)
+# -g => geodata directory (required)
+# -m => map template      (required)
+# -o => name of outputfile (otherwise the default is used)
+# -s => size
+# -t => imgtype (png)
+
+set usage {nbspgismap [-b] [-d <outputdir>] [-D <defines>]
+    [-e <extent>] [-f <mapfontsdir>] [-g <geodatadir>] [-I <inputdir>]
+    [-m <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
+    [-s <size>] [-t <imgtype>] <file1> ... <filen>};
+
+set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+    {I.arg ""} {m.arg ""} {n.arg 0} {o.arg ""} {p.arg ""} {s.arg ""}
+    {t.arg ""}};
 
 package require cmdline;
 
-set usage {nbspgismap [-b] [-c <conffile>] [-d <outputdir>] [-L]
-    [-n] [-o <outputfile>] [-t] [-v] [-w] [<id_list>]};
-set optlist {b {d.arg ""} {c.arg ""} L n {o.arg ""} t v w};
-
-# Read the init (instead of conf) because the filterlib_find_conf() function
-# from filter.lib is used. This also allows templates to "require" locally
-# installed packages; (e.g., gismap-bundle.conf-defaults uses radstations.tcl).
+# Source filters.init so that the templates can "require" locally
+# installed packages (e.g., map_rad requitres gis.tcl)
 #
 source "/usr/local/libexec/nbsp/filters.init";
 
-# The defaults are read from the gisfilter.init1, and the overrides
-# from gisflter.conf.
-foreach f [list "gisfilter.init1"] {
-    set f [file join $common(libdir) $f];
-    if {[file exists ${f}] == 0} {
-        puts "$f not found.";
-	return 1;
-    }
-    source $f;
-}
-unset f;
-
-# Convenience definitions
-foreach k [array names gisfilter gismap_*] {
-    regexp {^gismap_(.+)} $k match _k;
-    set nbspgismap($_k) $gisfilter($k);
-}
+# Defaults
+set map(imagetype) "png";
 #
-set nbspgismap(inputdir) $nbspgismap(datadir);
-set nbspgismap(outputdir) $nbspgismap(datadir);
+# map(extent) will be required below
+# map(geodata) will be required below
+# ma[(mapfonts) will be required below
+# map(size) is optional (a default is set in the templates)
+#
+
+# parameters
+set nbspgismap(map_rc_fext) ".map";
+set nbspgismap(map_tmpl_fext) ".tmpl";
 
 # variables
-set nbspgismap(geoclist) [list];	# initialized dynamically below
-set nbspgismap(geocid) "";
-set nbspgismap(geocidlist) [list];
+set nbspgismap(map_tmplfile) "";
+set nbspgismap(map_rcfile) "";
+set nbspgismap(input_files_list) [list];
+set nbspgismap(outputfile) "";
 
 proc log_warn s {
 
@@ -77,230 +103,170 @@ proc log_err s {
     exit 1;
 }
 
-proc get_map_tmplfile {map_tmplname} {
+proc source_map_tmpl {map_array_name} {
 
     global nbspgismap;
+    upvar $map_array_name map;
 
-    # If the argument is a full path, then it is not looked any further
-    if {[file pathtype $map_tmplname] eq "absolute"} {
-	return $map_tmplname;
-    }
-
-    set map_tmplfile [filterlib_find_conf $map_tmplname \
-	$nbspgismap(mapdirs) $nbspgismap(mapsubdir)];
-
-    if {[file exists $map_tmplfile] == 0} {
-	log_err "$map_tmplname not found.";
-    }
-
-    return $map_tmplfile;
+    source $nbspgismap(map_tmplfile);
 }
 
-proc get_geodata_dir {} {
+proc run_map_rcfile {} {
 
-    global nbspgismap;
+    global map nbspgismap option;
 
-    if {$nbspgismap(geodata_dir) eq ""} {
-	set nbspgismap(geodata_dir) [filterlib_find_conf \
-	    $nbspgismap(geodata_dirname) $nbspgismap(geodata_dirs)];
+    # The map rc file is created in the same directory as the output file,
+    # and with the same name but with the ".map" extension.
+
+    set nbspgismap(map_rcfile) [file rootname $nbspgismap(outputfile)];
+    append nbspgismap(map_rcfile) $nbspgismap(map_rc_fext);
+
+    # Create the variables for the map script. For the same reason
+    # mentioned in exec_shp2img {}, use the full paths in the map rc file.
+    # The output file is not used by the map script (only by the postscript)
+    # but for uniformity we use the full path here as well.
+
+    set map(mapfonts) [file join [pwd] $map(mapfonts)];
+    set map(geodata) [file join [pwd] $map(geodata)];
+    set map(outputfile) [file join [pwd] $nbspgismap(outputfile)];
+
+    set i 1;
+    foreach inputfile $nbspgismap(input_files_list) {
+	set map(inputfile,$i) [file join [pwd] $inputfile];
+	incr i;
     }
 
-    if {[file isdirectory $nbspgismap(geodata_dir)] == 0} {
-	log_err "$nbspgismap(geodata_dirname) not found.";
-    }
-}
-
-proc get_mapfonts_dir {} {
-
-    global nbspgismap;
-
-    if {$nbspgismap(mapfonts_dir) eq ""} {
-	set nbspgismap(mapfonts_dir) [filterlib_find_conf \
-	    $nbspgismap(mapfonts_dirname) $nbspgismap(mapfonts_dirs)];
-    }
-
-    if {[file isdirectory $nbspgismap(mapfonts_dir)] == 0} {
-	log_err "$nbspgismap(mapfonts_dirname) not found.";
-    }
-}
-
-proc get_gclist {} {
-
-    global nbspgismap;
-
-    if {[llength $nbspgismap(geoclist)] == 0} {
-	log_err "geoclist is empty.";
-    }
-
-    foreach gc $nbspgismap(geoclist) {
-	array set a $gc;
-	foreach key [array names a] {
-	    set nbspgismap(geoclist,$a(id),$key) $a($key);
-	}
-	lappend nbspgismap(geocidlist) $a(id);
-    }
-    
-    # foreach k [array names nbspgismap "geoclist,*"] {
-    #     puts "$k: $nbspgismap($k)";
-    # }
-}
-
-proc process_geoc_entry {id} {
-
-    global option nbspgismap;
-
-    # get_geoclist {} fills these, for each id, and these, together
-    # with the common options, are passed to nbspgismap1:
-    #
-    # nbspgismap(geoclist,$id,maptmpl)
-    # nbspgismap(geoclist,$id,options)
-    # nbspgismap(geoclist,$id,outputfile)
-    # nbspgismap(geoclist,$id,outputfilet)
-    # nbspgismap(geoclist,$id,inputpatt)
-    # nbspgismap(geoclist,$id,inputdirs)
-
-    set map_tmplfile [get_map_tmplfile $nbspgismap(geoclist,$id,maptmpl)];
-
-    # Construct the definitions list
-    set defs_list [list];
-    foreach {k v} $nbspgismap(geoclist,$id,options) {
-	lappend defs_list "$k=$v";
-    }
-    set defs [join $defs_list ","];
-
-    set cmd [list "nbspgismap1"];
-    if {$option(b) == 1} {
-	lappend cmd "-b";
-    }
-
-    if {$option(o) ne ""} {
-	set nbspgismap(geoclist,$id,outputfile) $option(o);
-    }
-
-    if {$option(n) != 0} {
-	set nbspgismap(geoclist,$id,outputfile) \
-	    [file tail $nbspgismap(geoclist,$id,outputfile)];
-	set nbspgismap(geoclist,$id,outputfilet) \
-	    [file tail $nbspgismap(geoclist,$id,outputfilet)];
-    }
-
-    if {$option(w) != 0} {
-	if {[file isdirectory $nbspgismap(outputdir)] == 0} {
-	    log_err "$nbspgismap(outputdir) does not exist.";
-	}
-    }
-
-    set outputfile $nbspgismap(geoclist,$id,outputfile);
-    if {$option(w) != 0} {
-	set outputpath [file join $nbspgismap(outputdir) $outputfile];
-    } else {
-	set outputpath $outputfile;
-    }
-    file mkdir [file dirname $outputpath];
-
-    # Delete the default output file in case it is a link.
-    file delete $outputpath;
-
-    # Check if "-t " was specified and set the output name accordingly
-    if {$option(t) != 0} {
-	set fmt $nbspgismap(geoclist,$id,outputfilet);
-	set outputfilet [clock format [clock seconds] -format $fmt];
-	if {$option(w) != 0} {
-	    set outputpatht [file join $nbspgismap(outputdir) $outputfilet];
-	} else {
-	    set outputpatht $outputfilet;
-	}
-	file mkdir [file dirname $outputpatht];
-    }
-
-    if {$option(w) != 0} {
-	lappend cmd "-d" $nbspgismap(outputdir);
-    }
-
-    if {$option(t) != 0} {
-	lappend cmd -o $outputfilet;
-    } else {
-	lappend cmd -o $outputfile;
-    }
-
-    set cmd [concat $cmd \
-		 [list -D $defs \
-		      -f $nbspgismap(mapfonts_dir) \
-		      -g $nbspgismap(geodata_dir) \
-		      -m $map_tmplfile \
-		      -I $nbspgismap(inputdir) \
-		      -p $nbspgismap(geoclist,$id,inputpatt)] \
-		 $nbspgismap(geoclist,$id,inputdirs)];
-
+    # Source the template inside a function to avoid clashes with
+    # local variables.
+    source_map_tmpl map;
+	
     set status [catch {
-	eval exec $cmd;
+	set F [open $nbspgismap(map_rcfile) "w"];
+	fconfigure $F -translation binary -encoding binary;
+	if {[info exists map(script)]} {
+	    puts $F [subst $map(script)];
+	} else {
+	    puts $F $map(scriptstr);
+	}
     } errmsg];
 
     if {$status != 0} {
-	# Don't exit so that other bundles can be processed
 	log_warn $errmsg;
-    } else {
-	if {$option(t) != 0} {
-	    exec ln -s [file join [pwd] $outputpatht] $outputpath;
-	}
+    }
 
-	if {$option(v) != 0} {
-	    puts $outputpath;
+    if {[info exists F]} {
+	if {[catch {close $F} errmsg] != 0} {
+	    set status 1;
+	    log_warn $errmsg;
 	}
+    }
+
+    if {$status != 0} {
+	file delete $nbspgismap(map_rcfile);
+	log_err "Could not create map script $nbspgismap(map_rcfile)";
+    }
+
+    exec_shp2img;
+
+    if {[info exists map(post)]} {
+	eval $map(post);
     }
 }
 
-#
-# These two functions can be used in the bundle conf file instead of using
-# `lappend nbspgismap(geoclist)` expicitly.
-#
-proc geoc_sat_bundle_add {id maptmpl extent size outputfile inputpatt args} {
-#
-# The last argument "args" should contain the list of input directories.
-# Each argument can be a tcl list of such directories.
-#
-    set options [list extent $extent size $size];
-    lappend nbspgismap(geoclist) [list \
-				      id $id \
-				      maptmpl $maptmpl \
-				      options $options \
-				      outputfile $outputfile \
-				      inputpatt $inputpatt \
-				      inputdirs [eval concat $args]];
-}
-
-proc geoc_rad_bundle_add {id maptmpl extent size awips1 \
-			      outputfile inputpatt args} {
-#
-# The last argument "args" should contain the list of input directories.
-# Each argument can be a tcl list of such directories.
-#
-    set options [list extent $extent size $size awips1 $awips1];
-    lappend nbspgismap(geoclist) [list \
-				      id $id \
-				      maptmpl $maptmpl \
-				      options $options \
-				      outputfile $outputfile \
-				      inputpatt $inputpatt \
-				      inputdirs [eval concat $args]];
-}
-
-proc geoc_bundle_clear {} {
+proc exec_shp2img {} {
 
     global nbspgismap;
 
-    set nbspgismap(geoclist) [list];
+    # The partial file names in the mapserver script are interpreted
+    # relative to the location of the map script and the data
+    # files are relative to the SHAPEPATH variable.
+    # I am not ure, but apparently shp2img make a `cd` to
+    # the directory that has the map file. If nbspgismap(outputfile)
+    # is a partial path, it will be created there (or throw an error
+    # if the intermediate directories do not exist).
+    # As a workaround to this mess, we pass to shp2img the full path,
+    # and always use full paths in the map scripts.
+
+    set outputfile [file join [pwd] $nbspgismap(outputfile)];
+    set outputlock ${outputfile}.lock.[pid];
+
+    # Delete any older version
+    file delete $outputfile;
+
+    set status [catch {
+	exec shp2img \
+	    -m $nbspgismap(map_rcfile) \
+	    -o $outputlock;
+    } errmsg];
+
+    file delete $nbspgismap(map_rcfile);
+
+    if {[file exists $outputlock]} {
+	file rename -force $outputlock $outputfile;
+    }
+
+    if {[file exists $nbspgismap(outputfile)] == 0} {
+	log_err $errmsg;
+    }
 }
 
+proc get_tmpl_fname {} {
 #
-# Dynamic initialization
+# If the output file name is not specified, then the name is derived from
+# the template name.
 #
+    global nbspgismap;
 
-# Load the configured geoclist
-if {[file exists $nbspgismap(bundle_conf)] == 0} {
-    log_err "$nbspgismap(bundle_conf) not found.";
-} else {
-    source $nbspgismap(bundle_conf);
+    if {[file extension $nbspgismap(map_tmplfile)] \
+	    eq $nbspgismap(map_tmpl_fext)} {
+	set fname [file rootname [file tail $nbspgismap(map_tmplfile)]];
+    } else {
+	set fname [file tail $nbspgismap(map_tmplfile)];
+    }
+
+    return $fname;
+}
+
+proc get_input_files_list {argv} {
+
+    global nbspgismap option;
+
+    set nbspgismap(input_files_list) [list];
+
+    set flist [list];
+    if {$option(I) ne ""} {
+	foreach f $argv {
+	    lappend flist [file join $option(I) $f];
+	}
+    } else {
+	set flist $argv;
+    }
+    
+    if {$option(p) eq ""} {
+	set nbspgismap(input_files_list) $flist;
+	return;
+    }
+
+    set dirlist $flist;
+    foreach dir $dirlist {
+	if {[file isdirectory $dir] == 0} {
+	    log_warn "Skiping $dir; not found.";
+	    continue;
+	}
+	# Exclude the latest links in the glob
+	set flist [list];
+	foreach f [lsort -decreasing \
+		       [glob -nocomplain -directory $dir $option(p)]] {
+	    if {[file type $f] ne "link"} {
+		lappend flist $f;
+	    }
+	}
+
+	set f [lindex $flist $option(n)];
+	if {$f ne ""} {
+	    lappend nbspgismap(input_files_list) $f;
+	}
+    }
 }
 
 #
@@ -309,37 +275,73 @@ if {[file exists $nbspgismap(bundle_conf)] == 0} {
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
-if {$argc != 0} {
-    set _idlist $argv;
-} else {
-    set _idlist [list];
+if {$argc == 0} {
+    set argv [split [string trim [read stdin]]];
+}
+get_input_files_list $argv;
+
+if {$option(e) ne ""} {
+    set map(extent) $option(e);
 }
 
-if {$option(c) ne ""} {
-    set nbspgismap(bundle_conf) $option(c);
+if {$option(f) ne ""} {
+    set map(mapfonts) $option(f);
+}
+
+if {$option(g) ne ""} {
+    set map(geodata) $option(g);
+}
+
+if {$option(m) eq ""} {
+    log_err "-m is required.";
+} else {
+    set nbspgismap(map_tmplfile) $option(m);
+}
+
+if {$option(s) ne ""} {
+    set map(size) $option(s);
+}
+
+if {$option(t) ne ""} {
+    set map(imagetype) $option(t);
+}
+
+# The defines
+if {$option(D) ne ""} {
+    set Dlist [split $option(D) ","];
+    foreach pair $Dlist {
+	set p [split $pair "="];
+	set var [lindex $p 0];
+	set val [lindex $p 1];
+	set map($var) "$val";    # extent and size can contain spaces 
+    }
+}
+
+foreach k [list extent geodata mapfonts] {
+    if {[info exists map($k)] == 0} {
+	log_err "No $k specified.";
+    }
+}
+
+if {$option(o) ne ""} {
+    set nbspgismap(outputfile) $option(o);
+} else {
+    if {[llength $nbspgismap(input_files_list)] == 1} {
+	set rootname [file rootname \
+		     [file tail [lindex $nbspgismap(input_files_list) 0]]];
+    } else {
+	set rootname [get_tmpl_fname];
+    }
+    set nbspgismap(outputfile) ${rootname}.$map(imagetype);
 }
 
 if {$option(d) ne ""} {
-    set nbspgismap(outputdir) $option(d);
-    set option(w) 1;
+    set nbspgismap(outputfile) [file join $option(d) $nbspgismap(outputfile)];
 }
 
-get_mapfonts_dir;
-get_geodata_dir;
-get_gclist;
-
-# If no id's were given in the cmd line, then do all of them.
-if {[llength $_idlist] == 0} {
-   set _idlist $nbspgismap(geocidlist);
+# The mapserver template is required.
+if {[file exists $nbspgismap(map_tmplfile)] == 0} {
+    log_err "$nbspgismap(map_tmplfile) not found.";
 }
 
-if {$option(L) == 1} {
-    foreach id $_idlist {
-	puts $id;
-    }
-    return;
-}
-
-foreach id $_idlist {
-    process_geoc_entry $id;
-}
+run_map_rcfile;

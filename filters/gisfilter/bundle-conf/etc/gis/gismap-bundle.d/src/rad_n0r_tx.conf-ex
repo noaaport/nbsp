@@ -3,7 +3,7 @@
 #
 # An example of a manually configured "N0R bundle" for TX.
 #
-lappend nbspgismap(geoclist) {
+lappend nbspgisbundle(geoclist) {
  id           rad_n0r_tx
  maptmpl      map_rad_bref.tmpl
  options      {extent {-104 23 -93 37} size {800 600} imagetype png awips1 n0r}

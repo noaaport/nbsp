@@ -3,7 +3,6 @@
 bin/nbspgrib
 bin/nbspgrib2
 bin/nbspgribctl
-bin/nbspgradrsh
 bin/nbspgribrsh
 bin/nbspgribcat
 bin/nbspwgrib

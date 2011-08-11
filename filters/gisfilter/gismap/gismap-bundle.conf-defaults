@@ -25,14 +25,14 @@
 geoc_bundle_clear;
 
 #
-# Use the function `geoc_bundle_add` to add buldles to the list, or
+# Use the function `geoc_bundle_add` to add bundles to the list, or
 # append them explicitly.
 #
 # geoc_sat_bundle_add "sat_conus_01" "map_sat.tmpl" "-126,30,-66,50" \
 #       "1280,800" "img/tig01.png" "*.asc" \
 #	"sat/asc/tig/tigw01" "sat/asc/tig/tige01"; 
 #
-# lappend nbspgismap(geoclist) {
+# lappend nbspgisbundle(geoclist) {
 #  id		sat_tig01_conus
 #  maptmpl	map_sat.tmpl
 #  options	{extent	{-126 30 -66 50} size {1280 800}}
@@ -44,7 +44,7 @@ geoc_bundle_clear;
 #
 # rad example
 #
-# lappend nbspgismap(geoclist) {
+# lappend nbspgisbundle(geoclist) {
 #  id		rad_n0r_tx
 #  maptmpl	map_rad_bref.tmpl
 #  options	{extent	{-104 23 -93 37} size {800 600} awips1 n0r}
@@ -70,7 +70,7 @@ geoc_bundle_clear;
 #
 # Better
 #
-# lappend nbspgismap(geoclist) [subst {
+# lappend nbspgisbundle(geoclist) [subst {
 # id            rad_n0r_south
 #  maptmpl	map_rad_bref.tmpl
 #  options     	{extent {[nbsp::radstations::extent_bystate ar la nm ok tx]}\

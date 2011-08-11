@@ -139,7 +139,7 @@ done
 
 for file in *-templates.tgz
 do
-  tar -C ../defaults -xzf $file
+  tar -C ../defaults -o -p -xzf $file
 done
 
 #

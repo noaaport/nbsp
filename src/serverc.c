@@ -225,7 +225,7 @@ static void cleanup(void *arg){
 
   /*
    * The thread_finished flag is set here so that if the thread is exiting
-   * by iteself (e.g., if it encountered an unrrecoverable error from write())
+   * by itself (e.g., if it encountered an unrrecoverable error from write())
    * the main thread can check and remove the connection element
    * from the table.
    */

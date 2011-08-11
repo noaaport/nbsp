@@ -1,6 +1,6 @@
 #!/bin/sh
 
-requires="curl tcl-8.6 tcllib tk-8.6 expect png netpbm gnuplot"
+requires="curl tcl-8.6 tcllib tk-8.6 png netpbm gnuplot"
 conflict="nbsp"
 
 # so that FreeBSD runs it only once 

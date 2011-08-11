@@ -54,7 +54,7 @@
 #
 
 # The default list
-set geoclist [exec nbspgismap -L];
+set geoclist [exec nbspgisbundlemap -L];
 
 foreach c $geoclist {
     #
@@ -64,8 +64,8 @@ foreach c $geoclist {
     # in the gisfilter.conf file (/var/noaaport/data/gis).
     #
     if {[regexp {^rad_.+_(ak|gu|hi|pr|conus|central|east|south|west)$} $c]} {
-        schedule M=10 nbspgismap -t -w $c;
+        schedule M=10 nbspgisbundlemap -t -w $c;
     } elseif {[regexp {^sat} $c]} {
-        schedule H00/2 nbspgismap -t -w $c;
+        schedule H00/2 nbspgisbundlemap -t -w $c;
     }
 }

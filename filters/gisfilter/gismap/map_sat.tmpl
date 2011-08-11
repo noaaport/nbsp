@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# When this file is sourced (by nbspgismap1), the following parameters
+# When this file is sourced (by nbspgismap), the following parameters
 # will have been set:
 #
 # map(geodata)
@@ -13,13 +13,13 @@
 # map(imagetype) = png, gif, ...
 #
 # These defaults can (should) be overriden via the -D switch to
-# nbspgismap1. In practice, they are set in the "bundle configuration file".
+# nbspgismap. In practice, they are set in the "bundle configuration file".
 #
 set _map(extent) {-126 30 -66 50};
 set _map(size) {512 512};
 set _map(imagetype) png;
 #
-foreach _k [list extent size] {
+foreach _k [list extent size imagetype] {
     if {[info exists map($_k)] == 0} {
         set map($_k) $_map($_k);
     }

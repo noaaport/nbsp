@@ -1,15 +1,17 @@
 #!/bin/sh
 
-name=nbsp
+branchname=nbsp
+tgzfile=${branchname}.tgz
 
-tgzfile=${name}.tgz
-
-rm -rf $name
+rm -rf $branchname
 tar -xzf $tgzfile
 
-. $name/VERSION
+. ./$branchname/VERSION
 
-cd $name
+rm -rf ${name}-${version}
+cp -r $branchname ${name}-${version}
+
+cd ${name}-${version}
 cp -R build/debian .
 dpkg-buildpackage -rfakeroot
 cp ../${name}_${version}*.deb build/debian

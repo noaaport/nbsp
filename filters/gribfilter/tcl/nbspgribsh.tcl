@@ -104,13 +104,8 @@ proc proc_grads {} {
     }
 
     set ctlfile [lindex $browser(list) $browser(curix)];
-    #
-    # nbspgradsh expects the path relative to the ctldir
-    #
-    set ctldir [file join $gribfilter(datadir) $gribfilter(ctldatadir)];
-    set rpath [::fileutil::stripPath $ctldir $ctlfile];
 
-    exec xterm -e nbspgradsh $rpath &;
+    exec xterm -e grads -l -c "open $ctlfile" &; 
 }
 
 #

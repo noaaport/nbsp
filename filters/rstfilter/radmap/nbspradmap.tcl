@@ -258,7 +258,7 @@ set _savedir "";
 set status [catch {
     source_template $option(rcfile);
     if {[info exists gpmap(script)] == 0} {
-	return;
+	log_err "gpmap(script) undefined.";
     }
 
     # To work around the gempak path length limitation

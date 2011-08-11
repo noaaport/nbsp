@@ -2,7 +2,7 @@
 # $Id$
 #
 
-lappend nbspgismap(geoclist) {
+lappend nbspgisbundle(geoclist) {
   id            sat_tig01_conus
   maptmpl       map_sat.tmpl
   options       {extent {-126 30 -66 50} size {1280 800} imagetype png}

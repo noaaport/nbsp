@@ -45,13 +45,13 @@ if {$option(d) ne ""} {
     set nbspgribrsh(datadir) $option(d);
 }
 
-# Variables
+# Variables (don't use file join for urls)
 set nbspgribrsh(grburl) "$nbspgribrsh(baseurl)/$nbspgribrsh(grbbasedir)";
 set nbspgribrsh(ctlurl) "$nbspgribrsh(baseurl)/$nbspgribrsh(ctlbasedir)";
 set nbspgribrsh(caturl) "$nbspgribrsh(baseurl)/$nbspgribrsh(catbasedir)";
+set nbspgribrsh(catalogurl) "$nbspgribrsh(caturl)/$nbspgribrsh(ctlcatalog)";
 set nbspgribrsh(catfile) [file join $nbspgribrsh(datadir) \
 			  $nbspgribrsh(catdatadir) $nbspgribrsh(ctlcatalog)];
-set nbspgribrsh(catalogurl) "$nbspgribrsh(caturl)/$nbspgribrsh(ctlcatalog)";
 
 #
 # Support functions
@@ -365,7 +365,7 @@ proc proc_wgrib {} {
 
 proc proc_grads {} {
 
-    global browser;
+    global browser nbspgribrsh;
 
     if {$browser(curix) == -1} {
 	puts "No file selected.";
@@ -379,14 +379,10 @@ proc proc_grads {} {
 	}
     }
 
-    set ctlfile [lindex $browser(list) $browser(curix)];
-    #
-    # nbspgradrsh expects the path relative to the ctldir
-    #
-    set ctldir [file join $nbspgribrsh(datadir) $nbspgribrsh(ctldatadir)];
-    set rpath [::fileutil::stripPath $ctldir $ctlfile];
- 
-    exec xterm -e nbspgradrsh $rpath &;
+    set names [proc_make_local_names_by_curix];
+    set ctlfile [lindex $names 1];
+
+    exec xterm -e grads -l -c "open $ctlfile" &;
 }
 
 #
@@ -407,9 +403,10 @@ foreach line [lsort [split [exec cat $nbspgribrsh(catfile)] "\n"]] {
     set ftime [lindex $parts 3];
     set rpath [lindex $parts 4];
     set name [file rootname [file tail $rpath]];
-    set fpath "$nbspgribrsh(ctlurl)/$rpath";
-    lappend browser(list) $fpath;
-    lappend filelist($model,$time) $fpath;
+    set urlfpath "$nbspgribrsh(baseurl)/$nbspgribrsh(ctlbasedir)/$rpath";
+
+    lappend browser(list) $urlfpath;
+    lappend filelist($model,$time) $urlfpath;
     lappend browser(rlist) $rpath;
 
     if {([info exists modeltimes($model)] == 0) || \

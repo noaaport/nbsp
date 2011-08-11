@@ -3,9 +3,13 @@
 #
 # proc nbsp::radstations::inputdirs_bystate {dir_tmpl args}
 # proc nbsp::radstations::bystate {args}
-# proc nbsp::radstations::extent_bystate {args}
 # proc nbsp::radstations::sitelist {}
-# proc nbsp::radstations::extent_bysite {site}
+# proc nbsp::radstations::extent_bysite {site {shift 2}}
+# proc nbsp::radstations::extent_bysitelist {args}
+# proc nbsp::radstations::extent_bystate {args}
+#
+# In the args argument, each element can be a space separated list of
+# items "ar la nm ok tx" or a tcl list.
 #
 package provide nbsp::radstations 1.0;
 package require textutil::split;
@@ -440,53 +444,6 @@ proc nbsp::radstations::bystate {args} {
     return $r;
 }
 
-proc nbsp::radstations::extent_bystate {args} {
-
-    variable radstations;
-
-    set lat1 1000;
-    set lat2 0;
-    set lon1 0;
-    set lon2 -1000;
-
-    # Construct the (tcl) state list
-    set statelist [list];
-    foreach _a $args {
-	set statelist [concat $statelist [::textutil::split::splitx ${_a}]];
-    }
-
-    foreach state $statelist {
-	foreach site [split $radstations(state,$state) ","] {
-	    set data [split $radstations(site,$site) ","];
-	    set lat [expr int([lindex $data 4])];
-	    set lon [expr int([lindex $data 5])];
-
-	    if {$lat < $lat1} {
-		set lat1 $lat;
-	    }
-		     
-	    if {$lat > $lat2} {
-		set lat2 $lat;
-	    }
-
-	    if {$lon < $lon1} {
-		set lon1 $lon;
-	    }
-
-	    if {$lon > $lon2} {
-		set lon2 $lon;
-	    }
-	}
-    }
-
-    incr lon1 -2;
-    incr lat1 -2;
-    incr lon2 2;
-    incr lat2 2;
-
-    return [list $lon1 $lat1 $lon2 $lat2];
-}
-
 proc nbsp::radstations::sitelist {} {
 
     variable radstations;
@@ -518,4 +475,81 @@ proc nbsp::radstations::extent_bysite {site {shift 2}} {
     incr lat2 $shift;;
 
     return [list $lon1 $lat1 $lon2 $lat2];
+}
+
+proc nbsp::radstations::extent_bysitelist {args} {
+
+    variable radstations;
+
+    set lat1 1000;
+    set lat2 0;
+    set lon1 0;
+    set lon2 -1000;
+
+    # Construct the (tcl) site list
+    set sitelist [list];
+    foreach _a $args {
+	set sitelist [concat $sitelist [::textutil::split::splitx ${_a}]];
+    }
+
+    if {[llength $sitelist] == 1} {
+	return [extent_bysite [lindex $sitelist 0]];
+    } elseif {[llength $sitelist] == 0} {
+	return -code error "Empty site list";
+    }
+
+    foreach site $sitelist {
+	set data [split $radstations(site,$site) ","];
+	set lat [expr int([lindex $data 4])];
+	set lon [expr int([lindex $data 5])];
+
+	if {$lat < $lat1} {
+	    set lat1 $lat;
+	}
+
+	if {$lat > $lat2} {
+	    set lat2 $lat;
+	}
+
+	if {$lon < $lon1} {
+	    set lon1 $lon;
+	}
+
+	if {$lon > $lon2} {
+	    set lon2 $lon;
+	}
+    }
+
+    incr lon1 -2;
+    incr lat1 -2;
+    incr lon2 2;
+    incr lat2 2;
+
+    return [list $lon1 $lat1 $lon2 $lat2];
+}
+
+proc nbsp::radstations::extent_bystate {args} {
+
+    variable radstations;
+
+    set lat1 1000;
+    set lat2 0;
+    set lon1 0;
+    set lon2 -1000;
+
+    # Construct the (tcl) state list
+    set statelist [list];
+    foreach _a $args {
+	set statelist [concat $statelist [::textutil::split::splitx ${_a}]];
+    }
+
+    # Construct the (tcl) site list
+    set sitelist [list];
+    foreach state $statelist {
+	foreach site [split $radstations(state,$state) ","] {
+	    lappend sitelist $site;
+	}
+    }
+
+    return [extent_bysitelist $sitelist];
 }

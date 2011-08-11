@@ -21,7 +21,7 @@ tclhttpd=${project}tclhttpd
 [ $# -ne 0 ] && tag=tags/$1
 
 cd ../../../
-#svn copy $project $mastersite/$project/$tag
+svn copy $project $mastersite/$project/$tag
 
 cd $project
 

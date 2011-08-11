@@ -22,7 +22,7 @@ TMPLDIR =	grads
 TMPLTARGET =	grib-templates.tgz
 TOOLS =		nbspgribctl nbspgribctlfiles nbspgribplot nbspgribplotc \
 		nbspwgrib \
-		nbspgradsh nbspgradrsh nbspgribsh nbspgribrsh nbspgribcat \
+		nbspgribsh nbspgribrsh nbspgribcat \
 
 
 TCLTARGET-MGR =	gribfilter-manager.tcl
@@ -78,12 +78,6 @@ nbspgribplot: nbspgribplot.tcl
 nbspgribplotc: nbspgribplotc.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgribplotc.tcl > nbspgribplotc
 
-nbspgradsh: nbspgradsh.tcl
-	sed -e /%EXPECT%/s##${EXPECT}# nbspgradsh.tcl > nbspgradsh
-
-nbspgradrsh: nbspgradrsh.tcl
-	sed -e /%EXPECT%/s##${EXPECT}# nbspgradrsh.tcl > nbspgradrsh
-
 nbspgribsh: nbspgribsh.tcl
 	sed -e /%WISH%/s##${WISH}# nbspgribsh.tcl > nbspgribsh
 
@@ -108,7 +102,7 @@ nbspgribcat: nbspgribcat.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgribcat.tcl > nbspgribcat
 
 ${TMPLTARGET}:
-	tar -c --exclude '*CVS*' -z -f ${TMPLTARGET} ${TMPLDIR}
+	tar -c @EXCLUDE@'*.svn*' -z -f ${TMPLTARGET} ${TMPLDIR}
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}

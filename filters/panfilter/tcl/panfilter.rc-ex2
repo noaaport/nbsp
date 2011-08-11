@@ -1,0 +1,29 @@
+#
+# $Id$
+#
+
+# Because the rc file is actually a tcl file that is sourced by the
+# filter initialization function, there is lot of flexibility to
+# construct the rules of condition/action pairs. This is an example
+# that can be used when we want to setup one cond/action rule for each
+# host. The table list of "host:port uregexp"
+#
+# caribe.noaaport.net:5000 -n0rjua
+# diablo.1-loop.net:5000 _sdus1[1-4]
+#
+# can be kept in a separate file or db and loaded by this file.
+
+foreach entry {
+	{caribe.noaaport.net:5000 -n0rjua}
+	{diablo.1-loop.net:5000 _sdus1[1-4]}} {
+
+    set hostport [lindex $entry 0];
+    set uregexp [lindex $entry 1];
+
+    lappend cond "\[filterlib_uwildmat $uregexp \$rc(fname)\]";
+
+    lappend action "
+	set udp(status) 0;
+	lappend udp(host) $hostport;
+    "
+}

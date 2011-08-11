@@ -42,8 +42,9 @@ bin/nbspws-gribtomdf
 bin/nbspws-metartomdf
 bin/nbspws-metartomts
 bin/nbspws-uatomdf
-bin/nbspgismap1
 bin/nbspgismap
+bin/nbspgisbundlemap
+bin/nbspgisradmap
 bin/nbspstatplot
 bin/nbspstatplot1
 bin/nbspstatplotdata
@@ -54,8 +55,6 @@ bin/nbspgribctl
 bin/nbspgribctlfiles
 bin/nbspgribplot
 bin/nbspgribplotc
-bin/nbspgradsh
-bin/nbspgradrsh
 bin/nbspgribsh
 bin/nbspgribrsh
 bin/nbspgribcat
