@@ -16,22 +16,22 @@ stage.configure:
 	./configure.sh
 	touch stage.configure
 
-stage.build: Makefile stage.configure 
+stage.build: stage.configure 
 	dh_testdir
 	${MAKE}
 	touch stage.build
 
-Makefile: Makefile.in
-	./configure.sh
-
-clean: Makefile
+clean: stage.configure
 	dh_testdir
 	dh_testroot
 	rm -f stage.*
 	-${MAKE} clean
-	dh_clean 
+	dh_clean
 
-install: Makefile stage.build
+distclean: clean
+	rm -rf stage.* debian
+
+install: stage.build
 	dh_testdir
 	dh_testroot
 	dh_prep

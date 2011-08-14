@@ -5,9 +5,9 @@
 cd ../..
 
 cp -R build/debian .
-dpkg-buildpackage -rfakeroot
+dpkg-buildpackage
 cp ../${name}_${version}*.deb build/debian
-rm -rf debian
+fakeroot debian/rules distclean
 
 cd build/debian
 ./ckplist.sh ${name}_${version}*.deb
