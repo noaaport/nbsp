@@ -24,12 +24,12 @@ stage.build: stage.configure
 clean: stage.configure
 	dh_testdir
 	dh_testroot
-	rm -f stage.*
 	-${MAKE} clean
+	rm -f stage.*
 	dh_clean
 
 distclean: clean
-	rm -rf stage.* debian
+	rm -rf debian
 
 install: stage.build
 	dh_testdir
