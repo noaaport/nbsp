@@ -4,7 +4,7 @@
 # 
 # Usage: nbspgismap [-b] [-d <outputdir>] [-D <defines>]
 #                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
-#                  [-I <inputdir>] -m <map_template> [-n <index>]
+#                  [-i] [-I <inputdir>] -m <map_template> [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <size>] [-t <imgtype>]
 #                  <file1> ... <filenn>
 #
@@ -30,7 +30,8 @@
 #
 # This is cmdline tool with no configuration file.
 #
-# -I => parent directory for the arguments to the program.
+# -I => Parent directory for the arguments to the program.
+# -i => Prepend common(datadir) to the argument given in -I.
 # -p => the arguments are interpreted as subdirectories of the -I parent dir.
 #       Then the list of files is constructed using the glob <patt>, sorted
 #       in decreasing order, and the -n <index> option is used to select
@@ -54,14 +55,15 @@ set usage {nbspgismap [-b] [-d <outputdir>] [-D <defines>]
     [-m <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
     [-s <size>] [-t <imgtype>] <file1> ... <filen>};
 
-set optlist {b {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+set optlist {b i {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
     {I.arg ""} {m.arg ""} {n.arg 0} {o.arg ""} {p.arg ""} {s.arg ""}
     {t.arg ""}};
 
 package require cmdline;
 
 # Source filters.init so that the templates can "require" locally
-# installed packages (e.g., map_rad requitres gis.tcl)
+# installed packages (e.g., map_rad requitres gis.tcl) as well the
+# "common" settings.
 #
 source "/usr/local/libexec/nbsp/filters.init";
 
@@ -83,6 +85,9 @@ set nbspgismap(map_tmplfile) "";
 set nbspgismap(map_rcfile) "";
 set nbspgismap(input_files_list) [list];
 set nbspgismap(outputfile) "";
+
+# inherited settings
+set nbspgismap(datadir) $common(datadir);
 
 proc log_warn s {
 
@@ -278,6 +283,11 @@ set argc [llength $argv];
 if {$argc == 0} {
     set argv [split [string trim [read stdin]]];
 }
+
+if {($option(I) ne "") && ($option(i) == 1)} {
+    set option(I) [file join $nbspgismap(datadir) $option(I)];
+}
+
 get_input_files_list $argv;
 
 if {$option(e) ne ""} {

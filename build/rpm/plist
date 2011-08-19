@@ -43,6 +43,7 @@
 /usr/local/bin/nbspgismap
 /usr/local/bin/nbspgisbundlemap
 /usr/local/bin/nbspgisradmap
+/usr/local/bin/nbspgissatmap
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
 /usr/local/bin/nbspstatplotdata

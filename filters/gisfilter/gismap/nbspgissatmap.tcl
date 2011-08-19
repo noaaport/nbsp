@@ -2,28 +2,30 @@
 #
 # $Id$
 # 
-# Usage: nbspgisradmap [-b] [-k] [-v] [-d <outputdir>] [-D <defines>]
+# Usage: nbspgissatmap [-b] [-k] [-q] [-v] [-d <outputdir>] [-D <defines>]
 #                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-i] [-I <inputdir>] [-m | -M <map_template>] [-n <index>]
-#                  [-o <outputfile>] [-p <patt>] [-s <size>] [-t <imgtype>]
-#                  <file1> ... <filenn>
+#                  [-o <outputfile>] [-p <patt>] [-r <lon1,lat1,lon2,lat2;...>
+#                  [-s <size>] [-t <imgtype>] <file1> ... <filenn>
 #
 # This is cmdline tool with no configuration file.
 # The <filen> arguments can be given in the command line or in stdin.
-# When there is more than one file, all must be of the same type (e.g. n0r).
+# When there is more than one file, all must be of the same type (e.g. 01).
 # The inputfile names must have the format
 #
-# <awips><anything>.nids
+# <tigxxx><anything>.gini
 #
-# Then from the the <awips> the map template to use is determined as well
-# as the extent (for the site(s)).
+# Then from the the <wmoid> the map template to use is determined.
 #
 # Examples:
 #
-#    nbspgisradmap -I /var/noaaport/data/digatmos/nexrad/nids \
-#                  -p "n0r/*.nids" fdr inx tlx vnx
+#    nbspgissatmap -I /var/noaaport/data/digatmos/sat/gini/tig \
+#                  -p "*.gini" tige01 tigw01
 #
-#    nbspgisradmap n0rjua_20110811_1755.nids
+#    nbspgissatmap -i -I digatmos/sat/gini/tig -p "*.gini" \
+#                  -q -r "5,0,0,0;0,0,5,0" tige01 tigw01
+#
+#    nbspgissatmap tig01_<date>.gini
 #
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
@@ -46,23 +48,25 @@
 # -o => name of outputfile (otherwise the default is used)
 # -s => size
 # -t => imgtype (png)
+# -q, -r => are passed intact to nbspsatgis for controlling the bounding box
+#           of each asc file
 
-set usage {nbspgisradmap [-b] [-k] [-v] [-d <outputdir>] [-D <defines>]
+set usage {nbspgissatmap [-b] [-k] [-v] [-q] [-d <outputdir>] [-D <defines>]
     [-e <extent>] [-f <mapfontsdir>] [-g <geodatadir>] [-i] [-I <inputdir>]
     [-m | -M <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
-    [-s <size>] [-t <imgtype>] <file1> ... <filen>};
+    [-r <lon1,lat1,lon2,lat2;...>] [-s <size>] [-t <imgtype>]
+    <file1> ... <filen>};
 
-set optlist {b i k v {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+set optlist {b i k v q {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
     {I.arg ""} {m.arg ""} {M.arg ""} {n.arg 0} {o.arg ""} {p.arg ""}
-    {s.arg ""} {t.arg ""}};
+    {r.arg ""} {s.arg ""} {t.arg ""}};
 
 package require cmdline;
 
 # Source filters.init so that the templates can "require" locally
-# installed packages (e.g., map_rad requires gis.tcl)
+# installed packages
 #
 source "/usr/local/libexec/nbsp/filters.init";
-package require nbsp::radstations;
 
 # Defaults
 #
@@ -90,7 +94,9 @@ foreach d $common(localconfdirs) {
 # parameters
 set nbspgismap(map_rc_fext) ".map";
 set nbspgismap(map_tmpl_fext) ".tmpl";
-set nbspgismap(map_tmpl_namefmt) "map_rad_%s";
+set nbspgismap(map_tmpl_namefmt) "map_sat_%s";
+set nbspgismap(map_tmpl_default) "map_sat";
+set nbspgismap(ascfext) ".asc";
 
 # variables
 set nbspgismap(map_tmplfile) "";
@@ -201,24 +207,91 @@ proc get_input_files_list {argv} {
 proc verify_inputfile_namefmt {inputfile} {
 
     set fbasename [file tail $inputfile];
-    set re {^[[:alnum:]]{6}.+\.nids$};
+    set re {^[[:alnum:]]{6}.+\.gini$};
 
     if {[regexp $re $fbasename] == 0} {
 	return -code error "Invalid input file name: $inputfile";
     }
 }
 
-proc select_mapname_keyword {awips1} {
+proc select_mapname_keyword {wmoid} {
 
-    if {[regexp {^n.(r|q|z)$} $awips1]} {
-	set mapname "bref";
-    } elseif {[regexp {^n.(u|v)$} $awips1]} {
-	set mapname "rvel";
+    if {[regexp {^tig} $wmoid]} {
+	set mapname "";
     } else {
-	return -code error "Unsupported nids type";
+	return -code error "Unsupported type: $wmoid";
     }
 
     return $mapname;
+}
+
+#
+# Functions to support the determination of the default extent from
+# the asc files themselves.
+#
+proc get_extent_from_ascfile_list {file_list} {
+#
+# This is the main function of the combo. The other two, next,
+# are used in this one.
+#
+    set extent [list];
+
+    foreach f $file_list {
+	set new_extent [get_extent_from_ascfile $f];
+	set extent [update_extent $extent $new_extent];
+    }
+
+    return $extent;
+}
+
+proc get_extent_from_ascfile {file} {
+
+    set data [split [string trim [exec head -n 6 $file]] "\n"];
+    foreach line $data {
+	set key [lindex [split $line] 0];
+	set val [lindex [split $line] 1];
+	set a($key) $val;
+    }
+
+    set lon1 $a(xllcorner);
+    set lat1 $a(yllcorner);
+    set lon2 [expr $lon1 + $a(ncols) * $a(cellsize)];
+    set lat2 [expr $lat1 + $a(nrows) * $a(cellsize)];
+
+    return [list $lon1 $lat1 $lon2 $lat2];
+}
+
+proc update_extent {old_extent new_extent} {
+
+    if {[llength $old_extent] == 0} {
+	return $new_extent;
+    }
+    
+    set lon1 [lindex $old_extent 0];
+    set new [lindex $new_extent 0];
+    if {$new < $lon1} {
+	set lon1 $new;
+    }
+
+    set lat1 [lindex $old_extent 1];
+    set new [lindex $new_extent 1];
+    if {$new < $lat1} {
+	set lat1 $new;
+    }
+    
+    set lon2 [lindex $old_extent 2];
+    set new [lindex $new_extent 2];
+    if {$new > $lon2} {
+	set lon2 $new;
+    }
+
+    set lat2 [lindex $old_extent 3];
+    set new [lindex $new_extent 3];
+    if {$new > $lat2} {
+	set lat2 $new;
+    }
+    
+    return [list $lon1 $lat1 $lon2 $lat2];
 }
 
 #
@@ -243,36 +316,52 @@ if {[llength $nbspgismap(input_files_list)] == 0} {
     log_err "No files found.";
 }
 
-set sitelist [list];
+set regionlist [list];
 foreach inputfile $nbspgismap(input_files_list) {
     verify_inputfile_namefmt $inputfile;
 
-    set awips [string range [file tail $inputfile] 0 5];
-    set site [string range $awips 3 5];
+    set wmoid [string range [file tail $inputfile] 0 5];
+    set region [string range $wmoid 0 3];
 
-    if {[info exists awips1] == 0} {
-	set awips1 [string range $awips 0 2];
-    } elseif {[string range $awips 0 2] ne $awips1} {
-	log_err "Input files have different data type.";
+    if {[info exists type] == 0} {
+	set type [string range $wmoid 4 5];
+    } elseif {[string range $wmoid 4 5] ne $type} {
+	err "Input files have different data type.";
     }
 
-    lappend sitelist $site;
+    lappend regionlist $region;
 }
 
-# This returns a keyword: "bref", "rvel", ...
-set mapname_keyword [select_mapname_keyword $awips1];
+# This returns a keyword or ""
+set mapname_keyword [select_mapname_keyword $wmoid];
 
-if {[regexp {^n.(r|v|z)} $awips1]} {
-    set do_nbspunz 1;
-    set map(extent) [::nbsp::radstations::extent_bysitelist $sitelist];
+if {$option(r) ne ""} {
+    set optr_list [split $option(r) ";"];
 } else {
-    set do_nbspunz 0;
-    if {[llength $sitelist] == 1} {
-	set map(extent) [::nbsp::radstations::extent_bysite $site 4];
-    } else {
-	set map(extent) [::nbsp::radstations::extent_bysitelist $sitelist];
-    }
+    set optr_list [list];
 }
+
+set ascfile_list [list];
+foreach inputfile $nbspgismap(input_files_list) {
+    set ascname [file rootname [file tail $inputfile]];
+    set cmd [list exec nbspunz $inputfile | nbspsatgis -A -n $ascname];
+
+    if {[llength $optr_list] != 0} {
+	set opts [list "-r" [lindex $optr_list 0]];
+	set optr_list [lreplace $optr_list 0 0];
+	if {$option(q) == 1} {
+	    lappend opts "-q";
+	}
+	set cmd [concat $cmd $opts];
+    }
+
+    eval $cmd;
+
+    lappend ascfile_list ${ascname}$nbspgismap(ascfext);
+}
+
+# Get the default extent from the asc files
+set map(extent) [get_extent_from_ascfile_list $ascfile_list];
 
 if {$option(e) ne ""} {
     set map(extent) $option(e);
@@ -291,9 +380,11 @@ if {$option(m) ne ""} {
 } else {
     if {$option(M) ne ""} {
 	set map_template $option(M);
-    } else {
+    } elseif {$mapname_keyword ne ""} {
 	set map_template [format $nbspgismap(map_tmpl_namefmt) \
 			      $mapname_keyword];
+    } else {
+	set map_template $nbspgismap(map_tmpl_default);
     }
 
     if {[file extension $map_template)] ne $nbspgismap(map_tmpl_fext)} {
@@ -329,21 +420,6 @@ if {[file exists $nbspgismap(map_tmplfile)] == 0} {
 }
 
 #
-# process files
-#
-set shpname_list [list];
-foreach inputfile $nbspgismap(input_files_list) {
-    set shpname [file rootname [file tail $inputfile]];
-    log_msg "Converting $inputfile to shapefile ...";
-    if {$do_nbspunz == 1} {
-	exec nbspunz $inputfile | nbspradgis -C -n $shpname;
-    } else {
-	exec nbspradgis -n $shpname $inputfile;
-    }
-    lappend shpname_list $shpname;
-}
-
-#
 # use this or \"$extent\" in the open proc.
 #
 set map(extent) [join $map(extent) ";"];
@@ -352,12 +428,6 @@ set cmd [list "|nbspgismap" -e $map(extent) \
 	     -f $map(mapfonts) \
 	     -g $map(geodata) \
 	     -m $nbspgismap(map_tmplfile)];
-
-if {$option(D) ne ""} {
-    append option(D) "," "awips1=$awips1";
-} else {
-    set option(D) "awips1=$awips1";
-}
 
 foreach k [list d D o s t] {
     if {$option($k) ne ""} {
@@ -368,14 +438,11 @@ foreach k [list d D o s t] {
 log_msg "Creating map ...";
 
 set F [open [join $cmd] "w"];
-puts $F [join $shpname_list "\n"];
+puts $F [join $ascfile_list "\n"];
 close $F;
 
 if {$option(k) == 0} {
-    foreach ext [list "shp" "shx" "dbf" "info"] {
-	foreach shpname $shpname_list {
-	    set f ${shpname}.${ext};
-	    file delete $f;
-	}
+    foreach f $ascfile_list {
+	file delete $f;
     }
 }

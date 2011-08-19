@@ -45,6 +45,7 @@ bin/nbspws-uatomdf
 bin/nbspgismap
 bin/nbspgisbundlemap
 bin/nbspgisradmap
+bin/nbspgissatmap
 bin/nbspstatplot
 bin/nbspstatplot1
 bin/nbspstatplotdata

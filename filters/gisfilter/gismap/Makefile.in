@@ -7,8 +7,9 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	nbspgismap nbspgisbundlemap nbspgisradmap
-TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl nbspgisradmap.tcl
+TCLTARGET =	nbspgismap nbspgisbundlemap nbspgisradmap nbspgissatmap
+TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl \
+		nbspgisradmap.tcl nbspgissatmap.tcl
 
 TMPLSOURCES =	gis-colors.def.in \
 		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def
@@ -45,6 +46,9 @@ nbspgisbundlemap: nbspgisbundlemap.tcl
 
 nbspgisradmap: nbspgisradmap.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgisradmap.tcl > nbspgisradmap
+
+nbspgissatmap: nbspgissatmap.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgissatmap.tcl > nbspgissatmap
 
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
