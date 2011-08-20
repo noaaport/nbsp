@@ -2,7 +2,8 @@
 #
 # $Id$
 # 
-# Usage: nbspgisradmap [-b] [-k] [-v] [-d <outputdir>] [-D <defines>]
+# Usage: nbspgisradmap [-b] [-k] [-v] [-a <awips1> [-A]]
+#                  [-d <outputdir>] [-D <defines>]
 #                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-i] [-I <inputdir>] [-m | -M <map_template>] [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <size>] [-t <imgtype>]
@@ -20,10 +21,20 @@
 #
 # Examples:
 #
+#    nbspgisradmap n0rjua_20110811_1755.nids
+#
+#    (These four are equivalent)
+#
 #    nbspgisradmap -I /var/noaaport/data/digatmos/nexrad/nids \
 #                  -p "n0r/*.nids" fdr inx tlx vnx
 #
-#    nbspgisradmap n0rjua_20110811_1755.nids
+#    nbspgisradmap -i -I digatmos/nexrad/nids \
+#                  -p "n0r/*.nids" fdr inx tlx vnx
+#
+#    nbspgisradmap -a n0r fdr inx tlx vnx
+#
+#    nbspgisradmap -a n0r -A ok
+#
 #
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
@@ -31,6 +42,14 @@
 #       Then the list of files is constructed using the glob <patt>, sorted
 #       in decreasing order, and the -n <index> option is used to select
 #       the file. The default is the most recent file (index = 0).
+# -a => is equivalent to set -i, -I digatmos/nexrad/nids, and
+#       -p <awips1>/*.nids  (where <awips1> is the argument to -a).
+# -A => if -a is given, then this option instructs to look every argument
+#       and take any two-letter word as the initials of a state, then
+#       expand it as a list of stations and add the list to the argument list.
+#       (When this option is used, the assumption is that the directories
+#       that are given in the arguments, are the names of the sites, as in
+#       the default configuration of the dafilter).
 # -b => background mode
 # -k => keep the generated shp files (when the input are nids)
 # -d => output directory
@@ -47,13 +66,14 @@
 # -s => size
 # -t => imgtype (png)
 
-set usage {nbspgisradmap [-b] [-k] [-v] [-d <outputdir>] [-D <defines>]
+set usage {nbspgisradmap [-b] [-k] [-v]
+    [-a <awips1> [-A]] [-d <outputdir>] [-D <defines>]
     [-e <extent>] [-f <mapfontsdir>] [-g <geodatadir>] [-i] [-I <inputdir>]
     [-m | -M <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
     [-s <size>] [-t <imgtype>] <file1> ... <filen>};
 
-set optlist {b i k v {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
-    {I.arg ""} {m.arg ""} {M.arg ""} {n.arg 0} {o.arg ""} {p.arg ""}
+set optlist {b i k v A {a.arg ""} {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""}
+    {g.arg ""} {I.arg ""} {m.arg ""} {M.arg ""} {n.arg 0} {o.arg ""} {p.arg ""}
     {s.arg ""} {t.arg ""}};
 
 package require cmdline;
@@ -91,6 +111,7 @@ foreach d $common(localconfdirs) {
 set nbspgismap(map_rc_fext) ".map";
 set nbspgismap(map_tmpl_fext) ".tmpl";
 set nbspgismap(map_tmpl_namefmt) "map_rad_%s";
+set nbspgismap(nids_fext) ".nids";
 
 # variables
 set nbspgismap(map_tmplfile) "";
@@ -100,6 +121,10 @@ set nbspgismap(outputfile) "";
 
 # inherited
 set nbspgismap(datadir) $common(datadir);
+
+# default options if -a is given
+set option(default_I) "digatmos/nexrad/nids";
+set option(default_p) {%s/*.nids};
 
 proc log_warn s {
 
@@ -221,6 +246,21 @@ proc select_mapname_keyword {awips1} {
     return $mapname;
 }
 
+proc expand_argv {inputlist} {
+
+    set outputlist [list];
+    foreach a $inputlist {
+        if {[string length $a] == 2} {
+            set slist [::nbsp::radstations::bystate $a];
+            set outputlist [concat $outputlist $slist];
+        } else {
+            lappend outputlist $a;
+        }
+    }
+
+    return $outputlist;
+}
+
 #
 # main
 #
@@ -231,6 +271,22 @@ check_conflicts $usage;
 
 if {$argc == 0} {
     set argv [split [read stdin]];
+}
+
+# set defaults if -a is given
+if {$option(a) ne ""} {
+    set option(i) 1;
+    if {$option(I) eq ""} {
+	set option(I) $option(default_I);
+    }
+
+    if {$option(p) eq ""} {
+	set option(p) [format $option(default_p) $option(a)];
+    }
+
+    if {$option(A) == 1} {
+	set argv [expand_argv $argv];
+    }
 }
 
 if {($option(I) ne "") && ($option(i) == 1)} {
