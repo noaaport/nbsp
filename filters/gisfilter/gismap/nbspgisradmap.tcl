@@ -14,7 +14,7 @@
 # When there is more than one file, all must be of the same type (e.g. n0r).
 # The inputfile names must have the format
 #
-# <awips><anything>.nids
+# <awips><anything>
 #
 # Then from the the <awips> the map template to use is determined as well
 # as the extent (for the site(s)).
@@ -111,7 +111,6 @@ foreach d $common(localconfdirs) {
 set nbspgismap(map_rc_fext) ".map";
 set nbspgismap(map_tmpl_fext) ".tmpl";
 set nbspgismap(map_tmpl_namefmt) "map_rad_%s";
-set nbspgismap(nids_fext) ".nids";
 
 # variables
 set nbspgismap(map_tmplfile) "";
@@ -226,7 +225,8 @@ proc get_input_files_list {argv} {
 proc verify_inputfile_namefmt {inputfile} {
 
     set fbasename [file tail $inputfile];
-    set re {^[[:alnum:]]{6}.+\.nids$};
+    # set re {^[[:alnum:]]{6}.+\.nids$};  # don't require nids extension
+    set re {^[[:alnum:]]{6}};
 
     if {[regexp $re $fbasename] == 0} {
 	return -code error "Invalid input file name: $inputfile";
@@ -408,6 +408,10 @@ set cmd [list "|nbspgismap" -e $map(extent) \
 	     -f $map(mapfonts) \
 	     -g $map(geodata) \
 	     -m $nbspgismap(map_tmplfile)];
+
+if {$option(b) == 1} {
+    lappend cmd "-b";
+}
 
 if {$option(D) ne ""} {
     append option(D) "," "awips1=$awips1";

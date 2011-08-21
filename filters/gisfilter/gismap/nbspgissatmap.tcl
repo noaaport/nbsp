@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspgissatmap [-b] [-k] [-q] [-v] [-d <outputdir>] [-D <defines>]
+# Usage: nbspgissatmap [-a] [-b] [-k] [-q] [-v] [-d <outputdir>] [-D <defines>]
 #                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-i] [-I <inputdir>] [-m | -M <map_template>] [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-r <lon1,lat1,lon2,lat2;...>
@@ -13,19 +13,28 @@
 # When there is more than one file, all must be of the same type (e.g. 01).
 # The inputfile names must have the format
 #
-# <tigxxx><anything>.gini
+# <tigxxx><anything>
 #
 # Then from the the <wmoid> the map template to use is determined.
 #
 # Examples:
 #
+#    nbspgissatmap tig01_<date>.gini
+#
+#    The following three are equivalent
+#
 #    nbspgissatmap -I /var/noaaport/data/digatmos/sat/gini/tig \
 #                  -p "*.gini" tige01 tigw01
+#
+#    nbspgissatmap -a tige01 tigw01
+#
+#
+#    These two are equivalent
 #
 #    nbspgissatmap -i -I digatmos/sat/gini/tig -p "*.gini" \
 #                  -q -r "5,0,0,0;0,0,5,0" tige01 tigw01
 #
-#    nbspgissatmap tig01_<date>.gini
+#    nbspgissatmap -a -q -r "5,0,0,0;0,0,5,0" tige01 tigw01
 #
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
@@ -33,6 +42,8 @@
 #       Then the list of files is constructed using the glob <patt>, sorted
 #       in decreasing order, and the -n <index> option is used to select
 #       the file. The default is the most recent file (index = 0).
+# -a => is equivalent to set -i, -I digatmos/sat/gini/tig, and
+#       -p "*.gini" (it does not require an argument since there is no awips1).
 # -b => background mode
 # -k => keep the generated shp files (when the input are nids)
 # -d => output directory
@@ -51,13 +62,14 @@
 # -q, -r => are passed intact to nbspsatgis for controlling the bounding box
 #           of each asc file
 
-set usage {nbspgissatmap [-b] [-k] [-v] [-q] [-d <outputdir>] [-D <defines>]
-    [-e <extent>] [-f <mapfontsdir>] [-g <geodatadir>] [-i] [-I <inputdir>]
+set usage {nbspgissatmap [-a] [-b] [-k] [-v] [-q]
+    [-d <outputdir>] [-D <defines>] [-e <extent>] [-f <mapfontsdir>]
+    [-g <geodatadir>][-i] [-I <inputdir>]
     [-m | -M <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
     [-r <lon1,lat1,lon2,lat2;...>] [-s <size>] [-t <imgtype>]
     <file1> ... <filen>};
 
-set optlist {b i k v q {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+set optlist {a b i k v q {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
     {I.arg ""} {m.arg ""} {M.arg ""} {n.arg 0} {o.arg ""} {p.arg ""}
     {r.arg ""} {s.arg ""} {t.arg ""}};
 
@@ -106,6 +118,10 @@ set nbspgismap(outputfile) "";
 
 # inherited
 set nbspgismap(datadir) $common(datadir);
+
+# default options if -a is given
+set option(default_I) "digatmos/sat/gini/tig";
+set option(default_p) {*.gini};
 
 proc log_warn s {
 
@@ -207,7 +223,8 @@ proc get_input_files_list {argv} {
 proc verify_inputfile_namefmt {inputfile} {
 
     set fbasename [file tail $inputfile];
-    set re {^[[:alnum:]]{6}.+\.gini$};
+    # set re {^[[:alnum:]]{6}.+\.gini$};
+    set re {^[[:alnum:]]{6}};
 
     if {[regexp $re $fbasename] == 0} {
 	return -code error "Invalid input file name: $inputfile";
@@ -304,6 +321,18 @@ check_conflicts $usage;
 
 if {$argc == 0} {
     set argv [split [read stdin]];
+}
+
+# set defaults if -a is given
+if {$option(a) ne ""} {
+    set option(i) 1;
+    if {$option(I) eq ""} {
+	set option(I) $option(default_I);
+    }
+
+    if {$option(p) eq ""} {
+	set option(p) $option(default_p);
+    }
 }
 
 if {($option(I) ne "") && ($option(i) == 1)} {
@@ -428,6 +457,11 @@ set cmd [list "|nbspgismap" -e $map(extent) \
 	     -f $map(mapfonts) \
 	     -g $map(geodata) \
 	     -m $nbspgismap(map_tmplfile)];
+
+
+if {$option(b) == 1} {
+    lappend cmd "-b";
+}
 
 foreach k [list d D o s t] {
     if {$option($k) ne ""} {
