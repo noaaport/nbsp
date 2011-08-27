@@ -24,17 +24,17 @@
 #    The following three are equivalent
 #
 #    nbspgissatmap -I /var/noaaport/data/digatmos/sat/gini/tig \
-#                  -p "*.gini" tige01 tigw01
+#                  -p "*.gini" tigw01 tige01
 #
-#    nbspgissatmap -a tige01 tigw01
+#    nbspgissatmap -a tigw01 tige01
 #
 #
 #    These two are equivalent
 #
 #    nbspgissatmap -i -I digatmos/sat/gini/tig -p "*.gini" \
-#                  -q -r "5,0,0,0;0,0,5,0" tige01 tigw01
+#                  -q -r "0,0,5,0;5,0,0,0" tigw01 tige01
 #
-#    nbspgissatmap -a -q -r "5,0,0,0;0,0,5,0" tige01 tigw01
+#    nbspgissatmap -a -q -r "0,0,5,0;5,0,0,0" tigw01 tige01
 #
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
