@@ -284,6 +284,7 @@
 /usr/local/etc/nbsp/dist/httpd.conf-sample
 /usr/local/etc/nbsp/dist/export.conf-sample
 /usr/local/etc/nbsp/dist/export-da.def-sample
+/usr/local/etc/nbsp/dist/export-grib.def-sample
 /usr/local/etc/nbsp/dist/weatherscope.conf-sample
 /usr/local/etc/nbsp/dist/npstats.conf-sample
 /usr/local/etc/nbsp/dist/npstats.conf-defaults
