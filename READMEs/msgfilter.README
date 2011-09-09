@@ -1,5 +1,5 @@
 #
-# $Id: msgfilter.README 2 2009-09-11 16:26:26Z nieves $
+# $Id: msgfilter.README 1100 2011-09-09 23:34:53Z jfnieves $
 #
 
 	Quick Start -
@@ -49,7 +49,7 @@ Subscriber list configuration -
 
 The list of "subscribers" is specified in the following form, one
 such term for each "subscriber", in the file
-"/usr/local/etc/nbsp/msgfilter.rc" (but see below):
+"/usr/local/etc/npemwin/msgfilter.rc" (but see below):
 
 lappend subscribers {
 	<transport>://<destination>
@@ -62,7 +62,7 @@ has the form
 	
 	<prod_code_regex>_<zone_code_regex>
 or
-	<prod_code_regex><size_code_regex>
+	<awips_code_regex>
 
 For example, given
 
@@ -76,7 +76,7 @@ then I would receive all svs and tor for TX zones 145 to 149, and also
 all SVR for VA zone 014. The comma separated list of product-zone
 combinations can be extended indefinitely.
 
-Another form is
+Instead of the prod_code and zone_code combiation, the other form is
 
 lappend subscribers {
 	smtp://nieves@noaaport.net
@@ -106,12 +106,12 @@ transport defines its own set flags (for transports could be empty).
 
 As already mentioned, the filter reads reads the file
 
-	/usr/local/etc/nbsp/msgfilter.rc
+	/usr/local/etc/npemwin/msgfilter.rc
 
 to get the list of subscribers. In practice the list should be written
 instead in the "site" file (the filter looks for it as well)
 
-	/usr/local/etc/nbsp/site/msgfilter.rc
+	/usr/local/etc/npemwin/site/msgfilter.rc
 
 Flat text files -
 ---------------
@@ -128,11 +128,11 @@ smtp://<phonenumber>@tms.suncom.com (svs|tor)-txz14[5-9] S;
 
 If such a flat list is kept in the file
 
-	/usr/local/etc/nbsp/site/msgfilter-subscribers.txt
+	/usr/local/etc/npemwin/site/msgfilter-subscribers.txt
 
 then it can be imported by "site/msgfilter.rc" file by writing in that file
 
-msgfilter_add_flat_file "/usr/local/etc/nbsp/site/msgfilter-subscribers.txt"
+msgfilter_add_flat_file "/usr/local/etc/npemwin/site/msgfilter-subscribers.txt"
 
 Examples -
 -------
