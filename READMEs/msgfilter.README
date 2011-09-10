@@ -1,5 +1,5 @@
 #
-# $Id: msgfilter.README 1100 2011-09-09 23:34:53Z jfnieves $
+# $Id: msgfilter.README 1102 2011-09-10 00:10:54Z jfnieves $
 #
 
 	Quick Start -
@@ -102,7 +102,7 @@ lappend subscribers {
 
 The <flags> depend on the particular transport. For smtp
 it can be "F" or "S" to send the full file or the summary. Each
-transport defines its own set flags (for transports could be empty).
+transport defines its own set flags (for some transports it could be empty).
 
 As already mentioned, the filter reads reads the file
 
