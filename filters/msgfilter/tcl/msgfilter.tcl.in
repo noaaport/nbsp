@@ -1,4 +1,3 @@
-
 #!%TCLSH%
 #
 # $Id$
@@ -132,7 +131,7 @@ proc process {finfo} {
 
     set prod_name $rc(fname);
     # Cleaned up if needed below
-    set prod_body [::fileutil::cat $rc(fpath)];
+    set prod_body [::fileutil::cat -translation binary $rc(fpath)];
     if {$msgfilter(ccbsaved) == 1} {
 	set prod_body [string range $prod_body $msgfilter(ccbsize) end];
     }
@@ -193,7 +192,7 @@ proc process {finfo} {
 	return;
     }
 
-    set prod_body [regsub -all {\r} $prod_body];
+    set prod_body [string trim [regsub -all {\r+} $prod_body ""]];
 
     foreach key [array names sendtolist] {
 	set t [lindex [split $key ","] 0];
@@ -223,7 +222,7 @@ proc msgfilter_dispatch {transport flags recipients \
 	set body $prod_body;
     } elseif {[string first $flags "S"] >= 0} {
 	set subject $prod_name;
-	append body $prod_summary;
+	set body $prod_summary;
     } else {
 	log_msg "Invalid flag $flags";
 	return;
