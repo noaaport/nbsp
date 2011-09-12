@@ -4,8 +4,8 @@
 #
 package require fileutil;
 package require textutil;
-package require mime;
-package require smtp;
+## package require mime;
+## package require smtp;
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
@@ -35,9 +35,9 @@ set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
 # Configuration variables
 #
 set msgfilter(smtp,originator) "nbsp@localhost";
-set msgfilter(smtp,servers)    "localhost";
-set msgfilter(smtp,options) [list]; # for other options (if needed) such as
-                                    # -username <u> -password <p> ...
+set msgfilter(smtp,options) [list]; # for other options (if needed)
+## set msgfilter(smtp,servers)    "localhost";
+
 #
 # The priority may be specified as a ``facility.level'' pair.
 # For example, ``local3.info'' logs the message as informational
@@ -246,21 +246,62 @@ proc msgfilter_add_flat_file {file} {
     close $f;
 }
 
+
+#
 # Here recipients is a tcl list (that gets converted to a comma-separated
 # string).
 #
+
 proc msgfilter_smtp_send_txt {recipients subject body} {
 
     global msgfilter;
 
-    set token [mime::initialize -canonical text/plain -string $body];
+    set recipients [join $recipients ","];
+
+    set msg "To: $recipients\n";
+    append msg "Subject: $subject\n";
+    append msg "From: $msgfilter(smtp,originator)\n";
+    append msg "\n$body\n";
+    append msg ".";
+
+    set cmd [concat [list "|sendmail" -t -f $msgfilter(smtp,originator)] \
+	$msgfilter(smtp,options)];
+
+    set status [catch {
+	set F [open $cmd w];
+	puts $F $msg;
+    } errmsg];
+
+    if {[info exists F]} {
+	catch {close $F};
+    }
+
+    if {$status != 0} {	
+       exec logger -t $msgfilter(syslogid) -p $msgfilter(syslogpri) $errmsg;
+    }
+                
+    return $status;
+}
+
+proc msgfilter_smtp_send_txt_old {recipients subject body} {
+#
+# For some reason this does not work for sms mesages - I believe
+# the reason is the mime encoding framework.
+#
+    global msgfilter;
+
+    set token [mime::initialize -canonical text/plain -encoding 7bit \
+	-string $body];
+
+    ::mime::setheader $token To [join $recipients ","];
+    ::mime::setheader $token Subject $subject;
 
     set cmd [list smtp::sendmessage $token \
-		-originator $msgfilter(smtp,originator) \
-		-servers $msgfilter(smtp,servers) \
-		-recipients [join $recipients ","] \
-		-header [list Subject $subject]];
-    set result [eval $cmd $msgfilter(smtp,options)];
+	-originator $msgfilter(smtp,originator) \
+	-recipients [join $recipients ","] \
+	-servers $msgfilter(smtp,servers)];
+
+    set result [eval [concat $cmd $msgfilter(smtp,options)]];
 
     mime::finalize $token;
 
