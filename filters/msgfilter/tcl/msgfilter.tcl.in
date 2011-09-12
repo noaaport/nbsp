@@ -1,3 +1,4 @@
+
 #!%TCLSH%
 #
 # $Id$
@@ -130,7 +131,8 @@ proc process {finfo} {
     }
 
     set prod_name $rc(fname);
-    set prod_body [::fileutil::cat -translation crlf $rc(fpath)];
+    # Cleaned up if needed below
+    set prod_body [::fileutil::cat $rc(fpath)];
     if {$msgfilter(ccbsaved) == 1} {
 	set prod_body [string range $prod_body $msgfilter(ccbsize) end];
     }
@@ -152,6 +154,7 @@ proc process {finfo} {
     #
     # The two forms can be mixed in the comma-separated list.
 
+    set match 0;
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
 	    set s_parts [::textutil::splitx [string trim $s]];
@@ -185,6 +188,13 @@ proc process {finfo} {
 	    }
 	}
     }
+
+    if {$match == 0} {
+	return;
+    }
+
+    set prod_body [regsub -all {\r} $prod_body];
+
     foreach key [array names sendtolist] {
 	set t [lindex [split $key ","] 0];
 	set f [lindex [split $key ","] 1];
