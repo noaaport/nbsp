@@ -433,7 +433,7 @@ proc msgfilter_prod_summary {prod_code} {
     if {[info exists filtersprodcodes($prod_code)]} {
 	set summary $filtersprodcodes($prod_code);
     } else {
-        append summary $prod_code " - No description found" ;
+        set summary $prod_code;
     }
 
     return $summary;
