@@ -3,7 +3,7 @@
 #
 
 # All in one line (always end in ';')
-smtp://7877589734@att.net (svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0 S;
+smstp://7873467474@att.net (svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0 S;
 
 # Split accross several lines
 smtp://nieves@noaaport.net
@@ -30,6 +30,7 @@ smtp://nieves@ltp.upr.clu.edu
 
 # Everything from San Juan
 smtp://nieves@ltp.upr.clu.edu jsj$ F;
+smtp://7873467474@att.net jsj$ S;
 
 # The above is the same as
 smtp://nieves@ltp.upr.clu.edu ...jsj F;

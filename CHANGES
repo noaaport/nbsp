@@ -114,5 +114,6 @@
 - Revision of nbspgribrsh (and the companion catalog tools)
 - Added -nobody in call to filterslib in gribfilter
 - Added nbspgisradmap and nbspgissatmap
-- Revised msgfilter because with the tcl mime-smtp package the sms to
-  mobile devices was not working correctly.
+- Revised msgfilter to add appropriate headers to the message. Added
+  separate function to send sms messages using sendmail in case
+  tcllib based function does not work for some addresses

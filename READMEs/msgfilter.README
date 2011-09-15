@@ -12,12 +12,15 @@ Quick Start -
 -----------
 
 	1) Enable the msgfilter in the "features.conf" file.
-	2) Set the variables
+	2) Set the variable
 
 		msgfilter(smtp,originator)
+
+ 	   and if needed
+
 		msgfilter(smtp,servers)
 
-	to appropriate values in "site/msgfilter.conf".
+	   to appropriate values in "site/msgfilter.conf".
 	3) Write the subscribers list(s) (as indicated below).
 
 
@@ -64,6 +67,8 @@ has the form
 or
 	<awips_code_regex>
 
+(if the awips code is blank then the wmoid is used).
+
 For example, given
 
 lappend subscribers {
@@ -103,6 +108,18 @@ lappend subscribers {
 The <flags> depend on the particular transport. For smtp
 it can be "F" or "S" to send the full file or the summary. Each
 transport defines its own set flags (for some transports it could be empty).
+
+==
+Added Tue Sep 13 11:39:32 AST 2011:
+
+To send sms messages (to a cel phone), e.g.,
+
+lappend subscribers {
+	smtp://7873467474@tmomail.net
+	(svs|tor)_txz14[5-9],svr_vaz014,afd(jsj|lix)
+	<flags>
+}
+==
 
 As already mentioned, the filter reads reads the file
 

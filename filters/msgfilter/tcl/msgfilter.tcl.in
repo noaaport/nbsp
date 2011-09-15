@@ -4,8 +4,8 @@
 #
 package require fileutil;
 package require textutil;
-## package require mime;
-## package require smtp;
+package require mime;
+package require smtp;
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
@@ -35,9 +35,9 @@ set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
 # Configuration variables
 #
 set msgfilter(smtp,originator) "nbsp@localhost";
-set msgfilter(smtp,options) [list]; # for other options (if needed)
-## set msgfilter(smtp,servers)    "localhost";
-
+set msgfilter(smtp,servers)    "localhost";
+set msgfilter(smtp,options) [list]; # for other options (if needed) such as
+                                    # -username <u> -password <p> ...
 #
 # The priority may be specified as a ``facility.level'' pair.
 # For example, ``local3.info'' logs the message as informational
@@ -130,8 +130,7 @@ proc process {finfo} {
     }
 
     set prod_name $rc(fname);
-    # Cleaned up if needed below
-    set prod_body [::fileutil::cat -translation binary $rc(fpath)];
+    set prod_body [::fileutil::cat -translation crlf $rc(fpath)];
     if {$msgfilter(ccbsaved) == 1} {
 	set prod_body [string range $prod_body $msgfilter(ccbsize) end];
     }
@@ -143,17 +142,15 @@ proc process {finfo} {
     #	<destination> <prodzonespcec> <flags>;
     #
     # The <prodzonespcec> is a comma separated list of
-    # products and zone regexes, or product and site regexes
+    # products and zone regexes, or product name regexes, where
+    # prodname = awips (or wmoid if awips is blank)
     #
     #     <prod_regex1>_<zone_regex1>,<prod_regex2>_<zone_regex2>,...
-    #
     # or
-    #
-    #     <prod_regex1><site_regex1>,<prod_regex2><site_regex2>,...
+    #     <prodname_regex1>,<prodname_regex2>,...
     #
     # The two forms can be mixed in the comma-separated list.
 
-    set match 0;
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
 	    set s_parts [::textutil::splitx [string trim $s]];
@@ -171,8 +168,8 @@ proc process {finfo} {
 
 		if {$s_zone_code_regex eq ""} {
 	 	    #
-		    # The spec is <prod><site> without zones, and in this case
-	 	    # the match is tried with the awips code.
+		    # The spec is <prodname> without zones, and in this case
+	 	    # the match is tried with the awips (or wmoid) code.
 		    #
 		    set match [regexp $s_prod_code_regex $prod_site_code];
 		} else {
@@ -187,13 +184,6 @@ proc process {finfo} {
 	    }
 	}
     }
-
-    if {$match == 0} {
-	return;
-    }
-
-    set prod_body [string trim [regsub -all {\r+} $prod_body ""]];
-
     foreach key [array names sendtolist] {
 	set t [lindex [split $key ","] 0];
 	set f [lindex [split $key ","] 1];
@@ -205,7 +195,7 @@ proc process {finfo} {
 proc msgfilter_dispatch {transport flags recipients \
 	prod_name prod_type prod_code prod_body} {
 
-    if {$transport ne "smtp"} {
+    if {[regexp {^(smtp|sms)$} $transport] == 0} {
 	log_msg "Invalid transport $transport.";
 	return;
     }
@@ -228,7 +218,16 @@ proc msgfilter_dispatch {transport flags recipients \
 	return;
     }
 
-    msgfilter_smtp_send_txt $recipients $subject $body;
+    # Tue Sep 13 14:38:24 AST 2011 - I found that the "smtp" function works
+    # with the cel phones I am leaving the second (sms) option for the
+    # moment, just in case there are some services for which the tcllib
+    # function does not work.
+
+    if {$transport eq "smtp"} {
+        msgfilter_smtp_send_txt $recipients $subject $body;
+    } elseif {$transport eq "sms"} {
+	 msgfilter_sms_send_txt $recipients $subject $body;
+    }
 }
 
 # This function takes as input a flat db file, parses it, and lappends the
@@ -255,13 +254,42 @@ proc msgfilter_add_flat_file {file} {
     close $f;
 }
 
-
 #
 # Here recipients is a tcl list (that gets converted to a comma-separated
 # string).
 #
-
 proc msgfilter_smtp_send_txt {recipients subject body} {
+
+    global msgfilter;
+
+    set token [mime::initialize -canonical text/plain -string $body];
+
+    ::mime::setheader $token To [join $recipients ","];
+    ::mime::setheader $token Subject $subject;
+
+    set cmd [list smtp::sendmessage $token \
+	-originator $msgfilter(smtp,originator) \
+	-recipients [join $recipients ","] \
+	-servers $msgfilter(smtp,servers)];
+
+    set result [eval $cmd $msgfilter(smtp,options)];
+
+    mime::finalize $token;
+
+    if {[llength $result] == 0} {
+	set status 0;
+    } else {
+        set status 1;
+        foreach r $result {
+            exec logger -t $msgfilter(syslogid) -p $msgfilter(syslogpri) \
+                [join $r ":"];
+        }
+    }
+
+    return $status;
+}
+
+proc msgfilter_sms_send_txt {recipients subject body} {
 
     global msgfilter;
 
@@ -289,41 +317,6 @@ proc msgfilter_smtp_send_txt {recipients subject body} {
        exec logger -t $msgfilter(syslogid) -p $msgfilter(syslogpri) $errmsg;
     }
                 
-    return $status;
-}
-
-proc msgfilter_smtp_send_txt_old {recipients subject body} {
-#
-# For some reason this does not work for sms mesages - I believe
-# the reason is the mime encoding framework.
-#
-    global msgfilter;
-
-    set token [mime::initialize -canonical text/plain -encoding 7bit \
-	-string $body];
-
-    ::mime::setheader $token To [join $recipients ","];
-    ::mime::setheader $token Subject $subject;
-
-    set cmd [list smtp::sendmessage $token \
-	-originator $msgfilter(smtp,originator) \
-	-recipients [join $recipients ","] \
-	-servers $msgfilter(smtp,servers)];
-
-    set result [eval [concat $cmd $msgfilter(smtp,options)]];
-
-    mime::finalize $token;
-
-    if {[llength $result] == 0} {
-	set status 0;
-    } else {
-        set status 1;
-        foreach r $result {
-            exec logger -t $msgfilter(syslogid) -p $msgfilter(syslogpri) \
-                [join $r ":"];
-        }
-    }
-
     return $status;
 }
 
@@ -433,7 +426,7 @@ proc msgfilter_prod_summary {prod_code} {
     if {[info exists filtersprodcodes($prod_code)]} {
 	set summary $filtersprodcodes($prod_code);
     } else {
-        set summary $prod_code;
+        set summary $prod_code";
     }
 
     return $summary;
