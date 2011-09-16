@@ -34,6 +34,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/gempak
 /var/noaaport/data/gis
 /var/noaaport/data/metar
+/var/noaaport/data/msg
 /var/noaaport/data/upperair
 /var/noaaport/data/grib
 /var/noaaport/data/track
@@ -169,6 +170,7 @@ cd htdocs/pub
 [ -e "digatmos" ] || ln -s /var/noaaport/data/digatmos digatmos
 [ -e "gempak" ] || ln -s /var/noaaport/data/gempak gempak
 [ -e "grib" ] || ln -s /var/noaaport/data/grib grib
+[ -e "msg" ] || ln -s /var/noaaport/data/msg msg
 [ -e "track" ] || ln -s /var/noaaport/data/track track
 [ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
 [ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot

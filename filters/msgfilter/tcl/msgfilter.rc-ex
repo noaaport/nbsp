@@ -20,8 +20,17 @@ lappend subscribers {
 #
 lappend subscribers {
 	smtp://7873467474@cingularme.com
-	(svs|tor)_txz14[5-9],svr_vaz014,npw_txz25[2-7]
+	(svs|tor)
 	S
+}
+
+#
+# Example for sending the URL (U flag) to a cel phone
+#
+lappend subscribers {
+	smtp://7873467474@cingularme.com
+	(svs|tor)
+	U
 }
 
 #

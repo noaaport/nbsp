@@ -3,7 +3,7 @@
 #
 
 # All in one line (always end in ';')
-smstp://7873467474@att.net (svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0 S;
+smtp://7873467474@att.net (svs|tor)_txz14[5-9],svr_vaz014,cwf_amz7[0-4]0 U;
 
 # Split accross several lines
 smtp://nieves@noaaport.net
@@ -30,7 +30,7 @@ smtp://nieves@ltp.upr.clu.edu
 
 # Everything from San Juan
 smtp://nieves@ltp.upr.clu.edu jsj$ F;
-smtp://7873467474@att.net jsj$ S;
+smtp://7873467474@att.net jsj$ U;
 
 # The above is the same as
 smtp://nieves@ltp.upr.clu.edu ...jsj F;
@@ -55,7 +55,7 @@ smtp://nieves@ltp.upr.clu.edu afd... F;
 #
 # where
 #
-#     <flags> = F or S  (F => full file, S => sumary
+#     <flags> = F, S, U  (F => full file, S => sumary, U => url
 #
 # <prodzone_spec> is a comma-separated list of terms where each term is
 # of the form

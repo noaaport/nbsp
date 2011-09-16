@@ -12,9 +12,10 @@ Quick Start -
 -----------
 
 	1) Enable the msgfilter in the "features.conf" file.
-	2) Set the variable
+	2) Set the variables
 
 		msgfilter(smtp,originator)
+		msgfilter(http,server)
 
  	   and if needed
 
@@ -30,16 +31,16 @@ Principle of operation -
 The msgfilter is driven by an "rc" file that specifies who
 gets what and how. The "how" is specified by the transport mechanism
 and perhaps some flags. Currently, the only transport is smtp and the
-flags are "F" or "S" for sending the full file or a summary, respectively.
-In this case (smtp), the "who" is an email address.
+flags are "F", "S" or "U" for sending the full file, a summary or a
+URL, respectively. In this case (smtp), the "who" is an email address.
 
 What each subscriber gets is specified by a combination of product codes
 and zones, or product codes and sites, using a regular expression syntax.
 For each incoming product, the filter scans the subscriber list and it
 builds up a list of recipients according to the regexp matching rules.
 
-Once the filter has collected the recipients list(s), one for the
-F flag and another for the S flag, it composes the messages and hands off
+Once the filter has collected the recipients list(s), one for each of the
+F, S and U flags, it composes the messages and hands off
 the delivery to the smtp server (configurable in "msgfilter.conf").
 The msgfilter speaks smtp with the server, so that the server
 can be either the localhost (the default) or another computer;
@@ -119,6 +120,8 @@ lappend subscribers {
 	(svs|tor)_txz14[5-9],svr_vaz014,afd(jsj|lix)
 	<flags>
 }
+
+Most useful <flags> is probably the U flag to send a URL to the full file.
 ==
 
 As already mentioned, the filter reads reads the file
@@ -160,3 +163,5 @@ examples illustrating all this.
 -
 Jose - Tue Jul  8 18:23:42 AST 2008
      - Fri Jun  3 11:58:25 AST 2011
+     - Thu Sep 15 16:34:48 AST 2011 (revised/tested with cel phones.
+                                     Added U flag)

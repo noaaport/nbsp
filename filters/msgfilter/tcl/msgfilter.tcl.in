@@ -34,6 +34,11 @@ set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
 #
 # Configuration variables
 #
+set msgfilter(datadir)	[file join $common(datadir) "msg"];
+set msgfilter(baseurl) "http://www.opennoaaport.net:8015/msg";
+#
+set msgfilter(bodysummarysize) 1024;
+#
 set msgfilter(smtp,originator) "nbsp@localhost";
 set msgfilter(smtp,servers)    "localhost";
 set msgfilter(smtp,options) [list]; # for other options (if needed) such as
@@ -130,6 +135,7 @@ proc process {finfo} {
     }
 
     set prod_name $rc(fname);
+    set prod_station $rc(station); 
     set prod_body [::fileutil::cat -translation crlf $rc(fpath)];
     if {$msgfilter(ccbsaved) == 1} {
 	set prod_body [string range $prod_body $msgfilter(ccbsize) end];
@@ -151,6 +157,7 @@ proc process {finfo} {
     #
     # The two forms can be mixed in the comma-separated list.
 
+    set match 0;
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
 	    set s_parts [::textutil::splitx [string trim $s]];
@@ -184,16 +191,33 @@ proc process {finfo} {
 	    }
 	}
     }
+
+    if {$match == 0} {
+	return;
+    }
+
+    # Save a copy of the file
+    set savedir $rc(station);
+    set savename $rc(fname);
+    append savename "." $prod_type;
+    set savefile [file join $savedir $savename];
+    ::fileutil::writeFile $savefile $prod_body;
+
+    set prod_url $msgfilter(baseurl);
+    append prod_url "/$savefile";
+
     foreach key [array names sendtolist] {
 	set t [lindex [split $key ","] 0];
 	set f [lindex [split $key ","] 1];
 	msgfilter_dispatch $t $f $sendtolist($key) \
-	    $prod_name $prod_type $prod_code $prod_body;
+	    $prod_name $prod_type $prod_code $prod_body $prod_url;
     }
 }
 
 proc msgfilter_dispatch {transport flags recipients \
-	prod_name prod_type prod_code prod_body} {
+	prod_name prod_type prod_code prod_body prod_url} {
+
+    global msgfilter;
 
     if {[regexp {^(smtp|sms)$} $transport] == 0} {
 	log_msg "Invalid transport $transport.";
@@ -207,12 +231,15 @@ proc msgfilter_dispatch {transport flags recipients \
     }
 
     set prod_summary [msgfilter_prod_summary $prod_code];
+    append subject $prod_name " - " $prod_summary;
+    
     if {[string first $flags "F"] >= 0} {
-	append subject $prod_name " - " $prod_summary;
 	set body $prod_body;
     } elseif {[string first $flags "S"] >= 0} {
-	set subject $prod_name;
-	set body $prod_summary;
+	set last [expr $msgfilter(bodysummarysize) - 1];
+	set body [string range $prod_body 0 $last];
+    } elseif {[string first $flags "U"] >= 0} {
+	set body $prod_url;
     } else {
 	log_msg "Invalid flag $flags";
 	return;
@@ -226,7 +253,7 @@ proc msgfilter_dispatch {transport flags recipients \
     if {$transport eq "smtp"} {
         msgfilter_smtp_send_txt $recipients $subject $body;
     } elseif {$transport eq "sms"} {
-	 msgfilter_sms_send_txt $recipients $subject $body;
+	msgfilter_sms_send_txt $recipients $subject $body;
     }
 }
 
@@ -435,6 +462,14 @@ proc msgfilter_prod_summary {prod_code} {
 # Load the subscribers rules
 source $msgfilter(rc);
 
+# cd to the base data dir once and for all
+if {[file isdirectory $msgfilter(datadir)]} {
+    cd $msgfilter(datadir);
+} else {
+    log_msg "Filter disabled: $msgfilter(datadir) not found.";
+    return 1;
+}
+     
 filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
