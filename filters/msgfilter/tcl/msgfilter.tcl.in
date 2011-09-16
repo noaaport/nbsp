@@ -34,15 +34,16 @@ set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
 #
 # Configuration variables
 #
-set msgfilter(datadir)	[file join $common(datadir) "msg"];
-set msgfilter(baseurl) "http://www.opennoaaport.net:8015/msg";
-#
-set msgfilter(bodysummarysize) 1024;
-#
 set msgfilter(smtp,originator) "nbsp@localhost";
 set msgfilter(smtp,servers)    "localhost";
 set msgfilter(smtp,options) [list]; # for other options (if needed) such as
                                     # -username <u> -password <p> ...
+set msgfilter(http,server) "http://www.opennoaaport.net:8015";
+#
+set msgfilter(datadir)	[file join $common(datadir) "msg"];
+set msgfilter(baseurl) "$msgfilter(http,server)/msg";
+#
+set msgfilter(bodysummarysize) 1024;
 #
 # The priority may be specified as a ``facility.level'' pair.
 # For example, ``local3.info'' logs the message as informational
