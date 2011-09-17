@@ -240,7 +240,7 @@ proc msgfilter_dispatch {transport flags recipients \
 	set last [expr $msgfilter(bodysummarysize) - 1];
 	set body [string range $prod_body 0 $last];
     } elseif {[string first $flags "U"] >= 0} {
-	set body $prod_url;
+	set body "\n\n$prod_url\n";
     } else {
 	log_msg "Invalid flag $flags";
 	return;
