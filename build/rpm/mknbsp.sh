@@ -1,17 +1,18 @@
 #!/bin/sh
 
 branchname=nbsp
-tgzfile=${branchname}.tgz
 
+rpmroot=$HOME/rpmbuild
+
+tgzfile=${branchname}.tgz
 rm -rf $branchname
 tar -xzf $tgzfile
 
 . ./$branchname/VERSION
 
 rm -rf ${name}-${version}
-
 cp -r $branchname ${name}-${version}
 tar -czf ${name}-${version}.tgz ${name}-${version}
-cp ${name}-${version}.tgz /home/nieves/rpmbuild/SOURCES
+cp ${name}-${version}.tgz $rpmroot/SOURCES
 cd ${name}-${version}/build/rpm
 make package
