@@ -16,7 +16,7 @@ lappend subscribers {
 }
 
 #
-# Example for sending the summary (S flag) to a cel phone
+# Example for sending the summary (S flag)
 #
 lappend subscribers {
 	smtp://7873467474@cingularme.com
@@ -25,7 +25,7 @@ lappend subscribers {
 }
 
 #
-# Example for sending the URL (U flag) to a cel phone
+# Example for sending the url (U flag)
 #
 lappend subscribers {
 	smtp://7873467474@cingularme.com
@@ -34,15 +34,33 @@ lappend subscribers {
 }
 
 #
+# Example(s) for sending the URL based on a condition
+#
+lappend subscribers {
+  smtp://7873467474@cingularme.com
+  {:[regexp {URGENT} $rc(bodypart)]}
+  U
+};
+
+lappend subscribers {
+  smtp://7873467474@cingularme.com
+  {:[regexp {URGENT} $rc(body)] && [regexp {tjsj} $rc(station)]}
+  U
+};
+
+#
 # General form
 # 
 lappend subscribers {
 	<transport>://<destination>
-	<prodzone_list>
+	<prodzone_list> or {:<condition>}
 	<flags>
 }
 
-#
+# When using a "condition" instead of the prodzone_list regular expressions,
+# the condition must start with the ':' character to be recognized as such,
+# and it must be protected by the curly brackets as shown in the example above.
+
 # Instead of, or in addition to, using the above syntax a flat file can be
 # used thus:
 #

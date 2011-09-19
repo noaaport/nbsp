@@ -57,7 +57,7 @@ such term for each "subscriber", in the file
 
 lappend subscribers {
 	<transport>://<destination>
-	<prodzone_spec>
+	<prodzone_spec> or {:<condition>}
 	<flags>
 }
 
@@ -82,7 +82,7 @@ then I would receive all svs and tor for TX zones 145 to 149, and also
 all SVR for VA zone 014. The comma separated list of product-zone
 combinations can be extended indefinitely.
 
-Instead of the prod_code and zone_code combiation, the other form is
+Instead of the prod_code and zone_code combiation, another form is
 
 lappend subscribers {
 	smtp://nieves@noaaport.net
@@ -90,7 +90,22 @@ lappend subscribers {
 	<flags>
 }
 
-to specify a site instead of zones. Several sites can be combined in this way
+to specify a site instead of zones.
+
+Another form is to specify a condition instead of the regular
+expressions for product code and zones. For example
+
+lappend subscribers {
+    smtp://7873432020@tmomail.net
+    {:[regexp {URGENT} $rc(body)] || [regexp {tjsj} $rc(station)]}
+    U
+}
+
+When using a "condition" instead of the prodzone_list regular expressions,
+the condition must start with the ':' character to be recognized as such,
+and it must be protected by the curly brackets as shown in the example above.
+
+Several sites can be combined in this way
 
 lappend subscribers {
 	smtp://nieves@noaaport.net
