@@ -1,0 +1,71 @@
+#
+# $Id$
+#
+
+This is a quick guide to sending sms messages (alerts) to smartphones.
+
+1)  Enable the msgfilter
+
+      set features(msgfilter) 1
+
+2)  Two settings must appear in site/msgfilter.conf file:
+
+      set msgfilter(smtp,originator) "nbsp@localhost";
+      set msgfilter(http,server) "http://www.opennoaaport.net:8015";
+
+    The first should be set to an email address that properly identifies
+    the sending site, and the second one to the correct url of the
+    site.
+
+    If the smtp server (e.g., sendmail) is setup in the same computer where
+    nbsp is running, then that is all. Otherwise this setting
+ 
+      set msgfilter(smtp,servers)  "localhost";
+
+    should be set to the appropriate smtp server to use, and 
+     
+      set msgfilter(smtp,options) [list];
+
+    to set any options that may be required, such as
+
+       set msgfilter(smtp,options) [list -username <u> -password <p>]
+
+3)  The site/msgfilter.rc file should contain an instruction like
+
+      lappend subscribers {
+        smtp://7873467474@cingularme.com
+        (svs|tor)
+        U
+      }
+
+    The last entry (U) is a flag indicating to send a URL in the sms
+    message, which is usually what you want. The other flags are either
+    F (to send the full file) or S (to send a "summary"; currenty the
+    first 1024 bytes are sent in that case).
+
+4)  Consult the files
+
+      dist/msgfilter.rc-ex
+
+    and
+
+      msgfilter.README
+
+    for the explanation of the regular expression syntax to select the
+    files to send.
+
+5)  These and some SMS gateways that I am aware of
+
+      (http://en.wikipedia.org/wiki/List_of_SMS_gateways)
+
+      T-Mobile: <phonenumber>@tmomail.net
+      Virgin Mobile: <phonenumber>@vmobl.com
+      Cingular: <phonenumber>@cingularme.com
+      Sprint: <phonenumber>@messaging.sprintpcs.com
+      Verizon: <phonenumber>@vtext.com
+      Nextel: <phonenumber>@messaging.nextel.com
+      US Cellular: <phonenumber>@email.uscc.net
+      SunCom: <phonenumber>@tms.suncom.com
+      Powertel: <phonenumber>@ptel.net
+      AT&T: <phonenumber>@txt.att.net
+      Alltel: <phonenumber>@message.alltel.com

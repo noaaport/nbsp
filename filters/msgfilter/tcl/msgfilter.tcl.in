@@ -57,6 +57,7 @@ set msgfilter(syslogpri) "user.err";
 set msgfilter(flatlineseparator) ";";
 set msgfilter(pzseparator) "_";       # separate <prod_regex> from <zone_regex>
 set msgfilter(pzlistseparator) ",";   # separate terms in <prodzone_spec>
+set msgfilter(pzcondindicator) ":";   # conditional expr instead of regexp
 #
 # Variables
 #
@@ -144,25 +145,29 @@ proc process {finfo} {
     set ugczones [ugc_get_lines [split $prod_body "\n"]];
 
     # The $msgfilter(subscribers) variable is a list of "subscriber lists",
-    # where each element of a "subscriber list" is a string
+    # where each element of a "subscriber list" is a three element list
     # of the form
     #
     #	<destination> <prodzonespec> <flags>;
     #
     # The <prodzonespec> is a comma separated list of
-    # products and zone regexes, or product name regexes, where
-    # prodname = awips (or wmoid if awips is blank)
+    # products and zone regexes, product and site regexes, or
+    # conditional expressions:
     #
     #     <prod_regex1>_<zone_regex1>,<prod_regex2>_<zone_regex2>,...
     # or
     #     <prodname_regex1>,<prodname_regex2>,...
+    # or
+    #     <cond1>,<cond2>,...
     #
-    # The two forms can be mixed in the comma-separated list.
+    # The three forms can be mixed in the comma-separated list. To be
+    # recognized as a conditional expression, the expression must start
+    # with ':'. For example, {:[regexp {URGENT} $rc(bodypart)]}
 
     set match 0;
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
-	    set s_parts [::textutil::splitx [string trim $s]];
+	    set s_parts $s;    # each subscriber is a list of three elements
 	    set s_addr [::textutil::splitx [lindex $s_parts 0] {://}];
 	    set s_addr_transp [lindex $s_addr 0];
 	    set s_addr_dest [lindex $s_addr 1];
@@ -170,12 +175,20 @@ proc process {finfo} {
 		[split [lindex $s_parts 1] $msgfilter(pzlistseparator)];
 	    set s_flags [lindex $s_parts 2];
 	    foreach s_prodzone $s_prodzone_list {
-		set s_prodzone_parts \
+	 	if {[string range $s_prodzone 0 0] eq \
+			$msgfilter(pzcondindicator)} {
+		    set s_prod_condition [string range $s_prodzone 1 end];
+		} else {
+		    set s_prod_condition "";
+		    set s_prodzone_parts \
 			[split $s_prodzone $msgfilter(pzseparator)];
-		set s_prod_code_regex [lindex $s_prodzone_parts 0];
-		set s_zone_code_regex [lindex $s_prodzone_parts 1];
+		    set s_prod_code_regex [lindex $s_prodzone_parts 0];
+		    set s_zone_code_regex [lindex $s_prodzone_parts 1];
+		}
 
-		if {$s_zone_code_regex eq ""} {
+	 	if {$s_prod_condition ne ""} {
+		    set match [expr $s_prod_condition];
+		} elseif {$s_zone_code_regex eq ""} {
 	 	    #
 		    # The spec is <prodname> without zones, and in this case
 	 	    # the match is tried with the awips (or wmoid) code.
