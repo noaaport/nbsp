@@ -146,9 +146,10 @@ proc process {finfo} {
     # The $msgfilter(subscribers) variable is a list of "subscriber lists",
     # where each element of a "subscriber list" is a string
     # of the form
-    #	<destination> <prodzonespcec> <flags>;
     #
-    # The <prodzonespcec> is a comma separated list of
+    #	<destination> <prodzonespec> <flags>;
+    #
+    # The <prodzonespec> is a comma separated list of
     # products and zone regexes, or product name regexes, where
     # prodname = awips (or wmoid if awips is blank)
     #
