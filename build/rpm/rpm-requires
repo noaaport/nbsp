@@ -1,0 +1,14 @@
+sharutils
+tcp_wrappers
+db4
+db4-utils
+tcl
+tcllib
+tk
+libpng
+netpbm-progs
+zlib
+bzip2
+gnuplot
+gifsicle
+mapserver

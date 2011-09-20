@@ -1,0 +1,67 @@
+Name: @name@
+Version: @version@
+Release:  @rpmrelease@%{?dist}
+Summary:  Noaaport Broadcast System Processor 
+Group:  Applications/Internet
+License:  BSD
+URL: http://www.noaaport.net
+Source0: %{name}-%{version}.tgz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: @requires@
+Conflicts: @nameclient@
+
+%description
+Noaaport Broadcast System Procesor and Emwin server
+
+%prep
+
+%setup
+./configure.sh
+
+%build
+make 
+
+%install
+savedir=`pwd`
+rm -rf $RPM_BUILD_ROOT
+dirs=`cat build/rpm/dirs`
+install -d $RPM_BUILD_ROOT
+cd $RPM_BUILD_ROOT
+install -d $dirs
+cd $savedir
+make PKGBUILDDIR=$RPM_BUILD_ROOT PKGCONFDIR=/dist PKGSHAREDIR=/dist install
+
+%post
+@postinstall@
+
+%postun
+@postuninstall@
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+
+@plist@
+
+%doc
+
+%changelog
+
+%package -n nbspclient
+Summary: Noaaport Broadcast System Procesor client programs
+Group: Applications/Internet
+Conflicts: nbsp
+
+%description -n nbspclient
+Noaaport Broadcast System Procesor client programs
+
+%post -n nbspclient
+@postinstallclient@
+
+%postun -n nbspclient
+@postuninstallclient@
+
+%files -n nbspclient
+@plistclient@

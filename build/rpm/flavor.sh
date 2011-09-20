@@ -10,7 +10,7 @@ then
    flavor=opensuse
 elif [ -f /etc/redhat-release ]
 then
-    flavor=centos
+    flavor=redhat
 elif [ -f /etc/debian_version ] 
 then
    flavor=debian

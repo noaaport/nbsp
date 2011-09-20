@@ -1,27 +1,66 @@
 #
 # $Id$
 #
+include ../../VERSION
 
-MAINDIR = ../..
-PKGMAKEFILE = Makefile.pkg
-MAKEDEPS = ${MAINDIR}/Makefile.inc ${MAINDIR}/Makefile
+# The defaults in spec.in are for SL, and the overrides are other
+# flavors are below.
+#
+requires = $(shell cat rpm-requires)
+rpmrelease = $(shell cat rpm-release)
+rpmroot = ${HOME}/rpmbuild
 
-default: build
+flavor = $(shell ./flavor.sh)
+arch =  $(shell uname -m)
+dist = $(shell ./dist.sh)
 
-${MAINDIR}/Makefile: ${MAINDIR}/Makefile.in
-	cd ${MAINDIR}; ./configure.sh
+ifeq (${flavor}, opensuse)
+  ifeq (${arch}, i386)
+    arch = i586
+  endif
+endif
 
-${MAINDIR}/Makefile.inc: ${MAINDIR}/Makefile.inc.in
-	cd ${MAINDIR}; ./configure.sh
+tgzfile = ${name}-${version}.tgz
+rpmfile = ${name}-${version}-${rpmrelease}${dist}.${arch}.rpm
+rpmfile_client = ${nameclient}-${version}-${rpmrelease}${dist}.${arch}.rpm
 
-build: ${MAKEDEPS}
-	${MAKE} -f ${PKGMAKEFILE} build
+default: package
 
-install: ${MAKEDEPS}
-	${MAKE} -f ${PKGMAKEFILE} install
+spec: rpm-spec
+tgz: ${tgzfile}
 
-package: ${MAKEDEPS}
-	${MAKE} -f ${PKGMAKEFILE} package
+${tgzfile}:
+	cd ../../..;\
+	cp -r ${name} ${name}-${version};\
+	tar -czf ${name}-${version}.tgz ${name}-${version};\
+	rm -rf ${name}-${version}
+	mv ../../../${name}-${version}.tgz .
 
-clean: ${MAKEDEPS}
-	${MAKE} -f ${PKGMAKEFILE} clean
+rpm-spec: rpm-spec.in
+	sed -e "/@name@/s//${name}/" \
+	-e "/@nameclient@/s//${nameclient}/" \
+	-e "/@version@/s//${version}/" \
+	-e "/@rpmrelease@/s//${rpmrelease}/" \
+	-e "/@requires@/s//${requires}/" \
+	-e "/@postinstall@/r rpm-postinstall" \
+	-e "/@postinstall@/d" \
+	-e "/@postuninstall@/r rpm-postuninstall" \
+	-e "/@postuninstall@/d" \
+	-e "/@plist@/r rpm-plist" \
+	-e "/@plist@/d" \
+	-e "/@postinstallclient@/r rpm-postinstall-client" \
+	-e "/@postinstallclient@/d" \
+	-e "/@postuninstallclient@/r rpm-postuninstall-client" \
+	-e "/@postuninstallclient@/d" \
+	-e "/@plistclient@/r rpm-plist-client" \
+	-e "/@plistclient@/d" \
+	rpm-spec.in > rpm-spec
+
+package: rpm-spec ${tgzfile}
+	mv ${tgzfile} ${rpmroot}/SOURCES
+	rpmbuild -bb rpm-spec
+	cp ${rpmroot}/RPMS/${arch}/${rpmfile} .
+	cp ${rpmroot}/RPMS/${arch}/${rpmfile_client} .
+
+clean:
+	rm -f *~ rpm-spec ${tgzfile} ${rpmfile} ${rpmfile_client}
