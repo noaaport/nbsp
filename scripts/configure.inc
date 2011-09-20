@@ -37,7 +37,7 @@ case $os in
 	[ $flavor = debian ] && RCCONF=nbspd.sh.conf-debian
 	[ $flavor = debian ] && POSTINSTALL_SRC=../build/debian/postinst
 
-	[ $flavor = centos ] && POSTINSTALL_SRC=../build/rpm/postinstall
+	[ $flavor = centos ] && POSTINSTALL_SRC=../build/rpm/rpm-postinstall
     	;;
     Darwin)
 	RCINIT=nbspd.sh-macosx
