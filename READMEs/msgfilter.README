@@ -97,12 +97,12 @@ expressions for product code and zones. For example
 
 lappend subscribers {
     smtp://7873432020@tmomail.net
-    {:[regexp {URGENT} $rc(body)] || [regexp {tjsj} $rc(station)]}
+    {:0 [regexp {URGENT} $rc(body)] || [regexp {tjsj} $rc(station)]}
     U
 }
 
 When using a "condition" instead of the prodzone_list regular expressions,
-the condition must start with the ':' character to be recognized as such,
+the condition must start with the ':0' character to be recognized as such,
 and it must be protected by the curly brackets as shown in the example above.
 
 Several sites can be combined in this way

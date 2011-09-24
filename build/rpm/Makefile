@@ -6,8 +6,8 @@ include ../../VERSION
 # The defaults in spec.in are for SL, and the overrides are other
 # flavors are below.
 #
-requires = $(shell cat rpm-requires)
-rpmrelease = $(shell cat rpm-release)
+requires = $(shell grep -v "^\#" rpm-requires)
+rpmrelease = $(shell grep -v "^\#" rpm-release)
 rpmroot = ${HOME}/rpmbuild
 
 flavor = $(shell ./flavor.sh)

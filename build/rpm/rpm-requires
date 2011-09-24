@@ -11,4 +11,4 @@ zlib
 bzip2
 gnuplot
 gifsicle
-mapserver
+# mapserver - removed until it is available for sl-6.1

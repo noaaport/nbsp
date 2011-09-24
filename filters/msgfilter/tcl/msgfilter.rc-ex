@@ -38,13 +38,13 @@ lappend subscribers {
 #
 lappend subscribers {
   smtp://7873467474@cingularme.com
-  {:[regexp {URGENT} $rc(bodypart)]}
+  {:0 [regexp {URGENT} $rc(bodypart)]}
   U
 };
 
 lappend subscribers {
   smtp://7873467474@cingularme.com
-  {:[regexp {URGENT} $rc(body)] && [regexp {tjsj} $rc(station)]}
+  {:0 [regexp {URGENT} $rc(body)] && [regexp {tjsj} $rc(station)]}
   U
 };
 
@@ -53,12 +53,12 @@ lappend subscribers {
 # 
 lappend subscribers {
 	<transport>://<destination>
-	<prodzone_list> or {:<condition>}
+	<prodzone_list> or {:0 <condition>}
 	<flags>
 }
 
 # When using a "condition" instead of the prodzone_list regular expressions,
-# the condition must start with the ':' character to be recognized as such,
+# the condition must start with the ':0' character to be recognized as such,
 # and it must be protected by the curly brackets as shown in the example above.
 
 # Instead of, or in addition to, using the above syntax a flat file can be

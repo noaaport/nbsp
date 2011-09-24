@@ -57,7 +57,9 @@ set msgfilter(syslogpri) "user.err";
 set msgfilter(flatlineseparator) ";";
 set msgfilter(pzseparator) "_";       # separate <prod_regex> from <zone_regex>
 set msgfilter(pzlistseparator) ",";   # separate terms in <prodzone_spec>
-set msgfilter(pzcondindicator) ":";   # conditional expr instead of regexp
+set msgfilter(pzcondindicator) ":";   # condition or code instead of regexp
+set msgfilter(pzexprindicator) ":0";  # conditional expr
+set msgfilter(pzextcodeindicator) ":="; # external code (for external apps)
 #
 # Variables
 #
@@ -164,7 +166,7 @@ proc process {finfo} {
     # recognized as a conditional expression, the expression must start
     # with ':'. For example, {:[regexp {URGENT} $rc(bodypart)]}
 
-    set match 0;
+    set foundmatch 0;
     foreach sl $msgfilter(subscribers) {
 	foreach s $sl {
 	    set s_parts $s;    # each subscriber is a list of three elements
@@ -174,20 +176,34 @@ proc process {finfo} {
 	    set s_prodzone_list \
 		[split [lindex $s_parts 1] $msgfilter(pzlistseparator)];
 	    set s_flags [lindex $s_parts 2];
+
 	    foreach s_prodzone $s_prodzone_list {
-	 	if {[string range $s_prodzone 0 0] eq \
+	 	if {[string range $s_prodzone 0 1] eq \
+			$msgfilter(pzexprindicator)} {
+		    #
+		    # A ":0" condition specification => an expression
+		    #
+		    set s_prod_expr [string range $s_prodzone 2 end];
+		} elseif {[string range $s_prodzone 0 0] ne \
 			$msgfilter(pzcondindicator)} {
-		    set s_prod_condition [string range $s_prodzone 1 end];
-		} else {
-		    set s_prod_condition "";
+		    #
+		    # A standard regexp, matched against prod code
+		    #
+		    set s_prod_expr "";
 		    set s_prodzone_parts \
 			[split $s_prodzone $msgfilter(pzseparator)];
 		    set s_prod_code_regex [lindex $s_prodzone_parts 0];
 		    set s_zone_code_regex [lindex $s_prodzone_parts 1];
+		} else {
+		    #
+		    # The conditional is ':' code different from :0
+	  	    # which is not meant for this filter.
+		    #
+		    continue;
 		}
 
-	 	if {$s_prod_condition ne ""} {
-		    set match [expr $s_prod_condition];
+	 	if {$s_prod_expr ne ""} {
+		    set match [expr $s_prod_expr];
 		} elseif {$s_zone_code_regex eq ""} {
 	 	    #
 		    # The spec is <prodname> without zones, and in this case
@@ -200,6 +216,7 @@ proc process {finfo} {
 		}
 
 		if {$match == 1} {
+		    set foundmatch 1;
 		    lappend sendtolist($s_addr_transp,$s_flags) $s_addr_dest;
 		    break;
 		}
@@ -207,7 +224,7 @@ proc process {finfo} {
 	}
     }
 
-    if {$match == 0} {
+    if {$foundmatch == 0} {
 	return;
     }
 
