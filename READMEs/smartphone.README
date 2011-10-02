@@ -14,8 +14,8 @@ This is a quick guide to sending sms messages (alerts) to smartphones.
       set msgfilter(http,server) "http://www.opennoaaport.net:8015";
 
     The first should be set to an email address that properly identifies
-    the sending site, and the second one to the correct url of the
-    site.
+    the sending site, and the second one to the correct nbsp base url of
+    the site.
 
     If the smtp server (e.g., sendmail) is setup in the same computer where
     nbsp is running, then that is all. Otherwise this setting
