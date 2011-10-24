@@ -8,7 +8,7 @@ Q='"'
 PREFIX=usr/local
 
 CC=cc
-CCWFLAGS="-Wall -Wextra"
+CCWFLAGS="-Wall -Wextra -Wformat-security -Werror"
 INSTALL=install
 SUFFIXRULES=".c.o:"
 
