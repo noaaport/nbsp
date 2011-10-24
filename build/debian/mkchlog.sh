@@ -1,9 +1,10 @@
 #!/bin/sh
 
 . ../../VERSION
+debrelease=`cat deb-release`
 
 cat > changelog <<EOF
-$name ($version-1) stable; urgency=low
+$name ($version-$debrelease) stable; urgency=low
 
   * Initial debian package release
 
