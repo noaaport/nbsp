@@ -102,14 +102,12 @@ static void process_input(void){
   int line_max_size = CMD_LINE_BUFFER_SIZE;
   int line_size;
   int lineno = 0;
-  int status = 0;
 
   while(fgets(line, line_max_size, stdin) != NULL){
     ++lineno;
     line_size = strlen(line);
     if(line[line_size - 1] != '\n'){
       log_errx(1, "Line %d exceeds maximum size %d.", lineno, line_max_size);
-      status = 1;
       break;
     }
     line[line_size - 1] = '\0';
@@ -250,6 +248,13 @@ static void process_file(void){
 
   while(nread > 0){
     nwrite = write_page(g.output_fp, &g.page[data_start], nread - data_start);
+
+    /*
+     * write_page() handles the error already (exits the program)
+     */
+    if(nwrite == -1)
+      log_err(1, "%s", "write_page() error");
+    
     nread = read_page(g.input_fp, g.page, g.page_size);
     data_start = 0;
   }	  

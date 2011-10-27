@@ -75,9 +75,9 @@ int loop(int fd){
   int n;
   char header[12];
   char *p = NULL;
-  char *fpath;
   char *fname;
-  int id;
+  /* char *fpath; */
+  /* int id; */
   off_t size;
   time_t now;
   struct tm *tmptr;
@@ -98,7 +98,10 @@ int loop(int fd){
   if(status != 0)
     goto end;
 
-  id = (header[0] << 24) + (header[1] << 16) + (header[2] << 8) + header[3];
+  /*
+   * id = (header[0] << 24) + (header[1] << 16) + (header[2] << 8) + header[3];
+   */
+
   size = (header[4] << 24) + (header[5] << 16) 
     + (header[6] << 8) + header[7];
 
@@ -130,7 +133,7 @@ int loop(int fd){
    * We are not using that here, so we extract only the fname and fpath.
    */
   fname = &p[8];
-  fpath = &p[8 + FNAME_SIZE + 1];
+  /* fpath = &p[8 + FNAME_SIZE + 1]; */
   ++gcount; 
   
   now = time(NULL);

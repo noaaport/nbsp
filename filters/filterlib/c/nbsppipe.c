@@ -165,6 +165,13 @@ static int process_file(void){
 
   while(nread > 0){
     nwrite = write_page(g.output_fp, &g.page[data_start], nread - data_start);
+
+    /*
+     * write_page() handles the error already (exits the program)
+     */
+    if(nwrite == -1)
+      log_err(1, "%s", "write_page() error");
+    
     nread = read_page(g.input_fp, g.page, g.page_size);
     data_start = 0;
   }	  

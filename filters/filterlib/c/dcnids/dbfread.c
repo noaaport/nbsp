@@ -20,7 +20,7 @@ int main(int argc, char **argv){
   int numfields;
   int i;
   char *fieldname[2];
-  int fieldlength;
+  /* int fieldlength; */
   char code[4];
   char level[4];
 
@@ -51,7 +51,7 @@ int main(int argc, char **argv){
   fieldname[0] = (char*)&b[32];
   fieldname[1] = (char*)&b[64];
 
-  fieldlength = b[64 + 16];
+  /* fieldlength = b[64 + 16]; */
 
   fprintf(stdout, "%d %d %d %d %d %d %d %d %s %s\n",
 	  version, yy, mm, dd, numrecords, headerlength, recordlength,

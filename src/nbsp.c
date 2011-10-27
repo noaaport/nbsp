@@ -495,10 +495,10 @@ static int pce_spool_product(struct pctl_element_st *pce){
    */
   struct memfile_st *mf = NULL;
   int status = 0;
-  int numfragments;
   int saveunz_flag;
+  /* int numfragments; */
 
-  numfragments = pce->num_fragments;
+  /* numfragments = pce->num_fragments; */
   saveunz_flag = pce->saveunz_flag;
  
   /*

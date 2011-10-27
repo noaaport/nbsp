@@ -287,7 +287,7 @@ void dcnids_shp_insert_content(unsigned char *p,
     nwords = dcnids_shp_insert_polygon(b, 0, record_number,
 		    pm->polygons[i].lon, pm->polygons[i].lat);
 
-    /* assert(nwords*2 == record_size_bytes); */
+    assert(nwords*2 == record_size_bytes);
 
     b += record_size_bytes;
     ++record_number;

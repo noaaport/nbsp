@@ -127,6 +127,12 @@ static void *reader_thread_main(void *arg){
 
   while(get_quit_flag() == 0){
     status = reader_thread_loop(rinfo->npchannel);
+    if(status != 0){
+      /*
+       * If there was an error, this (main thread loop) continues
+       */
+      ;
+    } 
   }
 
   return(NULL);

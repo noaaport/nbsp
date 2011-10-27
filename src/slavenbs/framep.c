@@ -407,15 +407,15 @@ static int msave_nbs_block(struct nbs1_packet_st *nbs){
   struct pctl_element_st *pce;
   struct memfile_st *mf = NULL;
   unsigned char f_compressed;
-  int save_format;
   int saveunz_flag;
+  /* int save_format; */ /* not currently used */
 
   pce = get_pctl_activepce(g.pctl, nbs->slavenbs_reader_index,
 			   nbs->seq_number);
   if(pce == NULL)
     return(1);
 
-  save_format = pce->save_format;	/* not currently used */
+  /* save_format = pce->save_format; */   /* not currently used */
   saveunz_flag = pce->saveunz_flag;
   mf = pce->mf;
   f_compressed = nbs->f_zip;

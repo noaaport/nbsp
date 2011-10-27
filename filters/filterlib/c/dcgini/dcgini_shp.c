@@ -5,7 +5,7 @@
  *
  * $Id$
  */
-/* #include <stdio.h>	delete */
+#include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -198,7 +198,7 @@ void dcgini_shp_insert_content(unsigned char *p,
     nwords = dcgini_shp_insert_point(b, 0, record_number,
 		    pm->points[i].lon, pm->points[i].lat);
 
-    /* assert(nwords*2 == record_size_bytes); */
+    assert(nwords*2 == record_size_bytes);
 
     b += record_size_bytes;
     ++record_number;

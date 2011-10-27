@@ -108,7 +108,7 @@ static int rmon_loop(void){
   char *p = NULL;
   char *fpath;
   char *fname;
-  int id;
+  /* int id; */
   off_t size;
   time_t now;
   struct tm *tmptr;
@@ -133,7 +133,10 @@ static int rmon_loop(void){
   if(status != 0)
     goto end;
 
-  id = (header[0] << 24) + (header[1] << 16) + (header[2] << 8) + header[3];
+  /*
+   * id = (header[0] << 24) + (header[1] << 16) + (header[2] << 8) + header[3];
+   */
+
   size = (header[4] << 24) + (header[5] << 16) 
     + (header[6] << 8) + header[7];
 

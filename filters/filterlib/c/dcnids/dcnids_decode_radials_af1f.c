@@ -228,7 +228,8 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
   double r1, r2, theta1, theta2;
   double sin_theta1, cos_theta1, sin_theta2, cos_theta2;
   double r, dtheta;
-  double theta1p, sin_theta1p, cos_theta1p;
+  /* double theta1p, sin_theta1p, cos_theta1p; */
+  double sin_theta1p, cos_theta1p;    /* theta1p not used */
   double theta2p, sin_theta2p, cos_theta2p;
   int numpolygons = 0;
   int run_level = 0;	/* the level corresponding to a given code */
@@ -347,7 +348,7 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 	if(radial_packet.angle_delta_deg < dtheta)
 	  dtheta = radial_packet.angle_delta_deg;
 
-	theta1p = theta1;
+	/* theta1p = theta1; */
 	sin_theta1p = sin_theta1;
 	cos_theta1p = cos_theta1;
 	theta2p = theta1;
@@ -384,7 +385,7 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 	  ++polygon;
 	  ++numpolygons;
 
-	  theta1p = theta2p;
+	  /* theta1p = theta2p; */
 	  sin_theta1p = sin_theta2p;
 	  cos_theta1p = cos_theta2p;
 	}
@@ -428,7 +429,8 @@ static void nids_count_polygons_radials_af1f(struct nids_data_st *nd){
   unsigned char *b = nd->data;
   struct nids_radial_packet_st radial_packet;
   int i, j;
-  int run_code, run_bins, total_bins;
+  /* int run_code, run_bins, total_bins; */
+  int run_bins, total_bins;  /* run_code not used in this function */
   double r1, r2, theta1, theta2;
   double r, theta, dtheta;
   int numpolygons = 0;
@@ -464,7 +466,7 @@ static void nids_count_polygons_radials_af1f(struct nids_data_st *nd){
 
     total_bins = 0;
     for(j = 0; j < radial_packet.num_rle_halfwords * 2; ++j){
-      run_code = (b[0] & 0xf);
+      /* run_code = (b[0] & 0xf); */
       run_bins = (b[0] >> 4);
       ++b;      
 

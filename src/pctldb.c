@@ -275,8 +275,8 @@ int pctldb_send_pce(struct pctldb_st *pctldb,
    * -1 real error
    */
   int status = 0;
-  uint32_t n;
   uint32_t mf_data_size;
+  /* uint32_t n; */
 
   status = pthread_mutex_lock(&pctldb->mutex);
   if(status != 0){
@@ -303,7 +303,8 @@ int pctldb_send_pce(struct pctldb_st *pctldb,
   }
   memcpy(&pctldb->last_tsqueue, &pce->tsqueue, sizeof(struct timespec));
   
-  n = pctldb->n;
+  /* n = pctldb->n; */
+
   mf_data_size = get_memfile_data_size(pce->mf);
   if(pctldb_hard_limit(pctldb, mf_data_size) != 0)
      status = 2;

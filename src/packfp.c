@@ -166,9 +166,9 @@ int recv_fp_packet(int fd, struct packet_info_st *packetinfo,
   int status = 0;
   ssize_t n = 0;
   unsigned char *p;
-  uint32_t transmitted_checksum;
   uint32_t data_size;
   uint32_t dataid;
+  /* uint32_t transmitted_checksum; */
 
   n = readn(fd, packetinfo->packet, NBS_ENVELOPE_SIZE, timeout_s, retry);
   if(n == -1)
@@ -190,7 +190,7 @@ int recv_fp_packet(int fd, struct packet_info_st *packetinfo,
     return(1);
 
   data_size = unpack_uint32(p, 4);
-  transmitted_checksum = unpack_uint32(p, 8);
+  /* transmitted_checksum = unpack_uint32(p, 8); */
 
   /* assert(data_size + NBS_ENVELOPE_SIZE <= packetinfo->packet_size); */
   if(data_size + NBS_ENVELOPE_SIZE > packetinfo->packet_size)
