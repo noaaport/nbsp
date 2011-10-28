@@ -2,33 +2,28 @@
 
 project=nbsp
 #
-#masterhost="http://svn.1-loop.net"
-masterhost="svn+ssh://jfnieves@svn.1-loop.net/home/jfnieves/svn"
+host="bzr+ssh://dme.1-loop.net"
 #
-masterrepo="nbsprepo"
+repo="home/repo/bzr/noaaport"
 tag=trunk
 #
-## mastersite="svn+ssh://diablo/home/svn"
-mastersite=${masterhost}/${masterrepo}
+site=${host}/${repo}
 
 # nbsptclhttpd receives special treatment
 tcllibs="tclgrads tclgempak tclmetar tclssh tclupperair"
 srclibs="libconnth libqdb libspoolbdb libtclconf"
 tclhttpd=${project}tclhttpd
 
-# Override tag with the cmd line argument (e.g. "nbsp-2.1.2r")
-[ $# -ne 0 ] && tag=tags/$1
-
-svn co $mastersite/$project/$tag $project
+bzr branch $site/$project/$tag $project
 cd $project
 for p in $tcllibs
 do
-  svn co $mastersite/$p/$tag $p
+  bzr branch $site/$p/$tag $p
 done
-svn co $mastersite/$tclhttpd/$tag tclhttpd
+bzr branch $site/$tclhttpd/$tag tclhttpd
 
 cd src
 for p in $srclibs
 do
-  svn co $mastersite/$p/$tag $p
+  bzr branch $site/$p/$tag $p
 done
