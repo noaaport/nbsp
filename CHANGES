@@ -119,3 +119,4 @@
   tcllib based function does not work for some addresses
 - Removed binary options in fconfigure in Tclgrads that eliminated
   problems with gfs_161.tcl hanging in SL-6.1.
+- Add K4M9 to metarfilter (Jason Brooks)

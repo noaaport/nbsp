@@ -20,6 +20,10 @@
 # http://weather.gladstonefamily.net/site/KGGE
 # http://www.gcmap.com/airport/KGGE
 # http://www.acukwik.com/airportinfo/KGGE
+#
+# - Fri Nov 11 12:21:25 AST 2011
+# Added K4M9 by hand (Jason Brooks)
+# http://www.airnav.com/airport/4M9
 
 set metarfilter(icao,bix1) "30-24-07N, 088-55-04W, Biloxi, Keesler Air Force Base, Navu, MS"
 set metarfilter(icao,bix2) "30-24-34N, 088-55-08W, Biloxi, Keesler Air Force Base, Navu, MS"
@@ -214,6 +218,7 @@ set metarfilter(icao,k4f4) "32-41-56N, 094-56-56W, Gilmer, Fox Stephens Field - 
 set metarfilter(icao,k4hv) "38-22N, 110-43W, Hanksville , UT"
 set metarfilter(icao,k4l7) "33-52N, 118-24W, Hermosa Beach Pier, CA"
 set metarfilter(icao,k4lw) "42-13N, 120-21W, Lakeview, OR"
+set metarfilter(icao,k4m9) "36-24N, 090-38W, Corning Municipal Airport, AR"
 set metarfilter(icao,k4mr) "34-18N, 103-48W, Melrose Gunnery Range, NM"
 set metarfilter(icao,k4my) "34-59N, 106-03W, Moriarty, NM"
 set metarfilter(icao,k4o4) "33-54-33N, 094-51-33W, Idabel, Mc Curtain County Regional Airport, OK"
