@@ -120,3 +120,4 @@
 - Removed binary options in fconfigure in Tclgrads that eliminated
   problems with gfs_161.tcl hanging in SL-6.1.
 - Add K4M9 to metarfilter (Jason Brooks)
+- Fixed the problem with dcgrib2 (reported by Jason Brooks)

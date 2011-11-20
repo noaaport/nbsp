@@ -493,6 +493,8 @@ proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
 	set status [catch {
 	    if {[info exists gpfilter(pipe_F,$pipe_name)] == 0} {
 		set gpfilter(pipe_F,$pipe_name) [open "|$cmd_name" w];
+		fconfigure $gpfilter(pipe_F,$pipe_name) \
+                	-translation binary -encoding binary;
 		log_msg "Opened $pipe_name";
 	    }
 
