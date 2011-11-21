@@ -2,7 +2,7 @@
 
 project=nbsp
 #
-host="bzr+ssh://linode.1-loop.net"
+host="bzr+ssh://repo.1-loop.net"
 #
 repo="home/repo/bzr/noaaport"
 tag=trunk
