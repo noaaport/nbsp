@@ -1,3 +1,10 @@
+nbsp (2.2.2r1-1) stable; urgency=low
+
+  * Add K4M9 to metarfilter (Jason Brooks)
+  * Fixed the problem with dcgrib2 (reported by Jason Brooks) 
+
+ -- Jose F Nieves <nieves@asa.uprrp.edu>  Sun, 20 Nov 2011 19:51:38 -0400
+
 nbsp (2.2.2p3-1) stable; urgency=low
 
   * Initial debian package release
