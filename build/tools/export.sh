@@ -1,12 +1,13 @@
 #!/bin/sh
 
 project=nbsp
-masterhost="http://svn.1-loop.net"
-masterrepo="nbsprepo"
+#
+host="bzr+ssh://repo.1-loop.net"
+#
+repo="home/repo/bzr/noaaport"
 tag=trunk
 #
-## mastersite="svn+ssh://diablo/home/svn"
-mastersite=${masterhost}/${masterrepo}
+site=${host}/${repo}
 
 # nbsptclhttpd receives special treatment
 tcllibs="tclgrads tclgempak tclmetar tclssh tclupperair"
@@ -16,9 +17,6 @@ tclhttpd=${project}tclhttpd
 exclude="build dev-notes examples"
 tmpdir=tmp
 
-# Override tag with the cmd line argument ("tags/nbsp-2.0.r1")
-[ $# -ne 0 ] && tag=$1
-
 # read name and version
 . ../../VERSION
 
@@ -26,19 +24,19 @@ rm -r -f $tmpdir
 mkdir $tmpdir
 cd $tmpdir
 
-svn export $mastersite/$name/$tag ${name}-$version
+bzr export $site/$name/$tag ${name}-$version
 cd ${name}-${version}
 rm -r $exclude
 for p in $tcllibs
 do
-  svn export $mastersite/$p/$tag $p
+  bzr export $site/$p/$tag $p
 done
-svn export $mastersite/$tclhttpd/$tag tclhttpd
+bzr export $site/$tclhttpd/$tag tclhttpd
 
 cd src
 for p in $srclibs
 do
-  svn export $mastersite/$p/$tag $p
+  bzr export $site/$p/$tag $p
 done
 
 cd ../.. 

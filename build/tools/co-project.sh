@@ -1,7 +1,13 @@
 #!/bin/sh
 
+host="bzr+ssh://repo.1-loop.net"
+#
+repo="home/repo/bzr/noaaport"
+tag=trunk
+#
+site=${host}/${repo}
+
 [ $# ne 1 ] && { echo "Needs project name."; exit 0; }
 p=$1
 
-svn co http://svn.1-loop.net/nbsprepo/$p/trunk $p
-
+bzr branch $site/$project/$tag $p
