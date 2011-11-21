@@ -24,19 +24,19 @@ rm -r -f $tmpdir
 mkdir $tmpdir
 cd $tmpdir
 
-bzr export $site/$name/$tag ${name}-$version
+bzr export ${name}-$version $site/$name/$tag
 cd ${name}-${version}
 rm -r $exclude
 for p in $tcllibs
 do
-  bzr export $site/$p/$tag $p
+  bzr export $p $site/$p/$tag
 done
-bzr export $site/$tclhttpd/$tag tclhttpd
+bzr export tclhttpd $site/$tclhttpd/$tag
 
 cd src
 for p in $srclibs
 do
-  bzr export $site/$p/$tag $p
+  bzr export $p $site/$p/$tag
 done
 
 cd ../.. 
