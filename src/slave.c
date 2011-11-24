@@ -102,6 +102,19 @@ int init_slavet(void){
   defaults.slave_so_rcvbuf = g.slave_so_rcvbuf;
   defaults.slave_stats_logperiod_secs = g.slave_stats_logperiod_secs;
 
+  /*
+   * Check both of these here once and for all
+   */
+  if(feedmode_masterservers_enabled() && (valid_str(g.masterservers) == 0)){
+    log_errx("Slave mode enabled with masterservers unset.");
+    return(-1);
+  }
+
+  if(feedmode_inputfifo_enabled() && (valid_str(g.infifo) == 0)){
+    log_errx("Input fifo mode enabled with invalid setting of infifo.");
+    return(-1);
+  }
+
   if(feedmode_inputfifo_enabled()){
     conf_str = slave_make_configuration_string();
     if(conf_str == NULL)
@@ -194,6 +207,9 @@ static char *slave_make_configuration_string(void){
   int n;
 
   if(valid_str(g.infifo) == 0){
+    /*
+     * This should have been caught already by the caller of this function
+     */
     log_errx("Invalid setting of infifo.");
     return(NULL);
   }
@@ -203,6 +219,9 @@ static char *slave_make_configuration_string(void){
 
   if(feedmode_masterservers_enabled()){
     if(valid_str(g.masterservers) == 0){
+      /*
+       * This should have been caught already by the caller of this function
+       */
       log_errx("Invalid setting of masterservers.");
       return(NULL);
     }

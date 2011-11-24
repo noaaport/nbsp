@@ -392,6 +392,14 @@ int slave_table_create(struct slave_table_st **slavet,
   int numslaves = 0;
   int i;
 
+  /*
+   * This should have been caught by the caller
+   */
+  if(valid_str(masterservers) == 0){
+    log_errx("Invalid value of masterservers in slave_table_create()");
+    return(-1);
+  }
+
   masterservers_size = strlen(masterservers);
   masterservers_copy = malloc(masterservers_size + 1);
   if(masterservers_copy == NULL){
