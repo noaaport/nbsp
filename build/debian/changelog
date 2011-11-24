@@ -1,4 +1,10 @@
-nbsp (2.2.1r1-1) stable; urgency=low
+nbsp (2.2.2r2) stable; urgency=low
+
+  * Bug fix 
+
+ -- Jose F Nieves <nieves@asa.uprrp.edu>  Thu, 24 Nov 2011 09:08:22 -0400
+
+nbsp (2.2.2r1-1) stable; urgency=low
 
   * Add K4M9 to metarfilter (Jason Brooks)
   * Fixed the problem with dcgrib2 (reported by Jason Brooks) 
