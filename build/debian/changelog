@@ -1,4 +1,12 @@
-nbsp (2.2.2r2) stable; urgency=low
+nbsp (2.2.2r3-1) stable; urgency=low
+
+  * Revised locking mechanism in tclhttpd (nbspsat and nbsprad) for the
+    dynamic image generation and introduced maxage parameter to control
+    the frequency of the new image creation.
+
+ -- Jose F Nieves <nieves@asa.uprrp.edu>  Fri, 25 Nov 2011 13:27:26 -0400
+
+nbsp (2.2.2r2-1) stable; urgency=low
 
   * Bug fix 
 
