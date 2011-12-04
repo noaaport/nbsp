@@ -19,7 +19,7 @@ package require cmdline;
 set usage {nbspmtr [-r] [-n number| -a] <collective>
 nbspmtr [-r | -t | -d] [-n number| -a] <station>};
 
-set optlist {{d 0} {r 0} {t 0} {n.arg 1} {a 0}};
+set optlist {a d r t {n.arg 1}};
 set conflict_drt 0;
 set conflict_an 0;
 

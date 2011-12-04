@@ -123,3 +123,6 @@
 - Fixed the problem with dcgrib2 (reported by Jason Brooks) by calling
   fconfigure with binary options after opening the pipe to the decoders.
 - Revised locking mechanism in the dynamic generation of sat images
+
+2.2.2.r4
+- nbspmtrd (Coesmetic change: Corrected optlist)

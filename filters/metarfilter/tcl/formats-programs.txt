@@ -1,0 +1,22 @@
+Formats -
+=========
+
+  Metarweather (mt) -
+  TJSJ 040956Z 00000KT 10SM SCT031 22/18 A2991 RMK AO2 SLP127 T02220183
+
+  Nbsp -
+  TJSJ,KWBC,US,1322982563,040700,040656Z,04,06,M,\
+	TJSJ 040656Z 00000KT 10SM FEW042 24/18 A2990
+
+  csv -
+  tjsj,04,07:56,4,190,73.4,64.4,29.90,1012.2
+  
+
+Programs -
+==========
+
+  nbspmtrcsv <sao file> -  convert sao to nbsp, or sao to mt
+  nbspmtrcsvd <sao file> - nbsptrcsv | nbspmtrd
+  nbspmtr <obstation> - print mt or nbsp record from Nbsp data files
+  nbspmtrplotdat <obstation> - nbspmtr | nbspmtrd
+  nbspmtrd (tclmetar) - convert nbsp or mt to csv
