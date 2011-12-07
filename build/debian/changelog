@@ -1,8 +1,9 @@
 nbsp (2.2.2r4-1) oneiric; urgency=low
 
   * Revised nbspmtrplotdat 
+  * Added arcfilter 
 
- -- Jose F Nieves <nieves@msi>  Sun, 04 Dec 2011 18:53:37 -0400
+ -- Jose F Nieves <nieves@asa.uprrp.edu>  Wed, 07 Dec 2011 17:47:30 -0400
 
 nbsp (2.2.2r3-1) stable; urgency=low
 
