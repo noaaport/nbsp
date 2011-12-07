@@ -164,7 +164,7 @@ proc process {finfo} {
     #
     # The three forms can be mixed in the comma-separated list. To be
     # recognized as a conditional expression, the expression must start
-    # with ':'. For example, {:[regexp {URGENT} $rc(bodypart)]}
+    # with ':0'. For example, {:0 [regexp {URGENT} $rc(bodypart)]}
 
     set foundmatch 0;
     foreach sl $msgfilter(subscribers) {
