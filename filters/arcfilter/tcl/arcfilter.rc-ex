@@ -17,8 +17,9 @@ lappend cond {
   [regexp {tjsj} $rc(station)] && ($rc(txtflag) == 1)
 }
 lappend action {
-  arcfilterlib_tar rc $rc(station)/$rc(yyyy)/$rc(ym) \
-	$rc(ymd).$rc(station) $rc(ymd).$rc(station);
+  arcfilterlib_tar rc \
+	$rc(yyyy)/$rc(station)/txt/$rc(ymd).$rc(station).txt.tar \
+	$rc(yyyy)/$rc(station)/txt/$rc(ymd).$rc(station).txt.inv;
   break;
 }
 
@@ -29,7 +30,8 @@ lappend cond {
   [regexp {tjsj} $rc(station)] && [regexp {^sdus[2-8]} $rc(wmoid)]
 }
 lappend action {
-  arcfilterlib_tar rc $rc(station)/$rc(yyyy)/$rc(ymd) \
-	$rc(ymd).$rc(awips) $rc(ymd).$rc(awips2);
+  arcfilterlib_tar rc \
+	$rc(yyyy)/$rc(station)/nids/$rc(awips1)/$rc(ymd).$rc(awips).nids.tar \
+	$rc(yyyy)/$rc(station)/nids/$rc(ymd).$rc(station).nids.inv;
   break;
 }

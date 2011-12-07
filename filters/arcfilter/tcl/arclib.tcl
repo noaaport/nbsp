@@ -1,16 +1,13 @@
-proc arcfilterlib_tar {rc_array archive_dir archive_rootname inv_rootname} {
+proc arcfilterlib_tar {rc_array archivepath invpath} {
 
     upvar $rc_array rc;
     global arcfilter;
-
-    append archive_name $archive_rootname $arcfilter(tarfext);
-    set archivepath [file join $archive_dir $archive_name];
 
     set _pwd [pwd];
     cd $arcfilter(datadir);
 
     set status [catch {
-        file mkdir $archive_dir;
+        file mkdir [file dirname $archivepath];
 	exec tar -r -f $archivepath -C [file dirname $rc(fpath)] \
 	    [file tail $rc(fpath)];
     } errmsg];
@@ -22,19 +19,16 @@ proc arcfilterlib_tar {rc_array archive_dir archive_rootname inv_rootname} {
 	return;
     }
 
-    append invname $inv_rootname $arcfilter(invfext);
-    set invpath [file join $archive_dir $invname];
-
     set invdata [list];
     foreach key [list station wmoid awips wmotime seconds fbasename] {
 	lappend invdata $rc($key);
     }
-    lappend invdata [file join $archive_name];
+    lappend invdata $archivepath;
 
     cd $arcfilter(invdir);
 
     set status [catch {
-	file mkdir $archive_dir;
+	file mkdir [file dirname $invpath];
 	filterlib_file_append $invpath [join $invdata ","];
     } errmsg];
 
