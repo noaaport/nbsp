@@ -1,0 +1,41 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	arcfilter.tcl
+TCLSOURCES =	arcfilter.tcl.in
+FILTERNAME =	arcfilter
+RCSOURCE =	arcfilter.rc
+RCEXAMPLE =	arcfilter.rc-ex
+TARGET =	${TCLTARGET} ${SAMPLES}
+SAMPLES =	arcfilter.conf-sample \
+		arcfilter.rc-sample
+FILTERLIB =	arclib.tcl
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+${TCLTARGET}: ${TCLSOURCES} ${FILTERLIB}
+	sed -e "/%TCLSH%/s##${TCLSH}#" \
+	-e "/@arclib@/r ${FILTERLIB}" -e "/@arclib@/d" \
+	${TCLSOURCES} > ${TCLTARGET}
+
+arcfilter.conf-sample: arcfilter.conf
+	cp arcfilter.conf arcfilter.conf-sample
+
+arcfilter.rc-sample: arcfilter.rc 
+	cp arcfilter.rc arcfilter.rc-sample
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${SAMPLES} ${RCEXAMPLE} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

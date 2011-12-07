@@ -1,0 +1,35 @@
+#
+# $Id$
+#
+
+#
+# - Examples
+#
+# These rc() variables are available from the filterlib (the times are based
+# on the product times (not arrival times)
+# ymd_hm, ymdhm, ymdh, ymd, ym, yyyy
+#
+
+#
+# To archive all txt files from tjsj
+#
+lappend cond {
+  [regexp {tjsj} $rc(station)] && ($rc(txtflag) == 1)
+}
+lappend action {
+  arcfilterlib_tar rc $rc(station)/$rc(yyyy)/$rc(ym) \
+	$rc(ymd).$rc(station) $rc(ymd).$rc(station);
+  break;
+}
+
+#
+# Archive all radar files from tjsj (jua, sju)
+#
+lappend cond {
+  [regexp {tjsj} $rc(station)] && [regexp {^sdus[2-8]} $rc(wmoid)]
+}
+lappend action {
+  arcfilterlib_tar rc $rc(station)/$rc(yyyy)/$rc(ymd) \
+	$rc(ymd).$rc(awips) $rc(ymd).$rc(awips2);
+  break;
+}
