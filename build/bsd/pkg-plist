@@ -126,6 +126,7 @@ libexec/nbsp/trackfilter.init
 libexec/nbsp/masterfilter
 libexec/nbsp/clusterfilter
 libexec/nbsp/clusterfilter.init
+libexec/nbsp/arcfilter
 libexec/nbsp/craftinsert
 libexec/nbsp/filters.init
 libexec/nbsp/filters.lib
@@ -252,6 +253,9 @@ etc/nbsp/dist/masterfilter.conf-sample
 etc/nbsp/dist/clusterfilter.conf-sample
 etc/nbsp/dist/clusterfilter.conf-ex
 etc/nbsp/dist/clusterfilter-schedule.rc-sample
+etc/nbsp/dist/arcfilter.conf-sample
+etc/nbsp/dist/arcfilter.rc-sample
+etc/nbsp/dist/arcfilter.rc-ex
 etc/nbsp/dist/craftinsert.conf-sample
 etc/nbsp/dist/grib-templates.tgz
 etc/nbsp/dist/metarplot-templates.tgz

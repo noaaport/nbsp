@@ -55,14 +55,8 @@ proc filter_archive {rc_array seq fpath savedir savename} {
 
     set status [catch {
         file mkdir $archive_savedir;
-
-	if {$dafilter(archive_asyncmode) == 1} {
-	    exec tar -r -f $archivepath -C [file dirname $fpath] \
-		[file tail $fpath] &;
-	} else {
-	    exec tar -r -f $archivepath -C [file dirname $fpath] \
-		[file tail $fpath];
-	}
+	exec tar -r -f $archivepath -C [file dirname $fpath] \
+	    [file tail $fpath];
     } errmsg];
 
     cd $_pwd;

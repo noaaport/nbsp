@@ -41,10 +41,6 @@ set archive(da,rad_enable) 1;
 set archive(da,file_regex) {.*};
 set archive(da,sat_regex) {.*};
 set archive(da,rad_regex) {.*};
-#
-# exec in the background
-#
-set archive(da,asyncmode) 1;
 
 #
 # metar
