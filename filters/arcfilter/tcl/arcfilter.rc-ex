@@ -18,8 +18,10 @@ lappend cond {
 }
 lappend action {
   arcfilterlib_tar rc \
-	$rc(yyyy)/$rc(station)/txt/$rc(ymd).$rc(station).txt.tar \
-	$rc(yyyy)/$rc(station)/txt/$rc(ymd).$rc(station).txt.inv;
+	[file join $rc(yyyy) $rc(station) txt \
+		$rc(ymd).$rc(station).txt.tar] \
+	[file join $rc(yyyy) $rc(station) txt \
+		$rc(ymd).$rc(station).txt.inv];
   break;
 }
 
@@ -31,7 +33,9 @@ lappend cond {
 }
 lappend action {
   arcfilterlib_tar rc \
-	$rc(yyyy)/$rc(station)/nids/$rc(awips1)/$rc(ymd).$rc(awips).nids.tar \
-	$rc(yyyy)/$rc(station)/nids/$rc(ymd).$rc(station).nids.inv;
+	[file join $rc(yyyy) $rc(station) nids $rc(awips1) \
+		$rc(ymd).$rc(station).$rc(awips).tar] \
+	[file join $rc(yyyy) $rc(station) nids \
+		$rc(ymd).$rc(station).nids.inv];
   break;
 }
