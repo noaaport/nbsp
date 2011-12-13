@@ -20,12 +20,12 @@ ship/YYYYMMDDHH_sb.gem)
 
 match_pipe($rc(wmoid), (^s[imn]v[^gins])|(^s[imn]w[^kz]),
 dcmsfc,
-m4DCOPTS(dcmsfc_6hr) -a 6 -d,
+m4DCOPTS(dcmsfc_6hr) -a 6,
 ship6hr/YYYYMMDDHH_ship.gem)
 
 match_pipe($rc(wmoid), ^u[abcdefghijklmnpqrstwxy],
 dcuair,
-m4DCOPTS(dcuair) -b 24 -m 16 -d -s snstns.tbl,
+m4DCOPTS(dcuair) -b 24 -m 16 -s snstns.tbl,
 upperair/YYYYMMDD_upa.gem)
 
 match_pipe($rc(wmoid), ^uz,
