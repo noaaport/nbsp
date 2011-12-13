@@ -7,4 +7,4 @@
 #
 
 awk '!/^@/ {printf("/usr/local/%s\n", $0)}' pkg-plist > ../debian/plist
-cp ../debian/plist ../rpm
+cp ../debian/plist ../rpm/rpm-plist

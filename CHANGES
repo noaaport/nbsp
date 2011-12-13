@@ -128,3 +128,4 @@
 - nbspmtrd (Coesmetic change: Corrected optlist)
 - nbspmtrplotdat revised
 - Added arcfilter
+- Fixed pipe.m4 (gpfilter.rc) the dcuair entry (extra -d)

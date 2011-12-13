@@ -124,6 +124,7 @@
 /usr/local/libexec/nbsp/masterfilter
 /usr/local/libexec/nbsp/clusterfilter
 /usr/local/libexec/nbsp/clusterfilter.init
+/usr/local/libexec/nbsp/arcfilter
 /usr/local/libexec/nbsp/craftinsert
 /usr/local/libexec/nbsp/filters.init
 /usr/local/libexec/nbsp/filters.lib
@@ -250,6 +251,9 @@
 /usr/local/etc/nbsp/dist/clusterfilter.conf-sample
 /usr/local/etc/nbsp/dist/clusterfilter.conf-ex
 /usr/local/etc/nbsp/dist/clusterfilter-schedule.rc-sample
+/usr/local/etc/nbsp/dist/arcfilter.conf-sample
+/usr/local/etc/nbsp/dist/arcfilter.rc-sample
+/usr/local/etc/nbsp/dist/arcfilter.rc-ex
 /usr/local/etc/nbsp/dist/craftinsert.conf-sample
 /usr/local/etc/nbsp/dist/grib-templates.tgz
 /usr/local/etc/nbsp/dist/metarplot-templates.tgz
