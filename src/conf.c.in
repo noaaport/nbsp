@@ -183,8 +183,8 @@
 #define CONFOPT_SUBDIRMODE		@counter@	
 #define DEFVAL_SUBDIRMODE		SUBDIR_PRODUCT_MODE
 
-#define CONFOPT_SAVEFRAMEFMT		@counter@
-#define DEFVAL_SAVEFRAMEFMT		SAVE_FRAME_FMT
+#define CONFOPT_SPOOLSAVEFMT		@counter@
+#define DEFVAL_SPOOLSAVEFMT		SPOOL_SAVE_FMT
 
 #define CONFOPT_STATS_LOGPERIOD_SECS	@counter@
 #define DEFVAL_STATS_LOGPERIOD_SECS	NBSP_STATS_LOGPERIOD_SECS
@@ -474,8 +474,8 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_QSTATEFIFOMODE},
   {"productmode", CONFOPT_PRODUCTMODE, TCL_LINK_INT, NULL, DEFVAL_PRODUCTMODE},
   {"subdirmode", CONFOPT_SUBDIRMODE, TCL_LINK_INT, NULL, DEFVAL_SUBDIRMODE},
-  {"saveframefmt", CONFOPT_SAVEFRAMEFMT, TCL_LINK_INT, NULL,
-	DEFVAL_SAVEFRAMEFMT},
+  {"spoolsavefmt", CONFOPT_SPOOLSAVEFMT, TCL_LINK_INT, NULL,
+	DEFVAL_SPOOLSAVEFMT},
   {"nbspstats_logperiod_secs", CONFOPT_STATS_LOGPERIOD_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_STATS_LOGPERIOD_SECS},
   {"qstate_logperiod_secs", CONFOPT_QSTATE_LOGPERIOD_SECS, TCL_LINK_INT, NULL,
@@ -673,7 +673,7 @@ int configure(void){
   setoptval(&g.qstatefifo_mode, confoptions, CONFOPT_QSTATEFIFOMODE);
   setoptval(&g.product_mode, confoptions, CONFOPT_PRODUCTMODE);
   setoptval(&g.subdir_product_mode, confoptions, CONFOPT_SUBDIRMODE);
-  setoptval(&g.saveframefmt, confoptions, CONFOPT_SAVEFRAMEFMT);
+  setoptval(&g.spoolsavefmt, confoptions, CONFOPT_SPOOLSAVEFMT);
   setoptval(&g.nbspstats_logperiod_secs, confoptions,
 	CONFOPT_STATS_LOGPERIOD_SECS);
   setoptval(&g.qstate_logperiod_secs, confoptions,
@@ -854,7 +854,7 @@ void print_confoptions(void){
   fprintf(stdout, "qstatefifo_mode %o\n", g.qstatefifo_mode);
   fprintf(stdout, "productmode %o\n", g.product_mode);
   fprintf(stdout, "subdirmode %o\n", g.subdir_product_mode);
-  fprintf(stdout, "saveframefmt %d\n", g.saveframefmt);
+  fprintf(stdout, "spoolsavefmt %d\n", g.spoolsavefmt);
   fprintf(stdout, "nbspstats_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.nbspstats_logperiod_secs);
   fprintf(stdout, "qstate_logperiod_secs " "%" PRIuMAX "\n",
@@ -1020,8 +1020,11 @@ int validate_configuration(void){
   VALIDATE_STR(g.filterserver_statefile, "filterserver_statefile");
   VALIDATE_STR(g.slavestatsfile, "slavestatsfile");
 
-  /* mode_t qstatefifo_mode, product_mode, subdir_product_mode type */
-  VALIDATE_PARAM_L(g.saveframefmt, 0, "saveframefmt");
+  /*
+   * mode_t qstatefifo_mode, product_mode, subdir_product_mode type
+   * (the type restrict the values)
+   */
+  VALIDATE_PARAM_L(g.spoolsavefmt, 0, "spoolsavefmt");
 
   VALIDATE_PARAMETER(g.servertype, 0, BUILTIN_SERVER_ALL, "servertype");
   /* char* g.servername can be NUILL or empty */

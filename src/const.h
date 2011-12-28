@@ -48,7 +48,7 @@
  * (See save_frame() in nbsp.c)
  */
 #define SAVEFORMAT_WITH_CCB	0    /* save ccb if present */
-#define SAVEFORMAT_NO_CCB	1    /* strip ccb (and T1T2A1A2 of wmo) */
+#define SAVEFORMAT_NO_CCB	1    /* strip ccb */
 
 /*
  * The protocols supported.

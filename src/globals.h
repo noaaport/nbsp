@@ -90,7 +90,7 @@ struct nbsp_globals {
   mode_t qstatefifo_mode;
   mode_t product_mode;
   mode_t subdir_product_mode;	/* mode of subdirs where produtcs are saved */
-  int saveframefmt;           /* how the (ccb, wmo) header is saved */
+  int spoolsavefmt;             /* how the (ccb, wmo) header is saved */
   int servertype;		/* protocol of the spawned server */
   char *servername;
   char *serverport;

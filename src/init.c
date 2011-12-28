@@ -128,7 +128,7 @@ void init_globals(void){
   g.qstatefifo_mode = NBSP_QSTATEFIFO_MODE;
   g.product_mode = FILE_PRODUCT_MODE;
   g.subdir_product_mode = SUBDIR_PRODUCT_MODE;
-  g.saveframefmt = SAVE_FRAME_FMT;
+  g.spoolsavefmt = SPOOL_SAVE_FMT;
 
   g.servertype = SERVER_TYPE;
   g.servername = SERVER_NAME;

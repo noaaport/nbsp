@@ -129,3 +129,5 @@
 - nbspmtrplotdat revised
 - Added arcfilter
 - Fixed pipe.m4 (gpfilter.rc) the dcuair entry (extra -d)
+- Renamed g.saveframefmt to g.spoolsavefmt (and the related changes
+  in nbspd.conf and defaults.h.in (for its possible use in the arcfilter)

@@ -308,7 +308,7 @@ static int start_activepce(struct sbn_frame *sbnf){
     pce->ts.tv_nsec = 0;
   }
 
-  pce->save_format = g.saveframefmt;
+  pce->save_format = g.spoolsavefmt;
   pce->saveunz_flag = 0;	/* determined below */
   pce->rtxdb_flag = 0;		/* managed in the processor, not here */
 

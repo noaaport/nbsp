@@ -253,7 +253,7 @@
 #define SUBDIR_PRODUCT_MODE	0755
 
 /* By default, if a ccb is present it is saved */
-#define SAVE_FRAME_FMT		SAVEFORMAT_WITH_CCB
+#define SPOOL_SAVE_FMT		SAVEFORMAT_WITH_CCB
 
 /*
  * Whether the daemon should spawn the built-in server and which one(s).
