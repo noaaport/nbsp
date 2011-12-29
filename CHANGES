@@ -125,9 +125,14 @@
 - Revised locking mechanism in the dynamic generation of sat images
 
 2.2.2.r4
-- nbspmtrd (Coesmetic change: Corrected optlist)
+- nbspmtrd (Cosmetic change: Corrected optlist)
 - nbspmtrplotdat revised
 - Added arcfilter
 - Fixed pipe.m4 (gpfilter.rc) the dcuair entry (extra -d)
+
+2.2.2.r4
 - Renamed g.saveframefmt to g.spoolsavefmt (and the related changes
   in nbspd.conf and defaults.h.in (for its possible use in the arcfilter)
+- Corrected call to nbspradinfo in filters.lib to add the -C option
+  when the spool files are saved without the ccb and the file being processed
+  is not uncompressed with nbspunz.
