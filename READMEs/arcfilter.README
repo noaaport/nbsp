@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+The arcfilter archives the files as they are saved in the spool
+directory. Therefore by default those archives will contain the files
+with the ccb header. To archive them without the ccb header
+the following settings can be made:
+
+In site/nbspd.conf
+
+   set spoolsavefmt 1  
+ 
+In site/filters.conf
+
+   set common(ccbsaved) 0
+   set filterslib(ccbsaved) 0
