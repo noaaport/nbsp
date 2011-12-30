@@ -2,12 +2,16 @@
 # $Id$
 #
 
+# These rc() variables are available from the filterlib (the times are based
+# on the product times (not arrival times))
+#
+# ymd_hm, ymdhm, ymdh, ymd, ym, yyyy
+#
+# See the arcfilter.README for a note about striping ccb header in the
+# archived files.
+
 #
 # - Examples
-#
-# These rc() variables are available from the filterlib (the times are based
-# on the product times (not arrival times)
-# ymd_hm, ymdhm, ymdh, ymd, ym, yyyy
 #
 
 #
