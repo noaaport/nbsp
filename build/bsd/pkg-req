@@ -14,7 +14,7 @@
 # in the default package).
 # We must build our own.
 #
-requires="db48 tcl-8.6:tcl86 tcllib tk-8.6:tk86 png netpbm gifsicle \
+requires="db5 tcl-8.6:tcl86 tcllib tk-8.6:tk86 png netpbm gifsicle \
     gnuplot mapserver"
 
 conflict="nbspgribrsh"

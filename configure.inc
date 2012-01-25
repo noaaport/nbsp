@@ -22,9 +22,9 @@ TCLSH=/usr/local/bin/tclsh8.6
 WISH=/usr/local/bin/wish8.6
 EXPECT=/usr/local/bin/expect
 
-DB_INCDIR="-I /usr/local/include/db48"
-DB_LIB="db-4.8"
-DB_BINDIR=/usr/local/bin/db48
+DB_INCDIR="-I /usr/local/include/db5"
+DB_LIB="db-5"
+DB_BINDIR=/usr/local/bin/db5
 
 LOCAL_LIBDIR="-L /usr/local/lib"
 LOCAL_INCDIR="-I /usr/local/include"
