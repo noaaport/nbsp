@@ -1,9 +1,19 @@
+nbsp (2.2.2r5-1) oneiric; urgency=low
+
+  * Renamed g.saveframefmt to g.spoolsavefmt (and the related changes
+    in nbspd.conf and defaults.h.in (for its possible use in the arcfilter)
+  * Corrected call to nbspradinfo in filters.lib to add the -C option
+    when the spool files are saved without the ccb and the file being processed
+    is not uncompressed with nbspunz.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 29 Dec 2011 21:35:12 -0400
+
 nbsp (2.2.2r4-1) oneiric; urgency=low
 
   * Revised nbspmtrplotdat 
   * Added arcfilter 
 
- -- Jose F Nieves <nieves@asa.uprrp.edu>  Wed, 07 Dec 2011 17:47:30 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 07 Dec 2011 17:47:30 -0400
 
 nbsp (2.2.2r3-1) stable; urgency=low
 
@@ -11,13 +21,13 @@ nbsp (2.2.2r3-1) stable; urgency=low
     dynamic image generation and introduced maxage parameter to control
     the frequency of the new image creation.
 
- -- Jose F Nieves <nieves@asa.uprrp.edu>  Fri, 25 Nov 2011 13:27:26 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 25 Nov 2011 13:27:26 -0400
 
 nbsp (2.2.2r2-1) stable; urgency=low
 
   * Bug fix 
 
- -- Jose F Nieves <nieves@asa.uprrp.edu>  Thu, 24 Nov 2011 09:08:22 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 24 Nov 2011 09:08:22 -0400
 
 nbsp (2.2.2r1-1) stable; urgency=low
 

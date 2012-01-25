@@ -14,5 +14,5 @@ nameslave=nbspslave
 branch=2.2
 releasenumber=2
 releaselevel=r
-update=4
+update=5
 version=${branch}.${releasenumber}${releaselevel}${update}
