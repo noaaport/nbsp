@@ -18,7 +18,7 @@ TARGET =	${PROGNAME}
 SOURCES =	${PROGNAME}.c
 OBJECTS =	${PROGNAME}.o
 
-LIBS =		-L ${LDMLIBDIR} -lldm -lm -lssl
+LIBS =		-L ${LDMLIBDIR} -lldm -lm -lssl -lxml2
 CFLAGS +=	-c -Wall -I ${LDMINCLUDEDIR}
 
 all: ${TARGET}

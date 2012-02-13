@@ -13,4 +13,16 @@ directory of the ldm include and lib subdirectories), for example
 
 # make LDMHOME=/usr/local/lib/ldm
 # make install
+
+NOTE for ldm-6.10.1
+===================
+
+The file
+
+    $LDMHOME/include/ldm.h
+
+includes "config.h", but that file is not copied by the ldm installation
+to the "include" subdirectory. Before executing the make commands above,
+be sure that the "config.h" file exists in $LDHOME/include and, if it
+is not there, then copy it there from $LDHOME/src.
 -
