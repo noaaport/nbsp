@@ -7,4 +7,11 @@ dnl
 #
 match_or_file($rc(awips1),
 cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw,
-$rc(body), EAS ACTIVATION, warnings, $ymdh.$rc(AWIPS1))
+$rc(body), EAS ACTIVATION, warnings, ${ymdh}.$rc(AWIPS1))
+
+#
+# The new GR scheme
+#
+match_or_file($rc(awips1),
+cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw,
+$rc(body), EAS ACTIVATION, warnings, warnings_${ymd_h}.txt)

@@ -32,7 +32,6 @@ lappend action {
   $7
 })
 
-
 define(matchstop_file,
 lappend cond {
   [regexp {$2} $1]

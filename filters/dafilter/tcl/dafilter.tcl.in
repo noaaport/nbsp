@@ -164,6 +164,7 @@ proc process {finfo} {
     # for example radar and sat files.
     set ymd_hm $rc(ymd_hm);
     set ymdhm $rc(ymdhm);
+    set ymd_h $rc(ymd_h);
     set ymdh $rc(ymdh);
     set ymd $rc(ymd);
     set ym $rc(ym);
