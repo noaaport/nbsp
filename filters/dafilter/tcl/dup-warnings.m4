@@ -5,13 +5,18 @@ dnl
 # 
 # Duplicates of warnings for grlevelx programs
 #
-match_or_file($rc(awips1),
-cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw,
-$rc(body), EAS ACTIVATION, warnings, ${ymdh}.$rc(AWIPS1))
+dnl
+dnl match_or_file($rc(awips1),
+dnl cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw,
+dnl $rc(body), EAS ACTIVATION, warnings, ${ymdh}.$rc(AWIPS1))
+dnl
+match_file($rc(awips1),
+svr|tor|ffw|svs|smw|mws,
+warnings, ${ymdh}.$rc(AWIPS1))
 
 #
 # The new GR scheme
 #
-match_or_file($rc(awips1),
-cem|cfw|ffw|fls|flw|hls|hwo|npw|rfw|sps|svr|svs|tor|wsw,
-$rc(body), EAS ACTIVATION, warnings, warnings_${ymd_h}.txt)
+match_file($rc(awips1),
+svr|tor|ffw|svs|smw|mws,
+warnings, warnings_${ymd_h}.txt)

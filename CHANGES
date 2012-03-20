@@ -130,9 +130,13 @@
 - Added arcfilter
 - Fixed pipe.m4 (gpfilter.rc) the dcuair entry (extra -d)
 
-2.2.2.r4
+2.2.2.r5
 - Renamed g.saveframefmt to g.spoolsavefmt (and the related changes
   in nbspd.conf and defaults.h.in (for its possible use in the arcfilter)
 - Corrected call to nbspradinfo in filters.lib to add the -C option
   when the spool files are saved without the ccb and the file being processed
   is not uncompressed with nbspunz.
+
+2.2.2.r6
+- Revised dup-warnings in dafilter to follow the updated GR scheme
+  (reported by Mark Burgus)

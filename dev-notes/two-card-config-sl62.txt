@@ -1,0 +1,4 @@
+1) Disable in NetworkManager
+
+2) in rc.local
+   ifconfig eth1 <ip> pointopoint 10.0.9.54
