@@ -75,6 +75,7 @@ bin/nbsptrackplot
 bin/nbspscheduler
 bin/nbspcspoolr
 bin/nbspreconfigure
+bin/nbspconfigure-dvbs2
 libexec/nbsp/features.init
 libexec/nbsp/nbspd.init
 libexec/nbsp/nbspfilter
@@ -164,6 +165,7 @@ etc/nbsp/dist/CONFIGURING
 etc/nbsp/dist/nbspd.conf-sample
 etc/nbsp/dist/nbspd.conf-defaults
 etc/nbsp/dist/sysctl.conf-ex
+etc/nbsp/dist/udprecvsize.conf-ex
 etc/nbsp/dist/features.conf-sample
 etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
 etc/nbsp/dist/nbspd-tier1.conf-ex

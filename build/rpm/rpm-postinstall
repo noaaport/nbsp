@@ -223,7 +223,8 @@ See the files
 	/usr/local/etc/nbsp/defaults/nbspd.conf
 	/usr/local/etc/nbsp/dist/sysctl.conf-ex
 
-for sysctl notes.
+for sysctl notes.  NOTE: Alternatively execute 'nbspconfigure-dvbs2' and
+it will carry out the steps indicated in those files.
 -
 
 To configure Nbsp with a memory based spool for a pure ingest role

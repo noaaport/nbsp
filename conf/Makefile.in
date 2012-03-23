@@ -11,14 +11,18 @@ SAMPLES =	nbspd.conf-sample features.conf-sample \
 DEFAULTS =	nbspd.conf-defaults
 EXAMPLES =	nbspd-mspoolbdb.conf-ex \
 		nbspd-tier1.conf-ex \
-		sysctl.conf-ex
+		sysctl.conf-ex \
+		udprecvsize.conf-ex
+
 DOCSAMPLES =	macosx-launchd.plist-sample
 READMES =	README CONFIGURING
 INITS =		features.init nbspd.init
-TOOLNAMES =	nbspreconfigure
+TOOLNAMES =	nbspreconfigure nbspconfigure-dvbs2
 
 NBSPDDEFAULTS =	@NBSPDDEFAULTS@
 SYSCTLDEFAULTS = @SYSCTLDEFAULTS@
+SYSCTLCONFLOCAL= @SYSCTLCONFLOCAL@
+UDPRECVSIZEDEFAULTS = @UDPRECVSIZEDEFAULTS@
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -33,6 +37,9 @@ nbspd.conf-defaults: ${NBSPDDEFAULTS}
 
 sysctl.conf-ex: ${SYSCTLDEFAULTS}
 	cp ${SYSCTLDEFAULTS} sysctl.conf-ex
+
+udprecvsize.conf-ex: ${UDPRECVSIZEDEFAULTS}
+	cp ${UDPRECVSIZEDEFAULTS} udprecvsize.conf-ex
 
 newsyslog.conf-sample: newsyslog.tmpl mksyslconf.sh
 	./mksyslconf.sh
@@ -58,6 +65,11 @@ nbspd-tier1.conf-ex: nbspd-tier1.conf
 
 nbspreconfigure: nbspreconfigure.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspreconfigure.tcl > nbspreconfigure
+
+nbspconfigure-dvbs2: nbspconfigure-dvbs2.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%SYSCTLCONFLOCAL%/s##${SYSCTLCONFLOCAL}# \
+	nbspconfigure-dvbs2.tcl > nbspconfigure-dvbs2
 
 install:
 	${INSTALL} -m 644 ${SAMPLES} ${MYCONFDIR}

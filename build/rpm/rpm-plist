@@ -73,6 +73,7 @@
 /usr/local/bin/nbspscheduler
 /usr/local/bin/nbspcspoolr
 /usr/local/bin/nbspreconfigure
+/usr/local/bin/nbspconfigure-dvbs2
 /usr/local/libexec/nbsp/features.init
 /usr/local/libexec/nbsp/nbspd.init
 /usr/local/libexec/nbsp/nbspfilter
@@ -162,6 +163,7 @@
 /usr/local/etc/nbsp/dist/nbspd.conf-sample
 /usr/local/etc/nbsp/dist/nbspd.conf-defaults
 /usr/local/etc/nbsp/dist/sysctl.conf-ex
+/usr/local/etc/nbsp/dist/udprecvsize.conf-ex
 /usr/local/etc/nbsp/dist/features.conf-sample
 /usr/local/etc/nbsp/dist/nbspd-mspoolbdb.conf-ex
 /usr/local/etc/nbsp/dist/nbspd-tier1.conf-ex

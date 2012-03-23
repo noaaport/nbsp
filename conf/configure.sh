@@ -7,5 +7,7 @@ sed -e "/@include@/ s||$INCLUDE|" \
     -e "/@INSTALL@/ s||$INSTALL|" \
     -e "/@NBSPDDEFAULTS@/s||$NBSPDDEFAULTS|" \
     -e "/@SYSCTLDEFAULTS@/s||$SYSCTLDEFAULTS|" \
+    -e "/@SYSCTLCONFLOCAL@/s||$SYSCTLCONFLOCAL|" \
+    -e "/@UDPRECVSIZEDEFAULTS@/s||$UDPRECVSIZEDEFAULTS|" \
     -e "/@TCLSH@/ s||$TCLSH|" \
     Makefile.in > Makefile
