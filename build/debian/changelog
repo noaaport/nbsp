@@ -1,3 +1,10 @@
+nbsp (2.2.2r6-1) oneiric; urgency=low
+
+  * Revised dafilter grlevel warnings directives
+  * Added nbspconfigure-dvbs2 
+
+ -- Jose F Nieves <nieves@asa.uprrp.edu>  Thu, 22 Mar 2012 23:13:47 -0400
+
 nbsp (2.2.2r5-1) oneiric; urgency=low
 
   * Renamed g.saveframefmt to g.spoolsavefmt (and the related changes
