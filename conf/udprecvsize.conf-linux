@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+
+# In linux the default udp buffer is around 109 KB and the maximum 255 KB,
+# but manually setting it would disable autotuning and therefore it is
+# not recommended to change the defaults.
+#
+### set udprcvsize	[expr 255 * 1024]
