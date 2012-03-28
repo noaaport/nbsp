@@ -140,3 +140,10 @@
 2.2.2.r6
 - Revised dup-warnings in dafilter to follow the updated GR scheme
   (reported by Mark Burgus)
+- Added nbspconfigure-dvbs2
+
+2.2.2.r7
+- Revised the function Httpd_ReturnFile in override.tcl (in the tclhttp lib)
+  to handle properly the bytes range requets (used by the GR warnings).
+  The case in which the request was "=n1-" (with n2 blank) was not
+  being handled correctly.
