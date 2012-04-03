@@ -147,3 +147,7 @@
   to handle properly the bytes range requets (used by the GR warnings).
   The case in which the request was "=n1-" (with n2 blank) was not
   being handled correctly.
+
+2.2.3.p1
+- Revised (and corrected) the virtual hosts framework. The web server
+  now supports virtual hosts, es explained in httpd-vhost.conf-ex

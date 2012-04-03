@@ -1,3 +1,10 @@
+nbsp (2.2.3p1-1) oneiric; urgency=low
+
+  * Revised (and corrected) the virtual hosts framework. The web server
+    now supports virtual hosts, es explained in httpd-vhost.conf-ex
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Tue, 03 Apr 2012 12:00:32 -0400
+
 nbsp (2.2.2r7-1) oneiric; urgency=low
 
   * Revised the function Httpd_ReturnFile in override.tcl (in the tclhttp lib
@@ -5,14 +12,14 @@ nbsp (2.2.2r7-1) oneiric; urgency=low
     The case in which the request was "=n1-" (with n2 blank) was not
     being handled correctly.
 
- -- Jose F Nieves <nieves@asa.uprrp.edu>  Wed, 28 Mar 2012 13:34:45 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 28 Mar 2012 13:34:45 -0400
 
 nbsp (2.2.2r6-1) oneiric; urgency=low
 
   * Revised dafilter grlevel warnings directives
   * Added nbspconfigure-dvbs2
 
- -- Jose F Nieves <nieves@asa.uprrp.edu>  Thu, 22 Mar 2012 23:13:47 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 22 Mar 2012 23:13:47 -0400
 
 nbsp (2.2.2r5-1) oneiric; urgency=low
 

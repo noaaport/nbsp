@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+In version 2.2.3 the web server was revised to support the bytes tanges
+http header and virtual hosts. The first is required by the new scheme
+used by the GR warnings programs. The virtual host support now
+makes it possible to use url's like
+
+    http://warnings.opennoaaport.net:8015
+
+instead of
+
+    http://www.opennoaaport.net:8015/digatmos/warnings
+
+The file
+
+    dist/httpd-vhost.conf-ex
+
+has explanations and examples of the virtual host configuration
+syntax and options.
+-
+
+Tue Apr  3 12:13:29 AST 2012
