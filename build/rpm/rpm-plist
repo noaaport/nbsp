@@ -288,6 +288,7 @@
 /usr/local/share/doc/nbsp/nbspudpread.tcl
 /usr/local/share/doc/nbsp/gis-bundle-www-templates.tgz
 /usr/local/etc/nbsp/dist/httpd.conf-sample
+/usr/local/etc/nbsp/dist/httpd-vhost.conf-ex
 /usr/local/etc/nbsp/dist/export.conf-sample
 /usr/local/etc/nbsp/dist/export-da.def-sample
 /usr/local/etc/nbsp/dist/export-grib.def-sample
