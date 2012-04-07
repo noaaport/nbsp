@@ -1,0 +1,48 @@
+#
+# Copyright (c) 2006-2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# $Id$
+#
+DIRS	=	cli
+
+SOURCES =	spoolbdb.c spoolbdbv.c spoolslots.c mspoolbdb.c
+OBJECTS =	spoolbdb.o spoolbdbv.o spoolslots.o mspoolbdb.o
+HEADERS =	spoolbdb.h spoolbdb_priv.h spoolbdbv.h spoolslots.h mspoolbdb.h
+
+TARGET =	libspoolbdb
+SHVERSION =	1
+
+INSTALL =	@INSTALL@
+CC =		@CC@
+INCDIRS =       @DB_INCDIR@
+CFLAGS +=	-c -Wall ${INCDIRS}
+CFLAGS +=	-g
+# CFLAGS +=	-fPIC
+
+all: ${TARGET}.a
+# all: ${TARGET}.a ${TARGET}.so
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE}) \
+	done
+
+${TARGET}.a: ${OBJECTS}
+	${AR} -rc $@ ${OBJECTS}
+
+# ${TARGET}.so: ${OBJECTS}
+#	${LD} -shared -o ${TARGET}.so.${SHVERSION} ${OBJECTS}
+#	@ln -s ${TARGET}.so.${SHVERSION} ${TARGET}.so
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+install:
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE} install) \
+	done
+
+clean:
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE} clean) \
+	done
+	rm -f *~ Makefile ${OBJECTS} \
+	${TARGET}.a ${TARGET}.so ${TARGET}.so.${SHVERSION}

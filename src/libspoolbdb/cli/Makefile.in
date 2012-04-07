@@ -1,0 +1,42 @@
+#
+# Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+AUX_SOURCES = util.c err.c
+AUX_HEADERS = util.h err.h
+AUX_OBJECTS = util.o err.o
+AUX_FILES = ${AUX_SOURCES} ${AUX_HEADERS}
+
+SOURCES =	cspoolr.c ${AUX_SOURCES}
+OBJECTS =	cspoolr.o ${AUX_OBJECTS}
+HEADERS =	../spoolbdb.h ../spoolbdbv.h ${AUX_HEADERS}
+
+TARGET =	cspoolr
+CLINAME =	nbspcspoolr
+
+INSTALL =	@INSTALL@
+CC =		@CC@
+INCDIRS =	 -iquote . -iquote .. -iquote ../../ @DB_INCDIR@
+CFLAGS +=	-c -g @CCWFLAGS@ ${INCDIRS}
+
+# bdb-46 in centos needs -lpthread
+LIBS =		@LOCAL_LIBDIR@ -l@DB_LIB@ -lpthread -L .. -lspoolbdb
+
+all: ${TARGET}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+cspoolr: ${OBJECTS}
+	${CC} -g -o $@ ${OBJECTS} ${LIBS}
+
+install: all
+	${INSTALL} -m 0755 ${TARGET} ${BINDIR}/${CLINAME}
+
+clean:
+	rm -f *~ ${OBJECTS} ${TARGET} ${AUX_FILES} Makefile
