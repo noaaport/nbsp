@@ -1,0 +1,162 @@
+#
+# $Id$
+#
+
+NAME
+	tclssh -
+
+	Tcl procedures to execute tcl scripts in remote hosts
+
+SYNOPSIS
+
+	package require tclssh;
+
+	# Basic
+	ssh::connect {args}
+	ssh::disconnect {host}
+	ssh::push {host script}
+	ssh::send {host}
+	ssh::send_exit {host}
+	ssh::pop_line {host line_varname}
+	ssh::pop_all {host output_varname}
+
+	# Special
+	ssh::hfileevent {host condition cmdlist}
+	ssh::hfconfigure {host args}
+	ssh::rexec {host script output_varname}
+	ssh::rexec_nopop {host script}
+	ssh::get_filehandle {host}
+	ssh::set_var {host var val}
+	ssh::get_var {host var}
+
+	# For internal use
+	ssh::_verify_connection {host}
+
+
+DESCRIPTION
+
+	This package provides a set of Tcl procedures that can be used
+	to execute tcl scripts in remote hosts.
+
+ssh::connect [-t <tclsh_name>] [-- <ssh_options>] [<user>@]<host>
+
+	Defaults: "-t "tclsh"
+
+	Must be called first. This proc opens an io channel to the tclsh
+	in the remote host (via ssh) that is kept in an internal variable
+	for subsequent use. The file handle can be retrieved if desired
+	through the
+
+	ssh::get_filehandle {host}
+
+	proc.
+
+ssh::disconnect <host>
+
+	Must be called last. Closes the filehandle opened by ssh::connect.
+
+ssh::push <host> <script>
+
+	<script> can be any tcl code. For example, if the remote
+	host is named "diablo"
+
+	ssh::push "diablo" "exec date"
+	ssh::push "diablo" "exec uname -a"
+
+	The commands are not executed immediately. Instead, the "push" proc
+	simply accumulates them in a list that is sent to the host
+	when the "send" procedure described below is executed. Each push
+	proc inserts the newline '\n' character after each <script>, so
+	it is not necessary to write
+
+	ssh::push "diablo" "exec date\n"
+	ssh::push "diablo" "exec uname -a\n"
+	...
+
+	in the above example. Internally, each <script> is a member of a
+	list, and when the "send" proc is invoked the entire script is
+	constructed as a "join <list> \n".
+
+ssh::send {host}
+
+	This proc does the equivalent of a
+
+	puts <filehandle> [join <script_list> \n]	
+	flush <filehandle>
+
+ssh::send_exit {host}
+
+	This proc is similar to the above, but it "pushes" an exit command
+	at the end of the script. The proc does the equivalent of
+
+	ssh::push <host> "exit"
+	ssh::send <host>
+
+	The net effect if this is that the remote host's tclsh will exit,
+	so that the filehandle receives an eof and we can use
+
+	[read <filehandle>]
+
+	to read the entire output at once (see the "pop" proc below).
+
+ssh::pop_line {host line_varname}
+
+	After executing a "send", this can be used to read one line
+	of output. The proc does the equivalent of
+
+	[gets <filehandle> line]
+
+
+ssh::pop_all {host output_varname}
+
+	This proc does the equivalent of
+
+	while {[::ssh::pop_line $host line] >= 0} {
+            puts $line;
+        }
+
+	but all the output is returned as one string in output_varname.
+	It should be used only when we know that the remote host's tclsh
+	will exit, so that the above code will detect the eof and exit
+	(see the "send_exit" proc above). The function returns the number
+	of lines read (0 if nothing is read before encountering eof).
+
+ssh::hfileevent {host condition cmdlist}
+
+	Equivalent to
+
+	fileevent <filehandke> $condition $cmdlist;
+
+ssh::hfconfigure {host args}
+
+	This is simply a short cut to
+
+	set F [ssh::get_filehandle <host>]
+	eval fconfigure $F $args;
+
+ssh::rexec {host script output_varname}
+
+	Short cut to
+
+    	ssh::rexec_nopop $host $script;
+    	ssh::pop_all $host output;
+
+ssh::rexec_nopop {host script}
+
+	Short cut to
+
+    	ssh::push $host $script;
+    	ssh::send_exit $host;
+
+ssh::get_filehandle {host}
+
+	Returns the filehandle of the connection to the remote host's tclsh.
+	The value returned can be used, for example, to setup fileevent
+	callbacks.
+
+ssh::set_var {host var val}
+ssh::get_var {host var}
+
+	These two functions give an extra facility that can be used to
+	keep variables that hold state information in scripts. 
+-

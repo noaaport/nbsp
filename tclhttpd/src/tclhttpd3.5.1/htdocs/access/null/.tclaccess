@@ -1,0 +1,2 @@
+set realm "Auto Password"
+set callback AuthNullCallback

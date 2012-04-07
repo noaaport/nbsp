@@ -1,0 +1,96 @@
+# Nothin in this directory should be cached
+cd [Doc_Root]	;# so relative paths will be doc root relative
+Doc_Dynamic
+namespace eval validation {
+}
+proc ::validation::genPasswd {password} {
+    package require crypt
+    package require uuencode
+    set crypt ":"
+    while {[string match *:* $crypt]} {
+	set crypt [crypt $password [Passgen_Salt]]
+    }
+    return $crypt
+}
+
+proc ::validation::chkPasswd {pass crypt} {
+    package require crypt
+    set salt [string range $crypt 0 1]
+    set crypt2 [crypt $pass $salt]
+    if {[string compare $crypt $crypt2] != 0} {
+	return 0	;# Not the right password
+    } else {
+	return 1	;# passwords matched
+    }
+}
+
+proc ::validation::parseFile {file var {extra ""}} {
+    upvar $var v
+    if {$extra != ""} {
+	upvar $extra e
+    }
+    
+    # read the file
+    catch {unset v}
+    if {[catch {open $file a+} in]} {
+	return $in
+    }
+    seek $in 0
+    while {[gets $in line] >= 0} {
+	if {[regexp {^([^:]+):[      ]*([^: ]+)(.*)$} $line x key value extra]} {
+	    #append result "<p>[protect_text $line] [protect_text $key] [protect_text $value] [protect_text $extra]"
+	    set v($key) [string trim $value]
+	    set e($key) [string trim $extra]
+	}
+    }
+    close $in
+    return ""
+}
+
+proc validation::writefile {file var {extra ""}} {
+    catch {
+	upvar $var v
+	if {$extra != ""} {
+	    upvar $extra e
+	} else {
+	    set e() ""
+	    unset e()
+	}
+	
+	catch {
+	    file copy -force $file ${file}~
+	}
+	
+	set fd [open $file w]
+	foreach {name val} [array get v] {
+	    if {[info exists e($name)]} {
+		puts $fd "${name}: $e($name)"
+	    } else {
+		puts $fd "${name}: $val"
+	    }
+	}
+	
+	close $fd
+    } err
+    Stderr $err
+}
+
+proc ::validation::debug {var} {
+    upvar $var v
+    if {[ncgi::value debug] == 1} {
+	# debugging output
+	return [subst {
+	    <b>$var</b><br>
+	    [html::tableFromArray v "border=1" *]
+	    <p><b>CGI Values</b><br>
+	    [html::tableFromList [ncgi::nvlist] "border=1"]
+	    <p>
+	    <b>Environment</b><br>
+	    [html::tableFromArray ::env "border=1" *]
+	}]
+    }
+}
+
+### Local Variables: ###
+### mode:tcl ###
+### End: ###

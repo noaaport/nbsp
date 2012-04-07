@@ -1,0 +1,2 @@
+[Doc_Dynamic]
+[html::tableFromList [Httpd_DumpHeaders $env(HTTP_CHANNEL)]]

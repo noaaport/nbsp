@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+HEADERS =	qdb.h
+SOURCES	=	qdb.c
+OBJECTS	=	qdb.o
+
+TARGET =	libqdb
+
+INSTALL =	@INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+INCDIRS =       @DB_INCDIR@
+DEBUGFLAGS =
+
+CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS} ${INCDIRS}
+
+all: ${TARGET}.a
+
+${TARGET}.a: ${OBJECTS}
+	${AR} -rc $@ ${OBJECTS}
+
+# ${TARGET}.so: ${OBJECTS}
+#	${LD} -shared -o ${.TARGET} ${.ALLSRC}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+test: main.o ${OBJECTS}
+	cc -o test main.o ${OBJECTS} -lc_r -lthr -lpthread \
+	-L /usr/local/lib -ldb-4.2
+
+install:
+
+clean:
+	rm -f *~ test main.o Makefile ${OBJECTS} ${TARGET}.a

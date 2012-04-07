@@ -1,0 +1,72 @@
+[manpage_begin httpd::dirlist n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {directory handling}]
+[moddesc   {Tcl Web Server}]
+[require httpd::dirlist [opt 1.1]]
+[description]
+
+The package [package httpd::dirlist] is an adjunct to the
+package [package httpd::doc], it provides the handling of
+directories to it.
+
+Note that the two packages cross-reference each other, in other words
+they are interdependent. It might make sense to make them one package
+in the future.
+
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Dirlist_IndexFile] [arg pattern]]
+
+The command sets the [cmd glob] pattern used by the package
+to locate the index file for a directory.
+
+
+[call [cmd Dirlist_Directory] [arg {prefix path suffix sock}]]
+
+This is the main command for the handling of directories.
+The name of the requested directory is in [arg path].
+
+[nl]
+
+The command will first try to locate an index file for the directory
+and failing that it will either reply with a not-found message
+generate a listing of the directory contents on its own, depending on
+whether directories are considered as hidden or not.
+
+[nl]
+
+If an index file was found it is given back to [package httpd::doc]
+for handling ([cmd Doc_Handle]).
+
+
+[call [cmd Dir_HideListings]]
+
+After the call of command all requests for directories without an
+index file will generate not-found replies.
+
+
+[call [cmd Dir_ShowListings]]
+
+After the call of command all requests for directories without an
+index file will generate listings of their contents.
+
+This is also the default status for the package.
+
+
+[call [cmd Dir_ListingIsHidden]]
+
+Returns the status set by [cmd Dir_HideListings]
+and [cmd Dir_ShowListings].
+
+
+[list_end]
+
+
+[see_also httpd httpd::url httpd::doc httpd::doc_error]
+[see_also httpd::utils]
+[keywords {web server} directory documents filesystem]
+[manpage_end]

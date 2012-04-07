@@ -1,0 +1,51 @@
+Copyright 2002-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+
+$Id$
+
+- Fri Nov  9 08:07:46 AST 2007
+
+This is a threaded version of libconn2. Here a thread is spawned for each
+client. The server reads from all fd's as before, but each thread writes
+to its coresponding client. There is a queue (a one-element nbsp_table from
+libqdb) for each client to which the server writes and each thread reads.
+
+The application can call conn_table_add_element()
+to insert the server's fd's, and also any other fd that it wants to monitor.
+For example
+    fd[0] = the unix server socket (for control operations of the server)
+    fd[1] = the network socket
+    fd[i] = any other device(s) that we want to monitor. For example,
+            in the weather monitor application,
+            fd[2] will be the wm918 device fd.
+
+The "type" argument for fd[0] should be set to CONN_TYPE_SERVER_LOCAL,
+for fd[1] should be CONN_TYPE_SERVER_NET and for fd[2] should
+be CONN_TYPE_APPLICATION.
+
+NOTE ABOUT ERRORS: The functions that return a dberror in the argument
+return dberror non-zero only if the error came from the db library;
+otherwise dberror is returned as zero. If such a function returns
+a non-zero value, checking the dberror argument variable determines
+if it was a db error or an OS error. Thereofore, if a function
+returns non-zero, the following will print the appropriate message:
+
+static void log_err_db(char *s, int dberror){
+
+  if(dberror >= 0){
+    /*
+     * dberror > 0 => a system error within the db library
+     * dberror = 0 => a system error outside the library.
+     */
+    log_err(s);
+  }else if(dberror < 0){
+    log_errx("%s %s", s, db_strerror(dberror));
+  }
+}
+
+The library must be compiled with the libqdb directory side-by-side.
+
+- Thu Nov 29 20:42:22 AST 2007
+
+The files tcpsock.{c,h} replace the functions that were in nsock.{c.h}.
+The latter two files are no longer used, and are kept here only
+for documentation purposes for some time.

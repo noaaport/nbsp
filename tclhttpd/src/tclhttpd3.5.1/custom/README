@@ -1,0 +1,32 @@
+custom/README
+
+This directory is the default location for adding custom code to TclHttpd.
+
+The custom code location is specified with the -library command line argument or the
+Config library <pathname>
+configuration file entry.
+
+The server sources everything in this directory in alphabetical order.
+This is done by the default "thread main" script, which is by default
+bin/httpdthread.tcl
+If you run with "-debug 1" you'll get feedback as the code here is loaded.
+Otherwise you only see any errors raised during the process.
+
+Contents
+
+mypage.tcl 
+This provides the page templates for the files under
+the htdocs directory.
+
+dodirs.tcl 
+This will source files from any subdirectory of custom/
+which contains a file called startup.tcl.  Can be used to modularise
+customisations.
+
+faq.tcl
+This is a sample that provides a faq-o-matic like interface
+
+hello.tcl
+This is another simple sample.
+
+For more sample applications, look under the sampleapp directory

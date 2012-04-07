@@ -1,0 +1,11 @@
+[mypage::header "Another Form"]
+<form action=/cgi-bin/test.cgi method=get>
+
+<select name=thesel multiple>
+<option value="foo+bar">foo bar
+<option value=red>red
+</select>
+<input type=submit>
+</form>
+
+[mypage::footer]

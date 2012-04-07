@@ -1,0 +1,4 @@
+This is a form-processing example that also uses MetaKit.
+The example creates a new document type to process ".frm"
+files, which are a lot like ".tml" files but have additional
+session semantics and work well with the forms package.

@@ -1,0 +1,39 @@
+# 'Report A Bug' template options: 
+
+set application_options {
+    {Bug Database}
+    {TclHttpd Documentation}
+}
+
+set os_options {
+    All
+    Windows
+    Unix
+    Macintosh
+}
+
+set priority_options {
+    Low
+    Medium
+    High
+}
+
+set assigned_options {
+    jrankin@oneil.com
+}
+
+set status_options {
+    New
+    Verified
+    Invalid
+    Fixed
+}
+
+# Application navigation links
+
+set my_navigation {
+    Home index.tml
+    {Report A Bug} report.tml
+    {List All Bugs} bug-list.tml
+}
+

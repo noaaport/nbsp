@@ -1,0 +1,30 @@
+The subdirectories here have code that can be added to tclhttpd
+as sample applications.
+
+addnode - this lets you add URLs and annotates for them
+
+bugdb - This is a simple bug database that uses MetaKit. The MetaKit
+        library (Mk4tcl) is required to run this application, or you 
+	can use Tclkit (which embeds MetaKit).
+
+ddehack - This is a little server that I ran on a Windows box so I
+        could control the Netscape running there via DDE.  So, an
+        external application (exmh) would poke a URL on tclhttpd,
+        which would in turn poke Netscape.
+
+kit_form - support for .frm files, which are forms that keep state
+        in a MetaKit database.
+
+login_cookie - demonstrates how to use cookies to maintain login sessions
+
+sendsock - This is really unsafe code.  It is an eval server that
+        will let a remote process connect to the server and evaluate
+        anything in tclhttpd.
+
+snmp    - this is a MIB-display demo that uses the Scotty Tnm extension
+
+sunscript - this is some very old code from the sunscript.sunlabs.com
+        website, which was the first "real" website run with tclhttpd
+        back in SunLabs.  Note, it isn't clear that the page format
+        templates here still work.
+

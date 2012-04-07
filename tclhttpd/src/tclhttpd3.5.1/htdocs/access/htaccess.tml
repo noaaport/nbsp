@@ -1,0 +1,104 @@
+[mypage::header "About .htaccess Files"]
+    <b>by Piet Vloet</b>
+    <p>Each directory can contain a file named ".htacess"
+      that controls access to the pages in that directory.
+      This depends on the files</p>
+    <ul><li>   .htaccess, 
+      <li>/usr/local/htaccess/passwd (or the Config AuthUserFile)
+      <li>/usr/local/htaccess/group.(or the Config AuthGroupFile)
+    </ul>
+    
+    <h4>Description of the <b>.htaccess</b> file:</h4>
+    <p>Each line begins with a keyword with one or more arguments. A keyword is case insensitive.
+      Also comment lines, a line starting with a '#', and blank lines are allowed.</p>
+
+    <h4>Keywords for .htaccess</h4>
+
+    <pre>
+AuthType             &lt;type&gt;
+                     Which Authentication mechanism to use
+                     type  ::  Basic | Digest
+
+AuthName             &lt;name&gt;
+                     Text displayed in password prompt from the browser
+                     name  ::  &lt;ASCII&gt;
+
+AuthUserFile         &lt;filename&gt;
+                     Reference to user file, inclusive path (See below)
+
+AuthGroupFile        &lt;filename&gt;
+                     Reference to group file, inclusive path (See below)
+
+Limit                &lt;op&gt;
+                     List of operations     
+                     op    ::  "GET|POST|.."
+
+/Limit
+</pre>
+<p>The following Keywords should be enclosed by the keywords "Limit" and "/Limit":
+Require, Order, Deny, Allow</p>
+
+<h4>USER and/or GROUP protection</h4>
+<pre>
+Require              &lt;key value&gt;
+                     key   ::  "user|group"
+                     value ::  "&lt;username&gt;|&lt;groupname&gt;"
+                     "value" must be specified in the AuthUserFile or AuthGroupFile
+</pre>
+<h4>NETWORK based protection</h4>
+    <p>In the case "allow" and/or "deny" is specified, order must be specified too!</p>
+    <pre>
+Order                &lt;value,value&gt;
+                     value ::  "allow|deny"
+
+Deny                 &lt;args&gt;
+                     args  ::  "\[from] {fully qualified network}* | all"
+
+Allow                &lt;args&gt;
+                     args  ::  "\[from] {fully qualified network}* | all
+
+    </pre>
+
+    <p>The <b>AuthUserfile</b> file "passwd" has this format:</p>
+
+    <pre>
+&lt;username&gt;:&lt;encrypted_password&gt;
+..</pre>
+
+    <p>The generation of encrypted passwords is support by the tcl package "crypt".
+      On unix you can copy e.g. an entry from the "passwd"/"shadow" file to the
+      AuthUserFile however since Basic authentication sends passwords in the clear, doing so
+      can expose your system to password sniffing attack.</p>
+    <p>The <b>AuthGroupFile</b> file "group" has this format:</p>
+    <pre>
+&lt;groupname&gt;:&lt;member&gt;,&lt;member2&gt;,&lt;member3&gt;
+..
+    </pre>
+    <h4>Notes:</h4>
+    <ul>
+      <li>At the moment of this writing a crypt library for Win32 is included in 
+	tclpro1.4.1 and is not part of Tclhttpd.</li>
+      <li>A pure tcl crypt is included with Tclhttpd, for the case that no faster lib is available.</li>
+      <li>How to create an AuthUserFile entry?
+	<p>Use the <a href="/htaccess">Access Control Editor</a>,</p>
+	<p>or Start a tcl shell and load the crypt package:</p>
+<pre>
+  tclsh
+  % package require crypt
+  % crypt &lt;password&gt; &lt;salt&gt;
+</pre>
+      </li>
+      <li><p>For further understanding I copied following text from the crypt.3c man page:</p>
+
+	<p>password is the input string to encrypt, for instance,  a  user's
+	  typed  password.   Only the first eight characters are used;
+	  the rest are ignored.  salt is a two-character string chosen
+	  from  the  set \[a-zA-Z0-9./]; this string is used to perturb
+	  the hashing algorithm in one of 4096 different  ways,  after
+	  which  the  input  string  is  used as the key to repeatedly
+	  encrypt a constant string.  The returned value points to the
+	  encrypted  input  string.   The  first two characters of the
+	  return value are the salt itself.</p>
+      </li>
+</ul>
+[mypage::footer]

@@ -1,0 +1,5 @@
+proc StatusMenu {} {
+    return "<a href=/stats/>Status</a> | <a href=/stats/doc.tml>Doc hits</a> | <a href=/stats/notfound.tml>Doc misses</a>\n"
+}
+
+

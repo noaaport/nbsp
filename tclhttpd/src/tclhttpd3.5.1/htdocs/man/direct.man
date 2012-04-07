@@ -1,0 +1,101 @@
+[manpage_begin httpd::direct n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Application direct domains}]
+[moddesc   {Tcl Web Server}]
+[require httpd::direct [opt 1.1]]
+[description]
+
+The package [package httpd::direct] provides generic facilities for
+the implementation of [term {application direct}] domains. These are
+domains where each url in the domain is handled by its own tcl
+command. Urls for which there is no command to handle it do not exists
+and cause the generation of an http error reply.
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Direct_Url] [arg virtual] [opt [arg prefix]] [opt [arg inThread]]]
+
+Registers the url prefix [arg virtual] as an application direct
+domain. If [arg prefix] is used then it declares the command prefix to
+use when constructing the name of the tcl command handling a
+particular url (See below for more details). If either no such prefix
+is declared, or as the empty string, then the url prefix itself,
+i.e. [arg virtual], will be used as the basename of the handler
+command.
+
+The last argument specifies whether the handlers command should run in
+a separate thread. By default the main thread is used.
+
+[nl]
+
+Regarding the construction of tcl commands for handling particular
+urls:
+
+For each url a/b/c in the domain the system will construct the command
+name [arg prefix]/a/b/c and call this to generate the html for that
+url. The value of any form variable for which the procedure has an
+argument of the same name will be assigned to that argument.  All
+remaining form variables and their values will be appended to the
+command in the form (varname value)... This means that any command
+implementing an application direct domain has to have an [arg args]
+argument to capture this data and prevent errors in this package when
+the command is called.
+
+[nl]
+
+The same data is also available through the commands provided by the
+package [package ncgi].
+
+[nl]
+
+The return code of the handler has important meaning. Anything
+outside of a regular return (code 0) and code 302 will be
+treated as an exception and thrown upward. As for the two
+codes mentioned above:
+
+[list_begin definitions]
+
+[lst_item [const 0]]
+A regular return.
+
+The return value of the handler command is used as the data to return
+to the browser. By default it is treated as of type "text/html". This
+can be changed by defining a global variable of the same name as the
+handler command and assigning the correct mime content type to
+it. I.e.
+
+[example_begin]
+    set [arg prefix]/a/b/c text/plain
+[example_end]
+
+[lst_item [const 302]]
+
+This code causes the package to assume that the result of the handler
+command is an url, and causes the generation of a http redirect reply
+to that url. (Side note: 302 is also the http protocol code used in
+http redirect replies).
+[nl]
+[list_end]
+[nl]
+
+Handlers for application direct domains are not given explicit access
+to either the channel handle for the connection, nor the connection
+status array. However they can use [cmd upvar] to import [var sock] or
+[var data] respectively from the caller's scope, which contain this
+information.
+
+
+[call [cmd Direct_UrlRemove] [arg prefix]]
+
+Removes the application direct domain which was registered
+for the specified command [arg prefix].
+
+[list_end]
+
+[see_also httpd httpd::url httpd::cgi httpd::cookie]
+[see_also httpd::doc_error httpd::utils]
+[keywords {web server} {application direct} domain]
+[manpage_end]

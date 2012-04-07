@@ -1,0 +1,18 @@
+[DynamicOnly]
+[SunscriptHead "$Httpd(name):$Httpd(port) Status"]
+[SunscriptBody]
+[SunscriptH1]
+[StatusMenu]
+<p>
+[TclPower]
+[StatusMainTable]
+<p>The following bar charts are created with a table of horizontal rules that may not display correctly on your browser.<br>
+<a href=/status/text>Text only view.</a>\n"
+[StatusMinuteHist CntMinuteurlhits "Per Minute Url Hits" $counter(basetime)]
+[if {[info exists counter(hour,1)]} {
+    StatusMinuteHist CntHoururlhits "Per Hour Url Hits" $counter(hour,1) hour
+}]
+[if {[info exists counter(day,1)]} {
+    StatusMinuteHist CntDayurlhits "Per Day Url Hits" $counter(day,1) day
+}]
+[End]

@@ -1,0 +1,9 @@
+cat <<__EOF__
+-
+The directory
+	
+	/usr/share/doc/tclgrads
+
+contains documentation, examples and sample data to get started.
+-
+__EOF__

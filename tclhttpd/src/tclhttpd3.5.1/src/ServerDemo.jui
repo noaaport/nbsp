@@ -1,0 +1,140 @@
+WidGet file, version 1.0, created:  Wed Feb 12 15:48:57 PST 1997
+Widget label#1
+	geometry row 1
+	other subclass {}
+	other type label
+	other helpURL {}
+	other master {}
+	other writeAccess {}
+	configure text {Enter password}
+	other pathname label#1
+	other tags {}
+	other level {}
+	other help {}
+	geometry column 1
+	other action {}
+	other comments {}
+	other item_name label#1
+	other tabbing {}
+Widget button#1
+	other helpURL {}
+	other writeAccess {}
+	other error {}
+	other tags {}
+	other level {}
+	other help {}
+	other master {}
+	other pathname button#1
+	other action {result.setText(digest(password.getText()));}
+	other item_name button#1
+	other tabbing {}
+	other subclass {}
+	geometry row 3
+	other type button
+	configure text compute
+	other comments {}
+	geometry column 1
+Widget entry#3
+	configure textvariable entry
+	other helpURL {}
+	other writeAccess {}
+	configure cursor {}
+	other editable {}
+	other error {The name "result" is already in use}
+	other tags {}
+	other level {}
+	other help {}
+	other master {}
+	other pathname entry#3
+	configure font Helvetica,12
+	other action {}
+	other tabbing {}
+	other item_name result
+	other subclass {}
+	geometry row 3
+	other type entry
+	configure width 64
+	other comments {}
+	geometry column 2
+Widget label#2
+	geometry row 2
+	other subclass {}
+	other type label
+	other helpURL {}
+	other master {}
+	other writeAccess {}
+	configure text {Sensitive data}
+	other pathname label#2
+	other tags {}
+	other level {}
+	other help {}
+	geometry column 1
+	other action {}
+	other comments {}
+	other item_name label#2
+	other tabbing {}
+Widget f
+	other panel {}
+	other subclass {}
+	other resize_row {0 0 0}
+	other type frame
+	other min_row {30 30 30}
+	other helpURL {}
+	other master {}
+	other writeAccess {}
+	other pathname f
+	other resize_column {0 0}
+	other tags {}
+	other level 0
+	configure background #e9e9e9
+	other min_column {30 30}
+	other help {}
+	other Colors {black white bisque grey red green blue magenta yellow #d9d9d9}
+	other preferences {package {} arg Object implements {} imports {} extends Helper init {super.init();}}
+	other action {}
+	other comments {}
+	other item_name f
+	other tabbing {}
+Widget entry#1
+	configure show *
+	configure textvariable entry
+	other helpURL {}
+	other writeAccess {}
+	configure cursor {}
+	other error {The name "password" is already in use}
+	other editable {}
+	other tags {}
+	other level {}
+	other help {}
+	other master {}
+	other pathname entry#1
+	other action {}
+	geometry sticky w
+	other tabbing {}
+	other item_name password
+	other subclass {}
+	geometry row 1
+	other type entry
+	other comments {}
+	geometry column 2
+Widget entry#2
+	configure textvariable entry
+	other helpURL {}
+	other writeAccess {}
+	configure cursor {}
+	other editable {}
+	other tags {}
+	other level {}
+	other help {}
+	other master {}
+	other pathname entry#2
+	other action {}
+	other tabbing {}
+	other item_name entry#2
+	geometry sticky sw
+	other subclass {}
+	geometry row 2
+	other type entry
+	other comments {}
+	geometry column 2
+

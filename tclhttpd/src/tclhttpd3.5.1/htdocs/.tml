@@ -1,0 +1,98 @@
+# Sunscript web site template definitions
+# SCCS: @(#) .tml 1.18 97/12/23 21:15:27
+
+# Site-specific modules from libtml
+
+package require mypage 1.0
+package require faq 1.2
+
+# Standard Tcl Library
+
+package require html
+package require ncgi
+
+# This allows to reset the package by appending ?packageReset=faq
+# for instance to a .tml query
+
+foreach pkg [ncgi::valueList packageReset] {
+    package forget $pkg
+    package require $pkg
+    Stderr "Reset package $pkg"
+}
+
+# This defines the URLs that appear in the footer
+
+mypage::contents {
+    Home		/
+    Status		/status	
+    "Learn"     	/learn/
+    "CGI Tests"		/forms/
+    "Templates"		/templates/
+    "Access Control"	/access/
+    "Reference Manual"	/man/
+}
+
+# These are the default colors and fonts for various HTML objects
+
+# #cc3300 is the "Tcl read"
+# #003399 is the "Tcl blue"
+
+html::init {
+    body.bgcolor	white
+    body.text		black
+    thinrule.bgcolor	#cc3300
+    font.face		arial
+}
+
+#
+# Support for the learn sub-tree
+#
+
+namespace eval learn {
+  variable order {
+    "Basic Setup"       setup.tml
+    "Templates"         /templates/
+    "Server Security"   security.tml
+    "Direct URLs"       direct.tml
+    "URL Domains"    domain.tml
+  }
+  variable prefix /learn
+}
+
+# learn::header - page header for this section
+
+proc ::learn::header { title } {
+  Doc_Dynamic
+  set html [mypage::header $title]
+  append html "<p>[clock format [clock seconds] -format "%H:%M %p"] [::learn::links]<p>\n"
+  return $html
+}
+
+# learn::links - format links to the pages in this section
+
+proc ::learn::links {{sep " | "}} {
+  variable order
+  variable prefix
+  set html ""
+  append html "<a href=\"$prefix/\">Learn</a> "
+  foreach {label url} $order {
+    if {![string match /* $url]} {
+      set url $prefix/$url
+    }
+    append html "$sep<a href=\"$url\">$label</a>"
+  }
+  return $html
+}
+
+# learn::link - format a link to a page in this section
+# The pattern argument matches against the labels for the links
+
+proc ::learn::link {pattern} {
+  variable order
+  foreach {label url} $order {
+    if {[regexp $pattern $label]} {
+      return "<a href=\"$url\">$label</a>"
+    }
+  }
+  return "$pattern <!-- No ::learn::link matches $pattern -->\n"
+}

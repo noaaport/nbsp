@@ -1,0 +1,51 @@
+[::learn::header "Lesson 1: Server Setup"]
+[Doc_Dynamic]
+
+<h4>Out of Box Startup</h4>
+
+This page describes how to set up the server for
+a standard "web page server"  and as a
+platform for web applications.  You have probably started
+the server using this simple command:
+<pre>
+tclsh$tcl_version bin/httpd.tcl -debug 1
+</pre>
+
+This runs the server using a standard selection of features
+and displaying the documents stored under <tt>htdocs</tt>
+in the distribution.  If you want an alternate document root,
+use the <tt>-docRoot <i>directory</i></tt> command line option.
+<pre>
+tclsh$tcl_version bin/httpd.tcl -docRoot <i>directory</i>
+</pre>
+<p>
+When you specify the <tt>-debug</tt> flag, you get additional information
+printed as different modules are loaded.
+You also get a Tcl command prompt that lets you poke around
+in the main Tcl interpreter used by TclHttpd.
+<p>
+Here are the command line options understood by this server:
+<table border=1>
+  <tr><th>option</th><th>default</th><th>description</th></tr>
+[html::foreach {arginfo} $::CommandLineOptions {
+  [html::foreach {arg default comment} $arginfo {
+    [html::eval {regsub .arg $arg {} arg}]
+    <tr><td>-$arg</td><td>$default</td><td>$comment</td></tr>
+  }]
+}]
+</table>
+
+<h4>Adding Code</h4>
+
+The server automatically sources the code in its
+<i>custom code directory</i>, which is specified by
+the <tt>-library</tt> command line argument.  
+This feature allows you to "drop in" additional Tcl code
+without modifying the server.  Your code can turn the basic
+server into a complete application.
+<p>
+The <tt>sampleapp</tt>
+directory of the distribution contains
+several examples contributed by TclHttpd users.
+
+[mypage::footer]

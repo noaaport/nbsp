@@ -1,0 +1,725 @@
+#
+# $Id$
+#
+
+NAME
+	tclgempak -
+
+	Tcl interface to Gempak.
+
+SYNOPSIS
+
+	package require gempak;
+
+	::gempak::init {args}
+	::gempak::define {param_name param_value}
+	::gempak::run {}
+	::gempak::end {}
+	::gempak::get {param_name}
+
+	::gempak::device_xxx {value} (xxx = device, name, size, color)
+	::gempak::set_device {}
+	::gempak::get_device {}
+	::gempak::get_device_list {} 
+
+	::gempak::map_xxxx {args} (xxxx = color, dash, width, filterflag)
+	::gempak::set_map {}
+	::gempak::append_map {}
+	::gempak::get_map {}
+	::gempak::get_map_list {} 
+
+	::gempak::garea_xxxx {args} (xxxx = lat1, lon1, lat2, lon2)
+	::gempak::set_garea {}
+	::gempak::get_garea {}
+	::gempak::get_area_list {} 
+
+	::gempak::latlon_xxxx {args} (xxxx = color, linetype, linewidth,
+					 freq, incr, label, format)
+	::gempak::set_latlon {}
+	::gempak::get_latlon {}
+	::gempak::get_latlon_list {} 
+
+	::gempak::imcbar_xxxx {args} (xxxx = color, orientation, anchor, xy,
+					 lengthwidth, frequency)
+	::gempak::set_imcbar {}
+	::gempak::get_imcbar {}
+	::gempak::get_imcbar_list {} 
+
+	::gempak::title_xxxx {args} (xxxx = color, location, string)
+	::gempak::set_title {}
+	::gempak::get_title {}
+	::gempak::get_title_list {}
+
+	::gempak::colors {args}
+	::gempak::get_colors {}
+	::gempak::get_colors_list {}
+	::gempak::append_colors {color}
+
+	::gempak::sfparm_name {name}
+	::gempak::sfparm_size {size}
+	::gempak::sfparm_width {width}
+	::gempak::sfparm_type {type}
+	::gempak::sfparm_headsiz {headsiz}
+	::gempak::set_sfparm {}
+	::gempak::get_sfparm {}
+	::gempak::get_sfparm_list {}
+	::gempak::append_sfparm {}
+
+	::gempak::stnplt_text_color {color}
+	::gempak::stnplt_text_size {size}
+	::gempak::stnplt_text_font {font}
+	::gempak::stnplt_text_width {width}
+	::gempak::stnplt_text_border {border}
+	::gempak::stnplt_text_rotation {rotation}
+	::gempak::stnplt_text_justification {justification}
+	::gempak::stnplt_text_hwflag {hwflag}
+	::gempak::stnplt_marker_color {color}
+	::gempak::stnplt_marker_type {type}
+	::gempak::stnplt_marker_size {size}
+	::gempak::stnplt_marker_width {width}
+	::gempak::stnplt_marker_hwflag {hwflag}
+	::gempak::stnplt_stnfile_name {stnfile_name}
+	::gempak::stnplt_stnfile_column {stnfile_column}
+	::gempak::set_stnplt {}
+	::gempak::get_stnplt {}
+	::gempak::get_stnplt_list {}
+
+	::gempak::wstm_end_time {end_time}
+	::gempak::wstm_color_warn {warn_color}
+	::gempak::wstm_color_watch {watch_color}
+	::gempak::wstm_color_advisory {advisory_color}
+	::gempak::wstm_time_flag {time_flag}
+	::gempak::wstm_label_flag {label_flag}
+	::gempak::wstm_outline_flag {outline_flag}
+	::gempak::wstm_outline_width_warn {warn_linewidth}
+	::gempak::wstm_outline_width_watch {watch_linewidth}
+	::gempak::wstm_outline_width_advisory {advisory_linewidth}
+	::gempak::set_wstm {}
+	::gempak::get_wstm {}
+	::gempak::get_wstm_list {}
+
+	::gempak::watch_end_time {end_time}
+	::gempak::watch_color_thunderstorm {thunderstorm_color}
+	::gempak::watch_color_tornado {tornado_color}
+	::gempak::watch_color_status {status_color}
+	::gempak::watch_time_flag_watch_box {flag}
+	::gempak::watch_time_flag_status_line {flag}
+	::gempak::watch_number_flag_watch_box {flag}
+	::gempak::watch_number_flag_status_line {flag}
+	::gempak::watch_color_code_flag {flag}
+	::gempak::watch_most_recent_status_line_flag {flag}
+	::gempak::set_watch {}
+	::gempak::get_watch {}
+	::gempak::get_watch_list {}
+
+	::gempak::warn_end_time {end_time}
+	::gempak::warn_color_tstorm {color}
+	::gempak::warn_color_tornado {color}
+	::gempak::warn_color_flash_flood {color}
+	::gempak::warn_time_flag {flag}
+	::gempak::warn_label_flag {flag}
+	::gempak::warn_outline_flag {flag}
+	::gempak::warn_poly_flag {flag}
+	::gempak::set_warn {}
+	::gempak::get_warn {}
+	::gempak::get_warn_list {}
+
+	::gempak::wou_end_time {end_time}
+	::gempak::wou_outline_color_thunderstorm {color}
+	::gempak::wou_outline_color_tornado {color}
+	::gempak::wou_time_flag {flag}
+	::gempak::wou_label_flag {flag}
+	::gempak::wou_watch_number {watch_number}
+	::gempak::wou_color_code_flag {flag}
+	::gempak::wou_marker_flag {flag}
+	::gempak::wou_outline_flag {flag}
+	::gempak::wou_fill_flag {flag}
+	::gempak::wou_fill_color_thunderstorm {color}
+	::gempak::wou_fill_color_tornado {color}
+	::gempak::wou_union_flag {flag}
+	::gempak::set_wou {} {
+	::gempak::get_wou {} {
+	::gempak::get_wou_list {} {
+
+	::gempak::wcn_end_time {end_time}
+	::gempak::wcn_outline_color_thunderstorm {color}
+	::gempak::wcn_outline_color_tornado {color}
+	::gempak::wcn_time_flag {flag}
+	::gempak::wcn_label_flag {flag}
+	::gempak::wcn_watch_number {watch_number}
+	::gempak::wcn_color_code_flag {flag}
+	::gempak::wcn_marker_flag {flag}
+	::gempak::wcn_outline_flag {flag}
+	::gempak::wcn_fill_flag {flag}
+	::gempak::wcn_fill_color_thunderstorm {color}
+	::gempak::wcn_fill_color_tornado {color}
+	::gempak::wcn_union_flag {flag}
+	::gempak::set_wcn {} {
+	::gempak::get_wcn {} {
+	::gempak::get_wcn_list {} {
+
+	::gempak::wcp_end_time {end_time}
+	::gempak::wcp_color_thunderstorm {thunderstorm_color}
+	::gempak::wcp_color_thunderstorm {thunderstorm_color} {
+	::gempak::wcp_time_flag {flag}
+	::gempak::wcp_watch_number_flag {flag}
+	::gempak::wcp_color_code_flag {flag}
+	::gempak::set_wcp {}
+	::gempak::get_wcp {}
+	::gempak::get_wcp_list {}
+
+	::gempak::svrl_end_time {end_time}
+	::gempak::svrl_color_thunderstorm {thunderstorm_color}
+	::gempak::svrl_color_tornado {tornado_color}
+	::gempak::svrl_time_flag {flag}
+	::gempak::svrl_label_flag {flag}
+	::gempak::svrl_outline_flag {flag}
+	::gempak::svrl_color_code_flag {flag}
+	::gempak::set_svrl {}
+	::gempak::get_svrl {}
+	::gempak::get_svrl_list {}
+
+	::gempak::ffa_end_time {end_time}
+	::gempak::ffa_color_ff {color}
+	::gempak::ffa_color_fa {color}
+	::gempak::ffa_time_flag {flag}
+	::gempak::ffa_label_flag {flag}
+	::gempak::ffa_immediate_cause_flag_flag {flag}
+	::gempak::ffa_outline_flag {flag}
+	::gempak::ffa_outline_width_ff {linewidth}
+	::gempak::ffa_outline_width_fa {linewidth}
+	::gempak::set_ffa {}
+	::gempak::get_ffa {}
+	::gempak::get_ffa_list {}
+
+	::gempak::mapfil {map1 map2 ....}
+	::gempak::get_mapfil {}
+
+	::gempak::refvec_magnitude {magnitude}
+	::gempak::refvec_xy {x y}
+	::gempak::refvec_text_size {size}
+	::gempak::refvec_text_font {font}
+	::gempak::refvec_text_width {width}
+	::gempak::refvec_text_hwflag {flag}
+	::gempak::refvec_string {string}
+	::gempak::set_refvec {}
+	::gempak::get_refvec {}
+	::gempak::get_refvec_list {}
+
+	::gempak::skip_contour {skip_contour}
+	::gempak::skip_plot_xy {skip_x skip_y}
+	::gempak::set_skip {}
+	::gempak::get_skip {}
+	::gempak::get_skip_list {}
+
+	::gempak::stream_lines {lines}
+	::gempak::stream_arrows {arrows}
+	::gempak::stream_stop {stop}
+	::gempak::stream_slow {slow}
+	::gempak::stream_scale {scale}
+	::gempak::set_stream {}
+	::gempak::get_stream {}
+	::gempak::get_stream_list {}
+
+	::gempak::wind_symbol_type {type}
+	::gempak::wind_symbol_units {units}
+	::gempak::wind_symbol_color {color}
+	::gempak::wind_size {size}
+	::gempak::wind_width {width}
+	::gempak::wind_type {type}
+	::gempak::wind_arrow_head_size {size}
+	::gempak::set_wind {}
+	::gempak::get_wind {}
+	::gempak::get_wind_list {}
+
+	::gempak::ctype_fill {}
+	::gempak::ctype_contour {}
+	::gempak::ctype_fc {}
+	::gempak::line_color {color}
+	::gempak::line_type {type}
+	::gempak::line_width {width}
+	::gempak::line_label {label}
+	::gempak::line_smth {smth}
+	::gempak::line_fltr {fltr}
+	::gempak::line_scfflg {scflg}
+	::gempak::set_line {}
+	::gempak::get_line {}
+	::gempak::get_line_list {}
+	::gempak::cint_interval {interval}
+	::gempak::cint_min {min}
+	::gempak::cint_max {max}
+	::gempak::set_cint {}
+	::gempak::get_cint {}
+	::gempak::get_cint_list {}
+	::gempak::fint_interval {interval}
+	::gempak::fint_min {min}
+	::gempak::fint_max {max}
+	::gempak::set_fint {}
+	::gempak::get_fint {}
+	::gempak::get_fint_list {}
+	::gempak::fline_color {color}
+	::gempak::fline_type {type}
+	::gempak::set_fline {}
+	::gempak::get_fline {}
+	::gempak::get_fline_list {}
+
+	::gempak::gdinfo::init {args}
+	::gempak::gdinfo::end {}
+	::gempak::gdinfo::run {}
+	::gempak::gdinfo::output_raw {}
+	::gempak::gdinfo::output {}
+	::gempak::gdinfo::output_list {}
+	::gempak::gdinfo::define {param val}
+	::gempak::gdinfo::get {param}
+	::gempak::gdinfo::gdfile {gdfile}
+	::gempak::gdinfo::get_gdfile {}
+	::gempak::gdinfo::set_var {var_name var_val}
+	::gempak::gdinfo::get_var {var_name}
+
+	::gempak::sflist::init {args}
+	::gempak::sflist::end {}
+	::gempak::sflist::run {}
+	::gempak::sflist::output_raw {}
+	::gempak::sflist::output {}
+	::gempak::sflist::output_list
+	::gempak::sflist::output_status {}
+	::gempak::sflist::define {param val}
+	::gempak::sflist::get {param}
+	::gempak::sflist::sfparm {args}
+	::gempak::sflist::dattim {val}
+	::gempak::sflist::sffile {val}
+	::gempak::sflist::stations {args}
+	::gempak::sflist::state {state}
+	::gempak::sflist::latlon12 {lat1 lon1 lat2 lon2}
+	::gempak::sflist::lat {lat1 lat2}
+	::gempak::sflist::lon {lon1 lon2}
+	::gempak::sflist::set_latlon {}
+	::gempak::sflist::set_var {var_name var_val}
+	::gempak::sflist::get_var {var_name}
+
+DESCRIPTION
+
+	This package provides a set of Tcl procedures that can be used
+	to run Gempak programs from Tcl scripts.
+
+proc gempak::init [-k] [-l <logfile>] <program>
+
+	Defaults: "-l /dev/null"
+
+	Must be called first, with the name of the program to be run
+	as argument (e.g., gpmap). <program> must be one of
+
+		gpmap, gpfront, sfmap, sfcntr
+
+	If [-k] is given, then the auxiliary files gemtbl.nts and last.nts
+	are kept, otherwise they are deleted by gempak::end.
+
+	If [-l] is given, then the argument is used to save the output
+	of the program.
+
+proc gempak::end {}
+
+	Must be called last, with no arguments.
+
+proc gempak::define <paramater name> <parameter value>
+
+	Must be called after ::gempak::init, with two arguments. The first
+	is the name of the gempak parameter to set, and the second argument
+	is the value. For example,
+
+	gempak::define proj "rad"
+	gempak::define garea "dset"
+	gempak::define radfil "n0rjua_20090106_1806.nids"
+
+	are all valid.
+
+proc gempak::run {}
+
+	Sends a "run" command to the Gempak program.
+
+proc gempak::get {param_name}
+
+	Returns the value of the parameter, previously set with
+	::gempak::define.
+
+Parameter Utility functions -
+
+proc ::gempak::device_device {device}
+proc ::gempak::device_name {name}
+proc ::gempak::device_size {xsize ysize}
+proc ::gempak::device_color {color}
+proc ::gempak::set_device {}
+proc ::gempak::get_device {}
+proc ::gempak::get_device_list {} 
+
+	The ::gempak_device_xxxx functions set the value of the xxxx
+	part of the "device" string value that is passed to the gempak
+	program. The function ::gempak::set_device must be called last
+	to actually build the string parameter and save it in the
+	appropriate (internal) variable, whose value can be retrieved
+	at any time with ::gempak::get_device. The ::gempak::get_device_list
+	returns the elementes of the devive as a tcl list, in the order
+	that appear as "xxx" in the synopsis.
+
+	Example -
+
+	gempak::device_device "gif";
+	gempak::device_name "latest.gif"
+	gempak::device_size 800 600;
+	gempak::set_device;
+
+proc ::gempak::map_color {color}
+proc ::gempak::map_dash {dash}
+proc ::gempak::map_width {width}
+proc ::gempak::map_filterflag {filterflag}
+proc ::gempak::set_map {}
+proc ::gempak::append_map {}
+proc ::gempak::get_map {}
+proc ::gempak::get_map_list {} 
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "map" parameter. The function
+	gempak::append_map appends the new settings to the previous ones,
+	separated by a "+", to build a map list like "1//2 + 2//3" + ...".
+
+proc ::gempak::garea_lat1 {lat}
+proc ::gempak::garea_lon1 {lon}
+proc ::gempak::garea_lat2 {lat}
+proc ::gempak::garea_lon2 {lon}
+proc ::gempak::set_garea {}
+proc ::gempak::get_garea {}
+proc ::gempak::get_garea_list {} 
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "garea" parameter.
+
+proc ::gempak::latlon_color {color}
+proc ::gempak::latlon_linetype {linetype}
+proc ::gempak::latlon_linewidth {linewidth}
+proc ::gempak::latlon_freq {xfreq yfreq}
+proc ::gempak::latlon_incr {xincr yincr}
+proc ::gempak::latlon_label {latlabel lonlabel}
+proc ::gempak::latlon_format {format}
+proc ::gempak::set_latlon {}
+proc ::gempak::get_latlon {}
+proc ::gempak::get_latlon_list {} 
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "latlon" parameter.
+
+proc ::gempak::imcbar_color {color}
+proc ::gempak::imcbar_orientation {orientation}
+proc ::gempak::imcbar_anchor {anchor}
+proc ::gempak::imcbar_xy {x y}
+proc ::gempak::imcbar_lengthwidth {length width}
+proc ::gempak::imcbar_frequency {frequency}
+proc ::gempak::set_imcbar {}
+proc ::gempak::get_imcbar {}
+proc ::gempak::get_imcbar_list {} 
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "imcbar" parameter.
+
+proc ::gempak::title_color {color}
+proc ::gempak::title_location {location}
+proc ::gempak::title_string {string {shorttitle ""}}
+proc ::gempak::set_title {}
+proc ::gempak::get_title {}
+proc ::gempak::get_title_list {} 
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "title" parameter.
+
+proc ::gempak::colors {args}
+proc ::gempak::get_colors {}
+proc ::gempak::get_colors_list {}
+proc ::gempak::append_colors {color}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "colors" parameter.
+
+proc ::gempak::sfparm_name {name}
+proc ::gempak::sfparm_size {size}
+proc ::gempak::sfparm_width {width}
+proc ::gempak::sfparm_type {type}
+proc ::gempak::sfparm_headsiz {headsiz}
+proc ::gempak::set_sfparm {}
+proc ::gempak::get_sfparm {}
+proc ::gempak::get_sfparm_list {}
+proc ::gempak::append_sfparm {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "sfparm" parameter.
+
+proc ::gempak::stnplt_text_color {color}
+proc ::gempak::stnplt_text_size {size}
+proc ::gempak::stnplt_text_font {font}
+proc ::gempak::stnplt_text_width {width}
+proc ::gempak::stnplt_text_border {border}
+proc ::gempak::stnplt_text_rotation {rotation}
+proc ::gempak::stnplt_text_justification {justification}
+proc ::gempak::stnplt_text_hwflag {hwflag}
+proc ::gempak::stnplt_marker_color {color}
+proc ::gempak::stnplt_marker_type {type}
+proc ::gempak::stnplt_marker_size {size}
+proc ::gempak::stnplt_marker_width {width}
+proc ::gempak::stnplt_marker_hwflag {hwflag}
+proc ::gempak::stnplt_stnfile_name {stnfile_name}
+proc ::gempak::stnplt_stnfile_column {stnfile_column}
+proc ::gempak::set_stnplt {}
+proc ::gempak::get_stnplt {}
+proc ::gempak::get_stnplt_list {}
+
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "stmnplt" parameter.
+
+proc ::gempak::wstm_end_time {end_time}
+proc ::gempak::wstm_color_warn {warn_color}
+proc ::gempak::wstm_color_watch {watch_color}
+proc ::gempak::wstm_color_advisory {advisory_color}
+proc ::gempak::wstm_time_flag {time_flag}
+proc ::gempak::wstm_label_flag {label_flag}
+proc ::gempak::wstm_outline_flag {outline_flag}
+proc ::gempak::wstm_outline_width_warn {warn_linewidth}
+proc ::gempak::wstm_outline_width_watch {watch_linewidth}
+proc ::gempak::wstm_outline_width_advisory {advisory_linewidth}
+proc ::gempak::set_wstm {}
+proc ::gempak::get_wstm {}
+proc ::gempak::get_wstm_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "wstm" parameter.
+
+proc ::gempak::watch_end_time {end_time}
+proc ::gempak::watch_color_thunderstorm {thunderstorm_color}
+proc ::gempak::watch_color_tornado {tornado_color}
+proc ::gempak::watch_color_status {status_color}
+proc ::gempak::watch_time_flag_watch_box {flag}
+proc ::gempak::watch_time_flag_status_line {flag}
+proc ::gempak::watch_number_flag_watch_box {flag}
+proc ::gempak::watch_number_flag_status_line {flag}
+proc ::gempak::watch_color_code_flag {flag}
+proc ::gempak::watch_most_recent_status_line_flag {flag}
+proc ::gempak::set_watch {}
+proc ::gempak::get_watch {}
+proc ::gempak::get_watch_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "watch" parameter.
+
+proc ::gempak::warn_end_time {end_time}
+proc ::gempak::warn_color_tstorm {color}
+proc ::gempak::warn_color_tornado {color}
+proc ::gempak::warn_color_flash_flood {color}
+proc ::gempak::warn_time_flag {flag}
+proc ::gempak::warn_label_flag {flag}
+proc ::gempak::warn_outline_flag {flag}
+proc ::gempak::warn_poly_flag {flag}
+proc ::gempak::set_warn {}
+proc ::gempak::get_warn {}
+proc ::gempak::get_warn_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "warn" parameter.
+
+proc ::gempak::wou_end_time {end_time}
+proc ::gempak::wou_outline_color_thunderstorm {color}
+proc ::gempak::wou_outline_color_tornado {color}
+proc ::gempak::wou_time_flag {flag}
+proc ::gempak::wou_label_flag {flag}
+proc ::gempak::wou_watch_number {watch_number}
+proc ::gempak::wou_color_code_flag {flag}
+proc ::gempak::wou_marker_flag {flag}
+proc ::gempak::wou_outline_flag {flag}
+proc ::gempak::wou_fill_flag {flag}
+proc ::gempak::wou_fill_color_thunderstorm {color}
+proc ::gempak::wou_fill_color_tornado {color}
+proc ::gempak::wou_union_flag {flag}
+proc ::gempak::set_wou {} {
+proc ::gempak::get_wou {} {
+proc ::gempak::get_wou_list {} {
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "wou" parameter.
+
+proc ::gempak::wcn_end_time {end_time}
+proc ::gempak::wcn_outline_color_thunderstorm {color}
+proc ::gempak::wcn_outline_color_tornado {color}
+proc ::gempak::wcn_time_flag {flag}
+proc ::gempak::wcn_label_flag {flag}
+proc ::gempak::wcn_watch_number {watch_number}
+proc ::gempak::wcn_color_code_flag {flag}
+proc ::gempak::wcn_marker_flag {flag}
+proc ::gempak::wcn_outline_flag {flag}
+proc ::gempak::wcn_fill_flag {flag}
+proc ::gempak::wcn_fill_color_thunderstorm {color}
+proc ::gempak::wcn_fill_color_tornado {color}
+proc ::gempak::wcn_union_flag {flag}
+proc ::gempak::set_wcn {} {
+proc ::gempak::get_wcn {} {
+proc ::gempak::get_wcn_list {} {
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "wcn" parameter.
+
+proc ::gempak::wcp_end_time {end_time}
+proc ::gempak::wcp_color_thunderstorm {thunderstorm_color}
+proc ::gempak::wcp_color_thunderstorm {thunderstorm_color} {
+proc ::gempak::wcp_time_flag {flag}
+proc ::gempak::wcp_watch_number_flag {flag}
+proc ::gempak::wcp_color_code_flag {flag}
+proc ::gempak::set_wcp {}
+proc ::gempak::get_wcp {}
+proc ::gempak::get_wcp_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "wcp" parameter.
+
+proc ::gempak::svrl_end_time {end_time}
+proc ::gempak::svrl_color_thunderstorm {thunderstorm_color}
+proc ::gempak::svrl_color_tornado {tornado_color}
+proc ::gempak::svrl_time_flag {flag}
+proc ::gempak::svrl_label_flag {flag}
+proc ::gempak::svrl_outline_flag {flag}
+proc ::gempak::svrl_color_code_flag {flag}
+proc ::gempak::set_svrl {}
+proc ::gempak::get_svrl {}
+proc ::gempak::get_svrl_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "svrl" parameter.
+
+proc ::gempak::ffa_end_time {end_time}
+proc ::gempak::ffa_color_ff {color}
+proc ::gempak::ffa_color_fa {color}
+proc ::gempak::ffa_time_flag {flag}
+proc ::gempak::ffa_label_flag {flag}
+proc ::gempak::ffa_immediate_cause_flag_flag {flag}
+proc ::gempak::ffa_outline_flag {flag}
+proc ::gempak::ffa_outline_width_ff {linewidth}
+proc ::gempak::ffa_outline_width_fa {linewidth}
+proc ::gempak::set_ffa {}
+proc ::gempak::get_ffa {}
+proc ::gempak::get_ffa_list {}
+
+	These functions are analogous to the ::gempak::device_xxxx
+	functions, but they work on the "ffa" parameter.
+
+proc ::gempak::mapfil {map1 map2 ....}
+proc ::gempak::get_mapfil {}
+
+	Convenience functions to hide the special role of the
+	mapfile variable in the gpmap scripts.
+-
+
+	The next set of functions are all related to the use of
+	gdstream, gdwind and gdcntr
+
+proc ::gempak::refvec_magnitude {magnitude}
+proc ::gempak::refvec_xy {x y}
+proc ::gempak::refvec_text_size {size}
+proc ::gempak::refvec_text_font {font}
+proc ::gempak::refvec_text_width {width}
+proc ::gempak::refvec_text_hwflag {flag}
+proc ::gempak::refvec_string {string}
+proc ::gempak::set_refvec {}
+proc ::gempak::get_refvec {}
+proc ::gempak::get_refvec_list {}
+
+proc ::gempak::skip_contour {skip_contour}
+proc ::gempak::skip_plot_xy {skip_x skip_y}
+proc ::gempak::set_skip {}
+proc ::gempak::get_skip {}
+proc ::gempak::get_skip_list {}
+
+proc ::gempak::stream_lines {lines}
+proc ::gempak::stream_arrows {arrows}
+proc ::gempak::stream_stop {stop}
+proc ::gempak::stream_slow {slow}
+proc ::gempak::stream_scale {scale}
+proc ::gempak::set_stream {}
+proc ::gempak::get_stream {}
+proc ::gempak::get_stream_list {}
+
+proc ::gempak::wind_symbol_type {type}
+proc ::gempak::wind_symbol_units {units}
+proc ::gempak::wind_symbol_color {color}
+proc ::gempak::wind_size {size}
+proc ::gempak::wind_width {width}
+proc ::gempak::wind_type {type}
+proc ::gempak::wind_arrow_head_size {size}
+proc ::gempak::set_wind {}
+proc ::gempak::get_wind {}
+proc ::gempak::get_wind_list {}
+
+	The next set of functions are functions are all in contour.tcl
+
+proc ::gempak::ctype_fill {}
+proc ::gempak::ctype_contour {}
+proc ::gempak::ctype_fc {}
+proc ::gempak::line_color {color}
+proc ::gempak::line_type {type}
+proc ::gempak::line_width {width}
+proc ::gempak::line_label {label}
+proc ::gempak::line_smth {smth}
+proc ::gempak::line_fltr {fltr}
+proc ::gempak::line_scfflg {scflg}
+proc ::gempak::set_line {}
+proc ::gempak::get_line {}
+proc ::gempak::get_line_list {}
+proc ::gempak::cint_interval {interval}
+proc ::gempak::cint_min {min}
+proc ::gempak::cint_max {max}
+proc ::gempak::set_cint {}
+proc ::gempak::get_cint {}
+proc ::gempak::get_cint_list {}
+proc ::gempak::fint_interval {interval}
+proc ::gempak::fint_min {min}
+proc ::gempak::fint_max {max}
+proc ::gempak::set_fint {}
+proc ::gempak::get_fint {}
+proc ::gempak::get_fint_list {}
+proc ::gempak::fline_color {color}
+proc ::gempak::fline_type {type}
+proc ::gempak::set_fline {}
+proc ::gempak::get_fline {}
+proc ::gempak::get_fline_list {}
+
+	These functions are in gdinfo.tcl. 
+
+proc ::gempak::gdinfo::init {args}
+proc ::gempak::gdinfo::end {}
+proc ::gempak::gdinfo::run {}
+proc ::gempak::gdinfo::inventory_raw {}
+proc ::gempak::gdinfo::output {}
+proc ::gempak::gdinfo::output_list {}
+proc ::gempak::gdinfo::define {param val}
+proc ::gempak::gdinfo::get {param}
+proc ::gempak::gdinfo::gdfile {gdfile}
+proc ::gempak::gdinfo::get_gdfile {}
+proc ::gempak::gdinfo::set_var {var_name var_val}
+proc ::gempak::gdinfo::get_var {var_name}
+
+	These functions are in sflist.tcl.
+
+proc ::gempak::sflist::init {args}
+proc ::gempak::sflist::end {}
+proc ::gempak::sflist::run {}
+proc ::gempak::sflist::output_raw {}
+proc ::gempak::sflist::output {}
+proc ::gempak::sflist::output_list
+proc ::gempak::sflist::output_status {}
+proc ::gempak::sflist::define {param val}
+proc ::gempak::sflist::get {param}
+proc ::gempak::sflist::sfparm {args}
+proc ::gempak::sflist::dattim {val}
+proc ::gempak::sflist::sffile {val}
+proc ::gempak::sflist::stations {args}
+proc ::gempak::sflist::state {state}
+proc ::gempak::sflist::latlon12 {lat1 lon1 lat2 lon2}
+proc ::gempak::sflist::lat {lat1 lat2}
+proc ::gempak::sflist::lon {lon1 lon2}
+proc ::gempak::sflist::set_latlon {}
+proc ::gempak::sflist::set_var {var_name var_val}
+proc ::gempak::sflist::get_var {var_name}

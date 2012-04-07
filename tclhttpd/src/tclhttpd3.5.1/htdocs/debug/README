@@ -1,0 +1,8 @@
+The files here are only for access control for the /debug
+Direct URL domain implemented in lib/debug.tcl
+
+The .tclaccess file has precidense over the .htaccess file.
+
+The .tclaccess implements something simple, just take a look at it.
+
+The .htaccess file depends on user and group files in /usr/local

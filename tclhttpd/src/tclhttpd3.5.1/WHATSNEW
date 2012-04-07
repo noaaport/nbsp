@@ -1,0 +1,144 @@
+What's new in TclHttpd
+
+3.5
+
+Mostly this is a cleanup of the code and web pages to cleanly
+separate out the core server from various sample applications and
+demo code.  The default web site is defined by the htdocs and custom
+subdirectories, and all the other stuff is organized under sampleapp.
+There are some new security controls over the debug URL so you can
+start up with that enabled and now worry about unauthorized access
+to that interface.
+
+3.4
+
+The upload domain has seen many fixes as a result of actually using it.
+Similarly, the Thread package has been updated to include some features
+added when we embedded TclHttpd into a threaded management server.
+The Doc module had some features added to template substitution
+and directory listing.  You can control the scope at which a template
+is subst'ed, and you and turn directory listings off.  There is also
+simple support for the If-Modified-Since header.  See the ChangeLog
+for details.
+
+There is now a Virtual Host mechanism.  You can load additional
+configuration files for different servers, and they are processed
+in different Tcl interpreters within your main server application.
+
+3.3
+
+This adds a file upload domain handler. (upload.tcl)
+Use Upload_Url to register the domain.  It takes a number
+of arguments that are described in the lib/upload.tcl script.
+A minimal call would be 
+
+Upload_Url /upload /tmp/upload UploadTest
+
+This will map the /upload URL to the upload domain.
+If you post forms that contain <input type=file> elements to /upload, 
+the files will be saved into /tmp/upload.  After they are saved,
+the UploadTest procedure will be called.  It gets two arguments:
+a list of form names and values, and a list of file names and 
+content types.  See the UploadTest procedure in upload.tcl for
+an example.
+
+3.2
+
+This adds a custom code directory that makes it easier to drop in
+your applicaton-specific code without hand-editting the bin/httpd.tcl
+and bin/httpdthread.tcl files.  Basically, all *.tcl files in the
+custom code directory are sourced towards the end of startup.
+Specify this directory with the -library command line switch,
+or with the "library" tclhttpd.rc file parameter.  By default this
+is the "custom" directory that now appears in the distribution.
+
+The Url_PrefixInstall command has been generalized to take some
+optional flags to enable some features on a per-domain basis.
+The calling sequence is backward compatible:
+    Url_PrefixInstall urlprefix tclcommand args
+where the optional args are option-value pairs:
+	-thread boolean
+		If boolean is true, and threads are enabled,
+		Then the domain handler is run in a thread.
+		The default is FALSE.
+	-readpost boolean
+		If boolean is true, then the POST data is
+		read in a non-blocking fashion before the
+		domain handler is invoked, and appears in
+		the data(query) variable.
+		The default is TRUE, so turn this off
+		if you have special post-data-reading code.
+	-command tclcommand2
+		This registers a command that is called
+		at the very end of URL processing by the
+		Httpd layer.  If the server decides to
+		time out your domain handler or the request
+		somehow aborts during processing, this
+		provides a way to learn about that.  The
+		command is called with two arguments, the
+		socket handle on the connection, and an
+		error string.  If the error string is empty,
+		no error occurred.
+		The default is no callback.
+
+3.1
+
+This is a cosmetic release that just changed all the "package provides" to
+name packages with a leading "httpd::" to organize the package namespace better.
+
+3.0
+
+The 3.0* releases feature the following major structural changes:
+
+Startup configuration.
+
+There are now three files that define your server startup sequence:
+In practice you may need to customize each of these.
+httpd.tcl - the main startup script.  This processes command line
+	arguments, opens the server sockets, does setuid and
+	a other process-wide configuration.
+httpdthread.tcl - a per-thread script that is also run by each thread.
+	This has most of the "package require" calls and the
+	various initialization calls that sets up your domian handlers.
+	Oddly, this typically has Url_PrefixInstall commands, although
+	these could also be in the httpd.tcl file.
+tclhttpd.rc - a configuration file that sets various parameters.
+	These include the port numbers, hostname, webmaster email, etc.
+
+Standard Tcl Library dependency.
+
+The server now depends on the ncgi, base64, and html packages
+from the Standard Tcl Library.  See the TCLLIB file for
+details about setting up the Standard Tcl Library.
+
+Generalized Access Control.
+
+The Url module now supports a more general access control
+filter that is called before the Url is dispatched to
+the domain handler.  This means, for example, you can use
+.htaccess or .tclaccess file-based control for non-file
+URLS like application-direct URLs.
+
+Thread support.
+
+You can now have your domain handler run in a worker thread.
+The Url_PrefixInstall call takes an extra flag to specify this.
+This requires that you have a Tclsh compiled with threads
+enabled, plus you have the Thread extension.  Tcl 8.3.1
+does not have all the right features to support passing sockets
+between threads, so data is copied an extra time.  Tcl 8.4 will
+have the right hooks (these are already in the CVS source base)
+and the Thread extension will be updated to support it
+in a future release.  Either way, the use of threads is nicely
+hidden behind the Httpd_Return* APIs that you used before,
+so you don't have to change your domain handlers to use threads.
+
+SSL support.
+
+This depends on the TLS extension by Matt Newman, as well as either
+the OpenSSL or RSAREF crypto libraries.  If the server can
+successfully "package require tls" then it will attempt to
+start open an HTTPS port.  You must have the appropriate
+certificates installed and edit the .rc file to reference
+them.  The certs/README.ssl file has more details.
+

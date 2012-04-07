@@ -1,0 +1,85 @@
+[html::author "Brent Welch"]
+[learn::header "URL Domains"]
+
+A URL domain handler is responsible for all aspects of
+URL processing, except for [::learn::link Security] checks.
+The domain handler has to interpret the URL, the query data,
+and generate a response to the client.
+The Document Domain and its <a href=/templates>Templates</a>
+scheme is an example of a URL domain that handles many of 
+these details automatically for you.  The
+<a href=direct.tml>Application Direct</a> URL domain is another
+example that handles the details.  In this page we give you
+a quick introduction to what you need to do to provide your
+own URL domain handler.  You should also look at
+<tt>lib/direct.tcl</tt>, <tt>lib/doc.tcl</tt>,
+and <tt>lib/template.tcl</tt> for the implementation of these
+domains.
+
+<h3>Url_PrefixInstall</h3>
+<p>
+You define the URL domain with <tt>Url_PrefixInstall</tt>.
+The basic call defines the URL prefix and the
+procedure to call to handle that part of the URL namespace.
+For example:
+<pre>
+Url_PrefixInstall /sample ::sample::domain
+</pre>
+This call causes every URL that begins with "/sample" to
+be processed by the <tt>::sample::domain</tt> procedure.
+That procedure is passed two arguments, a socket connection
+and the URL suffix (i.e., the rest of the URL).
+You can specify additional features of your domain:
+see the <a href=/man/url.man>URL man page</a> for details.
+<p>
+
+<h3>Sample Domain Handler</h3>
+Here is a sample domain handler.
+<hr>
+<pre>
+Url_PrefixInstall /sample ::sample::domain
+
+proc ::sample::domain {sock suffix} {
+
+   # Ensure pathname is OK, and figure out if
+   # there is a trailing slash in the URL.  This can
+   # be important when generating relative URLs in the result.
+
+   set components \[Url_PathCheck \[string trimleft \$suffix /\]\]
+   if {!\[regexp {.*(/)$} \$suffix _ slash\]} {
+     set slash ""
+   }
+
+   # Set up ncgi environment for access to query data
+
+   Url_QuerySetup \$sock
+
+   # Now look at suffix, or components, and decide what to do
+   # Here we just look at the first URL component after the
+   # prefix and show a few typical actions
+
+   switch -- \[lindex \$compoments 0] {
+     "test" {
+       Httpd_ReturnData \$sock text/html "<b>Hello, World!</b>"
+     }
+     "motd" {
+       # Return the Message of the Day file
+       if {\[file exists /etc/motd]} {
+         Httpd_ReturnFile \$sock text/plain /etc/motd
+       } else {
+         Doc_NotFound \$sock
+       }
+     }
+     "home" {
+       # Redirect to a different URL, in this case the home page
+       Redirect_Self /
+     }
+     default {
+       Doc_NotFound \$sock
+     }
+   }
+   return
+}
+</pre>
+
+[mypage::footer]

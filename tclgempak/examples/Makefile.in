@@ -1,0 +1,52 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+EXAMPLES = \
+ex-fronts.tcl ex-fronts-1.tcl \
+ex-rad.tcl ex-rad-1.tcl ex-rad-2.tcl ex-rad-3.tcl ex-rad-4.tcl \
+ex-rad-map-1.tcl ex-rad-map-2.tcl \
+ex-latlon.tcl \
+ex-sat.tcl \
+ex-wwa-1.tcl ex-wwa-2.tcl \
+ex-sfmap.tcl ex-sfmap-1.tcl ex-sfcntr.tcl ex-sflist.tcl \
+ex-gdcntr.tcl ex-gdstream.tcl ex-gdwind.tcl
+
+EXAMPLES_PACK_FILE = examples.tgz
+EXAMPLES_PACK_DIR = examples
+EXAMPLES_DOC =	examples.README
+
+TCLSH = @TCLSH@
+
+all: ${EXAMPLES_PACK_FILE} ${EXAMPLES_DOC}
+
+state.examples: ${EXAMPLES}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	sed -e /%TCLSH%/s##${TCLSH}# $${script} > $${scriptname}; \
+	done
+	touch state.examples	
+
+${EXAMPLES_PACK_FILE}: state.examples
+	rm -fr ${EXAMPLES_PACK_DIR}
+	mkdir ${EXAMPLES_PACK_DIR}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	${INSTALL} -m 0755 $${scriptname} ${EXAMPLES_PACK_DIR}/$${script}; \
+	done
+	tar -czf ${EXAMPLES_PACK_FILE} ${EXAMPLES_PACK_DIR}
+
+install: all
+	${INSTALL} -m 0644 ${EXAMPLES_PACK_FILE} ${MYEXAMPLESDIR}
+	${INSTALL} -m 0644 ${EXAMPLES_DOC} ${MYEXAMPLESDIR}
+
+clean:
+	rm -f *~ Makefile state.examples
+	rm -rf ${EXAMPLES_PACK_FILE} ${EXAMPLES_PACK_DIR}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	rm -f $${scriptname}; \
+	done

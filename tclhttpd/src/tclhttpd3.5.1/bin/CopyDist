@@ -1,0 +1,26 @@
+# tcl script to copy the TclHttpd source tree
+
+proc CopyTree {src dst} {
+    foreach f [glob -nocomplain [file join $src *] \
+		[file join $src .tml] \
+		[file join $src .htaccess] \
+		[file join $src .tclaccess]] {
+	if {[regexp {(CVS|SCCS|.*\.orig|.*\.old|~|#|DIST.*)$} $f]} {
+	    puts "skipping $f"
+	    continue
+	}
+	if {[file isdirectory $f]} {
+	    set path [file join $dst [file tail $f]]
+	    puts $path
+	    file mkdir $path
+	    CopyTree $f $path
+	} else {
+	    file copy -force $f [file join $dst [file tail $f]]
+	}
+    }
+}
+if {$argc < 2} {
+    puts stderr "Usage: CopyTree src dst"
+    exit 1
+}
+CopyTree [lindex $argv 0] [lindex $argv 1]

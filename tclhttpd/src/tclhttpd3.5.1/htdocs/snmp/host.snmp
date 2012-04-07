@@ -1,0 +1,54 @@
+<Title>SNMP Start Page</Title>
+<h1>SNMP Start Page</h1>
+<p>
+To use the snmp system, you need to choose a host.  You can either:
+<ol>
+<li>
+Enter the name of the hostname directly.  If a previous discovery
+has been done, then you may also choose from the list of discovered hosts.
+<form action=system.snmp>
+[formSession -group demo]
+[select host -choices [discover -incache 1] -submit {select host} -noempty 1]
+</form>
+<form method=POST action=system.snmp>
+[formSession -group demo]
+[input host -value [info hostname]]
+<input type=submit value="new host">
+</form>
+or
+<li>
+Have the system automatically discover the manageable hosts
+on a network by entering a network number here:
+<form>
+[formSession -group demo]
+<input name=net value=[value net [netId]] size=9>
+<input type=hidden name=incache value=0>
+<input type=hidden name=cache value=0>
+<input type=submit value="discover hosts">
+</form>.
+</ol>
+<p>
+Discovery can take a long time (so be patient).
+If you like knobs and dials, you can  futz with them here:
+<form>
+[formSession -group demo]
+<table border>
+<tr>
+  <th>Ms delay between snmp packets
+  <td>[input delay -value 25 -size 3]
+</tr>
+<tr>
+  <th>Maximum umber of outstanding snmp requests
+  <td>[input window -value 255 -size 3]
+</tr>
+<tr>
+  <th>How many times to retry each host
+  <td>[input retries -value 3 -size 2]
+</tr>
+<tr>
+  <th>How many seconds to try for a response
+  <td>[input timeout -value 2 -size 2]
+</tr>
+</table>
+<input type=submit value="change parameters">
+</form>

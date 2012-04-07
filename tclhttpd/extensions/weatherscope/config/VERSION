@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+# The definitions here should appear without spaces around the '='
+# sign, so that the file can be read by either make or sh.
+#
+# d = development
+# p = prerelase (release candidate)
+# r = release
+name=weatherscope-extension
+name_client=weatherscope-client
+branch=1.2
+releaselevel=r
+releasenumber=1
+version=${branch}.${releaselevel}${releasenumber}

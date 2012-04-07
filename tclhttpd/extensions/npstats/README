@@ -1,0 +1,7 @@
+#
+# $Id$
+#
+# This extension is an interface to use the npstats package for displaying
+# in the nbsp web pages a set of devices that may be of interest.
+# It of couse depends on the npstats package to be installed in the
+# machine.

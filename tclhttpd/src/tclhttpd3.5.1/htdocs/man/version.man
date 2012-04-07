@@ -1,0 +1,27 @@
+[manpage_begin httpd::version n 3.4]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Version information}]
+[moddesc   {Tcl Web Server}]
+[require httpd::version [opt 3.4]]
+[description]
+
+The package [package httpd::version] provides the version of the
+overall system.
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Httpd_Version]]
+
+Sets the version of the whole system into the global array [var Httpd]
+provides by the package [package httpd].
+
+The changed key is [const version].
+
+[list_end]
+
+[see_also httpd]
+[keywords {web server} version]
+[manpage_end]

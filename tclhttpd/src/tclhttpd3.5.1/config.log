@@ -1,0 +1,48 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:664: checking for gcc
+configure:777: checking whether the C compiler (cc  ) works
+configure:793: cc -o conftest    conftest.c  1>&5
+configure:819: checking whether the C compiler (cc  ) is a cross-compiler
+configure:824: checking whether we are using GNU C
+configure:833: cc -E conftest.c
+configure:852: checking whether cc accepts -g
+configure:896: checking for a BSD compatible install
+configure:954: checking whether make sets ${MAKE}
+configure:988: checking for ranlib
+configure:1021: checking for Cygwin environment
+configure:1037: cc -c -g -O2  conftest.c 1>&5
+configure: In function `main':
+configure:1033: error: `__CYGWIN32__' undeclared (first use in this function)
+configure:1033: error: (Each undeclared identifier is reported only once
+configure:1033: error: for each function it appears in.)
+configure: failed program was:
+#line 1026 "configure"
+#include "confdefs.h"
+
+int main() {
+
+#ifndef __CYGWIN__
+#define __CYGWIN__ __CYGWIN32__
+#endif
+return __CYGWIN__;
+; return 0; }
+configure:1059: checking for object suffix
+configure:1065: cc -c -g -O2  conftest.c 1>&5
+configure:1083: checking for mingw32 environment
+configure:1095: cc -c -g -O2  conftest.c 1>&5
+configure: In function `main':
+configure:1091: error: `__MINGW32__' undeclared (first use in this function)
+configure:1091: error: (Each undeclared identifier is reported only once
+configure:1091: error: for each function it appears in.)
+configure: failed program was:
+#line 1088 "configure"
+#include "confdefs.h"
+
+int main() {
+return __MINGW32__;
+; return 0; }
+configure:1114: checking for executable suffix
+configure:1124: cc -o conftest -g -O2   conftest.c  1>&5
+configure:1193: checking for Tcl configuration

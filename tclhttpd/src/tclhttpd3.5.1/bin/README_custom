@@ -1,0 +1,74 @@
+You can use TclHTTPD "out of the box" to implement a basic Web server.
+However, if you want to create your own Web application, you'll want
+to integrate your own custom Tcl code with the server.  
+
+*** Custom Code Directory ***
+
+The recommended way to do this is to create Tcl packages for your
+functionality and put them into a "custom code" directory.
+The "custom" directory of the distribution has some trivial examples.
+
+Specify the location of the custom code directory with the -library
+command line argument or the "library" .rc file Config specification.
+The files in this directory are sourced in alphabetical order.
+If you run with "-debug 1" then you'll see feedback as these are loaded.
+
+If you do not need to substantially change the way the default server
+works, but instead just add more stuff, then you are done.  Otherwise...
+
+*** Modifing the server startup code ***
+
+The Tcl scripts that start up the server are divided into three files.
+You will end up modifying one or more of the following files:
+
+bin/httpd.tcl
+	(The main program)
+	This main script processes command line arguments,
+	loads the configuration file,
+	starts the Http server,
+	loads the per-thread httpdthread.tcl file,
+	and enters the event loop.
+
+	This file embodies assumptions about the installation directory
+	structure.  If you repackage TclHttpd, you'll probably have
+	to modify this file.
+
+bin/tclhttpd.rc
+	(The Configuration File)
+	This script is sourced before the command line arguments are processed.
+	Its use is limited to setting simple parameters.  Typically these
+	correspond to command line arguments.  However, you are free to
+	add new Config parameters.  If you have
+		Config foo	"The value of foo"
+	in your .rc file, then you can access that value by using the
+	    config::cget foo
+	command, or (if you haven't changed bin/httpd.tcl) by using the
+	global Config array:
+	    global Config
+	    set foovalue $Config(foo)
+
+bin/httpdthread.tcl
+	(The per-thread main program)
+	This file is sourced by the main interpreter, and again by
+	each worker thread if you are using threads.
+	This file starts up most of the packages associated with a normal
+	web server.  At the very end it loads all the code from the custom
+	code directory described above.
+
+	If you need to disable some of the standard web server features,
+	you may need to edit this file.  You can select a different version
+	of this file with the "-main" command line argument, or the
+	"main" .rc Config specification.
+
+*** Starting the server ***
+	If you have created copies of the configuration
+	file and per-thread startup file, you'll need to specify those
+	on the command line:
+
+	tclsh httpd.tcl -config my.rc -main mythread.tcl
+
+	or you can also create a modified copy of httpd.tcl that embeds the
+	names of the other custom files, so starting the server reduces to
+
+	tclsh myhttpd.tcl
+

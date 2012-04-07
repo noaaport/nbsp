@@ -1,0 +1,8 @@
+@owner root
+@group wheel
+lib/tclssh/ssh.tcl
+lib/tclssh/pkgIndex.tcl
+share/doc/tclssh/api.README
+share/doc/tclssh/LICENSE
+share/doc/tclssh/examples/examples.README
+share/doc/tclssh/examples/examples.tgz

@@ -1,0 +1,5 @@
+tclmetar (0.5.p1.2-1) stable; urgency=low
+
+  * Initial debian package release
+
+ -- Jose F Nieves <nieves@ltp.upr.clu.edu>  Sat, 10 Jan 2009 23:46:25 -0400

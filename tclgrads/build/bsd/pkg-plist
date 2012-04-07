@@ -1,0 +1,23 @@
+@owner root
+@group wheel
+lib/tclgrads/grads.tcl
+lib/tclgrads/pkgIndex.tcl
+share/doc/tclgrads/api.README
+share/doc/tclgrads/LICENSE
+share/doc/tclgrads/examples/ex-coords.tcl
+share/doc/tclgrads/examples/ex-eval_expr_xy.tcl
+share/doc/tclgrads/examples/ex-expr1.tcl
+share/doc/tclgrads/examples/ex-get.tcl
+share/doc/tclgrads/examples/ex-get_levels.tcl
+share/doc/tclgrads/examples/ex-get_lons.tcl
+share/doc/tclgrads/examples/ex-get_vars.tcl
+share/doc/tclgrads/examples/ex-getval2.tcl
+share/doc/tclgrads/examples/ex-printim-uvt.tcl
+share/doc/tclgrads/examples/ex-printim.tcl
+share/doc/tclgrads/examples/ex-transform.tcl
+share/doc/tclgrads/examples/ex-uprintim-uvt.tcl
+share/doc/tclgrads/examples/ex-uprintim.tcl
+share/doc/tclgrads/examples/examples.README
+share/doc/tclgrads/examples/yq.grb
+share/doc/tclgrads/examples/yq.ctl
+share/doc/tclgrads/examples/yq.idx

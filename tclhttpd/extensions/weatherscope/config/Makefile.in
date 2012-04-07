@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+@include@ @q@VERSION@q@
+@include@ @q@../../../../Makefile.inc@q@
+@include@ @q@../../../Makefile.inc@q@
+
+
+FILES = ws-server.INSTALL ws-client.INSTALL
+
+SRCDIR = src
+SRCFILES = Makefile m4 xml
+
+PACKDIR = ${name}-${version}
+PACKFILE = ${PACKDIR}.tgz
+INSTALL_PACKFILE = ${name}.tgz
+
+all:
+	rm -rf ${PACKDIR}
+	install -d ${PACKDIR}
+#	cp -R src/* ${PACKDIR}
+	tar -c -C ${SRCDIR} @EXCLUDE@'*.svn*' -f - ${SRCFILES} | \
+		tar -x -C ${PACKDIR} -f -
+	cp ${FILES} ${PACKDIR}
+	tar -c -z -f ${PACKFILE} ${PACKDIR}
+
+install: all
+	install -m 0644 ${PACKFILE} ${MYDOCDIR}/${INSTALL_PACKFILE}
+
+clean:
+	cd src && ${MAKE} distclean
+	rm -rf *~ ${PACKDIR} ${PACKFILE} Makefile

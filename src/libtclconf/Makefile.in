@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+
+HEADERS =	tclconf.h tclcreate.h
+SOURCES	=	tclconf.c
+OBJECTS	=	tclconf.o
+
+INCDIRS =	@TCL_INCDIR@
+
+TARGET =	${OBJECTS}
+
+INSTALL =	@INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+DEBUGFLAGS =	
+
+CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS} ${INCDIRS}
+
+all: ${TARGET}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+install:
+
+clean:
+	rm -f *~ Makefile ${OBJECTS}

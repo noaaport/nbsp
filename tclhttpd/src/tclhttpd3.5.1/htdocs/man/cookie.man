@@ -1,0 +1,96 @@
+[manpage_begin httpd::cookie n 1.0]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Cookie management}]
+[moddesc   {Tcl Web Server}]
+[require httpd::cookie [opt 1.0]]
+[description]
+
+The package [package httpd::cookie] provides a number
+of convenient commands for the setup and use of cookies.
+
+[para]
+
+See [uri http://wp.netscape.com/newsref/std/cookie_spec.html]
+for the specification of what cookies are and how they work.
+
+[para]
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Cookie_Set] ([arg {option value}])...]
+
+Creates new cookie using the specified options and stores it
+internally. See section [sectref {Cookie options}] for the
+allowed options and their meaning.
+
+
+[call [cmd Cookie_Save] [arg sock] [opt [arg interp]]]
+
+Takes all the cookies which were created in the specified interpreter
+(via [cmd Cookie_Set]) and instructs the Http protocol engine (see
+package [package httpd]) to return them to the browser. If no
+interpreter is specified the current interpreter is used as data
+source.
+
+
+[call [cmd Cookie_Make]  ([arg {option value}])...]
+
+Low-level command to encode the specified options into a cookie. The
+generated cookie is not stored internally but returned as the result
+of the command. See section [sectref {Cookie options}] for the allowed
+options and their meaning.
+
+[call [cmd Cookie_Get] [arg cookie]]
+
+Looks in the environment created by the Http protocol engine (see
+package [package httpd]) for cookies sent by the browser and return a
+list of cookie values which match the specified key ([arg cookie]).
+
+[nl]
+
+[emph Danger:] This command prefers the data in the environment
+variables (HTTP_COOKIE) over the data in the request status
+array. This means that at certain points in the processing of a
+request the data returned by this command is out of sync with the
+actual data in the request status array.
+
+A concrete example of this are access control hooks
+
+(See [cmd Url_AccessUnInstall]). When they are called the CGI
+environment has not yet been (re)initialized, meaning that this
+command will return the cookie data for the last request, and not of
+the current one.
+
+[list_end]
+
+
+[section {Cookie options}]
+
+[list_begin opt]
+
+[opt_def name]
+Name of the cookie
+
+[opt_def value]
+Cookie value
+
+[opt_def path]
+Path restriction
+
+[opt_def domain]
+Domain restriction
+
+[opt_def expires]
+Time restriction.  Required format is "%A, %d-%b-%Y %H:%M:%S GMT" If
+it is not in GMT it has to acceptable to [cmd {clock scan}] for
+conversion.
+
+[list_end]
+
+
+[see_also httpd]
+[keywords {web server} cookies]
+[manpage_end]

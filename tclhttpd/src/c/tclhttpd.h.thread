@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ *
+ * See LICENSE
+ *
+ * $Id$
+ */
+#ifndef TCLHTTPD_H
+#define TCLHTTPD_H
+
+#include <pthread.h>
+#include <tcl.h>
+
+struct tclhttpd_st {
+  Tcl_Interp *interp;
+  char *script;
+  int f_quit;
+  int thread_status;	/* 0 => created */
+  pthread_t thread_id;
+};
+
+struct tclhttpd_st *tclhttpd_open(char *script);
+void tclhttpd_close(struct tclhttpd_st *);
+
+#endif

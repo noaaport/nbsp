@@ -1,0 +1,8 @@
+AuthUserFile /usr/local/htaccess/passwd
+AuthGroupFile /usr/local/htaccess/group
+AuthName TheAuthName
+AuthType Basic
+ 
+<Limit GET POST>
+require group webmaster
+</Limit>              

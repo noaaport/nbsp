@@ -1,0 +1,51 @@
+%description
+Tcl interface tp GrADS
+
+%prep
+
+%setup
+./configure.sh
+
+%build
+cd build/rpm
+make 
+
+%install
+cd build/rpm
+make install
+
+%post
+@POSTINSTALL@
+
+%postun
+
+%clean
+cd build/rpm
+make clean
+
+%files
+%defattr(-,root,root)
+/usr/lib/tclgrads/grads.tcl
+/usr/lib/tclgrads/pkgIndex.tcl
+/usr/share/doc/tclgrads/LICENSE
+/usr/share/doc/tclgrads/api.README
+/usr/share/doc/tclgrads/nbsp.README
+/usr/share/doc/tclgrads/examples/ex-coords.tcl
+/usr/share/doc/tclgrads/examples/ex-eval_expr_xy.tcl
+/usr/share/doc/tclgrads/examples/ex-expr1.tcl
+/usr/share/doc/tclgrads/examples/ex-get.tcl
+/usr/share/doc/tclgrads/examples/ex-get_levels.tcl
+/usr/share/doc/tclgrads/examples/ex-get_lons.tcl
+/usr/share/doc/tclgrads/examples/ex-get_vars.tcl
+/usr/share/doc/tclgrads/examples/ex-getval2.tcl
+/usr/share/doc/tclgrads/examples/ex-printim-uvt.tcl
+/usr/share/doc/tclgrads/examples/ex-printim.tcl
+/usr/share/doc/tclgrads/examples/ex-transform.tcl
+/usr/share/doc/tclgrads/examples/ex-uprintim-uvt.tcl
+/usr/share/doc/tclgrads/examples/ex-uprintim.tcl
+/usr/share/doc/tclgrads/examples/examples.README
+/usr/share/doc/tclgrads/examples/yq.grb
+/usr/share/doc/tclgrads/examples/yq.ctl
+/usr/share/doc/tclgrads/examples/yq.idx
+
+%changelog

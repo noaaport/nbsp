@@ -1,0 +1,28 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+@include@ @q@../../Makefile.inc@q@
+
+SAMPLES =	catalog.conf-sample
+TEMPLATES =	catalog-templates.def-sample
+TCLFILE =	catalog.tcl
+
+INSTALL =	@INSTALL@
+
+TARGET = ${SAMPLES} ${TEMPLATES}
+
+all: ${TARGET}
+
+catalog.conf-sample: catalog.conf
+	cp catalog.conf catalog.conf-sample
+
+catalog-templates.def-sample: catalog-templates.def
+	cp catalog-templates.def catalog-templates.def-sample
+
+install:
+	${INSTALL} -m 0644 ${TCLFILE} ${MYEXTLIBDIR}
+	${INSTALL} -m 0644 ${SAMPLES} ${TEMPLATES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

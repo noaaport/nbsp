@@ -1,0 +1,33 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+GEMPAKSOURCES = base.tcl \
+	colors.tcl contour.tcl \
+	device.tcl ffa.tcl garea.tcl imcbar.tcl latlon.tcl map.tcl title.tcl \
+	warn.tcl wcn.tcl wou.tcl watch.tcl wcp.tcl wstm.tcl svrl.tcl \
+	refvec.tcl stnplt.tcl mapfil.tcl sfparm.tcl skip.tcl ijskip.tcl \
+	text.tcl stream.tcl wind.tcl \
+	_auxiliary.tcl auxiliary.tcl
+
+INDEXFILE = pkgIndex.tcl
+GEMPAK = gempak.tcl
+GDINFO = gdinfo.tcl
+SFLIST = sflist.tcl
+PACKAGEFILES = ${INDEXFILE} ${GEMPAK} ${GDINFO} ${SFLIST}
+
+TARGET = ${GEMPAK}
+
+all: ${TARGET}
+
+${TARGET}: ${GEMPAKSOURCES}
+	cat ${GEMPAKSOURCES} > ${TARGET}
+
+install: all
+	${INSTALL} -m 0644 ${PACKAGEFILES} ${MYLIBDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

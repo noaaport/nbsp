@@ -1,0 +1,15 @@
+#
+# $Id$
+#
+
+# The definitions here should appear without spaces around the '='
+# sign, so that the file can be read by either make or sh.
+#
+# d = development
+# p = prerelase (release candidate)
+# r = release
+name=tclgrads
+branch=0.2
+releasenumber=2
+releaselevel=r
+version=${branch}.${releasenumber}${releaselevel}

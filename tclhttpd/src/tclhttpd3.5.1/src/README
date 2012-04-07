@@ -1,0 +1,18 @@
+crypt.c		crypt Tcl command implementation, used to encrypt
+		passwords for storage
+limit.c		limit Tcl command implementation, used to change
+		file descriptor limits
+setuid.c	setuid Tcl command implementation, used to change
+		effective user and group ids
+utime.c		utime Tcl command implementation, used to change
+		file modify times
+
+This is ancient, ancient java code that is unlikely to work anymore.
+
+Auth.java 	Applet that gets a password and signs form data
+Getpass.java	UI subset of Auth.java
+Getpass.jui	SpecJava ui file for GetPass
+Helper.java	Applet that interfaces between Auth.java and MD5
+MD5.java	"Stolen" MD5 implementation in java
+ServerDemo.java	Self contained (no form) MD5 demo
+ServerDemo.jui	SpecJava generated form for above

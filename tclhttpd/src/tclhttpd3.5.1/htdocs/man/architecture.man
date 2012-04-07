@@ -1,0 +1,208 @@
+[manpage_begin httpd-arch n 1.6]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {The TclHttpd Web Server System}]
+[moddesc   {Tcl Web Server}]
+[description]
+
+This document is intended for developers using TclHttpd as the basis
+for specialized web applications. In other words, for people who have
+to perform heavy customizations of the basic web server.
+
+[para]
+
+To this end the general architecture of the web server is explained
+below, i.e. the packages it consists of and their relationships,
+together with all customization points which can be used to alter the
+servers behaviour.
+
+[para]
+
+Where necessary references into the package manuals are provided for
+further study.
+
+
+[section {The application}]
+
+The standard application of the tclhttpd paackages consists of two
+scripts and a configuration file:
+
+[list_begin definitions]
+[lst_item [file bin/httpd.tcl]]
+
+The main script. It loads the basic packages and does some general
+initializations. Parts, especially the initialization can be
+customized.
+
+[lst_item [file bin/httpdthread.tcl]]
+
+A per-thread tcl script. This is used by the main script
+to initialize all worker threads of the web server.
+
+[emph Note:] This is used even for a non-threaded server. In that case the
+main thread is also the lone worker thread and initialized through
+this script.
+
+This script may need heavy modification, especially as this is the
+place where the standard domains of the server are set up.
+
+[lst_item [file bin/tclhttpd.rc]]
+
+This is the configuration file. It can be used to set the port, user
+ID, and other values, overriding the default values. You can configure
+additional features such as log file location, and more, by editing
+the configuration file.  There is an explanation about each option, so
+you can make a copy of the configuration file and try out new
+settings.
+
+[list_end]
+
+
+Developers planning to extend Tcl Httpd with their own code, may need
+to add initialization code to [file bin/httpd.tcl] and
+
+[file bin/httpdthread.tcl].  This code is typically a
+
+"[cmd "package require"]" to load the required special modules and one
+or two calls to initialize it.  For example, this code in
+
+[file bin/httpdthread.tcl] enables a /debug URL implementation that
+lets users examine the state of the server.
+
+[para]
+[example {
+    package require httpd::debug
+    Debug_Url /debug Debug
+}]
+[para]
+
+[emph Note:] It is not strictly necessary to modify [file bin/httpd.tcl] or
+[file bin/httpdthread.tcl].  Instead, you can provide a
+[term "custom code directory"] and put additional Tcl source files there
+and instruct the server to load that code on startup.  Use
+the "-library" command line option to specify the custom code directory.
+
+[para]
+
+The web server should have access to any Tcl package installed along
+with your Tcl installation.  Consult the on-line HTML documentation
+for a more indepth discussion of programming the server.
+
+[section {The packages}]
+
+[list_begin definitions]
+
+[lst_item "[package httpd], [package httpd::url]"]
+
+The core of the system, the protocol engine accepting and reading http
+requests, and the database which dispatches requests to handlers based
+on where the url is in the server tree.
+
+[lst_item {Domain Implementations}]
+
+This is the first level where customization is possible. Create
+special domains and domain implementations which are then hooked into
+the server by modifying the application (initialization) scripts.
+
+[nl]
+
+However there are also a number of pre-defined domains which can be
+used as well. These are described below, in the following items.
+
+[lst_item "[package httpd::doc], [package httpd::dirlist]"]
+
+A standard domain implementation. These two packages implement the
+serving of urls from the filesystem. Actually it can manage multiple
+domains, each associated with a different directory in the filesystem.
+
+[nl]
+
+This is the most important domain for an unmodified webserver as this
+is the part to serve all static content of a website.
+
+Note that the standard initialization uses this domain to associate a
+directory with the root of the url tree for the server. If a special
+server does not serve any static content at all deactivation of this
+module is not enough. It is also necessary to associate some other
+domain with the root.
+
+[nl]
+
+The customization feature in this part of the system are [term type]
+specific handlers.
+
+This means that the package determines the [term mime-type] of the
+file associated with the requested url and then calls a type specific
+tcl command if such can be found. This allows other packages to modify
+the way the contents of a file are returned. Like for example running
+some substitution process to insert dynamic parts of the page.
+
+Note that if there is no type-specific command for a mime-type then
+the domain will simply return the contents of the requested file as
+they are.
+
+[nl]
+
+[emph Comment:] It is unclear why doc and dirlist are separate
+packages. They are interdependent (i.e. each requires the other) and
+actually handle only two different aspects of the same thing (files
+and directories).
+[nl]
+[emph Answer:] In theory
+your application could provide a different directory listing module.
+But, really, Brent just likes smaller packages.
+
+[lst_item [package httpd::cgi]]
+
+A standard domain. Handles the serving of urls through external
+applications using the CGI interface. Internally this domain interacts
+with [term doc] (s.a.). It has no customization features beyond the
+ability of the configurator to place the domain prefix at will
+(default is [file /cgi-bin/]).
+
+If a webserver does not provide cgi applications this domain can be
+deactivated at leisure.
+
+
+[lst_item [package httpd::direct]]
+
+A standard domain. Actually a meta domain implementation.
+
+Its sole purpose is to provide a simpler interface for the
+implementation of special url trees than what is provided by the core
+package [package http::url].
+
+In other words, this package does not register a domain with very
+specific functionality, like [package httpd::cgi]
+
+(and [package httpd::doc]), but provides a framework for the
+implementation of domains directly through tcl commands.
+
+[nl]
+
+Domains implemented based on the interface provided here are called
+[term {application direct}]. Note that they are a restricted to a
+finite set of urls. This is because each url to be served needs a
+matching tcl command generating the contents. In other words, an
+unbounded number of urls requires an unbounded number of tcl
+commands. This means that for unbounded url trees an application
+direct domain is not the correct choice. An individual domain
+implementation is required.
+
+[nl]
+
+The system comes with a number of packages which implement standard
+application direct domains. An example is the status package which
+delivers server status information.
+
+
+
+[comment {More packages to come}]
+
+
+
+
+
+[list_end]
+
+[keywords {web server} http tclhttpd]
+[manpage_end]

@@ -1,0 +1,365 @@
+#
+# $Id$
+#
+
+NAME
+	grads -
+
+	Tcl interface to GrADS.
+
+SYNOPSIS
+
+	package require grads;
+
+	::grads::init {args}
+	::grads::end {}
+	::grads::open {file}
+	::grads::exec {args}
+	::grads::output {}
+	::grads::output_rc {}
+	::grads::output_list {}
+	::grads::output_line {lineindex}
+	::grads::output_word {lineindex wordindex}
+	::grads::output_value {}
+	::grads::get_dimensions {array_name}
+	::grads::set_dimensions {array_name {vars xyzt}}
+	::grads::get_vars {var_list}
+	::grads::get_levels {level_list [-r]}
+	::grads::get_times {time_list [-r]}
+	::grads::get_lons {lon_list [-r]}
+	::grads::get_lats {lat_list [-r]}
+	::grads::transform {cmd v1 v2 r1_name r2_name}
+	::grads::eval_expr {expression args}
+	::grads::eval_expr1 {expression param args}
+	::grads::eval_expr_xy {expression args}
+	::grads::_eval_expr_list {expr_list}
+
+	::gradsu::display {args}
+	::gradsu::draw {args}
+	::gradsu::printim {args}
+	::gradsu::clear {args}
+	::gradsu::reinit {}
+	::gradsu::reset {args}
+	::gradsu::mset {args}
+	::gradsu::dims {array_name}
+	::gradsu::levels {level_list [-r]}
+	::gradsu::times {time_list [-r]}
+	::gradsu::lons {lon_list [-r]}
+	::gradsu::lats {lat_list [-r]}
+	::gradsu::coords {<time|lev|lon|lat> list_name [-r]}
+	::gradsu::cmd {args}
+	::gradsu::rline {linenumber}
+	::gradsu::rword {linenumber wordnumber}
+	::gradsu::getval {expression var_name}
+	::gradsu::getval1 {expression param var_name args}
+	::gradsu::getval2 {expression param_1 param_2 var_name args}
+
+DESCRIPTION
+
+	This package provides a set of Tcl procedures that can be used
+	to execute GrADS commands from Tcl scripts. It uses the Tcl open
+	command to connect, send the commands to GrADS and parse its output.
+
+proc grads::init [-portrait] [-undef <symbol>]	
+	Defaults: "-l -b -u" -undef "?"
+
+	Must be called first.
+
+proc grads::end {}
+
+	Must be called last.
+
+proc grads::open {file}
+
+	Must be called after ::grads::init and before any of other functions.
+
+proc grads::exec {args}
+
+	Sends a command to GrADS for execution. The resulting output from
+	GrADS is saved in an internal variable, and it can retrieved by
+	the following functions:
+	
+	::grads::output
+	::grads::output_rc
+	::grads::output_list
+	::grads::output_line
+	::grads::output_word
+	::grads::output_value
+
+proc grads::output {}
+
+	Returns the entire output result of GrADS after a call to
+	::grads::exec, as a single text string.
+
+proc grads::output_rc {}
+
+	Returns the "RC" code returned by GrADS after a call to ::grads::exec.
+
+proc grads::output_list {}
+
+	Returns the output result of GrADS after a call to ::grads::exec,
+	with the text split in lines as a tcl list.
+
+proc grads::output_line {lineindex}
+
+	Returns the line indexed by $lineindex from the output list.
+	The indices are zero-based.
+
+	See ::gradsu::rline {} for the one-based index counterpart.
+	
+proc grads::output_word {lineindex wordindex}
+
+	Returns the word imdxed by $wordindex from the line indexed by
+	$lineindex. The indices are zero-based.
+
+	See ::gradsu::rword {} for the one-based index counterpart.
+
+proc grads::output_value {}
+
+	Returns the result value from the last command excuted by GrADS
+	(e.g., d tmpprs). If the last command did not correspond to
+	a variable evaluation, the return value is the "undef" parameter
+	("?" by default).
+
+proc grads::get_dimensions {array_name}
+
+	Fills the array (passed in the argument by name) with the various
+	dimensions of the data:
+
+		number of longitude points (xsize)
+		number of latitude points  (ysize)
+		number of levels (zsize)
+		number of times (tsize)
+		lon1, lon2, lat1, lat2, lev1, lev2, time1, time2,
+		x1, x2, y1, y2, z1, z2, t1, t2
+
+proc grads::set_dimensions {array_name {vars xyzt}}
+
+	Used for restoring the ranges after the executing the functions that
+	modify them (get_levels, get_times). "vars" is an optional argument
+	to indicate which variables to restore, in the form of a combination
+	of the letters xyzt. If it is absent, then all four variables are
+	restored.
+
+proc grads::get_vars {var_list}
+
+	Returns a list in var_list (passed by name) with the names of the
+	variables.
+
+proc grads::get_levels {level_list [-r]}
+
+	Fills a (tcl) list (the argument must be passed by name)
+	with the values of the entire set of levels. With the "-r" flag
+	is given then only the values in the currently set range are included.
+	The indices start at 0.
+
+	See ::gradsu::levels {} for the one-based index counterpart.
+
+proc grads::get_times {time_list [-r]}
+
+	Fills a (tcl) list (the argument must be passed by name)
+	with the entire set of forecast times in the file.
+	The [-r] flag has the same meaning as in get_levelset.
+	The indices start at 0.
+
+	See ::gradsu::times {} for the one-based index counterpart.
+
+proc grads::get_lons {lon_list [-r]}
+
+	Fills a (tcl) list (the argument must be passed by name)
+	with the entire set of longitudes in the file.
+	The [-r] flag has the same meaning as in get_levelset.
+	The indices start at 0.
+
+	See ::gradsu::lons {} for the one-based index counterpart.
+
+proc grads::get_lats {lat_list [-r]}
+
+	Fills a (tcl) list (the argument must be passed by name)
+	with the entire set of latitudes in the file.
+	The [-r] flag has the same meaning as in get_levelset.
+	The indices start at 0.
+
+	See ::gradsu::lats {} for the one-based index counterpart.
+
+proc grads::transform {cmd v1 v2 r1_name r2_name}
+	
+	Fills r1_name and r2name (passed by name) with the results of
+	transforming $v1 and $v2 by any of the "query" commands
+	xy2w, xy2gr, w2xy, w2gr, gr2w, gr2xy.
+
+	GrADS NOTE: N.B. Coordinate transform queries are only valid after
+	something has been displayed, and the transformations apply only
+	to the most recent item that has been displayed. 
+
+proc grads::eval_expr {expression args}
+
+	Returns the result of evaluation of a variable by GrADS.
+	It is assumed that all (x,y,z,t) variables have been set to fixed
+	values (otherwise it returns the undef (?) symbol).
+
+	args can be "-s" and/or "-S" as described in eval_expr_xy.
+
+proc grads::eval_expr1 {expression param args}
+
+	Here <param> is one x,y,z,t. The function assumes that the
+	other variables have been fixed, and then fills the list
+	(passed by name) with the value of the <expression> for all values of
+	the <param> in its current range. The returned list is zero-based
+	index. If the optional argument args is "-r", then the list 
+	contains only the values for the currently allowed range of the
+	<param>.
+
+	args can contain "-s" and/or "-S" as described in eval_expr_xy.
+
+	See ::gradsu::gatval1 for the one-based index counterpart.
+
+proc grads::eval_expr_xy {expression matrix_name args}
+
+	The function assumes that z and t are fixed. It then
+	evaluates <expression> for all values of x and y and returns in
+	<matrix_name> a "matrix object" that can be manipulated with the
+	struct::matrix package.
+
+	If args is "-r", then the matrix is restricted to the currently
+	set range for x and y.
+
+	In the matrix, the values of x increase from top to bottom
+	and, in each row, the values of y move (increase) from left to right.
+	Thus, the first row of the matrix has all the
+	values of y for the first value of x. The second row then has the
+	all the values of y for the second value of x, and so on.
+	The "-t" option reverses this: the values of y increase from top
+	to bottom and the values of x increase from left to right. If
+	"-T" is given, then in addition to reversing x and y as with "-t",
+	the values of y decrease from top to bottom.
+
+	<expression> can be an expression list of the form "e1|e2|...|en",
+	where each e1, e2, ...,  is a single expression
+	(that can be evaluated by GrADS). In that case each element of the
+	matrix would contain the result of each expression separated by a ",".
+
+	A separating char other than "|" in <expression> can be passed
+	with the "-s" option, and a character other than the "," can be
+	specified with "-S" for the output.
+
+	See also ::gradsu::getval2.
+
+#
+# Internal functions
+#
+proc grads::_eval_expr {expr}
+proc grads::_eval_expr_list {expr_list}
+
+#
+# Utility functions (namespace "gradsu")
+#
+proc gradsu::display {args}
+proc gradsu::draw {args}
+proc gradsu::printim {args}
+proc gradsu::clear {args}
+proc gradsu::reinit {}
+proc gradsu::reset {args}
+
+	These functions simply call
+
+	::grads::exec <verb> args
+
+	where <verb> is either "display", "draw", "printim", "clear",
+	"reinit" or "reset".
+
+proc gradsu::mset {args}
+
+	Here args is a list of the form
+
+	<name_1> <value_1> ... <name_n> <value_n>
+
+	This function then calls ("multiset")
+
+		::grads::exec set <name> <value>
+
+	for each pair of elements in $args.
+
+proc gradsu::dims {array_name}
+
+	A synonym for ::grads::get_dimensions {array_name}.
+
+proc gradsu::levels {level_list [-r]}
+
+	Fills a (tcl) list with all the levels in the file (the argument must
+	be passed by name). The first element [lindex $level_list 0]
+	of the list is the number of levels. The value of the ith level is
+	[lindex $level_list i].
+	If the "-r" flag is given, then only the values in the currently
+	set range are included.
+	
+proc gradsu::times {time_list [-r]}
+
+	Fills a (tcl) list with all the forecast times in the file
+	(the argument must be passed by name). The first element
+	[lindex $time_list 0] of the list is the number of times.
+	The value of the ith time is [lindex $time_list i].
+	The [-r] flag has the same meaning as in ::gradsu::levels.
+
+proc gradsu::lons {lon_list [-r]}
+
+	Fills a (tcl) list with all the longitudes in the file
+	(the argument must be passed by name). The first element
+	[lindex $lon_list 0] of the list is the number of entries.
+	The value of the ith element is [lindex $lon_list i].
+	The [-r] flag has the same meaning as in ::gradsu::levels.
+
+proc gradsu::lats {lat_list [-r]}
+
+	Similar to ::gradsu::lonset, for latitudes.
+
+proc gradsu::coords {<time|lev|lon|lat> list_name [-r]}
+
+	Calls the corresponding ::gradsu::<times,levels,lons,lats>.
+
+proc gradsu::cmd {args}
+
+	Synonym for ::::grads::exec
+
+proc gradsu::rline {linenumber}
+
+	Returns the line numbered by $linenumber from the output list.
+	Line numbers start at 1.
+	
+proc gradsu::rword {linenumber wordnumber}
+
+	Returns the word numbered by $wordnumber from the line number
+	$linenumber. The arguments linenumber and wordnumber start at 1.
+
+proc gradsu::getval {expression var_name args}
+
+	Calls ::grads::eval_expr and fills var_name (passed by name)
+	with the result value.
+
+proc gradsu::getval1 {expression param var_name args}
+
+	The same as ::grads::eval_expr1, but the list indices start at 1.
+	The 0th element is the number of points.
+	args is an optional argument that has the same meaning as in
+	::grads::eval_expr1.
+
+proc gradsu::getval2 {expression param_1 param_2 var_name args}
+
+	Here <param_1,2> is a pair from x,y,z,t. The function assumes that the
+	other two variables have been fixed, and then fills the list
+	(passed by name) with the value of the <expression> for all values of
+	the <param_1,2>.
+
+	If the "-r" option is given then only the values of<param1,2>
+	in their current range are used.
+
+	<expression> can be an "expression list" as in ::grads::eval_expr_xy.
+	The "-s" and "-S" options can be given and they have the same meaning
+	as in ::grads::eval_expr_xy. (The "-t" option is not available here.)
+
+	The result is a list of lists, with the list indices starting
+	with 1. The first list [lindex $var_name 1] corresponds to the
+	first value of <param_1>, and all the elements (starting with index 1)
+	contain the results for succesive values of <param_2>. Similarly, 
+	the second list corresponds to the second value of <param_1> and so on.
+-

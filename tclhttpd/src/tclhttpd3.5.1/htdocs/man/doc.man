@@ -1,0 +1,158 @@
+[manpage_begin httpd::doc n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {File handling}]
+[moddesc   {Tcl Web Server}]
+[require httpd::doc [opt 1.1]]
+[description]
+
+The package [package httpd::doc] provides a domain for the serving of
+urls from the filesystem. This is also the domain through which the
+TML template facility is made available. It has additional tie-ins to
+the packages [package httpd::cgi] (CGI applications stored in the
+fileststem) and [package httpd::dirlist] (Directory listings as
+virtual files).
+
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[lst_item {Access control}]
+
+This package installs an access control callback,
+[cmd DocAccessControl] which uses the
+package [package httpd::auth] to determine if an request for an url
+has to be denied or not.  This method searches the directory
+path to the file for .htaccess or .tclaccess files that specify
+access controls.  These are explained in the /access/ area
+of the default web site distributed with the server.
+
+[call [cmd Doc_AddRoot] [arg virtual] [arg directory] [arg arg]...]
+
+This commands adds a mapping from the url prefix [arg virtual] to the
+[arg directory] in the filesystem.
+
+Any additional arguments will be given as options and values to the
+internal [cmd Url_PrefixInstall] call registering [arg virtual] as a
+new domain.
+
+[emph Note:] The last implies that from [package httpd::url]'s point
+of view each document root is a separate url domain.
+
+
+[call [cmd Doc_Root] [opt "[arg real] [arg arg]..."]]
+
+A convenient wrapper around [cmd Doc_AddRoot]. It not only installs
+the directory [arg real] as a document domain, but associates it with
+the root of the url tree on this server, i.e. [file /].
+
+[nl]
+
+The command will return the name of the directory of that document
+root if no argument is specified. Otherwise it will set this document
+root and return the empty string.
+
+[nl]
+
+All arguments coming after are additional options and values which are
+given to [cmd Url_PrefixInstall].
+
+
+[call [cmd Doc_RegisterRoot] [arg {virtual directory}]]
+
+Use this call to add a file system managed by any Domain Handler
+(e.g. CGI for example) to this package. This registers the mapping
+from urls in the domain to files, as required for [cmd Doc_Virtual].
+
+
+[call [cmd Doc_Include] [arg filename]]
+
+Reads the contents of the file [arg filename] and substitutes them via
+[cmd subst] at the tcl stack level at which this procedure was called.
+The result of the substitution is returned as the result of the
+command. A relative path will be joined with the directory at the top
+of the include stack in global variable [var page(includeStack)].
+
+
+[call [cmd Doc_PublicHtml] [opt [arg homedir]]]
+
+En- and disables the handling of urls of the form [file ~user/a/b/...]
+by mapping them to the subdirectory [arg homedir] of that users
+account.  The command will by default use the subdirectory
+
+[file public_html] if no directory was specified explicitly.
+
+To disable the mapping invoke the command using the empty string for
+the name of the subdirectory.
+
+
+[call [cmd Doc_Virtual] [arg {sock curfile virtual}]]
+
+This command looks up the url [arg virtual] and returns the associated
+path in the filesystem. It will return the empty string if
+[arg virtual] is not managed by this package.
+
+[nl]
+
+If [arg virtual] is a relative url, then [arg curfile] has to be
+specified and will be treated as the [emph path] of the dcoument
+containing the reference to [arg virtual].
+
+[nl]
+
+The argument [arg sock] represents the current connection. It is not
+used by the command.
+
+
+
+[call [cmd Doc_Handle] [arg {prefix path suffix sock}]]
+
+The main command for the handling of document urls.
+Exported for use by other domains which have to handle
+files.
+
+The first three arguments specify the url to handle, and the file
+associated with it. The last argument is the connection making the
+request. The command assumes that all these pieces actually match up
+with each other.
+
+[nl]
+
+The command directs requests for directories always to the package
+[package httpd::dirlist]. Otherwise it will determine the mime-type of
+the requested document and then either invoke a special handler for
+that type if such present or directly reply with the contents of that
+file if there is no special handler for the type.
+
+[nl]
+
+If the [arg path] does not exist in the filesystem then it will try to
+find an alternative it can serve. A not-found reply will be generated
+only if that fails too.
+
+It is this fallback mechanism which calls the template facility when
+necessary.
+
+[nl]
+
+The handler mechanism described above is also dependent on the
+existence of appropriate file extension to mime type mapping in the
+package [package httpd::mtype] as otherwise special files will not be
+recognized as such, i.e. the chosen mime type will be wrong.
+
+If a file [file mime.types] is present in the server library directory
+(residence of all packages) it will be read automatically during
+startup and used to set up a number of standard mappingsa to support
+the type specific handlers exported by the various server packages.
+
+[list_end]
+
+
+
+[see_also httpd httpd::url httpd::fallback]
+[see_also httpd::dirlist httpd::cookie httpd::auth]
+[see_also httpd::fallback httpd::mtype httpd::doc_error]
+[see_also httpd::cgi]
+[keywords {web server} documents filesystem]
+[manpage_end]

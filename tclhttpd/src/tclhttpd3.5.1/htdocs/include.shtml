@@ -1,0 +1,76 @@
+<!Doctype HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<Html>
+<Head>
+<Title>Include Tests</Title>
+<!-- Author: bwelch -->
+<META HTTP-Equiv=Editor Content="SunLabs WebTk 1.0 DEVELOPMENT">
+</Head>
+<Body>
+
+
+
+<h1>Include Tests</h1>
+This file is: <!--#echo var=PATH_TRANSLATED -->
+<p>
+The server supports server side command processing, generally known as server-side includes.  The general HTML syntax is:
+<pre>
+&lt;!--#command arg=value arg=value --&gt;
+</pre>
+<p>The commands supported are:
+<dt><b>include</b>
+<dd>Include another file. The file is named with a virtual= or file= parameter.  The virtual path is relative to the document root.  The file path is relative to the current document.
+<dt><b>echo</b>
+<dd>Echo the value of an environment variable.  See the Environment section
+below for the variables the server can set.
+<dt><b>fsize</b>
+<dd>Return the size of a file.  The file is named with a virtual= or file= parameter.  The virtual path is relative to the document root.  The file path is relative to the current document.
+<dt><b>flastmod</b>
+<dd>Return the modify time of a file.  The file is named with a virtual= or file= parameter.  The virtual path is relative to the document root.  The file path is relative to the current document.
+<dt><b>exec</b>
+<dd>Execute the cmd= parameter and insert the results.
+<ul>
+<li>&lt;!--#fsize file=include.shtml --&gt;:  <!--#fsize file=include.shtml -->
+<li>&lt;!--#flastmod file="include.shtml"--&gt;: <!--#flastmod file="include.shtml"-->
+</ul>
+<h2>Environment</h2>
+Get these with
+<pre>
+&lt;!--#echo var=varname --&gt;
+</pre>
+<ul>
+    <dt>PATH_TRANSLATED:<dd> <!--#echo var=PATH_TRANSLATED -->
+    <dt>CONTENT_LENGTH:<dd> <!--#echo var=CONTENT_LENGTH -->
+    <dt>CONTENT_TYPE:<dd> <!--#echo var=CONTENT_TYPE -->
+    <dt>HTTP_ACCEPT	:<dd> <!--#echo var=HTTP_ACCEPT	 -->
+    <dt>HTTP_AUTHORIZATION:<dd> <!--#echo var=HTTP_AUTHORIZATION -->
+    <dt>HTTP_FROM	:<dd> <!--#echo var=HTTP_FROM	 -->
+    <dt>HTTP_REFERER:<dd> <!--#echo var=HTTP_REFERER -->
+    <dt>HTTP_USER_AGENT:<dd> <!--#echo var=HTTP_USER_AGENT -->
+    <dt>QUERY_STRING:<dd> <!--#echo var=QUERY_STRING -->
+    <dt>REQUEST_METHOD:<dd> <!--#echo var=REQUEST_METHOD -->
+    <dt>SERVER_PORT:<dd> <!--#echo var=SERVER_PORT -->
+    <dt>SERVER_NAME:<dd> <!--#echo var=SERVER_NAME -->
+    <dt>SERVER_SOFTWARE:<dd> <!--#echo var=SERVER_SOFTWARE -->
+    <dt>SERVER_PROTOCOL:<dd> <!--#echo var=SERVER_PROTOCOL -->
+    <dt>REMOTE_ADDR:<dd> <!--#echo var=REMOTE_ADDR -->
+</ul>
+<h2>Exec tests</h2>
+<p>
+This should be the contents of /etc/motd, or a comment containing an error if it does not exist.
+<pre>
+<!--#exec cmd="cat /etc/motd"-->
+</pre>
+<p>
+There should be a comment following this that complains about
+a missing /xyzzy file, (unless you have one!)
+<!--#exec cmd="cat /xyzzy"-->
+<p>
+<p>
+More stuff
+<p>
+Below is an errant include that accidentally includes itself!
+The include processor limits the include depth to work around bugs like this.
+<!--#include virtual="/include/footer.html"-->
+</Body>
+</Html>
+

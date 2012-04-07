@@ -1,0 +1,13 @@
+# Defaults for tclhttpd initscript
+# sourced by /etc/init.d/tclhttpd
+# installed at /etc/default/tclhttpd by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# Additional options that are passed to the Daemon.
+DAEMON_OPTS="-config /etc/tclhttpd/tclhttpd.rc"
+
+# if you have the package daemon installed, uncomment this
+#STARTER="daemon"

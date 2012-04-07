@@ -1,0 +1,70 @@
+[html-strict::head {TclHttpd &gt; Sample Apps &gt; Bug Database} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+[html::h1 {TclHttpd &gt; Sample Apps &gt; Bug Database &gt; Report A Bug}]
+
+<p>
+    [html::foreach {title ref} $my_navigation {
+        <a href="$ref">$title</a> |
+    }]
+</p>
+
+<form action="report-insert.tml" method="post">
+
+<p>
+    <label for="Application" class="text">Application:</label>
+    <select name="Application" id="Application">
+	[html::foreach option $application_options {
+            <option>$option</option>
+	}]
+    </select>
+</p>
+
+<p>
+    <label for="OS" class="text">Operating System:</label>
+    <select name="OS" id="OS">
+	[html::foreach option $os_options {
+            <option>$option</option>
+	}]
+    </select>
+</p>
+
+<p>
+    <label for="Priority" class="text">Priority:</label>
+    <select name="Priority" id="Priority">
+	[html::foreach option $priority_options {
+            <option>$option</option>
+	}]
+    </select>
+</p>
+
+<p>
+    <label for="Assigned" class="text">Assigned To:</label>
+    <select name="Assigned" id="Assigned">
+	[html::foreach option $assigned_options {
+            <option>$option</option>
+	}]
+    </select>
+</p>
+
+<p>
+    <label for="Summary" class="text">Summary:</label>
+    <input type="text" name="Summary" id="Summary" class="text"
+    style="width: 288px;" />
+</p>
+
+<p>
+    <label for="Description" class="text">Description:</label>
+    <textarea name="Description" id="Description"
+    style="width: 288px; height: 72px;"></textarea>
+</p>
+
+<p>
+    <input type="submit" value="Submit" class="button" />
+    <input type="reset" value="Clear Form" class="button" />
+</p>
+
+</form>
+
+[html-strict::foot]

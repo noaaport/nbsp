@@ -1,0 +1,63 @@
+<?datasetconfig version="1.0d1"?>
+
+<parminfo>
+	<parm id="n0r" name="base reflectivity 1"/>
+	<parm id="n1r" name="base reflectivity 2"/>
+	<parm id="n2r" name="base reflectivity 3"/>
+	<parm id="n3r" name="base reflectivity 4"/>
+	<parm id="n0v" name="base velocity 1"/>
+	<parm id="n1v" name="base velocity 2"/>
+	<parm id="n0z" name="base reflectivity 248"/>
+	<parm id="ncr" name="composite reflectivity"/>
+	<parm id="net" name="echo tops"/>
+	<parm id="n1p" name="1 hour rainfall"/>
+	<parm id="ntp" name="storm-total rainfall"/>
+	<parm id="n0s" name="storm relative velocity 1"/>
+	<parm id="n1s" name="storm relative velocity 2"/>
+	<parm id="n2s" name="storm relative velocity 3"/>
+	<parm id="n3s" name="storm relative velocity 4"/>
+	<parm id="nvw" name="velocity azimuth display"/>
+	<parm id="nvl" name="vertically integrated liquid"/>
+	<parm id="nmd" name="mesocyclone"/>
+
+	<radial id="16" name="Base Reflectivity" kmPerPixel="1.0" dataLevels="8" units="dBZ"/>
+	<radial id="17" name="Base Reflectivity" kmPerPixel="2.0" dataLevels="8" units="dBZ"/>
+	<radial id="18" name="Base Reflectivity" kmPerPixel="4.0" dataLevels="8" units="dBZ"/>
+	<radial id="19" name="Base Reflectivity" kmPerPixel="1.0" dataLevels="16" units="dBZ"/>
+	<radial id="20" name="Base Reflectivity" kmPerPixel="2.0" dataLevels="16" units="dBZ"/>
+	<radial id="21" name="Base Reflectivity" kmPerPixel="4.0" dataLevels="16" units="dBZ"/>
+	<radial id="22" name="Base Velocity" kmPerPixel="0.25" dataLevels="8" units="knot"/>
+	<radial id="23" name="Base Velocity" kmPerPixel="0.50" dataLevels="8" units="knot"/>
+	<radial id="24" name="Base Velocity" kmPerPixel="1.0" dataLevels="8" units="knot"/>
+	<radial id="25" name="Base Velocity" kmPerPixel="0.25" dataLevels="16" units="knot"/>
+	<radial id="26" name="Base Velocity" kmPerPixel="0.50" dataLevels="16" units="knot"/>
+	<radial id="27" name="Base Velocity" kmPerPixel="1.00" dataLevels="16" units="knot"/>
+	<radial id="28" name="Base Spectrum Width" kmPerPixel="0.25" dataLevels="8" units="knot"/>
+	<radial id="29" name="Base Spectrum Width" kmPerPixel="0.50" dataLevels="8" units="knot"/>
+	<radial id="30" name="Base Spectrum Width" kmPerPixel="1.0" dataLevels="8" units="knot"/>
+	<radial id="31" name="User Selectable Storm Total Precipitation" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	<radial id="32" name="Digital Hybrid Scan Reflectivity" kmPerPixel="1.0" dataLevels="256" units="dBZ"/>
+	<radial id="33" name="Digital Storm Total Precipitation" kmPerPixel="2.0" dataLevels="256"  units="inch"/>
+	<radial id="34" name="Clutter Filter Control" kmPerPixel="1.851852" dataLevels="8" units="dBZ"/>
+	<radial id="43" name="Severe Weather (Reflectivity)" kmPerPixel="1.0" dataLevels="16" units="dBZ"/>
+	<radial id="44" name="Severe Weather (Velocity)" kmPerPixel="0.25" dataLevels="16" units="knot"/>
+	<radial id="45" name="Severe Weather (Spectrum Width)" kmPerPixel="0.25" dataLevels="8" units="knot"/>
+	<radial id="46" name="Severe Weather (Shear)" kmPerPixel="0.50" dataLevels="16" units="knot"/>
+	<radial id="55" name="Storm Relative Mean Radial Velocity" kmPerPixel="0.5" dataLevels="16" units="knot"/>
+	<radial id="56" name="Storm Relative Mean Radial Veloicty" kmPerPixel="1.0" dataLevels="16" units="knot"/>
+	<radial id="78" name="Surface Rainfall Accum. (1 hr)" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	<radial id="79" name="Surface Rainfall Accum. (3 hr)" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	<radial id="80" name="Storm Total Rainfall Accumulation" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+
+	<mosaic id="57" name="Vertically Integrated Liquid" kmPerPixel="4.0" dataLevels="16" units="kgm2"/>
+	<mosaic id="35" name="Composite Reflectivity (124 nmi)" kmPerPixel="1.0" dataLevels="8" units="dBZ"/>
+	<mosaic id="36" name="Composite Reflectivity (248 nmi)" kmPerPixel="4.0" dataLevels="8" units="dBZ"/>
+	<mosaic id="37" name="Composite Reflectivity (124 nmi)" kmPerPixel="1.0" dataLevels="16" units="dBZ"/>
+	<mosaic id="38" name="Composite Reflectivity (248 nmi)" kmPerPixel="4.0" dataLevels="16" units="dBZ"/>
+	<mosaic id="41" name="Echo Tops" kmPerPixel="4.0" dataLevels="16" units="kft"/>
+	<mosaic id="42" name="Echo Tops Contour" kmPerPixel="4.0" dataLevels="16" units="kft"/>
+	<mosaic id="78" name="Surface Rainfall Accum. (1 hr)" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	<mosaic id="79" name="Surface Rainfall Accum. (3 hr)" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	<mosaic id="80" name="Storm Total Rainfall" kmPerPixel="2.0" dataLevels="16" units="inch"/>
+	
+</parminfo>

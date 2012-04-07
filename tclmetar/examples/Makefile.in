@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+EXAMPLES = ex-1.tcl
+
+EXAMPLES_PACK_FILE = examples.tgz
+EXAMPLES_PACK_DIR = examples
+EXAMPLES_DOC =	examples.README
+
+TCLSH = @TCLSH@
+
+all: ${EXAMPLES_PACK_FILE} ${EXAMPLES_DOC}
+
+state.examples: ${EXAMPLES}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	sed -e /%TCLSH%/s##${TCLSH}# $${script} > $${scriptname}; \
+	done
+	touch state.examples
+
+${EXAMPLES_PACK_FILE}: state.examples
+	rm -fr ${EXAMPLES_PACK_DIR}
+	mkdir ${EXAMPLES_PACK_DIR}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	${INSTALL} -m 0755 $${scriptname} ${EXAMPLES_PACK_DIR}/$${script}; \
+	done
+	tar -czf ${EXAMPLES_PACK_FILE} ${EXAMPLES_PACK_DIR}
+
+install: all
+	${INSTALL} -m 0644 ${EXAMPLES_PACK_FILE} ${MYEXAMPLESDIR}
+	${INSTALL} -m 0644 ${EXAMPLES_DOC} ${MYEXAMPLESDIR}
+
+clean:
+	rm -f *~ Makefile state.examples
+	rm -rf ${EXAMPLES_PACK_FILE} ${EXAMPLES_PACK_DIR}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	rm -f $${scriptname}; \
+	done

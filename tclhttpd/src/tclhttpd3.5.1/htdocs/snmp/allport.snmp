@@ -1,0 +1,21 @@
+<Title>SNMP Port View</Title>
+
+<h1 align=center>[DisplayMib sysDescr.0]</h1>
+<h2 align=center>[DisplayMib sysName.0]<br>Port Configuration</h2>
+<p>
+Number of ports:<b>[DisplayMib ifNumber.0]
+<p>
+[mibTable  -group demo \
+ -mib {ifIndex ifOutUcastPkts ifInUcastPkts ifAdminStatus} \
+ -order value \
+ -heading {port Out In Status} \
+ -caption {UDP Packet Statistics}
+]
+<p>
+<form action=portdetail.snmp>
+[formSession -group demo2]
+[input port -size 2 -value 1]
+<input type=submit value="show port details">
+</form>
+<a HREF="system.snmp?session=[session]">See System Configuration</a> 
+

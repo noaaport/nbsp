@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+@include@ @q@../../Makefile.inc@q@
+
+M4SOURCES_DA =	defs-da.m4 export_file-da.m4 export_pipe-da.m4 export_rad-da.m4
+M4TARGET_DA =	export-da.def
+M4SOURCES_GRIB = defs-grib.m4 export-grib.m4
+M4TARGET_GRIB =	export-grib.def
+SAMPLES =	export.conf-sample export-da.def-sample export-grib.def-sample
+TCLFILE =	export.tcl
+
+INSTALL =	@INSTALL@
+
+TARGET = ${M4TARGET_DA} ${M4TARGET_GRIB} ${SAMPLES}
+
+all: ${TARGET}
+
+${M4TARGET_DA}: ${M4SOURCES_DA}
+	m4 ${M4SOURCES_DA} > ${M4TARGET_DA}
+
+${M4TARGET_GRIB}: ${M4SOURCES_GRIB}
+	m4 ${M4SOURCES_GRIB} > ${M4TARGET_GRIB}
+
+export.conf-sample: export.conf
+	cp export.conf export.conf-sample
+
+export-da.def-sample: export-da.def
+	cp export-da.def export-da.def-sample
+
+export-grib.def-sample: export-grib.def
+	cp export-grib.def export-grib.def-sample
+
+install:
+	${INSTALL} -m 0644 ${TCLFILE} ${MYEXTLIBDIR}
+	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

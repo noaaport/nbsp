@@ -1,0 +1,31 @@
+httpd.tcl	Sample startup script.  To run a server on port 8015, just do:
+	wish httpd.tcl -debug 1
+		This should work with any Tcl 8.0 or later wish or tclsh.
+		To run on a different port and in the background, try:
+	tclsh httpd.tcl -port 80 &
+		To try out threads, run with a thread-enabled tclsh and do:
+	tclsh httpd.tcl -threads 5
+		where this means use up to 5 worker threads.
+
+		httpd.tcl depends on both tclhttpd.rc and httpdthread.tcl,
+		as well as the packages in ../lib
+
+tclhttpd.rc	Configuration file with default port, etc.
+httpdthread.tcl	Per-thread initialization.
+
+tclhttpd.etc.init
+		This is a Solaris startup script:
+		/etc/init.d/tclhttpd
+		You'd install this and make appropriate symbolic links
+		into the various runlevel directories (rc2.d)
+		to get the server to start at boot.  The details vary
+		among different UNIX's
+
+In the mini dirctory:
+mini1.1.tcl	- These are a set of tiny HTTPD implementations by
+minihttpd.tcl	- Steve Uhler (suhler@eng.sun.com)
+small1.1.tcl
+
+In test directory:
+echosrv.tcl	- Testing routines for Tcl sockets
+torture.tcl	- Testing for parallel HTTP fetches against servers

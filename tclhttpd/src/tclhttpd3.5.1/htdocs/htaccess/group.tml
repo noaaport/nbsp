@@ -1,0 +1,75 @@
+[html::author "Colin McCormack"]
+[mypage::header "Access Control Group Editor"]
+[
+ set file [ncgi::value file]
+ set in [validation::parseFile $file groups]
+ set valid 1
+ if {$in != ""} {
+     set valid 0
+     return "<p>$in</p>"
+ } else {
+     return "<p>(Read [ncgi::value file])</p>"
+ }
+]
+[
+ # write file if necessary 
+ set group [ncgi::value group]
+ if {$group != ""} {
+     if {[ncgi::value action] == "Del"} {
+	 catch {unset groups($group)}
+     } else {
+	 set groups($group) [ncgi::value people]
+     }
+
+     # save the file if necessary
+     validation::writefile $file groups
+
+     return "<p>(Updated [ncgi::value file])</p>"
+ }
+]
+[
+ ncgi::setValue group ""
+ ncgi::setValue people ""
+ ncgi::setValue action 0
+ catch {unset html}
+ return ""
+]
+[
+ if {$valid} {
+     return [subst { 
+	 <h4>Create a new group by typing its name and members, then clicking Add</h4>
+	 <form action="$page(url)" method=POST>
+	 <input type=hidden name=file  value="[html::quoteFormValue $file]">
+	 <input type=text name=group value="">
+	 <input type=text name=people value="">
+	 <input type=submit name=action value=Add>
+	 </form>
+     }]
+ }
+]
+ [
+ set html ""
+ if {$valid} {
+     set html "<h4>Edit the groups below by typing new group members<br>or check Del to delete the group.<br>Update by clicking on the group name.</h4>"
+     foreach {key value} [array get groups] {
+	 append html [subst {
+	     <form action="$page(url)" method=POST>
+	     <input type=hidden name=file  value="[html::quoteFormValue $file]">
+	     <input type=hidden name=group value="[html::quoteFormValue $key]">
+	     <input type=submit value="[html::quoteFormValue $key]">
+	     <input type=text name=people value="[html::quoteFormValue $value]">
+	     <input type=checkbox name=action value=Del>Del
+	     </form>
+	 }]
+     }
+ }
+ return $html
+]
+<p><a href="index.html">Return to htaccess editor</a></p>
+[
+ unset html
+#ncgi::setValue debug 1
+ return [::validation::debug groups]
+]
+
+[mypage::footer]

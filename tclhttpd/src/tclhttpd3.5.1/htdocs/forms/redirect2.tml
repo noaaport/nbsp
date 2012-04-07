@@ -1,0 +1,4 @@
+[Doc_Dynamic]
+<h2>Redirect 2</h2>
+Query data<p>
+[html::tableFromList [ncgi::nvlist]]

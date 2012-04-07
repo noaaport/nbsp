@@ -1,0 +1,12 @@
+Source: tclgempak
+Section: unknown
+Priority: extra
+Maintainer: Jose F Nieves <nieves@ltp.upr.clu.edu>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: tclgempak
+Architecture: all
+Description: Library for running Gempak programs from Tcl scripts.
+ TclGempak is a library of Tcl procedures to execute Gempak programs
+ from a Tcl script.

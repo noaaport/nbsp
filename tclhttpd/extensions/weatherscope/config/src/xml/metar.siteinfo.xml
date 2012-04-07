@@ -1,0 +1,2053 @@
+<?datasetconfig version="1.0d1"?>
+<siteinfo>
+  <table>
+    <fieldref id="stid" type="string"/>
+    <fieldref id="lat" type="float"/>
+    <fieldref id="lon" type="float"/>
+    <fieldref id="elev" type="float"/>
+    <fieldref id="name" type="string"/>
+    <record> "kbhm", 33.5656, -86.745, 196, "Birmingham Int'l Apt, AL" </record>
+    <record> "khsv", 34.6436, -86.7856, 192, "Huntsville Int'l, AL" </record>
+    <record> "kmgm", 32.3003, -86.4061, 67, "Montgomery, AL" </record>
+    <record> "kmob", 30.6883, -88.2456, 66, "Mobile Reg. Apt, AL" </record>
+    <record> "kckl", 32.9, -87.25, 140, "Centreville, AL" </record>
+    <record> "k79j", 31.3, -86.3833, 94, "Andalusia-Opp Apt, AL" </record>
+    <record> "k8r1", 30.2333, -88.0333, 1, "Mobile Point C.G.S., AL" </record>
+    <record> "kanb", 33.5906, -85.8475, 186, "Anniston Metro. Apt, AL" </record>
+    <record> "kaub", 32.6, -85.5, 198, "Auburn Univ. AMOS, AL" </record>
+    <record> "kauo", 32.6167, -85.4333, 236, "Auburn-Opelika Apt, AL" </record>
+    <record> "kbfm", 30.6139, -88.0633, 7, "Mobile Downtown Apt, AL" </record>
+    <record> "kbmx", 33.1667, -86.75, 231, "Birmingham NEXRAD, AL" </record>
+    <record> "kdcu", 34.6581, -86.9433, 180, "Decatur, AL" </record>
+    <record> "kdhn", 31.3214, -85.4497, 122, "Dothan Reg. Apt, AL" </record>
+    <record> "keet", 33.1783, -86.7817, 178, "Alabaster, AL" </record>
+    <record> "kgad", 33.9667, -86.0833, 173, "Gadsden Muni. AWOS, AL" </record>
+    <record> "kgzh", 31.4189, -87.0481, 78, "Evergreen, AL" </record>
+    <record> "khey", 31.35, -85.6667, 97, "Ozark, Hanchey AHP, AL" </record>
+    <record> "klor", 31.3589, -85.7483, 78, "Ft Rucker, Lowe Helipt, AL" </record>
+    <record> "km82", 34.8614, -86.5572, 230, "Huntsville, Madison Co. Apt, AL" </record>
+    <record> "kmsl", 34.7439, -87.5994, 167, "Muscle Shoals, AL" </record>
+    <record> "kmxf", 32.3833, -86.3667, 51, "Montgomery, Maxwell AFB, AL" </record>
+    <record> "knbj", 30.3911, -87.6325, 13, "Barin Field, NAF, AL" </record>
+    <record> "kozr", 31.2833, -85.7167, 91, "Ozark, Cairns Air Fld, AL" </record>
+    <record> "ksem", 32.35, -86.9833, 51, "Selma, Craig Field, AL" </record>
+    <record> "ktcl", 33.2119, -87.6158, 52, "Tuscaloosa Muni. Apt, AL" </record>
+    <record> "ktoi", 31.8606, -86.0122, 121, "Troy Muni. Apt, AL" </record>
+    <record> "klzk", 34.8333, -92.25, 165, "North Little Rock, AR" </record>
+    <record> "kfsm", 35.3336, -94.365, 142, "Fort Smith, AR" </record>
+    <record> "karg", 36.1333, -90.9167, 83, "Walnut Ridge AWOS, AR" </record>
+    <record> "kasg", 36.1833, -94.1167, 412, "Springdale Muni., AR" </record>
+    <record> "kbpk", 36.3706, -92.4719, 282, "Mountain Home, AR" </record>
+    <record> "kbvx", 35.7333, -91.65, 141, "Batesville AWOS, AR" </record>
+    <record> "kbyh", 35.9667, -89.95, 78, "Eaker AFB, AR" </record>
+    <record> "kcdh", 33.6167, -92.7667, 40, "Camden, AR" </record>
+    <record> "kdeq", 34.0469, -94.3994, 108, "De Queen, AR" </record>
+    <record> "keld", 33.2208, -92.8133, 84, "El Dorado, AR" </record>
+    <record> "kflp", 36.3, -92.4667, 350, "Flippin AWOS, AR" </record>
+    <record> "kfyv", 36.0103, -94.1678, 381, "Fayetteville, Drake Fld, AR" </record>
+    <record> "khka", 35.9389, -89.8325, 78, "Blytheville Muni. Apt, AR" </record>
+    <record> "khot", 34.4781, -93.0961, 165, "Hot Springs, AR" </record>
+    <record> "khro", 36.2617, -93.1547, 416, "Harrison, AR" </record>
+    <record> "kjbr", 35.8372, -90.6431, 79, "Jonesboro Muni. Apt, AR" </record>
+    <record> "klit", 34.7267, -92.2361, 79, "Little Rock, Adams Fld, AR" </record>
+    <record> "kllq", 33.6361, -91.7556, 82, "Monticello Muni. Apt, AR" </record>
+    <record> "klrf", 34.9167, -92.15, 95, "Little Rock AFB, AR" </record>
+    <record> "km39", 34.5467, -93.5781, 214, "Mt. Ida, Ouachita Orchard, AR" </record>
+    <record> "kmwt", 34.55, -93.5833, 214, "Mt. Ida, AR" </record>
+    <record> "kpbf", 34.175, -91.9347, 63, "Pine Bluff, AR" </record>
+    <record> "krog", 36.3667, -94.1, 415, "Rogers AWOS, AR" </record>
+    <record> "krue", 35.2578, -93.0947, 123, "Russellville Muni. Apt, AR" </record>
+    <record> "ksgt", 34.6, -91.5667, 68, "Stuttgart AWOS, AR" </record>
+    <record> "kslg", 36.2, -94.4833, 300, "Siloam Springs AWOS, AR" </record>
+    <record> "ksrc", 35.2119, -91.7372, 81, "Searcy Muni. Apt, AR" </record>
+    <record> "ktxk", 33.4561, -93.9875, 118, "Texarkana, AR" </record>
+    <record> "kvbt", 36.35, -94.2167, 395, "Bentonville AWOS, AR" </record>
+    <record> "kxna", 36.2819, -94.3069, 392, "Fayetteville/Springdale, AR" </record>
+    <record> "ktus", 32.1314, -110.9553, 805, "Tucson Int'l Apt, AZ" </record>
+    <record> "kffz", 33.4667, -111.7333, 424, "Mesa, Falcon Field, AZ" </record>
+    <record> "kphx", 33.4342, -112.0511, 345, "Phoenix Sky Harbor Int'l, AZ" </record>
+    <record> "kflg", 35.1403, -111.6722, 2137, "Flagstaff, AZ" </record>
+    <record> "kgcn", 35.9461, -112.1547, 2014, "Grand Canyon Nat'l Pk, AZ" </record>
+    <record> "kigm", 35.2578, -113.9331, 1050, "Kingman Apt, AZ" </record>
+    <record> "kyum", 32.65, -114.6, 65, "Yuma Int'l, AZ" </record>
+    <record> "klhu", 34.4667, -111.7667, 147, "Lake Havasu AWOS, AZ" </record>
+    <record> "kfhu", 31.5833, -110.3333, 1438, "Fort Huachuca, AZ" </record>
+    <record> "kgbn", 32.4333, -112.6833, 262, "Gila Bend Army Airfld, AZ" </record>
+    <record> "kinw", 35.0281, -110.7208, 1505, "Winslow Muni. Apt, AZ" </record>
+    <record> "kpga", 36.9206, -111.4481, 1314, "Page Muni. Apt, AZ" </record>
+    <record> "k0e4", 34.2333, -111.3333, 1498, "Payson, AZ" </record>
+    <record> "k13a", 31.4167, -110.85, 1198, "Nogales AMOS, AZ" </record>
+    <record> "k40g", 35.6508, -112.1461, 1829, "Grand Canyon, Valle Apt, AZ" </record>
+    <record> "kcgz", 32.95, -111.7667, 446, "Casa Grande AWOS, AZ" </record>
+    <record> "kchd", 33.2692, -111.8111, 379, "Chandler Muni. Apt, AZ" </record>
+    <record> "kdma", 32.1667, -110.8833, 824, "Davis-Monthan AFB, AZ" </record>
+    <record> "kdug", 31.4692, -109.6036, 1266, "Bisbee Douglas Int'l, AZ" </record>
+    <record> "kdvt", 33.6903, -112.0656, 450, "Phoenix-Deer Valley, AZ" </record>
+    <record> "ke74", 32.8167, -109.6833, 950, "Safford AMOS, AZ" </record>
+    <record> "kgeu", 33.5272, -112.2953, 325, "Glendale Muni. Apt, AZ" </record>
+    <record> "kgyr", 33.4167, -112.3833, 295, "Goodyear Muni., AZ" </record>
+    <record> "kifp", 35.1575, -114.5594, 212, "Laughlin/Bullhead Int'l, AZ" </record>
+    <record> "kiwa", 33.3167, -111.65, 421, "Mesa, Williams Gateway, AZ" </record>
+    <record> "kluf", 33.5333, -112.3833, 332, "Phoenix, Luke AFB, AZ" </record>
+    <record> "knyl", 32.6236, -113.7639, 64, "Yuma, U.S.M.C. Air Stn, AZ" </record>
+    <record> "kols", 31.4208, -110.8458, 1198, "Nogales Int'l Apt, AZ" </record>
+    <record> "kp01", 32.45, -112.8667, 444, "Ajo Muni., AZ" </record>
+    <record> "kp06", 35.1667, -114.5667, 167, "Bullhead City, AZ" </record>
+    <record> "kp65", 31.8833, -112.8167, 511, "Lukeville, AZ" </record>
+    <record> "kpjb", 34.2667, -111.35, 1571, "Payson, AZ" </record>
+    <record> "kprc", 34.6492, -112.4222, 1537, "Prescott, Love Field, AZ" </record>
+    <record> "krqe", 35.6575, -109.0614, 2054, "Window Rock Apt, AZ" </record>
+    <record> "ksad", 32.8572, -109.6356, 968, "Safford Muni. Apt, AZ" </record>
+    <record> "ksdl", 33.6228, -111.9106, 460, "Scottsdale Apt, AZ" </record>
+    <record> "ksez", 34.85, -111.7833, 1471, "Sedona Apt, AZ" </record>
+    <record> "ksjn", 34.5183, -109.3792, 1747, "St. Johns Indus. Airpk, AZ" </record>
+    <record> "ksow", 34.2667, -110, 1954, "Show Low Muni., AZ" </record>
+    <record> "kwtr", 33.8167, -109.9833, 1570, "Whiteriver Apt, AZ" </record>
+    <record> "klax", 33.9381, -118.3889, 38, "Los Angeles Int'l Apt, CA" </record>
+    <record> "ksfo", 37.6197, -122.3647, 3, "San Francisco Int'l, CA" </record>
+    <record> "ksjc", 37.3592, -121.9242, 18, "San Jose Int'l Apt, CA" </record>
+    <record> "ksan", 32.7336, -117.1831, 4, "San Diego Int'l, CA" </record>
+    <record> "ksac", 38.5069, -121.495, 6, "Sacramento Exec. Apt, CA" </record>
+    <record> "koak", 37.7194, -122.2353, 1, "Metro Oakland Int'l, CA" </record>
+    <record> "kfat", 36.78, -119.7194, 101, "Fresno Air Terminal, CA" </record>
+    <record> "klgb", 33.8117, -118.1464, 17, "Long Beach Apt, CA" </record>
+    <record> "kmux", 37.1667, -121.9, 1082, "Monterey NEXRAD, CA" </record>
+    <record> "kbfl", 35.4336, -119.0567, 155, "Bakersfield, CA" </record>
+    <record> "kedw", 34.9167, -117.9, 702, "Edwards AFB, CA" </record>
+    <record> "ksck", 37.8897, -121.2236, 9, "Stockton Metro. Apt, CA" </record>
+    <record> "kvbg", 34.75, -120.5667, 112, "Vandenberg AFB, CA" </record>
+    <record> "kriv", 33.9, -117.25, 469, "Riverside, March AFB, CA" </record>
+    <record> "keed", 34.7661, -114.6233, 300, "Needles Apt, CA" </record>
+    <record> "k4cb", 35.2667, -117.4333, 864, "Cuddleback Gun Range, CA" </record>
+    <record> "k4su", 36.3333, -117.1, 962, "Superior Valley Gun Rng, CA" </record>
+    <record> "k50q", 37.7, -123, 12, "Farallon Island, CA" </record>
+    <record> "k87q", 35.6656, -121.2847, 17, "Point Piedras Blanca, CA" </record>
+    <record> "kavx", 33.405, -118.4158, 488, "Avalon, Catalina Apt, CA" </record>
+    <record> "kbih", 37.3711, -118.3581, 1256, "Bishop Apt, CA" </record>
+    <record> "kbur", 34.1997, -118.3647, 236, "Burbank-Glendale-Pasadena, CA" </record>
+    <record> "kbys", 35.2833, -116.6167, 716, "Bicycle Lake Army Afld, CA" </record>
+    <record> "keka", 40.8, -124.1667, 13, "Eureka, CA" </record>
+    <record> "kmer", 37.3667, -120.5667, 57, "Merced, Castle AFB, CA" </record>
+    <record> "kmws", 34.2333, -118.0667, 1739, "Mt. Wilson, CA" </record>
+    <record> "kngz", 37.7833, -122.3167, 4, "Alameda NAS, CA" </record>
+    <record> "knid", 35.6864, -117.69, 696, "China Lake, NAF, CA" </record>
+    <record> "knjk", 32.825, -115.6606, -13, "El Centro, NAF, CA" </record>
+    <record> "knkx", 32.8644, -107.1308, 145, "San Diego, Miramar NAS, CA" </record>
+    <record> "knlc", 36.3036, -119.9381, 71, "Lemoore NAS, CA" </record>
+    <record> "knsi", 33.2347, -119.4528, 153, "San Nicholas Island, CA" </record>
+    <record> "kntd", 34.1239, -119.1217, 3, "Point Mugu, Naval AWC, CA" </record>
+    <record> "knuq", 37.4058, -122.0481, 10, "Mtn View, Moffett Fld, CA" </record>
+    <record> "ko64", 39.4, -123.8167, 19, "Fort Bragg, CA" </record>
+    <record> "kpmd", 34.6297, -118.0814, 775, "Palmdale Prod. Flight, CA" </record>
+    <record> "krbl", 40.1506, -122.2522, 106, "Red Bluff Muni. Apt, CA" </record>
+    <record> "krdd", 40.515, -122.2967, 153, "Redding Muni. Apt, CA" </record>
+    <record> "ksdb", 34.7436, -118.7244, 1378, "Sandberg, CA" </record>
+    <record> "ksmx", 34.8994, -120.4486, 78, "Santa Maria, CA" </record>
+    <record> "ksuu", 38.2667, -121.95, 19, "Fairfield, Travis AFB, CA" </record>
+    <record> "k0l3", 34.0167, -118.8167, 6, "Zuma Beach, CA" </record>
+    <record> "k1l2", 34, -118.5, 2, "Santa Monica Pier, CA" </record>
+    <record> "k1o5", 41.7333, -122.55, 770, "Montague, CA" </record>
+    <record> "k2h1", 33.5667, -118.1333, 36, "Huntington B. Oil, CA" </record>
+    <record> "k2l6", 33.9667, -118.4333, 8, "Marina Del Rey, CA" </record>
+    <record> "k2l7", 32.9833, -117.2667, 5, "Solana Beach, CA" </record>
+    <record> "k3a6", 34.3667, -118.5667, 427, "Newhall, CA" </record>
+    <record> "k3l3", 33.6, -117.8833, 3, "Newport Beach, CA" </record>
+    <record> "k3o6", 37.8, -122.3667, 8, "Treasure Island, CA" </record>
+    <record> "k4l7", 33.8667, -118.4, 8, "Hermosa Beach Pier, CA" </record>
+    <record> "k51q", 37.75, -122.7, 5, "San Francisco Pbs, CA" </record>
+    <record> "k52q", 38.05, -122.2667, 18, "Davis Point Av. WRS, CA" </record>
+    <record> "k53q", 37.5, -122.5, 40, "Pillar Pt-El Granda, CA" </record>
+    <record> "k54q", 36.8, -121.8, 5, "Castroville-Moss, CA" </record>
+    <record> "k5l8", 33.7667, -118.1667, 3, "Long Beach, CA" </record>
+    <record> "k6l9", 33.65, -118, 35, "Huntington Beach, CA" </record>
+    <record> "k84q", 40.4333, -124.5, 8, "Blunts Reef C.G.S., CA" </record>
+    <record> "k85q", 36.9667, -122, 1, "Santa Cruz Harbor, CA" </record>
+    <record> "k86q", 41.8333, -124.4, 45, "St George Reef C.G.L.S., CA" </record>
+    <record> "k88q", 40.7667, -124.2333, 2, "Samoa-Humboldt Bay, CA" </record>
+    <record> "k89q", 38.95, -123.7333, 18, "Point Arena C.G.L.S., CA" </record>
+    <record> "k91q", 37.85, -122.4167, 73, "Point Blunt C.G.L.S., CA" </record>
+    <record> "k92q", 38.3167, -123.05, 3, "Bodega Bay C.G.L.S., CA" </record>
+    <record> "k93q", 37.1833, -122.4, 1, "Pigeon Point C.G.L.S., CA" </record>
+    <record> "k94q", 37.8, -122.5167, 1, "Point Bonita C.G.L.S., CA" </record>
+    <record> "k95q", 36.6333, -121.9333, 6, "Point Pinos C.G.L.S., CA" </record>
+    <record> "k96q", 41.05, -124.15, 58, "Trinidad Head C.G.L.S., CA" </record>
+    <record> "k97q", 38, -123.0167, 87, "Point Reyes C.G.S., CA" </record>
+    <record> "k98q", 38.15, -121.7, 1, "Rio Vista C.G.L.S., CA" </record>
+    <record> "k99q", 38.0333, -122.0333, 12, "Port Chicago, CA" </record>
+    <record> "k9l0", 33.45, -117.6833, 15, "Dana Point, CA" </record>
+    <record> "kaat", 41.4914, -120.5644, 1333, "Alturas, CA" </record>
+    <record> "kacv", 40.9781, -124.1086, 66, "Arcata, CA" </record>
+    <record> "kapc", 38.2075, -122.2794, 10, "Napa Co. Apt, CA" </record>
+    <record> "kapv", 34.5833, -117.1833, 932, "Apple Valley, CA" </record>
+    <record> "kbab", 39.1333, -121.4333, 34, "Marysvile, Beale AFB, CA" </record>
+    <record> "kbhx", 40.5, -124.3, 767, "Eureka NEXRAD, CA" </record>
+    <record> "kblh", 33.6192, -114.7169, 121, "Blythe Apt, CA" </record>
+    <record> "kblu", 39.2761, -120.7081, 1610, "Emigrant Gap, CA" </record>
+    <record> "kbny", 40.8833, -121.6667, 957, "Burney, CA" </record>
+    <record> "kbuo", 33.9333, -116.9667, 692, "Beaumont, CA" </record>
+    <record> "kccr", 37.9917, -122.0519, 7, "Concord, CA" </record>
+    <record> "kcec", 41.7803, -124.2367, 17, "Crescent City, CA" </record>
+    <record> "kcic", 39.8, -121.85, 73, "Chico Muni., CA" </record>
+    <record> "kcma", 34.2167, -119.0833, 23, "Camarillo Apt, CA" </record>
+    <record> "kcno", 33.9756, -117.6236, 198, "Chino Apt, CA" </record>
+    <record> "kcqt", 34.0167, -118.2833, 56, "L.A., USC Downtown, CA" </record>
+    <record> "kcrq", 33.13, -117.2758, 100, "Carlsbad, CA" </record>
+    <record> "kcsl", 35.3333, -120.7333, 76, "Camp San Luis Apt, CA" </record>
+    <record> "kcwl", 32.6694, -115.5133, 1, "Calexico Int'l Apt, CA" </record>
+    <record> "kczz", 32.6261, -116.4683, 807, "Campo, CA" </record>
+    <record> "kdag", 34.8536, -116.7867, 587, "Barstow-Daggett Apt, CA" </record>
+    <record> "kdax", 38.5, -121.6833, 44, "Sacramento NEXRAD, CA" </record>
+    <record> "kemt", 34.0833, -118.0333, 90, "El Monte, CA" </record>
+    <record> "kfch", 36.7333, -119.8167, 85, "Fresno-Chandler, CA" </record>
+    <record> "kful", 33.8719, -117.9847, 29, "Fullerton Muni. Apt, CA" </record>
+    <record> "kggb", 37.8167, -122.4667, 81, "Golden Gate Bridge, CA" </record>
+    <record> "khhr", 33.9236, -118.3319, 19, "Hawthorne Muni. Apt, CA" </record>
+    <record> "khjo", 36.3186, -119.6289, 74, "Hanford Muni. Apt, CA" </record>
+    <record> "khwd", 37.6608, -122.1183, 14, "Hayward Air Terminal, CA" </record>
+    <record> "kipl", 32.8342, -115.5786, -17, "Imperial Co. Apt, CA" </record>
+    <record> "kiyk", 35.6667, -117.8333, 749, "Inyokern, CA" </record>
+    <record> "kiza", 34.6069, -120.0756, 205, "Santa Ynez Apt, CA" </record>
+    <record> "kl10", 33.4167, -117.6167, 3, "San Clemente, CA" </record>
+    <record> "kl13", 32.6667, -117.4833, 111, "Point Loma-Cabrillo, CA" </record>
+    <record> "kl14", 33.7167, -118.2833, 8, "Cabrillo Beach, CA" </record>
+    <record> "kl21", 32.8667, -117.25, 4, "Scripps Pier-La Jol, CA" </record>
+    <record> "kl27", 33.3333, -118.3333, 3, "Santa Catalina Island, CA" </record>
+    <record> "kl34", 33.2167, -117.4, 9, "Oceanside Harbor, CA" </record>
+    <record> "kl46", 34.0167, -119.3667, 42, "Anacapa Island, CA" </record>
+    <record> "kl55", 34.0333, -118.6833, 139, "Malibu Beach, CA" </record>
+    <record> "kl58", 32.7667, -117.2333, 2, "Mission Beach, CA" </record>
+    <record> "kl79", 34.1667, -119.2167, 2, "Oxnard-Channel Isl., CA" </record>
+    <record> "kl82", 33.7333, -118.2667, 10, "Terminal Island, CA" </record>
+    <record> "kl97", 33.7333, -118.4, 5, "Point Vincente, CA" </record>
+    <record> "kl98", 33.45, -120.0333, 27, "El Capitan Beach, CA" </record>
+    <record> "klpc", 34.6667, -120.4667, 27, "Lompoc AWOS, CA" </record>
+    <record> "klvk", 37.6928, -121.8144, 121, "Livermore Muni. Apt, CA" </record>
+    <record> "kmae", 36.9867, -120.1108, 77, "Madera Muni. Apt, CA" </record>
+    <record> "kmcc", 38.6667, -121.4, 23, "McClellan AFB, CA" </record>
+    <record> "kmce", 37.2831, -120.5078, 47, "Merced Muni. Apt, CA" </record>
+    <record> "kmhr", 38.55, -121.3, 29, "Mather Field, CA" </record>
+    <record> "kmhs", 41.3158, -122.3161, 1077, "Mt. Shasta, CA" </record>
+    <record> "kmhv", 35.0667, -118.15, 849, "Mojave, CA" </record>
+    <record> "kmmh", 37.6167, -118.8333, 2173, "Mammoth-June Lakes, CA" </record>
+    <record> "kmod", 37.6242, -120.9506, 29, "Modesto City-Co., CA" </record>
+    <record> "kmry", 36.5906, -121.8475, 77, "Monterey Pen. Apt, CA" </record>
+    <record> "kmtr", 36.5833, -121.85, 66, "Monterey, CA" </record>
+    <record> "kmyf", 32.8144, -117.1364, 128, "San Diego, Montgomery Fld, CA" </record>
+    <record> "kmyv", 39.0978, -121.5697, 19, "Marysville, Yuba Apt, CA" </record>
+    <record> "knfg", 33.3047, -117.3539, 23, "Oceanside, Camp Pendleton, CA" </record>
+    <record> "knnz", 36.3, -121.8833, 34, "Point Sur, CA" </record>
+    <record> "knrc", 37.4, -121.1, 50, "Crows Landing Naval ALF, CA" </record>
+    <record> "knrs", 32.5631, -117.11, 7, "Imperial Beach Naval ALF, CA" </record>
+    <record> "knuc", 33.0211, -118.5811, 55, "San Clemente, Naval ALF, CA" </record>
+    <record> "knxp", 34.2944, -116.145, 626, "29 Palms, USMC AGCC, CA" </record>
+    <record> "knzy", 32.6908, -117.2089, 7, "San Diego, N. Isl. NAS, CA" </record>
+    <record> "ko18", 36.3175, -119.6294, 75, "Hanford Muni. Apt, CA" </record>
+    <record> "ko72", 39.35, -123.8167, 20, "Point Cabrillo, CA" </record>
+    <record> "ko87", 40.0167, -124.0667, 21, "Shelter Cove, CA" </record>
+    <record> "kokb", 33.2181, -117.3514, 9, "Oceanside Muni. Apt, CA" </record>
+    <record> "kokh", 33.2194, -117.3494, 8, "Oceanside Muni. Apt, CA" </record>
+    <record> "kont", 34.0533, -117.5758, 287, "Ontario Int'l Apt, CA" </record>
+    <record> "kove", 39.4947, -121.6203, 57, "Oroville Muni. Apt, CA" </record>
+    <record> "koxr", 34.2006, -119.2031, 13, "Oxnard Apt, CA" </record>
+    <record> "kp43", 34.25, -119.25, 7, "Ventura Harbor, CA" </record>
+    <record> "kp44", 34.4, -119.7, 8, "Santa Barbara Harbor, CA" </record>
+    <record> "kpao", 37.4667, -122.1167, 2, "Palo Alto Apt, CA" </record>
+    <record> "kpoc", 34.1, -117.7833, 308, "La Verne-Brackett, CA" </record>
+    <record> "kprb", 35.6728, -120.6269, 255, "Paso Robles Muni. Apt, CA" </record>
+    <record> "kpsp", 33.8222, -116.5036, 140, "Palm Springs Reg. Apt, CA" </record>
+    <record> "kptv", 36.0333, -119.0667, 135, "Porterville AWOS, CA" </record>
+    <record> "kral", 33.9514, -117.4506, 248, "Riverside Muni. Apt, CA" </record>
+    <record> "krhv", 37.3333, -121.8167, 41, "San Jose-Reid/Hillv, CA" </record>
+    <record> "krnm", 33.0375, -116.9158, 424, "Ramona Apt, CA" </record>
+    <record> "ksba", 34.4261, -119.8436, 3, "Santa Barbara Muni., CA" </record>
+    <record> "ksbd", 34.1, -117.2333, 353, "San Bern, Norton AFB, CA" </record>
+    <record> "ksbp", 35.2361, -120.6361, 63, "San Luis Obispo Co., CA" </record>
+    <record> "ksdm", 32.5753, -116.9931, 164, "San Diego, Brown Fld, CA" </record>
+    <record> "ksee", 32.8333, -116.9667, 117, "San Diego-Gillespie, CA" </record>
+    <record> "ksiy", 41.7814, -122.4681, 807, "Montague, Siskiyou Apt, CA" </record>
+    <record> "ksli", 33.7833, -118.05, 11, "Los Alamitos Army Airfld, CA" </record>
+    <record> "ksmf", 38.7014, -121.5939, 8, "Sacramento Int'l Apt, CA" </record>
+    <record> "ksmo", 34.0158, -118.4514, 53, "Santa Monica Muni., CA" </record>
+    <record> "ksna", 33.68, -117.8664, 16, "Santa Ana, CA" </record>
+    <record> "ksns", 36.6636, -121.6081, 25, "Salinas Muni. Apt, CA" </record>
+    <record> "ksql", 37.5167, -122.25, 1, "San Carlos Apt, CA" </record>
+    <record> "ksrf", 38.0667, -122.5, 1, "Hamilton Army Airfld, CA" </record>
+    <record> "ksts", 38.5, -122.8167, 38, "Santa Rosa-Sonoma Co., CA" </record>
+    <record> "ksve", 40.3833, -120.5667, 1263, "Susanville Muni., CA" </record>
+    <record> "kszn", 34.0167, -119.75, 10, "Santa Cruz Island, CA" </record>
+    <record> "ktoa", 33.8, -118.3333, 31, "Torrance Muni., CA" </record>
+    <record> "ktrk", 39.3167, -120.1333, 1798, "Truckee-Tahoe, CA" </record>
+    <record> "ktrm", 33.6278, -116.16, -34, "Desert Resorts, CA" </record>
+    <record> "ktvl", 38.8939, -119.9953, 1909, "Lake Tahoe Apt, CA" </record>
+    <record> "kuki", 39.1258, -123.2008, 187, "Ukiah Muni. Apt, CA" </record>
+    <record> "kvcb", 38.3778, -121.9575, 34, "Vacaville, Nut Tree Apt, CA" </record>
+    <record> "kvcv", 34.5833, -117.3833, 876, "Victorvi, George AFB, CA" </record>
+    <record> "kvis", 36.3167, -119.4, 89, "Visalia Muni. AWOS, CA" </record>
+    <record> "kvny", 34.2125, -118.4908, 243, "Van Nuys Apt, CA" </record>
+    <record> "kvtx", 34.4167, -119.1833, 856, "Los Angeles NEXRAD, CA" </record>
+    <record> "kwjf", 34.7408, -118.2189, 715, "Lancaster, CA" </record>
+    <record> "kwvi", 36.9394, -121.7889, 49, "Watsonville Muni. Apt, CA" </record>
+    <record> "kxvw", 34.7167, -120.5667, 100, "Vandenberg Range, CA" </record>
+    <record> "kden", 39.8328, -104.6575, 1655, "Denver Int'l Apt, CO" </record>
+    <record> "kcos", 38.8158, -104.7108, 1881, "Colorado Springs, CO" </record>
+    <record> "kgjt", 39.1339, -108.5386, 1481, "Grand Junction, CO" </record>
+    <record> "kpub", 38.29, -104.4983, 1440, "Pueblo Mem. Apt, CO" </record>
+    <record> "ktex", 37.9539, -107.9086, 2767, "Telluride Reg. Apt, CO" </record>
+    <record> "kguc", 38.5333, -106.9333, 2339, "Gunnison AWOS, CO" </record>
+    <record> "k4v5", 37.2833, -107.8667, 2012, "Durango Aviation WRS, CO" </record>
+    <record> "kase", 39.2289, -106.8694, 2382, "Aspen-Pitkin Co. Apt, CO" </record>
+    <record> "kaff", 38.9667, -104.8167, 2003, "Air Force Academy, CO" </record>
+    <record> "kals", 37.4389, -105.8614, 2297, "Alamosa, CO" </record>
+    <record> "kcag", 40.4933, -107.5236, 1888, "Craig-Moffat Apt, CO" </record>
+    <record> "kdnr", 39.7833, -104.8667, 1626, "Denver, Stapleton Int'l, CO" </record>
+    <record> "kfcs", 38.7, -104.7667, 1789, "Fort Carson, CO" </record>
+    <record> "k1v1", 39.5333, -107.8, 1622, "Rifle Aviation WRS, CO" </record>
+    <record> "k2v9", 38.6, -106.9167, 2380, "Gunnison Aviation WRS, CO" </record>
+    <record> "kako", 40.1744, -103.2144, 1431, "Akron-Washington Co., CO" </record>
+    <record> "kapa", 39.5639, -104.8483, 1793, "Denver, Centennial Apt, CO" </record>
+    <record> "kbjc", 39.9167, -105.1167, 1724, "Broomfield-Jeffco, CO" </record>
+    <record> "kbkf", 39.71, -104.7581, 1726, "Aurora, Buckley AFB, CO" </record>
+    <record> "kc96", 39.8833, -105.7667, 2771, "Winter Park Resort, CO" </record>
+    <record> "kccu", 39.4672, -106.1503, 3680, "Copper Mtn/Red Cliff Ps, CO" </record>
+    <record> "kcez", 37.3064, -108.6256, 1803, "Cortez-Montezuma Co., CO" </record>
+    <record> "kcpw", 37.4514, -106.8003, 3584, "Pagosa Springs/Wolf Crk Ps, CO" </record>
+    <record> "kcrv", 40.0503, -105.5839, 3538, "Nederland Mtn/Corona Ps, CO" </record>
+    <record> "kdro", 37.1431, -107.7597, 2038, "Durango-La Plata Co., CO" </record>
+    <record> "keeo", 40.0422, -107.8897, 1948, "Meeker Apt, CO" </record>
+    <record> "kege", 39.65, -106.9167, 1993, "Eagle Co. Reg., CO" </record>
+    <record> "kfcl", 40.5833, -105.0833, 1525, "Fort Collins Supp AWRS, CO" </record>
+    <record> "kfnl", 40.45, -105.0167, 1529, "Fort Collins AWOS, CO" </record>
+    <record> "kftg", 39.7833, -104.55, 1709, "Denver NEXRAD, CO" </record>
+    <record> "kgxy", 40.4333, -104.6333, 1420, "Greeley-Weld AWOS, CO" </record>
+    <record> "khdn", 40.4833, -107.2167, 2012, "Hayden-Yampa AWOS, CO" </record>
+    <record> "kitr", 39.2422, -102.2828, 1285, "Burlington, Carson Co., CO" </record>
+    <record> "klaa", 38.0725, -102.6867, 1128, "Lamar Muni. Apt, CO" </record>
+    <record> "klhx", 38.0494, -103.5122, 1288, "La Junta Muni. Apt, CO" </record>
+    <record> "klic", 39.2733, -103.6667, 1635, "Limon Muni. Apt, CO" </record>
+    <record> "klxv", 39.2281, -106.3161, 3026, "Leadville, Lake Co., CO" </record>
+    <record> "kmnh", 39.2167, -104.6339, 2152, "Elbert Mtn/Monument Ps, CO" </record>
+    <record> "kmtj", 38.505, -107.8975, 1755, "Montrose Reg. Apt, CO" </record>
+    <record> "kmyp", 38.4844, -106.3169, 3667, "Salida Mtn/Monarch Ps, CO" </record>
+    <record> "kpef", 38.8167, -104.7333, 1876, "Peterson AFB, CO" </record>
+    <record> "kpux", 38.4667, -104.1833, 1620, "Pueblo NEXRAD, CO" </record>
+    <record> "kril", 39.525, -107.7272, 1690, "Rifle, Garfield Co., CO" </record>
+    <record> "ks29", 38.5167, -106.0167, 2186, "Salida, CO" </record>
+    <record> "ksbs", 40.5167, -106.8667, 2096, "Steamboat Springs, CO" </record>
+    <record> "kspd", 37.2833, -102.6167, 1335, "Springfield, Nat'l Grassld, CO" </record>
+    <record> "ktad", 37.2667, -104.4333, 1756, "Trinidad, Stokes Apt, CO" </record>
+    <record> "kvtp", 37.5011, -105.1669, 3114, "La Veta Mtn/Pass, CO" </record>
+    <record> "kbdr", 41.1583, -73.1289, 3, "Bridgeport, CT" </record>
+    <record> "khfd", 41.735, -72.6517, 5, "Hartford-Brainard, CT" </record>
+    <record> "kn11", 41.2667, -72.9, 3, "New Haven C.G.S., CT" </record>
+    <record> "kbdl", 41.9381, -72.6825, 53, "Windsor Locks, CT" </record>
+    <record> "k18n", 41.3, -72.0833, 8, "New London Ledge C.G.S., CT" </record>
+    <record> "k30n", 41.2167, -72.6667, 15, "Faulkner Island C.G.L.S., CT" </record>
+    <record> "k32n", 41.2, -72.1, 6, "Little Gulf Isl. Light Stn, CT" </record>
+    <record> "kdxr", 41.3717, -73.4844, 139, "Danbury Muni. Apt, CT" </record>
+    <record> "kgon", 41.3275, -72.0494, 3, "Groton, CT" </record>
+    <record> "khvn", 41.2639, -72.8872, 4, "Tweed-New Haven, CT" </record>
+    <record> "kijd", 41.7419, -72.1836, 75, "Willimantic, CT" </record>
+    <record> "kmmk", 41.5097, -72.8278, 31, "Meriden Markham Muni., CT" </record>
+    <record> "koxc", 41.4833, -73.1333, 222, "Oxford AWOS, CT" </record>
+    <record> "k61n", 38.6167, -75.0667, 1, "Indian River C.G.S., DE" </record>
+    <record> "kdov", 39.1333, -75.4667, 9, "Dover AFB, DE" </record>
+    <record> "kged", 38.69, -75.3625, 15, "Georgetown, DE" </record>
+    <record> "kilg", 39.6728, -75.6008, 24, "Wilmington, DE" </record>
+    <record> "kjax", 30.4944, -81.6933, 9, "Jacksonville Int'l, FL" </record>
+    <record> "kmia", 25.7906, -80.3164, 3, "Miami Int'l Apt, FL" </record>
+    <record> "ktlh", 30.3931, -84.3533, 24, "Tallahassee, FL" </record>
+    <record> "ktpa", 27.9614, -82.5403, 8, "Tampa Int'l Apt, FL" </record>
+    <record> "kmco", 28.4172, -81.325, 29, "Orlando Int'l Apt, FL" </record>
+    <record> "kmlb", 28.1028, -80.6458, 10, "Melbourne Int'l Apt, FL" </record>
+    <record> "keyw", 24.5536, -81.7536, 1, "Key West Int'l Apt, FL" </record>
+    <record> "kpbi", 26.6847, -80.0994, 5, "Palm Beach Int'l, FL" </record>
+    <record> "kxmr", 28.4667, -80.55, 3, "Cape Kennedy, FL" </record>
+    <record> "kaqq", 29.7269, -85.0247, 6, "Apalachicola, FL" </record>
+    <record> "kmcf", 27.85, -82.5, 4, "Macdill AFB, Fl., FL" </record>
+    <record> "kcof", 28.2333, -80.6, 3, "Cocoa, Patrick AFB, FL" </record>
+    <record> "kcty", 29.55, -83.1053, 12, "Cross City Apt, FL" </record>
+    <record> "khrt", 30.4167, -86.6833, 12, "Hurlburt Field, FL" </record>
+    <record> "kagr", 27.65, -81.3333, 20, "Avon Park Gun Range, FL" </record>
+    <record> "kpam", 30.0667, -85.5833, 5, "Tyndall AFB, FL" </record>
+    <record> "ktbw", 27.7, -82.4, 12, "Tampa Bay Area, FL" </record>
+    <record> "kvps", 30.4833, -86.5167, 26, "Valparaiso, Eglin AFB, FL" </record>
+    <record> "kaaf", 29.7269, -85.0247, 6, "Apalachicola, FL" </record>
+    <record> "k1j3", 29.0667, -80.9167, 3, "Ponce De Leon Inlet, FL" </record>
+    <record> "k1j4", 29.6833, -85.3667, 2, "Cape San Blas C.G.S., FL" </record>
+    <record> "k1j5", 30.3167, -87.25, 2, "Santa Rosa C.G.S., FL" </record>
+    <record> "k40j", 30.0719, -83.5736, 13, "Perry-Foley Apt, FL" </record>
+    <record> "kamx", 25.6167, -80.4167, 34, "Miami NEXRAD, FL" </record>
+    <record> "kapf", 26.15, -81.7667, 3, "Naples Muni., FL" </record>
+    <record> "kbct", 26.3786, -80.1078, 4, "Boca Raton Apt, FL" </record>
+    <record> "kbkv", 28.4736, -82.4544, 23, "Brooksville, FL" </record>
+    <record> "kbow", 27.95, -81.7833, 39, "Bartow Muni., FL"</record>
+    <record> "kcew", 30.7722, -86.52, 65, "Crestview, FL" </record>
+    <record> "kcrg", 30.3361, -81.5147, 12, "Jacksonville, Craig Muni, FL" </record>
+    <record> "kdab", 29.1772, -81.06, 10, "Daytona Beach, FL" </record>
+    <record> "kdts", 30.3933, -86.4675, 6, "Destin-Ft. Walton Beach, FL" </record>
+    <record> "kegi", 30.65, -86.5167, 59, "Duke Field, Eglin Aux., FL" </record>
+    <record> "kfll", 26.0681, -80.1525, 3, "Ft Lauderdale-Hlywd Int'l, FL" </record>
+    <record> "kfmy", 26.5842, -81.8625, 5, "Ft Myers, Page Field, FL" </record>
+    <record> "kfpr", 27.4981, -80.3767, 8, "Ft Pierce, St Lucie Co Int'l, FL" </record>
+    <record> "kfxe", 26.2, -80.1833, 4, "Ft Lauderdale Exec. Apt, FL" </record>
+    <record> "kgif", 28.0606, -81.7575, 44, "Winter Haven, FL" </record>
+    <record> "kgnv", 29.6919, -82.2756, 46, "Gainesville Reg. Apt, FL" </record>
+    <record> "khst", 25.4833, -80.3833, 2, "Homestead AFB, FL" </record>
+    <record> "khwo", 25.9989, -80.2411, 2, "Hollywood, North Perry Apt, FL" </record>
+    <record> "kism", 28.2897, -81.4372, 25, "Orlando, Kissimmee Muni., FL" </record>
+    <record> "klal", 27.9833, -82.0167, 43, "Lakeland Reg., FL" </record>
+    <record> "klee", 28.8208, -81.8097, 23, "Leesburg Muni. Apt, FL" </record>
+    <record> "kmai", 30.8367, -85.1836, 34, "Marianna Muni. Apt, FL" </record>
+    <record> "kmth", 24.7258, -81.0478, 2, "Marathon Apt, FL" </record>
+    <record> "knae", 29.1431, -81.6328, 28, "Astor, Bomb Range, FL" </record>
+    <record> "kndz", 30.6972, -87.02, 54, "Milton, Whiting Fld S., FL" </record>
+    <record> "knfj", 30.5117, -86.9539, 33, "Milton, Choctaw Naval ALF, FL" </record>
+    <record> "knip", 30.2342, -81.6747, 6, "Jacksonville NAS, FL" </record>
+    <record> "knpa", 30.3561, -87.3233, 9, "Pensacola NAS, FL" </record>
+    <record> "knqx", 24.5794, -81.6839, 1, "Key West NAS, FL" </record>
+    <record> "knrb", 30.3958, -81.4225, 5, "Mayport, NAF, FL" </record>
+    <record> "knse", 30.7333, -87.0167, 60, "Milton, Whiting Fld N., FL" </record>
+    <record> "knzc", 30.2122, -81.8703, 24, "Cecil NAS, FL" </record>
+    <record> "kocf", 29.1667, -82.2167, 27, "Ocala Muni. AWOS, FL" </record>
+    <record> "kopf", 25.91, -80.2831, 3, "Miami, Opa Locka Apt, FL" </record>
+    <record> "korl", 28.5464, -81.3358, 34, "Orlando Exec. Apt, FL" </record>
+    <record> "kpfn", 30.2075, -85.685, 6, "Panama City, FL" </record>
+    <record> "kpgd", 26.9178, -81.9936, 7, "Punta Gorda, FL" </record>
+    <record> "kpie", 27.9122, -82.6856, 3, "St. Petersburg-Clearwater Int'l, FL" </record>
+    <record> "kpmp", 26.2456, -80.1114, 6, "Pompano Beach Airpk, FL" </record>
+    <record> "kpns", 30.4781, -87.1869, 36, "Pensacola Reg. Apt, FL" </record>
+    <record> "krrf", 28.1892, -82.6258, 12, "New Port Richey, FL" </record>
+    <record> "krsw", 26.5269, -81.7664, 9, "Ft Myers, SW FL Int'l, FL" </record>
+    <record> "ksfb", 28.7833, -81.25, 17, "Orlando-Sanford Apt, FL" </record>
+    <record> "ksgj", 29.9592, -81.3397, 3, "St. Augustine Apt, FL" </record>
+    <record> "kspg", 27.7678, -82.6261, 2, "St. Petersburg, Whitted Apt, FL" </record>
+    <record> "ksrq", 27.4014, -82.5586, 9, "Sarasota-Bradenton, FL" </record>
+    <record> "ksua", 27.1817, -80.2211, 6, "Stuart, FL" </record>
+    <record> "ktix", 28.5167, -80.8, 11, "Titusville, FL" </record>
+    <record> "ktmb", 25.6419, -80.4347, 3, "Miami, Kendall-Tamiami, FL" </record>
+    <record> "ktts", 28.6167, -80.7167, 3, "NASA Shuttle Facility, FL" </record>
+    <record> "kvdf", 28.0139, -82.3453, 7, "Tampa, Vandenberg Apt, FL" </record>
+    <record> "kvlg", 28.9667, -81.9667, 27, "The Villages, FL" </record>
+    <record> "kvqq", 30.2186, -81.8767, 25, "Jacksonville, Cecil Fld, FL" </record>
+    <record> "kvrb", 27.6556, -80.4181, 7, "Vero Beach Muni. Apt, FL" </record>
+    <record> "kvvg", 28.9667, -81.9667, 27, "The Villages, FL" </record>
+    <record> "kx53", 26.75, -80.95, 6, "Clewiston, FL" </record>
+    <record> "kx80", 27.0333, -80.1167, 1, "Jupiter Inlet C.G.S., FL" </record>
+    <record> "kx81", 26.7667, -80.05, 1, "Lake Worth Inlet, FL" </record>
+    <record> "kx82", 27.4667, -80.3, 1, "Ft Pierce C.G.S., FL" </record>
+    <record> "kx84", 24.95, -80.5833, 1, "Islamorada C.G.S., FL" </record>
+    <record> "kx86", 25.5833, -80.1, 1, "Fowey Rocks C.G.S., FL" </record>
+    <record> "kx87", 25.7667, -80.1333, 1, "Miami Beach C.G.S., FL" </record>
+    <record> "kx88", 24.7167, -81.1167, 1, "Marathon C.G.S., FL" </record>
+    <record> "kx89", 26.45, -81.95, 1, "Ft Myers Beach C.G.S., FL" </record>
+    <record> "kx90", 27.0833, -82.45, 1, "Venice LR Navigation, FL" </record>
+    <record> "kx91", 27.6, -82.7667, 1, "Egmont Key C.G.S., FL" </record>
+    <record> "katl", 33.6297, -84.4422, 312, "Atlanta, Hartsfield Int'l, GA" </record>
+    <record> "kags", 33.3644, -81.9633, 44, "Augusta, Bush Field, GA" </record>
+    <record> "kahn", 33.9508, -83.3281, 246, "Athens, GA" </record>
+    <record> "kaby", 31.5356, -84.1944, 60, "Albany, GA" </record>
+    <record> "kmcn", 32.6878, -83.6544, 107, "Macon, GA" </record>
+    <record> "ksav", 32.1189, -81.2022, 15, "Savannah Int'l, GA" </record>
+    <record> "kvad", 30.9667, -83.2, 71, "Moody AFB, GA" </record>
+    <record> "klhw", 31.8833, -81.5667, 14, "Ft. Stewart, GA" </record>
+    <record> "klsf", 32.3333, -84.8333, 71, "Fort Benning, GA" </record>
+    <record> "kmge", 33.9167, -84.5167, 326, "Marietta, Dobbins AFB, GA" </record>
+    <record> "krmg", 34.3478, -85.1611, 194, "Rome, GA" </record>
+    <record> "kays", 31.25, -82.4, 46, "Waycross, GA" </record>
+    <record> "k1j1", 31.1333, -81.3667, 1, "Saint Simon Isl. C.G.S., GA" </record>
+    <record> "k1j2", 32.0167, -80.85, 2, "Tybee C.G.S., GA" </record>
+    <record> "k7a9", 32.0833, -84.3667, 160, "Plains, GA" </record>
+    <record> "kamg", 31.5361, -82.5067, 61, "Alma, GA" </record>
+    <record> "kbqk", 31.25, -81.4667, 8, "Brunswick-Glynco, GA" </record>
+    <record> "kcco", 33.3122, -84.7703, 296, "Newnan, GA" </record>
+    <record> "kcsg", 32.5161, -84.9422, 121, "Columbus Metro. Apt, GA" </record>
+    <record> "kdnl", 33.4669, -82.0386, 128, "Augusta, Daniel Field, GA" </record>
+    <record> "kdnn", 34.7217, -84.8692, 216, "Dalton Muni. Apt, GA" </record>
+    <record> "kffc", 33.3553, -84.5669, 246, "Atlanta, Peachtree City, GA" </record>
+    <record> "kfty", 33.7775, -84.5244, 256, "Atlanta, Fulton Co., GA" </record>
+    <record> "kgvl", 34.2719, -83.8303, 388, "Gainesville, GA" </record>
+    <record> "kiiy", 33.7797, -82.8164, 197, "Washington, GA" </record>
+    <record> "klgc", 33.0089, -85.0725, 211, "La Grange, GA" </record>
+    <record> "klzu", 33.9781, -83.9625, 323, "Lawrenceville, GA" </record>
+    <record> "knbq", 30.7942, -81.5569, 8, "Kings Bay, Naval Stn, GA" </record>
+    <record> "kopn", 32.955, -84.2644, 243, "Thomaston, GA" </record>
+    <record> "kpdk", 33.8783, -84.2981, 305, "Atlanta, De Kalb-Peachtree, GA" </record>
+    <record> "kryy", 34.0131, -84.5986, 317, "Marietta, Cobb Co., GA" </record>
+    <record> "kssi", 31.1517, -81.3914, 6, "Brunswick, McKinnon, GA" </record>
+    <record> "ksvn", 32.0167, -81.15, 13, "Hunter Army Airfld, GA" </record>
+    <record> "ktbr", 32.4831, -81.7372, 57, "Statesboro, GA" </record>
+    <record> "kvdi", 32.1925, -82.3719, 84, "Vidalia, GA" </record>
+    <record> "kvld", 30.7833, -83.2833, 62, "Valdosta, GA" </record>
+    <record> "kvpc", 34.1283, -84.8472, 233, "Cartersville, GA" </record>
+    <record> "kwdr", 33.9822, -83.6681, 287, "Winder-Barrow Apt, GA" </record>
+    <record> "kwrb", 32.6333, -83.6, 90, "Warner Robins AFB, GA" </record>
+    <record> "kdsm", 41.5378, -93.6661, 291, "Des Moines Int'l Apt, IA" </record>
+    <record> "kcid", 41.8828, -91.7239, 263, "Cedar Rapids Muni. Apt, IA" </record>
+    <record> "kdbq", 42.3978, -90.7036, 328, "Dubuque Reg. Apt, IA" </record>
+    <record> "kalo", 42.5544, -92.4011, 266, "Waterloo Muni. Apt, IA" </record>
+    <record> "kfod", 42.55, -94.1833, 354, "Fort Dodge, IA" </record>
+    <record> "ksux", 42.4025, -96.3844, 335, "Sioux City, Sioux Gtwy Apt, IA" </record>
+    <record> "k3oi", 40.6167, -93.95, 342, "Lamoni, IA" </record>
+    <record> "k3se", 43.1667, -95.15, 404, "Spencer, IA" </record>
+    <record> "kadu", 41.7011, -94.9203, 392, "Audubon Co. Apt, IA" </record>
+    <record> "kaio", 41.4, -95.05, 360, "Atlantic, IA" </record>
+    <record> "kamw", 41.9906, -93.6189, 288, "Ames Muni. Apt, IA" </record>
+    <record> "kawg", 41.2833, -91.6667, 230, "Washington, IA" </record>
+    <record> "kaxa", 43.0833, -94.2667, 372, "Algona, IA" </record>
+    <record> "kbnw", 42.05, -93.85, 354, "Boone Muni., IA" </record>
+    <record> "kbrl", 40.7728, -91.1253, 212, "Burlington Reg. Apt, IA" </record>
+    <record> "kcav", 42.75, -93.7667, 354, "Clarion, IA" </record>
+    <record> "kcbf", 41.2667, -95.7667, 382, "Council Bluffs, IA" </record>
+    <record> "kccy", 43.0667, -92.6167, 343, "Charles City, IA" </record>
+    <record> "kcin", 42.05, -94.7833, 375, "Carroll, IA" </record>
+    <record> "kcnc", 41.0333, -93.3667, 320, "Chariton, IA" </record>
+    <record> "kcsq", 41.0167, -94.3667, 394, "Creston, IA" </record>
+    <record> "kcwi", 41.8333, -90.3333, 216, "Clinton Muni. AWOS, IA" </record>
+    <record> "kdeh", 43.2833, -91.7333, 353, "Decorah, IA" </record>
+    <record> "kdmx", 41.7333, -93.7167, 322, "Des Moines NEXRAD, IA" </record>
+    <record> "kdns", 41.9833, -95.3833, 388, "Denison, IA" </record>
+    <record> "kdvn", 41.6139, -90.5914, 229, "Davenport Muni. Apt, IA" </record>
+    <record> "kebs", 42.4333, -93.8667, 342, "Webster City, IA" </record>
+    <record> "keok", 40.4667, -91.4333, 205, "Keokuk Muni., IA" </record>
+    <record> "kest", 43.4011, -94.7472, 401, "Estherville Muni. Apt, IA" </record>
+    <record> "kffl", 41.05, -91.9833, 244, "Fair Field, IA" </record>
+    <record> "kfsw", 40.6667, -91.3333, 221, "Fort Madison, IA" </record>
+    <record> "khnr", 41.5844, -95.3397, 375, "Harlan Muni. Apt, IA" </record>
+    <record> "kicl", 40.7167, -95.0333, 303, "Clarinda, IA" </record>
+    <record> "kikv", 41.69, -93.5658, 275, "Ankeny Reg. Apt, IA" </record>
+    <record> "kiow", 41.6328, -91.5431, 203, "Iowa City Muni. Apt, IA" </record>
+    <record> "klrj", 42.7781, -96.1936, 365, "Le Mars Muni. Apt, IA" </record>
+    <record> "klwd", 40.6306, -93.9008, 344, "Lamoni Muni. Apt, IA" </record>
+    <record> "kmcw", 43.1578, -93.3314, 370, "Mason City Muni. Apt, IA" </record>
+    <record> "kmiw", 42.1106, -92.9161, 296, "Marshalltown Muni Apt, IA" </record>
+    <record> "kmut", 41.3667, -91.15, 167, "Muscatine, IA" </record>
+    <record> "kmxo", 42.2333, -91.1667, 259, "Monticello Muni., IA" </record>
+    <record> "kolz", 42.6808, -91.9744, 328, "Oelwein Muni. Apt, IA" </record>
+    <record> "korc", 42.9833, -96.0667, 431, "Orange City, IA" </record>
+    <record> "kotm", 41.1067, -92.4481, 258, "Ottumwa Indus. Apt, IA" </record>
+    <record> "koxv", 41.3, -93.1167, 283, "Knoxville, IA" </record>
+    <record> "krdk", 41.0167, -95.2667, 318, "Red Oak, IA" </record>
+    <record> "ksda", 40.75, -95.4167, 296, "Shenandoah Muni., IA" </record>
+    <record> "kshl", 43.2167, -95.8333, 432, "Sheldon, IA" </record>
+    <record> "kslb", 42.6, -95.2333, 454, "Storm Lake, IA" </record>
+    <record> "kspw", 43.1656, -95.2028, 408, "Spencer Muni. Apt, IA" </record>
+    <record> "ktnu", 41.6833, -93.0167, 290, "Newton Muni., IA" </record>
+    <record> "kboi", 43.5667, -116.2406, 871, "Boise Air Terminal, ID" </record>
+    <record> "kcoe", 47.7667, -116.8167, 707, "Coeur D'Alene AWOS, ID" </record>
+    <record> "kida", 43.5208, -112.0661, 1445, "Idaho Falls, ID" </record>
+    <record> "klws", 46.3747, -117.0144, 438, "Lewiston-Nez Perce Co., ID" </record>
+    <record> "kpih", 42.9203, -112.5711, 1356, "Pocatello Reg. Apt, ID" </record>
+    <record> "k27u", 45.1833, -113.9, 1210, "Salmon, ID" </record>
+    <record> "k2u7", 44.2083, -114.9344, 1952, "Stanley Apt, ID" </record>
+    <record> "k4sv", 42.0167, -113.25, 1612, "Strevell, ID" </record>
+    <record> "k77m", 42.3167, -113.3333, 1375, "Malta, ID" </record>
+    <record> "kbyi", 42.5425, -113.7714, 1265, "Burley Muni. Apt, ID" </record>
+    <record> "keul", 43.6333, -116.6333, 740, "Caldwell AWOS, ID" </record>
+    <record> "kjer", 42.7267, -114.4572, 1234, "Jerome Co. Apt, ID" </record>
+    <record> "kllj", 44.5228, -114.215, 1546, "Challis Apt, ID" </record>
+    <record> "kmld", 42.1667, -112.3, 1373, "Malad City, ID" </record>
+    <record> "kmlp", 47.4542, -115.6697, 1829, "Mullan Pass Vor, ID" </record>
+    <record> "kmuo", 43.05, -115.8667, 913, "Mountain Home AFB, ID" </record>
+    <record> "kmyl", 44.8833, -116.0994, 1530, "McCall Apt, ID" </record>
+    <record> "kp69", 46.1442, -115.5964, 480, "Lowell, ID" </record>
+    <record> "krxe", 43.8317, -111.8061, 1481, "Rexburg-Madison Co., ID" </record>
+    <record> "ks06", 47.4667, -115.8, 1011, "Mullan Aviation WRS, ID" </record>
+    <record> "ks14", 44.35, -112.1833, 1793, "Spencer, ID" </record>
+    <record> "ks80", 45.95, -116.1333, 1009, "Grangeville, ID" </record>
+    <record> "ksmn", 45.1167, -113.8833, 1233, "Salmon, ID" </record>
+    <record> "ksnt", 44.2086, -114.9344, 1980, "Stanley Ranger Stn, ID" </record>
+    <record> "ksun", 43.5, -114.3, 1620, "Hailey/Friedman Mem., ID" </record>
+    <record> "ktwf", 42.4786, -114.4761, 1265, "Twin Falls, ID" </record>
+    <record> "ku15", 44.5228, -114.215, 1534, "Challis Apt, ID" </record>
+    <record> "ku73", 42.7275, -114.4531, 1233, "Jerome Co. Apt, ID" </record>
+    <record> "ku78", 42.65, -111.5833, 1780, "Soda Springs-Tigert, ID" </record>
+    <record> "kord", 41.9797, -87.9044, 203, "Chicago-O'Hare Int'l, IL" </record>
+    <record> "kmdw", 41.7842, -87.7553, 188, "Chicago, Midway Apt, IL" </record>
+    <record> "kspi", 39.8453, -89.6839, 182, "Springfield, IL" </record>
+    <record> "kpia", 40.6675, -89.6839, 201, "Greater Peoria, IL" </record>
+    <record> "krfd", 42.1928, -89.0933, 224, "Greater Rockford, IL" </record>
+    <record> "kmli", 41.4514, -90.5147, 179, "Moline, Quad-City Apt, IL" </record>
+    <record> "kmmo", 41.3667, -88.6833, 223, "Marseilles Island, IL" </record>
+    <record> "kslo", 38.6428, -88.9642, 175, "Salem-Leckrone Apt, IL" </record>
+    <record> "k12c", 41.8931, -89.0783, 238, "Rochelle Muni., IL" </record>
+    <record> "k1h2", 39.0706, -88.5333, 179, "Effingham Co. Mem. Apt, IL" </record>
+    <record> "k215", 40.2842, -88.1342, 225, "Rantoul, Elliott Field, IL" </record>
+    <record> "k2i5", 40.2936, -88.1425, 225, "Rantoul NAC, IL" </record>
+    <record> "k3lc", 40.1586, -89.335, 182, "Lincoln, Logan Co. Apt, IL" </record>
+    <record> "k62g", 42.0667, -87.6833, 183, "Wilmette Marines, IL" </record>
+    <record> "k63g", 41.7167, -87.5333, 180, "Chicago-Calumet C.G.S., IL" </record>
+    <record> "kaaa", 40.1586, -89.335, 182, "Lincoln, Logan Co. Apt, IL" </record>
+    <record> "kaln", 38.9, -90.05, 166, "Alton, St. Louis Reg., IL" </record>
+    <record> "karr", 41.77, -88.4814, 215, "Aurora Muni. Apt, IL" </record>
+    <record> "kbdf", 41.2333, -89.6167, 247, "Bradford-Rinkenberg, IL" </record>
+    <record> "kblv", 38.55, -89.85, 138, "Belleville, Scott AFB, IL" </record>
+    <record> "kbmi", 40.4833, -88.9167, 267, "Bloomington-Normal, IL" </record>
+    <record> "kc09", 41.4253, -88.4186, 178, "Morris Muni., IL" </record>
+    <record> "kc73", 41.8333, -89.45, 240, "Dixon, IL" </record>
+    <record> "kc75", 41.0192, -89.3864, 173, "Lacon, IL" </record>
+    <record> "kcgx", 41.8667, -87.6, 181, "Chicago-Meigs, IL" </record>
+    <record> "kchi", 42, -87.8833, 181, "Chicago WSFO, IL" </record>
+    <record> "kcmi", 40.0322, -88.2733, 229, "Champaign-Urbana, IL" </record>
+    <record> "kcps", 38.5708, -90.1561, 126, "Cahokia-St. Louis Dntwn, IL" </record>
+    <record> "kdec", 39.8344, -88.8656, 208, "Decatur, IL" </record>
+    <record> "kdkb", 41.9319, -88.7083, 279, "De Kalb, IL" </record>
+    <record> "kdnv", 40.1994, -87.5956, 212, "Danville, IL" </record>
+    <record> "kdpa", 41.8964, -88.2511, 231, "Chicago-W. Chicago, IL" </record>
+    <record> "kenl", 38.5147, -89.0922, 163, "Centralia Muni. Apt, IL" </record>
+    <record> "kfep", 42.2464, -89.5822, 262, "Freeport, IL" </record>
+    <record> "kfoa", 38.665, -88.4531, 144, "Flora Muni. Apt, IL" </record>
+    <record> "kfwc", 38.3786, -88.4128, 133, "Fairfield Muni. Apt, IL" </record>
+    <record> "kgbg", 40.9381, -90.4311, 233, "Galesburg Muni. Apt, IL" </record>
+    <record> "khsb", 37.8114, -88.5492, 121, "Harrisburg-Raleigh Apt, IL" </record>
+    <record> "kigq", 41.54, -87.5322, 188, "Chicago, Lansing Muni., IL" </record>
+    <record> "kijx", 39.7742, -90.2386, 190, "Jacksonville Muni. Apt, IL" </record>
+    <record> "kikk", 41.0714, -87.8464, 192, "Greater Kankakee Apt, IL" </record>
+    <record> "kjot", 41.5181, -88.1753, 177, "Joliet Reg. Apt, IL" </record>
+    <record> "klot", 41.6083, -88.0942, 205, "Chicago-Romeoville, IL" </record>
+    <record> "klwv", 38.7606, -87.5989, 131, "Lawrenceville-Vincennes Int'l Apt, IL" </record>
+    <record> "kmdh", 37.7831, -89.245, 125, "Carbondale-Murphysboro, IL" </record>
+    <record> "kmqb", 40.5203, -90.6525, 216, "Macomb Muni. Apt, IL" </record>
+    <record> "kmto", 39.4781, -88.2792, 220, "Mattoon-Charleston, IL" </record>
+    <record> "kmvn", 38.3167, -88.8667, 146, "Mt. Vernon AWOS, IL" </record>
+    <record> "kmwa", 37.7503, -89.0011, 144, "Marion, IL" </record>
+    <record> "koly", 38.7219, -88.1764, 147, "Olney-Noble Apt, IL" </record>
+    <record> "kpnt", 40.9236, -88.6253, 201, "Pontiac Muni. Apt, IL" </record>
+    <record> "kppq", 39.6389, -90.7783, 216, "Pittsfield Penstone Muni., IL" </record>
+    <record> "kprg", 39.7003, -87.6697, 199, "Paris, IL" </record>
+    <record> "kpwk", 42.1208, -87.9047, 197, "Chicago-Wheeling, IL" </record>
+    <record> "krpj", 41.8931, -89.0783, 238, "Rochelle Muni., IL" </record>
+    <record> "ksar", 38.1489, -89.6986, 164, "Sparta Community, IL" </record>
+    <record> "ksqi", 41.75, -89.6667, 197, "Sterling Rockfalls, IL" </record>
+    <record> "ktaz", 39.5342, -89.3278, 190, "Taylorville Muni. Apt, IL" </record>
+    <record> "ktip", 40.2936, -88.1425, 225, "Rantoul NAC, IL" </record>
+    <record> "kugn", 42.4167, -87.8667, 222, "Chicago-Waukegan Reg., IL" </record>
+    <record> "kuin", 39.9425, -91.1944, 234, "Quincy Reg., IL" </record>
+    <record> "kvys", 41.3519, -89.1531, 199, "Peru, IL" </record>
+    <record> "kind", 39.725, -86.2819, 243, "Indianapolis Int'l, IN" </record>
+    <record> "kfwa", 40.9783, -85.1953, 248, "Fort Wayne Int'l, IN" </record>
+    <record> "ksbn", 41.7089, -86.3186, 244, "South Bend, IN" </record>
+    <record> "kevv", 38.0431, -87.5203, 127, "Evansville, IN" </record>
+    <record> "k18c", 41.7167, -86.9167, 177, "Michigan City C.G.S., IN" </record>
+    <record> "kaid", 40.1167, -85.6167, 280, "Anderson Muni., IN" </record>
+    <record> "kbak", 39.2667, -85.9, 200, "Columbus-Bakalar, IN" </record>
+    <record> "kbmg", 39.1431, -86.6167, 257, "Bloomington, IN" </record>
+    <record> "kekm", 41.7167, -86, 237, "Elkhart Muni., IN" </record>
+    <record> "keye", 39.825, -86.2958, 250, "Indianapolis, Eagle Crk, IN" </record>
+    <record> "kgez", 39.5856, -85.8, 245, "Shelbyville Muni. Apt, IN" </record>
+    <record> "kgsh", 41.5261, -85.7867, 252, "Goshen, IN" </record>
+    <record> "kgus", 40.65, -86.15, 247, "Peru, Grissom AFB, IN" </record>
+    <record> "kgyy", 41.6167, -87.4167, 180, "Gary Reg., IN" </record>
+    <record> "khnb", 38.25, -86.95, 161, "Huntingburg, IN" </record>
+    <record> "khuf", 39.4417, -87.3253, 178, "Terre Haute Int'l, IN" </record>
+    <record> "klaf", 40.4125, -86.9475, 184, "Lafayette, IN" </record>
+    <record> "kmie", 40.2342, -85.3936, 285, "Muncie, IN" </record>
+    <record> "kokk", 40.5333, -86.0667, 253, "Kokomo AWOS, IN" </record>
+    <record> "kvpz", 41.4531, -86.9981, 234, "Valparaiso, IN" </record>
+    <record> "kict", 37.6472, -97.4294, 406, "Wichita Mid-Continent, KS" </record>
+    <record> "ktop", 39.0725, -95.6258, 268, "Topeka, Billard Muni., KS" </record>
+    <record> "kddc", 37.7728, -99.9697, 790, "Dodge City, KS" </record>
+    <record> "k1k5", 37, -101.8833, 1102, "Elkhart-Morton Co., KS" </record>
+    <record> "kcnk", 39.5514, -97.6506, 453, "Concordia, KS" </record>
+    <record> "kptt", 37.7, -98.75, 595, "Pratt, KS" </record>
+    <record> "kgld", 39.3675, -101.6931, 1114, "Goodland, KS" </record>
+    <record> "kp28", 37.2839, -98.5528, 469, "Medicine Lodge, KS" </record>
+    <record> "kfri", 39.1, -96.7667, 325, "Fort Riley, KS" </record>
+    <record> "k3km", 37.7497, -97.2189, 434, "Wichita, Col. Jabara Apt, KS" </record>
+    <record> "kaao", 37.7497, -97.2189, 432, "Wichita, Col. Jabara Apt, KS" </record>
+    <record> "kcfv", 37.0911, -95.5664, 229, "Coffeyville, KS" </record>
+    <record> "kcnu", 37.6703, -95.4842, 305, "Chanute, KS" </record>
+    <record> "keha", 37, -101.9, 1099, "Elkhart AWOS, KS" </record>
+    <record> "kemp", 38.3289, -96.1939, 367, "Emporia, KS" </record>
+    <record> "kewk", 38.05, -97.2833, 467, "Newton AWOS, KS" </record>
+    <record> "kflv", 39.3667, -94.9167, 235, "Fort Leavenworth, KS" </record>
+    <record> "kfoe", 38.9414, -95.6506, 329, "Topeka, Forbes Field, KS" </record>
+    <record> "kgbd", 38.35, -98.8667, 575, "Great Bend AWOS, KS" </record>
+    <record> "kgck", 37.9275, -100.7244, 881, "Garden City, KS" </record>
+    <record> "khlc", 39.3747, -99.8297, 678, "Hill City, KS" </record>
+    <record> "khut", 38.0681, -97.8606, 470, "Hutchinson, KS" </record>
+    <record> "khys", 38.85, -99.2667, 609, "Hays Muni. AWOS, KS" </record>
+    <record> "kiab", 37.6167, -97.2667, 418, "McConnell AFB, KS" </record>
+    <record> "kixd", 38.8244, -94.8869, 331, "Olathe, New Century, KS" </record>
+    <record> "klbl", 37.05, -100.9667, 879, "Liberal Muni. AWOS, KS" </record>
+    <record> "klwc", 39.0083, -95.2117, 253, "Lawrence, KS" </record>
+    <record> "kmhk", 39.1353, -96.6778, 321, "Manhattan, KS" </record>
+    <record> "kojc", 38.85, -94.7392, 334, "Olathe, Johnson Co., KS" </record>
+    <record> "kppf", 37.3278, -95.5042, 274, "Parsons, KS" </record>
+    <record> "krsl", 38.8728, -98.8131, 567, "Russell, KS" </record>
+    <record> "ksln", 38.78, -97.6442, 387, "Salina, KS" </record>
+    <record> "ktwx", 39, -96.2333, 431, "Topeka NEXRAD, KS" </record>
+    <record> "kwld", 37.1681, -97.0369, 353, "Winfield-Arkansas City, KS" </record>
+    <record> "klex", 38.0408, -84.6058, 298, "Lexington, Blue Grass, KY" </record>
+    <record> "ksdf", 38.1772, -85.7297, 151, "Louisville, Standiford Fld, KY" </record>
+    <record> "kfft", 38.1847, -84.9033, 245, "Frankfort, KY" </record>
+    <record> "kbwg", 37.9642, -86.4239, 166, "Bowling Green-Warren Co, KY" </record>
+    <record> "kftk", 37.9, -85.9667, 230, "Fort Knox, KY" </record>
+    <record> "khop", 36.6667, -87.5, 174, "Ft Campbell Army Airfield, KY" </record>
+    <record> "kpah", 37.0564, -88.7739, 125, "Paducah, KY" </record>
+    <record> "kcvg", 39.0431, -84.6717, 273, "Covington-Cincinnati, KY" </record>
+    <record> "k5i3", 37.4833, -82.5167, 446, "Pikeville Remote AMOS, KY" </record>
+    <record> "kehr", 37.8167, -87.6833, 117, "Henderson City, KY" </record>
+    <record> "kjkl", 37.5914, -83.3144, 421, "Jackson, KY" </record>
+    <record> "klou", 38.2278, -85.6636, 166, "Louisville, Bowman Fld, KY" </record>
+    <record> "kloz", 37.0894, -84.0686, 369, "London-Corbin, KY" </record>
+    <record> "klsd", 38.0333, -84.6167, 299, "Lexington-Creech, KY" </record>
+    <record> "klvx", 37.9833, -85.9333, 254, "Louisville NEXRAD, KY" </record>
+    <record> "kowb", 37.7333, -87.1667, 124, "Owensboro-Daviess, KY" </record>
+    <record> "ksme", 37.0542, -84.615, 283, "Somerset-Pulaski Co., KY" </record>
+    <record> "kmsy", 29.9928, -90.2508, 1, "New Orleans Int'l, LA" </record>
+    <record> "kbtr", 30.5372, -91.1469, 21, "Baton Rouge Metro., LA" </record>
+    <record> "klft", 30.2022, -91.9931, 12, "Lafayette, LA" </record>
+    <record> "kmlu", 32.5117, -92.0314, 24, "Monroe, LA" </record>
+    <record> "kshv", 32.4469, -93.8242, 78, "Shreveport Reg. Apt, LA" </record>
+    <record> "klch", 30.1261, -93.2233, 5, "Lake Charles, LA" </record>
+    <record> "kaex", 31.3347, -92.5586, 27, "Alexandria Int'l, LA" </record>
+    <record> "kier", 31.7358, -93.0992, 37, "Natchitoches, LA" </record>
+    <record> "kbad", 32.5, -93.6667, 51, "Barksdale AFB, LA" </record>
+    <record> "kbve", 29.3333, -89.4, 0, "Boothville, LA" </record>
+    <record> "klix", 30.3333, -89.8167, 8, "Slidell, LA" </record>
+    <record> "kpoe", 31.0333, -93.0333, 100, "Fort Polk, LA" </record>
+    <record> "k01r", 31.1333, -92.5667, 67, "Claiborne Range AFS, LA" </record>
+    <record> "k01t", 28.1333, -94.4, 30, "High Island, LA" </record>
+    <record> "k19r", 28.6833, -91.2167, 18, "Ship Shoal Platform, LA" </record>
+    <record> "k1b7", 29.35, -89.4333, 1, "Boothville Heliport, LA" </record>
+    <record> "k1g7", 28.7833, -89.05, 18, "Mississippi Canyon, LA" </record>
+    <record> "k28k", 27.8833, -91.5, 1, "Grncyn Blk52 Supp AWRS, LA" </record>
+    <record> "k3b6", 28.0833, -92.7, 0, "Eugene Island 330, LA" </record>
+    <record> "k3v8", 29.1167, -89.2, 80, "Venice Heliport, LA" </record>
+    <record> "k41i", 28.4667, -91.7833, 30, "Eugene Island, LA" </record>
+    <record> "k7b5", 28.2833, -93.1833, 0, "West Cameron 560A, LA" </record>
+    <record> "k7r1", 29.2628, -89.3633, 0, "Venice Heliport, LA" </record>
+    <record> "k7r2", 29.2167, -90.2333, 2, "Leeville, LA" </record>
+    <record> "k7r3", 29.7, -91.1, 2, "Amelia-Lake Palourd, LA" </record>
+    <record> "k7r4", 29.7833, -92.1333, 5, "Intracoastal City, LA" </record>
+    <record> "k7r5", 29.7833, -93.3, 1, "Cameron Heliport, LA" </record>
+    <record> "k7r8", 28.3, -91.9833, 1, "South Marsh Island, LA" </record>
+    <record> "k8r3", 28.9167, -89.4333, 1, "Southwest Pass C.G.S., LA" </record>
+    <record> "k8r5", 29.2667, -89.95, 2, "Grand Isle C.G.S., LA" </record>
+    <record> "k8r6", 29.7833, -93.35, 1, "Calcasieu C.G.S., LA" </record>
+    <record> "k9f2", 29.1, -90.2, 2, "Fourchon Supp. AWRS, LA" </record>
+    <record> "kara", 30.0289, -91.8844, 7, "New Iberia, LA" </record>
+    <record> "kasd", 30.3431, -89.8219, 9, "Slidell Apt, LA" </record>
+    <record> "kaud", 29.9333, -90.1333, 2, "Audubon Park, LA" </record>
+    <record> "kaxo", 29.25, -89.9667, 2, "Grand Isle Supp. AWRS, LA" </record>
+    <record> "kbcg", 30.1167, -91.55, 10, "Butte La Rose, LA" </record>
+    <record> "kcwf", 30.2167, -93.15, 4, "Chenault Airpk, LA" </record>
+    <record> "kdtn", 32.5425, -93.7447, 54, "Shreveport Downtown, LA" </record>
+    <record> "ke12", 28.0833, -92.7, 0, "East Cameron 345, LA" </record>
+    <record> "kesf", 31.395, -92.2903, 34, "Alexandria Esler Reg., LA" </record>
+    <record> "kh08", 28.4667, -93.7333, 0, "High Island 264C, LA" </record>
+    <record> "kgsm", 28.5333, -90.9833, 1, "Ship Shoal 207A, LA" </record>
+    <record> "kh39", 27.95, -93.9833, 30, "High Island A572c, LA" </record>
+    <record> "khdc", 30.5208, -90.4175, 13, "Hammond Muni. Apt, LA" </record>
+    <record> "khum", 29.5667, -90.6667, 3, "Houma-Terrebonne, LA" </record>
+    <record> "kl40", 28.2, -94.2, 0, "High Island A489b, LA" </record>
+    <record> "knbg", 29.8372, -90.0244, 0, "New Orleans NAS, LA" </record>
+    <record> "knew", 30.0494, -90.0289, 2, "New Orleans, Lakefront, LA" </record>
+    <record> "kp00", 28, -93, 15, "Tenneco Platform, LA" </record>
+    <record> "kp21", 29.6667, -88.8833, 1, "Main Pass B68, LA" </record>
+    <record> "kp22", 29.0667, -92.1833, 1, "Vermilion B131, LA" </record>
+    <record> "kp25", 28.7, -92.3167, 1, "Vermilion B215, LA" </record>
+    <record> "kp26", 28.5, -90.1167, 1, "Grand Isle B95, LA" </record>
+    <record> "kp30", 28.3333, -93.0167, 24, "West Cameron, LA" </record>
+    <record> "kp92", 29.5622, -91.5256, 0, "Salt Point, LA" </record>
+    <record> "kptn", 29.7167, -91.3333, 3, "Patterson Memorial, LA" </record>
+    <record> "krsn", 32.5144, -92.5883, 95, "Ruston Reg. Apt, LA" </record>
+    <record> "ks02", 28.5, -91.3, 32, "Ship Shoal B224a, LA" </record>
+    <record> "ks58", 28.5333, -90.5833, 1, "South Timbalier, LA" </record>
+    <record> "ks65", 28.5, -91.2, 2, "Ship Shoal 198g, LA" </record>
+    <record> "ksil", 30.25, -89.7667, 3, "Slidell Radar Site, LA" </record>
+    <record> "ksrn", 29.1167, -91.8667, 0, "South Marsh 268A, LA" </record>
+    <record> "ktvr", 32.3481, -91.03, 26, "Vicksburg-Tallulah, LA" </record>
+    <record> "kvrx", 28.5833, -92.45, 1, "Vermillion Area, LA" </record>
+    <record> "kvuw", 28.25, -91.8333, 1, "Eugene Island, LA" </record>
+    <record> "kw60", 28.15, -93.35, 0, "West Cameron 560, LA" </record>
+    <record> "kw76", 28.3833, -93.5, 29, "West Cameron B522, LA" </record>
+    <record> "kxcn", 27.7667, -91.5167, 0, "Green Canyon 184, LA" </record>
+    <record> "kbos", 42.3606, -71.0106, 6, "Boston, Logan Int'l, MA" </record>
+    <record> "kack", 41.2539, -70.0597, 14, "Nantucket, MA" </record>
+    <record> "korh", 42.2706, -71.8731, 307, "Worcester, MA" </record>
+    <record> "kbed", 42.4683, -71.2944, 40, "Bedford, MA" </record>
+    <record> "kcef", 42.2, -72.5333, 75, "Chicopee Falls, Westover AFB, MA" </record>
+    <record> "kchh", 41.6667, -69.9667, 14, "Chatham, MA" </record>
+    <record> "kfmh", 41.65, -70.5167, 40, "Otis Air Nat'l Guard, MA" </record>
+    <record> "k29b", 42.3167, -70.8833, 0, "Boston, Hull C.G.L.S., MA" </record>
+    <record> "k30b", 41.7833, -70.5, 1, "Sandwich C.G.S., MA" </record>
+    <record> "k31b", 41.6667, -69.95, 1, "Chatham C.G.S., MA" </record>
+    <record> "k33b", 41.3833, -71.0333, 1, "Buzzards Bay C.G.L.S., MA" </record>
+    <record> "k34b", 42.5833, -70.6667, 1, "Gloucester C.G.S., MA" </record>
+    <record> "k35b", 42.8167, -70.8667, 1, "Merrimac River C.G.S., MA" </record>
+    <record> "k36b", 42.05, -70.1833, 1, "Race Point C.G.S., MA" </record>
+    <record> "k37b", 42.2, -70.7167, 1, "Scituate C.G.S., MA" </record>
+    <record> "k3b2", 42.1, -70.6833, 3, "Marshfield, MA" </record>
+    <record> "k45b", 41.2833, -70.0833, 8, "Brant Point C.G.S., MA" </record>
+    <record> "kaqw", 42.6972, -73.1703, 199, "North Adams, MA" </record>
+    <record> "kaye", 42.5667, -71.6, 82, "Fort Devens-Ayer, MA" </record>
+    <record> "kbaf", 42.1597, -72.7128, 82, "Westfield, MA" </record>
+    <record> "kbox", 41.95, -71.1333, 71, "Boston NEXRAD, MA" </record>
+    <record> "kbvy", 42.5836, -70.9164, 33, "Beverly, MA" </record>
+    <record> "kcqx", 41.6875, -69.9933, 20, "Chatham Muni. Apt, MA" </record>
+    <record> "kewb", 41.6753, -70.9569, 24, "New Bedford, MA" </record>
+    <record> "kfit", 42.5519, -71.7558, 106, "Fitchburg, MA" </record>
+    <record> "khya", 41.6719, -70.2697, 15, "Hyannis, MA" </record>
+    <record> "klwm", 42.7131, -71.1258, 45, "Lawrence, MA" </record>
+    <record> "kmqe", 42.2122, -71.1147, 192, "East Milton, MA" </record>
+    <record> "kmvy", 41.3922, -70.6167, 20, "Vineyard Haven, MA" </record>
+    <record> "kore", 42.5717, -72.2775, 169, "Orange, MA" </record>
+    <record> "kowd", 42.1908, -71.1739, 15, "Norwood, MA" </record>
+    <record> "kpsf", 42.4272, -73.2892, 364, "Pittsfield, MA" </record>
+    <record> "kpvc", 42.0667, -70.2167, 2, "Provincetown AWOS, MA" </record>
+    <record> "kpym", 41.9086, -70.7281, 45, "Plymouth, MA" </record>
+    <record> "ktan", 41.8756, -71.0211, 13, "Taunton, MA" </record>
+    <record> "kbwi", 39.1667, -76.6833, 44, "Baltimore-DC Int'l, MD" </record>
+    <record> "knak", 38.9914, -76.4833, 2, "Annapolis, Naval Acad., MD" </record>
+    <record> "kadw", 38.8167, -76.85, 86, "Camp Springs, Andrews AFB, MD" </record>
+    <record> "knhk", 38.2786, -76.4139, 12, "Patuxent River NAS, MD" </record>
+    <record> "kw30", 38.3333, -75.0833, 4, "Ocean City, MD" </record>
+    <record> "k61w", 38.9167, -76.4667, 8, "Annapolis C.G.S., MD" </record>
+    <record> "k65w", 38.9, -76.4333, 1, "Thomas Point C.G.S., MD" </record>
+    <record> "k66w", 38.3833, -76.3833, 1, "Cove Point C.G.L.S., MD" </record>
+    <record> "k67w", 39.3333, -76.1, 8, "Stillpond C.G.S., MD" </record>
+    <record> "kapg", 39.4667, -76.1667, 18, "Aberdeen, Phillips Army, MD" </record>
+    <record> "kdmh", 39.2833, -76.6167, 6, "Baltimore, Inner Harbor, MD" </record>
+    <record> "kesn", 38.8, -76.0667, 22, "Easton-Newman Field, MD" </record>
+    <record> "kfdk", 39.4175, -77.3744, 92, "Frederick, MD" </record>
+    <record> "kfme", 39.0833, -76.7667, 46, "Fort Meade-Tipton, MD" </record>
+    <record> "khgr", 39.7058, -77.73, 214, "Hagerstown, MD" </record>
+    <record> "kjwx", 39.7333, -77.4333, 275, "Fort Ritchie, MD" </record>
+    <record> "klwx", 38.9833, -77.4833, 113, "Baltimore-DC NEXRAD, MD" </record>
+    <record> "kmtn", 39.3333, -76.4167, 7, "Baltimore-Martin, MD" </record>
+    <record> "kn80", 38.3083, -75.1239, 3, "Ocean City Muni. Apt, MD" </record>
+    <record> "knui", 38.1489, -76.42, 6, "St. Inigoes, Naval ESEA, MD" </record>
+    <record> "koxb", 38.3106, -75.1239, 4, "Ocean City Muni. Apt, MD" </record>
+    <record> "ksby", 38.3406, -75.5103, 16, "Salisbury-Ocean City, MD" </record>
+    <record> "kpwm", 43.6422, -70.3044, 22, "Portland Int'l Jetport, ME" </record>
+    <record> "kcar", 46.8672, -68.0133, 191, "Caribou, ME" </record>
+    <record> "kaug", 44.3206, -69.7972, 107, "Augusta State Apt, ME" </record>
+    <record> "kbgr", 44.7972, -68.8186, 58, "Bangor Int'l Apt, ME" </record>
+    <record> "kepo", 44.9167, -67, 24, "Eastport, ME" </record>
+    <record> "knhz", 43.9003, -69.935, 22, "Brunswick NAS, ME" </record>
+    <record> "kpqi", 46.6833, -68.05, 163, "Presque Isle, ME" </record>
+    <record> "krum", 44.5333, -70.5333, 192, "Rumford, ME" </record>
+    <record> "k0b9", 43.3333, -70.4, 12, "Goat Isl. Remote AMOS, ME" </record>
+    <record> "k14b", 44.15, -68.25, 1, "Great Duck Isl. C.G.L.S., ME" </record>
+    <record> "k15b", 43.65, -70.0333, 1, "Halfway Rock C.G.L.S., ME" </record>
+    <record> "k16b", 44.0333, -68.8667, 1, "Heron Neck C.G.L.S., ME" </record>
+    <record> "k18b", 43.7667, -69.3333, 1, "Monhegan-Manana Isl., ME" </record>
+    <record> "k20b", 44.1, -69.1, 1, "Rockland C.G.S., ME" </record>
+    <record> "k20j", 44.5333, -67.6167, 5, "West Jonesport C.G.S., ME" </record>
+    <record> "k23b", 43.6667, -69.7667, 1, "Seguin Island C.G.L.S., ME" </record>
+    <record> "k24b", 44.8, -66.95, 1, "W. Quoddy Head C.G.L.S., ME" </record>
+    <record> "k27b", 43.1667, -70.6, 12, "Cape Neddick C.G.L.S., ME" </record>
+    <record> "k2b8", 43.6167, -70.2, 23, "Portland Head C.G.L.S., ME" </record>
+    <record> "k3b1", 45.4631, -69.5517, 427, "Greenville Muni. Apt, ME" </record>
+    <record> "k40b", 46.6167, -69.5333, 314, "Clayton Lake, ME" </record>
+    <record> "k8b9", 44.35, -68.1333, 12, "Egg Rock Light Stn, ME" </record>
+    <record> "k94b", 43.45, -70.3167, 9, "Wood Island Light Stn, ME" </record>
+    <record> "k96b", 44.0833, -69.0333, 15, "Owl's Head Light Stn, ME" </record>
+    <record> "k9b5", 44.2833, -68.2667, 12, "Bear Island C.G.S., ME" </record>
+    <record> "kbhb", 44.45, -68.3667, 26, "Bar Harbor AWOS, ME" </record>
+    <record> "kfve", 47.285, -68.3072, 301, "Frenchville, ME" </record>
+    <record> "kgnr", 45.4667, -69.5833, 427, "Greenville, ME" </record>
+    <record> "kh32", 44.2667, -68.3167, 5, "Southwest Harbor, ME" </record>
+    <record> "khul", 46.1231, -67.7919, 149, "Houlton Int'l Apt, ME" </record>
+    <record> "kiwi", 43.9636, -69.7117, 20, "Wiscasset Apt, ME" </record>
+    <record> "kizg", 43.9892, -70.9503, 137, "Fryeburg, ME" </record>
+    <record> "klew", 44.05, -70.2833, 88, "Auburn-Lewiston, ME" </record>
+    <record> "kliz", 46.95, -67.8833, 227, "Limeston, Loring AFB, ME" </record>
+    <record> "kmlt", 45.6478, -68.6919, 124, "Millinocket, ME" </record>
+    <record> "kold", 44.95, -68.6667, 39, "Old Town-Dewitt Fld, ME" </record>
+    <record> "krkd", 44.0667, -69.1, 17, "Rockland-Knox AWOS, ME" </record>
+    <record> "ksfm", 43.4, -70.7167, 74, "Sanford Muni. AWOS, ME" </record>
+    <record> "kwvl", 44.5333, -69.6833, 101, "Waterville AWOS, ME" </record>
+    <record> "kdtw", 42.2314, -83.3308, 194, "Detroit Metro., MI" </record>
+    <record> "klan", 42.7803, -84.5789, 262, "Lansing, MI" </record>
+    <record> "kgrr", 42.8808, -85.5228, 242, "Grand Rapids, MI" </record>
+    <record> "kesc", 45.75, -87.0333, 180, "Escanaba, MI" </record>
+    <record> "kfnt", 42.9667, -83.7494, 238, "Flint, MI" </record>
+    <record> "kanj", 46.4794, -84.3572, 210, "Sault Ste. Marie, MI" </record>
+    <record> "kmqt", 46.5333, -87.55, 434, "Marquette, MI" </record>
+    <record> "kcmx", 47.1683, -88.4889, 334, "Hancock, MI" </record>
+    <record> "k3rn", 44.8333, -84.55, 387, "Graying Air Force Rng, MI" </record>
+    <record> "kapn", 45.0717, -83.5644, 210, "Alpena Co. Reg. Apt, MI" </record>
+    <record> "khtl", 44.3511, -84.6742, 350, "Houghton Lake, MI" </record>
+    <record> "kmkg", 43.1711, -86.2367, 191, "Muskegon Co. Apt, MI" </record>
+    <record> "k07g", 42.5744, -84.8114, 271, "Charlotte, Beach Apt, MI" </record>
+    <record> "k14c", 44.6333, -86.25, 174, "Frankfort C.G.S., MI" </record>
+    <record> "k17c", 43.95, -86.4667, 182, "Ludington C.G.S., MI" </record>
+    <record> "k19c", 43.2333, -86.3333, 182, "Muskegon C.G.S., MI" </record>
+    <record> "k20c", 42.1167, -86.4833, 176, "Saint Joseph C.G.S., MI" </record>
+    <record> "k27y", 46.6667, -85.9833, 183, "Grand Marais C.G.S., MI" </record>
+    <record> "k28y", 45.0167, -85.95, 177, "North Manitou Shoal, MI" </record>
+    <record> "k30g", 43.6333, -83.85, 177, "Saginaw River C.G.S., MI" </record>
+    <record> "k31g", 42.3333, -82.9667, 177, "Belle Isle C.G.S., MI" </record>
+    <record> "k31y", 47.4667, -88.1667, 186, "Eagle Harbor C.G.L.S., MI" </record>
+    <record> "k32y", 47.2333, -88.6333, 190, "Portage C.G.S., MI" </record>
+    <record> "k33g", 43, -82.4167, 177, "Port Huron C.G.S., MI" </record>
+    <record> "k34y", 46.55, -87.3833, 203, "Marquette C.G.L.S., MI" </record>
+    <record> "k36y", 44.6167, -86.2, 183, "Point Betsie-Frankfort, MI" </record>
+    <record> "k38y", 45.85, -84.7167, 176, "Saint Ignace, MI" </record>
+    <record> "k39y", 44.25, -83.4333, 178, "Tawas Point C.G.S., MI" </record>
+    <record> "k3he", 42.6333, -83.9833, 293, "Howell, MI" </record>
+    <record> "k40y", 45.0667, -83.55, 178, "Thunder Bay Island, MI" </record>
+    <record> "k41g", 42.85, -84.4833, 261, "Bath, MI" </record>
+    <record> "k44y", 46.5, -84.3333, 176, "Sault Ste. Marie C.G.S., MI" </record>
+    <record> "k55d", 44.6803, -84.7289, 353, "Grayling AAF Apt, MI" </record>
+    <record> "k5g9", 41.7358, -83.6553, 204, "Lambertville, MI" </record>
+    <record> "k7d2", 42.5431, -83.1778, 222, "Oakland/Troy Apt, MI" </record>
+    <record> "kacb", 44.9883, -85.1983, 190, "Bellaire, MI" </record>
+    <record> "kadg", 41.8678, -84.0794, 244, "Adrian, MI" </record>
+    <record> "kamn", 43.3219, -84.6878, 229, "Alma, MI" </record>
+    <record> "karb", 42.2239, -83.74, 255, "Ann Arbor, MI" </record>
+    <record> "kazo", 42.2292, -85.5464, 266, "Kalamazoo-Battle Creek, MI" </record>
+    <record> "kbax", 43.7808, -82.9856, 233, "Bad Axe, MI" </record>
+    <record> "kbeh", 42.1286, -86.4283, 196, "Benton Harbor, MI" </record>
+    <record> "kbiv", 42.7461, -86.0967, 209, "Holland, Tulip City Apt, MI" </record>
+    <record> "kbtl", 42.3125, -85.2408, 290, "Battle Creek, MI" </record>
+    <record> "kc19", 42.75, -86.1, 210, "Holland-Tulip City, MI" </record>
+    <record> "kcad", 44.2833, -85.4167, 398, "Cadillac-Wexford Co., MI" </record>
+    <record> "kciu", 46.25, -84.4667, 244, "Chippewa Int'l AWOS, MI" </record>
+    <record> "kcvx", 45.3047, -85.2747, 204, "Charlevoix Muni. Apt, MI" </record>
+    <record> "kd87", 45.4256, -84.9133, 209, "Harbor Springs Apt, MI" </record>
+    <record> "kdet", 42.4092, -83.01, 191, "Detroit City Apt, MI" </record>
+    <record> "kdtx", 42.7, -83.45, 361, "Detroit NEXRAD, MI" </record>
+    <record> "kduh", 41.7358, -83.6553, 204, "Lambertville, MI" </record>
+    <record> "kery", 46.3111, -85.4572, 265, "Newberry, MI" </record>
+    <record> "kfpk", 42.5744, -84.8114, 271, "Charlotte, Beach Apt, MI" </record>
+    <record> "kglr", 45.0164, -84.6889, 404, "Gaylord, MI" </record>
+    <record> "kgov", 44.6803, -84.7289, 353, "Grayling AAF Apt, MI" </record>
+    <record> "khyx", 43.4333, -83.8625, 183, "Saginaw Co., MI" </record>
+    <record> "kimt", 45.8142, -88.1089, 360, "Iron Mtn-Kingsford, MI" </record>
+    <record> "kirs", 41.8128, -85.4392, 282, "Sturgis, MI" </record>
+    <record> "kisq", 45.9747, -86.1719, 209, "Manistique, Schoolcraft Co., MI" </record>
+    <record> "kiwd", 46.5333, -90.1333, 375, "Ironwood AWOS, MI" </record>
+    <record> "kjxn", 42.2597, -84.4594, 305, "Jackson Co., MI" </record>
+    <record> "kjym", 41.9214, -84.5858, 360, "Hillsdale, MI" </record>
+    <record> "kldm", 43.9667, -86.4, 197, "Ludington, Mason Co., MI" </record>
+    <record> "kmbl", 44.2667, -86.25, 189, "Manistee Co., MI" </record>
+    <record> "kmbs", 43.5367, -84.0806, 203, "Saginaw, MBSy Int'l, MI" </record>
+    <record> "kmcd", 45.865, -84.6372, 226, "Mackinac Island Apt, MI" </record>
+    <record> "kmgn", 45.4256, -84.9133, 209, "Harbor Springs Apt, MI" </record>
+    <record> "kmnm", 45.1333, -87.6333, 191, "Menominee AWOS, MI" </record>
+    <record> "kmop", 43.6167, -84.7333, 230, "Mt. Pleasant Muni. Apt, MI" </record>
+    <record> "kmtc", 42.6167, -82.8333, 177, "Selfridge Air Nat'l Gd, MI" </record>
+    <record> "koeb", 41.9333, -85.0525, 292, "Coldwater, MI" </record>
+    <record> "konz", 42.0986, -83.1611, 180, "Detroit/Grosse Ile Apt, MI" </record>
+    <record> "kosc", 44.45, -83.4, 193, "Wurtsmith AFB, MI" </record>
+    <record> "kozw", 42.6294, -83.9842, 293, "Howell, Livingston Co., MI" </record>
+    <record> "kp58", 44.0219, -82.7931, 179, "Port Hope, MI" </record>
+    <record> "kp59", 47.4669, -87.875, 190, "Copper Harbor, MI" </record>
+    <record> "kp75", 45.95, -86.2297, 178, "Manistique, MI" </record>
+    <record> "kphn", 42.9167, -82.5333, 198, "St. Clair Co. Int'l, MI" </record>
+    <record> "kpln", 45.5708, -84.7967, 220, "Pellston, MI" </record>
+    <record> "kptk", 42.6631, -83.41, 299, "Pontiac, MI" </record>
+    <record> "kpzq", 45.4, -83.8167, 204, "Presque Isle-Rogers, MI" </record>
+    <record> "krmy", 42.2511, -84.9556, 287, "Marshall, MI" </record>
+    <record> "krqb", 43.7225, -85.5042, 302, "Big Rapids, MI" </record>
+    <record> "ksaw", 46.3536, -87.3958, 372, "Gwinn, MI" </record>
+    <record> "ksjx", 45.6922, -85.5664, 204, "Beaver Island Apt, MI" </record>
+    <record> "kslh", 45.6536, -84.5192, 195, "Cheboygan Co. Apt, MI" </record>
+    <record> "ktew", 42.5658, -84.4233, 280, "Mason Jewett Field, MI" </record>
+    <record> "kttf", 41.94, -83.4347, 188, "Monroe, MI" </record>
+    <record> "ktvc", 44.7367, -85.57, 190, "Traverse City, MI" </record>
+    <record> "ky15", 45.6536, -84.5192, 195, "Cheboygan Co. Apt, MI" </record>
+    <record> "kyip", 42.2367, -83.5261, 218, "Detroit, Willow Run Apt, MI" </record>
+    <record> "kdlh", 46.8428, -92.2261, 435, "Duluth Int'l Apt, MN" </record>
+    <record> "kinl", 48.5619, -93.3978, 361, "Int'l Falls Int'l Apt, MN" </record>
+    <record> "krst", 43.9042, -92.4917, 401, "Rochester Int'l Apt, MN" </record>
+    <record> "kstc", 45.5447, -94.0519, 312, "St. Cloud, MN" </record>
+    <record> "kbji", 47.5, -94.9333, 423, "Bemidji, MN" </record>
+    <record> "kd45", 48.9333, -95.35, 328, "Warroad, MN" </record>
+    <record> "kp39", 46.6, -94.3167, 390, "Pequot Lake, MN" </record>
+    <record> "kmkt", 44.2167, -93.9167, 311, "Mankato AWOS, MN" </record>
+    <record> "krwf", 44.5472, -95.0822, 312, "Redwood Falls, MN" </record>
+    <record> "kmsp", 44.8831, -93.2289, 256, "Minneapolis-St Paul Int'l, MN" </record>
+    <record> "k03y", 48.7833, -96.95, 250, "Hallock, MN" </record>
+    <record> "k17w", 46.4467, -95.2117, 418, "Wadena Muni. Apt, MN" </record>
+    <record> "k19d", 45.8833, -93.2667, 309, "Mora Muni. AWOS, MN" </record>
+    <record> "k30y", 46.7667, -92.0833, 186, "Duluth Harbor C.G.S., MN" </record>
+    <record> "k43f", 45.1, -94.5, 347, "Litchfield Muni., MN" </record>
+    <record> "k49y", 43.6767, -92.1797, 389, "Preston, MN" </record>
+    <record> "k53d", 45.65, -95.3833, 423, "Glenwood, MN" </record>
+    <record> "k8y8", 46.2667, -92.5667, 350, "Crane Lake AWOS, MN" </record>
+    <record> "k99m", 46.8392, -96.6631, 280, "Moorhead Muni. Apt, MN" </record>
+    <record> "kacq", 44.0733, -93.5531, 343, "Waseca, MN" </record>
+    <record> "kadc", 46.4467, -95.2117, 418, "Wadena Muni. Apt, MN" </record>
+    <record> "kael", 43.6833, -93.3667, 383, "Albert Lea AWOS, MN" </record>
+    <record> "kait", 46.55, -93.6833, 367, "Aitkin NDB AWOS, MN" </record>
+    <record> "kane", 45.15, -93.2167, 278, "Minneapolis-Blaine, MN" </record>
+    <record> "kaqp", 45.2275, -96.0042, 310, "Appleton, MN" </record>
+    <record> "kaum", 43.6667, -92.9333, 375, "Austin, MN" </record>
+    <record> "kaxn", 45.8686, -95.3942, 434, "Alexandria, MN" </record>
+    <record> "kbbb", 45.3167, -95.65, 317, "Benson, MN" </record>
+    <record> "kbde", 48.7267, -94.6122, 330, "Baudette Int'l, MN" </record>
+    <record> "kbfw", 47.2, -91.4, 331, "Silver Bay, MN" </record>
+    <record> "kbrd", 46.4047, -94.1308, 373, "Brainerd-Crow, MN" </record>
+    <record> "kcbg", 45.5667, -93.2667, 287, "Cambridge, MN" </record>
+    <record> "kcdd", 48.2664, -92.4836, 341, "Crane Lake, Scotts Seaplane, MN" </record>
+    <record> "kckc", 47.8383, -90.3831, 548, "Grand Marais/Cook Co., MN" </record>
+    <record> "kckn", 47.85, -96.6167, 273, "Crookston, MN" </record>
+    <record> "kcoq", 46.7, -92.5, 390, "Cloquet AWOS, MN" </record>
+    <record> "kcqm", 47.8219, -92.6894, 405, "Cook, MN" </record>
+    <record> "kd97", 44.85, -93.15, 250, "S. St. Paul Muni., MN" </record>
+    <record> "kdtl", 46.8333, -95.8833, 426, "Detroit Lakes AWOS, MN" </record>
+    <record> "kdxx", 44.9861, -96.1778, 330, "Madison-Lac Qui Parle Co., MN" </record>
+    <record> "kdyt", 46.7219, -92.0433, 186, "Duluth, Sky Harbor Apt, MN" </record>
+    <record> "kelo", 47.8167, -91.8333, 443, "Ely Muni. AWOS, MN" </record>
+    <record> "keth", 45.7, -96.5, 313, "Wheaton NDB AWOS, MN" </record>
+    <record> "kevm", 47.4, -92.5, 421, "Eveleth Muni. AWOS, MN" </record>
+    <record> "kfbl", 44.3333, -93.3167, 322, "Faribault Muni. AWOS, MN" </record>
+    <record> "kfcm", 44.8322, -93.4703, 287, "Minneapolis, Flying Cld, MN" </record>
+    <record> "kffm", 46.2833, -96.15, 616, "Fergus Falls AWOS, MN" </record>
+    <record> "kfgn", 49.3167, -94.9, 329, "Flag Island, MN" </record>
+    <record> "kfoz", 47.7828, -93.6503, 411, "Bigfork, MN" </record>
+    <record> "kfrm", 43.65, -94.4167, 354, "Fairmont Muni. AWOS, MN" </record>
+    <record> "kfse", 45.5, -95.7, 388, "Fosston AWOS, MN" </record>
+    <record> "kghw", 45.65, -95.3167, 425, "Glenwood ASOS, MN" </record>
+    <record> "kgna", 47.8333, -90.3833, 186, "Bay of Grand Marais, MN" </record>
+    <record> "kgpz", 47.2167, -93.5167, 413, "Grand Rapids AWOS, MN" </record>
+    <record> "kgyl", 44.7561, -94.0811, 302, "Glencoe, MN" </record>
+    <record> "khcd", 44.8667, -94.3833, 323, "Hutchinson AWOS, MN" </record>
+    <record> "khco", 48.7528, -96.9431, 250, "Hallock Muni. Apt, MN" </record>
+    <record> "khib", 47.3867, -92.8389, 412, "Chisholm-Hibbing, MN" </record>
+    <record> "kill", 45.1167, -95.0833, 344, "Willmar-Rice AWOS, MN" </record>
+    <record> "kjkj", 46.8392, -96.6631, 280, "Moorhead Muni. Apt, MN" </record>
+    <record> "kjmr", 45.8861, -93.2717, 309, "Mora Muni. Apt, MN" </record>
+    <record> "kjyg", 43.9864, -94.5581, 325, "St. James Muni. Apt, MN" </record>
+    <record> "kljf", 45.0972, -94.5072, 348, "Litchfield Muni. Apt, MN" </record>
+    <record> "klvn", 44.6278, -93.2281, 293, "Minneapolis, Airlake, MN" </record>
+    <record> "klxl", 45.95, -94.35, 342, "Little Falls AWOS, MN" </record>
+    <record> "kmgg", 45.2361, -93.9856, 313, "Maple Lake Muni. Apt, MN" </record>
+    <record> "kmic", 45.0625, -93.3508, 264, "Minneapolis, Crystal, MN" </record>
+    <record> "kmjq", 43.65, -94.9833, 441, "Jackson Muni. AWOS, MN" </record>
+    <record> "kmml", 44.45, -95.8167, 359, "Marshall-Ryan AWOS, MN" </record>
+    <record> "kmox", 45.5667, -95.9667, 344, "Morris Muni. AWOS, MN" </record>
+    <record> "kmve", 44.9667, -95.7167, 315, "Montevideo AWOS, MN" </record>
+    <record> "kmwm", 43.9133, -95.1094, 430, "Windom, MN" </record>
+    <record> "kmzh", 46.4167, -92.8, 328, "Moose Lake, MN" </record>
+    <record> "kona", 44.0833, -91.7, 200, "Winona Muni. AWOS, MN" </record>
+    <record> "korb", 48.0167, -92.8667, 397, "Orr, MN" </record>
+    <record> "kotg", 43.65, -95.5833, 480, "Worthington AWOS, MN" </record>
+    <record> "kovl", 44.7786, -95.0328, 328, "Olivia Reg. Apt, MN" </record>
+    <record> "kowa", 44.1167, -93.25, 350, "Owatonna AWOS, MN" </record>
+    <record> "kp61", 47.7472, -90.3444, 185, "Grand Marais, MN" </record>
+    <record> "kpkd", 46.9006, -95.0678, 439, "Park Rapids, MN" </record>
+    <record> "kpnm", 45.55, -93.6, 298, "Princeton, MN" </record>
+    <record> "kpqn", 43.9833, -96.3167, 529, "Pipestone AWOS, MN" </record>
+    <record> "kpwc", 46.725, -94.3836, 395, "Pine River, MN" </record>
+    <record> "krad", 48.9333, -95.3333, 328, "Warroad AWOS, MN" </record>
+    <record> "krgk", 44.5903, -92.4861, 239, "Red Wing, MN" </record>
+    <record> "kros", 45.6981, -92.9531, 281, "Rush City, MN" </record>
+    <record> "krox", 48.85, -95.7, 323, "Roseau Muni. AWOS, MN" </record>
+    <record> "krrt", 48.9414, -95.3483, 327, "Warroad Int'l, MN" </record>
+    <record> "ksaz", 46.3808, -94.8067, 392, "Staples Muni. Apt, MN" </record>
+    <record> "ksgs", 44.8572, -93.0328, 250, "S. St. Paul Muni., Fleming, MN" </record>
+    <record> "kstp", 44.9303, -93.0481, 214, "St. Paul Downtown, MN" </record>
+    <record> "ktob", 44.0181, -92.8314, 398, "Dodge Center Apt, MN" </record>
+    <record> "ktvf", 48.0667, -96.1833, 340, "Thief River AWOS, MN" </record>
+    <record> "ktwm", 47.05, -91.75, 328, "Two Harbors, MN" </record>
+    <record> "kulm", 44.3167, -94.5, 308, "New Ulm Muni. AWOS, MN" </record>
+    <record> "kvvv", 45.3056, -96.4244, 335, "Ortonville Muni., MN" </record>
+    <record> "kvwu", 48.1542, -94.5169, 360, "Waskish, MN" </record>
+    <record> "kxvg", 46.9903, -94.2039, 407, "Longville Muni. Apt, MN" </record>
+    <record> "ky12", 44.6333, -93.2333, 292, "Airlake, MN" </record>
+    <record> "ky39", 44.7786, -95.0328, 328, "Olivia Reg. Apt, MN" </record>
+    <record> "kmci", 39.2972, -94.7306, 312, "Kansas City Int'l, MO" </record>
+    <record> "kstl", 38.7525, -90.3736, 184, "St. Louis Int'l, MO" </record>
+    <record> "ksgf", 37.2397, -93.3897, 386, "Springfield, MO" </record>
+    <record> "kcou", 38.8169, -92.2183, 271, "Columbia, MO" </record>
+    <record> "kjef", 38.5944, -92.1558, 167, "Jefferson City, MO" </record>
+    <record> "kjln", 37.1561, -94.5006, 299, "Joplin, MO" </record>
+    <record> "kcgi", 37.2256, -89.5783, 104, "Cape Girardeau, MO" </record>
+    <record> "kstj", 39.7681, -94.9092, 251, "St. Joseph, MO" </record>
+    <record> "kvih", 38.1319, -91.7653, 350, "Rolla-Vichy, MO" </record>
+    <record> "kp35", 40.25, -93.7167, 271, "Spickard, MO" </record>
+    <record> "kaiz", 38.1, -92.55, 265, "Kaiser Memorial AWOS, MO" </record>
+    <record> "kcdj", 39.8167, -93.5833, 234, "Chillicothe Agri-Sci Ctr, MO" </record>
+    <record> "kdmo", 38.7122, -93.1744, 277, "Sedalia, MO" </record>
+    <record> "keax", 38.8167, -94.2667, 335, "Pleasant NEXRAD, MO" </record>
+    <record> "kfam", 37.7667, -90.4333, 288, "Farmington, MO" </record>
+    <record> "kgvw", 38.835, -94.5614, 332, "Kansas City, Rchrds-Gebaur, MO" </record>
+    <record> "kirk", 40.0972, -92.5433, 294, "Kirksville, MO" </record>
+    <record> "klxt", 38.9597, -94.3717, 306, "Lee's Summit, MO" </record>
+    <record> "kmkc", 39.1208, -94.5969, 231, "Kansas City Downtown, MO" </record>
+    <record> "kpof", 36.7706, -90.3222, 100, "Poplar Bluff, MO" </record>
+    <record> "kset", 38.9306, -90.4325, 133, "St. Charles Co., MO" </record>
+    <record> "ksus", 38.6572, -90.6558, 141, "Spirit of St. Louis Apt, MO" </record>
+    <record> "kszl", 38.7333, -93.55, 265, "Whiteman AFB, MO" </record>
+    <record> "ktbn", 37.7333, -92.1333, 353, "Fort Leonard Wood, MO" </record>
+    <record> "kuno", 36.8792, -91.905, 374, "West Plains, MO" </record>
+    <record> "kjan", 32.3197, -90.0775, 105, "Jackson Int'l, MS" </record>
+    <record> "kgpt", 30.4119, -89.0808, 8, "Gulfport-Biloxi, MS" </record>
+    <record> "ktup", 34.2681, -88.77, 106, "Tupelo, MS" </record>
+    <record> "khez", 31.6167, -91.3, 83, "Natchez-Hardy AWOS, MS" </record>
+    <record> "kvks", 32.2333, -90.9333, 32, "Vicksburg, MS" </record>
+    <record> "kmei", 32.3381, -88.7478, 90, "Meridian, Key Field, MS" </record>
+    <record> "kbix", 30.4167, -88.9167, 10, "Biloxi, Keesler AFB, MS" </record>
+    <record> "k8r0", 30.3667, -88.5667, 8, "Pascagoula C.G.S., MS" </record>
+    <record> "kcbm", 33.65, -88.45, 67, "Columbus AFB, MS" </record>
+    <record> "kglh", 33.4828, -90.9856, 40, "Greenville, MS" </record>
+    <record> "kgtr", 33.45, -88.5833, 80, "Golden Tri AWOS, MS" </record>
+    <record> "kgwo", 33.4925, -90.0836, 47, "Greenwood-LeFlore Apt, MS" </record>
+    <record> "khbg", 31.265, -89.2531, 46, "Hattiesburg, MS" </record>
+    <record> "khks", 32.3347, -90.2225, 104, "Jackson, MS" </record>
+    <record> "khsa", 30.3678, -89.4547, 7, "Bay St. Louis, MS" </record>
+    <record> "kmcb", 31.1783, -90.4719, 126, "McComb-Pike Co., MS" </record>
+    <record> "knjw", 32.7942, -88.8328, 164, "Meridian Range, MS" </record>
+    <record> "knmm", 32.5464, -88.5431, 96, "Meridian NAS, MS" </record>
+    <record> "kolv", 34.9789, -89.7869, 122, "Olive Branch, MS" </record>
+    <record> "kpcu", 30.5167, -89.7, 19, "Picayune-Pearl River, MS" </record>
+    <record> "kpgl", 30.4, -88.4833, 3, "Pascagoula-Jackson, MS" </record>
+    <record> "kpib", 31.4667, -89.3333, 91, "Pine Belt Reg. AWOS, MS" </record>
+    <record> "kpql", 30.4636, -88.5319, 5, "Pascagoula, MS" </record>
+    <record> "kuox", 34.3844, -89.5356, 138, "Oxford Univ., MS" </record>
+    <record> "kbil", 45.8069, -108.5422, 1112, "Billings, Logan Int'l, MT" </record>
+    <record> "khln", 46.6056, -111.9636, 1180, "Helena, MT" </record>
+    <record> "kbtm", 45.9547, -112.4975, 1690, "Butte, MT" </record>
+    <record> "kfca", 48.3042, -114.2636, 906, "Kalispell, Glacier Pk Int'l, MT" </record>
+    <record> "kggw", 48.2139, -106.6214, 699, "Glasgow, MT" </record>
+    <record> "kgtf", 47.4733, -111.3822, 1120, "Great Falls Int'l Apt, MT" </record>
+    <record> "kmso", 46.9208, -114.0925, 975, "Missoula Int'l, MT" </record>
+    <record> "kwey", 44.65, -111.1, 2031, "West Yellowstone, MT" </record>
+    <record> "kwys", 44.6833, -111.1167, 2025, "West Yellowstone, MT" </record>
+    <record> "khvr", 48.5428, -109.7633, 789, "Havre, MT" </record>
+    <record> "kmls", 46.4281, -105.8864, 801, "Miles City, MT" </record>
+    <record> "k3du", 46.6667, -113.15, 1202, "Drummond, MT" </record>
+    <record> "k3ht", 46.4333, -109.8333, 1268, "Harlowton, MT" </record>
+    <record> "k3th", 47.6, -115.3667, 725, "Thompson Falls, MT" </record>
+    <record> "k4bq", 45.4333, -105.4, 922, "Broadus, MT" </record>
+    <record> "kbhk", 46.3478, -104.2575, 905, "Baker, MT" </record>
+    <record> "kblx", 45.8539, -108.6061, 1116, "Billing Yell NEXRAD, MT" </record>
+    <record> "kbzn", 45.7881, -111.1608, 1364, "Bozeman, MT" </record>
+    <record> "kctb", 48.6083, -112.3761, 1175, "Cut Bank, MT" </record>
+    <record> "kdln", 45.2575, -112.5544, 1597, "Dillon, MT" </record>
+    <record> "kgdv", 47.1333, -104.8, 749, "Glendive AWOS, MT" </record>
+    <record> "kgfa", 47.5, -111.1833, 1075, "Malmstrom AFB, MT" </record>
+    <record> "khmm", 46.25, -114.15, 1110, "Hamilton-Ravalli Co., MT" </record>
+    <record> "kjdn", 47.3258, -106.9475, 811, "Jordan, MT" </record>
+    <record> "klds", 48.55, -109.6833, 775, "Leeds, MT" </record>
+    <record> "klvm", 45.6994, -110.4483, 1419, "Livingston, MT" </record>
+    <record> "klwt", 47.0492, -109.4664, 1270, "Lewistown, MT" </record>
+    <record> "kmqm", 44.5667, -112.3167, 2068, "Monida, MT" </record>
+    <record> "kmsx", 47.0333, -113.9833, 2451, "Missoula NEXRAD, MT" </record>
+    <record> "kolf", 48.0944, -105.5772, 605, "Wolf Point, MT" </record>
+    <record> "kred", 45.1833, -109.2667, 1757, "Red Lodge, MT" </record>
+    <record> "ksdy", 47.7, -104.2, 605, "Sidney-Richland, MT" </record>
+    <record> "ktfx", 47.4667, -111.3667, 1151, "Great Falls NEXRAD, MT" </record>
+    <record> "kclt", 35.2133, -80.9486, 228, "Charlotte-Douglas Int'l, NC" </record>
+    <record> "krdu", 35.8706, -78.7864, 133, "Raleigh-Durham Int'l, NC" </record>
+    <record> "kltx", 33.9833, -78.4333, 44, "Wilmington NEXRAD, NC" </record>
+    <record> "kavl", 35.4319, -82.5375, 660, "Asheville, NC" </record>
+    <record> "kgso", 36.0975, -79.9436, 282, "Greensboro, NC" </record>
+    <record> "khat", 35.2667, -75.55, 2, "Cape Hatteras, NC" </record>
+    <record> "kmhx", 34.7833, -76.8833, 11, "Newport, NC" </record>
+    <record> "kfbg", 35.1333, -78.9333, 74, "Ft Bragg-Simmons Army, NC" </record>
+    <record> "k44w", 35.15, -75.3, 1, "Diamond Shoals C.G.S., NC" </record>
+    <record> "k2dp", 35.6667, -75.9, 3, "Dare Co. Gun Range, NC" </record>
+    <record> "knkt", 34.8978, -76.8808, 8, "Cherry Point, USMC Air Stn, NC" </record>
+    <record> "kpob", 35.1667, -79.0333, 61, "Pope AFB, NC" </record>
+    <record> "k1w9", 34.1833, -77.8167, 3, "Wrightsville Beach, NC" </record>
+    <record> "k37w", 35.3786, -78.7336, 60, "Erwin, NC" </record>
+    <record> "k3w4", 34.65, -77.1, 2, "Swansboro-Bogue, NC" </record>
+    <record> "k45w", 35.1167, -75.9833, 2, "Oracoke C.G.S., NC" </record>
+    <record> "k6a3", 35.1944, -83.8647, 518, "Andrews-Murphy Apt, NC" </record>
+    <record> "k77w", 34.6, -76.5333, 4, "Cape Lookout C.G.S., NC" </record>
+    <record> "k78w", 33.8833, -78.0167, 1, "S. Port-Oak Isl. C.G.S., NC" </record>
+    <record> "k79w", 35.7667, -75.5167, 1, "Oregon Inlet C.G.S., NC" </record>
+    <record> "kakh", 35.1967, -81.1558, 243, "Gastonia, NC" </record>
+    <record> "kasj", 36.2975, -77.1708, 21, "Ahoskie, NC" </record>
+    <record> "kbuy", 36.0478, -79.4739, 188, "Burlington, NC" </record>
+    <record> "kctz", 34.9756, -78.3647, 45, "Clinton, NC" </record>
+    <record> "kdpl", 35, -77.9817, 42, "Kenansville, NC" </record>
+    <record> "kecg", 36.2631, -76.1828, 3, "Elizabeth City CG Air Stn, NC" </record>
+    <record> "kede", 36.0278, -76.5672, 6, "Edenton, NC" </record>
+    <record> "keqy", 35.0169, -80.6206, 207, "Monroe, NC" </record>
+    <record> "kewn", 35.0675, -77.0472, 5, "New Bern, NC" </record>
+    <record> "kexx", 35.7811, -80.3039, 223, "Lexington, NC" </record>
+    <record> "kfay", 34.9894, -78.88, 57, "Fayetteville, NC" </record>
+    <record> "kfqd", 35.4283, -81.935, 329, "Rutherford Co., NC" </record>
+    <record> "kgev", 36.4333, -81.4167, 969, "Jefferson, NC" </record>
+    <record> "kgsb", 35.3333, -77.9667, 33, "Seymour-Johnson AFB, NC" </record>
+    <record> "khbi", 35.6539, -79.895, 205, "Asheboro Muni. Apt, NC" </record>
+    <record> "khff", 35.0333, -79.5, 115, "Mackall Army Airfld, NC" </record>
+    <record> "khky", 35.7422, -81.3822, 362, "Hickory, NC" </record>
+    <record> "khrj", 35.3786, -78.7336, 60, "Erwin, NC" </record>
+    <record> "khse", 35.2322, -75.6225, 5, "Hatteras, Mitchell Fld, NC" </record>
+    <record> "khss", 35.9, -82.8167, 451, "Hot Springs Av. WRS, NC" </record>
+    <record> "kigx", 35.7667, -79.0642, 155, "Chapel Hill, NC" </record>
+    <record> "kilm", 34.2683, -77.9061, 9, "Wilmington, New Hanover Int'l, NC" </record>
+    <record> "kint", 36.1333, -80.2247, 295, "Winston Salem, NC" </record>
+    <record> "kipj", 35.4831, -81.1614, 267, "Lincolnton-Lincoln Co., NC" </record>
+    <record> "kiso", 35.3333, -77.6167, 29, "Kinston-Stallings, NC" </record>
+    <record> "kjnx", 35.5408, -78.3903, 50, "Smithfield, NC" </record>
+    <record> "kjqf", 35.3853, -80.7097, 210, "Concord, NC" </record>
+    <record> "klbt", 34.6072, -79.06, 38, "Lumberton, NC" </record>
+    <record> "klhz", 36.0233, -78.3303, 113, "Louisburg, NC" </record>
+    <record> "kmeb", 34.7914, -79.3681, 67, "Laurinburg-Maxton, NC" </record>
+    <record> "kmqi", 35.9167, -75.7, 4, "Manteo-Dare Co., NC" </record>
+    <record> "kmrh", 34.7336, -76.6606, 3, "Beaufort, NC" </record>
+    <record> "kmrn", 35.8214, -81.6108, 387, "Morganton-Lenior, NC" </record>
+    <record> "kmwk", 36.4597, -80.5531, 380, "Mt. Airy/Surry Co., NC" </record>
+    <record> "knbt", 35.0222, -76.4625, 5, "Piney Island, Bomb Rng, NC" </record>
+    <record> "knca", 34.7058, -77.4408, 7, "Jacksonville, New River, NC" </record>
+    <record> "knis", 34.8864, -76.8631, 8, "Cherry Point, USMC Air Stn, NC" </record>
+    <record> "knjm", 34.6928, -77.0294, 6, "Swansboro, USMC ALF, NC" </record>
+    <record> "knlt", 34.8792, -76.3361, 4, "Atlantic Fld Outlying LF, NC" </record>
+    <record> "koaj", 34.8333, -77.6167, 29, "Jacksonville AWOS, NC" </record>
+    <record> "kocw", 35.5706, -77.0497, 12, "Washington, Warren Fld, NC" </record>
+    <record> "kpgv", 35.6333, -77.4, 8, "Pitt-Greenville Apt, NC" </record>
+    <record> "krax", 35.6667, -78.5, 141, "Raleigh NEXRAD, NC" </record>
+    <record> "krhp", 35.1944, -83.8647, 518, "Andrews-Murphy Apt, NC" </record>
+    <record> "kruq", 35.65, -80.5167, 236, "Salisbury, NC" </record>
+    <record> "krwi", 35.855, -77.8931, 49, "Rocky Mt.-Wilson, NC" </record>
+    <record> "krzz", 36.4394, -77.7097, 77, "Roanoke Rapids, NC" </record>
+    <record> "ksop", 35.2333, -79.4, 141, "Southern Pines AWOS, NC" </record>
+    <record> "ksut", 33.9292, -78.0747, 8, "Oak Island, NC" </record>
+    <record> "ksvh", 35.7653, -80.9567, 294, "Statesville, NC" </record>
+    <record> "ktdf", 36.285, -78.9842, 186, "Roxboro, NC" </record>
+    <record> "ktnb", 36.2, -81.65, 959, "Boone, NC" </record>
+    <record> "ktta", 35.5825, -79.1014, 75, "Sanford-Lee Co. Reg., NC" </record>
+    <record> "kukf", 36.2167, -81.0833, 396, "North Wilkesboro, NC" </record>
+    <record> "kvuj", 35.4167, -80.1508, 186, "Albemarle, NC" </record>
+    <record> "kw44", 35.6539, -79.895, 205, "Asheboro Muni. Apt, NC" </record>
+    <record> "kw77", 35.4333, -79.1833, 131, "Sanford-Lee Co., Brick Fld, NC" </record>
+    <record> "kbis", 46.7825, -100.7572, 511, "Bismarck, ND" </record>
+    <record> "kfar", 46.9253, -96.8111, 274, "Fargo, ND" </record>
+    <record> "kmot", 48.2594, -101.2803, 523, "Minot Int'l, ND" </record>
+    <record> "kgfk", 47.9481, -97.1825, 257, "Grand Forks Int'l, ND" </record>
+    <record> "kisn", 48.1739, -103.6367, 604, "Williston, ND" </record>
+    <record> "kp11", 48.1, -98.8667, 439, "Devils Lake, ND" </record>
+    <record> "kp24", 47.75, -101.8333, 624, "Roseglen, ND" </record>
+    <record> "kbpp", 46.1869, -103.4281, 902, "Bowman, ND" </record>
+    <record> "kdik", 46.7972, -102.8019, 790, "Dickinson, ND" </record>
+    <record> "kdvl", 48.1167, -98.9167, 443, "Devils Lake AWOS, ND" </record>
+    <record> "khei", 46.0106, -102.6497, 824, "Hettinger, ND" </record>
+    <record> "kjms", 46.9297, -98.6783, 457, "Jamestown, ND" </record>
+    <record> "kmib", 48.4167, -101.35, 508, "Minot AFB, ND" </record>
+    <record> "kn60", 47.6458, -101.4394, 582, "Garrison, ND" </record>
+    <record> "kp67", 46.1, -97.15, 351, "Lidgerwood AMOS, ND" </record>
+    <record> "krdr", 47.9667, -97.4, 278, "Grand Forks AFB, ND" </record>
+    <record> "koff", 41.1167, -95.9, 319, "Omaha, Offutt AFB, NE" </record>
+    <record> "koma", 41.3103, -95.8992, 299, "Omaha, Eppley Airfld, NE" </record>
+    <record> "klnk", 40.8311, -96.7644, 370, "Lincoln, NE" </record>
+    <record> "klbf", 41.1219, -100.6683, 846, "North Platte, NE" </record>
+    <record> "kgri", 40.9583, -98.3125, 562, "Grand Island, Cntrl NE Reg, NE" </record>
+    <record> "kbff", 41.8669, -103.5858, 1208, "Scottsbluff, NE" </record>
+    <record> "koax", 41.3167, -96.3667, 350, "Valley, NE" </record>
+    <record> "kofk", 41.9806, -97.4369, 479, "Norfolk, NE" </record>
+    <record> "ksny", 41.0994, -102.9856, 1314, "Sidney, NE" </record>
+    <record> "kvtn", 42.8586, -100.5514, 789, "Valentine, NE" </record>
+    <record> "kaia", 42.0572, -102.8, 1197, "Alliance, NE" </record>
+    <record> "kanw", 42.5833, -100, 789, "Ainsworth, NE" </record>
+    <record> "kauh", 40.8939, -97.9944, 550, "Aurora, NE" </record>
+    <record> "kbbw", 41.4333, -99.65, 776, "Broken Bow, NE" </record>
+    <record> "kbie", 40.3, -96.75, 403, "Beatrice, NE" </record>
+    <record> "kcdr", 42.8375, -103.0953, 1005, "Chadron, NE" </record>
+    <record> "kczd", 40.8667, -100, 762, "Cozad, NE" </record>
+    <record> "kear", 40.7333, -99, 649, "Kearney Muni. AWOS, NE" </record>
+    <record> "kfet", 41.45, -96.5167, 379, "Fremont, NE" </record>
+    <record> "kfnb", 40.0789, -95.5919, 300, "Falls City, NE" </record>
+    <record> "kgrn", 42.8, -102.1667, 1085, "Gordon, NE" </record>
+    <record> "khde", 40.45, -99.3333, 704, "Brewster Field, NE" </record>
+    <record> "khsi", 40.6006, -98.4258, 595, "Hastings, NE" </record>
+    <record> "kiml", 40.5167, -101.6167, 997, "Imperial, NE" </record>
+    <record> "kjyr", 40.8967, -97.6228, 509, "York, NE" </record>
+    <record> "klxn", 40.7911, -99.7772, 736, "Lexington, NE" </record>
+    <record> "kmck", 40.2031, -100.5883, 786, "McCook, NE" </record>
+    <record> "kmhn", 42.05, -101.0667, 994, "Mullen-Hooker Co., NE" </record>
+    <record> "kodx", 41.6242, -98.9525, 631, "Ord, NE" </record>
+    <record> "koga", 41.1197, -101.7689, 999, "Ogallala, NE" </record>
+    <record> "kolu", 41.45, -97.3333, 440, "Columbus, NE" </record>
+    <record> "konl", 42.4667, -98.6833, 619, "O'Neill-Baker Field, NE" </record>
+    <record> "ktqe", 41.7669, -96.1778, 313, "Tekamah, NE" </record>
+    <record> "kuex", 40.3167, -98.4333, 626, "Grand Island NEXRAD, NE" </record>
+    <record> "kcon", 43.1953, -71.5011, 105, "Concord, NH" </record>
+    <record> "kpsm", 43.0833, -70.8167, 31, "Portsmouth, Pease AFB, NH" </record>
+    <record> "kbml", 44.5761, -71.1786, 353, "Berlin, NH" </record>
+    <record> "kmwn", 44.2667, -71.3, 1909, "Mt. Washington, NH" </record>
+    <record> "k12b", 43.1167, -70.4833, 1, "New Castles C.G.L.S., NH" </record>
+    <record> "k25b", 43.0667, -70.7167, 1, "Portsmouth Harbor, NH" </record>
+    <record> "k26b", 42.9667, -70.6167, 1, "Isle of Shoals C.G.S., NH" </record>
+    <record> "kafn", 42.8058, -72.0006, 317, "Jaffrey, NH" </record>
+    <record> "kash", 42.7833, -71.5167, 61, "Nashua-Boire Field, NH" </record>
+    <record> "kdaw", 43.2781, -70.9222, 98, "Rochester, NH" </record>
+    <record> "keen", 42.9, -72.2667, 149, "Keene-Dillant AWOS, NH" </record>
+    <record> "khie", 44.3661, -71.5525, 327, "Whitefield, NH" </record>
+    <record> "klci", 43.5667, -71.4167, 166, "Laconia Muni. AWOS, NH" </record>
+    <record> "kleb", 43.6272, -72.3058, 182, "Lebanon, NH" </record>
+    <record> "kmht", 42.9292, -71.4358, 71, "Manchester, NH" </record>
+    <record> "kewr", 40.6825, -74.1694, 5, "Newark Int'l, NJ" </record>
+    <record> "kacy", 39.4647, -74.5867, 23, "Atlantic City Int'l, NJ" </record>
+    <record> "kttn", 40.2764, -74.8164, 64, "Trenton, NJ" </record>
+    <record> "kn78", 39.7667, -74.1, 6, "Barnegat C.G.S., NJ" </record>
+    <record> "knel", 40.0333, -74.3167, 31, "Lakehurst NAS, NJ" </record>
+    <record> "k12n", 41.0089, -74.7367, 177, "Aeroflex-Andover Apt, NJ" </record>
+    <record> "k52n", 39, -74.8167, 2, "Wildwood, NJ" </record>
+    <record> "k54n", 40.1, -74.0167, 1, "Manasquan Inl C.G.S., NJ" </record>
+    <record> "k55n", 39.3833, -74.4167, 4, "Atlantic City C.G.S., NJ" </record>
+    <record> "k56n", 40.4667, -74.0167, 5, "Sandy Hook C.G.S., NJ" </record>
+    <record> "kblm", 40.1833, -74.1333, 48, "Belmar-Farmdale, NJ" </record>
+    <record> "kcdw", 40.8764, -74.2831, 52, "Caldwell, NJ" </record>
+    <record> "kfwn", 41.2003, -74.6231, 128, "Sussex, NJ" </record>
+    <record> "kmiv", 39.3661, -75.0783, 26, "Millville, NJ" </record>
+    <record> "kmmu", 40.8, -74.4167, 57, "Morristown, NJ" </record>
+    <record> "kn91", 38.95, -74.8833, 2, "Cape May C.G.S., NJ" </record>
+    <record> "ksmq", 40.6239, -74.6694, 32, "Somerville, NJ" </record>
+    <record> "kteb", 40.8589, -74.0567, 2, "Teterboro, NJ" </record>
+    <record> "kvay", 39.9406, -74.8411, 16, "Mt. Holly, NJ" </record>
+    <record> "kwri", 40.0167, -74.6, 41, "Mcguire AFB, NJ" </record>
+    <record> "kwwd", 39.0167, -74.9167, 7, "Wildwood AWOS, NJ" </record>
+    <record> "kabq", 35.0417, -106.6147, 1631, "Albuquerque Int'l, NM" </record>
+    <record> "ksaf", 35.6106, -106.095, 1934, "Santa Fe Co., NM" </record>
+    <record> "kskx", 36.45, -105.6667, 2161, "Taos Muni. Apt AWOS, NM" </record>
+    <record> "kcnm", 32.3375, -104.2633, 1004, "Carlsbad, NM" </record>
+    <record> "krtn", 36.7419, -104.6578, 1935, "Raton, NM" </record>
+    <record> "klam", 35.8833, -106.2833, 2179, "Los Alamos, NM" </record>
+    <record> "ktcc", 35.1828, -103.6031, 1239, "Tucumcari, NM" </record>
+    <record> "kcvs", 34.3833, -103.3167, 1309, "Clovis, Cannon AFB, NM" </record>
+    <record> "k2c2", 32.3833, -106.4833, 1244, "White Sands, NM" </record>
+    <record> "k4mr", 34.3, -103.8, 1326, "Melrose Gun Range, NM" </record>
+    <record> "kcao", 36.4483, -103.1531, 1513, "Clayton, NM" </record>
+    <record> "ke28", 33.9, -106.4, 1193, "Northrup Landing Strip, NM" </record>
+    <record> "kepz", 31.8667, -106.7, 1252, "Santa Teresa, NM" </record>
+    <record> "khmn", 32.85, -106.1, 1248, "Holloman AFB, NM" </record>
+    <record> "konm", 34.0167, -106.9, 1478, "Socorro, NM" </record>
+    <record> "krow", 33.3081, -104.5078, 1118, "Roswell Indus. Air Ctr, NM" </record>
+    <record> "ksvc", 32.6333, -108.15, 1659, "Silver City-Grant, NM" </record>
+    <record> "ktcs", 33.2367, -107.2681, 1478, "Truth or Consequences, NM" </record>
+    <record> "k4cr", 34.1, -105.6833, 1981, "Corona-Lincoln, NM" </record>
+    <record> "k4my", 34.9833, -106.05, 1890, "Moriarty, NM" </record>
+    <record> "k4sl", 35.8, -107.1833, 2106, "Torreon, NM" </record>
+    <record> "kabx", 35.15, -106.8167, 1814, "Albuquerque NEXRAD, NM" </record>
+    <record> "kaeg", 35.145, -106.795, 1779, "Albuquerque, Double Eagle, NM" </record>
+    <record> "kalm", 32.8333, -105.9833, 1279, "Alamogordo-White, NM" </record>
+    <record> "kats", 32.8525, -104.4675, 1079, "Artesia, NM" </record>
+    <record> "kcqc", 35, -105.6667, 2160, "Clines Corners, NM" </record>
+    <record> "kcvn", 34.4333, -103.0833, 1284, "Clovis Muni. AWOS, NM" </record>
+    <record> "kdmn", 32.2622, -107.7206, 1315, "Deming, NM" </record>
+    <record> "ke33", 36.9, -106.5833, 2393, "Chama, NM" </record>
+    <record> "kfmn", 36.7436, -108.2292, 1677, "Farmington, NM" </record>
+    <record> "kgnt", 35.1653, -107.9022, 1988, "Grants-Milan, NM" </record>
+    <record> "kgup", 35.5111, -108.7894, 1973, "Gallup, NM" </record>
+    <record> "khob", 32.6833, -103.2167, 1115, "Hobbs-Lea Co., NM" </record>
+    <record> "kikr", 34.95, -106.5667, 1612, "Kirtland AFB Aux. Fld, NM" </record>
+    <record> "klru", 32.2894, -106.9219, 1358, "Las Cruces Int'l, NM" </record>
+    <record> "klvs", 35.6542, -105.1425, 2096, "Las Vegas, NM" </record>
+    <record> "ksrr", 33.4667, -105.5333, 2076, "Ruidoso, NM" </record>
+    <record> "kzab", 35.1667, -106.5667, 1621, "Albuquerque Radar Site, NM" </record>
+    <record> "klas", 36.0789, -115.1553, 663, "Las Vegas, McCarran Int'l, NV" </record>
+    <record> "krno", 39.4839, -119.7711, 1345, "Reno Tahoe Int'l, NV" </record>
+    <record> "ktnx", 37.8, -116.7833, 1691, "Tonopah Test Range, NV" </record>
+    <record> "kdra", 36.6206, -116.0278, 1007, "Mercury, NV" </record>
+    <record> "kely", 39.295, -114.8453, 1907, "Ely Apt, NV" </record>
+    <record> "kins", 36.5333, -115.9, 952, "Indian Springs Gun Rng, NV" </record>
+    <record> "kp38", 37.6122, -114.5264, 1333, "Caliente, NV" </record>
+    <record> "kwmc", 40.9019, -117.8072, 1311, "Winnemucca, NV" </record>
+    <record> "k9bb", 41.1167, -114.9667, 1722, "Wells, NV" </record>
+    <record> "kawh", 41.6667, -115.7833, 1902, "Wildhorse Res.-Elko, NV" </record>
+    <record> "kb23", 40.6, -116.8667, 1381, "Battle Mountain, NV" </record>
+    <record> "keko", 40.825, -115.7917, 1568, "Elko Reg. Apt, NV" </record>
+    <record> "kesx", 35.7167, -114.9, 1509, "Las Vegas NEXRAD, NV" </record>
+    <record> "khnd", 35.9764, -115.1328, 749, "Las Vegas, Henderson Apt, NV" </record>
+    <record> "khth", 38.55, -118.6333, 1285, "Hawthorne, NV" </record>
+    <record> "klol", 40.0664, -118.5653, 1190, "Lovelock, NV" </record>
+    <record> "klrx", 40.7389, -116.8028, 2019, "Elko NEXRAD, NV" </record>
+    <record> "klsv", 36.2333, -115.0333, 570, "Nellis AFB, NV" </record>
+    <record> "knfl", 39.4322, -118.6856, 1199, "Fallon NAS, NV" </record>
+    <record> "kowy", 41.95, -116.1, 1645, "Owyhee, NV" </record>
+    <record> "kp68", 39.6014, -116.0056, 1812, "Eureka, NV" </record>
+    <record> "krgx", 39.75, -119.4667, 2560, "Reno NEXRAD, NV" </record>
+    <record> "ktph", 38.0603, -117.0872, 1654, "Tonopah Apt, NV" </record>
+    <record> "ku31", 39.5, -117.0833, 2014, "Austin, NV" </record>
+    <record> "kvgt", 36.2117, -115.1958, 672, "N. Las Vegas Apt, NV" </record>
+    <record> "kjfk", 40.6386, -73.7622, 3, "NYC, Kennedy Int'l, NY" </record>
+    <record> "kbuf", 42.9408, -78.7358, 220, "Greater Buffalo Int'l, NY" </record>
+    <record> "kroc", 43.1167, -77.6767, 170, "Greater Rochester Int'l, NY" </record>
+    <record> "ksyr", 43.1092, -76.1033, 128, "Syracuse Hancock Int'l, NY" </record>
+    <record> "kalb", 42.7467, -73.7989, 86, "Albany Co. Apt, NY" </record>
+    <record> "kiag", 43.1072, -78.9453, 180, "Niagara Falls Int'l, NY" </record>
+    <record> "kith", 42.4833, -76.45, 335, "Ithaca-Tompkins Co., NY" </record>
+    <record> "kmsv", 41.7, -74.8, 428, "Monticello AWOS, NY" </record>
+    <record> "kbgm", 42.2078, -75.9814, 496, "Binghamton, NY" </record>
+    <record> "kgtb", 44.05, -75.7333, 207, "Ft Drum-Wheeler, Sack Army Airfld, NY" </record>
+    <record> "klga", 40.7792, -73.88, 6, "NYC, La Guardia Apt, NY" </record>
+    <record> "k13g", 43.2667, -79.0667, 82, "Niagara C.G.S., NY" </record>
+    <record> "k19g", 42.8833, -78.8833, 180, "Buffalo C.G.S., NY" </record>
+    <record> "k26g", 43.25, -77.6, 82, "Rochester C.G.L.S., NY" </record>
+    <record> "k28g", 43.4667, -76.5167, 78, "Oswego C.G.S., NY" </record>
+    <record> "k34n", 40.95, -73.4, 1, "Eatons Neck C.G.S., NY" </record>
+    <record> "k44n", 41.7, -73.7333, 213, "Millbrook-Sky Acres, NY" </record>
+    <record> "k45n", 40.6333, -73.2667, 5, "Bay Shore-Fire Island, NY" </record>
+    <record> "k48n", 41.0667, -71.9333, 1, "Montauk Point C.G.L.S., NY" </record>
+    <record> "k49n", 40.7833, -72.75, 1, "East Moriches C.G.S., NY" </record>
+    <record> "k50n", 40.5667, -73.8833, 3, "Rockaway C.G.S., NY" </record>
+    <record> "k51n", 40.5833, -73.55, 1, "Short Beach C.G.S., NY" </record>
+    <record> "k95b", 44.1167, -76.3333, 75, "Cape Vincent Mar. ARS, NY" </record>
+    <record> "kart", 43.9919, -76.0217, 99, "Watertown, NY" </record>
+    <record> "kcto", 40.9167, -72.7833, 23, "Calverton-Grumman, NY" </record>
+    <record> "kdkk", 42.4931, -79.2758, 211, "Chautauqua Co., NY" </record>
+    <record> "kdsv", 42.5694, -77.7144, 201, "Dansville, NY" </record>
+    <record> "kelm", 42.1564, -76.9028, 291, "Elmira-Corning, NY" </record>
+    <record> "kelz", 42.1075, -77.9844, 647, "Wellsville, NY" </record>
+    <record> "kenx", 42.6, -74.0667, 581, "Albany NEXRAD, NY" </record>
+    <record> "kfok", 40.8508, -72.6206, 20, "Westhampton Beach, NY" </record>
+    <record> "kfrg", 40.7342, -73.4169, 24, "Farmingdale, NY" </record>
+    <record> "kfzy", 43.3508, -76.3881, 145, "Fulton, Oswego Co. Apt, NY" </record>
+    <record> "kgfl", 43.3411, -73.6106, 100, "Glens Falls, NY" </record>
+    <record> "khpn", 41.0669, -73.7075, 134, "White Plains, NY" </record>
+    <record> "khto", 40.9594, -72.2519, 17, "East Hampton, NY" </record>
+    <record> "khwv", 40.8217, -72.8689, 25, "Shirley, NY" </record>
+    <record> "kisp", 40.7939, -73.1017, 30, "Islip, NY" </record>
+    <record> "kjhw", 42.15, -79.2667, 525, "Jamestown AWOS, NY" </record>
+    <record> "kmgj", 41.5092, -74.265, 111, "Montgomery, NY" </record>
+    <record> "kmss", 44.9358, -74.8456, 66, "Massena Int'l, NY" </record>
+    <record> "kmtp", 41.0731, -71.9233, 2, "Montauk Apt, NY" </record>
+    <record> "kn00", 43.3497, -76.3847, 144, "Fulton, Oswego Co. Apt, NY" </record>
+    <record> "kn28", 40.45, -73.8167, 1, "Ambrose-Ft. Tilden, NY" </record>
+    <record> "kn84", 40.8833, -73.7333, 8, "Bronx-Execution C.G.S., NY" </record>
+    <record> "knyc", 40.7833, -73.9667, 47, "NYC, Central Park, NY" </record>
+    <record> "kogs", 44.6833, -75.4667, 91, "Ogdensburg Int'l, NY" </record>
+    <record> "kokx", 40.8667, -72.8667, 60, "NYC NEXRAD, NY" </record>
+    <record> "kole", 42.2333, -78.3667, 651, "Olean, NY" </record>
+    <record> "kpbg", 44.65, -73.4667, 72, "Plattsburgh AFB, NY" </record>
+    <record> "kpeo", 42.6431, -77.0494, 275, "Penn Yan Apt, NY" </record>
+    <record> "kplb", 44.6822, -73.5278, 113, "Plattsburgh, NY" </record>
+    <record> "kpou", 41.6267, -73.8842, 50, "Poughkeepsie, NY" </record>
+    <record> "krme", 43.2333, -75.4, 154, "Rome, Griffiss AFB, NY" </record>
+    <record> "ksch", 42.85, -73.9333, 115, "Schenectady Apt, NY" </record>
+    <record> "kslk", 44.3931, -74.2028, 507, "Saranac Lake, NY" </record>
+    <record> "kswf", 41.5, -74.1, 150, "Newburgh-Stewart, NY" </record>
+    <record> "kuca", 43.145, -75.3844, 227, "Utica, NY" </record>
+    <record> "kcmh", 39.995, -82.8764, 248, "Port Columbus Int'l, OH" </record>
+    <record> "kcle", 41.405, -81.8528, 241, "Cleveland-Hopkins Int'l, OH" </record>
+    <record> "kluk", 39.1058, -84.4158, 147, "Cincinnati, OH" </record>
+    <record> "kday", 39.9061, -84.2186, 307, "Cox Dayton Int'l, OH" </record>
+    <record> "ktol", 41.5886, -83.8014, 208, "Toledo Express Apt, OH" </record>
+    <record> "kyng", 41.2544, -80.6739, 364, "Youngstown-Warren, OH" </record>
+    <record> "kcak", 40.9181, -81.4425, 374, "Akron-Canton, OH" </record>
+    <record> "kffo", 39.8333, -84.05, 251, "Dayton, Wright-Patterson AFB, OH" </record>
+    <record> "k20g", 41.9167, -80.8, 178, "Ashtabula C.G.S., OH" </record>
+    <record> "k21g", 41.55, -82.7333, 196, "Marblehead C.G.S., OH" </record>
+    <record> "k23g", 41.5, -81.7167, 181, "Cleveland Harbor C.G.S., OH" </record>
+    <record> "k24g", 41.7, -83.45, 180, "Toledo C.G.S., OH" </record>
+    <record> "k27g", 41.4667, -82.1833, 176, "Lorain C.G.S., OH" </record>
+    <record> "k29g", 41.2167, -81.25, 365, "Ravenna-Portage Co., OH" </record>
+    <record> "k2i4", 39.9, -83.1333, 280, "Columbus, Bolton Field, OH" </record>
+    <record> "kakr", 41.0375, -81.4642, 325, "Akron Fulton Int'l, OH" </record>
+    <record> "kaoh", 40.7081, -84.0214, 297, "Lima, OH" </record>
+    <record> "kbjj", 40.8731, -81.8867, 346, "Wooster, OH" </record>
+    <record> "kbkl", 41.5256, -81.6689, 178, "Cleveland, Burke Lakefront, OH" </record>
+    <record> "kcgf", 41.5667, -81.4833, 268, "Cleveland-Cuyahoga, OH" </record>
+    <record> "kdfi", 41.3364, -84.4294, 215, "Defiance, OH" </record>
+    <record> "kfdy", 41.0136, -83.6686, 248, "Findlay, OH" </record>
+    <record> "khao", 39.3614, -84.5208, 193, "Hamilton, OH" </record>
+    <record> "khzy", 41.7794, -80.6967, 281, "Ashtabula Co. Apt, OH" </record>
+    <record> "kiln", 39.4283, -83.7792, 328, "Wilmington, OH" </record>
+    <record> "klck", 39.8167, -82.9333, 227, "Rickenbacker Air Nat'l Gd, OH" </record>
+    <record> "klhq", 39.7572, -82.6633, 264, "Lancaster, OH" </record>
+    <record> "klnn", 41.6833, -81.3833, 191, "Willoughby, OH" </record>
+    <record> "klpr", 41.3461, -82.1794, 242, "Lorain-Elyria, OH" </record>
+    <record> "kmfd", 40.8203, -82.5178, 395, "Mansfield Lahm Muni., OH" </record>
+    <record> "kmgy", 39.5936, -84.2264, 293, "Dayton General-South, OH" </record>
+    <record> "kmnn", 40.6167, -83.0683, 303, "Marion, OH" </record>
+    <record> "kosu", 40.0781, -83.0781, 275, "Columbus, OSU Apt, OH" </record>
+    <record> "kphd", 40.4719, -81.4236, 272, "New Philadelphia, OH" </record>
+    <record> "ksgh", 39.8333, -83.8333, 321, "Springfield, OH" </record>
+    <record> "kshi", 41.7794, -80.6967, 281, "Ashtabula Co. Apt, OH" </record>
+    <record> "kslw", 40.8833, -81.8333, 357, "Smithville-Wooster, OH" </record>
+    <record> "ktdz", 41.5631, -83.4764, 189, "Toledo, Metcalf Field, OH" </record>
+    <record> "ktzr", 39.9008, -83.1372, 276, "Columbus, Bolton Field, OH" </record>
+    <record> "kvta", 40.0228, -82.4625, 269, "Newark Heath Apt, OH" </record>
+    <record> "kzzv", 39.9444, -81.8922, 274, "Zanesville, OH" </record>
+    <record> "kokc", 35.3886, -97.6003, 394, "OKC, Will Rogers World, OK" </record>
+    <record> "ktul", 36.1975, -95.8864, 206, "Tulsa Int'l Apt, OK" </record>
+    <record> "koun", 35.2167, -97.45, 357, "Norman, OK" </record>
+    <record> "klaw", 34.5575, -98.4167, 338, "Lawton, OK" </record>
+    <record> "klts", 34.65, -99.2667, 420, "Altus AFB, OK" </record>
+    <record> "ktik", 35.4167, -97.3833, 394, "Tinker AFB, OK" </record>
+    <record> "kwwr", 36.4367, -99.5211, 667, "Woodward, OK" </record>
+    <record> "kmlc", 34.8822, -95.7831, 234, "McAlester, OK" </record>
+    <record> "kf10", 35.4, -96.0167, 259, "Henryetta, OK" </record>
+    <record> "kf30", 34.5167, -96.9833, 320, "Sulphur, OK" </record>
+    <record> "kh92", 36.4333, -96.3833, 251, "Hominy, OK" </record>
+    <record> "kfsi", 34.6, -98.4, 362, "Fort Sill, OK" </record>
+    <record> "k1f0", 34.1469, -97.1225, 257, "Ardmore Downtown, OK" </record>
+    <record> "kadh", 34.8044, -96.6714, 310, "Ada, OK" </record>
+    <record> "kadm", 34.3, -97.0167, 232, "Ardmore Muni., OK" </record>
+    <record> "kaqr", 34.3983, -96.1481, 180, "Atoka Muni. Apt, OK" </record>
+    <record> "kavk", 36.7731, -98.67, 449, "Alva, OK" </record>
+    <record> "kbvo", 36.7683, -96.0261, 217, "Bartlesville, OK" </record>
+    <record> "kchk", 35.0961, -97.9661, 351, "Chickasha, OK" </record>
+    <record> "kcqb", 35.7239, -96.8203, 300, "Chandler, OK" </record>
+    <record> "kcsm", 35.3567, -99.2036, 585, "Clinton-Sherman, OK" </record>
+    <record> "kdua", 33.9422, -96.3944, 213, "Durant, OK" </record>
+    <record> "kduc", 34.4708, -97.96, 339, "Duncan, OK" </record>
+    <record> "kend", 36.3333, -97.9167, 398, "Enid, Vance AFB, OK" </record>
+    <record> "kfdr", 34.3444, -98.9831, 382, "Frederick, OK" </record>
+    <record> "kgag", 36.2967, -99.7689, 677, "Gage, OK" </record>
+    <record> "kgcm", 36.2944, -95.4797, 221, "Claremore, OK" </record>
+    <record> "kgmj", 36.6053, -94.7386, 254, "Grove, OK" </record>
+    <record> "kgok", 35.8519, -97.4075, 327, "Guthrie, OK" </record>
+    <record> "kguy", 36.6817, -101.5053, 952, "Guymon, OK" </record>
+    <record> "khbr", 34.9894, -99.0525, 476, "Hobart, OK" </record>
+    <record> "kinx", 36.1833, -95.5667, 226, "Tulsa NEXRAD, OK" </record>
+    <record> "kjsv", 35.4381, -94.8028, 161, "Sallisaw, OK" </record>
+    <record> "kjwg", 35.8647, -98.4208, 472, "Watonga, OK" </record>
+    <record> "kmko", 35.6569, -95.3597, 185, "Muskogee, OK" </record>
+    <record> "kokm", 35.6681, -95.9486, 220, "Okmulgee, OK" </record>
+    <record> "kpnc", 36.7306, -97.0997, 307, "Ponca City, OK" </record>
+    <record> "kpvj", 34.7111, -97.2233, 295, "Pauls Valley, OK" </record>
+    <record> "kpwa", 35.5411, -97.6467, 396, "OKC, Wiley Post Apt, OK" </record>
+    <record> "krkr", 35.0217, -94.6214, 138, "Poteau, OK" </record>
+    <record> "krvs", 36.0425, -95.9894, 194, "Tulsa, Jones Jr. Apt, OK" </record>
+    <record> "ksnl", 35.3572, -96.9428, 327, "Shawnee, OK" </record>
+    <record> "kswo", 36.1622, -97.0892, 300, "Stillwater, OK" </record>
+    <record> "ktlx", 35.3333, -97.2833, 338, "OKC NEXRAD, OK" </record>
+    <record> "ktqh", 35.9289, -95.0044, 266, "Tahlequah, OK" </record>
+    <record> "kwdg", 36.3833, -97.7833, 356, "Enid, Woodring Muni., OK" </record>
+    <record> "kpdx", 45.5908, -122.6003, 8, "Portland Int'l, OR" </record>
+    <record> "keug", 44.1333, -123.2144, 111, "Eugene, OR" </record>
+    <record> "ksle", 44.9078, -122.995, 64, "Salem, OR" </record>
+    <record> "krdm", 44.2542, -121.1497, 938, "Redmond, OR" </record>
+    <record> "kast", 46.1569, -123.8825, 3, "Astoria, OR" </record>
+    <record> "kbno", 43.595, -118.9564, 1263, "Burns, OR" </record>
+    <record> "kmfr", 42.3811, -122.8722, 405, "Medford, Rogue Valley Int'l, OR" </record>
+    <record> "kpdt", 45.6983, -118.8342, 455, "Pendleton Apt, OR" </record>
+    <record> "k3s2", 45.25, -122.7667, 60, "Aurora State, OR" </record>
+    <record> "k4bk", 42.05, -124.2833, 24, "Brookings, OR" </record>
+    <record> "k4lw", 42.2167, -120.35, 1455, "Lakeview, OR" </record>
+    <record> "k5j0", 44.4042, -118.9625, 1127, "John Day State Apt, OR" </record>
+    <record> "k83s", 43.35, -124.3333, 23, "Coos Bay C.G.S., OR" </record>
+    <record> "k85s", 44, -124.1167, 12, "Siuslaw River C.G.S., OR" </record>
+    <record> "k88s", 45.5667, -123.9167, 15, "Tillamook Bay C.G.S., OR" </record>
+    <record> "k90s", 43.6833, -124.1667, 41, "Umpqua River C.G.S., OR" </record>
+    <record> "k92s", 42.8333, -124.5667, 57, "Cape Blanco C.G.S., OR" </record>
+    <record> "k95s", 44.6167, -124.05, 1, "Yaquina Bay C.G.S., OR" </record>
+    <record> "kbke", 44.8372, -117.8092, 1028, "Baker City, OR" </record>
+    <record> "kcvo", 44.5, -123.2833, 75, "Corvallis Muni. AWOS, OR" </record>
+    <record> "kczk", 45.6667, -121.8833, 46, "Cascade Locks State, OR" </record>
+    <record> "kdls", 45.6186, -121.1672, 75, "Columbia Gorge/Dalles, OR" </record>
+    <record> "khio", 45.5481, -122.9544, 62, "Portland-Hillsboro Apt, OR" </record>
+    <record> "khri", 45.8258, -119.2611, 194, "Hermiston, OR" </record>
+    <record> "kjnw", 44.5833, -124.0667, 48, "Newport, OR" </record>
+    <record> "klgd", 45.2833, -118, 827, "La Grande AWOS, OR" </record>
+    <record> "klkv", 42.1667, -120.4, 1441, "Lakeview AWOS, OR" </record>
+    <record> "klmt", 42.1469, -121.7242, 1247, "Klamath Falls Int'l, OR" </record>
+    <record> "kmax", 42.0808, -122.7158, 118, "Medford NEXRAD, OR" </record>
+    <record> "kmeh", 45.5114, -118.4247, 1135, "Meacham, OR" </record>
+    <record> "kmmv", 45.1961, -123.1322, 48, "McMinnville, OR" </record>
+    <record> "kono", 44.0194, -117.0097, 667, "Ontario, OR" </record>
+    <record> "konp", 44.5803, -124.0581, 49, "Newport Muni. Apt, OR" </record>
+    <record> "koth", 43.4167, -124.25, 4, "North Bend AWOS, OR" </record>
+    <record> "kp47", 42.15, -124.2667, 6, "Chetco River C.G.S., OR" </record>
+    <record> "kp88", 42.9, -117.65, 1162, "Rome AMOS, OR" </record>
+    <record> "kpfc", 45.2, -123.9667, 2, "Pacific City State, OR" </record>
+    <record> "krbg", 43.2339, -123.3561, 160, "Roseburg, OR" </record>
+    <record> "kreo", 42.5906, -117.8644, 1234, "Rome, OR" </record>
+    <record> "krtx", 45.7167, -122.9667, 514, "Portland NEXRAD, OR" </record>
+    <record> "ks21", 43.8833, -121.45, 1266, "Sunriver, OR" </record>
+    <record> "ks47", 45.4186, -123.8136, 11, "Tilamook, OR" </record>
+    <record> "kspb", 45.7692, -122.8622, 16, "Scappoose Indus. Airpk, OR" </record>
+    <record> "ksxt", 42.6003, -123.3642, 0, "Sexton Summit, OR" </record>
+    <record> "kttd", 45.5511, -122.4089, 11, "Portland-Troutdale Apt, OR" </record>
+    <record> "kuao", 45.2489, -122.7656, 59, "Aurora State Apt, OR" </record>
+    <record> "kphl", 39.8683, -75.2311, 6, "Philadelphia Int'l, PA" </record>
+    <record> "kpit", 40.5039, -80.2664, 366, "Pittsburgh Int'l, PA" </record>
+    <record> "keri", 42.08, -80.1825, 223, "Erie Int'l Apt, PA" </record>
+    <record> "kcxy", 40.2172, -76.8514, 106, "Harrisburg, Capital City, PA" </record>
+    <record> "kccx", 40.9167, -78, 758, "State College NEXRAD, PA" </record>
+    <record> "kabe", 40.6508, -75.4492, 120, "Allentown, PA" </record>
+    <record> "klns", 40.1203, -76.2944, 123, "Lancaster, PA" </record>
+    <record> "kavp", 41.3389, -75.7267, 293, "Wilkes-Barre/Scranton Int'l, PA" </record>
+    <record> "kipt", 41.2433, -76.9217, 161, "Williamsport-Lycoming Co., PA" </record>
+    <record> "k25g", 42.1167, -80.0833, 175, "Erie C.G.S., PA" </record>
+    <record> "k2g6", 41.6258, -80.2122, 426, "Port Meadville Apt, PA" </record>
+    <record> "k40n", 39.9833, -75.8667, 201, "Chester Co. Apt, PA" </record>
+    <record> "kafj", 40.1333, -80.2833, 361, "Washington AWOS, PA" </record>
+    <record> "kagc", 40.3547, -79.9217, 382, "Pittsburgh, Allegheny Co., PA" </record>
+    <record> "kaoo", 40.3, -78.3169, 458, "Altoona-Blair Co. Apt, PA" </record>
+    <record> "kbfd", 41.7986, -78.6358, 653, "Bradford, PA" </record>
+    <record> "kbtp", 40.7833, -79.95, 380, "Butler Co. AWOS, PA" </record>
+    <record> "kbvi", 40.7667, -80.4, 382, "Beaver Falls, PA" </record>
+    <record> "kdix", 39.95, -74.4167, 70, "Philadelphia NEXRAD, PA" </record>
+    <record> "kduj", 41.1833, -78.9, 555, "Du Bois-Jefferson Co., PA" </record>
+    <record> "kdyl", 40.33, -75.1225, 120, "Doylestown, PA" </record>
+    <record> "kfig", 41.0467, -78.4117, 462, "Clearfield-Lawrence, PA" </record>
+    <record> "kfkl", 41.3833, -79.8667, 469, "Franklin AWOS, PA" </record>
+    <record> "kgkj", 41.6264, -80.2147, 427, "Port Meadville Apt, PA" </record>
+    <record> "kidi", 40.6333, -79.1, 429, "Indiana, PA" </record>
+    <record> "kjst", 40.3161, -78.8339, 696, "Johnstown-Cambria Co., PA" </record>
+    <record> "klbe", 40.2833, -79.4, 361, "Latrobe-Westmorland, PA" </record>
+    <record> "kmdt", 40.1936, -76.7633, 95, "Harrisburg Int'l, PA" </record>
+    <record> "kmpo", 41.1389, -75.3961, 584, "Pocono Mountains, PA" </record>
+    <record> "kmui", 40.4333, -76.5667, 149, "Indiantown, Muir Army Airfld, PA" </record>
+    <record> "knxx", 40.1931, -75.1444, 110, "Willow Grove NAS, PA" </record>
+    <record> "kpbz", 40.5333, -80.2167, 386, "Pittsburgh NEXRAD, PA" </record>
+    <record> "kpne", 40.0789, -75.0136, 36, "NE Philadelphia Apt, PA" </record>
+    <record> "kptw", 40.2383, -75.5572, 89, "Pottstown Limerick, PA" </record>
+    <record> "krdg", 40.3733, -75.9594, 105, "Reading, PA" </record>
+    <record> "krvl", 40.6833, -77.6333, 250, "Reedsville-Mifflin, PA" </record>
+    <record> "kseg", 40.8192, -76.8661, 137, "Selinsgrove, PA" </record>
+    <record> "kthv", 39.9194, -76.8769, 146, "York, PA" </record>
+    <record> "kunv", 40.85, -77.85, 378, "State College, PA" </record>
+    <record> "tjsj", 18.45, -66.0, 3, "San Juan, Luis Munoz Marin International Airport, PR" </record>
+    <record> "tjbq", 18.5, -67.1333, 72, "Aquadilla, Rafael Hernandez Airport, PR" </record>
+    <record> "tjmz", 18.2667, -67.15, 9, "Mayaguez, Eugenio Maria de Hostos Airport, PR" </record>
+    <record> "tjps", 18.0167, -66.5667, 8, "Ponce, Mercedita Airport, PR" </record>
+    <record> "kpvd", 41.7219, -71.4325, 16, "Providence, RI" </record>
+    <record> "ksfz", 41.9167, -71.5, 134, "Pawtucket AWOS, RI" </record>
+    <record> "k67b", 41.45, -71.35, 15, "Castle Hill C.G.S., RI" </record>
+    <record> "kbid", 41.1667, -71.5833, 33, "Block Island AWOS, RI" </record>
+    <record> "koqu", 41.6, -71.4167, 6, "N. Kingston-Quonset, RI" </record>
+    <record> "kpji", 41.35, -71.4667, 2, "Point Judith C.G.S., RI" </record>
+    <record> "kuuu", 41.53, -71.2836, 52, "Newport State Apt, RI" </record>
+    <record> "kwst", 41.3497, -71.7989, 24, "Westerly State Apt, RI" </record>
+    <record> "kchs", 32.8989, -80.0406, 14, "Charleston AFB, SC" </record>
+    <record> "kcae", 33.9419, -81.1181, 71, "Columbia Metro. Apt, SC" </record>
+    <record> "kmyr", 33.6833, -78.9333, 8, "Myrtle Beach AFB, SC" </record>
+    <record> "khxd", 32.2167, -80.7, 6, "Hilton Head AWOS, SC" </record>
+    <record> "k2pj", 33.85, -80.4833, 68, "Poinsett Range, SC" </record>
+    <record> "kgsp", 34.8839, -82.2208, 296, "Greer, SC" </record>
+    <record> "kssc", 33.9667, -80.4833, 74, "Shaw AFB, SC" </record>
+    <record> "k84j", 32.6833, -79.8833, 3, "Folly Beach LR Nav., SC" </record>
+    <record> "k85j", 33.2167, -79.1833, 8, "Georgetown C.G.L.S., SC" </record>
+    <record> "k86j", 32.7667, -79.85, 3, "Sullivans Island C.G.S., SC" </record>
+    <record> "kand", 34.4978, -82.7097, 238, "Anderson Co., SC" </record>
+    <record> "kceu", 34.6722, -82.8814, 272, "Clemson-Oconee Co., SC" </record>
+    <record> "kcre", 33.8117, -78.7239, 10, "N. Myrtle Beach, SC" </record>
+    <record> "kcub", 33.9708, -80.9944, 64, "Columbia Owens Downtn, SC" </record>
+    <record> "kflo", 34.1878, -79.7308, 45, "Florence, SC" </record>
+    <record> "kgmu", 34.8461, -82.3461, 319, "Greenville Downtown, SC" </record>
+    <record> "kgrd", 34.2472, -82.1547, 192, "Greenwood Co., SC" </record>
+    <record> "kigc", 32.9, -80.05, 14, "Charleston AFB, SC" </record>
+    <record> "kmmt", 33.9167, -80.8, 77, "McEntire Air Nat'l Gd WFB, SC" </record>
+    <record> "kmni", 33.5833, -80.2167, 32, "Manning-Cooper, SC" </record>
+    <record> "knbc", 32.4936, -80.7031, 11, "Beaufort, USMC Air Stn, SC" </record>
+    <record> "knex", 32.9167, -79.9833, 12, "Charleston Nise, SC" </record>
+    <record> "kogb", 33.4639, -80.8536, 60, "Orangeburg, SC" </record>
+    <record> "kspa", 34.9167, -81.95, 246, "Spartanburg Memorial, SC" </record>
+    <record> "kudg", 34.4492, -79.8903, 59, "Darlington Co., SC" </record>
+    <record> "kuza", 34.9839, -81.0558, 204, "Rock Hill-York Co., SC" </record>
+    <record> "krap", 44.0456, -103.0539, 976, "Rapid City, SD" </record>
+    <record> "kfsd", 43.5769, -96.7536, 435, "Sioux Falls, SD" </record>
+    <record> "kabr", 45.4433, -98.4131, 396, "Aberdeen, SD" </record>
+    <record> "kpir", 44.3828, -100.2858, 531, "Pierre, SD" </record>
+    <record> "khon", 44.3881, -98.2283, 392, "Huron, SD" </record>
+    <record> "k9v9", 43.7667, -99.3183, 516, "Chamberlain, SD" </record>
+    <record> "ksfd", 43.3906, -99.8425, 619, "Winner, Wiley Field, SD" </record>
+    <record> "k0v1", 43.7331, -103.6114, 1711, "Custer Co. Apt, SD" </record>
+    <record> "k2wx", 45.6044, -103.5464, 915, "Buffalo, SD" </record>
+    <record> "k8d3", 45.6689, -96.9914, 354, "Sisseton, SD" </record>
+    <record> "katy", 44.9047, -97.1494, 532, "Watertown, SD" </record>
+    <record> "kbkx", 44.3, -96.8167, 502, "Brookings AWOS, SD" </record>
+    <record> "kcut", 43.7331, -103.6114, 1711, "Custer Co. Apt, SD" </record>
+    <record> "kd07", 45.0319, -102.0192, 787, "Faith, SD" </record>
+    <record> "kefc", 44.7333, -103.8667, 972, "Belle Fourche, SD" </record>
+    <record> "kien", 43.0256, -102.5231, 1015, "Pine Ridge Apt, SD" </record>
+    <record> "kmbg", 45.55, -100.4086, 522, "Mobridge Muni. Apt, SD" </record>
+    <record> "kmhe", 43.7667, -98.0333, 397, "Mitchell, SD" </record>
+    <record> "kned", 43.3894, -99.8428, 619, "Winner, Wiley Field, SD" </record>
+    <record> "kphp", 44.0511, -101.6011, 673, "Philip Apt, SD" </record>
+    <record> "krca", 44.15, -103.1, 999, "Ellsworth AFB, SD" </record>
+    <record> "kspf", 44.4833, -103.7833, 1188, "Spearfish-Clyde Ice, SD" </record>
+    <record> "ky22", 45.9333, -102.1667, 781, "Lemmon, SD" </record>
+    <record> "ky26", 45.5333, -100.4333, 508, "Mobridge, SD" </record>
+    <record> "kykn", 42.9167, -97.3833, 398, "Yankton AWOS, SD" </record>
+    <record> "ktys", 35.8181, -83.9858, 299, "Knoxville, Tyson Apt, TN" </record>
+    <record> "kcha", 35.0333, -85.2, 207, "Chattanooga, TN" </record>
+    <record> "kmem", 35.0611, -89.985, 101, "Memphis Int'l, TN" </record>
+    <record> "kbna", 36.1189, -86.6892, 182, "Nashville Int'l, TN" </record>
+    <record> "kckv", 36.6219, -87.415, 168, "Clarksville, TN" </record>
+    <record> "kcqn", 35.1667, -85.15, 225, "Chattanooga-Daisy, TN" </record>
+    <record> "kcsv", 35.9514, -85.085, 573, "Crossville Memorial, TN" </record>
+    <record> "kdkx", 35.9667, -83.8667, 254, "Knoxville Downtown, TN" </record>
+    <record> "kdyr", 36, -89.4, 103, "Dyersburg AWOS, TN" </record>
+    <record> "kmkl", 35.5931, -88.9167, 132, "Jackson, TN" </record>
+    <record> "kmqy", 36.0167, -86.5167, 166, "Smyrna, TN" </record>
+    <record> "kmrc", 35.55, -87.1833, 206, "Columbia-Maury Co., TN" </record>
+    <record> "kmrx", 36.1667, -83.4, 437, "Morristown NEXRAD, TN" </record>
+    <record> "knqa", 35.3567, -89.8703, 98, "Millington, TN" </record>
+    <record> "kohx", 36.75, -86.5667, 206, "Nashville NEXRAD, TN" </record>
+    <record> "koqt", 36.0228, -84.2333, 279, "Oak Ridge, TN" </record>
+    <record> "ktri", 36.4797, -82.3989, 463, "Bristol-Johnson/Kingsport, TN" </record>
+    <record> "kelp", 31.8111, -106.3758, 1206, "El Paso, TX" </record>
+    <record> "kiah", 29.9925, -95.3639, 29, "Houston Intercontinental, TX" </record>
+    <record> "kdfw", 32.8969, -97.0219, 183, "Dallas-Fort Worth Int'l, TX" </record>
+    <record> "ksat", 29.5328, -98.4636, 246, "San Antonio Int'l, TX" </record>
+    <record> "kaus", 30.1944, -97.67, 165, "Austin-Bergstrom Int'l, TX" </record>
+    <record> "kbpt", 29.9508, -94.0208, 5, "Beaumont-Port Arthur, TX" </record>
+    <record> "klbb", 33.6675, -101.8214, 1000, "Lubbock Int'l, TX" </record>
+    <record> "kama", 35.22, -101.7172, 1099, "Amarillo, TX" </record>
+    <record> "kabi", 32.4103, -99.6817, 545, "Abilene Reg. Apt, TX" </record>
+    <record> "kact", 31.6172, -97.2278, 157, "Waco, TX" </record>
+    <record> "kbro", 25.9142, -97.4231, 7, "Brownsville-S. Padre Isl., TX" </record>
+    <record> "kcrp", 27.7731, -97.5128, 13, "Corpus Christi Int'l, TX" </record>
+    <record> "klrd", 27.55, -99.4667, 155, "Laredo Int'l, TX" </record>
+    <record> "kmaf", 31.9478, -102.2086, 875, "Midland, TX" </record>
+    <record> "ksps", 33.9786, -98.4928, 309, "Wichita Falls, Sheppard AFB, TX" </record>
+    <record> "kggg", 32.3906, -94.7139, 111, "Longview, TX" </record>
+    <record> "ksjt", 31.3514, -100.4939, 584, "San Angelo, TX" </record>
+    <record> "kdrt", 29.3747, -100.9236, 304, "Del Rio, TX" </record>
+    <record> "kfwd", 32.8333, -97.3, 196, "Fort Worth, TX" </record>
+    <record> "kgls", 29.2703, -94.8642, 2, "Galveston, Scholes Fld, TX" </record>
+    <record> "ksep", 32.2167, -98.1833, 402, "Stephenville, TX" </record>
+    <record> "kcll", 30.5822, -96.3617, 97, "College Station, TX" </record>
+    <record> "kdht", 36.0233, -102.5472, 1216, "Dalhart, TX" </record>
+    <record> "khlr", 31.1, -97.3333, 283, "Fort Hood, TX" </record>
+    <record> "kjct", 30.5108, -99.7664, 527, "Junction, TX" </record>
+    <record> "kmrf", 30.3667, -104.0167, 1478, "Marfa, TX" </record>
+    <record> "kp07", 30.1667, -102.4167, 865, "Sanderson, TX" </record>
+    <record> "kgdp", 31.8311, -104.8089, 1661, "Pine Springs/Guadalupe Mtns, TX" </record>
+    <record> "kvct", 28.8625, -96.9297, 35, "Victoria, TX" </record>
+    <record> "k11r", 30.2189, -96.3742, 94, "Brenham, TX" </record>
+    <record> "k28t", 29.7, -93.95, 5, "Sabine Pass, TX" </record>
+    <record> "k3t5", 29.9081, -96.95, 99, "La Grange, TX" </record>
+    <record> "k5r0", 28.2167, -93.75, 26, "East Addition B323, TX" </record>
+    <record> "k6r6", 30.0481, -102.2131, 707, "Dryden, TX" </record>
+    <record> "k8r7", 29.7333, -93.8667, 1, "Sabine Pass C.G.S., TX" </record>
+    <record> "k8r8", 28.95, -95.3, 2, "Freeport C.G.S., TX" </record>
+    <record> "k9r0", 29.3333, -94.7667, 1, "Galveston C.G.S., TX" </record>
+    <record> "k9r1", 27.8333, -97.0667, 1, "Port Aransas C.G.S., TX" </record>
+    <record> "kads", 32.9667, -96.8333, 196, "Dallas-Addison Apt, TX" </record>
+    <record> "kafw", 32.9733, -97.3181, 220, "Ft Worth, Alliance Apt, TX" </record>
+    <record> "kali", 27.7411, -98.0269, 54, "Alice, TX" </record>
+    <record> "katt", 30.3167, -97.7667, 198, "Austin City, TX" </record>
+    <record> "kbaz", 29.7086, -98.0453, 197, "New Braunfels, TX" </record>
+    <record> "kbgd", 35.695, -101.395, 931, "Borger, TX" </record>
+    <record> "kbif", 31.85, -106.3833, 1204, "Ft. Bliss, Biggs Army Airfld, TX" </record>
+    <record> "kbmq", 30.7406, -98.2353, 392, "Burnet, TX" </record>
+    <record> "kbwd", 31.8, -98.95, 422, "Brownwood, TX" </record>
+    <record> "kcds", 34.4275, -100.2833, 595, "Childress, TX" </record>
+    <record> "kcot", 28.4583, -99.2203, 145, "Cotulla-La Salle Co., TX" </record>
+    <record> "kcrs", 32.0311, -96.3989, 136, "Corsicana, TX" </record>
+    <record> "kcxo", 30.3567, -95.4139, 74, "Conroe, TX" </record>
+    <record> "kdal", 32.8525, -96.8556, 148, "Dallas, Love Field, TX" </record>
+    <record> "kdlf", 29.1167, -100.4667, 294, "Laughlin AFB Aux., TX" </record>
+    <record> "kdto", 33.2061, -97.1989, 195, "Denton, TX" </record>
+    <record> "kdwh", 30.0675, -95.5561, 46, "Houston, Hooks Mem., TX" </record>
+    <record> "kdys", 32.42, -99.8569, 545, "Abilene, Dyess AFB, TX" </record>
+    <record> "kefd", 29.6, -95.1667, 10, "Houston-Ellington, TX" </record>
+    <record> "kerv", 29.9833, -99.0833, 493, "Kerrville, TX" </record>
+    <record> "kewx", 29.7, -98.0333, 223, "San Antonio NEXRAD, TX" </record>
+    <record> "kf39", 33.7167, -96.6667, 228, "Sherman-Denison, TX" </record>
+    <record> "kfoq", 29, -95.3167, 2, "Freeport Supp. AWRS, TX" </record>
+    <record> "kfst", 30.9119, -102.9167, 917, "Fort Stockton, TX" </record>
+    <record> "kftw", 32.8253, -97.3642, 216, "Ft Worth, Meacham Int'l, TX" </record>
+    <record> "kfws", 32.5667, -97.3, 213, "Ft Worth, Spinks Apt, TX" </record>
+    <record> "kgky", 32.6639, -97.0958, 192, "Arlington, TX" </record>
+    <record> "kgle", 33.6514, -97.1969, 256, "Gainesville, TX" </record>
+    <record> "kgpm", 32.6986, -97.0467, 180, "Grand Prairie, TX" </record>
+    <record> "kgrk", 31.0667, -97.8333, 309, "Ft Hood-Gray Army Airfield, TX" </record>
+    <record> "kgtu", 30.6833, -97.6833, 240, "Georgetown AWOS, TX" </record>
+    <record> "kgvt", 33.0667, -96.0667, 163, "Greenville-Majors, TX" </record>
+    <record> "khdo", 29.3594, -99.1742, 283, "Hondo, TX" </record>
+    <record> "khgx", 29.4667, -95.0833, 35, "Houston-Galveston NEXRAD, TX" </record>
+    <record> "khhf", 35.9, -100.4, 730, "Canadian-Hemphill, TX" </record>
+    <record> "khou", 29.6375, -95.2825, 14, "Houston Hobby Apt, TX" </record>
+    <record> "khrl", 26.2297, -97.6553, 10, "Harlingen, TX" </record>
+    <record> "khyi", 29.8936, -97.8647, 182, "San Marcos Muni. Apt, TX" </record>
+    <record> "kile", 31.0833, -97.6833, 258, "Killeen Muni. AWOS, TX" </record>
+    <record> "kink", 31.7797, -103.2014, 860, "Wink, TX" </record>
+    <record> "kiws", 29.8167, -95.6667, 34, "West Houston-Lakeside, TX" </record>
+    <record> "klbx", 29.1153, -95.4631, 7, "Angleton-Lake Jackson, TX" </record>
+    <record> "klfk", 31.2339, -94.75, 90, "Lufkin, TX" </record>
+    <record> "klvj", 29.5189, -95.2417, 13, "Houston, Clover Field, TX" </record>
+    <record> "kmfe", 26.1797, -98.2444, 32, "McAllen, TX" </record>
+    <record> "kmwl", 32.7817, -98.0603, 297, "Mineral Wells, TX" </record>
+    <record> "knbe", 32.7333, -96.9667, 150, "Dallas U. S. NAS, TX" </record>
+    <record> "knfw", 32.7658, -97.4333, 198, "Ft Worth NAS, TX" </record>
+    <record> "kngp", 27.6886, -97.2917, 5, "Corpus Christi NAS, TX" </record>
+    <record> "kngw", 27.7225, -97.4425, 9, "Corpus Christi, Cabiness Fld, TX" </record>
+    <record> "knmt", 28.2361, -98.7242, 79, "McMullen Target Site, TX" </record>
+    <record> "knog", 27.8892, -98.0442, 78, "Orange Grove, Naval ALF, TX" </record>
+    <record> "knqi", 27.5031, -97.8117, 15, "Kingsville NAS, TX" </record>
+    <record> "knvt", 27.6311, -97.3117, 7, "Corpus Christi, Waldron OLF, TX" </record>
+    <record> "koch", 31.5833, -94.7167, 108, "Nacogdoches AWOS, TX" </record>
+    <record> "kodo", 31.9214, -102.3917, 914, "Odessa, TX" </record>
+    <record> "kpil", 26.1592, -97.3375, 5, "Port Isabel-Cameron Co., TX" </record>
+    <record> "kprx", 33.6333, -95.45, 167, "Paris, TX" </record>
+    <record> "kpsx", 28.7275, -96.2508, 5, "Palacios, TX" </record>
+    <record> "kpwg", 31.4833, -97.3167, 180, "McGregor AWOS, TX" </record>
+    <record> "krbd", 32.6758, -96.8639, 201, "Dallas, Redbird Apt, TX" </record>
+    <record> "kree", 33.6, -102.05, 1017, "Lubbock, Reese AFB, TX" </record>
+    <record> "krjo", 29.9, -97.8667, 182, "San Marcos AWOS, TX" </record>
+    <record> "krkp", 28.0836, -97.0464, 7, "Rockport, TX" </record>
+    <record> "krnd", 29.5333, -98.2833, 232, "Randolph AFB, TX" </record>
+    <record> "krpe", 29.7, -93.95, 3, "Sabine Pass, TX" </record>
+    <record> "ksgr", 29.6222, -95.6567, 25, "Houston, Hull Fld, TX" </record>
+    <record> "kshp", 33.9667, -98.4833, 314, "Sheppard AFB, TX" </record>
+    <record> "kskf", 29.3833, -98.5833, 210, "Kelly AFB, TX" </record>
+    <record> "kssf", 29.3389, -98.4717, 175, "San Antonio, Stinson Muni., TX" </record>
+    <record> "kt46", 28.0167, -95.8667, 23, "South Brazos A70, TX" </record>
+    <record> "ktki", 33.185, -96.5878, 176, "McKinney, TX" </record>
+    <record> "ktpl", 31.15, -97.4, 208, "Temple-Miller AWOS, TX" </record>
+    <record> "ktrl", 32.7136, -96.2683, 144, "Terrell, TX" </record>
+    <record> "ktyr", 32.3586, -95.4039, 165, "Tyler Pounds Field, TX" </record>
+    <record> "kuts", 30.7439, -95.5861, 111, "Huntsville, TX" </record>
+    <record> "kslc", 40.7781, -111.9694, 1288, "Salt Lake City Int'l, UT" </record>
+    <record> "kogd", 41.1936, -112.0164, 1362, "Ogden-Hinckley Apt, UT" </record>
+    <record> "kdpg", 40.1667, -112.9333, 1326, "Dugway Proving Grounds, UT" </record>
+    <record> "kenv", 40.7333, -114.0333, 1291, "Wendover, AF Aux. Fld, UT" </record>
+    <record> "kbce", 37.7064, -112.1456, 2312, "Bryce Canyon, UT" </record>
+    <record> "kpvu", 40.2167, -111.7167, 1369, "Provo Muni. AWOS, UT" </record>
+    <record> "kpuc", 39.6092, -110.7547, 1805, "Price, UT" </record>
+    <record> "ku67", 40.3, -109.9833, 1553, "Roosevelt, UT" </record>
+    <record> "k36u", 40.4819, -111.4289, 1718, "Heber City, UT" </record>
+    <record> "k4bl", 37.6167, -109.4667, 1840, "Blanding, UT" </record>
+    <record> "k4hv", 38.3667, -110.7167, 1314, "Hanksville, UT" </record>
+    <record> "kcdc", 37.7067, -113.0967, 1715, "Cedar City, UT" </record>
+    <record> "kcny", 38.76, -109.7447, 1388, "Moab, UT" </record>
+    <record> "khif", 41.1167, -111.9667, 1459, "Ogden, Hill AFB, UT" </record>
+    <record> "klgu", 41.7828, -111.8539, 1357, "Logan-Cache, UT" </record>
+    <record> "kmlf", 38.4225, -113.0097, 1536, "Milford, UT" </record>
+    <record> "kmtx", 41.4333, -112.75, 2004, "Salt Lake NEXRAD, UT" </record>
+    <record> "kqca", 40.1667, -113.35, 1310, "Granite Peak, UT" </record>
+    <record> "kqcb", 41.25, -112.25, 1326, "Little Mountain, UT" </record>
+    <record> "kqcj", 41.05, -113.0833, 1294, "Eagle Range, UT" </record>
+    <record> "ksgu", 37.0833, -113.6, 896, "Saint George AWOS, UT" </record>
+    <record> "kt62", 40.3167, -112.3, 1628, "Tooele, UT" </record>
+    <record> "ku16", 41.05, -113.0667, 1292, "Eagle Range, UT" </record>
+    <record> "ku17", 37.5, -110.7, 1110, "Bullfrog Marina, UT" </record>
+    <record> "ku24", 39.3333, -112.5833, 1414, "Delta, UT" </record>
+    <record> "ku28", 39, -110.1667, 1241, "Green River Range, UT" </record>
+    <record> "ku42", 40.6194, -111.9928, 1403, "Salt Lake City Muni. 2, UT" </record>
+    <record> "ku71", 40.4667, -109.5333, 1612, "Vernal, UT" </record>
+    <record> "kvel", 40.4442, -109.5117, 1607, "Vernal Apt, UT" </record>
+    <record> "kzlc", 40.7833, -111.95, 1288, "Salt Lake City, UT" </record>
+    <record> "kdca", 38.8483, -77.0342, 4, "Washington DC, Reagan Nat'l, VA" </record>
+    <record> "kntu", 36.8211, -76.0283, 6, "Virginia Beach, Oceana NAS, VA" </record>
+    <record> "korf", 36.9036, -76.1919, 8, "Norfolk Int'l, VA" </record>
+    <record> "kric", 37.5111, -77.3233, 51, "Richmond Int'l, VA" </record>
+    <record> "kiad", 38.9347, -77.4475, 95, "Washington, Dulles Int'l, VA" </record>
+    <record> "kroa", 37.3169, -79.9742, 358, "Roanoke Reg. Apt, VA" </record>
+    <record> "klfi", 37.0833, -76.35, 3, "Langley AFB, VA" </record>
+    <record> "klyh", 37.3208, -79.2067, 285, "Lynchburg, VA" </record>
+    <record> "kwal", 37.9406, -75.4631, 12, "Wallops Flight Facility, VA" </record>
+    <record> "k0w8", 37.9333, -75.3833, 2, "Chincoteague, VA" </record>
+    <record> "k62w", 36.9333, -76, 1, "Cape Henry C.G.L.S., VA" </record>
+    <record> "k63w", 37.4833, -76.3167, 1, "Milford Haven C.G.S., VA" </record>
+    <record> "k64w", 37.5333, -75.6167, 1, "Parramore Beach, VA" </record>
+    <record> "kakq", 36.9814, -77.0011, 34, "Wakefield, VA" </record>
+    <record> "kavc", 36.6886, -78.0542, 135, "South Hill, VA" </record>
+    <record> "kbcb", 37.2167, -80.4167, 650, "Virginia Tech Apt, VA" </record>
+    <record> "kbkt", 37.0833, -77.95, 130, "Ft. Pickett-Blackstone, VA" </record>
+    <record> "kcho", 38.1383, -78.4558, 195, "Charlottesville-Albemarle, VA" </record>
+    <record> "kcjr", 38.5267, -77.8589, 95, "Culpeper Co. Apt, VA" </record>
+    <record> "kcpk", 36.6656, -76.3206, 6, "Chesapeake, VA" </record>
+    <record> "kdaa", 38.7167, -77.1833, 21, "Fort Belvoir, VA" </record>
+    <record> "kdan", 36.5728, -79.3361, 174, "Danville, VA" </record>
+    <record> "kemv", 36.6869, -77.4828, 39, "Emporia-Greensville, VA" </record>
+    <record> "kezf", 38.2667, -77.45, 26, "Shannon Apt, VA" </record>
+    <record> "kfaf", 37.1333, -76.6167, 4, "Fort Eustis-Felker, VA" </record>
+    <record> "kfcx", 37.0167, -80.2667, 904, "Roanoke NEXRAD, VA" </record>
+    <record> "kfkn", 36.7, -76.9, 12, "Franklin-Rose, VA" </record>
+    <record> "kfvx", 37.35, -78.4333, 125, "Farmville, VA" </record>
+    <record> "khef", 38.7167, -77.5167, 59, "Manassas Muni. AWOS, VA" </record>
+    <record> "khlx", 36.7667, -80.8167, 834, "Hillsville, VA" </record>
+    <record> "khsp", 37.95, -79.8333, 1156, "Hot Springs-Ingalls, VA" </record>
+    <record> "kjyo", 39.0833, -77.5667, 119, "Leesburg-Godfrey, VA" </record>
+    <record> "klku", 38.0097, -77.9703, 150, "Louisa Co., VA" </record>
+    <record> "klnp", 36.9833, -82.5333, 817, "Wise-Lonesome Pine, VA" </record>
+    <record> "kmfv", 37.65, -75.7667, 15, "Melfa-Accomack Apt, VA" </record>
+    <record> "kmkj", 36.9, -81.35, 780, "Marion-Wytheville, VA" </record>
+    <record> "kmtv", 36.6333, -80.0167, 287, "Martinsville, VA" </record>
+    <record> "knfe", 36.7008, -76.1283, 3, "Fentress, Naval ALF, VA" </record>
+    <record> "kngu", 36.9336, -76.2958, 4, "Norfolk NAS, VA" </record>
+    <record> "knyg", 38.5125, -77.2917, 3, "Quantico, USMC Air Fac., VA" </record>
+    <record> "kofp", 37.7081, -77.4344, 62, "Ashland, VA" </record>
+    <record> "kokv", 39.15, -78.15, 222, "Winchester, VA" </record>
+    <record> "komh", 38.2472, -78.0456, 142, "Orange Co. Apt, VA" </record>
+    <record> "kphf", 37.1319, -76.4931, 13, "Newport News-Williamsburg Int'l, VA" </record>
+    <record> "kpsk", 37.1333, -80.6833, 642, "Dublin-New River Valley, VA" </record>
+    <record> "kptb", 37.1833, -77.5167, 59, "Petersburg AWOS, VA" </record>
+    <record> "ksfq", 36.6822, -76.6019, 22, "Suffolk, VA" </record>
+    <record> "kshd", 38.2667, -78.9, 366, "Staunton-Shenandoah, VA" </record>
+    <record> "kvji", 36.6833, -82.0333, 631, "Abingdon, VA" </record>
+    <record> "kvqn", 36.95, -78.9833, 185, "Volens, VA" </record>
+    <record> "kw08", 37.4667, -75.8833, 12, "Weirwood, VA" </record>
+    <record> "kw39", 36.9, -75.7167, 23, "Norfolk-Chesapeake, VA" </record>
+    <record> "kw51", 37.25, -76, 2, "Cape Charles C.G.S., VA" </record>
+    <record> "kw63", 36.6, -78.5667, 128, "Clarksville-Marks, VA" </record>
+    <record> "kw71", 37.8833, -76.1833, 1, "Smith Point-Sunnybank, VA" </record>
+    <record> "kbtv", 44.4681, -73.1503, 101, "Burlington Int'l, VT" </record>
+    <record> "kmpv", 44.2047, -72.5661, 355, "Barre-Montpelier, VT" </record>
+    <record> "k9b2", 44.9333, -72.2, 233, "Newport, VT" </record>
+    <record> "k1v4", 44.4194, -72.0194, 212, "Saint Johnsbury, VT" </record>
+    <record> "kddh", 42.89, -73.2464, 252, "Bennington-Morse State, VT" </record>
+    <record> "kmvl", 44.5361, -72.6161, 223, "Morrisville-Stowe State, VT" </record>
+    <record> "krut", 43.5333, -72.95, 240, "Rutland State AWOS, VT" </record>
+    <record> "kvsf", 43.3425, -72.5217, 175, "Springfield-Hartness State, VT" </record>
+    <record> "ksea", 47.4447, -122.3136, 130, "Seattle-Tacoma Int'l, WA" </record>
+    <record> "kgeg", 47.6214, -117.5278, 723, "Spokane Int'l, WA" </record>
+    <record> "kolm", 46.9733, -122.9033, 62, "Olympia, WA" </record>
+    <record> "ktcm", 47.15, -122.4833, 98, "Tacoma, McChord AFB, WA" </record>
+    <record> "kykm", 46.5642, -120.5336, 333, "Yakima Air Terminal, WA" </record>
+    <record> "kalw", 46.095, -118.2842, 367, "Walla Walla, WA" </record>
+    <record> "kgrf", 47.1167, -122.55, 92, "Fort Lewis-Gray Army Airfld, WA" </record>
+    <record> "khms", 46.5667, -119.6, 223, "Hanford, WA" </record>
+    <record> "know", 48.1333, -123.4, 5, "Port Angeles CG Air Stn, WA" </record>
+    <record> "kuil", 47.9375, -124.555, 59, "Quillayute State Apt, WA" </record>
+    <record> "k07s", 47.9742, -117.4283, 672, "Deer Park Apt, WA" </record>
+    <record> "k2s9", 46.7, -123.8167, 5, "Willapa Harbor, WA" </record>
+    <record> "k43s", 47.6667, -122.4333, 4, "West Point C.G.L.S., WA" </record>
+    <record> "k4om", 48.4167, -119.5333, 374, "Omak, WA" </record>
+    <record> "k53s", 48.1167, -122.75, 1, "Point Wilson C.G.L.S., WA" </record>
+    <record> "k75s", 48.4667, -122.4167, 43, "Burlington-Mt Vern, WA" </record>
+    <record> "k76s", 48.25, -122.6667, 58, "Oak Harbor Airpk, WA" </record>
+    <record> "k82s", 46.2833, -124.05, 55, "Cape Disappointment, WA" </record>
+    <record> "k84s", 46.9167, -124.1, 6, "Grays Harbor C.G.S., WA" </record>
+    <record> "k86s", 48.3167, -122.85, 1, "Smith Island C.G.L.S., WA" </record>
+    <record> "k87s", 47.9, -124.6333, 1, "Quillayute Riv. C.G.L.S., WA" </record>
+    <record> "k91s", 47.5167, -122.4167, 1, "Alki Point C.G.L.S., WA" </record>
+    <record> "k93s", 48.3833, -124.7333, 26, "Cape Flattery C.G.L.S., WA" </record>
+    <record> "k96s", 48.1667, -123.1, 12, "New Dungeness C.G.S., WA" </record>
+    <record> "k97s", 47.9167, -122.5333, 1, "Point No Point C.G.S., WA" </record>
+    <record> "k99s", 47.3833, -122.3667, 0, "Point Robinson C.G.L.S., WA" </record>
+    <record> "katx", 48.2, -122.5, 185, "Seattle NEXRAD, WA" </record>
+    <record> "kawo", 48.1667, -122.1667, 42, "Arlington Muni., WA" </record>
+    <record> "kbfi", 47.5458, -122.3136, 5, "Seattle, Boeing Field, WA" </record>
+    <record> "kbli", 48.7994, -122.5392, 48, "Bellingham, WA" </record>
+    <record> "kclm", 48.1222, -123.5053, 87, "Port Angeles, Fairchild Int'l, WA" </record>
+    <record> "kcqv", 48.55, -117.8833, 572, "Colville, WA" </record>
+    <record> "kdew", 47.9742, -117.4283, 672, "Deer Park Apt, WA" </record>
+    <record> "keat", 47.3989, -120.2069, 381, "Wenatchee, Pangborn Mem. Apt, WA" </record>
+    <record> "keln", 47.0336, -120.5292, 536, "Ellensburg, WA" </record>
+    <record> "keph", 47.3075, -119.5158, 389, "Ephrata, WA" </record>
+    <record> "kfhr", 48.5203, -123.0253, 33, "Friday Harbor, WA" </record>
+    <record> "khqm", 46.9711, -123.92, 4, "Hoquiam, WA" </record>
+    <record> "kkls", 46.1167, -122.9, 5, "Kelso-Longview AWOS, WA" </record>
+    <record> "kmwh", 47.1931, -119.3133, 361, "Moses Lake, WA" </record>
+    <record> "knra", 48.1906, -122.6306, 60, "Coupeville, Outlying LF, WA" </record>
+    <record> "knuw", 48.3492, -122.6506, 14, "Whidbey Island NAS, WA" </record>
+    <record> "komk", 48.4642, -119.5181, 397, "Omak Apt, WA" </record>
+    <record> "kpae", 47.9231, -122.2825, 184, "Everett, WA" </record>
+    <record> "kpsc", 46.2697, -119.1167, 124, "Pasco, WA" </record>
+    <record> "kpuw", 46.7439, -117.1097, 779, "Pullman-Moscow, WA" </record>
+    <record> "kpwt", 47.5, -122.75, 147, "Bremerton Nat'l AWOS, WA" </record>
+    <record> "krnt", 47.4944, -122.2128, 8, "Renton Muni. Apt, WA" </record>
+    <record> "ks38", 48.0833, -122.1, 18, "Burrows Island, WA" </record>
+    <record> "ks53", 47.6667, -124.4833, 24, "Destruction Island, WA" </record>
+    <record> "ks88", 48.1667, -122.15, 42, "Arlington AWOS, WA" </record>
+    <record> "ksff", 47.6856, -117.3203, 595, "Spokane, Felts Field, WA" </record>
+    <record> "kshn", 47.2381, -123.1408, 82, "Shelton, WA" </record>
+    <record> "kska", 47.6167, -117.65, 750, "Fairchild AFB, WA" </record>
+    <record> "ksmp", 47.2767, -121.3372, 1207, "Stampede Pass, WA" </record>
+    <record> "ktdo", 46.4833, -122.8, 113, "Toledo-Winlock Mem., WA" </record>
+    <record> "ktiw", 47.2675, -122.5761, 96, "Tacoma Narrows, WA" </record>
+    <record> "kvuo", 45.6233, -122.6564, 7, "Vancouver, WA" </record>
+    <record> "kzse", 47.2833, -122.1833, 99, "Auburn, WA" </record>
+    <record> "kmke", 42.955, -87.9044, 220, "Milwaukee, Gen. Mitchell Int'l, WI" </record>
+    <record> "kmsn", 43.1406, -89.3453, 262, "Madison, WI" </record>
+    <record> "kgrb", 44.4794, -88.1367, 211, "Green Bay, WI" </record>
+    <record> "klse", 43.8794, -91.2567, 199, "La Crosse, WI" </record>
+    <record> "kdll", 43.5219, -89.7708, 298, "Baraboo-Wisc. Dells, WI" </record>
+    <record> "kasx", 46.5497, -90.9183, 251, "Ashland, WI" </record>
+    <record> "keau", 44.8653, -91.485, 277, "Eau Claire, WI" </record>
+    <record> "kjvl", 42.6167, -89.0333, 246, "Janesville-Rock Co., WI" </record>
+    <record> "kosh", 43.9667, -88.5581, 246, "Oshkosh, WI" </record>
+    <record> "kpkf", 45.9333, -90.45, 462, "Park Falls, WI" </record>
+    <record> "k0y2", 44.7833, -87.3167, 176, "Sturgeon Bay, WI" </record>
+    <record> "k15c", 43.0167, -87.95, 179, "Milwaukee C.G.L.S., WI" </record>
+    <record> "k16c", 42.5833, -87.75, 223, "Kenosha C.G.S., WI" </record>
+    <record> "k21c", 43.75, -87.7, 1, "Sheboygan C.G.S., WI" </record>
+    <record> "k29y", 47.0833, -90.7333, 192, "Devils Island Light Stn, WI" </record>
+    <record> "kaig", 45.15, -87.15, 0, "Antigo-Lang AWOS, WI" </record>
+    <record> "karv", 45.9333, -89.7333, 496, "Minocqua-Woodruff, WI" </record>
+    <record> "katw", 44.25, -88.5167, 280, "Appleton-Outagamie, WI" </record>
+    <record> "kauw", 44.9286, -89.6267, 366, "Wausau Downtown Apt, WI" </record>
+    <record> "kbuu", 42.6906, -88.3047, 237, "Burlington, WI" </record>
+    <record> "kc52", 42.6906, -88.3047, 237, "Burlington, WI" </record>
+    <record> "kc58", 44.1333, -87.55, 176, "Two Rivers C.G.S., WI" </record>
+    <record> "kcli", 44.6139, -88.7314, 251, "Clintonville, WI" </record>
+    <record> "kcmy", 43.9583, -90.7378, 255, "Sparta, WI" </record>
+    <record> "kcwa", 44.7833, -89.6667, 389, "Mosinee, WI" </record>
+    <record> "keew", 44.2167, -88.55, 275, "Neenah, WI" </record>
+    <record> "keft", 42.615, -89.5908, 331, "Monroe, WI" </record>
+    <record> "kegv", 45.9317, -89.2692, 501, "Eagle River, WI" </record>
+    <record> "kenw", 42.595, -87.9381, 226, "Kenosha, WI" </record>
+    <record> "ketb", 43.4222, -88.1281, 270, "West Bend, WI" </record>
+    <record> "kfld", 43.77, -88.4864, 246, "Fond Du Lac, WI" </record>
+    <record> "khyr", 46.0206, -91.4503, 370, "Hayward, WI" </record>
+    <record> "kisw", 44.3592, -89.8369, 311, "Wisconsin Rapids, WI" </record>
+    <record> "klnr", 43.2119, -90.1814, 219, "Lone Rock, WI" </record>
+    <record> "kmdz", 45.1011, -90.3033, 448, "Medford, WI" </record>
+    <record> "kmfi", 44.6381, -90.1875, 389, "Marshfield, WI" </record>
+    <record> "kmkx", 42.9667, -88.55, 312, "Milwaukee NEXRAD, WI" </record>
+    <record> "kmrj", 42.8853, -90.2319, 359, "Mineral Point, WI" </record>
+    <record> "kmtw", 44.1333, -87.6833, 198, "Manitowoc Muni. AWOS, WI" </record>
+    <record> "kmwc", 43.1167, -88.0333, 227, "Milwaukee-Timmerman, WI" </record>
+    <record> "koeo", 45.3086, -92.69, 275, "Osceola, WI" </record>
+    <record> "kovs", 43.1561, -90.6775, 205, "Boscobel, WI" </record>
+    <record> "kpbh", 45.7, -90.4, 449, "Phillips-Price Co., WI" </record>
+    <record> "kpdc", 43.0219, -91.1247, 201, "Prairie Du Chien, WI" </record>
+    <record> "krac", 42.7586, -87.8178, 205, "Racine, WI" </record>
+    <record> "krhi", 45.6317, -89.4822, 495, "Rhinelander-Oneida Co., WI" </record>
+    <record> "krie", 45.4833, -91.7167, 347, "Rice Lake Muni., WI" </record>
+    <record> "krnh", 45.1483, -92.5381, 304, "New Richmond, WI" </record>
+    <record> "krpd", 45.4181, -91.7736, 337, "Rice Lake Reg., Carl's Fld, WI" </record>
+    <record> "krrl", 45.1833, -89.7, 401, "Merrill, WI" </record>
+    <record> "kryv", 43.1667, -88.7167, 254, "Watertown, WI" </record>
+    <record> "krzn", 45.8228, -92.3725, 301, "Siren, WI" </record>
+    <record> "ksbm", 43.7764, -87.8497, 228, "Sheboygan Co. Mem., WI" </record>
+    <record> "kskc", 43.0333, -88.2333, 284, "Waukesha, WI" </record>
+    <record> "kste", 44.545, -89.5303, 338, "Stevens Point, WI" </record>
+    <record> "ksue", 44.85, -87.4167, 221, "Sturgeon Bay, WI" </record>
+    <record> "ksuw", 46.6897, -92.0947, 205, "Superior, WI" </record>
+    <record> "kues", 43.0411, -88.2369, 278, "Waukesha Co. Apt, WI" </record>
+    <record> "kunu", 43.4267, -88.7033, 285, "Juneau, WI" </record>
+    <record> "kvok", 43.9333, -90.2667, 277, "Volk-Camp Douglas, WI" </record>
+    <record> "kcrw", 38.3794, -81.5914, 299, "Charleston, Yeager Apt, WV" </record>
+    <record> "kbkw", 37.795, -81.1247, 763, "Beckley, WV" </record>
+    <record> "kekn", 38.8853, -79.8528, 605, "Elkins-Randolph Co., WV" </record>
+    <record> "khts", 38.365, -82.555, 252, "Huntington, WV" </record>
+    <record> "kblf", 37.2958, -81.2078, 871, "Bluefield, WV" </record>
+    <record> "kckb", 39.3, -80.2247, 366, "Clarksburg Benedum Apt, WV" </record>
+    <record> "khlg", 40.1703, -80.6444, 364, "Wheeling, WV" </record>
+    <record> "klwb", 37.8667, -80.4, 702, "Lewisburg-Greenbrier, WV" </record>
+    <record> "kmgw", 39.6494, -79.9211, 380, "Morgantown, WV" </record>
+    <record> "kmrb", 39.4019, -77.9844, 170, "Martinsburg, WV" </record>
+    <record> "kpkb", 39.345, -81.4392, 262, "Parkersburg, WV" </record>
+    <record> "krlx", 38.3167, -81.7167, 364, "Charleston, WV" </record>
+    <record> "kssu", 37.7667, -80.3333, 549, "White Sulphur Sprng, WV" </record>
+    <record> "kw99", 38.9833, -79.1333, 293, "Petersburg, WV" </record>
+    <record> "kcys", 41.1578, -104.8069, 1876, "Cheyenne, WY" </record>
+    <record> "kcpr", 42.8975, -106.4731, 1630, "Casper, WY" </record>
+    <record> "kjac", 43.6, -110.7333, 1964, "Jackson Hole AWOS, WY" </record>
+    <record> "klar", 41.3119, -105.675, 2218, "Laramie, WY" </record>
+    <record> "k4dg", 42.75, -105.3833, 1477, "Douglas, WY" </record>
+    <record> "kbpi", 42.5789, -110.1031, 2126, "Big Piney-Marbleton, WY" </record>
+    <record> "kcod", 44.5167, -109.0167, 1551, "Cody, WY" </record>
+    <record> "kdgw", 42.7942, -105.3819, 1502, "Douglas, Converse Co., WY" </record>
+    <record> "kgcc", 44.3394, -105.5419, 1330, "Gillette-Campbell Co., WY" </record>
+    <record> "klnd", 42.8147, -108.7281, 1703, "Lander, WY" </record>
+    <record> "kriw", 43.0619, -108.4464, 1684, "Riverton, WY" </record>
+    <record> "krks", 41.5942, -109.0653, 2060, "Rock Springs-Sweetwater Co., WY" </record>
+    <record> "kshr", 44.7694, -106.9689, 1225, "Sheridan Co. Apt, WY" </record>
+    <record> "karl", 41.7, -106.2167, 2179, "Arlington, WY" </record>
+    <record> "kbfu", 43.9333, -105.45, 1422, "Belle Fourche, WY" </record>
+    <record> "kbit", 41.65, -108.5833, 2160, "Bittercreek, WY" </record>
+    <record> "kbrx", 41.9333, -104.95, 1422, "Bordeaux, WY" </record>
+    <record> "kbyg", 44.3814, -106.7189, 1514, "Buffalo, WY" </record>
+    <record> "kcms", 41.5333, -109.4667, 1949, "Cemetery Separa, WY" </record>
+    <record> "kctd", 41.7167, -107.7833, 2146, "Continental Divide, WY" </record>
+    <record> "kdhs", 44.2167, -106.1, 1241, "Dead Horse, WY" </record>
+    <record> "kdrc", 42.8333, -105.8667, 1543, "Deer Creek, WY" </record>
+    <record> "kevw", 41.2731, -111.0306, 2183, "Evanston-Uninta Co., WY" </record>
+    <record> "kfir", 41.3, -110.7667, 2294, "First Divide, WY" </record>
+    <record> "kgey", 44.5158, -108.0758, 1199, "Greybull, S. Big Horn Co., WY" </record>
+    <record> "khld", 43.1, -107.3167, 1846, "Hiland, WY" </record>
+    <record> "kidv", 43.9333, -106.65, 1531, "I-25 Divide, WY" </record>
+    <record> "kika", 44.3, -104.6333, 1319, "Inyan Kara, WY" </record>
+    <record> "kp60", 44.5444, -110.4211, 2388, "Yellowstone Lake, WY" </record>
+    <record> "kpat", 42.5667, -106.85, 1912, "Pathfinder Hill, WY" </record>
+    <record> "kpin", 44.5667, -106.8167, 1392, "Piney Creek, WY" </record>
+    <record> "kpum", 41.05, -105.4667, 2420, "Pumpkin Vine, WY" </record>
+    <record> "krwl", 41.8056, -107.1997, 2077, "Rawlins, WY" </record>
+    <record> "ksib", 42.45, -105.0333, 1500, "Sibley Peak, WY" </record>
+    <record> "ktmh", 43.1167, -106.3333, 1743, "20 Mile Hill, WY" </record>
+    <record> "ktor", 42.0647, -104.1528, 1282, "Torrington, WY" </record>
+    <record> "kvdw", 41.15, -105.4, 2542, "Vedauwoo, WY" </record>
+    <record> "kwrl", 43.9658, -107.9508, 1288, "Worland, WY" </record>
+    <record> "tist", 18.3333, -64.9833, 7, "Charlotte Amalie St. Thomas, Cyril E. King Airport, Virgin Islands" </record>
+    <record> "tisx", 17.7000, -64.8000, 20, "Christiansted St. Criox, Henry E. Rohlsen Airport, Virgin Islands" </record>
+  </table>
+</siteinfo>

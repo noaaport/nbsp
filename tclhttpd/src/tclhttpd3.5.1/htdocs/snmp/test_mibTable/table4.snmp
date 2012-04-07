@@ -1,0 +1,22 @@
+<title>test suite for Mib Table - test 4</title>
+<h1> Test out various orders</h1>
+<hr>
+<form>
+[formSession -group test4]
+Choose a sample list:
+[select order -choices { \
+   {ident value}
+   {value ident}
+   {port type value}
+   {id full}
+   {value description}
+   {ident id}
+   {value value value}
+}]
+<input type=submit>
+</form>
+<hr>
+[mibTable -group test4 -descriptionOK 1 -idOK 1 -typeOK 1 -portOK 1 -fullOK 1]
+<hr>
+<a href=table3.snmp?session=[session]>prev test</a><br>
+<a href=table5.snmp?session=[session]>next test</a>

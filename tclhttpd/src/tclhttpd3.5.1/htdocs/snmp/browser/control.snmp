@@ -1,0 +1,11 @@
+<Title>SNMP control page part of fancy demo</Title>
+<form method=POST TARGET=data action=table.snmp>
+[formSession -group browse]
+<table border vspace=70 cellspacing=0>
+<tr><th>description[radio -name descriptionOK -default 0]
+    <th>writable[radio -name writeOnly -default 0]
+    <th>show mibs[radio -name idOK -default 0]
+    <td><input type=submit value="submit">
+    <td><a href=../host.snmp?session=kill[session] target=_parent>new host</a>
+    </tr>
+</form></table>

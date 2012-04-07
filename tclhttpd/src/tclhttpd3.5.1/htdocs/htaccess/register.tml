@@ -1,0 +1,146 @@
+[html::author "Colin McCormack"]
+[mypage::header "user editor"]
+[
+ if {0} {
+     this template takes the following get parameters:
+     userfile - the file of passwords to update
+     groupfile - the file of groups to update
+     name - the user name to edit
+     action - the action to perform {del/add/edit}
+     password - the user's plaintext password
+     password1 - the password repeated
+     oldpassword - the old password, for editing
+     extra - extra information to file with the password
+ }
+ set userfile [ncgi::value userfile userextra]
+ parseFile $userfile users userextra
+
+ set groupfile [ncgi::value groupfile]
+ parseFile $userfile groups groupextra
+]
+
+[
+ # write userfile if necessary
+ set name [string tolower [ncgi::value name]]
+ set group [string tolower [ncgi::value group]]
+ set action [ncgi::value action]
+ set password [ncgi::value password]
+ if {$name != ""} {
+     switch $action {
+	 Del {
+	     # user must exist
+	     if {![info exists users($name)]} {
+		 return "<p>Can't delete '[protect_text $name]': doesn't exist.</p>"
+	     }
+	     
+	     # user must supply an old password
+	     if {![::validation::chkPasswd $password $users($name)]} {
+		 return "<p>Can't delete '[protect_text $name]': Passwords don't match.</p>"
+	     }
+	     unset users($name)
+	     foreach n $groups($group) {
+		 if {$name != $n} {
+		     lappend names $n
+		 }
+	     }
+	     set groups($group) $names
+	     catch {unset names}
+	     set result "Deleted $name's record"
+	     set saveGroup 1
+	 }
+	 Edit {
+	     # user must exist
+	     if {![info exists users($name)]} {
+		 return "<p>Can't edit [protect_text $name]: doesn't exist.</p>"
+	     }
+
+	     # user must supply an old password
+	     if {![::validation::chkPasswd $password $users($name)]} {
+		 return "<p>Can't change '[protect_text $name]': Passwords don't match.</p>"
+	     }
+	     set users($name) [$genPasswd $password]
+	     set saveGroup 0
+	     set result "Changed $name's record"
+	 }
+	 default {
+	     # name must not contain bad characters
+	     if {![string is alnum -strict]} {
+		 return "<p>Name [protect_text $name] contains invalid characters.</p>"
+	     }
+
+	     # user must not exist yet
+	     if {[info exists users($name)]} {
+		 return "<p>User [protect_text $name] already exists.</p>"
+	     }
+
+	     # passwords must match
+	     if {$password != $password1} {
+		 return "<p>Passwords don't match.</p>"
+	     }
+
+	     set users($name) [$genPasswd $password]
+	     lappend groups($group) $name
+	     set saveGroup 1
+	     set result "Created $name's record"
+	 }
+     }
+
+     # save the userfile if necessary
+     validation::writefile $userfile users userextra
+     if {$saveGroup} {
+	 validation::writefile $groupfile groups groupextra
+     }
+
+     return "<p>$result</p>"
+ } else {
+     return ""
+ }
+]
+[
+ ncgi::setValue name ""
+ ncgi::setValue password ""
+]
+
+[
+ ncgi::setValue action 0
+ catch {unset html}
+
+ foreach {key value} [array get users] {
+     append html [subst {
+	 <form action="$page(url)" method=POST>
+	 <input type=hidden name=userfile  value="[html::quoteFormValue $userfile]">
+	 <input type=hidden name=name value="[html::quoteFormValue $key]">
+	 <input type=submit value="[html::quoteFormValue $key]">
+	 <input type=text name=password value="">
+	 <input type=checkbox name=action value=Del>Del
+	 </form>
+     }]
+ }
+
+ append html [subst {<form action="$page(url)" method=POST>
+     <input type=hidden name=userfile  value="[html::quoteFormValue $userfile]">
+     <input type=text name=name value="">
+     <input type=text name=password value="">
+     <input type=submit name=action value=Add>
+     </form>
+ }]
+
+ return $html
+]
+<p><a href="index.html">Return to htaccess editor</a></p>
+[
+ #ncgi::setValue debug 1
+ if {[ncgi::value debug] == 1} {
+    # debugging output
+    return [subst {
+	<b>Users</b><br>
+	[html::tableFromArray users "border=1" *]
+	<p><b>CGI Values</b><br>
+	[html::tableFromList [ncgi::nvlist] "border=1"]
+	<p>
+	<b>Environment</b><br>
+	[html::tableFromArray ::env "border=1" *]
+    }]
+}]
+
+[mypage::footer]

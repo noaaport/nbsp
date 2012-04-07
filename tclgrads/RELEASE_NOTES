@@ -1,0 +1,33 @@
+$Id$
+
+TclGrads is a library of Tcl procedures to execute GrADS commands
+from a Tcl script.  Tclgrads uses the Tcl open command to connect,
+send the commands to GrADS and parse its output,
+and it requires some of the modules of the Tcllib. There are no other
+requirements, and in particular it is a pure Tcl library so there is
+nothing to compile.
+
+Sources and documentation are available from the OpenGrADS project
+
+	http://www.opengrads.org
+
+at SourceForge, and binary packages for FreeBSD and CentOS, in tbz and rpm
+formats, respectively, are available from the software section in
+
+	http://www.noaaport.net
+
+Since Tclgrads is written entirely in Tcl, the packages can be
+installed anywhere the same package management tools are used.
+
+The distribution comes with a set of examples to illustrate the
+basic functionality, and with a README file that list the available
+procedures and their usage. The packages install the examples and README
+under
+
+	<PREFIX>/share/doc/tclgrads
+
+where <PREFIX> is /usr (CentOS) or /usr/local (FreeBSD). 
+
+-
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Thu Sep 18 12:53:32 AST 2008

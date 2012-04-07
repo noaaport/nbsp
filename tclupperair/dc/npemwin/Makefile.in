@@ -1,0 +1,42 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+PROGNAME1 =	@PROGNAME1@
+PROGNAME2 =	@PROGNAME2@
+
+SRC1 =		../nbsp/fm35dc.tcl
+TARGET1 =	${PROGNAME1}
+SRC2 =		../nbsp/uatocsv.tcl
+TARGET2 =	${PROGNAME2}
+
+TARGET =	${TARGET1} ${TARGET2}
+
+TCLUPPERAIR_LIB =	../../src/fm35.tcl
+TCLUPPERAIR_PKGINDEX = ../../src/pkgIndex.tcl
+TCLUPPERAIR_FILES = ${TCLUPPERAIR_LIB} ${TCLUPPERAIR_PKGINDEX}
+TCLUPPERAIR_INSTALLDIR = ${MYLIBEXECDIR}/tclupperair
+
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
+
+all: ${TARGET}
+
+${TARGET1}: ${SRC1}
+	cd ../../; ${MAKE}
+	sed -e /%TCLUPPERAIR_INSTALLDIR%/s##${TCLUPPERAIR_INSTALLDIR}# \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC1} > ${TARGET1}
+
+${TARGET2}: ${SRC2}
+	cd ../../; ${MAKE}
+	sed -e /%TCLUPPERAIR_INSTALLDIR%/s##${TCLUPPERAIR_INSTALLDIR}# \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC2} > ${TARGET2}
+
+install: all
+	${INSTALL} -m 644 ${TCLUPPERAIR_FILES} ${TCLUPPERAIR_INSTALLDIR}
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}/${PROGNAME}
+
+clean:
+	cd ../../; ${MAKE} clean
+	rm -f *~ Makefile ${TARGET}

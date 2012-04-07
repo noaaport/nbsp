@@ -1,0 +1,54 @@
+[html::author "Brent Welch"]
+[learn::header "Application Direct URLs"]
+
+An application direct URL provides a direct mapping
+from a URL to a Tcl procedure defined inside the server.
+The <a href=/hello/>/hello</a> URL is an example.
+Look at the <tt>custom/hello.tcl</tt> to see how it is implemented.
+<p>
+The first step in creating application direct URLs is to
+define a mapping from a URL prefix (e.g., <tt>/hello</tt>)
+to a Tcl command prefix (e.g., <tt>::hello::</tt>).
+<pre>
+Direct_Url /hello ::hello::
+</pre>
+Now, define a Tcl procedure who's name starts with 
+::hello:: (this puts it into the ::hello namespace).
+<pre>
+namespace eval ::hello {
+  # ensure ::hello namespace exists
+}
+proc ::hello::/world {} {
+  return "Hello, World!"
+}
+</pre>
+This defines an implementation of the <tt>/hello/world</tt>
+URL that will print a simple message in the user's browser.
+<p>
+The correspondence between the URL and Tcl procedure name is
+made with an exact substitution of <tt>/hello</tt> with
+<tt>::hello::</tt>.  Only if that Tcl procedure exists will
+a page be returned, otherwise you get a 404 Not Found error.
+<pp>
+You can pass arguments to your URLs with CGI query data.
+The direct URL implementation maps query values to the
+corresponding Tcl procedure arguments.  For example,
+if your procedure has an argument named "foo", then
+query data from a form with an element named "foo" will
+be bound to that argument.
+<p>
+Suppose you have this simple form:
+<pre>
+&lt;form action=/hello/formhandler method=POST&gt;
+&lt;input type=text name=foo&gt;
+&lt;input type=submit&gt;
+&lt;/form&gt;
+</pre>
+You can define a form handler like this:
+<pre>
+proc ::hello::/formhandler {foo} {
+  return "You entered foo=\$foo"
+}
+</pre>
+
+[mypage::footer]

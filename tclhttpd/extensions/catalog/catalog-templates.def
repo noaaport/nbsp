@@ -1,0 +1,59 @@
+#
+# $Id$
+#
+
+# <dataset
+#    name="2010032622.taf"
+#    ID="da/taf/2010032622.taf"
+#    urlPath="da/taf/2010032622.taf">
+#    <date type="modified">2010-03-25 22:31:43Z</date>
+# </dataset>
+
+# <catalogRef
+#    xlink:href="syn/catalog.xml"
+#    xlink:title="syn"
+#    ID="da/syn"
+#    name=""/>
+
+set catalog(xml_tmpl_file) {
+    <dataset
+	ID="$subdir/$fbasename"
+	name="$fbasename"
+	urlPath="_catalog_get/$subdir/$fbasename">
+	<date type="modified">
+		[clock format $mtime -format "%Y-%m-%d %H:%M:%SZ" -gmt 1]
+	</date>
+    </dataset>
+}
+
+# The href is relative to the parent subdir
+set catalog(xml_tmpl_dir) {
+    <catalogRef
+    	ID="$subdir/$fbasename"
+	xlink:title="$fbasename"
+        xlink:href="[file tail $subdir]/$fbasename"
+	name=""
+    />
+}
+
+set catalog(xml_tmpl_start) {<?xml version="1.0" encoding="UTF-8"?>
+<catalog
+    xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    version="1.0.1">
+
+    <service name="$subdir" serviceType="Compound" base="">
+      <service name="http" serviceType="HTTPServer" base="/"/>
+    </service>
+
+    <dataset name="$subdir" ID="$subdir">
+
+      <metadata inherited="true">
+	<serviceName>$subdir</serviceName>
+      </metadata>
+}
+
+set catalog(xml_tmpl_end) {
+    </dataset>
+</catalog>
+}

@@ -1,0 +1,6 @@
+The old pre-compiled binaries that used to be in
+this directory have been removed.  The best thing
+to do is "configure" and "make" in the parent
+directory.  Or, make a platform-specific sub-directory
+(.e.g., ../linux from this location) and run
+configure and make there.

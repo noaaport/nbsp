@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+@include@ @q@../../Makefile.inc@q@
+
+SAMPLES =	inbsp.conf-sample
+TCLFILE =	inbsp.tcl
+
+INSTALL =       @INSTALL@
+
+TARGET = ${SAMPLES}
+
+all: ${TARGET}
+
+inbsp.conf-sample: inbsp.conf
+	cp inbsp.conf inbsp.conf-sample
+
+install:
+	${INSTALL} -m 0644 ${TCLFILE} ${MYEXTLIBDIR}
+	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

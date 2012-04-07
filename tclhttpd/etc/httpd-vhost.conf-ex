@@ -1,0 +1,51 @@
+#
+# $Id$
+#
+
+#
+# Example vhost configuration for
+#
+# http://warnings.opennoaaport.net
+# http://metar.opennoaaport.net
+#
+# A properly customized version of this file can be saved as "httpd.conf"
+# in the "site" subdirectory so that it is read at startup, and not
+# overwritten during an upgrade.
+#
+
+#
+# The virtual hosts configuration files will be stored in the
+# vhost.conf.d subdirectory (of the directory that contains this conf file)
+#
+set vhostconfdir [file join [file dirname [info script]] "vhost.conf.d"];
+
+# Virtual host configuration list
+set Config(virtual) [list \
+    "warnings.opennoaaport.net" [file join ${vhostconfdir} "warnings.conf"] \
+    "metar.opennoaaport.net" [file join ${vhostconfdir} "metar.conf"] \
+]
+
+#
+# A generalization
+#
+set Config(virtual) [list];
+foreach f [glob -directory ${vhostconfdir} -nocomplain "*.conf"] {
+    set name [file rootname [file tail $f]];
+    lappend Config(virtual) "${name}.opennoaaport.net" $f;
+}
+
+#
+# In general, Config(virtual) is a (tcl) list of pairs 
+#
+# <vhost_1> <configfile_1> ... <vhost_n> <configfile_n>
+#
+
+# Finally, in these two cases, the files "warnings.conf" and "metar.conf"
+# contain the following (uncommented)
+#
+## set Config(docRoot) [file join $Config(home) "htdocs/pub/digatmos/warnings"]
+## set Config(docRoot) [file join $Config(home) "htdocs/pub/digatmos/surface"]
+#
+# respectively.
+
+

@@ -1,0 +1,8 @@
+[mypage::header Surfer]
+<p>
+You clicked on the surfer.
+<p>
+<a HREF="index.html">Image</a>.
+
+[mypage::footer]
+

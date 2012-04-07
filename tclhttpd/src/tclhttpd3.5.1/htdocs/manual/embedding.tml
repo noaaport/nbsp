@@ -1,0 +1,24 @@
+[mypage::header "Embedding TclHttpd"]
+<h2>How to shutdown embedded TclHttpd</h2>
+<i>John Buckman of Lyris Technology</i>
+<p>
+Here is our scenario: we link Tcl into our multithreaded application, and 
+one thread launches Tcl and runs TclHttpd.  This works great, but when our 
+application is told to exit, how do we tell TclHttpd to exit in a thread 
+safe manner?  After all, we have TclHttpd in a "vwait forever" loop, from 
+which it never wants to exit
+<p>
+The solution that we adopted was to create a async event handler beforehand 
+to signal program exit, use a separate thread to notify the async event 
+when it is time to shutdown, and then Tcl runs our C code at a safe time 
+from inside its own thread, which modifies the global "forever" variable, 
+thus causing TclHttpd to gracefully exit.  This works nicely, with no 
+memory leaks, and no need to wait for someone to cause an event.
+<p>
+We looked at the Tcl source code for the asynchronous operations, and all 
+of it is semaphore protected and thread safe (beautiful, clean source code, 
+by the way) so I assume that this is the proper way to do it since it 
+appears from looking at the Tcl code that it was made for this sort of thing.
+
+
+[mypage::footer]

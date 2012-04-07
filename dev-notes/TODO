@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-31jan2008 - Think about having just one ``masterfilter'', that
-	calls all the others. The features.init file would be read
-	from filters.conf, which is also the configuration file
-	of the master filter. (The model used by npemwin).

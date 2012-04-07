@@ -1,0 +1,6 @@
+<title>test suite for Mib Table - test 1</title>
+<h1> This has all the options turned on</h1>
+<hr>
+[mibTable]
+<hr>
+<a href=table2.snmp>next test</a>

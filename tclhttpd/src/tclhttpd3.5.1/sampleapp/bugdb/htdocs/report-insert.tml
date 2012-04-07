@@ -1,0 +1,34 @@
+[html-strict::head {TclHttpd &gt; Sample Apps &gt; Bug Database} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+[html::h1 {TclHttpd &gt; Sample Apps &gt; Bug Database &gt; Report A Bug}]
+
+<p>
+    [html::foreach {title ref} $my_navigation {
+        <a href="$ref">$title</a> |
+    }]
+</p>
+
+[html::if {[bugdb::insert [ncgi::value Application] [ncgi::value OS] \
+           [ncgi::value Priority] [ncgi::value Assigned] \
+	   [ncgi::value Summary] [ncgi::value Description] ] == 0} {
+
+    <p>The bug report has been added to the database.</p>
+    <p><strong>Bug Report:</strong></p>
+
+    <ul style="list-style: none;">
+        <li>Application: [ncgi::value Application]</li>
+        <li>Operating System: [ncgi::value OS]</li>
+        <li>Priority: [ncgi::value Priority]</li>
+        <li>Assigned To: [ncgi::value Assigned]</li>
+        <li>Summary: [ncgi::value Summary]</li>
+        <li>Description: [ncgi::value Description]</li>
+    </ul>
+
+} else {
+    <p>The bug report could not be added to the database, please report
+    this problem to <a href="mailto:[Doc_Webmaster]">[Doc_Webmaster]</a>.</p>
+}]
+
+[html-strict::foot]

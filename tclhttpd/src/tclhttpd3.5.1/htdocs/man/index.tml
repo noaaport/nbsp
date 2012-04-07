@@ -1,0 +1,68 @@
+[mypage::header "Reference Pages"]
+[html::if {[catch {package require doctools}]} {
+You need the doctools package from Tcllib to view the pages
+in this section.
+}]
+
+[proc ManRow {manfile label desc} {
+  return "<tr><td><a href=\"$manfile\">$label</a></td><td>$desc</td></tr>\n"
+}]
+
+[proc X {} {return "<font color=red>*</font>"}]
+
+<table>
+<tr><th colspan=3 align=left>Overview</th></tr>
+
+[ManRow tclhttpd.man TclHttpd "command line arguments"]
+[ManRow architecture.man Architecture "Major modules of TclHttpd"]
+[ManRow ../manual/intro.tml Introduction "Programming and configuring TclHttpd"]
+
+<tr><th colspan=3 align=left>Tcllib Modules</th></tr>
+<tr><td colspan=3 align=left>These Standard Tcl Library modules are used by
+the TclHttpd Core modules, and are available to your application.
+Modules with a <font color=red>*</font> are especially handy.</td></tr>
+
+[ManRow base64.man base64 "encoding module"]
+[ManRow cmdline.man cmdline "command line processor"]
+[ManRow counter.man counter "stats (i.e., hit counters)"]
+[ManRow doctools.man doctools "formatting manual pages"]
+[ManRow fileutil.man fileutil "file utilities"]
+[ManRow html.man html "[X] generating HTML"]
+[ManRow md5.man md5 "MD5 hash function"]
+[ManRow md5crypt.man md5crypt "MD5 crypto function"]
+[ManRow ncgi.man ngci "[X] CGI form value support"]
+[ManRow smtp.man smtp "SMTP mail transport protocol"]
+[ManRow textutil.man textutil "Text processing"]
+[ManRow uri.man uri "URL/URI formatting"]
+
+<tr><th colspan=3 align=left>TclHttpd Core Modules</th></tr>
+<tr><td colspan=3 align=left>The TclHttpd Core modules implement
+the server, and you may need to use their interfaces when
+building your own applications on top of TclHttpd.
+Modules with a <font color=red>*</font> are the most important
+and most likely to be used directly by your application.</td></tr>
+
+[ManRow cgi.man cgi "Server's CGI processor"]
+[ManRow config.man config "[X] Configuration support"]
+[ManRow cookie.man cookie "[X] Cookie handling"]
+[ManRow counter.man counter "Layer over tcllib ::counter"]
+[ManRow direct.man direct "[X] Application-direct URL"]
+[ManRow dirlist.man dirlist "Directory listing"]
+[ManRow doc_error.man doc_error "Error handler"]
+[ManRow doc.man doc "[X] File handler"]
+[ManRow httpd.man httpd "[X] HTTPD server core"]
+[ManRow log.man log "Logging module"]
+[ManRow logstd.man logstd "Standard log format"]
+[ManRow mtype.man mtype "MIME types"]
+[ManRow session.man session "[X] Session support"]
+[ManRow ../manual/stdin.html stdin "Standard input reader"]
+[ManRow subst.man subst "Simple templates"]
+[ManRow url.man url "[X] URL dispatcher core"]
+[ManRow version.man version "Version information"]
+
+<tr><th colspan=3 align=left>Tech Notes</th></tr>
+
+[ManRow ../manual/htdig.html htdig "Search engine configuration"]
+[ManRow ../manual/embedding.tml embedding "Notes on embedding tclhttpd"]
+</table>
+[mypage::footer]

@@ -1,0 +1,145 @@
+This file gives several installation scenarios, from the simplest to
+the more complex.  If you are familiar with older versions of TclHttpd
+you may be used to running the server right out of this directory
+without any installation at all.  That is the first option we explore.
+
+1. No Install Approach
+
+Try using the server without installing anything.
+The preconditions for this are that you have Tcl 8.3 (or higher)
+and the Tcl Standard Library installed.  Test that by running tclsh
+and attempting to
+	package require counter
+
+If you can do that, then you should be able to run the server like this:
+
+	tclsh bin/httpd.tcl -port 8001
+
+Typical startup messages include:
+
+can't find package limit
+Running with default file descriptor limit
+httpd started on port 8001
+
+The last message is the one you want to see.  It tells you the
+server is running on that port.  You can ignore the message about
+the limit extension (and crypt).  These extensions are optional
+and the server works fine without them.
+
+If you use wish3 instead of tclsh you get a small Tk window that
+displays some information.  There is also a big QUIT button that will
+stop the server.
+
+2. Install Tcl Standard Library
+
+If approach #1 doesn't work because you don't have the Standard Tcl Library,
+then either fetch it from ftp://www.tcl.tk/pub/tcl/tcllib
+or use the one that comes with the "bundled TclHttpd" distribution.
+Grab the highest version number one you can find from:
+
+	http://tcllib.sourceforge.net/
+
+Tcllib contains a Tcl or SH script that copies its files into peer directories
+of your Tcl script library.  For example, if your Tcl library is in
+/usr/local/tcl/tcl8.3, then it will create a directory named something like
+/usr/local/tcl/tcllib1.6.  Once these are in place, you should be able to
+"package require tcllib" from your Tcl shell.
+
+WARNING: The Tcl package mechanism doesn't deal correctly with multiple
+versions of TclLib installed.  For best results, remove the older versions
+after you install the latest one.
+
+Now go try approach #1 again.
+
+3. Configure and Make Install
+
+The configure and Makefile.in files are used to create a tailored
+Makefile for your system.  You use the Makefile to
+compile the optional extensions and to install Tcl Httpd into a 
+central location.
+
+Try this:
+
+	configure --prefix=/home/yourname/test --enable-gcc
+	make install
+
+This will create a directory structure under /home/yourname/test that
+contains TclHttpd.  The install directory structure is organized a bit
+different than the distribution directory, just to keep you on your toes.
+
+To avoid errors from the above step, you'll need to have a Tcl source tree
+around so the configure can find a tclConfig.sh file, and so the
+link step for the limit and crypt extensions can find the Tcl stub libraries.
+You might need to do this:
+
+	configure --prefix=/home/yourname/test --enable-gcc \
+		--with-tcl=/the/place/that/contains/tclConfig.sh
+
+In other words, specify the Tcl *build* directory so the binary extensions
+can be compiled in a compatible way.  You might be able to get around this
+by ignoring any errors from configure and doing "make -k install" to
+ignore errors about the crypt and limit extentions.  The server starts
+up and runs with or without these optional extensions.
+
+For best results, the --prefix you use with TclHttpd is exactly the
+same as the one you used when compiling and installing Tcl.  If
+Tcl is in a central location that you do not own, you might have
+to hand-edit bin/httpd.tcl to get the auto_path right.  Or, simply
+compile and install Tcl yourself in a locate you control.
+
+4. Use the Makefile in the bundled distrubtion.
+
+The bundled distribution includes Tcl, Tcl Httpd, the Thread extension,
+and the Standard Tcl Library.  It contains a toplevel Makefile that
+will attempt to compile and install all the packages in the bundle.
+By default it installs into a subdirectory (install), so you may want
+to edit the Makefile to change the PREFIX value.  There is also a
+PLATFORM variable there that defaults to Linux, but you can see
+settings for other platforms.
+
+The bundled build creates a Tcl interpreter with threading support.
+
+NOTE - THREADING IS NOT REQUIRED.  I've run Tcl Httpd for years
+without threads and it has served millions of URL requests on
+www.scriptics.com (and now www.tcl.tk) Tcl has a wonderful event-driven
+I/O system so you can have a sophisticated server without threading.
+However, if one of your requests blocks, then the whole server
+blocks.  Without threads, you are forced to put your blocking
+operations into CGI scripts so that the external CGI process blocks.
+The server continues to service requests until the pipe connected
+to the CGI process produces data.
+
+5. Starkit Distribution
+
+The tclhttpd3.5.0.kit file is a starkit that is used with the
+tclkit Tcl interpreter.  There is more information about Tclkit at
+  http://wiki.tcl.tk/tclkit/
+but the basic idea is simple.  All you need is a tclkit binary
+installed for your platform, and the platform-independent tclhttpd.kit.
+Start the server like this:
+  tclkit tclhttpd.kit -port 8001 -docRoot /your/htdocs -library /your/code
+If you don't supply a docRoot or library, then you get the sample
+htdocs and extension code that is bundled inside the tclhttpd.kit file.
+You can supply all the regular command line arguments to the starkit.
+
+NOTE: CGI scripts don't work if you use the sample document tree because
+the hosting OS cannot find the CGI script files inside the starkit.
+
+Feel free to create your own tclhttpd.kit that has your own doc tree
+and application code.  You'll need the "sdx" utility that wraps and unwraps
+a tclkit.  You can even create a single-file Starpack that includes
+tclkit and the tclhttpd.kit wrapped up into a single executable file.
+
+
+----------------------------------------------------------------------------
+PLATFORM ISSUES
+---------------
+
+REDHAT 7.0
+----------
+Brian Meagher <bmeagher@eurologic.com> reported issues with the 
+configure scripts and RedHat 7.0:
+	The configure script (generated by autoconf 2.52g) does not
+	operate properly on my Red Hat 7.0 Linux system.  I regenerated
+	the script with autoconf 2.13 & that works fine.  (I also tried
+	with 2.52 & 2.53 - neither worked). 

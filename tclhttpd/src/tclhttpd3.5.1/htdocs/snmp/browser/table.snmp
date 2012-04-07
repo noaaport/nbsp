@@ -1,0 +1,2 @@
+<title>Mib Table</title>
+[mibTable -mib system -group {browse demo}]  

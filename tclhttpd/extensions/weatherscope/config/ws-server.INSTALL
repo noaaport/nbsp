@@ -1,0 +1,48 @@
+#
+# $Id$
+#
+
+The files in this package add an extension to the Nbsp tclhttpd web server
+to support the WeatherScope program as a client. The Weatherscope application
+is available from
+
+		http://climate.ok.gov/software/
+-
+
+Installation of Weatherscope support files 
+==========================================
+
+1) First,
+
+	cd m4
+
+and edit the file ``defs.m4'' to reflect your setup. The only really
+important setting is the ``baseurl''.
+
+ 
+2) Back to this directory, and
+
+	make
+
+3) That will produce two files,
+
+	ws-server.tgz
+	ws-client.tgz
+
+Copy all the xml files contained in the ws-server.tgz file to
+
+	/var/noaaport/www/htdocs/pub/weatherscope/conf
+
+4) The file ws-client.zip is for your clients. Distribute that file along with
+ws-client.INSTALL. A good place to put both is
+
+	/var/noaaport/www/htdocs/pub/weatherscope/client
+
+5) Edit "features.conf" in nbsp, and enable the wsfilter in nbsp, by
+
+	set feature(wsfilter) 1
+
+6) Restart nbspd.
+
+-
+Thu Mar 25 17:16:30 AST 2010

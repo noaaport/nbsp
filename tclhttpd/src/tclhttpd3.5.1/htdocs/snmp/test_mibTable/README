@@ -1,0 +1,4 @@
+These are test pages for the MibTable building block
+that is defined in snmp.tcl.  The basic idea is that
+it displays a table of info from the SNMP mib, but with
+lots of control over how the data is presented.

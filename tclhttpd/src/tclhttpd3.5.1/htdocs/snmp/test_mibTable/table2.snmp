@@ -1,0 +1,19 @@
+<title>test suite for Mib Table - test 2</title>
+<h1> This tests a few of the options</h1>
+<form>
+[formSession -group test2]
+<table border>
+<tr><th>http method<td colspan=2>[select method -selected POST -choices {POST GET}]</tr>
+<tr><th>heading<td colspan=2>[select heading -selected {} -choices {{} {{Object Name} {Current Value}}}]</tr>
+<tr><th>Writeable<br>only[radio -name writeOnly -default 0]</tr>
+<tr><th>read only[radio -name readOnly -default 0]</tr>
+<tr><th>border[radio -name border -default 1]</tr>
+</tr>
+</table>
+<input type=submit>
+</form>
+<hr>
+[mibTable -group test2]
+<hr>
+<a href=table1.snmp?session=[session]>prev test</a><br>
+<a href=table3.snmp?session=[session]>next test</a>

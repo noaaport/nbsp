@@ -1,0 +1,7 @@
+[html-strict::head {Just a simple test!} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+Just a simple test!
+
+[html-strict::foot]

@@ -1,0 +1,12 @@
+<?datasetconfig version="1.0d1"?>
+
+<siteinfo>
+	<table>
+		<fieldref id="stid" type="string"/>
+		<fieldref id="stnm" type="int"/>
+		<fieldref id="lat" type="float"/>
+		<fieldref id="lon" type="float"/>
+
+		<record> "000001", 1, </record>
+	</table>
+</siteinfo>

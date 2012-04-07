@@ -1,0 +1,23 @@
+tclhttpd (3.5.1-1) unstable; urgency=low
+  * change version for release
+
+ -- Colin McCormack <colin@chinix.com>  Thu, 27 May 2004 10:06:02 +1000
+
+tclhttpd (3.5.0-2) unstable; urgency=low
+
+  * cleaned up some errors
+
+ -- Colin McCormack <colin@chinix.com>  Sat, 13 Mar 2004 15:36:24 +1000
+
+tclhttpd (3.5.0-1) unstable; urgency=low
+
+  * tclhttpd native debian release.
+
+ -- Colin McCormack <colin@chinix.com>  Sun, 18 Jan 2004 21:18:40 +1000
+
+tclhttpd (3.4.3-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Colin McCormack <colin@chinix.com>  Sun, 12 Oct 2003 14:04:55 +1000
+

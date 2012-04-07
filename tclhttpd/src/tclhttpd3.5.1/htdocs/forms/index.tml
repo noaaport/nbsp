@@ -1,0 +1,26 @@
+[mypage::header "CGI Examples"]
+<i>Note: The CGI scripts use tclsh and the ncgi module from the Standard Tcl Library.
+Even if you can run the web server, you may need to install the Standard Tcl Library
+before the CGI scripts will work.</i>
+
+<h3>Normal cases</h3>
+<ul>
+<li><a href=form1.html>Sample form posted to test.cgi</a>
+<li><a href=file.html>File upload form</a>
+<li><a href=posttest.html>Form with mixed POST/GET</a>
+<li><a href=../cgi-bin/env.cgi/extra/path?query=data&x=y>CGI that dumps the environment</a>
+<li><a href=../cgi-bin/big.cgi>CGI that returns a large image</a>
+</ul>
+<h3>Error cases</h3>
+<ul>
+<li><a href=../cgi-bin/err1.cgi>CGI that generates no output and hangs</a>
+For versions of Tcl before 8.2.3, 
+this hangs the server (!) because Tcl tries wait for the child
+process when the server closes the pipe.
+<li><a href=../cgi-bin/err2.cgi>CGI that generates some output, then hangs</a>
+<li><a href=../cgi-bin/err0.cgi>CGI that exits without output.</a>  This
+crashes Tcl 8.0b2 with a panic in Tcl_AppendListObjElement and results in a file descriptor leak in Tcl 8.0b1.  These bugs are due to the new
+fcopy command introduces in Tcl 8.0b1 that replaced the old
+unsupported0 (a.k.a. copychannel).
+</ul>
+[mypage::footer]

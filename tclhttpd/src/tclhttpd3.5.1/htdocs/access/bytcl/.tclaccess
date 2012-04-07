@@ -1,0 +1,33 @@
+# The "realm" will appear in the Browser's password prompt dialog.
+# The callback is the name of the Tcl procedure to call to check the password
+
+set realm "TclHttpd"
+set callback MyPasswordChecker
+
+# MyPasswordChecker
+#
+#	This is called to verify the username and password
+#
+# Arguments:
+#	sock	Handle on the client connection
+#	realm	Should be the realm we define above
+#	user	The user name
+#	pass	The password
+#
+# Results:
+#	1	if access is allowed
+#	0	if access is denied
+
+proc MyPasswordChecker {sock realm user pass} {
+
+    # Of course, you'll probably wan't something more sophisticated
+    # than this, plus I'd never put the function in the .tclaccess
+    # file but instead have it in the script library.
+
+    if {[string compare $user tclhttpd] == 0 &&
+	    [string compare $pass "I love Tcl"] == 0} {
+	return 1
+    } else {
+	return 0
+    }
+}

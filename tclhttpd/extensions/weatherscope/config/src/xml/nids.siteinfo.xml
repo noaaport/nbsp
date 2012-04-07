@@ -1,0 +1,176 @@
+<?datasetconfig version="1.0d1"?>
+
+<siteinfo>
+  <table>
+    <fieldref id="stnm" type="int"/>
+    <fieldref id="stid" type="string"/>
+    <fieldref id="name" type="string"/>
+    <fieldref id="lat" type="float"/>
+    <fieldref id="lon" type="float"/>
+    <fieldref id="elev" type="float"/>
+
+    <record> 304, "abc", "AK- Bethel", 60.8, -161.8833, 160  </record>
+    <record> 553, "acg", "AK- Biorka Island", 56.85, -135.5333, 207  </record>
+    <record> 344, "ahg", "AK- Kenei", 60.7333, -151.35, 243  </record>
+    <record> 568, "akc", "AK- King Salmon", 58.6833, -156.6333, 62  </record>
+    <record> 505, "aih", "AK- Middleton Islands", 59.4667, -146.3, 66</record>
+    <record> 346, "aec", "AK- Nome", 64.5, -165.4333, 36  </record>
+    <record> 525, "apd", "AK- Pedro Dome", 65.0333, -147.1667, 2592  </record>
+    <record> 320, "bmx", "AL- Birmingham", 33.1722, -86.7697, 645  </record>
+    <record> 362, "eox", "AL- Ft. Rucker", 31.4606, -85.4594, 434  </record>
+    <record> 826, "htx", "AL- Huntsville-Hytop", 34.9306, -86.0833, 1760
+    </record>
+    <record> 509, "mob", "AL- Mobile", 30.6794, -88.2397, 208  </record>
+    <record> 9999,"mxx", "AL- Montgomery-Maxwell AFB", 32.533, -85.783, 122
+    </record>
+    <record> 825, "srx", "AR- Ft. Smith", 35.2906, -94.3617, 640  </record>
+    <record> 395, "lzk", "AR- Little Rock", 34.8364, -92.2622, 568  </record>
+    <record> 361, "fsx", "AZ- Flagstaff", 34.5744, -111.1978, 7417  </record>
+    <record> 524, "iwa", "AZ- Phoenix", 33.2892, -111.67, 1353  </record>
+    <record> 556, "emx", "AZ- Tucson", 31.8936, -110.6303, 5205  </record>
+    <record> 393, "yux", "AZ- Yuma", 32.4953, -114.6567, 174  </record>
+    <record> 380, "bbx", "CA- Beale AFB", 39.4961, -121.6317, 167  </record>
+    <record> 511, "eyx", "CA- Edwards AFB", 35.0978, -117.5608, 2757</record>
+    <record> 359, "bhx", "CA- Eureka", 40.4983, -124.2919, 2402  </record>
+    <record> 396, "vtx", "CA- Los Angeles", 34.4117, -119.1794, 2726 </record>
+    <record> 574, "sox", "CA- Santa Ana Mountains", 33.8178, -117.6358, 3027
+     </record>
+    <record> 536, "dax", "CA- Sacramento", 38.5011, -121.6778, 30  </record>
+    <record> 540, "nkx", "CA- San Diego", 32.9189, -117.0419, 955  </record>
+    <record> 541, "mux", "CA- San Francisco", 37.1553, -121.8983, 3469
+    </record>
+    <record> 363, "hnx", "CA- San Joaquin Valley", 36.3142, -119.6322, 243
+    </record>
+    <record> 559, "vbx", "CA- Vandenberg AFB", 34.8381, -120.3969, 1223
+    </record>
+    <record> 347, "ftg", "CO- Denver", 39.7867, -104.5458, 5497  </record>
+    <record> 368, "gjx", "CO- Grand Junction", 39.0622, -108.2139, 9991
+    </record>
+    <record> 529, "pux", "CO- Pueblo", 38.4594, -104.1814, 5249  </record>
+    <record> 351, "dox", "DE- Dover AFB", 38.8256, -75.4397, 50  </record>
+    <record> 307, "evx", "FL- Eglin AFB", 30.5644, -85.9214, 140  </record>
+    <record> 383, "jax", "FL- Jacksonville", 30.4847, -81.7019, 33  </record>
+    <record> 386, "byx", "FL- Key West", 24.5975, -81.7031, 8  </record>
+    <record> 302, "mlb", "FL- Melbourne", 28.1133, -80.6542, 35  </record>
+    <record> 728, "amx", "FL- Miami", 25.6111, -80.4128, 14  </record>
+    <record> 551, "tlh", "FL- Tallahassee", 30.3975, -84.3289, 63  </record>
+    <record> 552, "tbw", "FL- Tampa Bay", 27.7056, -82.4017, 41  </record>
+    <record> 316, "ffc", "GA- Atlanta", 33.3636, -84.5658, 858  </record>
+    <record> 510, "vax", "GA- Moody AFB", 30.8903, -83.0017, 173  </record>
+    <record> 535, "jgx", "GA- Robins AFB", 32.6753, -83.3511, 521  </record>
+    <record> 314, "gua", "Guam- Anderson AFB", 13.5667, 144.9167, 613  </record>
+    <record> 377, "hkm", "HI- Kohala", 20.1333, -155.7833, 3812  </record>
+    <record> 336, "hmo", "HI- Molokai", 21.1333, -157.1833, 1361  </record>
+    <record> 570, "hwa", "HI- South Hawaii", 19.1, -155.5667, 1381  </record>
+    <record> 550, "hki", "HI- South Kauai", 21.9, -159.55, 180  </record>
+    <record> 348, "dmx", "IA- Des Moines", 41.7311, -93.7228, 981  </record>
+    <record> 530, "dvn", "IA- Quad Cities", 41.6117, -90.5808, 754  </record>
+    <record> 322, "cbx", "ID- Boise", 43.4906, -116.2356, 3061  </record>
+    <record> 546, "sfx", "ID- Idaho Falls", 43.1058, -112.6861, 4474  </record>
+    <record> 337, "lot", "IL- Chicago", 41.6047, -88.0847, 663  </record>
+    <record> 549, "ilx", "IL- Springfield", 40.1506, -89.3369, 582  </record>
+    <record> 1023,"vwx", "IN- Evansville", 38.260, -87.724, nan </record>
+    <record> 381, "ind", "IN- Indianapolis", 39.7075, -86.2803, 790  </record>
+    <record> 827, "iwx", "IN- Webster", 41.3589, -85.7, 960  </record>
+    <record> 350, "ddc", "KS- Dodge City", 37.7608, -99.9686, 2590  </record>
+    <record> 366, "gld", "KS- Goodland", 39.3669, -101.7003, 3651  </record>
+    <record> 554, "twx", "KS- Topeka", 38.9969, -96.2325, 1367  </record>
+    <record> 562, "ict", "KS- Wichita", 37.6547, -97.4428, 1335  </record>
+    <record> 364, "hpx", "KY- Ft. Campbell", 36.7367, -87.285, 576  </record>
+    <record> 373, "jkl", "KY- Jackson", 37.5908, -83.3131, 1364  </record>
+    <record> 397, "lvx", "KY- Louisville", 37.9753, -85.9439, 719  </record>
+    <record> 521, "pah", "KY- Paducah", 37.0683, -88.7719, 392  </record>
+    <record> 339, "poe", "LA- Ft. Polk", 31.1556, -92.9758, 408  </record>
+    <record> 391, "lch", "LA- Lake Charles", 30.1253, -93.2158, 13  </record>
+    <record> 545, "lix", "LA- New Orleans", 30.3367, -89.8256, 24  </record>
+    <record> 543, "shv", "LA- Shreveport", 32.4508, -93.8414, 273  </record>
+    <record> 323, "box", "MA- Boston", 41.9558, -71.1369, 118  </record>
+    <record> 329, "cbw", "ME- Caribou (Loring AFB)", 46.0394, -67.8067, 80  </record>
+    <record> 528, "gyx", "ME- Portland", 43.8914, -70.2564, 409  </record>
+    <record> 349, "dtx", "MI- Detroit", 42.6997, -83.4717, 1072  </record>
+    <record> 312, "apx", "MI- Gaylord", 44.9072, -84.7197, 1464  </record>
+    <record> 399, "mqt", "MI- Marquette", 46.5311, -87.5483, 1411  </record>
+    <record> 369, "grr", "MI- Muskegon", 42.8939, -85.5447, 778  </record>
+    <record> 352, "dlh", "MN- Duluth", 46.8369, -92.2097, 1428  </record>
+    <record> 506, "mpx", "MN- Minneapolis-St. Paul", 44.8489, -93.5656, 946  </record>
+    <record> 385, "eax", "MO- Kansas City", 38.8103, -94.2644, 995  </record>
+    <record> 548, "sgf", "MO- Springfield", 37.2353, -93.4006, 1278  </record>
+    <record> 308, "lsx", "MO- St. Louis", 38.6989, -90.6828, 608  </record>
+    <record> 342, "gwx", "MS- Columbus AFB", 33.8967, -88.3289, 476  </record>
+    <record> 382, "dgx", "MS- Jackson", 32.3178, -90.08, 297  </record>
+    <record> 318, "blx", "MT- Billings", 45.8539, -108.6067, 3598  </record>
+    <record> 365, "ggw", "MT- Glasgow", 48.2064, -106.625, 2276  </record>
+    <record> 370, "tfx", "MT- Great Falls", 47.4597, -111.3853, 3714  </record>
+    <record> 508, "msx", "MT- Missoula", 47.0411, -113.9861, 7855  </record>
+    <record> 375, "mhx", "NC- Morehead City", 34.7761, -76.8761, 31  </record>
+    <record> 531, "rax", "NC- Raleigh-Durham", 35.6656, -78.4897, 348  </record>
+    <record> 563, "ltx", "NC- Wilmington", 33.9894, -78.4289, 64  </record>
+    <record> 321, "bis", "ND- Bismarck", 46.7708, -100.7606, 1658  </record>
+    <record> 360, "mvx", "ND- Fargo", 47.5278, -97.3256, 986  </record>
+    <record> 507, "mbx", "ND- Minot AFB", 48.3925, -100.865, 1493  </record>
+    <record> 367, "uex", "NE- Grand Island", 40.3208, -98.4419, 1976  </record>
+    <record> 517, "lnx", "NE- North Platte", 41.9578, -100.5764, 2970  </record>
+    <record> 519, "oax", "NE- Omaha", 41.3203, -96.3667, 1148  </record>
+    <record> 311, "abx", "NM- Albuquerque", 35.1497, -106.8239, 5870  </record>
+    <record> 328, "fdx", "NM- Cannon AFB", 34.6353, -103.63, 4650  </record>
+    <record> 376, "hdx", "NM- Holloman AFB", 33.0764, -106.1228, 4222  </record>
+    <record> 564, "lrx", "NV- Elko", 40.7397, -116.8028, 6744  </record>
+    <record> 566, "esx", "NV- Las Vegas", 35.7011, -114.8914, 4867  </record>
+    <record> 533, "rgx", "NV- Reno", 39.7542, -119.4622, 8299  </record>
+    <record> 310, "enx", "NY- Albany", 42.5864, -74.0639, 1826  </record>
+    <record> 319, "bgm", "NY- Binghamton", 42.1997, -75.9847, 1606  </record>
+    <record> 325, "buf", "NY- Buffalo", 42.9489, -78.7367, 693  </record>
+    <record> 850, "tyx", "NY- Montague", 43.7558, -75.68, 1988  </record>
+    <record> 515, "okx", "NY- New York City", 40.8656, -72.8639, 85  </record>
+    <record> 338, "iln", "OH- Cincinnati", 39.4203, -83.8217, 1056  </record>
+    <record> 340, "cle", "OH- Cleveland", 41.4131, -81.8597, 763  </record>
+    <record> 305, "fdr", "OK- Frederick", 34.3622, -98.9764, 1267  </record>
+    <record> 1, "tlx", "OK- Oklahoma City", 35.3331, -97.2778, 1213  </record>
+    <record> 557, "inx", "OK- Tulsa", 36.175, -95.5647, 668  </record>
+    <record> 558, "vnx", "OK- Vance AFB", 36.7408, -98.1278, 1210  </record>
+    <record> 500, "max", "OR- Medford", 42.0811, -122.7172, 7513  </record>
+    <record> 522, "pdt", "OR- Pendleton", 45.6906, -118.8528, 1515  </record>
+    <record> 527, "rtx", "OR- Portland", 45.7147, -122.9653, 1572  </record>
+    <record> 523, "dix", "PA- Philadelphia", 39.9469, -74.4108, nan </record>
+    <record> 526, "pbz", "PA- Pittsburgh", 40.5317, -80.2181, 1185  </record>
+    <record> 374, "ccx", "PA- State College", 40.9231, -78.0036, 2405  </record>
+    <record> 502, "jua", "Puerto Rico- San Juan", 18.1156, -66.0781, 2794  </record>
+    <record> 333, "clx", "SC- Charleston", 32.6556, -81.0422, 97  </record>
+    <record> 341, "cae", "SC- Columbia", 33.9486, -81.1183, 231  </record>
+    <record> 555, "gsp", "SC- Greenville-Spartanburg (Greer)", 34.8833, -82.22, 940  </record>
+    <record> 309, "abr", "SD- Aberdeen", 45.4558, -98.4131, 1302  </record>
+    <record> 532, "udx", "SD- Rapid City", 44.125, -102.8297, 3016  </record>
+    <record> 544, "fsd", "SD- Sioux Falls", 43.5878, -96.7294, 1430  </record>
+    <record> 387, "mrx", "TN- Knoxville", 36.1686, -83.4017, 1337  </record>
+    <record> 501, "nqa", "TN- Memphis", 35.3447, -89.8733, 282  </record>
+    <record> 512, "ohx", "TN- Nashville", 36.2472, -86.5625, 579  </record>
+    <record> 313, "ama", "TX- Amarillo", 35.2333, -101.7092, 3587  </record>
+    <record> 539, "ewx", "TX- Austin-San Antonio", 29.7039, -98.0283, 633  </record>
+    <record> 324, "bro", "TX- Brownsville", 25.9161, -97.4189, 23  </record>
+    <record> 332, "grk", "TX- Central Texas (Ft. Hood)", 30.7217, -97.3831, 538  </record>
+    <record> 343, "crp", "TX- Corpus Christi", 27.7842, -97.5111, 45  </record>
+    <record> 345, "fws", "TX- Dallas-Ft. Worth", 32.5731, -97.3031, 683  </record>
+    <record> 353, "dyx", "TX- Dyess AFB", 32.5383, -99.2544, 1517  </record>
+    <record> 357, "epz", "TX- El Paso", 31.8731, -106.6981, 4104  </record>
+    <record> 378, "hgx", "TX- Houston", 29.4719, -95.0792, 18  </record>
+    <record> 394, "dfx", "TX- Laughlin AFB", 29.2728, -100.2806, 1131  </record>
+    <record> 398, "lbb", "TX- Lubbock", 33.6542, -101.8142, 3259  </record>
+    <record> 518, "maf", "TX- Odessa", 31.9433, -102.1892, 2868  </record>
+    <record> 538, "sjt", "TX- San Angelo", 31.3714, -100.4925, 1890  </record>
+    <record> 330, "icx", "UT- Cedar City", 37.5908, -112.8622, 10600  </record>
+    <record> 537, "mtx", "UT- Salt Lake City", 41.2628, -112.4478, 6460  </record>
+    <record> 516, "akq", "VA- Norfolk-Richmond", 36.9839, -77.0072, 112  </record>
+    <record> 534, "fcx", "VA- Roanoke", 37.0244, -80.2739, 2868  </record>
+    <record> 303, "lwx", "VA- Sterling (Washington, DC)", 38.9753, -77.4778, 272
+    </record>
+    <record> 326, "cxx", "VT- Burlington", 44.5111, -73.1669, 317  </record>
+    <record> 542, "atx", "WA- Seattle-Tacoma", 48.1944, -122.4958, 494 </record>
+    <record> 547, "otx", "WA- Spokane", 47.6803, -117.6267, 2384  </record>
+    <record> 371, "grb", "WI- Green Bay", 44.4983, -88.1114, 682  </record>
+    <record> 389, "arx", "WI- LaCrosse", 43.8228, -91.1911, 1276  </record>
+    <record> 504, "mkx", "WI- Milwaukee", 42.9678, -88.5506, 958  </record>
+    <record> 334, "rlx", "WV- Charleston", 38.3111, -81.7231, 1080  </record>
+    <record> 335, "cys", "WY- Cheyenne", 41.1519, -104.8061, 6128  </record>
+    <record> 392, "riw", "WY- Riverton", 43.0661, -108.4772, 5568  </record>
+  </table>
+</siteinfo>

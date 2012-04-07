@@ -1,0 +1,9 @@
+[mypage::header "Imagemap Test"]
+<p>
+This was the view outside my window at SunLabs.
+Click on something.
+<br>
+
+<a HREF="../images/lake.map"><img src="../images/lake.gif" width="557" height="141" ismap></a>
+
+[mypage::footer]

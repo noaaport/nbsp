@@ -1,0 +1,133 @@
+[::learn::header "Server Security"]
+[Doc_Dynamic]
+
+<h4>Server Security Model</h4>
+
+Each URL request goes through two main phases.
+The first phase performs access control,
+and the second phase generates the page.
+<ul>
+<li><a href=#htaccess>File-based Access Control</a>
+<li><a href=#custom>Securing Custom URLs</a>
+<li><a href=#api>Access Control Hook API</a>
+</ul>
+<p>
+
+<h4><a name="htaccess">.htaccess</a> and .tclaccess Access Control Files</h4>
+
+<p>
+Your application (i.e., web site) registers
+one or more access control hooks with <tt>Url_AccessInstall</tt>.
+By default, the server registers
+the <tt>DocAccessControl</tt> procedure,
+which implements access control based on both
+<tt>.htaccess</tt> and <tt>.tclaccess</tt> control files
+that you can put in any directory in your web site.
+<p>
+There are <a href=/access/>several examples of
+access control files</a>.
+There is also a simple <a href=http://localhost:$Httpd(port)/htaccess/>editor for
+.htaccess files</a>.  You must access /htaccess using a "locahost" URL.
+
+<h4><a name="custom">Security and Custom URLs</a></h4>
+
+<p>
+A custom URL is something implemented by pure code in your
+application as opposed to being based on a document in a filesystem
+directory somewhere.  URL domains are created with
+<tt>Url_PrefixInstall</tt>, and
+<a href=/learn/direct.tml>Application Direct URLs</a> are
+a simple kind of custom URL domain you can easily experiment with.
+For example, the <a href=/debug/echo?foo=bar>/debug</a> and
+<a href=/status>/status</a> are Application Direct URLs
+implemented by code inside the basic server that provide
+simple debugging tools and status reporting.
+<p>
+Some admins may worry about the debug hooks,
+although I've used them without incident.
+Through a simple trick, you can use <tt>.htaccess</tt> or
+<tt>.tclaccess</tt> files to control access to
+custom URL domains.
+Access control to the "/debug" URL domains is set by the
+<tt>.htaccess</tt> or <tt>.tclaccess</tt> file in the
+"/debug" subdirectory of your document root.
+This works because the DocAccessHook always looks in directories
+for these control files, ignoring the custom URL prefixes.
+<p>
+Verify this by checking <a href=/debug/pvalue?aname=Doc>this /debug URL</a>
+which, if allowed, will dump out the contents of the Doc variable.
+If you are prompted for a login, use the "debug" user and the
+password printed out when the server starts up.
+<p>
+Now practice modifying the /debug/.tclaccess file to implement
+a different password checker for the /debug URL.
+<p>
+<h4><a name="api">Access Control Hook Interface</a></h4>
+<p>
+Suppose you register your own access control hook, like this:
+<pre>
+Url_AccessInstall MyAccessHook
+proc MyAccessHook {sock url} {
+  # return either:
+  # "ok" means access is allowed
+  # "denied" if access is denied
+  # "skip" if this hook doesn't have any opinion on the matter
+}
+</pre>
+<p>
+Most access hooks do some pattern matching on the url to
+limit the scope of their checks, such as:
+<pre>
+if {!\[regexp {^(/debug|/status)} \$url\]} {
+  return "skip"
+}
+</pre>
+<p>
+There is also <tt>Url_AccessInstallPrepend</tt> and
+<tt>Url_AccessUnInstall</tt> if you want to manipulate the
+access control hook order.  The hook list is stored in
+<tt>\$Url(accessHooks)</tt>.
+The access control procedures configured for this server:
+<ul><li>[join $Url(accessHooks) <li>]</ul>
+<h4><a name="connect">Useful Connection State</a></h4>
+<p>
+[proc MyHttpdState {} {
+  global Httpd
+  set sock $Httpd(currentSocket)
+  upvar #0 Httpd$sock data
+  set html "<table border=0 cellpadding=2 cellspacing=2 align=left>\n"
+  append html "<tr><td>\n"
+  append html "<table border=1 cellpadding=2 cellspacing=2 align=left>\n"
+  # Used to do "array names data", but here we filter a bit
+  foreach x {proto url uri prefix suffix pathlist
+        self mime,host ipaddr} {
+    append html "<tr><td>data($x)</td><td>$data($x)</td></tr>\n"
+  }
+  append html "</table>"
+  append html "</td><td>&nbsp;</td></tr></table>"
+  return $html
+}]
+[MyHttpdState]
+You may also want to look at connection state.
+There is a standard idiom to get this from the \$sock variable.
+<pre>
+upvar #0 Httpd\$sock data
+</pre>
+After this, the <tt>data</tt> variable is an array with
+various interesting bits of state.  The table at
+left shows several (but not all) elements of the socket
+state.
+The \$data(ipaddr) value is the IP address of the requesting
+client.  One useful filter is to limit this to 127.0.0.1 so
+the browser has to run on the same host as the server.
+<pre>
+if {\$data(ipaddr) == "127.0.0.1"} {
+  return "ok"
+}
+</pre>
+<p>
+Beware that \$data(pathlist) is a side effect of DocAccessHook,
+which sets this by calling <tt>Url_PathCheck</tt> to ensure that
+the URL doesn't use "../" components to sneak out of the URL namespace.
+<br clear>
+[mypage::footer]

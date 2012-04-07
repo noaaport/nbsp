@@ -1,0 +1,114 @@
+[manpage_begin httpd::log n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Logging of web activity}]
+[moddesc   {Tcl Web Server}]
+[require httpd::log [opt 1.1]]
+[description]
+
+The package [package httpd::log] is a core module providing all other
+modules of the web server with commands to log user activity.
+
+[para]
+
+This package has a soft-dependency on the package
+
+[package httpd::counter]. The command [cmd Log_SetFile] will use
+
+[cmd Counter_Checkpoint] to save the counter state as part of flushing
+the logs to disk, but only if the [package httpd::counter] package is
+present.
+
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Log] [arg sock] [arg reason] [arg arg]...]
+
+Log information about the activity of the web server.  There are two
+kinds of log entries.  One [term normal] entry that goes into its own
+log, one line for each HTTP transaction. All other log records are
+appended to an error log file.
+
+[nl]
+
+The first argument, [arg sock] provides the handle of the connection
+causing the generation of this entry. If the [arg reason] is set to
+[const Close] then this is the [term normal] completion of a request.
+Otherwise, this is some error tag and the record goes to the error
+log.
+
+[nl]
+
+The other arguments are copied verbatim into the log file chosen for
+the entry.
+
+
+[call [cmd Log_Configure]]
+[call [cmd Log_Configure] [arg option]]
+[call [cmd Log_Configure] ([arg option] [arg value])...]
+
+(Re)configures the package, or retrieves the configuration.
+
+[nl]
+
+When called without arguments the current configuration is returned as
+a dictionary. When called with a single argument the current value of
+that option is returned. Else the package is reconfigured using the
+specificed options and values.
+
+[nl]
+
+The accepted options are
+
+[list_begin opt]
+[opt_def -lognames]
+
+The argument is a boolean value. If set to [const true] the package
+[package log::std] will log the domain names of the hosts acessing the
+web server. The default is [const false] as the DNS lookup is a
+time-expensive operation, causing the logging of the bare ip-addresses
+instead.
+
+[list_end]
+
+
+[call [cmd Log_FlushMinutes] [arg min]]
+
+Sets the interval in minutes at which the logs are flushed to disk. If
+the interval is set to [const 0] then the logs will be flushed on each
+write. The default is one minute.
+
+[call [cmd Log_SetFile] [opt [arg basename]]]
+
+The command is multi-purpose. Calling it sets a new basename for the
+two log files. It flushes all logs, rotates the old log files and
+swaps in the new. It also sets up a timer event which will perform
+the same rotation at the next midnight.
+
+[nl]
+
+When called without argument it performs all of the operations above,
+except that the basename for the log files is not changed. This
+is the way the timer event above is set up.
+
+[nl]
+
+The above means that this command should be used once, during the
+startup of the web server to define a log file and initiate the
+logging. From then on the system will automatically rotate the created
+logs every midnight without user intervention.
+
+
+[call [cmd Log_Flush]]
+
+Calling this command causes the package to periodically flush
+the log files to disk, according to the interval set via
+[cmd Log_FlushMinutes].
+
+[list_end]
+
+[see_also httpd httpd::logstd httpd::counter]
+[keywords {web server} log trace]
+[manpage_end]

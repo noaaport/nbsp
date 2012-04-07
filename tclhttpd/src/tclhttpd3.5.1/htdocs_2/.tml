@@ -1,0 +1,3 @@
+proc AddrootProc {args} {
+   return "Code loaded from local .tml file"
+}

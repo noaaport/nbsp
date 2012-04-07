@@ -1,0 +1,41 @@
+<?wxscript version="1.4d1" encoding="UTF-8"?>
+<?FxWindow frameBounds="106,74,1100,655"?>
+<?MapView bounds="0,0,1100,633"?>
+<wxscript>
+	<map color="#EFEFDEFF" fieldOfView="136.808" scale="1.266" mapLon="-98.
+419" mapLat="34.045" legendVisible="true" legendAlign="left" archiving="true" r
+ate="37">
+		<projection id="orthographic">
+			<property id="stdLon" type="float" value="-97.278"/>
+			<property id="stdLat" type="float" value="35.333"/>
+		</projection>
+		<loop>
+			<duration value="1" units="hour"/>
+			<step value="5" units="min"/>
+		</loop>
+		<shape visible="true" selected="false" alpha="0.3" dataset="edu
+.ou.ocs.usshapes" color="#000000FF" width="1.0" feature="outline" region="conus
+" mask="false" filled="false"/>
+		<symbol visible="true" selected="false" alpha="1.0" dataset="ed
+u.ou.ocs.aprs" color="#000000FF" symbol="solidCircle" size="1.19"/>
+		<gridlines visible="true" selected="false" alpha="0.1" color="#
+000000FF" width="1.0" startLat="-90.000" endLat="90.000" startLon="-180.000" en
+dLon="180.000" lonInterval="2.000" latInterval="2.000"/>
+		<obs visible="true" selected="true" alpha="1.0" dataset="edu.ou
+.ocs.aprs" parm="stid" units="nada" color="#000000FF" min="nan" max="nan" preci
+sion="1" location="1" outline="true">
+			<font name="Lucida Grande" size="10"/>
+		</obs>
+		<shape visible="true" selected="false" alpha="0.4" dataset="edu
+.ou.ocs.usshapes" color="#4C5675FF" width="1.0" feature="counties" region="tx" 
+mask="false" filled="false"/>
+		<shape visible="true" selected="false" alpha="0.4" dataset="edu
+.ou.ocs.usshapes" color="#4C5675FF" width="1.0" feature="counties" region="ok" 
+mask="false" filled="false"/>
+		<obs visible="true" selected="false" alpha="1.0" dataset="edu.o
+u.ocs.okplaces" parm="name" units="nada" color="#90BB99E0" min="nan" max="nan" 
+precision="1" location="4" outline="false">
+			<font name="Lucida Grande" size="9"/>
+		</obs>
+	</map>
+</wxscript>

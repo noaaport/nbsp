@@ -1,0 +1,164 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# debian/rules with debhelper for tclhttpd
+
+export VERSION=3.5.1
+export BUILD=$(CURDIR)/debian/tclhttpd/
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+config.status: configure
+	dh_testdir
+	# Add here commands to configure the package.
+	CFLAGS="${CFLAGS}" ./configure --host=$(DEB_HOST_GNU_TYPE) --libdir=/usr/lib/tclhttpd$(VERSION) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=/usr/share/man
+# --mandir=/usr/share/man --infodir=/usr/share/info
+
+
+
+build: build-stamp
+build-stamp: config.status
+	dh_testdir
+
+	$(MAKE) DESTDIR=$(CURDIR)/debian/tclhttpd
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	-$(MAKE) distclean
+
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub ./config/config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess ./config/config.guess
+endif
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here commands to install the package into debian/<packagename>
+	$(MAKE) DESTDIR=`pwd`/debian/`dh_listpackages` SERVER_ROOT=/var/www pkglibdir=/usr/lib/tclhttpd$(VERSION) install
+	#cp `which env` $(BUILD)/var/www/htdocs/cgi-bin/env
+	-rm $(BUILD)/var/www/htdocs/cgi-bin/env
+	rm $(BUILD)/var/www/htdocs/license.terms
+	rm $(BUILD)/var/www/tclhttpd.etc.init
+	rm $(BUILD)/var/www/README*
+
+	# move some lib dirs out of the way
+	# The htdocs/libtml directory is no longer used
+	# The code to support the sample website is in the custom directory
+	mkdir $(BUILD)/usr/lib/tclhttpd/
+#	mv $(BUILD)/var/www/htdocs/libtml $(BUILD)/usr/lib/tclhttpd/
+	-rm -rf $(BUILD)/var/www/htdocs/libtml
+	mv $(BUILD)/var/www/custom $(BUILD)/usr/lib/tclhttpd/
+
+	mv $(BUILD)/var/www/htdocs/* $(BUILD)/var/www
+	mv $(BUILD)/var/www/htdocs/.tml $(BUILD)/var/www
+
+	mkdir $(BUILD)/etc
+	mkdir $(BUILD)/etc/tclhttpd
+	#mv $(BUILD)/usr/bin/httpdthread.tcl $(BUILD)/usr/lib/tclhttpd$(VERSION)/
+
+	# supply our own config files
+	rm $(BUILD)/usr/bin/tclhttpd.rc
+	cp $(BUILD)/../tclhttpd-debian/tclhttpd.rc $(BUILD)/etc/tclhttpd/
+
+	rm $(BUILD)/usr/bin/httpdthread.tcl
+	cp $(BUILD)/../tclhttpd-debian/httpdthread.tcl $(BUILD)/etc/tclhttpd/
+
+	# clean up some mess to keep lintian happy
+	chmod a-x `find $(BUILD)/var/www/ -name '*.gif'` \
+		`find $(BUILD)/var/www/ -name '*.css'` \
+		`find $(BUILD)/var/www/ -name '*.html'` \
+		`find $(BUILD)/etc/tclhttpd/` \
+		$(BUILD)/usr/lib/tclhttpd/custom/dodirs.tcl
+
+	mv $(BUILD)/usr/share/man/man1/httpd.1 $(BUILD)/usr/share/man/man1/httpd.tcl.1
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs -n
+	dh_installexamples
+	dh_install
+#	dh_installmenu
+	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installcatalogs
+#	dh_installpam
+#	dh_installmime
+	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_undocumented
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	sed -i "s/%VERSION%/${VERSION}/" $(BUILD)/DEBIAN/postinst
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+
+# The autotools target adds forced build-time dependencies on
+# autotools-dev (for /usr/share/misc/config.*) and devscripts (for dch)
+# It's also a .PHONY make target.
+autotools:
+        OLDDATESUB=`./config/config.sub -t | tr -d -` ;\
+        OLDDATEGUESS=`./config/config.guess -t | tr -d -` ;\
+        NEWDATESUB=`/usr/share/misc/config.sub -t | tr -d -` ;\
+        NEWDATEGUESS=`/usr/share/misc/config.guess -t | tr -d -` ;\
+        if [ $$OLDDATESUB -lt $$NEWDATESUB -o \
+             $$OLDDATEGUESS -lt $$NEWDATEGUESS ]; then \
+           dch -a -p "GNU config automated update: config.sub\
+             ($$OLDDATESUB to $$NEWDATESUB), config.guess\
+             ($$OLDDATEGUESS to $$NEWDATEGUESS)" ;\
+           cp -f /usr/share/misc/config.sub ./config/config.sub ;\
+           cp -f /usr/share/misc/config.guess ./config/config.guess ;\
+           echo WARNING: GNU config scripts updated from master copies 1>&2 ;\
+        fi
+
+.PHONY: build clean binary-indep binary-arch binary install autotools

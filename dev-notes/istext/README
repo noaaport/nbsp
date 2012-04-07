@@ -1,6 +1,0 @@
-#
-# $Id$
-#
-I used the istext.tcl as a filter to determine the list of files
-that seem to be text files.
-

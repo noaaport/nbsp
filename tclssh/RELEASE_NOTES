@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+This is the first release of Tclssh, a library of Tcl procedures
+for executing tcl scripts in a remote host from a tcl script.  Tclssh
+requires some of the modules of the Tcllib library. There are no other
+requirements, and in particular it is a pure Tcl library so there is
+nothing to compile.
+
+Sources, documentation and binary packages for FreeBSD, CentOS and Debian,
+in tbz, rpm and deb formats, respectively, are available from the software
+section in
+
+	http://www.noaaport.net
+
+Since Tclssh is written entirely in Tcl, the packages can be
+installed anywhere the same package management tools are used.
+
+The distribution comes with a set of examples to illustrate the
+basic functionality, and with a README file that list the available
+procedures and their usage. The packages install the examples and README
+under
+
+	<PREFIX>/share/doc/tclssh
+
+where <PREFIX> is /usr (CentOS, Debian) or /usr/local (FreeBSD). 
+
+-
+Jose F Nieves <nieves@ltp.upr.clu.edu>
+Tue Mar 10 21:15:48 AST 2009

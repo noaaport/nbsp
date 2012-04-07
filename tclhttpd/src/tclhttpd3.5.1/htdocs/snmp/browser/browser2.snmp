@@ -1,0 +1,9 @@
+<title> Device management panel</title>
+<frameset rows="85,*,85">
+  <frame src=title.snmp?session=[session] name=top target=data>
+  <frameset cols="25%,*">
+    <frame src=walker.snmp?session=[session] name=walker>
+    <frame src=table.snmp?session=[session] name=data>
+  </frameset>
+  <frame src=control.snmp?session=[session] name=control target=data>
+</frameset>

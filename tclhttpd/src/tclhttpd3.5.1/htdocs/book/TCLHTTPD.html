@@ -1,0 +1,3348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="TCLHTTPD.css">
+<TITLE>  18</TITLE></HEAD>
+<BODY BGCOLOR="#ffffff">
+<DIV>
+<H1 CLASS="ChapterNumber">
+<A NAME="pgfId=2395">
+ </A>
+<A NAME="38825">
+ </A>
+</H1>
+<DIV>
+<H2 CLASS="CTChapterTitle">
+<A NAME="pgfId=2397">
+ </A>
+TclHttpd Web Server</H2>
+<font size=-1>
+This chapter is part of the 3rd edition of <em>Practical Programming
+in Tcl and Tk</em> by Brent Welch.
+This chapter is being made available to help users of TclHttpd.
+The original work is in Frame, and this HTML file is automatically generated
+with minimal effort.  Please don't complain about formatting, but
+please do provide feedback about content.  Direct your email
+to welch@acm.org and put the word "book" into the subject.
+</font>
+</em>
+<P CLASS="AuthorInfo.first">
+</P>
+<P CLASS="AuthorInfo.first">
+<A NAME="pgfId=2399">
+ </A>
+This chapter describes TclHttpd, a web server built entirely in Tcl. The web server can be used as a stand-alone server or it can be embedded into applications to web-enable them. TclHttpd provides a Tcl+HTML template facility that is useful for maintaining site-wide look and feel, and an application-direct URL that invokes a Tcl procedure in an application.</P>
+<P CLASS="Body.Initial.Cap">
+<A NAME="pgfId=5787">
+ </A>
+<EM CLASS="Initial">
+T</EM>
+clHttpd started out as about 175 lines of Tcl that could serve up HTML pages and images. The Tcl <EM CLASS="ComputerStatement">
+socket</EM>
+ and I/O commands make this easy. Of course, there are lots of features in web servers like Apache or Netscape that were not present in the first prototype. Steve Uhler took my prototype, refined the HTTP handling, and aimed to keep the basic server under 250 lines. I went the other direction, setting up a modular architecture, adding in features found in other web servers, and adding some interesting ways to connect TclHttpd to Tcl applications. </P>
+<P CLASS="Body">
+<A NAME="pgfId=10293">
+ </A>
+Today TclHttpd is used both as a general-purpose Web server, and as a framework for building server applications. It implements www.tcl.tk, including the Tcl Resource Center and Scriptics' electronic commerce facilities. It is also built into several commercial applications such as license servers and mail spam filters. Instructions for setting up the TclHttpd on your platform are given towards the end of the chapter, on page <A HREF="TCLHTTPD.html#31754" CLASS="XRef">
+See The TclHttpd Distribution</A>
+. It works on Unix, Windows, and Macintosh. You can have the server up and running quickly.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9594">
+ </A>
+The bulk of this chapter describes the various ways you can extend the server and integrate it into your application. TclHttpd is interesting because, as a Tcl script, it is easy to add to your application. Suddenly your application has an interface that is accessible to Web browsers in your company's intranet or the global Internet. The Web server provides several ways you can connect it to your application:</P>
+<UL>
+<LI>
+<A NAME="pgfId=8203">
+ </A>
+Static pages. As a &quot;normal&quot; web server, you can serve static documents that describe your application.</LI>
+<LI>
+<A NAME="pgfId=8208">
+ </A>
+Domain handlers. You can arrange for all URL requests in a section of your web site to be handled by your application. This is a very general interface where you interpret what the URL means and what sort of pages to return to each request. For example, <EM CLASS="ComputerStatement">
+http://www.tcl.tk/resource/</EM>
+ is implemented this way. The URL past <EM CLASS="ComputerStatement">
+/resource</EM>
+ selects an index in a simple database, and the server returns a page describing the pages under that index.</LI>
+<LI>
+<A NAME="pgfId=8210">
+ </A>
+Application-Direct URLs. This is a domain handler that maps URLs onto Tcl procedures. The form query data that is part of the HTTP GET or POST request is automatically mapped onto the parameters of the application-direct procedure. The procedure simply computes the page as its return value. There is none of the complexity of the CGI interface. For example, in TclHttpd the URLs under <EM CLASS="ComputerStatement">
+/status</EM>
+ report various statistics about the web server's operation.</LI>
+<LI>
+<A NAME="pgfId=8209">
+ </A>
+Document handlers. You can define a Tcl procedure that handles all files of a particular type. For example, the server has a handler for CGI scripts, HTML files, and HTML+Tcl template files. </LI>
+<LI>
+<A NAME="pgfId=8222">
+ </A>
+HTML+Tcl Templates. These are web pages that mix Tcl and HTML markup. The server replaces the Tcl using the <EM CLASS="ComputerStatement">
+subst</EM>
+ command and returns the result. The server can cache the result in a regular HTML file to avoid the overhead of template processing on future requests. Templates are a great way to maintain common look and feel to a family of web pages, as well as to implement more advanced dynamic HTML features like self-checking forms.</LI>
+</UL>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=8964">
+ </A>
+TclHttpd Architecture</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=9100">
+ </A>
+This section describes the software architecture of TclHttpd. This explains how the server dispatches requests for URLs to different modules and what basic functions are available to help respond to URL requests. You need to understand this as you go to extend the server's functionality or integrate the server into your own application. As we go along, there will be references to Tcl files in the server's implementation. These are all found in the <EM CLASS="ComputerStatement">
+lib</EM>
+ directory of the distribution, and you may find it helpful to read the code to learn more about the implementation. [CD-ROM ref] Figure <A HREF="TCLHTTPD.html#22964" CLASS="XRef">
+See The dotted box represents one application that embeds TclHttpd. Document templates and Application Direct URLs provide direct connections from an HTTP request to your application.</A>
+ shows the basic components of the server.</P>
+<DIV>
+<MAP NAME="TCLHTTPD-1">
+</MAP>
+<IMG SRC="TCLHTTPD-1.gif" USEMAP="#TCLHTTPD-1">
+</DIV>
+<P CLASS="Body">
+<A NAME="pgfId=9237">
+ </A>
+At the core is the <EM CLASS="ComputerStatement">
+Httpd module</EM>
+, which implements the server side of the <EM CLASS="ComputerStatement">
+HTTP</EM>
+ protocol. The 'd' in Httpd stands for daemon, which is the name given to system servers on <EM CLASS="ComputerStatement">
+UNIX</EM>
+. This module manages network requests, dispatches them to the <EM CLASS="ComputerStatement">
+Url</EM>
+ module, and provides routines used to return the results to requests. </P>
+<P CLASS="Body">
+<A NAME="pgfId=9228">
+ </A>
+The <EM CLASS="ComputerStatement">
+Url</EM>
+ module divides the web site into <EM CLASS="Emphasis">
+domains</EM>
+, which are subtrees of the URL hierarchy provided by the server. The idea is that different domains may have completely different implementations. For example, the Document domain (<EM CLASS="ComputerStatement">
+doc.tcl</EM>
+) maps its URLs into files and directories on your hard disk, while the Application-Direct domain (<EM CLASS="ComputerStatement">
+direct.tcl</EM>
+) maps URLs into Tcl procedure calls within your application. The CGI domain (cgi.tcl) maps URLs onto other programs that compute web pages. </P>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9248">
+ </A>
+A Simple URL Domain</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9993">
+ </A>
+You can implement new kinds of domains that provide your own interpretation of a URL. This is the most flexible interface available to extend the web server. You provide a callback that is invoked to handle every request in a domain, or subtree, of the URL hierarchy. The callback interprets the URL, computes the page content, and returns the data using routines from the <EM CLASS="ComputerStatement">
+Httpd</EM>
+ module. </P>
+<P CLASS="Body">
+<A NAME="pgfId=9998">
+ </A>
+Example <A HREF="TCLHTTPD.html#12514" CLASS="XRef">
+See A simple URL domain.</A>
+ defines a simple domain that always returns the same page to every request. This example shows the basic structure of a domain handler and introduces some useful support procedures. The domain is registered with the <EM CLASS="ComputerStatement">
+Url_PrefixInstall</EM>
+ command. The arguments to <EM CLASS="ComputerStatement">
+Url_PrefixInstall</EM>
+ are the URL prefix and a callback that is called to handle all URLs that match that prefix. In the example, all URLs that start with <EM CLASS="ComputerStatement">
+/simple</EM>
+ are dispatched to the <EM CLASS="ComputerStatement">
+SimpleDomain</EM>
+ procedure.</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=9120">
+ </A>
+<A NAME="12514">
+ </A>
+A simple URL domain.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9121">
+ </A>
+Url_PrefixInstall /simple [list SimpleDomain /simple]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9140">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9122">
+ </A>
+proc SimpleDomain {prefix sock suffix} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9125">
+ </A>
+	upvar #0 Httpd$sock data</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10001">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10002">
+ </A>
+	# Generate page header</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10003">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9127">
+ </A>
+	set html &quot;&lt;title&gt;A simple page&lt;/title&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9141">
+ </A>
+	append html &quot;&lt;h1&gt;$prefix$suffix&lt;/h1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9136">
+ </A>
+	append html &quot;&lt;h1&gt;Date and Time&lt;/h1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9133">
+ </A>
+	append html [clock format [clock seconds]]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10004">
+ </A>
+	# Display query data</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10005">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9126">
+ </A>
+	if {[info exist data(query)]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9134">
+ </A>
+		append html &quot;&lt;h1&gt;Query Data&lt;/h1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9129">
+ </A>
+		append html &quot;&lt;table&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9130">
+ </A>
+		foreach {name value} [Url_DecodeQuery $data(query)] {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9132">
+ </A>
+			append html &quot;&lt;tr&gt;&lt;td&gt;$name&lt;/td&gt;&lt;td&gt;$value&lt;/td&gt;&lt;/tr&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9131">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10294">
+ </A>
+		append html &quot;&lt;/table&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9128">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9139">
+ </A>
+	Httpd_ReturnData $sock text/html $html</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=9123">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=9169">
+ </A>
+The <EM CLASS="ComputerStatement">
+SimpleDomain</EM>
+ handler illustrates several properties of domain handlers. The <EM CLASS="ComputerStatement">
+sock</EM>
+ and <EM CLASS="ComputerStatement">
+suffix</EM>
+ arguments to <EM CLASS="ComputerStatement">
+SimpleDomain</EM>
+ are appended by <EM CLASS="ComputerStatement">
+Url_Dispatch</EM>
+ when it invokes the domain handler. The <EM CLASS="ComputerStatement">
+suffix</EM>
+ parameter is the part of the URL after the prefix. The <EM CLASS="ComputerStatement">
+prefix</EM>
+ is passed in as part of the callback definition so the domain handler can recreate the complete URL. For example, if the server receives a request for the url <EM CLASS="ComputerStatement">
+/simple/page</EM>
+, then the prefix is <EM CLASS="ComputerStatement">
+/simple</EM>
+, the suffix is <EM CLASS="ComputerStatement">
+/request</EM>
+.</P>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9810">
+ </A>
+Connection State and Query Data</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9213">
+ </A>
+The <EM CLASS="ComputerStatement">
+sock</EM>
+ parameter is a handle on the socket connection to the remote client. This variable is also used to name a state variable that the <EM CLASS="ComputerStatement">
+Httpd</EM>
+ module maintains about the connection. The name of the state array is <EM CLASS="ComputerStatement">
+Httpd$sock</EM>
+, and <EM CLASS="ComputerStatement">
+SimpleDomain</EM>
+ uses <EM CLASS="ComputerStatement">
+upvar</EM>
+ to get a more convenient name for this array (i.e., <EM CLASS="ComputerStatement">
+data</EM>
+):</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9815">
+ </A>
+upvar #0 Httpd$sock data</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9279">
+ </A>
+An important element of the state array is the query data. This is the information that comes from HTML forms. The query data arrives in an encoded format, and the <EM CLASS="ComputerStatement">
+Url_DecodeQuery</EM>
+ procedure is used to decode the data into a list of names and values:</P>
+</DIV>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.first">
+<A NAME="pgfId=9820">
+ </A>
+foreach {name value} [Url_DecodeQuery $data(query)] {</H5>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9821">
+ </A>
+	# Process query data</P>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.last">
+<A NAME="pgfId=9822">
+ </A>
+}</H5>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9569">
+ </A>
+Returning Results</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9175">
+ </A>
+Finally, once the page has been computed, the <EM CLASS="ComputerStatement">
+Httpd_ReturnData</EM>
+ procedure is used to return the page to the client. This takes care of the HTTP protocol as well as returning the data. There are two related procedures, <EM CLASS="ComputerStatement">
+Httpd_ReturnFile</EM>
+ and <EM CLASS="ComputerStatement">
+Httpd_Redirect</EM>
+. The first returns the contents of a file as the result of the transaction. It is called like this:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9184">
+ </A>
+Httpd_ReturnFile $sock <EM CLASS="EmphComputer">
+mimetype</EM>
+ <EM CLASS="EmphComputer">
+filename</EM>
+</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9185">
+ </A>
+The <EM CLASS="ComputerStatement">
+Httpd_Redirect</EM>
+ procedure generates a 302 return code that causes the remote client to fetch a different URL. This is a very useful trick employed in complex page flows. It is invoked like this:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9196">
+ </A>
+Httpd_Redirect <EM CLASS="EmphComputer">
+newurl</EM>
+ $sock</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9200">
+ </A>
+If you need to return an error in response to a request, use <EM CLASS="ComputerStatement">
+Httpd_Error</EM>
+. Its <EM CLASS="ComputerStatement">
+code</EM>
+ parameter is a standard numeric code (e.g., <EM CLASS="ComputerStatement">
+404</EM>
+ for <EM CLASS="ComputerStatement">
+Not</EM>
+ <EM CLASS="ComputerStatement">
+Found)</EM>
+</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9201">
+ </A>
+Httpd_Error $sock <EM CLASS="EmphComputer">
+code</EM>
+ </H6>
+</DIV>
+</DIV>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=9827">
+ </A>
+Application Direct URLs</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=9828">
+ </A>
+The Application Direct domain implementation provides the simplest way to extend the web server. It hides the details associated with query data, decoding URL paths, and returning results. All you do is define Tcl procedures that corresond to URLs. Their arguments are automatically matched up to the query data. The Tcl procedures compute a string that is the result data, which is usually HTML. That's all there is to it. </P>
+<P CLASS="Body">
+<A NAME="pgfId=9832">
+ </A>
+The <EM CLASS="ComputerStatement">
+Direct_Url</EM>
+ procedure defines a URL prefix and a corresponding Tcl command prefix. Any URL that begins with the URL prefix will be handled by a corresponding Tcl procedure that starts with the Tcl command prefix. This is shown in Example <A HREF="TCLHTTPD.html#29189" CLASS="XRef">
+See Application Direct URLs</A>
+:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=9837">
+ </A>
+<A NAME="29189">
+ </A>
+Application Direct URLs<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9833">
+ </A>
+Direct_Url /demo Demo</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9860">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9838">
+ </A>
+proc Demo {} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9839">
+ </A>
+	return &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;Demo page&lt;/title&gt;&lt;/head&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9889">
+ </A>
+		&lt;body&gt;&lt;h1&gt;Demo page&lt;/h1&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9890">
+ </A>
+		&lt;a href=/demo/time&gt;What time is it?&lt;/a&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9917">
+ </A>
+		&lt;form action=/demo/echo&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9918">
+ </A>
+		Data: &lt;input type=text name=data&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9919">
+ </A>
+		&lt;br&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9949">
+ </A>
+		&lt;input type=submit name=echo value='Echo Data'&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9924">
+ </A>
+		&lt;/form&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9892">
+ </A>
+		&lt;/body&gt;&lt;/html&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9872">
+ </A>
+}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9841">
+ </A>
+proc Demo/time {{format &quot;%H:%M:%S&quot;}} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9842">
+ </A>
+	return [clock format [clock seconds] -format $format]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9844">
+ </A>
+}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9845">
+ </A>
+proc Demo/echo {args} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9846">
+ </A>
+	# Compute a page that echos the query data</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9861">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9848">
+ </A>
+	set html &quot;&lt;head&gt;&lt;title&gt;Echo&lt;/title&gt;&lt;/head&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9849">
+ </A>
+	append html &quot;&lt;body&gt;&lt;table&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9850">
+ </A>
+	foreach {name value} $args {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9851">
+ </A>
+		append html &quot;&lt;tr&gt;&lt;td&gt;$name&lt;/td&gt;&lt;td&gt;$value&lt;/td&gt;&lt;/tr&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9852">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9853">
+ </A>
+	append html &quot;&lt;/tr&gt;&lt;/table&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9854">
+ </A>
+	return $html</P>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=9855">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=9834">
+ </A>
+Example <A HREF="TCLHTTPD.html#29189" CLASS="XRef">
+See Application Direct URLs</A>
+ defines <EM CLASS="ComputerStatement">
+/demo</EM>
+ as an Application Direct URL domain that is implemented by procedures that begin with <EM CLASS="ComputerStatement">
+Demo</EM>
+. There are just three URLs defined:</P>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.first">
+<A NAME="pgfId=9867">
+ </A>
+/demo</H5>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9868">
+ </A>
+/demo/time</P>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.last">
+<A NAME="pgfId=9869">
+ </A>
+/demo/echo</H5>
+<P CLASS="Body">
+<A NAME="pgfId=9881">
+ </A>
+The <EM CLASS="ComputerStatement">
+/demo</EM>
+ page displays a hypertext link to the <EM CLASS="ComputerStatement">
+/demo/time</EM>
+ page, and a simple form that will be handled by the <EM CLASS="ComputerStatement">
+/demo/echo</EM>
+ page. This page is static, and so there is just one <EM CLASS="ComputerStatement">
+return</EM>
+ command in the procedure body. Each line of the string ends with:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9953">
+ </A>
+\n\</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9954">
+ </A>
+This is just a formatting trick to let me indent each line in the procedure, but not have the line indented in the resulting string. Actually, the \-newline will be replaced by one space, so each line will be indented one space. You can leave those off and the page will display the same in the browser, but when you view the page source you'll see the indenting. Or, you could not indent the lines in the string, but then your code looks a little funny.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9950">
+ </A>
+The <EM CLASS="ComputerStatement">
+/demo/time</EM>
+ procedure just returns the result of <EM CLASS="ComputerStatement">
+clock</EM>
+ <EM CLASS="ComputerStatement">
+format</EM>
+. It doesn't even bother adding <EM CLASS="ComputerStatement">
+&lt;html&gt;</EM>
+, <EM CLASS="ComputerStatement">
+&lt;head&gt;</EM>
+, or <EM CLASS="ComputerStatement">
+&lt;body&gt;</EM>
+ tags, which you can get away with in today's browsers. A simple result like this is also useful if you are using programs to fetch information via HTTP requests.</P>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9977">
+ </A>
+Using Query Data</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9976">
+ </A>
+The <EM CLASS="ComputerStatement">
+/demo/time</EM>
+ procedure is defined with an optional <EM CLASS="ComputerStatement">
+format</EM>
+ argument. If a <EM CLASS="ComputerStatement">
+format</EM>
+ value is present in the query data then it overrides the default value given in the procedure definition.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9970">
+ </A>
+The /demo/echo procedure creates a table that shows its query data. Its <EM CLASS="ComputerStatement">
+args</EM>
+ parameter gets filled in with a name-value list of all query data. You can have named parameters, named parameters with default values, and the <EM CLASS="ComputerStatement">
+args</EM>
+ parameter in your application-direct URL procedures. The server automatically matches up incoming form values with the procedure declaration. For example, suppose you have an application direct procedure declared like this:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10023">
+ </A>
+proc Demo/param { a b {c cdef} args} { body }</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10024">
+ </A>
+You could create an HTML form that had elements named <EM CLASS="ComputerStatement">
+a</EM>
+, <EM CLASS="ComputerStatement">
+b</EM>
+, and <EM CLASS="ComputerStatement">
+c</EM>
+, and specified /demo/param for the <EM CLASS="ComputerStatement">
+ACTION</EM>
+ parameter of the <EM CLASS="ComputerStatement">
+FORM</EM>
+ tag. Or, you could type the following into your browser to embed the query data right into the URL:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10029">
+ </A>
+<EM CLASS="ComputerStatement">
+/demo/param?a=5&amp;b=7&amp;c=red&amp;d=%7ewelch&amp;e=two+words</EM>
+</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10028">
+ </A>
+In this case, when your procedure is called, <EM CLASS="ComputerStatement">
+a</EM>
+ is <EM CLASS="ComputerStatement">
+5</EM>
+, <EM CLASS="ComputerStatement">
+b</EM>
+ is <EM CLASS="ComputerStatement">
+7</EM>
+, <EM CLASS="ComputerStatement">
+c</EM>
+ is <EM CLASS="ComputerStatement">
+red</EM>
+, and the <EM CLASS="ComputerStatement">
+args</EM>
+ parameter becomes a list of:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10030">
+ </A>
+d ~welch e {two words}</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10031">
+ </A>
+The <EM CLASS="ComputerStatement">
+%7e</EM>
+ and the <EM CLASS="ComputerStatement">
++</EM>
+ are special codes for non-alphanumeric characters in the query data. Normally this encoding is taken care of automatically by the Web browser when it gets data from a form and passes it to the Web server. However, if you type query data directly, you need to think about the encoding. <A HREF="REGEXP.html#18457" CLASS="XRef">
+</A>
+ show the <EM CLASS="ComputerStatement">
+Url_Decode</EM>
+ procedure that decodes these values. This procedure is used by the application direct domain implementation, so your procedure argument values are already decoded.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10059">
+ </A>
+If parameters are missing from the query data they either get the default values from the procedure definition, or the empty string. Consider this example:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10048">
+ </A>
+<EM CLASS="ComputerStatement">
+/demo/param?b=5</EM>
+</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10046">
+ </A>
+In this case <EM CLASS="ComputerStatement">
+a</EM>
+ is <EM CLASS="ComputerStatement">
+&quot;&quot;</EM>
+, <EM CLASS="ComputerStatement">
+b</EM>
+ is <EM CLASS="ComputerStatement">
+5</EM>
+, <EM CLASS="ComputerStatement">
+c</EM>
+ is <EM CLASS="ComputerStatement">
+cdef</EM>
+, and <EM CLASS="ComputerStatement">
+args</EM>
+ is an empty list.</P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9978">
+ </A>
+Returning Other Content Types</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9979">
+ </A>
+The default content type for application direct URLs is <EM CLASS="ComputerStatement">
+text/html</EM>
+. You can specify other content types by using a global variable with the same name as your procedure. (Yes, this is a crude way to craft an interface.) Example <A HREF="TCLHTTPD.html#19048" CLASS="XRef">
+See Alternate types for Appliction Direct URLs.</A>
+ shows part of the <EM CLASS="ComputerStatement">
+faces.tcl</EM>
+ file that implements an interface to a database of picons, or personal icons, that is organized by user and domain names. The idea is that the database contains images corresponding to your email correspondents. The <EM CLASS="ComputerStatement">
+Faces_ByEmail</EM>
+ procedure, which is not shown, looks up an appropriate image file. The application direct procedure is <EM CLASS="ComputerStatement">
+Faces/byemail</EM>
+, and it sets the global variable <EM CLASS="ComputerStatement">
+Faces/byemail</EM>
+ to the correct value based on the filename extension. This value is used for the <EM CLASS="ComputerStatement">
+Content-Type</EM>
+ header in the result part of the <EM CLASS="ComputerStatement">
+HTTP</EM>
+ protocol.</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10091">
+ </A>
+<A NAME="19048">
+ </A>
+Alternate types for Appliction Direct URLs.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10092">
+ </A>
+Direct_Url /faces Faces</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10093">
+ </A>
+proc Faces/byemail {email} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10095">
+ </A>
+	global Faces/byemail</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10096">
+ </A>
+	filename [Faces_ByEmail $email]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10296">
+ </A>
+	set Faces/byemail [Mtype $filename]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10103">
+ </A>
+	set in [open $filename]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10105">
+ </A>
+	fconfigure $in -translation binary</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10104">
+ </A>
+	set X [read $in]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10106">
+ </A>
+	close $in</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10107">
+ </A>
+	return $X</P>
+</DIV>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10094">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10295">
+ </A>
+The <EM CLASS="ComputerStatement">
+Mtype</EM>
+ module that maintains a map from file suffixes to MIME content types. For example, it maps <EM CLASS="ComputerStatement">
+.gif</EM>
+ to <EM CLASS="ComputerStatement">
+image/gif</EM>
+.</P>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=10118">
+ </A>
+Document Types</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=10119">
+ </A>
+The Document domain maps URLs onto files and directories. It provides more ways to extend the server by registering different document type handlers. This occurs in a two step process. First the type of a file is determined by its suffix. The <EM CLASS="ComputerStatement">
+mime.types</EM>
+ file contains a map from suffixes to <EM CLASS="ComputerStatement">
+MIME</EM>
+ types such as <EM CLASS="ComputerStatement">
+text/html</EM>
+ or <EM CLASS="ComputerStatement">
+image/gif</EM>
+. This map is controlled by the <EM CLASS="ComputerStatement">
+Mtype</EM>
+ module in <EM CLASS="ComputerStatement">
+mtype.tcl</EM>
+. Second, the server checks for a Tcl procedure with the appropriate name:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10127">
+ </A>
+Doc_mimetype</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10128">
+ </A>
+The matching prcedure, if any, is called to handle the URL request. The procedure should use routines in the <EM CLASS="ComputerStatement">
+Httpd</EM>
+ module to return data for the request. If there is no matching <EM CLASS="ComputerStatement">
+Doc_mimetype</EM>
+ procedure, then the default document handler uses <EM CLASS="ComputerStatement">
+Httpd_ReturnFile</EM>
+ and specifies the Content Type based on the file extension.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10140">
+ </A>
+You can make up new types to support your application. For example, the HTML+Tcl templates use the &quot;<EM CLASS="ComputerStatement">
+.tml</EM>
+&quot; suffix that is mapped to the <EM CLASS="ComputerStatement">
+application/x-tcl-template</EM>
+ type. The TclHttpd distribution also includes support for files with a .snmp extension that implement a template-based web interface to the Scotty SNMP Tcl extension.</P>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=10154">
+ </A>
+HTML + Tcl Templates</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10158">
+ </A>
+The template system uses HTML pages that embed Tcl commands and Tcl variable references. The server replaces these using the <EM CLASS="ComputerStatement">
+subst</EM>
+ command and returns the results. The server comes with a general template system, but using <EM CLASS="ComputerStatement">
+subst</EM>
+ is so easy you can create your own template system. The general template framework has these components:</P>
+<UL>
+<LI>
+<A NAME="pgfId=10163">
+ </A>
+Each <EM CLASS="ComputerStatement">
+.html</EM>
+ file has a corresponding <EM CLASS="ComputerStatement">
+.tml</EM>
+ template file. This feature is enabled with the <EM CLASS="ComputerStatement">
+Doc_CheckTemplates</EM>
+ command in the server's configuration file. Normally, the server returns the <EM CLASS="ComputerStatement">
+.html</EM>
+ file unless the corresponding <EM CLASS="ComputerStatement">
+.tml</EM>
+ file has been modified more recently. In this case the server processes the template, caches the result in the <EM CLASS="ComputerStatement">
+.html</EM>
+ file, and returns the result. </LI>
+<LI>
+<A NAME="pgfId=10169">
+ </A>
+A dynamic template (e.g., a form handler) must be processed each time it is requested. If you put the <EM CLASS="ComputerStatement">
+Doc_Dynamic</EM>
+ command into your page it turns off the caching of the result in the <EM CLASS="ComputerStatement">
+.html</EM>
+ page. The server responds to a request for a <EM CLASS="ComputerStatement">
+.html</EM>
+ page by processing the <EM CLASS="ComputerStatement">
+.tml</EM>
+ page.</LI>
+<LI>
+<A NAME="pgfId=10166">
+ </A>
+The server creates a <EM CLASS="ComputerStatement">
+page</EM>
+ global Tcl variable that has context about the page being processed. Table X lists the elements of the page array.</LI>
+<LI>
+<A NAME="pgfId=10183">
+ </A>
+The server initializes the <EM CLASS="ComputerStatement">
+env</EM>
+ global Tcl variable with similar information, but in the standard way for CGI scripts. Table Y lists the elements of the env array that are set by <EM CLASS="ComputerStatement">
+Cgi_SetEnv</EM>
+ in <EM CLASS="ComputerStatement">
+cgi.tcl</EM>
+.</LI>
+<LI>
+<A NAME="pgfId=10184">
+ </A>
+The server supports per-directory &quot;<EM CLASS="ComputerStatement">
+.tml</EM>
+&quot; files that contain Tcl source code. These files are sourced by the server from the URL document root down to the directory containing a template file. These files are designed to contain procedure definitions and variable settings that are shared among pages. The server compares the modify time of these files against the template file and will process the template if these <EM CLASS="ComputerStatement">
+.tml</EM>
+ files are newer than the cached <EM CLASS="ComputerStatement">
+.html</EM>
+ file. So, by modifying the &quot;<EM CLASS="ComputerStatement">
+.tml</EM>
+&quot; file in the root of your URL hierarchy you invalidate all the cached <EM CLASS="ComputerStatement">
+.html</EM>
+ files.</LI>
+<LI>
+<A NAME="pgfId=10194">
+ </A>
+The server supports a script library for the procedures called from templates. The <EM CLASS="ComputerStatement">
+Doc_TemplateLibrary</EM>
+ procedure registers this directory. The server adds the directory to its <EM CLASS="ComputerStatement">
+auto_path</EM>
+, which assumes you have a <EM CLASS="ComputerStatement">
+tclIndex</EM>
+ or <EM CLASS="ComputerStatement">
+pkgIndex.tcl</EM>
+ file in the directory so the procedures are loaded when needed.</LI>
+</UL>
+<P CLASS="Body">
+<A NAME="pgfId=10197">
+ </A>
+The advantage of putting procedure definitions in the library is that they are defined one time but executed many times. This works well with the Tcl byte-code compiler. The disadvantage is that if you modify procedures in these files you have to explicitly source them into the server for these changes to take effect. </P>
+<P CLASS="Body">
+<A NAME="pgfId=10758">
+ </A>
+The advantage of putting code into <EM CLASS="ComputerStatement">
+.tml</EM>
+ files is that changes are picked up immediately with no effort on your part. However, that code is only run one time, so the byte-code compiler just adds overhead.</P>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=10211">
+ </A>
+Templates for Site Structure</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10249">
+ </A>
+The next few examples show a simple template system used to maintain a common look at feel across the pages of a site. Example <A HREF="TCLHTTPD.html#23982" CLASS="XRef">
+See A one-level site structure.</A>
+ shows a simple one-level site definition that is kept in the root <EM CLASS="ComputerStatement">
+.tml</EM>
+ file. This structure lists the title and URL of each page in the site:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10253">
+ </A>
+<A NAME="23982">
+ </A>
+A one-level site structure.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10254">
+ </A>
+set site(pages) {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10255">
+ </A>
+	Home						/index.html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10276">
+ </A>
+	&quot;Ordering Computers&quot;						/ordering.html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10256">
+ </A>
+	&quot;New Machine Setup&quot;						/setup.html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10257">
+ </A>
+	&quot;Adding a New User&quot;						/newuser.html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10258">
+ </A>
+	&quot;Network Addresses&quot;						/network.html</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10212">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10245">
+ </A>
+Each page includes two commands, <EM CLASS="ComputerStatement">
+SitePage</EM>
+ and <EM CLASS="ComputerStatement">
+SiteFooter</EM>
+ that generate HTML for the navigational part of the page. Between these commands is regular HTML for the page content. Example <A HREF="TCLHTTPD.html#40779" CLASS="XRef">
+See A HTML + Tcl template file.</A>
+ shows a sample template file:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10215">
+ </A>
+<A NAME="40779">
+ </A>
+A HTML + Tcl template file.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10216">
+ </A>
+[SitePage &quot;New Machine Setup&quot;]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10217">
+ </A>
+This page describes the steps to take when setting up a new</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10218">
+ </A>
+computer in our environment. See</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10466">
+ </A>
+&lt;a href=/ordering.html&gt;Ordering Computers&lt;/a&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10467">
+ </A>
+for instructions on ordering machines.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10221">
+ </A>
+&lt;ol&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10222">
+ </A>
+&lt;li&gt;Unpack and setup the machine.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10223">
+ </A>
+&lt;li&gt;Use the Network control panel to set the IP address</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10227">
+ </A>
+and hostname.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10228">
+ </A>
+&lt;!-- Several steps omitted --&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10229">
+ </A>
+&lt;li&gt;Reboot for the last time.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10230">
+ </A>
+&lt;/ol&gt;</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10231">
+ </A>
+[SiteFooter]<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10457">
+ </A>
+The <EM CLASS="ComputerStatement">
+SitePage</EM>
+ procedure takes the page title as an argument. It generates HTML to implement a standard navigational structure. Example <A HREF="TCLHTTPD.html#35984" CLASS="XRef">
+See SitePage template procedure.</A>
+ has a simple implementation of <EM CLASS="ComputerStatement">
+SitePage</EM>
+:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10309">
+ </A>
+<A NAME="35984">
+ </A>
+SitePage template procedure.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10310">
+ </A>
+proc SitePage {title} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10313">
+ </A>
+	global site</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10311">
+ </A>
+	set html &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;$title&lt;/title&gt;&lt;/head&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10761">
+ </A>
+	append html &quot;&lt;body bgcolor=white text=black&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10312">
+ </A>
+	append html &quot;&lt;h1&gt;$title&lt;/h1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10320">
+ </A>
+	set sep &quot;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10314">
+ </A>
+	foreach {label url} $site(pages) {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10327">
+ </A>
+		append html $sep</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10315">
+ </A>
+		if {[string compare $label $title] == 0} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10325">
+ </A>
+			append html &quot;$label&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10316">
+ </A>
+		} else {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10326">
+ </A>
+			append html &quot;&lt;a href='$url'&gt;$label&lt;/a&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10328">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10329">
+ </A>
+		set sep &quot; | &quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10317">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10318">
+ </A>
+	return $html</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10319">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10332">
+ </A>
+The <EM CLASS="ComputerStatement">
+foreach</EM>
+ loop that computes the simple menu of links turns out to be useful in many places. Example <A HREF="TCLHTTPD.html#25029" CLASS="XRef">
+See SiteMenu and SiteFooter template procedures.</A>
+ splits out the loop and uses it in the <EM CLASS="ComputerStatement">
+SitePage</EM>
+ and <EM CLASS="ComputerStatement">
+SiteFooter</EM>
+ procedures. This version of the templates creates a left column for the navigation and a right column for the page content:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10333">
+ </A>
+<A NAME="25029">
+ </A>
+SiteMenu and SiteFooter template procedures.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10383">
+ </A>
+proc SitePage {title} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10384">
+ </A>
+	global site</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10385">
+ </A>
+	set html &quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;$title&lt;/title&gt;&lt;/head&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10386">
+ </A>
+		&lt;body bgcolor=$site(bg) text=$site(fg)&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10423">
+ </A>
+		&lt;!-- Two Column Layout --&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10424">
+ </A>
+		&lt;table cellpadding=0&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10425">
+ </A>
+		&lt;tr&gt;&lt;td&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10426">
+ </A>
+		&lt;!-- Left Column --&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10427">
+ </A>
+		&lt;img src='$site(mainlogo)'&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10387">
+ </A>
+		&lt;font size=+1&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10388">
+ </A>
+		[SiteMenu &lt;br&gt; $site(pages)]\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10422">
+ </A>
+		&lt;/font&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10437">
+ </A>
+		&lt;/td&gt;&lt;td&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10438">
+ </A>
+		&lt;!-- Right Column --&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10439">
+ </A>
+		&lt;h1&gt;$title&lt;/h1&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10396">
+ </A>
+		&lt;p&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10389">
+ </A>
+	return $html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10390">
+ </A>
+}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10391">
+ </A>
+proc SiteFooter {} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10392">
+ </A>
+	global site</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10393">
+ </A>
+	set html &quot;&lt;p&gt;&lt;hr&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10450">
+ </A>
+		&lt;font size=-1&gt;[SiteMenu | $site(pages)]&lt;/font&gt;\n\</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10443">
+ </A>
+		&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10400">
+ </A>
+	return $html</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10394">
+ </A>
+}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10334">
+ </A>
+proc SiteMenu {sep list} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10335">
+ </A>
+	global page</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10336">
+ </A>
+	set s &quot;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10347">
+ </A>
+	set html &quot;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10337">
+ </A>
+	foreach {label url} $list {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10338">
+ </A>
+		if {[string compare $page(url) $url] == 0} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10339">
+ </A>
+			append html $s$label</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10340">
+ </A>
+		} else {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10341">
+ </A>
+			append html &quot;$s&lt;a href='$url'&gt;$label&lt;/a&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10342">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10343">
+ </A>
+		set s $sep</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10344">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10345">
+ </A>
+	return $html</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10346">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10468">
+ </A>
+Of course, a real site will have more elaborate graphics and probably a two-level, three-level, or more complex tree structure that describes its structure.You can also define a family of templates so that each page doesn't have to fit the same mold. Once you start using templates, it is fairly easy to both change the template implementation and to move pages around among different sections of your web site.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10471">
+ </A>
+There are many other applications for &quot;macros&quot; that make repetitive HTML coding chores easy. Take, for example, the link to <EM CLASS="ComputerStatement">
+/ordering.html</EM>
+ in Example <A HREF="TCLHTTPD.html#40779" CLASS="XRef">
+See A HTML + Tcl template file.</A>
+. The proper label for this is already defined in <EM CLASS="ComputerStatement">
+$site(pages)</EM>
+, so we could introduce a <EM CLASS="ComputerStatement">
+SiteLink</EM>
+ procedure that uses this:</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10475">
+ </A>
+The SiteLink procedure.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10476">
+ </A>
+proc SiteLink {label} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10477">
+ </A>
+	global site</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10478">
+ </A>
+	array set map $site(pages)</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10479">
+ </A>
+	if {[info exist map($label)]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10480">
+ </A>
+		return &quot;&lt;a href='$map($label)'&gt;$label&lt;/a&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10481">
+ </A>
+	} else {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10482">
+ </A>
+		return $label</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10483">
+ </A>
+	}</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10484">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10485">
+ </A>
+If your pages embed calls to <EM CLASS="ComputerStatement">
+SiteLink</EM>
+, then you can change the URL associated with the page name by changing the value of <EM CLASS="ComputerStatement">
+site(pages)</EM>
+. If this is stored in the top-level <EM CLASS="ComputerStatement">
+.tml</EM>
+ file, the templates will automatically track the changes.</P>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=10489">
+ </A>
+Form Handlers</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=10656">
+ </A>
+Forms and form handling programs go together. The form is presented to the user on the client machine. The form handler runs on the server after the user fills out the form and hits the submit button. The form presents input widgets like radiobuttons, checkbuttons, selection lists, and text entry fields. Each of these widgets is assigned a name, and each widget gets a value based on the users input. The form handler is a program that looks at the names and values from the form and computes the next page for the user to read.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10660">
+ </A>
+CGI is a standard way to hook external programs to web servers for the purpose of processing form data. CGI has a special encoding for values so they can be transported safely. The encoded data is either read from standard input or taken from the command line. The CGI program decodes the data, processes it, and writes a new HTML page on its standard output. <A HREF="Guestbk.html#29061" CLASS="XRef">
+</A>
+ (page <A HREF="Guestbk.html#29061" CLASS="XRef">
+</A>
+) describes writing CGI scripts in Tcl.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10774">
+ </A>
+TclHttpd provides alternatives to CGI that are more efficient because they are built right into the server. This eliminates the overhead that comes from running an external program to compute the page. Another advantage is that the Web server can maintain state between client requests simply in Tcl variables. If you use CGI, you must use some sort of database or file storage to maintain information between requests.</P>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=10670">
+ </A>
+Application Direct Handlers</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10737">
+ </A>
+The server comes with several built-in forms handlers that you can use with little effort. The <EM CLASS="ComputerStatement">
+/mail/forminfo</EM>
+ URL will package up the query data and mail it to you. You use form fields to set various mail headers, and the rest of the data is packaged up into a Tcl-readable mail message. Example <A HREF="TCLHTTPD.html#17545" CLASS="XRef">
+See Mail form results with /mail/forminfo.</A>
+ shows a form that uses this handler. Other built in handlers are described starting at page <A HREF="TCLHTTPD.html#12174" CLASS="XRef">
+See Debugging</A>
+</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10674">
+ </A>
+<A NAME="17545">
+ </A>
+Mail form results with /mail/forminfo.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10675">
+ </A>
+&lt;form action=/mail/forminfo method=post&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10677">
+ </A>
+	&lt;input type=hidden name=sendto value=mailreader@my.com&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10682">
+ </A>
+	&lt;input type=hidden name=subject value=&quot;Name and Address&quot;&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10683">
+ </A>
+	&lt;table&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10685">
+ </A>
+		&lt;tr&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;&lt;input name=name&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10693">
+ </A>
+		&lt;tr&gt;&lt;td&gt;Address&lt;/td&gt;&lt;td&gt;&lt;input name=addr1&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10695">
+ </A>
+		&lt;tr&gt;&lt;td&gt; &lt;/td&gt;&lt;td&gt;&lt;input name=addr2&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10699">
+ </A>
+		&lt;tr&gt;&lt;td&gt;City&lt;/td&gt;&lt;td&gt;&lt;input name=city&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10705">
+ </A>
+		&lt;tr&gt;&lt;td&gt;State&lt;/td&gt;&lt;td&gt;&lt;input name=state&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10711">
+ </A>
+		&lt;tr&gt;&lt;td&gt;Zip/Postal&lt;/td&gt;&lt;td&gt;&lt;input name=zip&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10713">
+ </A>
+		&lt;tr&gt;&lt;td&gt;Country&lt;/td&gt;&lt;td&gt;&lt;input name=country&gt;&lt;/td&gt;&lt;/tr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10684">
+ </A>
+	&lt;/table&gt;</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10676">
+ </A>
+&lt;/form&gt;<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10777">
+ </A>
+The mail message sent by /mail/forminfo is shown in Example <A HREF="TCLHTTPD.html#28955" CLASS="XRef">
+See Mail message sent by /mail/forminfo</A>
+. It is easy to write a script that strips the headers, defines a data procedure, and uses <EM CLASS="ComputerStatement">
+eval</EM>
+ to process the message body. Whenever you send data via email, if you format it with Tcl list structure you can process it quite easily.</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10781">
+ </A>
+<A NAME="28955">
+ </A>
+Mail message sent by /mail/forminfo<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10782">
+ </A>
+To: mailreader@my.com</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10783">
+ </A>
+Subject: Name and Address</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10784">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10785">
+ </A>
+data {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10786">
+ </A>
+	name		{Joe Visitor}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10787">
+ </A>
+	addr1		{Acme Company}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10788">
+ </A>
+	addr2		{100 Main Street}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10789">
+ </A>
+	city		{Mountain View}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10790">
+ </A>
+	state		California</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10791">
+ </A>
+	zip		12345</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10792">
+ </A>
+	country			USA</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10793">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=10740">
+ </A>
+Template Form Handlers</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10741">
+ </A>
+The drawback of using the built-in form handlers is that you have to modify their Tcl implementation to change the resulting page. Another approach is to use templates for the result page that embed a command that handles the form data. The <EM CLASS="ComputerStatement">
+Mail_FormInfo</EM>
+ procedure, for example, mails form data. It takes no arguments. Instead, it looks in the query data for <EM CLASS="ComputerStatement">
+sendto</EM>
+ and <EM CLASS="ComputerStatement">
+subject</EM>
+ values, and if they are present it sends the rest of the data in an email. It returns an HTML comment that flags that mail was sent.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10659">
+ </A>
+When you use templates to process form data you need to turn off result caching because the server must process the template each time the form is submitted. To turn off caching, embed the <EM CLASS="ComputerStatement">
+Doc_Dynamic</EM>
+ command in your form handler pages, or set the <EM CLASS="ComputerStatement">
+page(dynamic)</EM>
+ variable to 1.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10493">
+ </A>
+Example <A HREF="TCLHTTPD.html#27229" CLASS="XRef">
+See A self-checking form.</A>
+ shows a name and address form. This form is on a page that posts the form data to itself. Once all the data has been filled in correctly, the <EM CLASS="ComputerStatement">
+Form_Check</EM>
+ procedure in Example <A HREF="TCLHTTPD.html#42303" CLASS="XRef">
+See The Form_Check form handler.</A>
+ redirects to the next page in the flow.</P>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10494">
+ </A>
+<A NAME="27229">
+ </A>
+A self-checking form.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10495">
+ </A>
+&lt;form action=$page(url) method=post&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10496">
+ </A>
+&lt;input type=hidden name=form value=NameAddr&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10497">
+ </A>
+[Form_Check nextpage.html mark {email first last addr1 city zip}]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10498">
+ </A>
+&lt;table&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10560">
+ </A>
+[foreach {label name} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10652">
+ </A>
+	&quot;Email&quot;				email</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10561">
+ </A>
+	&quot;First Name&quot;				first</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10562">
+ </A>
+	&quot;Last Name&quot;				last</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10563">
+ </A>
+	&quot;Address 1&quot;				addr1</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10564">
+ </A>
+	&quot;Address 2&quot;				addr2</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10565">
+ </A>
+	&quot;City&quot;				city</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10566">
+ </A>
+	&quot;State&quot;				state</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10567">
+ </A>
+	&quot;Zip/Post&quot;				zip</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10568">
+ </A>
+	&quot;Country&quot;				country</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10569">
+ </A>
+} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10629">
+ </A>
+	if {[info exist mark($name)]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10570">
+ </A>
+		append _ &quot;&lt;tr&gt;&lt;td&gt;$mark($name) $label&lt;/td&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10630">
+ </A>
+	} else {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10633">
+ </A>
+		append _ &quot;&lt;tr&gt;&lt;td&gt;$label&lt;/td&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10631">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10571">
+ </A>
+	append _ &quot;&lt;td&gt;&lt;input [form::value $name]&lt;/td&gt;&lt;/tr&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10572">
+ </A>
+}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10573">
+ </A>
+set _]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10557">
+ </A>
+&lt;/table&gt;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10558">
+ </A>
+&lt;input type=submit&gt;</P>
+</DIV>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10559">
+ </A>
+&lt;/form&gt;<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10590">
+ </A>
+This page embeds a <EM CLASS="ComputerStatement">
+foreach</EM>
+ loop to make generation of the HTML table for the form easier. The loop appends to the _ variable, which is used by convention for this purpose in web pages. The <EM CLASS="ComputerStatement">
+form::value</EM>
+ procedure, which comes with TclHttpd, is designed for self-posting forms. It returns:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=10591">
+ </A>
+name=&quot;name&quot; value=&quot;value&quot;</H6>
+<P CLASS="Body">
+<A NAME="pgfId=10593">
+ </A>
+The <EM CLASS="EmphComputer">
+value</EM>
+ is the value of the form element based on incoming query data, or just the empty string if the query value for <EM CLASS="EmphComputer">
+name</EM>
+ is undefined. This way the form can post to itself and retain values from the previous version of the page.</P>
+</DIV>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=10600">
+ </A>
+<A NAME="42303">
+ </A>
+The Form_Check form handler.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10601">
+ </A>
+proc Form_Check {nextpage markVar required} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10602">
+ </A>
+	global page</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10618">
+ </A>
+	upvar $markVar mark</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10603">
+ </A>
+	if {[info exist page(query)]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10604">
+ </A>
+		array set query $page(query)</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10619">
+ </A>
+		if {[info exist mark]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10620">
+ </A>
+			unset mark</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10621">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10605">
+ </A>
+		foreach field $required {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10609">
+ </A>
+			if {![info exist query($field)] ||</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10610">
+ </A>
+					[string length $query($field)] == 0} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10611">
+ </A>
+				set mark($field) *</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10614">
+ </A>
+			}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10615">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10622">
+ </A>
+		if {![info exist mark]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10651">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10623">
+ </A>
+			# No missing fields, so advance to the next page.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10648">
+ </A>
+			# In practice, you must save the existing fields </P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10649">
+ </A>
+			# before redirecting to the next page.</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10650">
+ </A>
+</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10624">
+ </A>
+			Doc_Redirect $nextpage</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10625">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10626">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=10627">
+ </A>
+	return &quot;&quot;</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=10628">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<P CLASS="Body">
+<A NAME="pgfId=10634">
+ </A>
+The <EM CLASS="ComputerStatement">
+Doc_Redirect</EM>
+ procedure raises a special error that causes TclHttpd to redirect the client browser to a different page. Otherwise, the <EM CLASS="ComputerStatement">
+Form_Check</EM>
+ procedure defines an element of the <EM CLASS="ComputerStatement">
+mark</EM>
+ array for each missing field. The code in Example <A HREF="TCLHTTPD.html#27229" CLASS="XRef">
+See A self-checking form.</A>
+ uses this to flag missing fields. In practice, your form handler should do something with the good data, such as put it into a database.</P>
+<P CLASS="Body">
+<A NAME="pgfId=10644">
+ </A>
+As a matter of style, there is a bit too much code inside the HTML page in Example <A HREF="TCLHTTPD.html#27229" CLASS="XRef">
+See A self-checking form.</A>
+. You could consider combining the logic that displays the form with the logic that checks for required fields. In this case the HTML page has a single call to your procedure that implements &quot;both sides&quot; of the form: the HTML input form and the Tcl code that validates the field and saves the results.This approach is useful if you re-use the same form on different pages.</P>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=10488">
+ </A>
+<A NAME="31754">
+ </A>
+The TclHttpd Distribution</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=9604">
+ </A>
+Get the TclHttpd distribution from the CD-ROM, or find it on the Internet at:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9605">
+ </A>
+ftp://ftp.tcl.tk/pub/tcl/httpd/</H6>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9606">
+ </A>
+http://www.beedub.com/tclhttpd/</H6>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9607">
+ </A>
+Quick Start</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9608">
+ </A>
+Unpack the tar file or the zip file and you can run the server from the <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ script in the <EM CLASS="ComputerStatement">
+bin</EM>
+ directory. On UNIX:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9609">
+ </A>
+tclsh httpd.tcl -port 80</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9610">
+ </A>
+This command will start the web server on the standard port (80). By default it uses port 8015 instead. If you run it with the <EM CLASS="ComputerStatement">
+-help</EM>
+ flag it will tell you what command line options are available. If you use wish instead of tclsh then a simple Tk user interface is displayed that shows how many hits the server is getting.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9611">
+ </A>
+On Windows you can double-click the <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ script to start the server. It will use wish and display the user interface. Again it will start on port 8015. You will need to create a shortcut that passes the <EM CLASS="ComputerStatement">
+-port</EM>
+ argument, or edit the associated configuration file to change this. Configuring the server is described later.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9612">
+ </A>
+Once you have the server running you can connect to it from your web browser. Use this URL if you are running on the default (non-standard) port:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9613">
+ </A>
+http://hostname:8015/</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9614">
+ </A>
+If you are running without an internet connection, you may need to specify <EM CLASS="ComputerStatement">
+127.0.0.1</EM>
+ for the hostname. This is the &quot;localhost&quot; address and will bypass the network subsystem.</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9615">
+ </A>
+http://127.0.0.1:8015/</H6>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9616">
+ </A>
+Inside the Distribution</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9617">
+ </A>
+The TclHttpd distribution is organized into the following directories:</P>
+<UL>
+<LI>
+<A NAME="pgfId=9618">
+ </A>
+bin<BR>
+This has sample startup scripts and configuration files. The <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ script runs the server. The <EM CLASS="ComputerStatement">
+tclhttpd.rc</EM>
+ file is the standard configuration file. The <EM CLASS="ComputerStatement">
+minihttpd.tcl</EM>
+ file is the 250-line version. The <EM CLASS="ComputerStatement">
+torture.tcl</EM>
+ file has some scripts that you can use to fetch many URLs at once from a server.</LI>
+<LI>
+<A NAME="pgfId=9619">
+ </A>
+lib<BR>
+This has all the Tcl sources. In general, each file provides a package. You will see the <EM CLASS="ComputerStatement">
+package</EM>
+ <EM CLASS="ComputerStatement">
+require</EM>
+ commands partly in <EM CLASS="ComputerStatement">
+bin/httpd.tcl</EM>
+ and partly in <EM CLASS="ComputerStatement">
+bin/tclhttpd.rc</EM>
+. The idea is that the only the core packages are required by <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+, and different applications can tune what packages are needed by adjusting the contents of <EM CLASS="ComputerStatement">
+tclhttpd.rc</EM>
+.</LI>
+<LI>
+<A NAME="pgfId=9620">
+ </A>
+htdocs<BR>
+This is a sample URL tree that demonstrates the features of the web server. There is also some documentation there. One directory to note is <EM CLASS="ComputerStatement">
+htdocs/libtml</EM>
+, which is the standard place to put site-specific Tcl scripts used with the Tcl+HTML template facility.</LI>
+<LI>
+<A NAME="pgfId=9621">
+ </A>
+src<BR>
+There are a few C source files for a some optional packages. These have been precompiled for some platforms, and you can find the compiled libraries back under <EM CLASS="ComputerStatement">
+lib/Binaries</EM>
+ in platform-specific subdirectories.</LI>
+</UL>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=9622">
+ </A>
+Server Configuration</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=9623">
+ </A>
+TclHttpd configures itself with three main steps. The first step is to process the command line arguments described in Table <A HREF="TCLHTTPD.html#32426" CLASS="XRef">
+See Basic TclHttpd Parameters</A>
+. The arguments are copied into the <EM CLASS="ComputerStatement">
+Config</EM>
+ Tcl array. Anything not specified on the command line gets a default value. The next configuration step is to source the configuration file. The default configuration file is named <EM CLASS="ComputerStatement">
+tclhttpd.rc</EM>
+ in the same directory as the startup script (i.e., <EM CLASS="ComputerStatement">
+bin/tclhttpd.rc</EM>
+). This file can override command line arguments by setting the <EM CLASS="ComputerStatement">
+Config</EM>
+ array itself. This file also has application-specific <EM CLASS="ComputerStatement">
+package</EM>
+ <EM CLASS="ComputerStatement">
+require</EM>
+ commands and other Tcl commands to initialize the application. Most of the Tcl commands used during initialization are described in the rest of this section. The final step is to actually start up the server. This done back in the main <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ script.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9627">
+ </A>
+For example, to start the server for the document tree under /usr/local/htdocs and your own email address as webmaster, you can execute this command to start the server:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9628">
+ </A>
+tclsh httpd.tcl -docRoot /usr/local/htdocs -webmaster welch</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9629">
+ </A>
+Alternatively, you can put these settings into a configuration file, and start the server with that configuration file:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9630">
+ </A>
+tclsh httpd.tcl -config mytclhttpd.rc</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9631">
+ </A>
+In this case the <EM CLASS="ComputerStatement">
+mytclhttpd.rc</EM>
+ file could contain these commands to hard-wire the document root and webmaster email. In this case the command line arguments cannot override these settings:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9632">
+ </A>
+set Config(docRoot) /usr/local/htdocs</H6>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9633">
+ </A>
+set Config(webmaster) welch</H6>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9634">
+ </A>
+Command Line Arguments</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9635">
+ </A>
+There are several parameters you may need to set for a standard web server. These are shown below in Table <A HREF="TCLHTTPD.html#32426" CLASS="XRef">
+See Basic TclHttpd Parameters</A>
+. The command line values are mapped into the <EM CLASS="ComputerStatement">
+Config</EM>
+ array by the <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ startup script.</P>
+<TABLE>
+<CAPTION>
+<H6 CLASS="TableTitle">
+<A NAME="pgfId=9642">
+ </A>
+<A NAME="32426">
+ </A>
+Basic TclHttpd Parameters</H6>
+</CAPTION>
+<TR>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableColumnHead">
+<A NAME="pgfId=9648">
+ </A>
+Parameter</P>
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableColumnHead">
+<A NAME="pgfId=9650">
+ </A>
+Command Option</P>
+</TH>
+<TH ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableColumnHead">
+<A NAME="pgfId=9652">
+ </A>
+Config Variable</P>
+</TH>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9654">
+ </A>
+Port number. The default is <EM CLASS="CStatement8">
+8015</EM>
+. </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9656">
+ </A>
+-port <EM CLASS="EmphComputer">
+number</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9658">
+ </A>
+Config(port)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9660">
+ </A>
+Server name. The default is <EM CLASS="CStatement8">
+[info hostname]</EM>
+.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9662">
+ </A>
+-name <EM CLASS="EmphComputer">
+name</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9664">
+ </A>
+Config(name)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9666">
+ </A>
+IP address. The default is <EM CLASS="ComputerStatement">
+0, for &quot;any address&quot;</EM>
+.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9668">
+ </A>
+-ipaddr <EM CLASS="EmphComputer">
+address</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9670">
+ </A>
+Config(ipaddr)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9672">
+ </A>
+Directory of the root of the URL tree. The default is the <EM CLASS="CStatement8">
+htdocs</EM>
+ directory.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9674">
+ </A>
+-docRoot <EM CLASS="EmphComputer">
+directory</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9676">
+ </A>
+Config(docRoot)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9678">
+ </A>
+User ID of the TclHttpd process. The default is <EM CLASS="CStatement8">
+50</EM>
+. (UNIX only.)</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9680">
+ </A>
+-uid <EM CLASS="EmphComputer">
+uid</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9682">
+ </A>
+Config(uid)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9684">
+ </A>
+Group ID of the TclHttpd process. The default is <EM CLASS="CStatement8">
+100</EM>
+. (UNIX only.)</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9686">
+ </A>
+-gid <EM CLASS="EmphComputer">
+gid</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9688">
+ </A>
+Config(gid)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9690">
+ </A>
+Webmaster email. The default is <EM CLASS="CStatement8">
+webmaster</EM>
+.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9692">
+ </A>
+-webmaster <EM CLASS="EmphComputer">
+email</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9694">
+ </A>
+Config(webmaster)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9696">
+ </A>
+Configuration file. The default is <EM CLASS="CStatement8">
+tclhttpd.rc</EM>
+.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9698">
+ </A>
+-config <EM CLASS="EmphComputer">
+filename</EM>
+</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9700">
+ </A>
+Config(file)</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TB">
+<A NAME="pgfId=9702">
+ </A>
+Additional directory to add to the <EM CLASS="CStatement8">
+auto_path</EM>
+.</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9704">
+ </A>
+-library directory</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9706">
+ </A>
+Config(library)</P>
+</TD>
+</TR>
+</TABLE>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9707">
+ </A>
+Server Name and Port</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9708">
+ </A>
+The name and port parameters define how your server is known to Web browsers. The URLs that access your server begin with</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9709">
+ </A>
+http://<EM CLASS="EmphComputer">
+name</EM>
+:<EM CLASS="EmphComputer">
+port</EM>
+/</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9710">
+ </A>
+If the port number is 80 you can leave out the port specification. The call that starts the server using these parameters is found in <EM CLASS="ComputerStatement">
+httpd.tcl</EM>
+ as:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9711">
+ </A>
+Httpd_Server $Config(name) $Config(port) $Config(ipaddr)</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9712">
+ </A>
+Specifying the IP address is only necessary if you have several network interfaces (or several IP addresses assigned to one network interface) and want the server to listen to requests on a particular network address. Otherwise, by default server accepts requests from any network interface.</P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9713">
+ </A>
+User and Group ID</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9714">
+ </A>
+The user and group ID are used on UNIX systems with the <EM CLASS="ComputerStatement">
+setuid</EM>
+ and <EM CLASS="ComputerStatement">
+setgid</EM>
+ system calls. This lets you start the server as root, which is necessary to listen on port 80, and then switch to a less privileged user account. If you use Tcl+HTML templates that cache the results in HTML files, then you need to pick an account that can write those files. Otherwise you may want to pick a very unprivileged account.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9715">
+ </A>
+The <EM CLASS="ComputerStatement">
+setuid</EM>
+ Tcl command is implemented by a C extension found under the <EM CLASS="ComputerStatement">
+src</EM>
+ directory. If you have not compiled this for your platform, then the attempt to change user ID gracefully fails. See the <EM CLASS="ComputerStatement">
+README</EM>
+ file in the <EM CLASS="ComputerStatement">
+src</EM>
+ directory for instructions on compiling and installing the extensions found there.</P>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9716">
+ </A>
+Webmaster Email</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9717">
+ </A>
+The webmaster email address is used for automatic error reporting in the case of server errors. This is defined in the configuration file with the following command:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9718">
+ </A>
+Doc_Webmaster $Config(webmaster)</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9719">
+ </A>
+If you call <EM CLASS="ComputerStatement">
+Doc_Webmaster</EM>
+ with no arguments, it returns the email address you previously defined. This is useful when generating pages that contain <EM CLASS="ComputerStatement">
+mailto:</EM>
+ URLs with the webmaster address.</P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9720">
+ </A>
+Document Root</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9721">
+ </A>
+The document root is the directory that contains the static files, templates, cgi scripts, and so on that make up your web site. By default the httpd.tcl script uses the htdocs directory next to the directory containing httpd.tcl. It is worth noting the trick used to locate this directory:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9722">
+ </A>
+file join [file dirname [info script]] ../htdocs</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9723">
+ </A>
+The <EM CLASS="ComputerStatement">
+info</EM>
+ <EM CLASS="ComputerStatement">
+script</EM>
+ command returns the full name of the http.tcl script, <EM CLASS="ComputerStatement">
+file</EM>
+ <EM CLASS="ComputerStatement">
+dirname</EM>
+ computes its directory, and <EM CLASS="ComputerStatement">
+file</EM>
+ <EM CLASS="ComputerStatement">
+join</EM>
+ finds the adjacent directory. The path <EM CLASS="ComputerStatement">
+../htdocs</EM>
+ works with <EM CLASS="ComputerStatement">
+file</EM>
+ <EM CLASS="ComputerStatement">
+join</EM>
+ on any platform. The default location of the configuration file is found in a similar way:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9724">
+ </A>
+file join [file dirname [info script]] tclhttpd.rc</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9725">
+ </A>
+The configuration file initializes the document root with this call:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9726">
+ </A>
+Doc_Root $Config(docRoot)</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9727">
+ </A>
+If you need to find out what the document root is, you can call Doc_Root with no arguments and it returns the directory of the document root. If you want to add additional document trees into your website you can do that with a call like this in your configuration file:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9728">
+ </A>
+Doc_AddRoot directory urlprefix</H6>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9729">
+ </A>
+Other Document Settings</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9730">
+ </A>
+The <EM CLASS="ComputerStatement">
+Doc_IndexFile</EM>
+ command sets a pattern used to find the index file in a directory. The command used in the default configuration file is</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9731">
+ </A>
+Doc_IndexFile index.{htm,html,tml,subst}</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9732">
+ </A>
+If you invent other file types with different file suffixes, you can alter this pattern to include them. This pattern will be used by the Tcl <EM CLASS="ComputerStatement">
+glob</EM>
+ command.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9733">
+ </A>
+The <EM CLASS="ComputerStatement">
+Doc_PublicHtml</EM>
+ command is used to define &quot;home directories&quot; on your HTML site. If the URL begins with ~username, then the web server will look under the home directory of username for a particular directory. The command in the default configuration file is:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9734">
+ </A>
+Doc_PublicHtml public_html</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9735">
+ </A>
+For example, if my home directory is <EM CLASS="ComputerStatement">
+/home/welch</EM>
+, then the URL <EM CLASS="ComputerStatement">
+~welch</EM>
+ maps to the directory <EM CLASS="ComputerStatement">
+/home/welch/public_html</EM>
+. If there is no <EM CLASS="ComputerStatement">
+Doc_PublicHtml</EM>
+ command, then this mapping does not occur.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9736">
+ </A>
+You can register two special pages that are used when the server encounters an error it the user specifies an unknown URL. The default configuration file has these commands:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9737">
+ </A>
+Doc_ErrorPage error.html</H6>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9738">
+ </A>
+Doc_NotFoundPage notfound.html</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9739">
+ </A>
+These files are treated like templates in that they are passed through subst in order to include the error information or the URL of the missing page. These are pretty crude templates compared to the templates described earlier. You can only count on the <EM CLASS="ComputerStatement">
+Doc</EM>
+ and <EM CLASS="ComputerStatement">
+Httpd</EM>
+ arrays being defined. Look at the <EM CLASS="ComputerStatement">
+Doc_SubstSystemFile</EM>
+ in <EM CLASS="ComputerStatement">
+doc.tcl</EM>
+ for the truth about how these files are processed.</P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9740">
+ </A>
+Document Templates</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9741">
+ </A>
+The template mechanism has two main configuration options. The first specifies an additional library directory that contains your application-specific scripts. This lets you keep your application-specific files separate from the TclHttpd implementation. The command in the default configuration file specifies the libtml directory of the document tree:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9742">
+ </A>
+Doc_TemplateLibrary [file join $Config(docRoot) libtml]</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9743">
+ </A>
+You can also specify an alternate Tcl interpreter in which to process the templates. The default is to use the main interpreter, which is named {} according to the conventions described in <A HREF="Interp.html#16432" CLASS="XRef">
+</A>
+.</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9747">
+ </A>
+Doc_TemplateInterp {}</H6>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9748">
+ </A>
+Log Files</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9749">
+ </A>
+The server keeps standard format log files. The <EM CLASS="ComputerStatement">
+Log_SetFile</EM>
+ command defines the base name of the log file. The default configuration file uses this command:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9750">
+ </A>
+Log_SetFile /tmp/log$Config(port)_</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9751">
+ </A>
+By default the server rotates the log file each night at midnight. Each day's log file is suffixed with the current date (e.g., <EM CLASS="ComputerStatement">
+/tmp/logport_990218</EM>
+.) The error log, however, is not rotated, and all errors are accumulated in <EM CLASS="ComputerStatement">
+/tmp/logport_error.</EM>
+</P>
+<P CLASS="Body">
+<A NAME="pgfId=9752">
+ </A>
+The log records are normally flushed every few minutes to eliminate an extra I/O operation on each HTTP transaction. You can set this period with <EM CLASS="ComputerStatement">
+Log_FlushMinutes</EM>
+. If minutes is 0, the log is flushed on every HTTP transaction. The default configuration file contains:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9753">
+ </A>
+Log_FlushMinutes 1</H6>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9754">
+ </A>
+CGI Directories</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9755">
+ </A>
+You can register a directory that contains CGI programs with the <EM CLASS="ComputerStatement">
+Cgi_Directory</EM>
+ command. This command has the intersting effect of forcing all files in the directory to be executed as CGI scripts, so you cannot put normal HTML files there. The default configuration file contains:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9756">
+ </A>
+Cgi_Directory /cgi-bin</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9757">
+ </A>
+This means the <EM CLASS="ComputerStatement">
+cgi-bin</EM>
+ directory under the document root is a CGI directory. If you supply another argument to <EM CLASS="ComputerStatement">
+Cgi_Directory</EM>
+, then this is a file system directory that gets mapped into the URL defined by the first argument.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9758">
+ </A>
+You can also put CGI scripts into other directories and use the <EM CLASS="ComputerStatement">
+.cgi</EM>
+ suffix to indicate they should be executed as CGI scripts. The various file types supported by the server are described later.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9759">
+ </A>
+The <EM CLASS="ComputerStatement">
+cgi.tcl</EM>
+ file has some additional parameters that you can only tune by setting some elements of the <EM CLASS="ComputerStatement">
+Cgi</EM>
+ Tcl array. See the comments in the beginning of that file for details.</P>
+</DIV>
+</DIV>
+</DIV>
+<DIV>
+<H4 CLASS="H1">
+<A NAME="pgfId=9427">
+ </A>
+Standard Application-Direct URLs</H4>
+<P CLASS="Body.first">
+<A NAME="pgfId=9428">
+ </A>
+The server has several modules that provide application-direct URLs. These application-direct URL lets you control the server or examine its state from any Web browser. You can look at the implementation of these modules as examples for your own application.</P>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9429">
+ </A>
+Status</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9430">
+ </A>
+The <EM CLASS="ComputerStatement">
+/status</EM>
+ URL is implemented in the <EM CLASS="ComputerStatement">
+status.tcl</EM>
+ file. The status module implements the display of hit counts, document hits, and document misses (i.e., documents not found). The <EM CLASS="ComputerStatement">
+Status_Url</EM>
+ command enables the application-direct URLs and assigns the top-level URL for the status module. The default configuration file contains this command:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9431">
+ </A>
+Status_Url /status</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9461">
+ </A>
+Assuming this configuration, the following URLs are implemented:</P>
+<TABLE>
+<CAPTION>
+<H6 CLASS="TableTitle">
+<A NAME="pgfId=9434">
+ </A>
+Status application-direct URLs.</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9438">
+ </A>
+/status</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9440">
+ </A>
+Main status page showing summary counters and hit count histograms.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9442">
+ </A>
+/status/doc</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9444">
+ </A>
+Show hit counts for each page. This page lets you sort by name or hit count, and limit files by patterns.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9446">
+ </A>
+/status/hello</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9448">
+ </A>
+A trivial URL that returns &quot;hello&quot;.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9450">
+ </A>
+/status/notfound</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9452">
+ </A>
+Show miss counts for URLs that users tried to fetch.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9454">
+ </A>
+/status/size</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9456">
+ </A>
+The displays an estimated size of Tcl code and Tcl data used by the TclHttpd program.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9458">
+ </A>
+/status/text</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9460">
+ </A>
+This is a version of the main status page that doesn't use the graphical histograms of hit counts.</P>
+</TD>
+</TR>
+</TABLE>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9462">
+ </A>
+<A NAME="12174">
+ </A>
+Debugging</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9463">
+ </A>
+The <EM CLASS="ComputerStatement">
+/debug</EM>
+ URL is implemented in the <EM CLASS="ComputerStatement">
+debug.tcl</EM>
+ file. The debug module has several useful URLs that let you examine variable values and other internal state. It is turned on with this command in the default configuration file:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9464">
+ </A>
+Debug_Url /debug</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9468">
+ </A>
+Table <A HREF="TCLHTTPD.html#17518" CLASS="XRef">
+See Debug application-direct URLs.</A>
+ lists the /debug URLs. These URLs often require parameters that you can specify directly in the URL. For example, the <EM CLASS="ComputerStatement">
+/debug/echo</EM>
+ URL echoes its query parameters:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9507">
+ </A>
+http://yourserver:port/debug/echo?name=value&amp;name2=val2</H6>
+<TABLE>
+<CAPTION>
+<H6 CLASS="TableTitle">
+<A NAME="pgfId=9472">
+ </A>
+<A NAME="17518">
+ </A>
+Debug application-direct URLs.</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9476">
+ </A>
+/debug/after</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9478">
+ </A>
+List the outstanding <EM CLASS="ComputerStatement">
+after</EM>
+ events.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9480">
+ </A>
+/debug/dbg</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9482">
+ </A>
+Rendez-vous with TclPro Debugger. This takes a <EM CLASS="CStatement8">
+host</EM>
+ and <EM CLASS="CStatement8">
+port</EM>
+ parameter. You need to install <EM CLASS="CStatement8">
+prodebug.tcl</EM>
+ from TclPro into the server's script library directory.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9484">
+ </A>
+/debug/echo</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9486">
+ </A>
+Echos its query parameters. Accepts a <EM CLASS="CStatement8">
+title</EM>
+ parameter.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9488">
+ </A>
+/debug/errorInfo</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9490">
+ </A>
+Displays the <EM CLASS="CStatement8">
+errorInfo</EM>
+ variable along with the servers version number and webmaster email. Accepts <EM CLASS="CStatement8">
+title</EM>
+ and <EM CLASS="CStatement8">
+errorInfo</EM>
+ arguments.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9492">
+ </A>
+/debug/parray</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9494">
+ </A>
+Displays a global array variable. The name of the variable is specified with the <EM CLASS="CStatement8">
+aname</EM>
+ parameter.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9496">
+ </A>
+/debug/pvalue</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9498">
+ </A>
+A more general value display function. The name of the variable is specified with the <EM CLASS="CStatement8">
+aname</EM>
+ parameter. This can be a scaler, an array, or a pattern that matches several variable names.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9500">
+ </A>
+/debug/raise</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9502">
+ </A>
+Raise an error (to test error handling). Any parameters become the error string.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9504">
+ </A>
+/debug/source</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9506">
+ </A>
+Source a file from either the server's main library directory or the <EM CLASS="CStatement8">
+Doc_TemplateLibrary</EM>
+ directory. The file is specified with the <EM CLASS="CStatement8">
+source</EM>
+ parameter.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="Body">
+<A NAME="pgfId=9508">
+ </A>
+The sample URL tree that is included in the distribution includes the file <EM CLASS="ComputerStatement">
+htdocs/hacks.html</EM>
+. This file has several small forms that use the <EM CLASS="ComputerStatement">
+/debug</EM>
+ URLS to examine variables and source files. Example<A HREF="TCLHTTPD.html#23633" CLASS="XRef">
+See The /debug/source application-direct URL implementation.</A>
+ shows the implementation of <EM CLASS="ComputerStatement">
+/debug/source</EM>
+. You can see that it limits the files to the main script library and to the script library associated with document templates. It may seem dangerous to have these facilities, but I reason that because my source directories are under my control it cannot hurt to reload any source files. In general the library scripts just contain procedure definitions and no global code that might reset state inappropriately. In practice, the ability to tune (i.e., fix bugs) in the running server has proven useful to me on many occassions. It lets you evolve your application without restarting it! </P>
+</DIV>
+<DIV>
+<H6 CLASS="MyExample">
+<A NAME="pgfId=9513">
+ </A>
+<A NAME="23633">
+ </A>
+The /debug/source application-direct URL implementation.<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H6>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9514">
+ </A>
+proc Debug/source {source} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9515">
+ </A>
+	global Httpd Doc</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9516">
+ </A>
+	set source [file tail $source]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9517">
+ </A>
+	set dirlist $Httpd(library)</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9518">
+ </A>
+	if {[info exists Doc(templateLibrary)]} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9519">
+ </A>
+		lappend dirlist $Doc(templateLibrary)</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9520">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9521">
+ </A>
+	foreach dir $dirlist {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9522">
+ </A>
+		set file [file join $dir $source]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9523">
+ </A>
+		if [file exists $file] {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9524">
+ </A>
+			break</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9525">
+ </A>
+		}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9526">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9527">
+ </A>
+	set error [catch {uplevel #0 [list source $file]} result]</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9528">
+ </A>
+	set html &quot;&lt;title&gt;Source $source&lt;/title&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9529">
+ </A>
+	if {$error} {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9530">
+ </A>
+		global errorInfo</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9531">
+ </A>
+		append html &quot;&lt;H1&gt;Error in $source&lt;/H1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9532">
+ </A>
+		append html &quot;&lt;pre&gt;$result&lt;p&gt;$errorInfo&lt;/pre&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9533">
+ </A>
+	} else {</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9534">
+ </A>
+		append html &quot;&lt;H1&gt;Reloaded $source&lt;/H1&gt;\n&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9535">
+ </A>
+		append html &quot;&lt;pre&gt;$result&lt;/pre&gt;&quot;</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9536">
+ </A>
+	}</P>
+<P CLASS="ComputerStatement">
+<A NAME="pgfId=9537">
+ </A>
+	return $html</P>
+</DIV>
+</DIV>
+<DIV>
+<H5 CLASS="ComputerStatement.lined">
+<A NAME="pgfId=9538">
+ </A>
+}<DIV>
+<IMG SRC="TCLHTTPD-2.gif">
+</DIV>
+</H5>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9539">
+ </A>
+Administration</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9540">
+ </A>
+The <EM CLASS="ComputerStatement">
+/admin</EM>
+ URL is implemented in the <EM CLASS="ComputerStatement">
+admin.tcl</EM>
+ file. The admin module lets you load URL redirect tables, and it provides URLs that reset some of the counters maintained by the server. It is turned on with this command in the default configuration file:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9541">
+ </A>
+Admin_Url /admin</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9542">
+ </A>
+Currently there is only one useful admin URL. The <EM CLASS="ComputerStatement">
+/admin/redirect/reload </EM>
+URL sources the file named <EM CLASS="ComputerStatement">
+redirect</EM>
+ in the document root. This file is expected to contain a number of <EM CLASS="ComputerStatement">
+Url_Redirect</EM>
+ commands that establish URL redirects. These are useful if you change the names of pages and want the old names to still work.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9543">
+ </A>
+The administration module has a limited set of application-direct URLs because the simple application-direct mechanism doesn't provide the right hooks to check authentication credentials. The HTML+Tcl templates work better with the authentication schemes. </P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="H2">
+<A NAME="pgfId=9544">
+ </A>
+Sending Email</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9545">
+ </A>
+The <EM CLASS="ComputerStatement">
+/mail</EM>
+ URL is implemented in the <EM CLASS="ComputerStatement">
+mail.tcl</EM>
+ file. The mail module implements various form handlers that email form data. Currently it is UNIX only as it uses <EM CLASS="ComputerStatement">
+/usr/lib/sendmail</EM>
+ to send the mail. It is turned on with this command in the default configuration file:</P>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9546">
+ </A>
+Mail_Url /mail</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9547">
+ </A>
+The following application-direct URLs are useful form handlers. You can specify them as the <EM CLASS="ComputerStatement">
+ACTION</EM>
+ parameter in your <EM CLASS="ComputerStatement">
+&lt;FORM&gt;</EM>
+ tags.</P>
+<TABLE>
+<CAPTION>
+<H6 CLASS="TableTitle">
+<A NAME="pgfId=9550">
+ </A>
+Application-direct URLS that email form results.</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9554">
+ </A>
+/mail/bugreport</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9556">
+ </A>
+This sends email with the <EM CLASS="CStatement8">
+errorInfo</EM>
+ from a server error. It takes an <EM CLASS="CStatement8">
+email</EM>
+ parameter for the destination address and an <EM CLASS="CStatement8">
+errorInfo</EM>
+ parameter. Any additional arguments get included into the message.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9558">
+ </A>
+/mail/forminfo</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9560">
+ </A>
+This is designed to send email containing form results. It requires these parameters: <EM CLASS="CStatement8">
+sendto</EM>
+ for the destination address, <EM CLASS="CStatement8">
+subject</EM>
+ for the mail subject, <EM CLASS="CStatement8">
+href</EM>
+ and <EM CLASS="CStatement8">
+label</EM>
+ for a link to display on the results page. Any additional arguments are formatted with the Tcl <EM CLASS="CStatement8">
+list</EM>
+ command for easy processing by programs that read the mail.</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TBleft">
+<A NAME="pgfId=9562">
+ </A>
+/mail/formdata</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableBody">
+<A NAME="pgfId=9564">
+ </A>
+Thisis an older form of <EM CLASS="CStatement8">
+/mail/forminfo</EM>
+ that doesn't format the data into Tcl lists. It only requires the <EM CLASS="CStatement8">
+email</EM>
+ and <EM CLASS="CStatement8">
+subject</EM>
+ parameters. The rest are formatted into the message body.</P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="Body">
+<A NAME="pgfId=9565">
+ </A>
+The mail module provides two Tcl procedures that are generally useful. The <EM CLASS="ComputerStatement">
+MailInner</EM>
+ procedure is the one that sends mail. It is called like this:</P>
+</DIV>
+<DIV>
+<H6 CLASS="Quote">
+<A NAME="pgfId=9566">
+ </A>
+MailInner sendto subject from type body</H6>
+<P CLASS="Body">
+<A NAME="pgfId=9567">
+ </A>
+The <EM CLASS="ComputerStatement">
+sendto</EM>
+ and <EM CLASS="ComputerStatement">
+from</EM>
+ arguments are email addresses. The <EM CLASS="ComputerStatement">
+type</EM>
+ is the Mime type (e.g., <EM CLASS="ComputerStatement">
+text/plain</EM>
+ or <EM CLASS="ComputerStatement">
+text/html</EM>
+) and appears in a <EM CLASS="ComputerStatement">
+Content-Type</EM>
+ header. The <EM CLASS="ComputerStatement">
+body</EM>
+ contains the mail message without any headers.</P>
+<P CLASS="Body">
+<A NAME="pgfId=9568">
+ </A>
+The <EM CLASS="ComputerStatement">
+Mail_FormInfo</EM>
+ procedure is designed for use in HTML+Tcl template files. It takes no arguments, but insteads looks in current query data for its parameters. It expects to find the same arguments as the <EM CLASS="ComputerStatement">
+/mail/forminfo</EM>
+ direct URL. Using a template with <EM CLASS="ComputerStatement">
+Mail_FormInfo</EM>
+ gives you more control over the result page than posting directly to <EM CLASS="ComputerStatement">
+/mail/forminfo</EM>
+, and is illustrated in <A HREF="TCLHTTPD.html#17545" CLASS="XRef">
+See Mail form results with /mail/forminfo.</A>
+.</P>
+</DIV>
+</DIV>
+</DIV>
+</DIV>
+</BODY>
+</HTML>

@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>Nbsp@[exec hostname -s]</title>
+
+<meta name="description" content="Software suite (nbsp) for processing the
+contents of the Noaaport data stream">
+<meta http-equiv="Refresh" content="60">
+</head>
+
+<frameset rows="100,*">
+  <frame src="header.html">
+  <frameset cols="25%,*,25%">
+    <frame src="menu_monitor.html">
+    <frame src="nbsp" name="mainwindow">
+    <frame src="menu_data.html">
+  </frameset>
+</frameset>
+
+</html>

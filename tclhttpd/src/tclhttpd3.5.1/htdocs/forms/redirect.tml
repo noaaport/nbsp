@@ -1,0 +1,17 @@
+<title>Redirect Test</title>
+<h1>Redirect Test</h1>
+
+[if {[ncgi::value field] == "go"} {
+    package require http
+    Doc_RedirectSelf /forms/redirect2.html?[eval http::formatQuery [ncgi::nvlist]]
+}]
+
+<form action=redirect.html method=post>
+
+<input type=hidden name=hide_me value="something much longer here.  About this long">
+Field: <input [html::formValue field]>
+<br>
+[html::submit Go]
+
+</form>
+

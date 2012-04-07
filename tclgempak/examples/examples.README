@@ -1,0 +1,39 @@
+#
+# $Id$
+#
+The examples assume that Nbsp and Gempak have been installed
+from the noaaport.net packages. If a different installation is used
+then the scripts may need to be edited to specify the proper location
+of the files required.
+
+Further, the examples assume that the dafilter and gpfilter have been
+configured as explained in the file nbsp.README. The scripts can be
+used in other installations, and without nbsp, if the location of the
+data files is specified accordingly in the scripts.
+
+Examples -
+
+	ex-fronts
+	ex-wwa
+	ex-rad jua n0r
+	ex-sat tigp02
+
+ex-rad takes two arguments as indicated and and ex-sat just one.
+
+Prior to executing these scripts, the Gemenviron files must have been
+sourced. This can be done in two ways:
+
+1) Depending on the SHELL, this can be accomplished by
+
+	source /usr/local/etc/gempak/gempakcsh.conf
+or
+	. /usr/local/etc/gempak/gempaksh.conf
+
+2) Alternatively, at the top of each script, the following command can
+be put, and the scripts will source the relevant file:
+
+	source /usr/local/etc/nbsp/gempak.env
+
+The examples already have this, and it is the method to use in scripts
+that will run automatically.
+-

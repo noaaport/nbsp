@@ -1,0 +1,4 @@
+# Map for /export/home/bwelch/httpd/htdocs/images/lake.gif
+circle ../map/surfer.html 267,80 280,102
+poly ../map/bush.html 7,3 39,8 71,63 61,111 22,111 6,100 7,3
+default ../map/mapdefault.html

@@ -1,0 +1,6 @@
+tclhttpd for Debian
+-------------------
+
+For added security, this daemon does not run as root, and therefore listens only on port 8015.  It is suggested xinetd, rinetd, redir or ipchains be used to redirect port 80 to port 8015 if this is desired.
+
+ -- Colin McCormack <colin@chinix.com>, Sun Oct 12 14:55:01 2003

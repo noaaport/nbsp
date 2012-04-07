@@ -1,0 +1,27 @@
+Current version is 3.5.1
+This is reflected in the following files (sigh)
+
+README
+        For informational purposes
+configure.in
+        The patchlevel is either "" or ".1" etc.
+        *re-run* autoconf to update configure
+bin/httpd.tcl
+        set v 3.5.1
+        So it can look for the right tclhttpd library
+lib/version.tcl
+        To set the right version string.  This does
+        package provide major.minor only, but the string
+        has the date and patchlevel.  The actual value
+        of the httpd::version package number isn't used.
+lib/pkgIndex.tcl
+        This needs to be regenerated when any package in lib
+        changes its version number
+DIST_build/DIST
+        To choose the CVS tag for the release, which typically
+        reflects the version number (e.g., tclhttpd-3-3-1 or
+        tclhttpd-3-4-rel-2)
+DIST_build/DIST.exp
+        To remove the scratch directories used to create the distribution
+DIST_build/Makefile.boot
+        To fix the version number

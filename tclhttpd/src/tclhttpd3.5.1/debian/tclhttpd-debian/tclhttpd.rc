@@ -1,0 +1,199 @@
+# tclhttpd.rc
+#
+# This is the debian configuration file for TclHttpd
+#
+# Note - you should assume that all the paramters listed here 
+# are required in one place or another.  If you want to "delete"
+# a parameter you should set the associated value to the
+# empty string, which is written either "" or {}
+#
+# This file is processed in a safe interpreter.  The only side
+# effects it has are through the Config command.  Given two arguments,
+# the Config command sets a parameter.  With a single argument,
+# it returns the value of that parameter.
+
+# Config parameters in all lower-case have a command line
+# argument alternative (see httpd.tcl)
+# You can specify a value on the command line to override
+# what is in this configuration file.
+
+# don't use tclhttpd 3.3 compatibility
+Config compat 0
+
+# docRoot - the name of the file system directory containing
+# the root of your document tree.  This is conditional so you
+# can run from the source distribution or after doing "make install"
+
+Config docRoot /var/www
+
+# library - the name of the file system directory containing
+# custom code you want to graft into TclHttpd.
+Config library /usr/lib/tclhttpd/custom/
+
+# main - Main per-thread startup script.
+# The old way to customize the server was to modify this file directly.
+Config main /etc/tclhttpd/httpdthread.tcl
+
+# uid - the server executes as the following user ID.
+# If you have TclX available, these can be user names.
+# If you use the simple "setuid" extension, this must be a number.
+
+Config uid		50
+
+# gid - the server executes as the following group ID.
+# If you are using .tml templates then the server will try
+# to cache corresponding .html files.  Put the server into
+# the group that has write permission to the htdocs area
+# so it can do this.  If it cannot write the cache files it
+# just has to process the template on every URL request.
+
+Config gid		50
+
+# host - the name of the server (i.e., www.yourcompany.com)
+# This should be fully qualified.
+
+Config host		[info hostname]
+
+# https_host - the name of the server (i.e., www.yourcompany.com)
+# This should be fully qualified.
+
+Config https_host	[info hostname]
+
+# port - the listening port for the server for HTTP requests.
+# The standard web port is 80.
+
+Config port		8015
+
+# https_port - the listening port for the server for HTTPS requests.
+# The standard SSL port is 443.
+
+Config https_port	8016
+
+# ipaddr - the IP address of the server's end of the HTTP socket.
+# Only specify this if you have a machine with several IP addresses
+# and you want the server to only listen on one IP address.
+# If this is the empty string, then it will listen on all
+# network interfaces for connections.
+
+Config ipaddr	{}
+
+# https_ipaddr - ditto, but for https (i.e., SSL) connections
+
+Config https_ipaddr	{}
+
+# webmaster - an email address for error mailings
+
+Config webmaster	webmaster@[info hostname]
+
+# secsPerMinute - The seconds-per-minute value used when creating the
+# time-based histograms on the /status page.  This should
+# be between 1 and 60, inclusive.
+
+Config secsPerMinute	60
+
+# threads - the maximum number of worker threads to create.
+# If 0, then no threads are ever used.
+
+Config threads		0
+
+# gui - if we should attempt to start up a GUI when Tk is used
+# Set this to 0 if you want to run your own GUI.
+# The default is to run the simple gui from srvui.tcl
+
+Config gui              1
+
+#####################
+
+# The parameters below here are not settable via the command line
+
+# LogFile - the file used for standard logging informaation.
+# This is actually the prefix of the name.  The port and current date stamp
+# is append to this file, and it is rolled every night at midnight
+
+Config LogFile	/var/log/tclhttpd/log
+
+# LogFlushMinutes - how frequently the log file is flushed to disk.
+# Use 0 to have each URL request cause a log flush.
+
+Config LogFlushMinutes 0
+
+# MaxFileDescriptors - the maximum number of file descriptors the
+# server can have open.  This impacts the number of simultaneous
+# client requests it can have open.
+
+Config MaxFileDescriptors	256
+
+#########################
+# SSL Configuration
+
+# SSL_REQUEST - should the server ask for certificates from clients?
+
+Config SSL_REQUEST	0
+
+# SSL_REQUIRE - should the server require certificates?
+
+Config SSL_REQUIRE	0
+
+# SSL_CADIR - the directory containing Certificate Authority
+# certificate files.  If you have only one such file, you can use
+# SSL_CAFILE described below.
+
+Config SSL_CADIR	[file join [file dirname [Config home]] certs]
+
+# SSL_CAFILE - the file containing the Certificate Authority
+# certificate.  If this is empty, then the directory specified by
+# SSL_CADIR is scanned for certificate files.
+
+Config SSL_CAFILE 	""
+
+# SSL_CERTFILE - The server's certificate.
+
+Config SSL_CERTFILE	[file join [Config SSL_CADIR] server.pem]
+
+# SSL_KEYFILE - The server's key file.  If this is empty,
+# then just use the SSL_CERTFILE
+
+Config SSL_KEYFILE	[file join [Config SSL_CADIR] skey.pem]
+
+# USE_SSL2 - Allow the use of SSL version 2 
+# (You cannot get this with a "no patents" build of OpenSSL)
+
+Config USE_SSL2		1
+
+# USE_SSL3 - Allow the use of SSL version 3
+
+Config USE_SSL3		1
+
+# USE_TLS1 - ??
+
+Config USE_TLS1		0
+
+# SSL_CIPHERS - list of SSL ciphers to support.  If this is empty,
+# then all the ciphers supported by the SSL implementation are available.
+
+Config SSL_CIPHERS	{}
+
+############################
+# Authentication Configuration
+
+# The auth config creates a default authentication array.
+# To create passwords for user $u and group $g
+# Config Auth {user,$u $password group,$g group}
+# Note: these passwords are plaintext, so it's not very secure.
+#
+# If Auth is undefined, a random password
+# is created and logged per invocation of the server
+# If Auth is defined (even if empty, it is considered authoritative and
+# no default passwords are generated.
+#Config Auth {}
+
+# Default password file - used if .htaccess doesn't specify AuthUserFile
+# this defaults to the authentication array authdefault()
+#Config AuthUserFile {}
+
+# Default group file - used if .htaccess doesn't specify AuthGroupFile
+# this defaults to the authentication array authdefault()
+#Config AuthGroupFile {}
+
+# Default mail servers - the smtp servers to use when sending mail
+Config MailServer {}

@@ -1,0 +1,43 @@
+[mypage::header "Use of the Access Control Editor"]
+<b>by Colin McCormack</b>
+    <h3>Introduction</h3>
+    <p>Several directories and domains, such as /status /debug and /admin must be protected, or the installation will not be secure from remote attack.  As distributed, Tclhttpd defaults to safe but restrictive permissions.</p>
+    <p>Opening access to these sensitive facilities on a new installation requires that the admin create system-wide user and group files, and .htaccess files in the various directories which need to be protected.</p>
+
+    <p>The <a href='/htaccess'>Access Control Editor</a> maintains:</p>
+    <dl>
+      <dt>.htaccess file</dt>
+      <dd><p>The per-directory control file, as detailed <a href="htaccess.html">here</a></p></dd>
+      <dt>group file</dt>
+      <dd><p>consisting of lines formatted as: group_name: member, member ...</p></dd>
+      <dt>user file</dt>
+      <dd><p>consisting of lines formatted as user_name: password</p></dd>
+    </dl>
+    <p>As it is necessary to have an administrative password <b>before</b> safely administering access control, some bootstrapping is required.</p>
+
+    <h3>Bootstrapping New Installations</h3>
+    <p>To begin to administer access control through the <a href='/htaccess'>editor</a> one may log in as the user <b>webmaster</b> with the password in <b>/tmp/tclhttpd.default</b>.</p>
+    <p>The first thing one should do is decide where the installation's user and group files will reside and create a password for webmaster.</p>
+    <p><b><i>Note: It is crucial that the user file not be visible from the web - it must not reside under the document root!</i></b></p>
+    <p>Once the user and group files are created and populated with values, you can secure the Access Control Editor by editing the directory <b>htaccess</b>.</p>
+    <p>Having secured /htaccess, one can freely use it to secure any directory or domain.</p>
+
+    <h3>Configuration Options</h3>
+    <p>Several configuration options in tclhttpd.rc control how authentication occurs:</p>
+    <dl>
+      <dt>Auth</dt>
+      <dd>The default webmaster password.
+	<p>If this is undefined, a new random password is created in /tmp/tclhttpd.default every time the server is restarted.  If it is defined, it is the plaintext default password for a user called webmaster, who has (by default) complete access to the Access Control Editor.</p>
+	<p>After boostrapping, it would be advisable to set this value to ""</p>
+      </dd>
+      <dt>AuthUserFile</dt>
+      <dd><p>The default name of the file containing web user passwords (note, this should be different from your system's default password file, if any)</p></dd>
+      <dt>AuthGroupFile</dt>
+      <dd><p>The default name of a file containing web groups.</p></dd>
+    </dl>
+
+<!-- Created: Tue Mar 23 01:47:36 EST 2004 -->
+<!-- hhmts start -->
+Last modified: Tue Mar 23 01:47:39 EST 2004
+<!-- hhmts end -->
+[mypage::footer]

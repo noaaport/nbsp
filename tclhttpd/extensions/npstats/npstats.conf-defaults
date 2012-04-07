@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+
+#
+## Novra default device
+#
+
+lappend _npstats(devices) {
+     mydomain.mynovra novra_s75.tml
+}

@@ -1,0 +1,47 @@
+#!/sbin/sh
+#
+# /etc/init.d/tclhttpd - Start/Stop the tcl httpd server
+#
+# This file lives in slightly different locations on different platforms:
+# Solaris:
+# IRIX:
+#	/etc/init.d/tclhttpd
+# RedHat Linux:
+#	/etc/rc.d/init.d/tclhttpd
+# HPUX:
+#	/sbin/init.d/tclhttpd
+#
+# The script also needs links from peer directories named
+# rc2.d to start the server
+# (e.g., make rc2.d/S80tclhttpd a link to ../init.d/tclhttpd)
+# and in rc0.d to stop the server, create a link named rc0.d/K20tclhttpd
+#
+
+#
+PATH=/usr/bin:/bin
+TDIR=/ajuba/tclpro1.4/bin
+SCRIPT=httpd.tcl
+PROG=$TDIR/$SCRIPT
+
+case $1 in 
+'start')
+	if [ -f $PROG ]; then
+		$PROG &
+	fi	
+	;;
+'stop')
+	pid=`/usr/ucb/ps -axc | /usr/bin/grep $SCRIPT | /usr/bin/sed -e 's/^  *//' -e 's/ .*//'`
+	if test "$pid"
+	then
+		echo "Stopping $PROG"
+		kill $pid
+	fi
+	;;
+'restart')
+	$0 stop
+	$0 start
+	;;
+*)
+	echo "usage: $0 {start|stop}"
+	;;
+esac

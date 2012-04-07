@@ -1,0 +1,15 @@
+<title>repeat test</title>
+<body onload="setTimeout('window.location.reload()',5000)">
+<h1>Traffic Statistics</h1>
+<table border>
+<tr><th colspan=2>Total frames transmitted</tr>
+<tr><td>port 1<td>[DisplayMib swPortTxTotalFrames.1]</tr>
+<tr><td>port 2<td>[DisplayMib swPortTxTotalFrames.2]</tr>
+<tr><td>port 3<td>[DisplayMib swPortTxTotalFrames.3]</tr>
+<tr><td>port 4<td>[DisplayMib swPortTxTotalFrames.4]</tr>
+<tr><td>port 5<td>[DisplayMib swPortTxTotalFrames.5]</tr>
+<tr><td>port 6<td>[DisplayMib swPortTxTotalFrames.6]</tr>
+<tr><td>port 7<td>[DisplayMib swPortTxTotalFrames.7]</tr>
+<tr><td>port 8<td>[DisplayMib swPortTxTotalFrames.8]</tr>
+</table>
+</body>

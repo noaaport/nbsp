@@ -1,0 +1,19 @@
+<Html>
+<Head>
+<Title>discover test</Title>
+<!-- Author: suhler -->
+</Head>
+<Body>
+
+<h1>Discover SNMP Agents</h1>
+<p>
+Discovery is quick because it uses asynchronous requests, but it does
+cause a brief flood of packets!
+<form action=outdiscov.snmp method=POST>
+   [formSession -group discover]
+   <input type=submit value="choose net:">
+   <input name=net value=[value net [netId]] size=9>
+</form>
+</form></Body>
+</Html>
+

@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+DOCS = api.README ../LICENSE
+
+all:
+
+install: all
+	${INSTALL} -m 0644 ${DOCS} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile

@@ -1,0 +1,5 @@
+tclupperair (0.1.p1.1-1) stable; urgency=low
+
+  * Initial debian package release
+
+ -- Jose F Nieves <nieves@ltp.upr.clu.edu>  Sun, 22 Feb 2009 16:55:07 -0400

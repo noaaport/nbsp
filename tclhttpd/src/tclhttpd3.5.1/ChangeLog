@@ -1,0 +1,1271 @@
+2004-05-28 Brent Welch <welch@panasas.com>
+        * htdocs/learn/* - various doc updates
+        * DIST_build/Makefile.boot
+        * DIST_build/DIST
+        Updates to use a pre-packaged thread-2.5.2 release because I'm
+        having build/autoconf troubles with CVS HOL (thread 2.6)
+
+2004-05-27 Colin McCormack <colin@chinix.com>
+	* lib/utils.tcl
+	* lib/digest.tcl
+	* lib/session.tcl
+	changed all the md5 refs to a utils.tcl defined
+	version-appropriate alias 'md5hex', this should be future proof
+	(and past-proof), since it adapts the interface explicitly.
+	Recommend using md5hex explicitly.
+	* debian/: updated debian package version ahead of 3.5.1 release
+	
+2004-05-18 Brent Welch <welch@panasas.com>
+        * README
+        * VERSION
+        * configure.in
+        * DIST_build/DIST
+        * DIST_build/DIST.exp
+        * DIST_build/Makefile.boot
+        * DIST_build/README
+        * lib/version.tcl
+        * bin/httpd.tcl
+        Version updates in preparation for a 3.5.1 release
+        (3.5.0 remained unreleased)
+
+2004-05-18 Brent Welch <welch@panasas.com>
+        * bin/http.tcl: Added 'package require md5 1' to startup
+        because of conflicts internal to Tcllib 1.6 between
+        md5 1.4.3 and md5 2.0.0.
+
+2004-05-18 Brent Welch <welch@panasas.com>
+        * lib/mail.tcl: fixed startup so it works with a
+        vanilla server.
+
+2004-05-18 Brent Welch <welch@panasas.com>
+        * lib/doc.tcl: added [file normalize] to Doc_Handle to
+        avoid returning file contents for files whos name
+        ends with extra trailing "." characters.
+
+2004-05-14 Colin McCormack <colin@chinix.com>
+	* lib/mail.tcl: fixed another config bug for mailserver
+
+2004-05-09 Colin McCormack <colin@chinix.com>
+	* lib/mail.tcl: fixed config bug for mailserver
+	* lib/log.tcl: made log check for gzip, per sf [949730]
+	* debian/: minor changes to chmod install dirs
+
+2004-05-06 Colin McCormack <colin@chinix.com>
+	* lib/mail.tcl: new mail facility using tcllib's smtp client
+	* bin/httpd.tcl, bin/tclhttpd.rc: -mail option for mail server
+
+2004-05-06 Brent Welch <welch@panasas.com>
+        * Various doc updates
+
+2004-05-05 Brent Welch <welch@panasas.com>
+        * Various doc updates
+        * lib/digest.tcl: fixed use of the md5 package
+
+2004-05-01 Colin McCormack <colin@chinix.com>
+	* lib/session.tcl: added a facility to destroy a session cookie.
+	Added type name to session cookie name
+	* lib/cookie.tcl: added ability to expunge cookies from client.
+
+2004-04-29 Colin McCormack <colin@chinix.com>
+	* lib/stdin.tcl: removed history proc which interferes with 
+	some third party console packages to no legitimate purpose.
+
+2004-04-29 Colin McCormack <colin@chinix.com>
+	* lib/template.tcl: allow non-dynamic templates to control
+	content type of returned file.
+	* lib/httpd.tcl: fixed sf error '[925210] bad message length in Httpd_Error'
+	* lib/cookie.tcl: removed redundant test
+	* lib/status.tcl: fixed sf bug '[943990] Status/text uses wrong counter names'
+	per patch supplied.
+	
+2004-04-27 Colin McCormack <colin@chinix.com>
+	* src/crypt.c: added a test for error return from crypt()
+	* lib/{fallback,mtype,template}.tcl: corrected and extended source
+	comments
+
+2004-04-23 Colin McCormack <colin@chinix.com>
+	* bin/httpdthread.tcl: added a missing package require httpd::digest
+
+2004-04-20 Brent Welch <welch@panasas.com>
+	* lib/session.tcl: Fixed a couple of typos.  Moved the
+        "file mkdir" of the sessions save directory into Session_Save
+        because this doesn't work in the starkit version.  We should
+        still fix the default sessions dir so it isn't under htdocs
+
+2004-04-20 Brent Welch <welch@panasas.com>
+	* DIST_build/DIST: Added generation of tclhttpd.kit starkit
+
+2004-04-21 Colin McCormack <colin@chinix.com>
+	* lib/session.tcl: added optional MD5 long session IDs,
+	cookie sessions, persistent sessions.
+	* sampleapps/session/: added demo for sessions.
+
+2004-04-19 Brent Welch <welch@panasas.com>
+        * Various doc updates.
+        Moved learn/self.tml to templates/self.tml
+        * bin/httpd.tcl: Introduced the CommandLineOptions variable
+        so it can be reference by the htdocs/learn/setup.tml page.
+
+2004-04-17 Brent Welch <welch@panasas.com>
+        * Various doc updates.
+        Created htdocs/man/index.tml
+        renamed manual/reference.tml -> manual/intro.tml
+        renamed manual/technotes.tml -> manual/embedding.tml
+
+2004-04-15 Colin McCormack <colin@chinix.com>
+	* lib/upload.tcl: implemented -maxfiles, -maxbytes
+	and -totalbytes options to Upload_Url.
+	* debian/ added support for Debian daemon package
+	* sampleapp/upload - simple file upload and delete app
+
+2004-04-15 Colin McCormack <colin@chinix.com>
+	* lib/upload.tcl: handle redirect and suspend from upload
+	domain
+	
+2004-04-15 Jeffrey Rankin <jrankin@oneil.com>
+	* sampleapp/README: updated to state that only the MetaKit
+	lib is required to run the bugdb application.
+
+2004-04-15 Colin McCormack <colin@chinix.com>
+	* changed the file evaluated for ${template}.tml/ directory
+	to index.tml ... fewer special case filenames to remember.
+
+2004-04-14 Colin McCormack <colin@chinix.com>
+	* lib/subst.tcl: Fixed list quote bug in Subst_File preventing subst
+	of filenames with spaces and bug subst'ing links, both in directory
+	subst hack.
+
+2004-04-03 Jeffrey Rankin <jrankin@oneil.com>
+	* sampleapp/bugdb/htdocs/*.tml: Adjusted stylesheet reference
+	to account for reorg.
+
+2004-04-02 Jeffrey Rankin <jrankin@oneil.com>
+	* sampleapp/bugdb/htdocs/.tml: Added .tml which was left
+	out during the recent sampleapp reorganization.
+
+2004-03-22 Brent Welch <welch@panasas.com>
+        * htdocs/man: minor updates to some of these pages
+        * lib/cookie.tcl: Added Cookie_GetSock to get a cookie from the
+        connection as opposed to getting it from the environment
+        * bin/httpd.tcl: rooted out another reference to libtml
+        * DIST_build/{DIST,README}: tweaks for packaging
+
+2004-03-22 Brent Welch <welch@panasas.com>
+        * Large reshuffle of files among
+          htdocs/libtml, lib, custom, and sampleapp
+          The goal is that the minimum is in the lib directory for
+          the main server (no demos or sample apps) and that the
+          custom directory has things to support the pages under htdocs.
+          Everything is being organized under sampleapp
+        * bin/httpdthread.tcl, debian/tclhttpd-debian/httpdthread.tcl,
+          and debian/rules: eliminted reference to htdocs/libtml
+        * custom/mkweb_05.tcl:            -> sampleapp/mkweb/mkweb.tcl
+        * custom/ddehack.tcl:             -> sampleapp/ddehack/ddehack.tcl
+        * htdocs/libtml: gone
+        * htdocs/libtml/faq.tcl:          -> custom
+        * htdocs/libtml/htmlutils.tcl:    -> sampleapp/sunscript
+        * htdocs/libtml/mypage.tcl:       -> custom
+        * htdocs/libtml/ss_survey.tcl:    -> sampleapp/sunscript
+        * htdocs/libtml/sunscript.tcl:    -> sampleapp/sunscript
+        * htdocs/sampleapp/bugdb:         -> sampleapp/bugdb/htdocs
+        * lib/demo.tcl:                   -> sampleapp/addnode/demo.tcl
+        * lib/sendsock.tcl:               -> sampleapp/sendsock/sendsock.tcl
+        * lib/snmp.tcl:                   -> sampleapp/snmp/snmp.tcl
+        * lib/telnet.tcl:                 -> sampleapp/snmp/telnet.tcl
+        * lib/snmp.tcl:                   -> sampleapp/snmp/snmp.tcl
+        * custom/snmpinit.tcl:            -> sampleapp/snmp/snmpinit.tcl
+
+2004-03-22 Jeffrey Rankin <jrankin@oneil.com>
+        * sampleapp/bugdb/bugdb.tcl: Added a procedure to remove
+	characters that can break HTML (<, >, "). Appropriate
+	character entities are substituted. Added documentation.
+	* htdocs/sampleapp/bugdb/.tml: Removed SMTP server variable.
+	* htdocs/sampleapp/bugdb/bugdb-design.png: Added this
+	screenshot showing the Metakit database design.
+	* htdocs/sampleapp/bugdb/report.tml: Removed send email
+	checkbox.
+
+2004-03-22  Brent Welch <welch@panasas.com>
+        * lib/debug.tcl: Added DebugSetRandomPassword and have the
+        debug domain compute a random password when it starts up.
+        * htdocs/debug/.tclaccess: added to use the random debug password
+        * htdocs/status/.tclaccess: added to use the random debug password
+        * lib/redirect.tcl: fixed typo in a comment
+        * bin/tclhttpd.rc: adjusted CompressProg config to be an absolute
+        pathname.  It looks for /bin/gzip, /usr/bin/gzip, and
+        /usr/local/bin/gzip before just picking "gzip".
+        * htdocs/cgi-bin/*.cgi: tweaked #! line so it searchs for
+        tclsh among these version:
+          /usr/bin/tclsh
+          /usr/local/bin/tclsh8.4
+          /usr/local/bin/tclsh8.3
+          /usr/bin/tclsh8.4
+          tclsh
+        * htdocs/index.tml: reorganized the main page
+        * htcocs/learn: added various introductory pages
+        * htdocs/register.tml: added disclaimer, because this form
+        still doesn't work, lacking a good emailer-capable system 
+
+2004-03-23  Colin McCormack <colin@chinix.com>
+	* htdocs/access, htdocs/htaccess: updated /htaccess and
+	documentation
+	* lib/auth.tcl: fixed bugs relating to generalised authentication
+	data structure
+	* lib/passgen.tcl: added a random password generator for access
+	control bootstrapping
+	* bin/tclhttpd.rc: added Auth* config parameters for access
+	control
+
+2004-03-16  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* lib/doc.tcl (DocDomain): more checks to ensure personal home
+	page dirs exist and are readable (petrus)
+
+2004-2-29 Brent Welch <welch@panasas.com>
+        * bin/httpd.tcl: removed compatibility warning message
+        * lib/auth.tcl: Fixed to tolerate missing group and user files
+        * htdocs/debug/.tclaccess: added this to provide easier to
+        control access to the /debug URL.
+        * custom/dodirs.tcl: fixed this so it doesn't do "cd" and
+        only looks through subdirectories that contain startup.tcl
+        For example, this skips the CVS directory
+        * contrib/mkweb_05.tcl: metakit admin interface by Stefan Vogel
+        * htdocs/cgi-bin/wiki.cgi: sample CGI for wikit
+ 
+2004-2-25 Colin McCormack <colin@field.medicine.adelaide.edu.au>
+       * lib/template.tcl
+       * lib/subst.tcl
+	templates can be directories, their value is from dir.tml
+	index.html now depends on the whole containing directory
+        * lib/*
+	removed some incorrect copyright lines with my name
+
+2004-2-09 Colin McCormack <colin@field.medicine.adelaide.edu.au>
+       * lib/httpd.tcl
+       * lib/auth.tcl
+       * lib/digest.tcl
+       * htdocs/access/digest/*
+       Added digest authentication per http://www.ietf.org/rfc/rfc2617.txt
+	
+2004-1-13 Brent Welch <welch@panasas.com>
+        * README
+        * VERSION
+        * configure.in
+        * DIST_build/DIST
+        * DIST_build/DIST.exp
+        * DIST_build/Makefile.boot
+        * DIST_build/README
+        * lib/version.tcl
+        * bin/httpd.tcl
+        Version updates in preparation for a 3.5.0 release
+
+2003-11-04 Colin McCormack <colin@field.medicine.adelaide.edu.au>
+       * preparing Debian package for tclhttpd
+       * fixed innocuous bug causing noise on loading libtml under
+       Debian package
+	
+2003-10-28 Colin McCormack <colin@field.medicine.adelaide.edu.au>
+       * Fixed sf.net bug [804488] Redirect_To does not work in .tml
+        Added suggested patch to template.tcl
+       * Added Http_AddHeaders and Http_RemoveHeaders, and
+       modified HttpRespondHeader so users can add http headers
+       * Added Http_Refresh and Http_NoCache convenience procs
+       * Fixed sf.net bug 607590 error counter named "errors" or "error"?
+       picked errors - it's less easily confused with error command
+       * Fixed sf.net bug 723419 Doc_Error errors
+       as suggested by davygrvy
+       * Fixed sf.net bug 761322 Upload module is dangerous
+       Added -unique flag to upload module to resolve problem
+	
+2003-10-16 Colin McCormack <colin@field.medicine.adelaide.edu.au>
+        * lib/{auth,passcheck,tclcrypt}.tcl: added pure tcl crypt
+        as a fallback for installations lacking the compiled version
+        * htdocs/htaccess/: added tools for maintenance of .htaccess
+        authentication files, group and passwords.
+
+2003-10-10  Brent Welch <welch@panasas.com>
+        * lib/httpd.tcl: fixes for logging of static files based on
+        changes suggestedby David Zolli.
+        * lib/logstd.tcl: introduced Log(cookie) to control if the
+        cookie value is appended to the log.
+
+2003-9-27  Colin McCormack <colin@field.medicine.adelaide.edu.au>
+        * lib/httpd.tcl: HTML armour default error output
+        * htdocs/admin htdocs/debug htdocs/status:
+        added access control .htaccess to direct domains
+        to remove some vulnerabilities
+
+2003-9-24  Brent Welch <welch@panasas.com>
+        * lib/dirlist.tcl: Security fix to prevent you from listing
+        the contents of directories you are not supposed to. It is
+        worth noting that you could never fetch a file outside the
+        URL tree, but you could list directories.
+
+2003-8-28  Brent Welch <welch@panasas.com>
+        * lib/httpd.tcl: Fix in virtual host code suggested by Colin McCormack
+
+2003-8-11  Brent Welch <welch@panasas.com>
+        * tclhttpd.spec: Updates from Michael Thomas to create RPMs.
+        * bin/httpdthread.tcl: fixed loading of mime.types in installed configuration
+        * bin/httpd.tcl: added support for -gui flag to control default Tk gui
+        * bin/tclhttpd.rc: added support for -gui flag to control default Tk gui
+        * Everything else is cleanup associated with creating RPMs.
+
+2003-6-26  Brent Welch <welch@panasas.com>
+        * lib/subst.tcl: fixed Doc_application/x-tcl-auth based on a bug
+        filed by Andreas Kupries
+
+2003-5-01  Brent Welch <welch@panasas.com>
+        * Removed the precompiled .so files as those cause more
+          trouble than they are worth.
+        * src/limit.c: added stubs enabled version from Michael Schlenker
+        * lib/debug.tcl: add custom library to path used by /debug/source
+        * lib/doc.tcl: added Doc_Redirect Doc_RedirectSelf compat aliases
+
+2002-12-02  Brent Welch <welch@panasas.com>
+        * Merged the tclhttpd-3-4-rel branch into the trunk.
+          tclhttpd-3-4-rel-3 represents the 3.4.3 release and
+          the merge point.  This sets the version numbers to
+          3.4.3, which isn't strictly correct, but reflects
+          the merge.
+
+2002-12-02  Wojciech Kocjan (via Brent Welch)
+        * lib/httpd.tcl: added data(headerlist) that records the header
+        information in order so the AOLserver emulation can recreate
+        the exact MIME headers of the request.
+        * lib/url.tcl: added a URL access hook return code of "return"
+        which just means "I've serviced this URL request completely".
+
+2002-09-25  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* Makefile.in: better DESTDIR/libdir support (steffen)
+
+2002-08-30  Brent Welch <welch@panasas.com>
+        * Merged the tclhttpd-3-4-rel branch into the trunk.
+          tclhttpd-3-4-rel-1 represents the 3.4.1 release and
+          the merge point.
+
+2002-10-28  Brent Welch <welch@panasas.com>
+        * Makefile.in: MAKE_LIB doesn't work for building two different
+          extensions, so I fixed that.  The Makefile is now Unix-specific
+          for the limit and crypt .so files, which is OK.  These now build.
+
+2002-10-28  Brent Welch <welch@panasas.com>
+        * bin/httpdthread.tcl: Fixed loading of custom code.
+        * Bumped version to 3.4.3
+
+2002-10-14  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * DIST_build/Makefile.boot: Fixed version reference
+        * VERSION: updated notes
+        * tagged tclhttpd-3-4-rel-2 (3.4.2)
+
+2002-09-23  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * lib/upload.tcl: Added the completion callback to UploadTidyUp.
+
+2002-09-15  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * lib/doc.tcl: ensure we don't try to cache a template result
+        when you fetch a .tml file directly.  If your template somehow
+        set page(dynamic) to 0, the server was trying to cache the result
+        using an empty filename.
+        * lib/upload.tcl: reset the Url_PostHook state and data(count) so
+        the other layers don't try to read any of the post data.
+        * lib/httpd.tcl: reset the Url_PostHook on GET requests to clear
+        any state from a previous POST request.
+
+2002-09-11  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * lib/dirlist.tcl: added in the Dir_ShowListings,
+        Dir_HideListings, and Dir_IsHidden api that got
+        dropped when I merged in additions by Melissa Chawla.
+
+2002-09-03  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * lib/dirlist.tcl: Fixing bug where a ../* in the dirlist form
+          could leak filenames (but not contents) outside the URL tree.
+        * htdocs/.tml: plugged silly memory leak (lappend to unused var)
+
+2002-09-03  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * bin/httpdthread.tcl: Fixed custom code loader to skip pkgIndex.tcl
+        files.
+        * htdocs/index.html: Fixed a few errors pointed out by Larry Virden
+        * htdocs/forms/posttest.tml: Added comments that explain this form.
+        * DIST_build/DIST: moved the copying of some things into the htdocs
+        tree from the Makefile to the distribution creation script.
+        * configure.in:
+        * README
+        * bin/httpd.tcl:
+        * lib/version.tcl: Changed to 3.4.2 (sigh)
+        * Added VERSION so I remember how to change the version number in
+          all the right places!
+
+2002-08-30  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).
+        * Modified Auth_Check, which is used by DocAccessHook, to
+        disallow retrieval of .tml, .tclaccess and .htaccess files.
+        This vulnerability was identified by David Welton, although
+        I'll note you had to had permission to retrieve the access
+        control files.
+        * lib/url.tcl: Added Url_AccessUnInstall to remove hooks.
+        From Petrus Vloet:
+        * lib/debug.tcl: Added /debug/enable so you can disable the
+        Debug URL.
+        * lib/direct.tcl: Added Direct_UrlRemove to support disabling
+        the debug url.
+        * htdocs/hacks.tml: Updated to explain the /debug URL features
+
+2002-08-29  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch).  These were added on
+        the suggestion of David Welton
+        * lib/auth.tcl: Auth_Check checks that the path is a directory
+        before rummaging around for the .tclaccess and .htaccess files
+        * lib/url.tcl: Added Url_AccessInstallPrepend to put the
+        access hook at the front of the search path.
+
+2002-08-26  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch)
+        * lib/cgi.tcl: Fixed POST forms on Windows so we correctly set up
+          the pipe to the subprocess and detect the header/body separator
+        * lib/upload.tcl: Nuked the CvsReadFileHeader call
+        * lib/version.tcl: Updated to 3.4.1
+        * bin/httpd.tcl.new: Deleted this cruft
+        As a bonus - these features:
+        * lib/mtype.tcl: Added Mtype_Add and Mtype_Reset
+        * lib/mime.types: added application/x-ns-proxy-autoconfig
+
+2002-08-18  Brent Welch <welch@panasas.com>
+        * Merged the tclhttpd-3-4-rel branch into the trunk.
+        * The tag tclhttpd-3-4-rel-0 in the branch marks the merge.
+
+2002-08-15 Colin McCormack <colin@chinix.com>
+	* split doc.tcl into many smaller source files
+
+2002-08-18  Brent Welch <welch@panasas.com>
+        * (In the tclhttpd-3-4-rel branch)
+        * Applied patches for virtual hosting fixes from Don Porter
+          that allow virtual hosts to share an interpreter, which is
+          useful if they are just name aliases for each other.
+        * Applied patches from Dave Welton that fix references to
+          scriptics.com in the online docs.
+        * Fixes to DIST and Makefile.boot to get the bundled distribution
+          to start working.
+
+2002-08-03  Brent Welch <welch@panasas.com>
+        * Added support for If-Modified-Since header and the
+          304 Not Modified return code (contributed by Brian Meagher)
+        * Applied the VirtualHost patch from Don Porter.
+        * Folded in all the changes by Melissa
+        * Changed the version number to 3.4 and updated various README's etc.
+
+2002-06-25  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/upload.tcl: Fixed bug that caused the socket never to be
+	closed if you try to upload a dirname ending with / (Netscape
+	allows this).
+	
+2002-03-29  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/httpd.tcl: Added a function to remove previously set cookies
+	that match a given pattern: Httpd_RemoveCookies.
+	
+2002-02-12  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/upload.tcl: Fixed "extra trailing newline" bug for large
+	files where blocking causes the UploadReadFile to be called more
+	than once.
+
+2002-02-02  Acacio Cruz <acacio.cruz@eur.autodesk.com>
+	* added config/ module
+	* regenerated configure script
+	* created contrib directory
+	* added cookie example to contrib/cookies
+
+2002-01-15  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/doc.tcl: Doc_Root and Doc_AddRoot now take optional callback
+	and readpost values.
+
+2001-12-23  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/upload.tcl: Fixed bug that caused all uploaded files to have
+	an extra trailing newline.
+
+2001-12-21  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/pkgIndex.tcl: Added the upload package to the index file.
+
+2001-12-18  Brent Welch <welch@panasas.com>
+	* bin/counter.tcl: Fixed initialization of the "errors" counter.
+
+2001-12-04  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/httpd.tcl: Added the individual Httpd_ServerShutdown and
+	Httpd_SecureServerShutdown procedures so sockets can be closed
+	separately.
+
+2001-11-30  Brent Welch <welch@panasas.com>
+	* bin/url.tcl: Minor cleanup of error message in Url_PrefixInstall.
+	* lib/upload.tcl: Fixed things so files are always uploaded in binary
+	* custom/hello.tcl: Fixed buglet in /hello/there
+
+2001-11-01  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/mime.types: Added the .core extension to the list of
+	octet-stream types.
+
+2001-10-09  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/doc.tcl: The Doc_text function gathers the content type from
+	the data array after substituting the document but before calling
+	the Httpd_ReturnData proc--this enhancement only applies to dynamic
+	docs.
+
+2001-09-24  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/thread.tcl: The master thread now has a function
+	Thread_ReapAll to remove all existing threads.  Busy threads are
+	marked for deletion and removed when they call Thread_Free.
+
+2001-09-18  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/thread.tcl: Slave threads now unset the data array after
+	passing the URL result to the main thread.
+
+2001-09-17  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/doc.tcl: Check whether directory listings are hidden before
+	showing them.  If hidden, then show the not-found page.
+	* lib/doc.tcl: Added substitution hook to allow post-processing after
+	each page is substituted.
+	* lib/doc.tcl: DocGetTemplates now returns a unique list of .tml files.
+	* lib/dirlist.tcl: Added an API to hide directory listings.
+	
+2001-08-31  Melissa Chawla <mchawla@panasas.com>
+
+	* lib/thread.tcl: Added Thread_Dispatch_General and
+ 	Thread_Invoke_General procedures.  Now you can eval scripts that
+ 	are not related to a socket in the threads managed by this module.
+  	Items on the thread queue that are 1-element are assumed to be
+ 	scripts with no socket.
+	
+2001-08-23  Melissa Chawla <mchawla@panasas.com>
+	* lib/doc.tcl: Added Doc_TemplateScope procedure.  Now you can
+ 	decide whether templates are subst'ed at the global or local (to
+ 	DocSubst proc) level.
+	
+2001-08-21  Melissa Chawla <mchawla@panasas.com>
+	* lib/thread.tcl: Added Thread_IsMaster and Thread_MasterEval
+	procedures.
+
+2001-07-11  Brent Welch <welch@panasas.com>
+	* bin/httpdthread.tcl: Catch around package require html
+	because the latest version of that module conflicts with prodebug.
+	* lib/httpd.tcl: Fixed (ancient?) bug where static files would
+	not end up in the access log.
+	* lib/stdlog.tcl: Fixed this procedure so status and file size
+	are correctly logged.
+
+2001-07-09  Brent Welch <welch@panasas.com>
+	* htdocs/access/index.tml: Fixed typo in section headers.
+	* lib/doc.tcl: Fixed Doc_Cookie to look in the connection
+	state (mime array) instead of relying on the environment variable.
+	* lib/pkgIndex.tcl: Fixed to handle spaces in directory names.
+	* lib/thread.tcl: Fixed Thread_IsFree
+
+2001-03-19  Brent Welch <welch@panasas.com>
+	* Added custom/ddehack.tcl example that I've been using to
+	integrate exmh running on Unix and Netscape running on Windows.
+
+2001-03-13  Brent Welch <welch@panasas.com>
+	* Tagged and released tclhttpd-3-3
+
+2001-03-12  Brent Welch <welch@panasas.com>
+	(Adopted from work by Piet Vloet - thanks!)
+	* lib/auth.tcl: Changes to handle multiple
+	group and user specifications in .htaccess files.
+	Also changed Auth_AccessFile to Auth_InitCrypt
+	* htdocs/access/index.html: Updated docs 
+	* htdocs/access/multiple: New tests
+	* htaccess: sample group and password files.
+
+2001-03-12  Brent Welch <welch@panasas.com>
+
+	* ChangeLog:
+	* bin/httpdthread.tcl: Updated to Auth_InitCrypt from Auth_AccessFile.
+	* htdocs/x/hacks.tml: Switched from debug/parray to debug/pvalue,
+	which is more general.  It takes a pattern of variables to print.
+	* lib/status.tcl: Added StatusHeader procedure
+	* lib/debug.tcl: Added check for Config(lib) directory
+	to set of places used by /debug/source
+
+2001-02-16  Brent Welch <welch@panasas.com>
+
+	* ChangeLog:
+	* INSTALL:
+	* README:
+	* WHATSNEW:
+	* configure.in:
+	* DIST_build/DIST:
+	* DIST_build/Makefile.boot:
+	* DIST_build/README:
+	* lib/version.tcl:
+	* bin/httpd.tcl:
+	Changed version number to 3.3.  Gack - the .tcl files at
+	least should be ".in" files.
+	* bin/httpd.tcl:
+	Fixed package require of TclX, which was never correct!
+
+2001-01-31  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/upload.tcl: Added a file upload domain handler.
+	Check out the definition of Upload_Url, which registers
+	the domain, and UploadTest, which is the sample callback.
+	* lib/cgi.tcl: Added binary translation to the pipe used
+	to send POST data to a CGI script.
+
+2001-01-26  Brent Welch <welch@ajubasolutions.com>
+
+	* bin/cgi.tcl: Fixed handling of large POST data by replacing
+	an fcopy with filevent.  The works around a fcopy bug
+	diagnosed by Don Porter.
+
+2000-11-29  Brent Welch <welch@ajubasolutions.com>
+
+	* bin/httpd.tcl: Fixed setting of auto_path in the standard
+	install configuration so that the limit and crypt packages can
+	be found (Peter Farmer)
+	* lib/doc.tcl: Added Doc_RegisterRoot so the cgi domain can set up
+	the directory mapping used by DocAccessHook. (Peter Farmer)
+	* lib/cgi.tcl: Fixed "extra timer" bug found by Petrus that could cause
+	erroneous aborts of CGI connections. (Petrus Vloet)
+	Added use of Doc_RegisterRoot so DocAccessHook works right for
+	/cgi-bin directories outside the htdocs hierarchy.  (Peter Farmer)
+	Eliminated extra / build-up in /cgi/bin pathnames (Peter Farmer)
+
+2000-11-13  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/cgi.tcl: Added checking in CgiCancel in case
+	the connection has already gone away.  (Probably redundant)
+	* lib/httpd.tcl: Added checking to HttpdCloseFinal in case
+	the connection has already gone away.  Seemed like a bug.
+
+2000-10-30  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/pkgIndex.tcl:  Fixed quoting issue when you have
+	installed TclHttpd under "Program Files".
+
+2000-10-26  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/cgi.tcl:  fixed POST data handling in light of the
+	-readpost change to Url and Httpd.
+	* lib/counter.tcl: Explicitly initialize cgihits counter
+	* lib/version.tcl: Changed version to 3.2.1
+
+2000-10-20  Brent Welch <welch@ajubasolutions.com>
+    
+	* DIST_build/Makefile.boot: Fixed installation of Tcllib
+	* bin/httpdthread.tcl:
+	* bin/httpd.tcl: Fixed counter initialization for threaded case.
+	* lib/counter.tcl: Fixed broken counter initialization
+	* lib/httpd.tcl: Removed Counter_Reset call as it gets in
+	the way of counter initialization.
+	* lib/status.tcl: Removed 0-valued counters from table display.
+	* Tagged and released 3.2
+
+2000-10-19  Brent Welch <welch@ajubasolutions.com>
+    
+	* bin/httpd.tcl: Fixed error handling around SSL startup.
+	* lib/httpd.tcl: Fixed Httpd_Suspend/Httpd_Resume usage that
+	was added to Httpd_ReadPostDataAsync (The Httpd_Resume was omitted)
+
+2000-10-12  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/httpd.tcl: Added Httpd_ReadPostDataAsync that is
+	a thin layer over Httpd_GetPostDataAsync
+	* lib/url.tcl: Added the -readpost option to Url_PrefixInstall.
+	This option is actually *on* by default and it causes TclHttpd
+	to read all the post data using Httpd_GetPostDataAsync before
+	dispatching to the Url domain implementation.
+
+2000-10-09  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/direct.tcl: Fixed parameter passing when there are multiple
+	values from a form element (e.g., checkbox).  The switch to ncgi::
+	had resulted in dropping the extra values - this is fixed.
+	Nuked Count call with incorrect prefix.  Domain hits
+	are already being counted by the Url module.
+	* lib/httpd.tcl: Changed order so Log comes before HttpdDoCallback.
+
+2000-10-04  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/direct.tcl: Exported Direct_MarshallArguments that computes
+	the Tcl command to invoke, so other domains can implement variations
+	on application-direct URLs.
+	* lib/url.tcl: Added Url_QuerySetup that is like the old
+	Url_DecodeQuery, but passes the information to the ncgi:: module.
+	* lib/httpd.tcl: Added optional sock parameter to Httpd_CurrentSocket
+	so you can set the current socket.
+
+2000-10-02  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/counter.tcl: Changed stats:: to counter::
+	* lib/status.tcl: Changed stats:: to counter::
+
+2000-10-02  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/counter.tcl: Fixed secsPerMinute initialization.
+	* lib/status.tcl: Added use of stats::htmlHistDisplayRow
+	Added /status/domain for per-domain counting
+	* lib/url.tcl: Added per-domain hit counting.
+	* imagemap.tcl, ismap.tcl, snmp.tcl, discover.tcl - cleaned up to have a
+	packge not span files because that breaks our custom-generated pkgIndex.tcl
+
+2000-09-29  Brent Welch <welch@ajubasolutions.com>
+    
+	* lib/debug.tcl: Fixed /debug/pvalue to properly sort things
+	when given a name pattern.
+	* lib/doc.tcl: Added DocGetTemplates to check for .tml files properly
+	when using user's public_html directory and Doc_AddRoot.  Based on
+	an idea contributed by Glenn Jackmann
+	* lib/httpd.tcl: Added Httpd_RequestComplete so the Url module can
+	determine if a URL implementation actually issued a response.
+	* lib/url.tcl: Url_Dispatch returns a default 403 result if the
+	access hook says "denied" but doesn't send a response.
+	* htdocs_2: added some test pages to ensure that the DocGetTemplates
+	code is working.
+	* Makefile.in: Added mkinstalldirs for the man directory.
+
+2000-09-29  Lee Bernhard  <lfb@ajubasolutions.com>
+
+	* lib/direct.tcl: Split DirectDomain into four functions that
+	parse the query data, assemble the Tcl command line to execute,
+	evaluate the command, and return a result.  
+
+2000-09-27  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/direct.tcl: Converted this to use the ncgi:: module.
+	This means you can use ncgi::value inside application-direct URLs.
+	* lib/httpd.tcl: Added accept_https counter
+	* lib/status.tcl: Added accept_https counter
+	* lib/counter.tcl:  Added unused code for -histlog.
+	Fixed use of Log(log) in Counter_CheckPoint.
+	* lib/debug.tcl: Added wired-in defaults for debug host, port
+	in case things are so broken you cannot pass parameters.
+	* lib/doc.tcl: Fixed similar "redirect looses query" bug
+	inside the redirect done by DocFallback
+
+2000-09-26  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/httpd.tcl: Fixed long-standing buglet in 
+	Httpd_RedirectDir, which would loose query data from the
+	URL when redirecting from /Manager?a=b to /Manager/?a=b
+
+2000-09-25  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/httpd.tcl: Added data(code) back into support logging.
+	* lib/logstd.tcl: Added LogStandardPrint.
+
+2000-09-25  Brent Welch <welch@ajubasolutions.com>
+
+	* bin/httpd.tcl: Changed Log_SetFile call so we append the port
+	to the log file name given in the .rc file.
+	* bin/tclhttpd.rc: Removed use of config port in log file name.
+	* lib/log.tcl: Split out routines that relate to standard logging format.
+	This is so an application can provide its own Log interface, yet still use
+	our code to format standard web logs.
+	* lib/logstd.tcl: Split out routines that relate to standard logging format.
+	* lib/status.tcl: Fixed histogram init calls.
+
+
+2000-09-22  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/httpd.tcl: Protect against unknown error codes passed
+	into Httpd_ReturnData and Httpd_Error.
+
+2000-09-21  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/counter.tcl: Added secsPerMinute parameter to Counter_Init
+	* lib/httpd.tcl:
+	* bin/httpd.tcl: moved Counter_Init call to here from Httpd_Init.
+	Added -secs command line argument to set secsPerMinute.
+	* bin/tclhttpd.rc: Added secsPerMinute .rc file setting.
+	* lib/status.tcl:  Minor cleanup of histogram calls.
+
+2000-09-20  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/counter.tcl: Fixed Counter_CheckPoint
+	* lib/MakeIndex: Fixed this to create the specially-constructed
+	pkgIndex.tcl file.
+
+2000-09-19  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/auth.tcl:
+	Made consistent assignments to:
+	data(session), data(remote_user), and data(auth_type)
+	so that any Url Domain can count on these.
+	* lib/counter.tcl:
+	Re-wrote this to be a thin layer over the Standard Tcl Library
+	stats module.
+	* lib/doc.tcl:
+	Added procedure headers throughout.  Changed Doc(tmlSuffix) var to
+	Doc(tmlExt), and added Doc(htmlExt) (either ".html" or ".htm").
+	Streamlined the DocFallback somewhat, and fixed a lingering issue
+	when you have a cachable index.tml page.  Previously it wouldn't
+	be cached unless you asked for the index.html page explicitly,
+	which didn't work right for DocDirectory.
+	* lib/httpd.tcl:
+	Added procedure headers throughout.  Added
+	Httpd_CompletionCallback so Url_Dispatch can register a
+	domain-sepcific callback when a request completes.
+	Added calls to monitor the service time of requests.
+	Documented the elements of the data() array.
+	    Removed data(ssl), data(code).
+	Added better catching around the routines that generate
+	replies in case the socket goes bad.
+	Added Httpd_Resume and Httpd_CurrentSocket to help domains that
+	use Httpd_Suspend find their context again.
+	* lib/url.tcl:
+	Generalized Url_PrefixInstall to take option, value pairs.  This
+	is done in a backwards compatible way.  The new signature is:
+		Url_PrefixInstall prefix domainHandler args
+	If args is a single word, it is treated as the "thread" option.
+	Otherwise it is an option, value list of:
+		-thread		boolean
+		-callback	command
+	Where the callback is made when the URL request has completed.
+	If thread-dispatch is requested, the server uses a worker thread
+	if Tcl supports it and the server is configured for it.
+	* lib/srvui.tcl:
+	* lib/status.tcl:
+	Switched to use new counters.
+
+2000-09-13  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/httpd.tcl:
+	Generalized Httpd_Port to return the listening port without having
+	to give it a socket.  Used for configuration managers.
+	Added Httpd_SecurePort to return the https listening port, if any.
+
+2000-09-11  Brent Welch <welch@ajubasolutions.com>
+
+	* DIST_build/DIST:
+	Changed to version 3.2 and tag tclhttpd-3-2-0
+	Fixed unbundled distributions to not contain CVS directories.
+	* README:
+	* DIST_build/DIST:
+	* DIST_build/README:
+	* bin/httpd.tcl:
+	Updated for 3.2
+	* bin/README_custom:
+	Explained the new way to cutomize the server.
+
+2000-09-05  Brent Welch <welch@ajubasolutions.com>
+
+	* Makefile.in:
+	* configure.in:
+	* lib/version.tcl:
+	Changed version number to 3.2
+	* bin/httpdthread.tcl:
+	Changed the -library (i.e., Config library) parameter to
+	be a directory that contains custom code that is sourced
+	as part of (per thread) startup.  This makes it easier
+	to drop code into TclHttpd without modifying the
+	distributed files.
+	* bin/httpd.tcl:
+	This calls tls::init instead of doing strange things to
+	get the code in Httpd_SecureSever to set parameters.
+	* bin/tclhttpd.rc.in:
+	Added a config paramter for SSL_USE_TLS1
+	* lib/httpd.tcl:
+	Moved tls parameter setting out of this file and into
+	the main startup script.
+	* lib/utils.tcl:
+	Fixed iscommand to work better with commands in namespaces,
+	and to auto_load procedures if necessary.
+	* lib/direct.tcl:
+	Used Doc_NotFound instead of returning 403 errors.
+	* custom/*
+	Added sample custom code
+	* lib/doc.tcl:
+	Changed html::resolveUrl to uri::resolve as the former got deleted from TclLib,
+	this means that Doc_RedirectSelf is probably broken in 3.1.0 if you use
+	TclLib 0.6.1
+
+2000-09-01  Brent Welch <welch@ajubasolutions.com>
+
+	* lib/doc.tcl:
+	Fixed handling of Url encoding in file names.  In particular,
+	the dirlist.tcl module does urlencoding so - gets encoded,
+	and the DocDomain procedure wasn't handling it.
+	* lib/version.tcl:
+	Nudged up the date stamp to distinquish from the TclPro
+	release as I'm too lazy to change the version number.
+	I've nudged the tclhttpd-3-1-0 tag as well.
+
+	Released TclHttpd 3.1.0
+
+2000-08-30  Brent Welch <welch@ajubasolutions.com>
+
+	Released TclPro 1.4.1
+
+2000-08-28  Brent Welch <welch@scriptics.com>
+	* lib/url.tcl:
+	Added Url_PrefixExists to see if a prefix has been added with
+	Url_PrefixInstall (e.g., Doc_AddRoot).
+	* htdocs/index.tml:
+	Use Url_PrefixExists to check for TclPro documentation.
+	Use "file exists" to check that /java pages are installed.
+	* bin/httpdthread.tcl:
+	Added Doc_AddRoot to splice in TclPro docs, if they exist.
+	* lib/version.tcl:
+	Nudged up the 3.1.0 date stamp
+
+2000-08-26  Brent Welch <welch@scriptics.com>
+	* doc/httpd.1:
+	Added this man page for TclPro 1.4
+	* Makefile.in:
+	Added man page, README, tclhttpd.etc.init to set of files
+	that are installed.
+	* htdocs/license.terms:
+	Changed Scriptics to Ajuba
+	* htdocs/index.html:
+	Conditionally link to TclPro files
+	* lib/status.tcl: Fixed uses of Thread_List so there are
+	no errors when threading is not used.
+
+2000-08-25  Brent Welch <welch@scriptics.com>
+
+	* lib/imagemap.tcl: Fixed typo inexpression in imagemap.tcl
+	* lib/maptcl.tcl: Fixed MapRead to handle spaces in map filenames.
+	* lib/maptk.tcl: Fixed MapRead to handle spaces in map filenames.
+	* lib/auth.tcl: fixed funny call to Log in the error case.
+	* bin/httpdthread.tcl: Catch around puts warning so daemons
+	do not need stdout.
+	* htdocs/templates/faqfaq.tml: Added missing \ in .tml Tcl code
+	* Nudged up the tclhttpd-3-1-0 CVS tag.
+
+2000-08-23  Brent Welch <welch@scriptics.com>
+
+	* Makefile.in: Fixed install permission bits on files.
+	* bin/httpd.tcl: Fixed setuid emulation under Tclx to setgid
+	before setuid.
+	* lib/url.tcl: Added support for raising an error with errorCode
+	set to HTTPD_SUSPEND in order to suspend a request - this calls
+	the Httpd_Suspend funciton.
+	* certs/README.ssl:  Added documentation about creating self-signed
+	certificates.
+	* lib/version.tcl: Tweaked date stamp in version
+	* bin/httpdthread.tcl: Added package require httpd::version to
+	fix htdocs/templates/index.tml example
+	* Applied tclhttpd-3-1-0 CVS tag.
+
+2000-08-02  Brent Welch <welch@scriptics.com>
+
+	* Upped the version number to 3.1
+	 Changed the name of every "package" to have a leading "httpd::" to
+	distingquish it as belonging to TclHttpd.
+	* configure:
+	* htdocs/access/index.tml:
+	* htdocs/templates/faqfaq.tml: (Contributed by Colin McCormack)
+	* htdocs_2/index.tml:
+	* lib/passcheck.tcl: (Contributed by Cezar Totth)
+	* lib/prodebug.tcl:
+	 Added a few stray files that were missing from CVS
+
+
+2000-07-26  Brent Welch <welch@scriptics.com>
+
+	* lib/cgi.tcl - Fixed use of "2> /dev/stdout", which can
+	fail if you start tclhttpd under an xterm (which is a fine
+	/dev/stdout), but later exit the xterm.  Previously that
+	broke all CGI scripts.  The open error is now trapped, and
+	it falls back to the old "|& cat" way of doing things.
+	[BUG 5870]
+
+2000-07-24  Brent Welch <welch@scriptics.com>
+
+	* lib/httpd.tcl - Fixed case where a normal post happens to
+	start with a leading newline for valid reasons as opposed to
+	being the extra newline from SSL on Netscape.
+
+2000-07-18  Brent Welch <welch@scriptics.com>
+
+	* lib/httpd.tcl - Fixed cleanup call to Httpd_GetPostDataAsync
+	* lib/doc.tcl - fixed ~ file name attack on Doc_AddRoot domains
+	* lib/imagemap.tcl - fixed bug caused by unbraced expression
+	* lib/safecgio.tcl - fixed unterminated quote bug.
+	* lib/version.tcl - bumped version to 3.0.4
+	* bin/httpd.tcl - bumped version to 3.0.4
+	* bin/httpdthread.tcl - Added /addroot url to test Doc_AddRoot
+
+2000-06-09  Brent Welch <welch@scriptics.com>
+
+	* Released 3.0.3 - added top-level Makefile for building
+	the bundled distribution.
+
+2000-05-31  Brent Welch <welch@scriptics.com>
+
+	* lib/doc.tcl: Fixed file join bugs with extra leading '/' in
+	the URL suffix. This bug caused a SECURITY_BUG if you used
+	Doc_AddRoot to add file systems into your URL tree.
+	(If you have just a single root defined by Doc_Root there is
+	no security problem in 3.0.2)
+
+2000-05-30  Dan Kuchler <kuchler@scriptics.com>
+
+        * lib/mtype.tcl: Changed the file extension array to use case
+        insensitive file extension to mime type mapping.  This makes
+        .GIF and .gif the same and .HTM and .htm identical.
+
+2000-05-17  Brent Welch <welch@scriptics.com>
+
+	* Released 3.0.2
+
+	* lib/url.tcl: SECURITY FIX.  3.0.0 and 3.0.1 can leak files simply
+	by specifying an extra leading /, eg., http://localhost:8015//etc/passwd
+	will happily fetch the password file.  This bug is not present in
+	the 2.* or earlier versions of TclHttpd.  Thanks to Petrus Vloet for
+	finding this one.
+	* lib/version.tcl, various Makefiles and Configures. Changed to 3.0.2
+	* Applied rel-3-0-2 CVS tag.
+
+2000-05-13  Brent Welch <welch@scriptics.com>
+
+	* lib/include.tcl: Changed Html_ExtractParam to html::extractParam so the
+	server-side examples work.
+	* htdocs/*: Various clean up of the sample URL tree for the 3.0.1 release.
+
+2000-05-12  Brent Welch <welch@scriptics.com>
+
+	* Various additions to installation documentation
+	* Created 3.0.1 distribution
+
+2000-05-10  Brent Welch <welch@scriptics.com>
+
+	* bin/httpd.tcl: Moved development script library to
+	the front of the auto_path.
+	* lib/httpd.tcl: Made the SSL handhake non-blocking. BUG 5252.
+	* lib/cgi.tcl: Changed exec of CGI script to use
+		>2 /dev/stdout (if that device exists) instead of
+		|& cat (to eliminate a process)
+	* lib/doc.tcl: Fixed ~username accesses.
+	* lib/mail.tcl: This now looks for /usr/lib/sendmail or
+	for /sbin/sendmail for those FreeBSD folks out there.
+	* lib/status.tcl: Beefed up /status/size
+
+2000-05-08  Melissa Chawla  <hershey@scriptics.com>
+
+	* lib/httpd.tcl: removed extra requirement that the caDir
+	Httpd(SSL_CADIR) be an existing file.
+
+2000-05-08 Brent Welch <welch@scriptics.com>
+
+	* lib/httpd.tcl: Fixed Httpd_SelfUrl to correctly insert the port
+	number if the client passed the Host: HTTP header. 
+	Previously that case wasn't setting custom port numbers correctly.
+	* lib/version.tcl: Upped to 3.0.1
+	* htdocs/register.tml: Added version string to form data
+	* bin/test/bigpost.tcl: Fixed argument handling
+	* lib/cgi.tcl: set env(SERVER_HTTPS_PORT) if the server has
+	a secure port open.
+
+2000-05-05 Brent Welch <welch@scriptics.com>
+
+	* lib/auth.tcl, lib/httpd.tcl:  The Basic authentication module
+	now sets the data(remote_user) and data(auth_type) variables,
+	which are later copied into the REMOTE_USER and AUTH_TYPE
+	environment variables.
+	* lib/log.tcl: Log_FlushMinutes will call Log_Flush if it sees
+	that the chain of after events has already been started.  This
+	will ensure that the next flush occurs when expected.
+	* bin/httpdthread.tcl, lib/thread.tcl:  fixed initialization
+	of threaded interpreters.
+	* htdocs/*:  Added various test pages.
+
+2000-05-03 Brent Welch <welch@scriptics.com>
+    
+	* bin/httpd.tcl:  Fixed startup code to find bundled TclLib
+	* lib/doc.tcl: Added check against bogus Content-Type that can
+	be generated by IE 5 when a POST keep-alive is followed by a GET.
+	The GET request contains the Content-Type from the POST (!), which
+	if it is multipart/form-data, is completely bogus.
+
+2000-05-01 Brent Welch <welch@scriptics.com>
+    
+	* Added Httpd_DumpHeaders to get the HTTP protocol state out
+	of a connection
+
+2000-04-28 Brent Welch <welch@scriptics.com>
+    
+	* Fixed Doc_RedirectSelf to use html::resolveUrl to correctly
+	convert relative URLs into an absolute one.
+
+2000-04-26  Brent Welch <welch@scriptics.com>
+
+	* Released 3.0.0 - applied rel-3-0-0 tag
+
+2000-04-26  Brent Welch <welch@scriptics.com>
+
+	* DIST_build: added directory for distribution scripts
+	* htdocs/.tml: Tracking name changes in ncgi
+	* lib/doc.tcl: Added call to ncgi::urlStub so pages can call this procedure
+	instead of using $page(url)
+
+2000-04-25  Brent Welch <welch@scriptics.com>
+
+	* Makefile.in: fixes for make dist and make install
+	* htdocs/*.tml: various clean up for new html:: proc names
+	* lib/cgi.tcl: Nuked reference to Httpd(fcopy)
+
+2000-04-24  Brent Welch <welch@scriptics.com>
+
+	* bin/README_custom: Added read-me about customizing TclHttpd
+	* configure.in: Fixed laundering of crypt and limit version numbers
+	on windows, where of course the macro to use is NODOT_VERSION
+	as opposed to WIN_VERSION...
+	* bin/httpd.tcl: Fixed -debug 1 starup under Wish to open the console.
+	* lib/httpd.tcl: Fixed bug in closing keep-alive sockets that was
+	introduced in the 4/21 putback.  Improved handling of bogus
+	data inbetween keep-alive requiests.
+	* lib/status.tcl: Fixed doc hit display
+	* lib/srvui.tcl: Fixed home page counter
+
+2000-04-21  Brent Welch <welch@scriptics.com>
+
+	* lib/httpd.tcl: The server now drains the socket if the Domain
+	handler choose not to read the POST data.  This makes it more
+	reliable for the client side to read the server's reply.  Added
+	Httpd_GetPostDataAsync and Httpd_CopyPostData so Domain handlers
+	have a clean interface to asynchronously deal with POST data.
+
+2000-04-20  Brent Welch <welch@scriptics.com>
+	* configure.in, Makefile.in: Fixes so that crypt and limit can have
+	a different version number (1.0) than TclHttpd
+	PARTS LIST ALERT.  This affects the libcrypt.1.0.so, liblimit.1.0.so
+	and the directories lib/crypt1.0 and lib/limit1.0
+	* pkgIndex.tcl.in: Removed incorrect hardwired version number.
+	* lib/httpd.tcl: Added Httpd_Name and Httpd_Protocol to go with the
+	existing Httpd_Port that return the server name, protocol (http or
+	https), and the port associated with a particular connection.
+	* htdocs/forms: General clean up of the CGI forms here.  Added
+	multipart file uploading test.
+
+2000-04-19  Brent Welch <welch@scriptics.com>
+	* bin/httpd.tcl: Fixed call to tcl_findLibrary
+	* bin/tclhttpd.rc: Change SSL parameters a bit.
+	* lib/doc.tcl: restored old page(querytype) variable for compatibility
+
+2000-04-18  Sandeep Tamhankar <sandeep@scriptics.com>
+        * Makefile.in: Added calls to @CYGPATH@ so that Cygwin //z/
+        references get converted to z:/.
+
+2000-04-18  Brent Welch <welch@scriptics.com>
+	* lib/doc.tcl, lib/url.tcl: Fixed POST data to templates
+
+2000-04-18  Brent Welch <welch@scriptics.com>
+	* lib/debug.tcl: Added /debug/showproc
+	* lib/doc.tcl: Integrated with ncgi:: module for page query data
+	* lib/httpd.tcl: Added Proxy_Dispatch hook
+	* lib/mime.types: Added WAP types
+	* lib/status.tcl: Removed hardwired use of /status
+	* lib/thread.tcl: Switched to use new Thread package
+	* htdocs: Changed most .html files into .tml templates
+	* htdocs/libtml/form.tcl: Removed this and replaced with uses
+	of tcllib html:: module.
+
+2000-04-03  Brent Welch  <welch@scriptics.com>
+
+	* lib/httpd.tcl: Fixed accesshook "denied" case where the catch
+	inside Url_Dispatch was catching an early return.  This caused
+	an extra error reply after the 403 reply that was already generated.
+	Fixes bug 4741
+	* lib/include.tcl: Added support for the "exec" command in
+	server side includes.
+	* lib/log.tcl:  Added "file mkdir" to Log_SetFile so it will create
+	the log directory if it doesn't exist.  This is wrapped in a catch,
+	as are half the lines of code in this procedure, so logging silently
+	fails if it cannot open the log file for some reason.
+
+2000-03-27  Brent Welch  <welch@scriptics.com>
+
+	* lib/version.tcl: updated the date in the 3.0.0 version string
+	* lib/thread.tcl: Removed Thread_Disable and replaced it with
+	Thread_Enabled, a boolean function that is used by other modules
+	to see if thread were enabled when the server started.  Also
+	fixed a bug with undefined Url(postlength)
+	* lib/url.tcl: Changed Url_PrefixInstall to check Thread_Enabled
+	before deciding that a URL domain should be handled in a thread.
+	This makes it easier to stub out the thread module, if necessary.
+	Fixed bug in Url_PrefixRemove in the case that the prefix contained
+	regexp special characters.
+	* lib/config.tcl Added module to manage the configuration options
+	stored in the tclhttpd.rc file.
+	* bin/tclhttpd.rc: Major re-wack so this only contains configuration
+	parameters in a stylized Tcl script.  This file is sourced very
+	early, before command line arguments are processed, in order to
+	establish a baseline configuration.
+	* bin/main.tcl: Added this new file, which has the bulk of the
+	application initialization code in it - all except actually
+	opening the server sockets and the main loop and some other details.
+	* bin/httpd.tcl - Major re-wack to use both tclhttpd.rc and main.tcl
+
+	Also moved a bunch of files into subdirectories:
+	* bin/mini: The variations on the 250-line mini httpd
+	* bin/test: Scripts that test the server.  These are not standard
+	Tcl test suite files, which will appear someday in the main tests
+	directory, hence the different location.
+	* bin/util: Random scripts, like crypting passwords and such.
+
+	Htdocs changes
+	* htdocs/access/null: New directory to test out AuthNullCallback,
+	which implements a funky bootstrapped password registry
+	* htdocs/access/bytcl: Changed this to illustrate password checking
+	callbacks more clearly
+
+2000-03-22  Brent Welch  <welch@scriptics.com>
+	
+	* lib/doc.tcl  Created DocAccessHook and moved authentication
+	checking out of DocDomain and into DocAccessHook.  Also did
+	cleanup so that Doc_Virtual would work if you used Doc_AddRoot
+	to splice in other directory trees into the URL tree.  The
+	nice side effect of DocAccessHook is that you can create
+	a file system structure to parallel application-direct URLs,
+	(e.g., /debug and /status) and put .htaccess or .tclaccess
+	files in them to control access to the built in URLs.
+	* lib/url.tcl  Simplified Url_Dispatch by removing the
+	UrlCache array.  Also added Url_PrefixMatch
+	* lib/auth.tcl  Define env(REMOTE_USER) and env(AUTH_TYPE) in the
+	case that .tclaccess files are used to check Basic Authentication.
+	* REMOVED lib/base64.tcl in favor of the Standard Tcl Library
+	base64 package. (You can find it in deprecated/base64.tcl)
+
+2000-03-18  Brent Welch  <welch@scriptics.com>
+
+	* lib/url.tcl	Added Url_AccessInstall and changed Url_Dispatch
+	to call registered access control hooks before dispatching to
+	domain handlers.  Changed URL redirect scheme to not use the
+	UrlCache hack, but to use a URL access control hook.
+	* lib/redirect.tcl: Added a URL access control hook to implement
+	per-URL redirects.
+	* lib/httpd.tcl: unbroke Httpd_RedirectSelf
+	* lib/thread.tcl: fixed use of undefined procedure
+	* lib/admin.tcl: Removed most of the redirect code from here.
+	* htdocs/redirect: Added sample redirect file.  This is loaded
+	during startup and when you poke the /redirect/reload direct URL.
+	* bin/httpd.tcl: added initialization for the redirect module.
+
+2000-03-07  Melissa Chawla  <hershey@scriptics.com>
+
+	* htdocs/access/bydir/user.cgi
+	* htdocs/cgi-bin/user.cgi
+	* lib/auth.tcl
+	* lib/mail.tcl: changed calls to Base64 library to use the
+	"base64" namespace (version 2.0 of the package).
+
+
+(Please see the "changes" file for a slightly higher-level view
+of the changes that goes back much farther and is organized by
+TclHttpd releases.)

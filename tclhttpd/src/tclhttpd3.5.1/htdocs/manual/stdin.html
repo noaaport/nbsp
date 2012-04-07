@@ -1,0 +1,63 @@
+<title>Stdin Package Description</title>
+<!-- Stephen Uhler (c) 1997 Sun Microsystems -->
+<h1>Stdin Package Description</h1>
+<h2>usage</h2>
+<pre>
+package require stdin
+Stdin_Start
+</pre>
+<h2>Description</h2>
+<p>
+The <b>stdin</b> package provides a text console for entering Tcl
+commands to <i>tclsh</i> while allowing it to be event driven.
+To access the <b>stdin</b> package, include the code:
+<ul>
+<tt>package provide stdin</tt>
+</ul>
+in your script, and start the <i>tcl</i> event loop (and the stdin console)
+by entering:
+<ul>
+<tt>Stdin_Start</tt>
+</ul>
+that takes as an optional argument, a command prompt string.
+<pp>
+In addition to providing normal command entry, <b>stdin</b> provides
+a rudimentary command history, loosely inspired from <i>csh</i>.
+Any command that begins with (!) is looked up in the history list,
+allowing a previous command to be re-executed.  The general for of a 
+history command is:
+<ul>
+<b>!</b><i>match-expression</i><b>/</b><i>replace-expression</i><b>/</b><i>replacement-string</i>
+<li>
+<i>match-expression</i> is a regular expression that is used to find the most
+recent command in the history list to re-executed.  By default, this
+expression is anchored at the beginning of the line, so the command:
+<ul> <tt>!s</tt></ul>
+will re-execute the most recent command that begins with "s".
+The command:
+<ul><tt>!s.*q</tt></ul>
+will re-execute the most recent command that begins with "s" and also contains
+the letter "q".
+The re-issued command is inserted onto the history list.
+<li>
+The sequence:
+<ul><tt><b>/</b><i>replace-expression</i><b>/</b><i>replacement-string</i></tt></ul>
+is optional, and permits part of a previous command to be re-issued with 
+modifications. The <i>replace-expression</i> is a regular expression that
+matches some portion of the command string, which is then replaced by
+<i>replacement-string</i> before the command is re-issued.
+When a substitution succeeds, both the original command matched and the
+modified version are displayed on the console.
+</ul>
+<p>
+As an example, if the command:
+<ul><tt>source ../lib/something.tcl</tt></ul>
+is the most recent command on the history list beginning with "s", then:
+<ul><tt>!s/g/g2/</tt></ul>
+would run the command:
+<ul><tt>source ../lib/something2.tcl</tt></ul>
+<h2>Variables</h2>
+State for the <b>stdin</b> package is stored in the global array:
+<i>Stdin</i>.
+<h2>Author</h2>
+Stephen Uhler

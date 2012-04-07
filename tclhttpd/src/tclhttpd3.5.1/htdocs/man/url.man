@@ -1,0 +1,370 @@
+[manpage_begin httpd::url n 1.2]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Url dispatching}]
+[moddesc   {Tcl Web Server}]
+[require httpd::url [opt 1.2]]
+[description]
+
+The package [package httpd::url] is a companion package to package
+[package httpd] and required by it. It provides the database mapping
+from urls in http requests to the tcl commands implementing them, and
+the commands to manipulate said database.
+
+[para]
+
+The main concept of this package is the [term domain].  A domain is
+described by an url prefix and handled by single tcl command, the
+[term {domain handler}]. In other words, a domain is an url tree,
+i.e. an url directory and all urls inside of that directory
+[lb]*[rb]. These urls are handled by the associated tcl command.
+
+[para]
+
+[lb]*[rb] There is one exception to this definition. It is possible,
+actually allowed, to define a domain whose url prefix is inside of
+another domain. All the urls in this sub-domain do [emph not] belong
+to the enclosing domain anymore.
+
+[para]
+
+
+[section {Interface to protocol engines}]
+
+The commands in this section are called by the package [package httpd]
+as part of the url dispatching process. They are public for use in
+implementations of the HTTP protocol different from [package httpd].
+
+[list_begin definitions]
+
+[call [cmd Url_Dispatch] [arg sock]]
+
+Dispatches the request currently waiting on the connection [arg sock]
+to the associated domain handler. The http protocol engine has already
+read the HTTP headers and placed into the connection status
+ array. It may have read all posted data before invoking the domain
+handler. This is done if and only if requested by the domain.
+
+[nl]
+
+Before the domain handler is invoked all registered access control
+callbacks are run. If any of them denies the request an http error
+reply is sent back and the domain handler is not invoked.
+
+
+[call [cmd Url_DeferredDispatch] [arg {prefix suffix sock varname errmsg}]]
+
+Bare bones invocation of the domain handler for the url ([arg prefix]
+and [arg suffix]) in the current request waiting on the connection
+[arg sock]. Executed after all posted data was read by this
+package. If the error message in [arg errmssg] is not empty the
+request will be aborted, using this message in the generated http
+error reply, and the domain handler is not invoked.
+
+[nl]
+
+This command does not perform access control. It assumes
+that this has already been done before.
+
+
+[call [cmd Url_PostHook] [arg {sock length}]]
+
+Backdoor hack for [cmd Url_DecodeQuery] compatibility.  Remembers the
+current connection [arg sock] and length of pending data so that
+
+[cmd Url_DecodeQuery] can read the post data if it has not already
+been read by the time it is called. Setting a [arg length] of 0
+deactivates the remembered information.
+
+[list_end]
+
+
+[section {Database manipulation}]
+[para]
+
+The commands in this section are for use by domain implementations, to
+manage their presence in the dispatcher database.
+
+[list_begin definitions]
+
+[call [cmd Url_PrefixInstall] [arg {prefix command}] ([arg {option value}])...]
+
+Adds a domain described by the url [arg prefix] to the database. After
+the call any access to an url in the domain will cause this package to
+call the associated domain handler, the command prefix [arg command].
+
+[nl]
+
+The domain handler is called with one additional argument, the channel
+handle [var sock] of the connection which made the request for an url
+in the domain. The state data of this connection is available through
+
+[example_begin]
+	upvar #0 Httpd$[var sock]
+[example_end]
+
+as described in [package httpd].
+
+The allowed options and their meanings are:
+
+[list_begin opt]
+[opt_def readpost]
+
+takes a boolean value. If set to [const true] (the default), then this
+package will retrieve post data before calling the domain
+handler. Else the domain handler is responsible for reading any post
+data the browser might have sent.
+
+[opt_def callback]
+
+takes a command prefix. It is invokes whenever a request in the domain
+was completed, with or without error. This allows the domain handler
+to cleanup any resources it might have allocated for the request at
+that time, like aborting a long running server operation.
+
+[nl]
+
+The callback will be invoked with two additional arguments, [arg sock]
+and a string, in this order. The string can be empty. If the string is
+not empty it will contain an error message.
+
+
+[opt_def thread]
+
+takes a boolean value. If set to [const true] the domain handler will
+run in its own thread. The default is [const false]. In a server which
+is not thread-enabled this option will be ignored and the value always
+forced to [const false].
+
+[list_end]
+
+
+[call [cmd Url_PrefixRemove] [arg prefix]]
+
+Remove the domain described by the url [arg prefix] from the
+database. After the call all urls in the domain may fall into a
+different domain and will be handled by that domain handler.  If they
+don't fall into a different domain they will cause the generation of
+http error replies when accessed from a browser.
+
+
+[call [cmd Url_AccessInstall] [arg proc]]
+
+Adds the command with name [arg proc] at the end of the list of access
+control callback managed by the package. After the call the command
+will be invoked for all incoming requests. It can grant access, deny
+it, or announce that it doesn't care. When calling the command
+multiple times for the same [arg proc] only the first call will update
+the package. All others will be ignored.
+
+[nl]
+
+The register callback is invoked with two additional arguments, the
+channel handle of the connection, and the url which is accessed. It
+has to return one of
+
+[list_begin definitions]
+[lst_item [const ok]]
+Access is granted.
+
+[lst_item [const denied]]
+
+Access is denied. It is recommended that the callback generates the
+appropriate http error reply. However the system will work even if it
+does not, by generating its own reply when it finds that the callback
+did not.
+
+[lst_item [const return]]
+See [const denied].
+
+[lst_item [const skip]]
+The callback does not care about this url.
+
+[list_end]
+
+[nl]
+
+The package invokes the callbacks from first registered to last and
+will not stop as long as the callbacks return [const skip]. Any tcl
+error thrown by a callback wil cause url processing to abort.
+
+
+[call [cmd Url_AccessInstallPrepend] [arg proc]]
+
+See [cmd Url_AccessInstall], except that the command prefix is added
+at the front of the list, causing it to be called before anything else
+registered before.
+
+
+[call [cmd Url_AccessUnInstall] [arg proc]]
+
+Removes the command prefix [arg proc] from the list of access control
+callbacks managed y the package. If the command prefix could not be
+found this command will do nothing.
+
+
+[call [cmd Url_PrefixMatch] [arg {url prefixVar suffixVar}]]
+
+Finds the best-matching domain for the [arg url] and stores the url
+prefix of the domain into the variable [arg prefixVar], and the
+remainder of the url (i.e. everything after the prefix) into the
+variable [arg suffixVar].
+
+[nl]
+
+The best-matching domain is the domain with the longest prefix which
+still matches the specified url, path-component wise. In other words,
+the prefix /tcl will [emph not] match the url /tclhttpd/foo.
+
+
+[call [cmd Url_PrefixExists] [arg prefix]]
+
+Checks if a domain was registerd for [arg prefix]. The result is a
+boolean value where [const true] signals that a domain was registered
+indeed.
+
+[call [cmd Url_Handle] [arg {cmd sock}]]
+
+This used to cache the domain handler command [arg cmd] for the url on
+the connection [arg sock] before invoking it. Nowadays it only invokes
+the command.
+
+[call [cmd Url_UnCache] [arg sock] [opt [arg force]]]
+
+Removes the domain handler command for the url on the connection
+[arg sock] from the domain handler cache. If the argument [arg force]
+is present and set then there will be no special case for the internal
+redirect hack.
+
+[list_end]
+
+
+
+
+[section {Support for domain handlers}]
+[para]
+
+The commands of this section are for use by domain implementations, to
+aid the tasks of url and request processing.
+
+[list_begin definitions]
+
+[call [cmd Url_Unwind] [arg {sock ei ec}]]
+
+Performs common error handling after the current request on the
+connection [arg sock] was aborted with a tcl error. The two arguments
+[arg ei] and [arg ec] contain the errorInfo and errorCode information
+from the interpreter.
+
+
+[call [cmd Url_PathCheck] [arg urlsuffix]]
+
+Validates the pathname [arg urlsuffix] and makes sure that it doesn't
+sneak out of its domain via [const ..]-trickery. Either raises an
+error, or returns a list of components in the pathname.
+
+
+[call [cmd Url_DecodeQuery] [arg query] ([arg option] [arg value])...]
+
+A small wrapper around [cmd Url_DecodeQueryOnly]. Ensures that the
+POST data on the connection set via [cmd Url_PostHook] is read before
+handing over to the decoder. [arg query] is the name of the internal
+variable the data is stored into. The options coming after this
+information are simply handed over to the actual decoder, i.e.
+[cmd Url_DecodeQueryOnly].
+
+Accepted options:
+
+[list_begin opt]
+[opt_def type]
+
+Forces a specific type for the query data. Defaults to
+[const application/x-www-urlencoded]. If no decoder for that type is
+present the system is forced back to the default.
+
+[opt_def qualifiers]
+
+Empty by default. Transformed into the second argument of the type
+specific decoders, see below.
+
+[list_end]
+
+[call [cmd Url_DecodeQueryOnly] [arg query] ([arg option] [arg value])...]
+
+Decodes the POST data stored in the variable [arg query].  It does
+this by dispatching to the appropriate type-specific decoder command
+(see below). See [cmd Url_DecodeQuery] for the accepted options.
+
+
+[call [cmd Url_DecodeQuery_multipart/form-data]               [arg {query qualifiers}]]
+
+Decoder for [arg query] data of type [const multipart/form-data].
+Essentially has to parse the MIME document in [arg query], with
+guidance by the dictionary [arg qualifiers].
+
+Used keys are
+
+[list_begin definitions]
+[lst_item [const boundary]]
+The boundary line used to separate the MIME parts. Required.
+[list_end]
+
+Returns a dictionary mapping from the names of the uploaded files
+to their contents.
+
+[call [cmd Url_DecodeQuery_application/x-www-urlencoded]      [arg {query qualifiers}]]
+
+Decoder for [const application/x-www-urlencoded] [arg query] data.
+The argument [arg qualifiers] is not used. Returns a dictionary
+mapping from the query keys to the query values.
+
+[call [cmd Url_DecodeQuery_application/x-www-form-urlencoded] [arg {query qualifiers}]]
+
+Decoder for [const application/x-www-form-urlencoded] [arg query]
+data. An alias of [cmd Url_DecodeQuery_application/x-www-urlencoded].
+
+
+[call [cmd Url_QuerySetup] [arg sock]]
+
+Reads the POST data on the connection [arg sock] and initializes the
+[package ncgi] package with it, for convenient access by URL
+implementations later on.
+
+
+[call [cmd Url_ReadPost] [arg {sock varname}]]
+
+Synchronously reads the POST data on the connection [arg sock] and
+stores it into the variable [arg varname].
+
+
+[call [cmd Url_DecodeMIMEField] [arg type]]
+
+Decodes a mime type. Returns a list containing 3 elements, the major
+and minor type, and its qualifiers, a dictionary, in this order.
+
+
+[call [cmd Url_Decode] [arg data]]
+
+Decodes a single string in [const x-www-urlencoded] form.
+The decoded string is returned as the result of the command.
+
+
+[call [cmd Url_Encode] [arg string]]
+
+Encodes a [arg string] for use in [const x-www-urlencoded] query data.  The
+encoded string is returned as the result of the command.
+
+
+[call [cmd Url_IsLinkToSelf] [arg url]]
+
+Compares the [arg url] to the url of the current page.
+The result of the comparison is a boolean flag.
+If they seem to be the same [const true] will be returned, else
+[const false].
+
+
+[list_end]
+
+[see_also httpd httpd::counter httpd::doc_error]
+[see_also httpd::threadmgr httpd::utils]
+[keywords {web server} {url dispatch} url domain]
+[manpage_end]

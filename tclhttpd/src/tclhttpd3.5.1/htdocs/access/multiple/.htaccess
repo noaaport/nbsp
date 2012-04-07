@@ -1,0 +1,10 @@
+AuthUserFile /usr/local/htaccess/passwd
+AuthGroupFile /usr/local/htaccess/group
+AuthName Multiple
+AuthType Basic
+<Limit GET POST>
+require group group1
+require group group2
+require user m3
+require user m4
+</Limit>

@@ -1,0 +1,73 @@
+[html::author "Colin McCormack"]
+[mypage::header "Access Control User Editor"]
+[
+ set file [ncgi::value file]
+ 
+ set in [validation::parseFile $file users]
+ set valid 1
+ if {$in != ""} {
+     set valid 0
+     return "<p>$in</p>"
+ } else {
+     return "<p>(Read [ncgi::value file])</p>"
+ }
+]
+[
+ set name [ncgi::value name]
+ # write file if necessary
+ if {$valid && $name != ""} {
+     if {[ncgi::value action] == "Del"} {
+	 catch {unset users($name)}
+     } else {
+	 set users($name) [validation::genPasswd [ncgi::value password]]
+     }
+     
+     # save the file if necessary
+     validation::writefile $file users
+     
+     return "<p>(Updated [ncgi::value file])</p>"
+ }
+]
+[
+ ncgi::setValue name ""
+ ncgi::setValue people ""
+ ncgi::setValue action 0
+ set html ""
+ if {$file != ""} {
+     foreach {key value} [array get users] {
+	 append html [subst {
+	     <form action="$page(url)" method=POST>
+	     <input type=hidden name=file  value="[html::quoteFormValue $file]">
+	     <input type=hidden name=name value="[html::quoteFormValue $key]">
+	     <input type=submit value="[html::quoteFormValue $key]">
+	     <input type=text name=password value="">
+	     <input type=checkbox name=action value=Del>Del
+	     </form>
+	 }]
+     }
+
+     append html [subst {<form action="$page(url)" method=POST>
+	 <input type=hidden name=file  value="[html::quoteFormValue $file]">
+	 <input type=text name=name value="">
+	 <input type=text name=password value="">
+	 <input type=submit name=action value=Add>
+	 </form>
+     }]
+ } 
+ return $html
+]
+<p><a href="index.html">Return to htaccess editor</a></p>
+
+[
+ unset html
+ #ncgi::setValue debug 1
+ return [::validation::debug users]
+]
+
+[mypage::footer]
+
+<!--
+### Local Variables: ###
+### mode:tcl ###
+### End: ###
+-->

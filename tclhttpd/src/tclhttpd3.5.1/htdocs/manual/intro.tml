@@ -1,0 +1,221 @@
+[mypage::header "Tcl Server Programming Intro"]
+
+<p>
+<h2>
+<a NAME="basic">Introduction</a></h2>
+<p>
+This is an old page that describes some of the
+the most commonly used APIs in the server.
+You should also look at the <a href=/learn/>Learn</a> section
+that has several more specific write-ups and the
+<a href=/man/>manual pages</a> for more complete documentation
+on each module.
+
+<h3>Document Root</h3>
+<p>
+The document root is the name of the directory on your server machine
+that corresponds to the root of server's URL hierarchy. This is defined
+with the <code>Doc_Root</code> command: 
+<p>
+<code>Doc_Root /usr/local/htdocs</code> 
+<p>
+With no arguments, <code>Doc_Root</code> returns the current root.
+
+<p>
+If you have additional directories you need to paste into the hierarchy
+you can use <code>Doc_AddRoot</code>. This creates sort of a symbolic
+link from a URL to some point in your server's file system: 
+<p>
+<code>Doc_AddRoot <em>virtual</em> <em>directory</em></code> 
+<p>
+The term <code><em>virtual</em></code> means a URL path like <code>/cgi-bin</code>
+or <code>/foobar</code>. The directory is a file pathname like <code>/export/disk3/foobar</code>.
+
+
+<h3>Per-User Directories</h3>
+<p>
+If you want users to export their own pages under ~user URLs, then
+use the <code>Doc_PublicHtml</code> command to define what subdirectory
+of their home is used. 
+<p>
+<code>Doc_PublicHtml public_html</code> 
+
+<h3>Index Files</h3>
+<p>
+The <code>Doc_IndexFile</code> specifies a pattern for the base name
+of the index file. The pattern can be an exact name, like "index.html",
+or a pattern that allows any suffix (e.g., index.*) If more than one
+file matches the pattern, the most recently modified file is used.
+
+<p>
+<code>Doc_IndexFile index.{html,shtml,htm}</code> 
+
+<h3>Log Files</h3>
+<p>
+The server generates log files in a standard format that is understood
+by various log-processing utilities. (If you have special needs you
+can implement a new log module.) The log files are automatically rotated
+every day, except that there is only one error log that is always appended.
+You specify the base name of the log file and a different suffix is
+appended for the daily logs and the error file: 
+<p>
+<code>Log_SetFile /usr/local/tclhttpd/log: </code> 
+<p>
+The logs are flushed periodically instead of on each log entry, except
+the error log which is flushed immediately. You can set the period
+with: 
+<p>
+<code>Log_FlushMinutes <em>minutes</em></code> 
+
+<h3>Server Name and Port</h3>
+<p>
+You set the server's host name and port with the <code>Httpd_Server</code>
+command. This command opens the socket and activates the server: 
+<p>
+<code>Httpd_Server 80 sunscript.sun.com</code> 
+<p>
+If you need to specify the server's own IP address, in case you have
+multiple servers running on different interfaces, just append the IP
+address to this command: 
+<p>
+<code>Httpd_Server 80 sunscript.sun.com 152.70.4.123</code> 
+<p>
+If you are going to run several servers you'll need to clone the startup
+script and run a different Tcl process for each server. 
+
+<h2><a NAME="prefix">URL Domain Handlers</a></h2>
+<p>
+The server partitions the URL space into "domains" that are uniquely
+identified by a prefix of the URL. The longest matching prefix is used.
+For example, "/" is the prefix of all URLs, but you can also have a
+"/device" domain and a "/status" domain that are handled by different
+Tcl procedures. Basic file system service is provided by the Doc domain
+(i.e., doc.tcl), which makes a call like this: 
+<p>
+<code>Url_PrefixInstall / \[list DocDomain \$Doc(root)]</code> 
+<p>
+but the CGI domain makes a call like 
+<p>
+<code>Url_PrefixInstall /cgi-bin \[list CgiDomain \$directory]</code>
+
+<p>
+This registers a Tcl procedure that is called each time a request matches
+the prefix. The longest matching prefix is used to resolve conflicts
+between prefixes like "/" and "/cgi-bin". The domain handler is invoked
+like this: 
+<p>
+<code>DocDomain \$directory \$sock \$suffix</code> 
+<p>
+The <code>\$sock</code> and <code>\$suffix</code> are added by <code>Url_Dispatch</code>
+when the handler is invoked. The <code>\$directory</code> was defined
+at the time <code>Url_PrefixInstall</code> was called. A domain handler
+can be installed with any arguments it needs. The <code>\$sock</code>
+is the socket for the connection, and it is used in calls on the Httpd
+module to return results. The <code>\$suffix</code> is the part of the
+URL after the prefix is stripped off. 
+<p>
+Sample domain handlers include <code>DocDomain</code>, <code>CgiDomain</code>,
+and <code>DirectDomain</code>, which can be found in <code>doc.tcl,</code>
+<code>cgisrv.tcl</code>, and <code>direct.tcl</code>, respectively.
+
+
+<h2>Application Direct URLs</h2>
+<p>
+The Direct module implements a mapping from URLs to Tcl procedure calls.
+The name of the URL determines the procedure, and the arguments come
+from query data. Use <code>Direct_Url</code> to define the command
+prefix associated with a URL subtree. For example: 
+<p>
+<code>Direct_Url /status Status</code> <code>
+<br>
+
+Direct_Url /mail Mail</code>
+<p>
+This declares that URLs beginning with <code>/status</code> are handled
+by Tcl procedures that begin with <code>Status</code>, and URLS beginning
+with <code>/mail</code> are handled by Tcl procedures that begin with
+<code>Mail</code>. The URL must match the Tcl procedure exactly.  For
+example:
+<p>
+<code>proc Status/hello {args} {return hello} </code> 
+<p>
+This defines an implementation for the <code>/status/hello</code> URL
+that returns a page containing the string "hello". 
+<p>
+If the procedure has arguments defined, then the <code>Direct</code>
+module looks for those names in the query data posted (or included)
+with the URL.  The <code>args</code> parameter is used to collect extra
+form data.  If there is no matching form data then the parameter gets
+its default value or the empty string.  For example, the server defines<code>proc
+Mail/formdata {email subject args} { ... }</code>
+<p>
+If you have an HTML form with <code>email</code> and <code>subject</code>
+fields, then you can use <code>/mail/formdata</code> as the action
+URL for your form.  The Mail/formdata Tcl procedure is called with
+<code>email</code> and <code>subject</code> bound to the values from
+the form.  Any additional fields in the form are collected into <code>args</code>
+as a list that alternates between name and value.
+
+<h2><a NAME="doctype">Document Type Handlers</a></h2>
+<p>
+The Doc domain supports handlers for MIME types. The <code>mime.types</code>
+file establishes a mapping from file suffixes (e.g., <code>html</code>)
+to MIME types (e.g. <code>text/html</code>). For example, files with
+suffix <code>.shtml</code> are type <code>application/x-server-include</code>.
+The Doc module checks to see if a handler exists for a type before
+returning the file. If it exists, the handler is called like this:
+
+<p>
+<code>Doc_application/x-server-include \$path \$suffix \$sock</code> 
+<p>
+The <code>\$path</code> is the absolute pathname of the file. The <code>\$suffix</code>
+is the URL suffix. The <code>\$sock</code> is the socket handle for
+the connection. 
+<p>
+Example handlers include <code>Doc_application/x-cgi</code>, <code>Doc_application/x-imagemap</code>,
+<code>Doc_application/x-tcl-subst</code>, and <code>Doc_application/x-server-include</code>.
+
+<h2><a NAME="subst">HTML+Tcl Templates</a></h2>
+<p>
+The <code>Doc_Subst</code> procedure is a handler for <code>application/x-tcl-subst</code>.
+This handler simply reads a file and does a Tcl <code>subst</code>
+on it to replace any embedded Tcl commands and variable references.
+By default the <code>subst</code> is done in the main interpreter so
+you have to be careful. However, <code>Doc_Subst</code> is often used
+by other handler types that use sessions that are maintained in safe
+slave interpreters. 
+<p>
+For example, a simple <code>foo.subst</code> file might contain: 
+<pre>&lt;h1&gt;Hello World&lt;/h1&gt;
+The current time is [clock format [clock seconds]]
+</pre>
+
+<h2><a NAME="session">Sessions and Session State</a></h2>
+<p>
+The <code>Session</code> module keeps track of session state in slave
+interpreters. A session has a 4-character ID that is dynamically generated
+when a new session is created. Sessions work by passing around the
+session ID in URL requests. For example, a URL that starts a new session
+looks like: 
+<p>
+<code>/something.special?session=new</code> 
+<p>
+The MIME type handler for <code>.special</code> (e.g., <code>Doc_application/x-whizbang</code>)
+must process the query data and then process the named file. When it
+sees the <code>session=new</code> it calls <code>Session_Create</code>
+to create a new slave interpreter for the session and return the ID.
+If it sees something like 
+<p>
+<code>/something.special?session=3f3b</code> 
+<p>
+Then it calls <code>Session_Match</code> to hook up with the existing
+interpreter state. 
+<p>
+The <code>Doc_application/x-tcl-snmp</code> is the best example that
+uses session state. It uses <code>Url_DecodeQuery</code> to parse incoming
+form data, <code>Session_Match</code> to hook up to session state,
+and <code>SnmpProcess</code> to handle the form data in an application-specific
+way. It then falls through to <code>Doc_Subst</code> to process the
+page in the context of the session. 
+
+[mypage::footer]

@@ -1,0 +1,8 @@
+AuthUserFile /etc/tclhttpd/digest-passwd
+AuthGroupFile /etc/tclhttpd/group
+AuthName testrealm@host.com
+AuthType Digest
+ 
+<Limit GET POST>
+require user Mufasa
+</Limit>

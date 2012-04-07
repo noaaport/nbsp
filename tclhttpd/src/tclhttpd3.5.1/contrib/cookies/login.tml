@@ -1,0 +1,21 @@
+[
+Doc_Dynamic
+html::head "Login form"]
+
+<FORM action=/login method=post>
+  <table>
+  <tr>
+      <td>Username</td>
+      <td><input name=username value="[Doc_Cookie username]"></td>
+  </tr>
+  <tr>
+      <td>Password</td>
+      <td><input name=password></td>
+  </tr>
+  <tr>
+      <td><input type=submit></td>
+  </tr>
+  </table>
+</FORM>
+
+</HTML>

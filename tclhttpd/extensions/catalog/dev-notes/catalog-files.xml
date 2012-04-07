@@ -1,0 +1,24 @@
+<catalog version="1.0.1">
+
+<service name="all" serviceType="Compound" base="">
+  <service name="odap" serviceType="OPENDAP" base="/thredds/dodsC/"/>
+  <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/"/>
+</service>
+
+<dataset name="taf" ID="da/taf">
+  <metadata inherited="true">
+    <serviceName>all</serviceName>
+  </metadata>
+
+  <dataset name="2010032622.taf" ID="da/taf/2010032622.taf"
+	urlPath="da/taf/2010032622.taf">
+	<date type="modified">2010-03-25 22:31:43Z</date>
+  </dataset>
+
+  <dataset name="2010032618.taf" ID="da/taf/2010032618.taf"
+	urlPath="da/taf/2010032618.taf">
+	<date type="modified">2010-03-26 16:27:02Z</date>
+  </dataset>
+
+</dataset>
+</catalog>

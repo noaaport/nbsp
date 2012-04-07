@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+
+NAME
+	tclupperair -
+
+	Tcl procedures to decode Upperair reports.
+
+SYNOPSIS
+
+	package require upperair;
+
+	upperair::fm35::decode {body}
+	upperair::fm35::get_levels {}
+	upperair::fm35::get_data {level}
+	upperair::fm35::get_siteid {}
+	upperair::fm35::get_time {}
+	upperair::fm35::set_na {s}
+	upperair::fm35::get_na {}
+	# For internal use
+	upperair::fm35::_strip_zeros {v}
+	upperair::fm35::_decode_temp_dewp {tttdd}
+	upperair::fm35::_decode_wind {dddff}
+	upperair::fm35::_decode_height_ttaa {pphhh}
+	upperair::fm35::_decode_height_ttcc {pphhh}
+	upperair::fm35::_decode_surface_tropopause {data}
+	upperair::fm35::_decode_windmax {data}
+	upperair::fm35::_decode_upperair_level {part level_data}
+
+DESCRIPTION
+
+	This package provides a set of Tcl procedures that can be used
+	to decode Upperair reports from Tcl scripts.
+
+proc upperair::decode <line>
+
+	Decodes the various parts of a upperair report and sets the
+	corresponding variables.
+-

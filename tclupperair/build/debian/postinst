@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cat <<__EOF__
+-
+The directory
+	
+	/usr/share/doc/tclupperair
+
+contains documentation and examples to get started.
+-
+__EOF__

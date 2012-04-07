@@ -1,0 +1,9 @@
+# The "realm" will appear in the Browser's password prompt dialog.
+# The callback is the name of the Tcl procedure to call to check the password
+
+set realm "TclHttpd Debug Hooks"
+
+# This callback is defined in lib/debug.tcl
+
+set callback DebugPasswordChecker
+

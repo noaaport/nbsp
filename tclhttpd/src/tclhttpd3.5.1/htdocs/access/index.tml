@@ -1,0 +1,64 @@
+[mypage::header "Access Control Schemes"]
+TclHttpd supports access control at two levels.
+The most general support is through an access control
+procedure, or filter, that is run before each URL
+is processed.  These filters are registered with the
+Url_AccessInstall procedure.  See the lib/url.tcl file
+for more details about access control filters.
+<p>
+The DocAccessHook procedure provides support for
+Apache-style .htaccess files.  This is enabled by
+default.  Here is an <a href="htaccess.html">explanation
+of .htaccess files</a> by Piet Vloet.
+A web-based utility to maintain .htaccess Access Control
+can be run by the webmaster <a href="/htaccess">here</a>,
+here is a brief <a href="htman.html">guide for new installations</a>.
+
+<p>
+Another feature implemented by DocAccessHook is support
+for .tclaccess files.  These files are short Tcl scripts
+that define two variables: "realm" and "callback".
+The browser will display the realm string in the password
+prompt.  The server will invoke the procedure named by
+the callback variable to check the password.
+
+<p>
+<b>Examples using .tclaccess files</b>
+<ul>
+<li>
+<a href=bytcl/>The first example</a> uses a .tclaccess file in the directory that
+specifies a Tcl procedure to run to check the password.  Try "tclhttpd" and "I love Tcl",
+then check out <a href=/debug/showproc?proc=MyPasswordChecker>MyPasswordChecker</a> to
+see how easy this can be.<br>
+
+<li>
+<a href=null/>Funky auto-login mechanism</a>  This uses the AuthNullCallback procedure that
+forces you to try to login twice, and then remembers that password until the server restarts.
+I'm not sure how useful this really is.<br>
+</ul>
+
+<b>Examples using .htaccess files</b>
+<p>
+To be able to run the examples you have to create the files
+/usr/local/htaccess/passwd and /usr/local/htaccess/group.
+Samples can be found in the htaccess subdirectory
+of the distribution.
+The password for a user is identical to its username.<br>
+
+<ul>
+<li>
+<a href=noawe/>Deny access to a host</a>  This is a .htaccess example that
+denies access to noawe.sun.com. <br>
+
+<li>
+<a href=auth/>Webmaster</a> Access is allowed to anyone in the group webmaster.<br>
+
+<li>
+<a href=bydir/>Tcl97</a> It only allows the user tcl97.<br>
+
+<li>
+<a href=multiple/>Multiple</a> Example with multiple "require group" and/or 
+"require user" entries in a .htaccess file.
+</ul>
+
+[mypage::footer]

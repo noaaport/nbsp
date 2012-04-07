@@ -1,3 +1,0 @@
-gemlib/im  - imgi2gm.f
-gplt/transform - gcylml.f
-

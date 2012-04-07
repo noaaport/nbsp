@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+With the exception of "ex-nbsp.tcl", the examples require the data files
+
+	yq.grb
+	yq.ctl
+	yq.idx
+
+If they are not in this directory, they must be copied from the "src/test"
+directory to this one. The Package installation do this automatically.
+
+The file "ex-nbsp.tcl" is an example for using the library with
+the data files processed the Nbsp (see the nbsp.README file for details).
+-

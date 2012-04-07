@@ -1,0 +1,31 @@
+[html-strict::head {TclHttpd &gt; Sample Apps &gt; Bug Database} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+[html::h1 {TclHttpd &gt; Sample Apps &gt; Bug Database &gt; List All Bugs}]
+
+<p>
+    [html::foreach {title ref} $my_navigation {
+        <a href="$ref">$title</a> |
+    }]
+</p>
+
+<table>
+
+[html-strict::th {ID Date Application OS Priority Summary Assignee}]
+
+[html::foreach {Row Date Application OS Priority Summary Assigned} \
+[bugdb::bug-list] {
+    <tr[html::if {[expr $Row%2] == 1} { class="alt"}]>
+        <td><a href="bug-detail.tml?bug=$Row">$Row</a></td>
+        <td>$Date</td>
+        <td>$Application</td>
+        <td>$OS</td>
+        <td>$Priority</td>
+        <td>$Summary</td>
+        <td><a href="mailto:$Assigned">$Assigned</a></td>
+    </tr>
+}]
+</table>
+
+[html-strict::foot]

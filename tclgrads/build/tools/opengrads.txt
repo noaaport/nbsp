@@ -1,0 +1,27 @@
+export
+======
+cvs -d :ext:nieves@opengrads.cvs.sourceforge.net:/cvsroot/opengrads \
+    export -D now -d ${name}-${version} contrib/interfaces/tcl
+
+cvs -d :ext:nieves@opengrads.cvs.sourceforge.net:/cvsroot/opengrads \
+    export -D now -d ${name}-${version} tclgrads
+
+-
+checkout
+========
+cvs -d :ext:nieves@opengrads.cvs.sourceforge.net:/cvsroot/opengrads \
+    co -P tclgrads
+-
+wiki
+====
+http://opengrads.org/wiki/index.php?title=TCL_Interface_to_GrADS
+-
+
+release
+======
+https://sourceforge.net/project/showfiles.php?group_id=161773
+
+http://alexandria.wiki.sourceforge.net/File+Release+System+-+Offering+Files+for+Download
+
+https://sourceforge.net/project/showfiles.php?group_id=161773&package_id=292128
+-

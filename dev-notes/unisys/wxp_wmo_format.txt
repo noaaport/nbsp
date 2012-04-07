@@ -1,7 +1,0 @@
-  [SOH][CR][CR][LF]
-   seq[CR][CR][LF]
-   header[CR][CR][LF]
-   data..........
-   [CR][CR][LF][ETX]
-   [SOH]...
-

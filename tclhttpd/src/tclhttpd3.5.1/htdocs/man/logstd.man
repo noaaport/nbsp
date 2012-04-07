@@ -1,0 +1,34 @@
+[manpage_begin httpd::logstd n 1.0]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Standard information for the log}]
+[moddesc   {Tcl Web Server}]
+[require httpd::logstd [opt 1.0]]
+[description]
+
+The package [package httpd::logstd] provides command generating the
+standard data to show in the server logs.
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd LogStandardData] [arg sock] [arg now]]
+
+Generates a standard web log file record for the current connection
+[arg sock] and return it as the result of the command. This records
+the client address, the URL, the time, the error code, and so forth.
+The time is provided by [arg now], in seconds.
+
+[call [cmd LogValue] [arg var]]
+
+Generates a field or the default "null field" representation for the
+data in the variable [arg var]. A null field is generated if the
+variable does not exist in the calling scope.
+
+
+[list_end]
+
+[see_also httpd httpd::log]
+[keywords {web server} log trace]
+[manpage_end]

@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+@include@ @q@../../Makefile.inc@q@
+
+DIRS = config
+
+SAMPLES = weatherscope.conf-sample
+WS_MAIN_FILE = weatherscope.tcl
+WS_LIB_FILES = metar.tcl nids.tcl
+
+# Where the WS_LIB_FILES are stored
+WS_LIB_FILES_DIR = ${MYEXTLIBDIR}/weatherscope
+
+INSTALL = @INSTALL@
+
+TARGET = ${SAMPLES}
+
+all: ${TARGET}
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE}) \
+	done
+
+weatherscope.conf-sample: weatherscope.conf
+	cp weatherscope.conf weatherscope.conf-sample
+
+install:
+	${INSTALL} -m 0644 ${WS_MAIN_FILE} ${MYEXTLIBDIR}
+	${INSTALL} -m 0644 ${WS_LIB_FILES} ${WS_LIB_FILES_DIR}
+	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE} install) \
+	done
+
+clean:
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE} clean) \
+	done
+	rm -f *~ ${TARGET} Makefile

@@ -1,0 +1,287 @@
+<?datasetconfig version="1.0d1"?>
+
+<!-- 2004 02 19 ... wgm ... initial version -->
+<!-- 2006 02 15 ... jpb ... merge with Justin and operator fixes -->
+<!-- 2007 03 27 ... neb ... upper case to lower case -->
+<!-- 2007 04 18 ... dbd ... updated some units/derivations -->
+
+<parminfo>
+	<parm id="stid" type="string" units="nada" name="station id"/>
+	<parm id="stnm" type="int"    units="nada" name="Station Number"/>
+	<parm id="lat"  type="float"  units="degr" name="Latitude"/>
+	<parm id="lon"  type="float"  units="degr" name="Longitude"/>
+	<parm id="elev" type="float"  units="m"    name="Elevation"/>
+	<parm id="name" type="string" units="nada" name="Site Name"/>
+
+	<parm id="pres_sfc" type="float" units="mbar"  name="Surface level - Air pressure"/>
+	<parm id="tair_sfc" type="float" units="cels"  name="Surface level - Air temperature"/>
+	<parm id="relh_sfc" type="float" units="prct"  name="Surface level - Relative humidity"/>
+	<parm id="tdew_sfc" type="float" units="cels"  name="Surface level - Dewpoint temperature"/>
+	<parm id="dewd_sfc" type="float" units="celsd" name="Surface level - Dewpoint depression"/>
+	<parm id="wdir_sfc" type="float" units="degr"  name="Surface level - Wind direction"/>
+	<parm id="wspd_sfc" type="float" units="knot"  name="Surface level - Wind speed"/>
+	<parm id="thta_sfc" type="float" units="kelv"  name="Surface level - Theta"/>
+	<parm id="thte_sfc" type="float" units="kelv"  name="Surface level - Theta-E"/>
+
+	<parm id="hght_1000" type="float" units="m"     name="1000 millibars - Height"/>
+	<parm id="tair_1000" type="float" units="cels"  name="1000 millibars - Air temperature"/>
+	<parm id="relh_1000" type="float" units="prct"  name="1000 millibars - Relative humidity"/>
+	<parm id="tdew_1000" type="float" units="cels"  name="1000 millibars - Dewpoint temperature"/>
+	<parm id="dewd_1000" type="float" units="celsd" name="1000 millibars - Dewpoint depression"/>
+	<parm id="wdir_1000" type="float" units="degr"  name="1000 millibars - Wind direction"/>
+	<parm id="wspd_1000" type="float" units="knot"  name="1000 millibars - Wind speed"/>
+	<parm id="thta_1000" type="float" units="kelv"  name="1000 millibars - Theta"/>
+	<parm id="thte_1000" type="float" units="kelv"  name="1000 millibars - Theta-E"/>
+	<parm id="pres_1000" type="float" units="mbar"  name="1000 millibars - Air pressure"/>
+
+	<parm id="hght_950" type="float" units="m"     name="950 millibars - Height"/>
+	<parm id="tair_950" type="float" units="cels"  name="950 millibars - Air temperature"/>
+	<parm id="relh_950" type="float" units="prct"  name="950 millibars - Relative humidity"/>
+	<parm id="tdew_950" type="float" units="cels"  name="950 millibars - Dewpoint temperature"/>
+	<parm id="dewd_950" type="float" units="celsd" name="950 millibars - Dewpoint depression"/>
+	<parm id="wdir_950" type="float" units="degr"  name="950 millibars - Wind direction"/>
+	<parm id="wspd_950" type="float" units="knot"  name="950 millibars - Wind speed"/>
+	<parm id="thta_950" type="float" units="kelv"  name="950 millibars - Theta"/>
+	<parm id="thte_950" type="float" units="kelv"  name="950 millibars - Theta-E"/>
+	<parm id="pres_950" type="float" units="mbar"  name="950 millibars - Air pressure"/>
+	
+	<parm id="hght_925" type="float" units="m"     name="925 millibars - Height"/>
+	<parm id="tair_925" type="float" units="cels"  name="925 millibars - Air temperature"/>
+	<parm id="relh_925" type="float" units="prct"  name="925 millibars - Relative humidity"/>
+	<parm id="tdew_925" type="float" units="cels"  name="925 millibars - Dewpoint temperature"/>
+	<parm id="dewd_925" type="float" units="celsd" name="925 millibars - Dewpoint depression"/>
+	<parm id="wdir_925" type="float" units="degr"  name="925 millibars - Wind direction"/>
+	<parm id="wspd_925" type="float" units="knot"  name="925 millibars - Wind speed"/>
+	<parm id="thta_925" type="float" units="kelv"  name="925 millibars - Theta"/>
+	<parm id="thte_925" type="float" units="kelv"  name="925 millibars - Theta-E"/>
+	<parm id="pres_925" type="float" units="mbar"  name="925 millibars - Air pressure"/>
+	
+	<parm id="hght_850" type="float" units="m"     name="850 millibars - Height"/>
+	<parm id="tair_850" type="float" units="cels"  name="850 millibars - Air temperature"/>
+	<parm id="relh_850" type="float" units="prct"  name="850 millibars - Relative humidity"/>
+	<parm id="tdew_850" type="float" units="cels"  name="850 millibars - Dewpoint temperature"/>
+	<parm id="dewd_850" type="float" units="celsd" name="850 millibars - Dewpoint depression"/>
+	<parm id="wdir_850" type="float" units="degr"  name="850 millibars - Wind direction"/>
+	<parm id="wspd_850" type="float" units="knot"  name="850 millibars - Wind speed"/>
+	<parm id="thta_850" type="float" units="kelv"  name="850 millibars - Theta"/>
+	<parm id="thte_850" type="float" units="kelv"  name="850 millibars - Theta-E"/>
+	<parm id="pres_850" type="float" units="mbar"  name="850 millibars - Air pressure"/>
+	
+	<parm id="hght_700" type="float" units="m"     name="700 millibars - Height"/>
+	<parm id="tair_700" type="float" units="cels"  name="700 millibars - Air temperature"/>
+	<parm id="relh_700" type="float" units="prct"  name="700 millibars - Relative humidity"/>
+	<parm id="tdew_700" type="float" units="cels"  name="700 millibars - Dewpoint temperature"/>
+	<parm id="dewd_700" type="float" units="celsd" name="700 millibars - Dewpoint depression"/>
+	<parm id="wdir_700" type="float" units="degr"  name="700 millibars - Wind direction"/>
+	<parm id="wspd_700" type="float" units="knot"  name="700 millibars - Wind speed"/>
+	<parm id="thta_700" type="float" units="kelv"  name="700 millibars - Theta"/>
+	<parm id="thte_700" type="float" units="kelv"  name="700 millibars - Theta-E"/>
+	<parm id="pres_700" type="float" units="mbar"  name="700 millibars - Air pressure"/>
+	
+	<parm id="hght_500" type="float" units="m"     name="500 millibars - Height"/>
+	<parm id="tair_500" type="float" units="cels"  name="500 millibars - Air temperature"/>
+	<parm id="relh_500" type="float" units="prct"  name="500 millibars - Relative humidity"/>
+	<parm id="tdew_500" type="float" units="cels"  name="500 millibars - Dewpoint temperature"/>
+	<parm id="dewd_500" type="float" units="celsd" name="500 millibars - Dewpoint depression"/>
+	<parm id="wdir_500" type="float" units="degr"  name="500 millibars - Wind direction"/>
+	<parm id="wspd_500" type="float" units="knot"  name="500 millibars - Wind speed"/>
+	<parm id="thta_500" type="float" units="kelv"  name="500 millibars - Theta"/>
+	<parm id="thte_500" type="float" units="kelv"  name="500 millibars - Theta-E"/>
+	<parm id="pres_500" type="float" units="mbar"  name="500 millibars - Air pressure"/>
+	
+	<parm id="hght_400" type="float" units="m"     name="400 millibars - Height"/>
+	<parm id="tair_400" type="float" units="cels"  name="400 millibars - Air temperature"/>
+	<parm id="relh_400" type="float" units="prct"  name="400 millibars - Relative humidity"/>
+	<parm id="tdew_400" type="float" units="cels"  name="400 millibars - Dewpoint temperature"/>
+	<parm id="dewd_400" type="float" units="celsd" name="400 millibars - Dewpoint depression"/>
+	<parm id="wdir_400" type="float" units="degr"  name="400 millibars - Wind direction"/>
+	<parm id="wspd_400" type="float" units="knot"  name="400 millibars - Wind speed"/>
+	<parm id="thta_400" type="float" units="kelv"  name="400 millibars - Theta"/>
+	<parm id="thte_400" type="float" units="kelv"  name="400 millibars - Theta-E"/>
+	<parm id="pres_400" type="float" units="mbar"  name="400 millibars - Air pressure"/>
+	
+	<parm id="hght_300" type="float" units="m"     name="300 millibars - Height"/>
+	<parm id="tair_300" type="float" units="cels"  name="300 millibars - Air temperature"/>
+	<parm id="relh_300" type="float" units="prct"  name="300 millibars - Relative humidity"/>
+	<parm id="tdew_300" type="float" units="cels"  name="300 millibars - Dewpoint temperature"/>
+	<parm id="dewd_300" type="float" units="celsd" name="300 millibars - Dewpoint depression"/>
+	<parm id="wdir_300" type="float" units="degr"  name="300 millibars - Wind direction"/>
+	<parm id="wspd_300" type="float" units="knot"  name="300 millibars - Wind speed"/>
+	<parm id="thta_300" type="float" units="kelv"  name="300 millibars - Theta"/>
+	<parm id="thte_300" type="float" units="kelv"  name="300 millibars - Theta-E"/>
+	<parm id="pres_300" type="float" units="mbar"  name="300 millibars - Air pressure"/>
+	
+	<parm id="hght_250" type="float" units="m"     name="250 millibars - Height"/>
+	<parm id="tair_250" type="float" units="cels"  name="250 millibars - Air temperature"/>
+	<parm id="relh_250" type="float" units="prct"  name="250 millibars - Relative humidity"/>
+	<parm id="tdew_250" type="float" units="cels"  name="250 millibars - Dewpoint temperature"/>
+	<parm id="dewd_250" type="float" units="celsd" name="250 millibars - Dewpoint depression"/>
+	<parm id="wdir_250" type="float" units="degr"  name="250 millibars - Wind direction"/>
+	<parm id="wspd_250" type="float" units="knot"  name="250 millibars - Wind speed"/>
+	<parm id="thta_250" type="float" units="kelv"  name="250 millibars - Theta"/>
+	<parm id="thte_250" type="float" units="kelv"  name="250 millibars - Theta-E"/>
+	<parm id="pres_250" type="float" units="mbar"  name="250 millibars - Air pressure"/>
+	
+	<parm id="hght_200" type="float" units="m"     name="200 millibars - Height"/>
+	<parm id="tair_200" type="float" units="cels"  name="200 millibars - Air temperature"/>
+	<parm id="relh_200" type="float" units="prct"  name="200 millibars - Relative humidity"/>
+	<parm id="tdew_200" type="float" units="cels"  name="200 millibars - Dewpoint temperature"/>
+	<parm id="dewd_200" type="float" units="celsd" name="200 millibars - Dewpoint depression"/>
+	<parm id="wdir_200" type="float" units="degr"  name="200 millibars - Wind direction"/>
+	<parm id="wspd_200" type="float" units="knot"  name="200 millibars - Wind speed"/>
+	<parm id="thta_200" type="float" units="kelv"  name="200 millibars - Theta"/>
+	<parm id="thte_200" type="float" units="kelv"  name="200 millibars - Theta-E"/>
+	<parm id="pres_200" type="float" units="mbar"  name="200 millibars - Air pressure"/>
+	
+	<parm id="hght_150" type="float" units="m"     name="150 millibars - Height"/>
+	<parm id="tair_150" type="float" units="cels"  name="150 millibars - Air temperature"/>
+	<parm id="relh_150" type="float" units="prct"  name="150 millibars - Relative humidity"/>
+	<parm id="tdew_150" type="float" units="cels"  name="150 millibars - Dewpoint temperature"/>
+	<parm id="dewd_150" type="float" units="celsd" name="150 millibars - Dewpoint depression"/>
+	<parm id="wdir_150" type="float" units="degr"  name="150 millibars - Wind direction"/>
+	<parm id="wspd_150" type="float" units="knot"  name="150 millibars - Wind speed"/>
+	<parm id="thta_150" type="float" units="kelv"  name="150 millibars - Theta"/>
+	<parm id="thte_150" type="float" units="kelv"  name="150 millibars - Theta-E"/>
+	<parm id="pres_150" type="float" units="mbar"  name="150 millibars - Air pressure"/>
+	
+	<parm id="hght_100" type="float" units="m"     name="100 millibars - Height"/>
+	<parm id="tair_100" type="float" units="cels"  name="100 millibars - Air temperature"/>
+	<parm id="relh_100" type="float" units="prct"  name="100 millibars - Relative humidity"/>
+	<parm id="tdew_100" type="float" units="cels"  name="100 millibars - Dewpoint temperature"/>
+	<parm id="dewd_100" type="float" units="celsd" name="100 millibars - Dewpoint depression"/>
+	<parm id="wdir_100" type="float" units="degr"  name="100 millibars - Wind direction"/>
+	<parm id="wspd_100" type="float" units="knot"  name="100 millibars - Wind speed"/>
+	<parm id="thta_100" type="float" units="kelv"  name="100 millibars - Theta"/>
+	<parm id="thte_100" type="float" units="kelv"  name="100 millibars - Theta-E"/>
+	<parm id="pres_100" type="float" units="mbar"  name="100 millibars - Air pressure"/>
+	
+	<!-- Thickness -->
+	<parm id="thck_1000_850" type="float" units="m" name="Thickness 1000-850 mb"/>
+	<parm id="thck_1000_700" type="float" units="m" name="Thickness 1000-700 mb"/>
+	<parm id="thck_1000_500" type="float" units="m" name="Thickness 1000-500 mb"/>
+	<parm id="thck_850_700"  type="float" units="m" name="Thickness 850-700 mb" />
+	<parm id="thck_850_500"  type="float" units="m" name="Thickness 850-500 mb" />
+	<parm id="thck_700_500"  type="float" units="m" name="Thickness 700-500 mb" />
+
+
+	<!-- DERIVATIONS -->
+	
+	<!-- Thickness -->
+	<derivation id="thck_1000_850" func="diffdist" args="hght_850 hght_1000"/>
+	<derivation id="thck_1000_700" func="diffdist" args="hght_700 hght_1000"/>
+	<derivation id="thck_1000_500" func="diffdist" args="hght_500 hght_1000"/>
+	<derivation id="thck_850_700"  func="diffdist" args="hght_700 hght_850" />
+	<derivation id="thck_850_500"  func="diffdist" args="hght_500 hght_850" />
+	<derivation id="thck_700_500"  func="diffdist" args="hght_500 hght_700" />
+
+	<!-- Potential temperature -->
+	<derivation id="thta_sfc"  func="thta" args="tair_sfc pres_sfc"  />
+	<derivation id="thta_1000" func="thta" args="tair_1000 pres_1000"/>
+	<derivation id="thta_925"  func="thta" args="tair_925 pres_925"  />
+	<derivation id="thta_850"  func="thta" args="tair_850 pres_850"  />
+	<derivation id="thta_700"  func="thta" args="tair_700 pres_700"  />
+	<derivation id="thta_500"  func="thta" args="tair_500 pres_500"  />
+	<derivation id="thta_400"  func="thta" args="tair_400 pres_400"  />
+	<derivation id="thta_300"  func="thta" args="tair_300 pres_300"  />
+	<derivation id="thta_250"  func="thta" args="tair_250 pres_250"  />
+	<derivation id="thta_200"  func="thta" args="tair_200 pres_200"  />
+	<derivation id="thta_150"  func="thta" args="tair_150 pres_150"  />
+	<derivation id="thta_100"  func="thta" args="tair_100 pres_100"  />
+
+	<!-- Equivalent potential temperature -->
+	<derivation id="thte_sfc"  func="thte" args="tair_sfc tdew_sfc pres_sfc"   />
+	<derivation id="thte_1000" func="thte" args="tair_1000 tdew_1000 pres_1000"/>
+	<derivation id="thte_925"  func="thte" args="tair_925 tdew_925 pres_925"   />
+	<derivation id="thte_850"  func="thte" args="tair_850 tdew_850 pres_850"   />
+	<derivation id="thte_700"  func="thte" args="tair_700 tdew_700 pres_700"   />
+	<derivation id="thte_500"  func="thte" args="tair_500 tdew_500 pres_500"   />
+	<derivation id="thte_400"  func="thte" args="tair_400 tdew_400 pres_400"   />
+	<derivation id="thte_300"  func="thte" args="tair_300 tdew_300 pres_300"   />
+	<derivation id="thte_250"  func="thte" args="tair_250 tdew_250 pres_250"   />
+	<derivation id="thte_200"  func="thte" args="tair_200 tdew_200 pres_200"   />
+	<derivation id="thte_150"  func="thte" args="tair_150 tdew_150 pres_150"   />
+	<derivation id="thte_100"  func="thte" args="tair_100 tdew_100 pres_100"   />
+
+	<!-- Relative Humidity -->
+	<derivation id="relh_sfc"  func="relh" args="tair_sfc tdew_sfc"  />
+	<derivation id="relh_1000" func="relh" args="tair_1000 tdew_1000"/>
+	<derivation id="relh_925"  func="relh" args="tair_925 tdew_925"  />
+	<derivation id="relh_850"  func="relh" args="tair_850 tdew_850"  />
+	<derivation id="relh_700"  func="relh" args="tair_700 tdew_700"  />
+	<derivation id="relh_500"  func="relh" args="tair_500 tdew_500"  />
+	<derivation id="relh_400"  func="relh" args="tair_400 tdew_400"  />
+	<derivation id="relh_300"  func="relh" args="tair_300 tdew_300"  />
+	<derivation id="relh_250"  func="relh" args="tair_250 tdew_250"  />
+	<derivation id="relh_200"  func="relh" args="tair_200 tdew_200"  />
+	<derivation id="relh_150"  func="relh" args="tair_150 tdew_150"  />
+	<derivation id="relh_100"  func="relh" args="tair_100 tdew_100"  />
+
+	<!-- Dewpoint depression -->
+	<derivation id="dewd_sfc"  func="diff" args="tair_sfc tdew_sfc"  />
+	<derivation id="dewd_1000" func="diff" args="tair_1000 tdew_1000"/>
+	<derivation id="dewd_925"  func="diff" args="tair_925 tdew_925"  />
+	<derivation id="dewd_850"  func="diff" args="tair_850 tdew_850"  />
+	<derivation id="dewd_700"  func="diff" args="tair_700 tdew_700"  />
+	<derivation id="dewd_500"  func="diff" args="tair_500 tdew_500"  />
+	<derivation id="dewd_400"  func="diff" args="tair_400 tdew_400"  />
+	<derivation id="dewd_300"  func="diff" args="tair_300 tdew_300"  />
+	<derivation id="dewd_250"  func="diff" args="tair_250 tdew_250"  />
+	<derivation id="dewd_200"  func="diff" args="tair_200 tdew_200"  />
+	<derivation id="dewd_150"  func="diff" args="tair_150 tdew_150"  />
+	<derivation id="dewd_100"  func="diff" args="tair_100 tdew_100"  />
+
+	<!-- "u" and "v" wind components -->
+	<derivation id="uwnd_sfc"  func="uwnd" args="wspd_sfc wdir_sfc"  />
+	<derivation id="vwnd_sfc"  func="vwnd" args="wspd_sfc wdir_sfc"  />
+	<derivation id="uwnd_1000" func="uwnd" args="wspd_1000 wdir_1000"/>
+	<derivation id="vwnd_1000" func="vwnd" args="wspd_1000 wdir_1000"/>
+	<derivation id="uwnd_925"  func="uwnd" args="wspd_925 wdir_925"  />
+	<derivation id="vwnd_925"  func="vwnd" args="wspd_925 wdir_925"  />
+	<derivation id="uwnd_850"  func="uwnd" args="wspd_850 wdir_850"  />
+	<derivation id="vwnd_850"  func="vwnd" args="wspd_850 wdir_850"  />
+	<derivation id="uwnd_700"  func="uwnd" args="wspd_700 wdir_700"  />
+	<derivation id="vwnd_700"  func="vwnd" args="wspd_700 wdir_700"  />
+	<derivation id="uwnd_500"  func="uwnd" args="wspd_500 wdir_500"  />
+	<derivation id="vwnd_500"  func="vwnd" args="wspd_500 wdir_500"  />
+	<derivation id="uwnd_400"  func="uwnd" args="wspd_400 wdir_400"  />
+	<derivation id="vwnd_400"  func="vwnd" args="wspd_400 wdir_400"  />
+	<derivation id="uwnd_300"  func="uwnd" args="wspd_300 wdir_300"  />
+	<derivation id="vwnd_300"  func="vwnd" args="wspd_300 wdir_300"  />
+	<derivation id="uwnd_250"  func="uwnd" args="wspd_250 wdir_250"  />
+	<derivation id="vwnd_250"  func="vwnd" args="wspd_250 wdir_250"  />
+	<derivation id="uwnd_200"  func="uwnd" args="wspd_200 wdir_200"  />
+	<derivation id="vwnd_200"  func="vwnd" args="wspd_200 wdir_200"  />
+	<derivation id="uwnd_150"  func="uwnd" args="wspd_150 wdir_150"  />
+	<derivation id="vwnd_150"  func="vwnd" args="wspd_150 wdir_150"  />
+	<derivation id="uwnd_100"  func="uwnd" args="wspd_100 wdir_100"  />
+	<derivation id="vwnd_100"  func="vwnd" args="wspd_100 wdir_100"  />
+
+	<!-- pressure levels -->
+	<derivation id="pres_1000" func="1000mb" args="" />
+	<derivation id="pres_925"  func="925mb"  args="" />
+	<derivation id="pres_850"  func="850mb"  args="" />
+	<derivation id="pres_700"  func="700mb"  args="" />
+	<derivation id="pres_500"  func="500mb"  args="" />
+	<derivation id="pres_400"  func="400mb"  args="" />
+	<derivation id="pres_300"  func="300mb"  args="" />
+	<derivation id="pres_250"  func="250mb"  args="" />
+	<derivation id="pres_200"  func="200mb"  args="" />
+	<derivation id="pres_150"  func="150mb"  args="" />
+	<derivation id="pres_100"  func="100mb"  args="" />
+
+	<!-- VECTORS -->
+
+	<!-- Wind -->
+	<vector id="wind_sfc"  name="Winds at surface level"  samag="wspd_sfc"  vamag="wvec_sfc"  dir="wdir_sfc"  ucomp="uwnd_sfc"  vcomp="vwnd_sfc"  gust=""/>
+	<vector id="wind_1000" name="Winds at 1000 millibars" samag="wspd_1000" vamag="wvec_1000" dir="wdir_1000" ucomp="uwnd_1000" vcomp="vwnd_1000" gust=""/>
+	<vector id="wind_925"  name="Winds at 925 millibars"  samag="wspd_925"  vamag="wvec_925"  dir="wdir_925"  ucomp="uwnd_925"  vcomp="vwnd_925"  gust=""/>
+	<vector id="wind_850"  name="Winds at 850 millibars"  samag="wspd_850"  vamag="wvec_850"  dir="wdir_850"  ucomp="uwnd_850"  vcomp="vwnd_850"  gust=""/>
+	<vector id="wind_700"  name="Winds at 700 millibars"  samag="wspd_700"  vamag="wvec_700"  dir="wdir_700"  ucomp="uwnd_700"  vcomp="vwnd_700"  gust=""/>
+	<vector id="wind_500"  name="Winds at 500 millibars"  samag="wspd_500"  vamag="wvec_500"  dir="wdir_500"  ucomp="uwnd_500"  vcomp="vwnd_500"  gust=""/>
+	<vector id="wind_400"  name="Winds at 400 millibars"  samag="wspd_400"  vamag="wvec_400"  dir="wdir_400"  ucomp="uwnd_400"  vcomp="vwnd_400"  gust=""/>
+	<vector id="wind_300"  name="Winds at 300 millibars"  samag="wspd_300"  vamag="wvec_300"  dir="wdir_300"  ucomp="uwnd_300"  vcomp="vwnd_300"  gust=""/>
+	<vector id="wind_250"  name="Winds at 250 millibars"  samag="wspd_250"  vamag="wvec_250"  dir="wdir_250"  ucomp="uwnd_250"  vcomp="vwnd_250"  gust=""/>
+	<vector id="wind_200"  name="Winds at 200 millibars"  samag="wspd_200"  vamag="wvec_200"  dir="wdir_200"  ucomp="uwnd_200"  vcomp="vwnd_200"  gust=""/>
+	<vector id="wind_150"  name="Winds at 150 millibars"  samag="wspd_150"  vamag="wvec_150"  dir="wdir_150"  ucomp="uwnd_150"  vcomp="vwnd_150"  gust=""/>
+	<vector id="wind_100"  name="Winds at 100 millibars"  samag="wspd_100"  vamag="wvec_100"  dir="wdir_100"  ucomp="uwnd_100"  vcomp="vwnd_100"  gust=""/>
+</parminfo>

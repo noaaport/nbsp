@@ -1,0 +1,3 @@
+Redirect_Url /foobar http://www.tcl.tk
+Redirect_UrlSelf /baz /status
+Redirect_UrlTree /STATUS /status

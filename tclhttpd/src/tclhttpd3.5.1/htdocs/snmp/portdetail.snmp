@@ -1,0 +1,13 @@
+<Title>Port Details</Title>
+
+<h1 align=center>[DisplayMib sysDescr.0]</h1>
+<h2 align=center>[DisplayMib sysName.0] 
+<br>
+[mibTable  -group demo2 \
+ -mib snmpDot3RptrMgt \
+]
+<p>
+<a HREF="allport.snmp?session=[session]">View All Ports</a>
+<p>
+<a HREF="system.snmp?session=[session]">View System Configuration</a>
+

@@ -1,0 +1,8 @@
+@owner root
+@group wheel
+lib/tclupperair/fm35.tcl
+lib/tclupperair/pkgIndex.tcl
+share/doc/tclupperair/api.README
+share/doc/tclupperair/LICENSE
+share/doc/tclupperair/examples/examples.README
+share/doc/tclupperair/examples/examples.tgz

@@ -1,0 +1,9 @@
+[mypage::header "POST format test"]
+<form action=headers.html method=post>
+
+<input type=hidden name=hide_me value="hello, world">
+Value <input name=the_value>
+<p>
+<input type=submit>
+</form>
+[mypage::footer]

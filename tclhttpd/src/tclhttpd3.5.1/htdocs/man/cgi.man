@@ -1,0 +1,95 @@
+[manpage_begin httpd::cgi n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {CGI handling}]
+[moddesc   {Tcl Web Server}]
+[require httpd::cgi [opt 1.1]]
+[description]
+
+The package [package httpd::cgi] provides generic facilities for
+the implementation of [term {application cgi}] domains. These are
+domains where each url in the domain is handled by its own tcl
+command. Urls for which there is no command to handle it do not exists
+and cause the generation of an http error reply.
+
+[para]
+
+[emph Note:] This package also provides a number of type-specific doc
+handlers which will be picked up and used automatically by package
+[package httpd::doc].
+
+This will work if and only if an appropriate file extension to mime
+type mapping was added to [package httpd::mtype] during startup of the
+server. If a file [file mime.types] is present in the server library
+directory (residence of all packages) it will be read automatically
+and used to set up a standard mapping to support the type specific
+handlers exported by this package.
+
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Cgi_Directory] [arg virtual] [opt [arg directory]]]
+
+Registers the url prefix [arg virtual] as domain for the handling of
+cgi requests. The given [arg directory] is registered as a root in the
+[term doc] domain. If it is not specified then its name will be
+derived directly from the url prefix [arg virtual].
+
+[nl]
+
+The basic standard initialization of the [cmd tclhttpd] server will
+register the url prefix [file /cgi-bin/].
+
+
+[call [cmd Cgi_Domain] [arg prefix] [arg directory] [arg sock] [arg suffix]]
+
+The domain handler command. It is public only because of the
+fallback scheme in the module [term doc], which calls it directly
+in some situations.
+
+[call [cmd Doc_application/x-cgi] [arg {path suffix sock}]]
+
+This command is a type-specific document handler and is called by the
+package [package httpd::doc] if there is no extra pathname after the
+name of a cgi script, and the module did find a [file .cgi] file.
+
+[call [cmd Cgi_SetEnv] [arg {sock path}] [opt [arg var]]]
+
+This command sets up the environment variables for the CGI
+applications. They are passed implicitly to the applications
+during the [cmd open] call which spawns them as separate process.
+
+[nl]
+
+The request handle is on the connection [arg sock]. If [arg var] is
+not specified then the command will manipulate the variable [var env],
+else it will work with the specified variable. It assumes that the
+variable is in the callers scope.
+
+[call [cmd Cgi_SetEnvInterp] [arg {sock path interp}]]
+
+Like [cmd Cgi_SetEnv], but modifies the global variable [var env] in
+the specified slave interpreter [arg interp].
+
+[call [cmd Cgi_SetEnvAll] [arg {sock path extra url var}]]
+
+The worker command for both [cmd Cgi_SetEnv] and
+
+[cmd Cgi_SetEnvInterp].
+
+
+[call [cmd Cgi_Ident] [arg state]]
+
+Enables or disables IDENT lookup, according to the value of the
+boolean flag [arg state]. Initially IDENT lookup is off.
+
+
+[list_end]
+
+
+[see_also httpd httpd::url httpd::doc httpd::doc_error]
+[see_also httpd::counter httpd::log httpd::threadmgr]
+[keywords {web server} cgi]
+[manpage_end]

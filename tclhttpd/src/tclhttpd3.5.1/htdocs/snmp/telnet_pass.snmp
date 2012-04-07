@@ -1,0 +1,6 @@
+<title>Sample zack Telnet Interface</title>
+Enter the management password for zack:
+<form action=telnet.snmp>
+[SetState Telnet]
+<input type=password name=password size=8>
+</form>

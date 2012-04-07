@@ -1,0 +1,77 @@
+[html::description "Learn to program TclHttpd, the Tcl Web Server."]
+[html::keywords Tcl TclHttpd Learn "Tcl Web Server" "Web Server"]
+[html::author "Brent Welch"]
+[learn::header "TclHttpd Lesson Book"]
+
+<h2>Server Setup</h2>
+Before you start building an application, you'll want to
+know a few things about <a href=setup.tml>setting up the basic server</a>.
+
+<h2>Extending the Server</h2>
+<p>
+The TclHttpd web server is designed to be easily extended by adding
+Tcl code to the server.  The easiest way to do this is to put
+all your code into a few Tcl source files in a directory
+known as your <i>custom code directory</i>.  You tell the server
+about this with the <tt>-library</tt> command line argument,
+and the server automatically loads this code upon startup.
+<pre>
+tclsh8.3 bin/httpd.tcl -library <i>custom_directory</i>
+</pre>
+<p>
+Note that nearly all configuration of the server is achieved
+by calling Tcl procedures.  So, throughout the explainations
+here you see references to Tcl commands used to set up the
+server or provide URL implementations.  Just put all that code
+into your custom code directory for it to take effect.
+
+<p>
+
+The interface to a web server is, of course,
+by the HTTP protocol in which clients ask for URLs and, optionally,
+provide additional <i>query data</i> that comes from forms.
+There are two basic phases in processing a URL request:
+access control and URL implementation.
+
+<h3>Access Control</h3>
+<p>
+The first phase is a [::learn::link Security] check where access
+controls can be enforced.  At this stage you can enforce password
+protection, require HTTPS access, check sessions, and so forth.
+TclHttpd allows multiple security modules to be added, and each
+module gets a chance to check permissions.
+
+<h3>URL Implementation</h3>
+<p>
+The second, main phase is the URL implementation. This is where
+the URL and associated query data is processed by the server,
+and results are returned to the client.  In this phase, TclHttpd
+divides the URL namespace into subtrees called
+<a href=domain.tml>URL Domains</a>.
+A URL domain is identified by the prefix of its URLs (e.g., "/status",
+or "/debug", or "/images").  The server comes with support for
+a few different kinds of URL domains, or you can implement your own
+custom URL domain for your application.
+
+<h4>Document Domain</h4>
+<p>
+The Document Domain supports URLs that are mapped to regular files.
+The document domain allows you to plug in specialized support for
+different kinds of files.  In particular, there is a
+<a href=/templates>TML Templates</a> system that lets you embed
+Tcl code in your HTML page.  The Tcl code gets expanded on the server
+before the page is returned to the client.  This lets you do
+clever form handling, generate a common look and feel, and much more.
+
+<h4><a name="direct">Application Direct URL</a></h4>
+
+An <a href=direct.tml>application-direct URL</a>
+is a direct mapping from a URL to a
+Tcl procedure call inside your application.  Through a simple
+prefix mapping, the URL name is used as the Tcl procedure name.
+CGI values (i.e., query data) is mapped onto Tcl procedure arguments.
+The results of the Tcl procedure are displayed in the browser.
+This provides a simple, direct way to invoke functionality in
+your application.
+
+[mypage::footer]

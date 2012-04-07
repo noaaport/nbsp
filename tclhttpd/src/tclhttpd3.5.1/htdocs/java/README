@@ -1,0 +1,9 @@
+See ../../src
+    Auth.class
+    Getpass.class
+    Helper.class
+    ServerDemo.class
+    MD5.class
+ServerDemo.html		Stand-alone demo for md5
+auth.js
+authenticate.html	Sample authentication form using MD5 and 1-time passwords

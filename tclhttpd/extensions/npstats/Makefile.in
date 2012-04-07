@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+@include@ @q@../../Makefile.inc@q@
+
+SAMPLES = npstats.conf-sample
+DEFAULTS = npstats.conf-defaults
+MAIN = npstats.tcl
+
+INSTALL = @INSTALL@
+
+TARGET = ${SAMPLES}
+
+all: ${TARGET}
+
+npstats.conf-sample: npstats.conf
+	cp npstats.conf npstats.conf-sample
+
+install:
+	${INSTALL} -m 0644 ${MAIN} ${MYEXTLIBDIR}
+	${INSTALL} -m 0644 ${SAMPLES} ${MYCONFDIR}
+	${INSTALL} -m 0644 ${DEFAULTS} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

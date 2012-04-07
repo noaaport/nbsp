@@ -1,0 +1,19 @@
+#
+# $Id$
+#
+
+Basic -
+      test-rad
+      test-sat
+      test-fronts
+      test-wwa
+
+test-rad-1  - gempak::device_xxxx utility functions.
+test-rad-2  - gempak::map_xxxx utility functions.
+test-rad-3  - gempak::imcbar_xxxx utility functions.
+test-rad-4  - gempak::stnplt utility functions (cities)
+test-rad-map - using gempak::map to make a maplist (xxx + xxx + xxx)
+test-fronts-1 - gempak::garea utility functions.
+test-latlon - gempak::latlon utility functions
+test-stnplt - gempak::stnplt utility functions
+test-map-append - gempak::append_map utility function (instead of test-rad-map)

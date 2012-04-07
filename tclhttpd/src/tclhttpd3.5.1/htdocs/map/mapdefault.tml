@@ -1,0 +1,7 @@
+[mypage::header Default]
+<p>
+You didn't hit any targets.  Try the surfer and the bush at the left.
+<p>
+<a HREF="index.html">Image</a>.
+
+[mypage::footer]

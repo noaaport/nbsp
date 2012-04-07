@@ -1,0 +1,12 @@
+@owner root
+@group wheel
+lib/tclgempak/pkgIndex.tcl
+lib/tclgempak/gempak.tcl
+lib/tclgempak/gdinfo.tcl
+lib/tclgempak/sflist.tcl
+share/doc/tclgempak/api.README
+share/doc/tclgempak/LICENSE
+share/doc/tclgempak/nbsp.README
+share/doc/tclgempak/gempak.env-sample
+share/doc/tclgempak/examples/examples.README
+share/doc/tclgempak/examples/examples.tgz

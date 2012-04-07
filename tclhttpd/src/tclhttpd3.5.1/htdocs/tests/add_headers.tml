@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Test Http_AddHeader</title>
+  </head>
+  [Template_Dynamic
+    set sock [Httpd_CurrentSocket]
+    #Http_RemoveHeaders $sock	;# remove any user-defined headers
+    Http_AddHeaders $sock Cache-Control no-cache	;# should prevent caching
+    Http_AddHeaders $sock Warning {199 localhost "User Warning"} ;# does nothing
+    set freq 3
+    Http_AddHeaders $sock Refresh $freq
+    return ""
+  ]
+
+  <body>
+    <h1>Test Http_AddHeaders [clock format [clock scan now]]</h1>
+
+    <p>This document uses Http_AddHeaders to set the http 'Cache-Control: no-cache' header in a reply</p>
+    <p>It also uses Http_AddHeaders to set the http 'Refresh:' header, which causes a reload every $freq seconds</p>
+      <hr>
+      <h2>Use of Http_AddHeaders</h2>
+      <p><b>Http_AddHeaders</b> <i>sock header value</i> ... can be called any time before returning data to httpd, and will cause the headers to be added to the http HEAD section of tclhttpd's reply to the client browser, in sequence before any cookies.</p>
+      <p><b>Http_RemoveHeaders</b> <i>sock {pattern}</i> ... can be called any time before returning data to httpd, and will remove any headers matching pattern (default all) from a previously user-supplied header set.</p>
+      <h2>Utility wrappers</h2>
+      <p><b>Http_NoCache</b> <i>sock</i> adds a header cache directive to prevent caching.</p>
+      <p><b>Http_Refresh</b> <i>sock time {url}</i> adds a header cache directive to refresh after time seconds to the given url (default same url).
+      <hr>
+    <p>Here are some response headers from the <a href='ftp://ftp.isi.edu/in-notes/rfc2616.txt'>RFC 2616</a>.  I have no idea what any of them do.
+    <ul>
+      <li>Cache-Control</li>
+      <li>Accept-Ranges</li>
+      <li>Age</li>
+      <li>ETag</li>
+      <li>Location</li>
+      <li>Proxy-Authenticate</li>
+      <li>Retry-After</li>
+      <li>Server</li>
+      <li>Vary</li>
+      <li>WWW-Authenticate</li>
+      <li>Allow</li>
+      <li>Content-Encoding</li>
+      <li>Content-Language</li>
+      <li>Content-Length</li>
+      <li>Content-Location</li>
+      <li>Content-MD5</li>
+      <li>Content-Range</li>
+      <li>Content-Type</li>
+      <li>Expires</li>
+      <li>Last-Modified</li>
+  </ul>
+
+    <hr>
+    <address><a href="mailto:colin@chinix.com">Colin McCormack</a></address>
+<!-- Created: Mon Oct 27 09:50:03 EST 2003 -->
+<!-- hhmts start -->
+Last modified: Mon Oct 27 11:52:36 EST 2003
+<!-- hhmts end -->
+  </body>
+</html>

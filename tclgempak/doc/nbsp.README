@@ -1,0 +1,35 @@
+#
+# $Id$
+#
+This file explains how to use the tclgempak-based scripts with the data
+files processed by Nbsp (Noaaport Broadcast System Processor).
+
+The ``dafilter'' and ``gpfilter'' must be enabled in the Nbsp configuration
+file ``features.conf'':
+
+set features(dafilter) 1;
+set features(gpfilter) 1;
+
+Since these two filters are ``heavy'' in terms of the computer
+resources utilization, it may desirable to use a ``lite'' configuration
+of them. See the files gp-lite.README and da-lite.README for hints
+and examples of how to accomplish this.
+
+To run the examples supplied with the distribution it is suffcient to leave the
+dafilter alone, and then to set
+
+	gpfilter.conf
+or
+	site/gpfilter.conf
+
+the following:
+
+set gpfilter(rad_enable) 0;
+set gpfilter(sat_enable) 0;
+set gpfilter(file_enable) 0;
+set gpfilter(decoder_regex) {^dcw|dcstorm|dcffa|dcffg|dcsvrl};
+
+Other scripts that use other data files may need to enable more
+data types in the gpfilter.
+
+-

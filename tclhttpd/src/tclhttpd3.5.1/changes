@@ -1,0 +1,552 @@
+TclHttpd Change Log
+
+(This is an old file (pre 3.0).
+The detailed change log is now ChangeLog.)
+
+------------
+This file was started after the 2.0.1 release.
+
+Fixed handling of large amounts of post data.
+
+Folded in 1.1 and keep-alive support, thanks to Steve Uhler.
+
+Added support for Tcl/HTML templates (foo.tml) where the result is cached in
+a regular HTML file.  The templates also support searching up the
+URL tree for templates library files (.tml).  See the information in the
+templates directory.
+
+Increased HTTP timeout from 40 to 120 seconds.
+
+Added /mail/forminfo Direct URL, which uses /usr/lib/sendmail
+
+Updated mime.types:
+ application/octet-stream       sun4 i86pc
+ application/x-tcl-template    tml
+ application/mac-binhex40	hqx
+
+Removed load of Cisco cat1900.mib from snmp.tcl
+
+Added CGI ident support (Steve Ball).
+Fixed env(SCRIPT_NAME)to not include document root.
+Fixed env(SERVER_PROTOCOL) to be HTTP/1.0
+Change directory to CGI script location before execution.
+Cleaned up Cgi_SetEnv so it handles all uses.
+
+The server records referrer information on document not found.
+
+Allow registration of a content type for a direct URL.  Define the type
+with a global variable that has the same name as the direct URL procedure.
+
+Enhanced the status/doc direct URL to take pattern and sort parameters.
+You can sort by number or by name.  The string match pattern selects a
+subset of documents.
+
+If fixed setuid extension so the type is right and does not cause
+a segfault on Linux.
+
+Fixed the torture.tcl script to work with fcopy
+
+Fixed Http stack to handle leading http://servername/ in request URLs.
+
+Added Mail_Url, Status_Url, and Admin_Url to register the url prefix
+for these application-direct URLs.
+
+Added Url_RedirectSelf for redirecting within the same server.
+
+Moved redirect stuff to admin.tcl
+
+Fixed "not found" page so it returns 404 and not 200.
+
+--- 2.1 released, running on sunscript.sun.com ---
+
+Removed error logging for normal shutdown of keepalive connections.
+
+Append URL to error log record, if possible.
+
+Added template library directory to support a library of tcl
+support scripts in the document tree (separate from server implementation).
+Put sunscript.sun.com templates into htdocs/libtml and htdocs/.tml
+
+Added lots to template.tcl module, and moved this from the server's
+script library to the htdocs/libtml directory
+
+Fix error handling bug in Url_Dispatch.
+Add special case to preserve Url Redirect information in the UrlCache -
+this was getting cleared on errors so redirects were getting forgotten.
+
+Changed Tcl Powered logo's file names to match Tk library,
+pwrdLogo150.gif etc.  The 150 image changed size slightly.
+
+---- released 2.1.1 12/24/97 -----
+
+Added HTTP_COOKIE to the environment set by Cgi_SetEnv.
+
+Changed dates to be GMT.
+
+Fixed (old-fashioned) server side includes to handle spaces in file names.
+
+Fixed error handling in cgi.tcl for two many cgi processes.
+
+Tweaked directory listing display.
+
+Added boolean function to convert strings like "true" to 1
+
+Added Log_Configure and a switch to log names or just ip addresses.
+
+Updated handling of Accept: headers to properly deal with (i.e., discard)
+quality of service parameters.
+
+Set up the environment with Cgi_SetEnv before processing templates.
+
+Tweaked template handling such that if a template sets the global
+page(dynamic)
+variable to 1, then the .tml result is not cached in the parallel .html file.
+This gives the flavor of a .subst file but with all the .tml machinery.
+
+Fixed catch of "too many open files"
+
+Fixed typo in authentication logging.
+
+Moved base64.tcl from the auth package to its own base64 package.
+
+Fixed typo in status.tcl for non-unix platforms.
+
+Added /debug/package direct URL to reload a package - useful for
+packages used in the .libtml directories.
+
+Renamed lassign to lassign-brent and added a new lassign that
+is compatible with the TclX version of lassign.  See utils.tcl
+
+---- released 2.1.2 2/26/97 -----
+
+cgi.tcl
+    Increased CGI timeout from 60 seconds to 300 seconds.
+
+    Fixed conflict over "env" variable in Cgi_SetEnvAll that
+    meant you always were settting the env variable instead of
+    the passed in variable name.
+
+    Fixed broken call to CgiCancel so that hung CGI scripts
+    do get cleaned up properly.
+
+counter.tcl
+    Changed Counter_CheckPoint to write its own file
+    instead of polluting the error log.
+
+direct.tcl
+    Maintain a map from Tcl prefix to URL prefix so you can
+    reconstruct pathnames using $Direct($cmdprefix)
+
+    Map ?number,number into x=number&y=number so
+    direct URLs can handle imagemaps.
+
+    Added "cache hit" counters to direct URLS so they show
+    up in the /status/doc display
+
+    Added the ability to do redirects by throwing an error
+    with code 302:
+	return -code 302 $newurl
+
+doc.tcl
+    Added Doc_ExcludePat to register pathname suffixes you do
+    not want found by DocFallback (like .bak and .swp files)
+
+    Eliminated fallback when the file name has nothing before
+    the suffix: like /mumble/.abc
+
+    The DocFallback code generates URL redirects to the new path
+    so that spelling errors like john.osterhoot are not
+    cached and propagated back to folks browsers.
+
+    Doc(errorUrl) is set after an error so that the /error.html
+    page template can use it.
+
+    Template caching traps the case where the cached .html file
+    cannot be written to disk.
+
+httpd.tcl
+    Improved pattern on initial command to avoid totally bogus clients.
+
+    Added Httpd_SelfUrl that maps /a/b/c into
+    http://$Httpd(name):$Httpd(port)/a/b/c
+    only including port if it is != 80
+
+log.tcl
+    Added support for Log(compressProg) so you can compress
+    the nightly log file.  This is /usr/local/bin/gzip by default.
+
+    Eliminated duplicate IP address in the log, which was totally broken:		A.B.C.DA.B.C.D, groan
+
+mail.tcl
+    Improved auto-mail bug reports
+
+    Added "href", and "label" args  to /mail/forminfo so you
+    can display a link in the acknowledgement page.
+
+    Added Mail_FormInfo that is designed to be embedded into .tml pages.
+    It assumes there is are sendto and subject form elements that
+    direct the mailing.
+
+srvui.tcl
+    Added WM_DELLETE_WINDOW protocol handler
+
+status.tcl
+    Moved all the Debug routines into debug.tcl
+
+    Eliminated the link to /status/notfound/reset from the
+    /status/notfound page.  The URL is still there, just no link.
+
+    Fixed missing <title> from /status/all
+
+url.tcl
+    Improved URL dispatch so you can have conflicting domain
+    prefixes like "/tcl" and "/tclhttpd".  Previously a domain
+    prefix like "/tcl" would mask the file "/tclhttpd" in the / domain.
+
+    Added even more general support for URL redirections.  Any
+    URL implementation can raise an error and set the global
+    errorCode variable to
+    [list HTTPD_REDIRECT $newurl]
+    this is because subst masks all error codes, so the return -code 302
+    trick for direct URLS doesn't work inside .tml files.
+
+    Added Url_Encode so you can create URLs that have funny characters
+    properly encoded as %xx
+
+utils.tcl
+    Beefed up File_List and added an "open" wrapper so we can track
+    what files are opened.  Useful when plugging file descriptor leaks.
+
+mime.types
+    application/msword            doc
+    application/ms-powerpoint     ppt
+
+open.tcl
+    Created wrapper for open command used by File_List
+
+---- 2.1.3 Released for the Tcl Blast! CD-ROM
+
+auth.tcl
+	Added REMOTE_USER and AUTH_TYPE environment variable settings
+	Fixed handling of .htaccess files in the root directory
+
+cgi.tcl
+	Improvements to work under Windows - including a filter on
+	what environment variables must be preserved,  plus the server
+	watches the reply so CGI scripts can return MIME headers
+	and 302 return codes, etc.
+	Added explicit handling of .tcl, .pl, and .cgi files
+
+httpd.tcl
+	Added GMT to HttpdDate
+
+utime.c
+	New file to implement the utime() system call
+
+doc.tcl, url.tcl
+	Added Steve Ball's parser for multipart/form-data
+
+---- 2.1.4 released, sources put up on netCVS ---
+---- see http://www.scriptics.com/software/netcvs.html ----
+
+(This may not be entirely accurate.  2.1.4 had a short life and
+some features in 2.1.5 may be earlier in this file.)
+
+cgi.tcl
+	Refined the windows CGI support.  You can define shells to
+	handle files with different extensions.  So you can now handle
+	Perl CGI scripts :-/
+doc.tcl, url.tcl
+	Refined Steve Ball's parser for multipart/form-data
+
+----------------- released 2.1.5 October 6, 1998 ------------------
+
+Added command line arguments to httpd, including -port.  Try
+	httpd -help
+For a complete list of options.  Feature contributed by Gerald Lester.
+
+The global variables used by the startup script are now collected into
+the Config array.
+
+Added configuration file, the default is tclhttpd.rc.  This has most
+of the package requires and the various calls to initialization procs.
+You can specify alternate config with the -config command line argument.
+
+The startup sequence now adds $Httpd(library)/Binaries/$tcl_platform(os)
+and $Httpd(library)/Binaries/$tcl_platform(os)/$tcl_platform(osVersion)
+to the auto_path so you have a good place to put those .so files (DLLs).
+You can also add to the auto_path with the -library command line argument.
+
+auth.tcl
+	Fixed to handle (i.e., ignore) extra password fields
+
+dirlist.tcl
+	Fixed to handle URL tree's added with Doc_AddRoot
+	Cleaned up the display of they hypertext links.
+
+doc.tcl
+	Fixes to handle document domains that are not the root domain.
+	Fixes to DocTemplate to avoid using Doc(templateInterp), which
+		was already passes as the paramter value.
+
+mail.tcl
+	Changed Mail/forminfo to Base64_Encode values that get an
+	explosion of backslashes when using the list command.  Instead
+	of a "Data" command you get a "Data64" command in the mail message.
+
+session.tcl
+	Added "isSafe" parameter to Session creation.
+
+url.tcl
+	Tweaked Url_DecodeQuery_application/x-www-urlencoded to ensure there
+	are evenly matched name-value list pairs even in the face of
+	mal-formed query data.
+----------------- released 2.1.6 December 6, 1998 ------------------
+
+Quick release to fix a number of quirks in the new 2.1.6 startup configuration
+
+----------------- released 2.1.7 December 7, 1998 ------------------
+
+auth.tcl	Added Auth_VerifyCallback to make it easier to add
+	new authorization schemes.
+
+base64.tcl	Removed harmless extra ]
+
+cgi.tcl		Added env(REQUEST_URI)
+
+debug.tcl	Added env argument to /debug/errorInfo form handler
+		Removed lint found by procheck
+
+direct.tcl	Added Cgi_SetEnv call so application direct handlers
+		have the standard environment.
+
+dirlist.tcl	Added sorting by size.  (Modified contributed patch.)
+
+doc.tcl		Added Doc_Dynamic for use in .tml pages.  This sets
+		page(dynamic) to 1 so the html cache file is not generated.
+
+		Added Doc_Cookie and Doc_SetCookie, which a page can
+		use to query and set a cookie value, respectively.
+
+		Added Doc_IsLinkToSelf to see if a given URL corresponds
+		to the current page.
+
+		Fixed template processing to work in "non root"
+		file systems (things added with Doc_AddRoot)
+
+		Removed lint found by procheck
+
+lib/httpd.tcl	Fix broken call to Log in Httpd_Shutdown
+
+		Moved Httpd(library) definition into this file, away
+		from bin/httpd.tcl
+
+		Added data(uri) element, which is the complete request.
+
+		Added Httpd_SetCookie, which you can use to set a cookie
+		during a subsequent Httpd_ReturnFile, Httpd_ReturnData.
+
+		Fixed bug in HTTP/1.1 handling with Expect: header
+		and the Continue response.
+
+		Added some procedure header comments.
+
+log.tcl		Made it possible to not log anything if you never call
+		Log_SetFile.  You can still call Log and Log_Flush.
+
+mail.tcl	Added env array to /mail/bugreport form handler
+
+snmp.tcl	Removed lint
+
+srvui.tcl	Fixed WM_DELLETE_WINDOW typo
+
+url.tcl		Removed lint.
+		Added guard against bogus Content-Types for post data
+
+utils.tcl	Fixed lassign to work with no input values.
+
+bin/crypt.tcl	Added this little expect script that uses the crypt.so
+		library to encrypt passwords.  You still need to
+		update your htaccess password files by hand.
+
+bin/httpd.tcl	Removed Httpd(library) definition, added Config(lib)
+		instead.
+
+htdocs/guestbook	Added simple guestbook example.
+
+.htaccess, .tclaccess	Oops, added all these missing files to the distribution.
+
+htdocs/book	Added HTML version of book chapter on TclHttpd.
+
+----------------- released 2.2 June 18, 1999 ------------------
+
+cgi/*.cgi	Changed to exec "tclsh8.0" instead of absolute path
+
+htdocs/guestbook/guestbook.cgi	Fixed link to newguest.html page
+
+
+cgi.tcl		Use [info nameofexecutable] to choose Tcl interpreter
+		Fixed env(SCRIPT_NAME) to deal with paths that are
+		either under ~username directories, or directories
+		added with Doc_AddRoot.
+		Fixed PATH_TRANSLATED, which was completely wrong.
+
+doc.tcl		Changes to Cgi_Domain interface to support the above.
+		Proper setup of page(url) under ~username  directories,
+		or directories added with Doc_AddRoot.
+		Hack to support applications created with TclPro Wrapper
+		so they can find default index files in DocDirectory
+
+url.tcl		Cleanup of Url_PathCheck
+
+----------------- released 2.2.1 July 7, 1999 ------------------
+
+bin/httpd.tcl	Added load/package require for TclX as an alternate way
+		to get the setuid function.  It looks for either solution now.
+
+bin/imagehttpd.tcl	An updated version of minihttpd.tcl that adds
+		limited keep-alive support.
+
+bin/torture.tcl	Made this work on Windows.
+
+admin.tcl	Have noisy error message if redirect file is bad when 
+		starting the server.
+
+auth.tcl	Guard against missing group definition when parsing
+		password files
+
+cgi.tcl		Fixed initialization of Cgi(tclsh)
+		Fixed definition of env(PATH_TRANSLATED)
+		Updated to use the new Httpd_GetPostData interface
+
+direct.tcl	Added cookie support.  Call Doc_SetCookie from an application
+		direct URL in order to set a return cookie.
+
+dirlist.tcl	Split DirList into three procedures: DirList, which does
+		a complete page, DirListForm, which adds the listing
+		order and pattern form elements, and DirListInner, which
+		displays the file list.
+
+doc.tcl		Doc_Cookie now returns a list because there may be more
+		than one occurence of a named cookie.
+		Added Doc_Redirect and Doc_RedirectSelf to trigger
+		a page redirect.
+
+httpd.tcl	Added Httpd_GetPostData to read the POST payload data.
+		Httpd_GetPostChannel returns the socket and tells you
+		how much POST data is available to read.
+
+url.tcl		Disallow all of /, \, and :, from URLs on Windows
+		to avoid drive-letter attacks.
+		Added Url_PrefixRemove
+		Fixed Url_PathCheck to not ignore trailing empty directories.
+		This was letting you skip the .htaccess file when reading
+		just the directory contents.
+		Added Url_PostHook backdoor between Httpd_GetPostData and
+		Url_DecodeQuery.  If you call Url_DecodeQuery and there
+		is any unread post data, it is automatically read and
+		bundled in with the data that, for example, could have come
+		from the query part of the URL.  Call Url_DecodeQueryOnly
+		if you don't want it to look aside at the POST data.
+
+libtml/htmlutils.tcl	An assortment of procedures useful from
+		within .tml page templates.  Supercedes the old
+		libtml/template.tcl file.
+
+----------------- released 2.3.0 October 3, 1999 ------------------
+
+lib/doc.tcl	Fixed DocTemplate in two ways.  First, templates can both
+		set cookies with Doc_SetCookie and cause redirects with
+		Doc_Redirect.  Second, it deals correctly with pending
+		post data so document templates do not have to use
+		Httpd_GetPostData.
+
+lib/url.tcl	Fixed a bug where errors in document handlers would cause
+		the document handler to be run twice, once from the entry
+		in the UrlCache array, and one through the URL prefix dispatch.
+
+lib/httpd.tcl	Added Httpd_PostDataSize so you can see if there is any
+		pending post data.
+		Turned off the socket read handler before calling Url_Dispatch
+		so document handlers don't have to worry about the socket.
+
+----------------- released 2.3.1 October 5, 1999 ------------------
+
+lib/doc.tcl	Fixed cookie bug where Doc_SetCookie could result in a cookie
+		being given out to different browsers!
+		Also fixed use of file mtime so it works on Macintosh.
+
+lib/httpd.tcl	Fixed reading of mime.types so it uses file join and works on Mac.
+		Added HttpdCookieLog, which is not used by default.
+
+lib/status.tcl	Changes status bar charts to use gifs.
+
+lib/url.tcl	Fixed use of the UrlCache array when post data was available.
+ 
+----------------- released 2.3.2 October 15, 1999 ------------------
+
+lib/httpd.tcl	*IMPORTANT* fixed a bug in Httpd_GetPostData where an
+		eof condition on the socket was not handled properly.
+		This caused an infinite loop in Url_DecodeQuery.
+  
+lib/cgi.tcl	Added TZ to the environment variables passed
+		through to scripts
+
+lib/doc.tcl	Fixed DocFallback so it will not select files like
+		foo.tml.old when asked for foo.html
+
+lib/log.tcl	Added an optional debug log.  You have to define
+		Log(debug_file) to "1" to enable this, and then make calls
+		to Log with "Debug" as the reason.
+
+bin/imagehttpd.tcl	Updated this to fix the 1.1 support.  This seems
+		correct for simple cases, but generates some spurious errors
+		in real life web-sites.
+
+bin/torture.tcl	Added some feedback to the Iterate proc
+
+----------------- released 2.3.3 October 25, 1999 ------------------
+
+lib/dirlist.tcl	Fixed directory listing to have relative pathnames and to
+		Url Encode file names (mostly, except for . and _).  This fixes
+		the handing of files with spaces in their names.
+
+lib/httpd.tcl	Strip leading http://server.name from incoming URLs, and filter
+		out any proxy requests to other servers.
+
+lib/log.tcl	** Added cookie to log ** as an extra field.  Check your log
+		analysis programs to make sure this doesn't confuse them.
+
+htdocs/libtml/form.tcl	Fixed form::value to entity encode characters like
+		", > and < inside the quoted strings it returns.
+
+----------------- released 2.3.4 November 28, 1999 ------------------
+
+lib/cgi.tcl	Urk - stray debugging puts got into the 2.3.4 release.
+
+----------------- released 2.3.5 November 30, 1999 ------------------
+
+lib/admin.tcl	Added the /admin/reset/counter Direct URL.  It takes
+		a "name" argument that is the name of an element of
+		the counter array to reset.
+
+lib/base64.tcl	Fixed a bug that shows up in 8.1 and higher where
+		trailing NULL bytes are added to the result of
+		Base64_Decode - each trailing '=' becomes a NULL.
+
+lib/counter.tcl	Record the time that counters were reset.
+
+lib/direct.tcl	Honor the content-type of query data so the right
+		arguments are passed to Url_DecodeQuery.
+
+lib/doc.tcl	Proctect against regexp specials in file name suffixes
+		when mapping from non-existing file names to existing
+		ones, e.g.,  from "foo.html)" to "foo.html"
+
+lib/status.tcl	Display the time that a counter was reset.
+
+----------------- released 2.3.6 January 19, 2000 ------------------
+
+OK, the detailed change log is now in the ChangeLog file.
+Please see the WHATSNEW file for information about important
+changes in the 3.0 releases.

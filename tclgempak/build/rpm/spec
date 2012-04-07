@@ -1,0 +1,39 @@
+%description
+Tcl interface to Gempak
+
+%prep
+
+%setup
+./configure.sh
+
+%build
+cd build/rpm
+make 
+
+%install
+cd build/rpm
+make install
+
+%post
+@POSTINSTALL@
+
+%postun
+
+%clean
+cd build/rpm
+make clean
+
+%files
+%defattr(-,root,root)
+/usr/lib/tclgempak/pkgIndex.tcl
+/usr/lib/tclgempak/gempak.tcl
+/usr/lib/tclgempak/gdinfo.tcl
+/usr/lib/tclgempak/sflist.tcl
+/usr/share/doc/tclgempak/LICENSE
+/usr/share/doc/tclgempak/api.README
+/usr/share/doc/tclgempak/nbsp.README
+/usr/share/doc/tclgempak/gempak.env-sample
+/usr/share/doc/tclgempak/examples/examples.README
+/usr/share/doc/tclgempak/examples/examples.tgz
+
+%changelog

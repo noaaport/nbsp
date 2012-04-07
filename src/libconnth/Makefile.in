@@ -1,0 +1,40 @@
+#
+# Copyright (c) 2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+
+HEADERS = ce.h cq.h cs.h conn.h poll.h sock.h tcpsock.h connect_timed.h \
+	client_options.h
+SOURCES = ce.c cq.c cs.c conn.c poll.c sock.c tcpcosk.c connect_timed.c
+OBJECTS = ce.o cq.o cs.o conn.o poll.o sock.o tcpsock.o connect_timed.o
+
+TARGET = libconn
+
+INSTALL =	@INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+INCDIRS =       @DB_INCDIR@
+DEBUGFLAGS =
+
+CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS} ${INCDIRS}
+
+# all: ${TARGET}.a ${TARGET}.so
+all: ${TARGET}.a
+
+${TARGET}.a: ${OBJECTS}
+	${AR} -rc $@ ${OBJECTS}
+
+# ${TARGET}.so: ${OBJECTS}
+#	${LD} -shared -o ${.TARGET} ${.ALLSRC}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+clean:
+	rm -f *~ *.o *.a lib*.so* .depend Makefile
+	cd test; make clean
+
+install:

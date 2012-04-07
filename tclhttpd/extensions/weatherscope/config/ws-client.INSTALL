@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+
+The files in this package configure the Weatherscope program to use an Nbsp
+server as a (non-exclusive) source of data. The Weatherscope application
+is available from
+
+		http://climate.ok.gov/software/
+-
+Installation of the Weatherscope client support files -
+=======================================================
+
+1) Unpack the ws-client.zip file anywhere.
+
+2) Inside the ws-client there are a bunch of directories that start
+with ``noaaport.'', for example,
+
+	noaaport.nids
+	noaaport.metar.mdf
+	noaaport.metar.mts
+
+and many others.
+
+3) Copy all those directories to the Weatherscope user directory, usually
+
+	My Documents\Weather\Weatherscope Data
+
+The Weatherscope program will download from the Nbsp web server the other
+files that are needed.
+
+3) Launch the program. In the data sources menu, the new data source
+will be identified as ``Noaaport ....''.
+
+-
+Sun Apr  5 09:47:50 AST 2009
+

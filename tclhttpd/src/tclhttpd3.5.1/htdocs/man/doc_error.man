@@ -1,0 +1,67 @@
+[manpage_begin httpd::doc_error n 1.0]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Commands to generate error and not-found pages}]
+[moddesc   {Tcl Web Server}]
+[require httpd::doc_error [opt 1.0]]
+[description]
+
+The package [package httpd::doc_error] provides a number of commands
+for the generation of standard error and not-found pages.
+
+[para]
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Doc_NotFoundPage] [arg virtual]]
+
+Registers the url ([arg virtual]) and thus the file of the not-found
+page in the package [package httpd::doc]. The contents of the file are
+always subst'ed to generate the actual reply send to the client.
+
+In other words, while there is basic templating for this page via
+[package httpd::subst] the full-blown TML is [emph not] available
+here.
+
+
+[call [cmd Doc_ErrorPage] [arg virtual]]
+
+See [cmd Doc_NotFoundPage] above, except for the error page.
+
+
+[call [cmd Doc_NotFound] [arg sock]]
+
+Called when a page is missing. Looks for a handler page registered
+with [cmd Doc_NotFoundPage], sets up the substitution context and then
+returns the result of the substitution run. The argument [arg sock]
+specifies the connection and request which asked for the missing page.
+
+A subst handler can retrieve the url which was not found via the
+command [cmd Doc_UrlNotFound] below.
+
+
+[call [cmd Doc_Error] [arg sock] [arg ei]]
+
+Like [cmd Doc_NotFound], except that is called when an error occured
+while processing the request on connection [arg sock].  [arg ei]
+contains the error information to show in the page.  A subst handler
+can retrieve this information via [cmd Doc_ErrorInfo] below.
+
+
+[call [cmd Doc_ErrorInfo]]
+
+Returns the error information raised by the package.
+
+
+[call [cmd Doc_UrlNotFound]]
+
+Returns the url which was not found.
+
+[list_end]
+
+[see_also httpd httpd::counter httpd::doc]
+[see_also httpd::log httpd::subst httpd::utils]
+[keywords {web server} error documents files substitution templates]
+[manpage_end]

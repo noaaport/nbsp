@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<TITLE>Insider Configuration</TITLE>
+<script src=./auth.js>No Java Script Available</script>
+</HEAD>
+<h1>Insider configuration page</h1>
+<form name=myform>
+<input type=hidden value="random string" name=cookie>
+<input type=hidden value="xy" name=salt>
+<table border>
+<tr><td colspan=3><center><b>Server configuration properties</b></center></tr>
+<tr><th>property<td colspan=2><input type=text name=prop1></tr>
+<tr><th>property<td colspan=2><input type=text name=prop2></tr>
+<tr><th>property<td colspan=2><input type=text name=prop3></tr>
+<tr><th>password<td colspan=1>
+  <Applet align=TEXTTOP Code="Auth" width=75 height=30 name=myApp CodeBase=".">oink!</Applet>
+  <td>
+  <input type=submit name=submit value="submit" onClick="authenticate(this.form)">
+</tr>
+</table>
+</form>
+<hr>
+</HTML>

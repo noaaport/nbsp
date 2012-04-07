@@ -1,0 +1,27 @@
+<title>test suite for Mib Table - test 3</title>
+<h1> This is a multiple node table</h1>
+<form>
+[formSession -group test3]
+<table border>
+<tr><th>Skip 0's<td>[select matchValue -selected * -choices {* !^0$}]</tr>
+<tr><th>border[radio -name border -default 1]</tr>
+</tr>
+</table>
+<input type=submit>
+</form>
+<hr>
+[mibTable  -group test3 \
+ -mib {ifIndex ifOutUcastPkts ifInUcastPkts ifAdminStatus} \
+ -order value \
+ -heading {port Out In Status} \
+ -caption {UDP Packet Statistics}
+]
+<hr>
+<a href=table2.snmp?session=[session]>prev test</a><br>
+<a href=table4.snmp?session=[session]>next test</a>
+<dl>
+<dt>note 1
+<dd>
+Both test2 and test3 use border, but since they have a different
+group, they should not interfere
+</dl>

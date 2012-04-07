@@ -1,0 +1,54 @@
+#
+# $Id$
+#
+.include "../../Makefile.inc"
+.include "../../VERSION"
+.include "pkginfo.mk"
+
+package_version = ${version}_${release} 
+package_origin = ${package_category}/${name}
+package_name = ${name}-${package_version}
+package_file = ${package_name}.${package_ext}
+
+OS != uname
+
+option_files = -f pkg-plist \
+	-c pkg-comment \
+	-d pkg-descr \
+	-r pkg-req \
+	-D pkg-display
+
+default: build
+
+../../Makefile: ../../Makefile.in
+	cd ../..; ./configure.sh
+
+build: ../../Makefile
+	cd ../..; ${MAKE}
+
+install: build
+	rm -rf pkg
+.if ${OS} == FreeBSD
+	install -d pkg
+	cd pkg; install -d `cat ../dirs`
+	cd ../..; ${MAKE} DESTDIR=`pwd`/build/bsd/pkg install
+.elif ${OS} == OpenBSD
+	install -d pkg/${PREFIX}
+	dirslist=`pwd`/dirs; cd pkg/${PREFIX}; install -d `cat $$dirslist`
+	cd ../..; ${MAKE} PKGBUILDDIR=`pwd`/build/bsd/pkg install
+.endif
+
+package: install
+.if ${OS} == FreeBSD
+	pkg_create -p ${DESTDIR} -s `pwd`/pkg -o ${package_origin} \
+	${option_files} ${package_file}  
+.elif ${OS} == OpenBSD
+	pkg_create -p ${DESTDIR} -B `pwd`/pkg ${option_files} ${package_file}  
+.endif
+
+clean:
+	cd ../..; ./configure.sh
+	rm -f *~
+	rm -f -r pkg
+	rm -f ${package_file}
+	cd ../.. && ${MAKE} clean

@@ -1,0 +1,39 @@
+[mypage::header "Sample Form"]
+
+<form action="/cgi-bin/test.cgi" method="POST">
+
+<input type=hidden name=hide_me value="this has a space">
+
+<h1>Sample Form</h1>
+<p>
+<!-- Basic form template -->Explain the form here.
+<ul>
+<li>This is a boolean option: <input type=checkbox name=c1 value=off>
+<li>This is a choice: #1<input type=radio name=r1 value=a>#2<input type=radio name=r1 value=b>#3<input type=radio name=r1 value=c>
+<li>This is a text field: <input name=s1>
+<li>This is a password field: <input type=password name=PASS>
+</ul>
+<p>
+You can enter lots of text here: <textarea name=text1 cols=50 rows=10>Here
+is an initial value
+
+</textarea>
+<p>
+Here is a choice among item:<select name="choice" size="5">
+<option>one
+<option>two
+<option selected>three
+<option>four
+<option value="five value">five
+</select>
+<p>
+A selection that lets you choose more than one thing.
+<select name=multi multiple>
+<option value="foo+bar">foo bar
+<option value=red>red
+</select>
+<p>
+Decide what to do with this form: <input type=reset name=Reset><input type="submit" name="Submit"><!--></form>
+
+
+[mypage::footer]

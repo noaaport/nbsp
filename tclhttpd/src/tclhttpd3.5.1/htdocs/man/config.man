@@ -1,0 +1,42 @@
+[manpage_begin httpd::config n 1.0]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Configuration management}]
+[moddesc   {Tcl Web Server}]
+[require httpd::config [opt 1.0]]
+[description]
+
+The package [package httpd::config] is a core module providing all
+other modules of the web server with commands to define and read
+global configuration data.
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd config::init] [arg config] [arg aname]]
+
+Retrieves a list of resources from disk, specifically the
+file [arg config]. The array variable [arg aname] contains the default
+configuration values to use, and the new, current values after the
+processing of the configuration file has completed.
+
+
+[call [cmd config::cget] [arg index]]
+
+Returns the value for configuration key/variable [arg index].  The
+empty string will be returned if there is no such configuration
+variable.
+
+
+[call [cmd config::setValue] ([arg key] [arg value])...]
+
+Goes through the specified configuration keys, assigns them the given
+values, and then stores the changed information back to disk.  This
+call will fail if [cmd config::init] has not been called before.
+
+[list_end]
+
+[see_also httpd]
+[keywords {web server} configuration]
+[manpage_end]

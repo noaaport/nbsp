@@ -1,0 +1,43 @@
+<?datasetconfig version="1.0d1"?>
+
+<parminfo>
+  <parm id="stid" type="string" units="nada" name="site ID"/>
+  <parm id="stnm" type="int" units="nada" name="site number"/>
+  <parm id="time" type="float" units="min" name="time of observation"/>
+  <parm id="lat" type="float" units="degr" name="latitude"/>
+  <parm id="lon" type="float" units="degr" name="longitude"/>
+  <parm id="elev" type="float" units="m" unitset="dist" name="elevation"/>
+
+  <parm id="tair" type="float" units="cels" name="air temperature"/>
+  <parm id="tdew" type="float" units="cels" name="dewpoint temperature"/>
+  <parm id="wspd" type="float" units="mps" name="wind speed at 10 m"/>
+  <parm id="wdir" type="float" units="degr" name="wind direction at 10 m"/>
+  <parm id="pmsl" type="float" units="mbar" name="altimeter setting"/>
+  <parm id="pres" type="float" units="mbar" name="pressure"/>
+  <parm id="relh" type="float" units="prct" name="relative humidity"/>
+  <parm id="chil" type="float" units="fahr" name="wind chill index"/>
+  <parm id="heat" type="float" units="fahr" name="heat index"/>
+  <parm id="uwnd" type="float" units="mps" name="wind vector U component"/>
+  <parm id="vwnd" type="float" units="mps" name="wind vector V component"/>
+  <parm id="vapr" type="float" units="mbar" name="vapor pressure"/>
+  <parm id="vaps" type="float" units="mbar" name="saturation vapor pressure"/>
+  <parm id="tlcl" type="float" units="cels" name="LCL temperature"/>
+  <parm id="thta" type="float" units="kelv" name="potential temperature"/>
+  <parm id="thte" type="float" units="kelv" name="equivalent potential temperature"/>
+  <parm id="tvir" type="float" units="kelv" name="virtual temperature"/>
+  <parm id="twet" type="float" units="cels" name="wet-bulb temperature"/>
+
+  <derivation id="pres" func="pres" args="pmsl elev"/>
+  <derivation id="relh" func="relh" args="tair tdew"/>
+  <derivation id="chil" func="chil" args="tair wspd"/>
+  <derivation id="heat" func="heat" args="tair relh"/>
+  <derivation id="uwnd" func="uwnd" args="wspd wdir"/>
+  <derivation id="vwnd" func="vwnd" args="wspd wdir"/>
+  <derivation id="vapr" func="vapr" args="tdew"/>
+  <derivation id="vaps" func="vapr" args="tair"/>
+  <derivation id="tlcl" func="tlcl" args="tair tdew"/>
+  <derivation id="thta" func="thta" args="tair pres"/>
+  <derivation id="thte" func="thte" args="tair tdew pres"/>
+  <derivation id="tvir" func="tvir" args="tair tdew pres"/>
+  <derivation id="twet" func="wetb" args="tair tdew pres"/>
+</parminfo>

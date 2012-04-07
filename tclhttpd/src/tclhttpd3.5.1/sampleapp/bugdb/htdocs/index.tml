@@ -1,0 +1,40 @@
+[html-strict::head {TclHttpd &gt; Sample Apps &gt; Bug Database} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+[html::h1 {TclHttpd &gt; Sample Apps &gt; Bug Database}]
+
+<p>
+    [html::foreach {title ref} $my_navigation {
+        <a href="$ref">$title</a> |
+    }]
+</p>
+
+[html::h2 {Support Libraries}]
+
+<p>
+First create a library containing procedures that output HTML
+headers and footers. Since this library will be used in other
+applications, we'll give it a generic name (e.g. html-strict). The
+library should be put in one of the library directories
+specified in the config file or through command line.
+<span class="note">Note:</span> In the case of this sample application, 
+custom libraries are in the sampleapp directory.</p>
+
+<p>
+To make sure these procedures are working, create a simple template like
+the example shown below:
+</p>
+
+<pre>
+\[html-strict::head {Just a simple test!} \\
+{default.css screen} {} \]
+\[Doc_Dynamic\]
+
+Just a simple test!
+
+\[html-strict::foot\]</pre>
+
+<p class="example-test"><a href="test.tml">test this example</a> &gt; </p>
+
+[html-strict::foot]

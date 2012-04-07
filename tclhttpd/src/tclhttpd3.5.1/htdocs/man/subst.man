@@ -1,0 +1,105 @@
+[manpage_begin httpd::subst n 1.0]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Basic substitution and templating facility}]
+[moddesc   {Tcl Web Server}]
+[require httpd::subst [opt 1.0]]
+[description]
+
+The package [package httpd::subst] provides a basic template
+facility for the parameterization of delivered pages.
+
+This is [emph not] the full Template Macro Language (TML). TML is
+provided by the package [package httpd::template] instead.
+
+[para]
+
+[emph Note:] This package also provides a number of type-specific doc
+handlers which will be picked up and used automatically by package
+[package httpd::doc].
+
+This will work if and only if an appropriate file extension to mime
+type mapping was added to [package httpd::mtype] during startup of the
+server. If a file [file mime.types] is present in the server library
+directory (residence of all packages) it will be read automatically
+and used to set up a standard mapping to support the type specific
+handlers exported by this package.
+
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Subst_ReturnFile] [arg sock] [arg path] [opt [arg interp]]]
+
+This command is a convenience wrapper around [cmd Subst_File].
+
+It runs the substitution process on the file [arg path] and returns
+the result directly to the request waiting on connection [arg sock].
+
+
+[call [cmd Subst_File] [arg path] [opt [arg interp]]]
+
+Runs the substitution process on the file [arg path] and returns the
+result as the result of the command.
+
+If an [arg interp]reter is specified it will be used as the
+substitution context. If no interpreter is specified the current
+interpreter will be used as the context. When doing the latter the
+configuration defined via [cmd Subst_Scope] will also determine
+whether the current or global scope is used for the processing.
+
+
+[call [cmd Subst_Scope] [arg scope]]
+
+Globally declares which scope to use when processing a template.
+A value of [const 0] for [arg scope] means that the global
+namespace will be used as scope, anything else causes usage
+of the current (procedure-)local scope.
+
+Initially the package is set up to use the global namespace.
+
+This value is effective if and only if the current interpreter
+is used to process a template. When using a different interpreter
+the processing will always happen at the global scope.
+
+
+[call [cmd Subst_Install] [arg proc]]
+
+This command registers the command name [arg proc] as a
+postprocessor.
+
+[nl]
+
+All such commands are run by the package in order of registration
+whenever a template was processed. The first postprocessor is called
+with the result of the substitution as its first and only
+argument. All others will be called with the result of the
+previously-run postprocessor. The result of the last postprocessor is
+returned as the result of the whole substitution process.
+
+[nl]
+
+Errors in a postprocessor will cause the system to abort processing.
+
+
+[call [cmd Doc_application/x-tcl-subst] [arg {path suffix sock}] [opt [arg interp]]]
+
+This command is a type-specific document handler for pages of
+mime-type [const application/x-tcl-subst] and is called by the package
+[package httpd::doc]. Simply invokes [cmd Subst_ReturnFile] to handle
+the insertion of data into the template file at [arg path].
+
+
+[call [cmd Doc_application/x-tcl-auth] [arg {path suffix sock}]]
+
+Like [cmd Doc_application/x-tcl-subst] except that a basic
+authentication cookie is used to obtain session state, and the
+substitution process will be run in the session interpreter.
+
+
+[list_end]
+
+[see_also httpd httpd::doc httpd::cgi httpd::session]
+[keywords {web server} substitution templates]
+[manpage_end]

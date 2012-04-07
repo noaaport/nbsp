@@ -1,0 +1,21 @@
+<title>Mib table walker</title>
+<table> <tr>
+<td>
+  <form TARGET=top action=title.snmp>
+  [formSession -group browse]
+  <input type=submit value="choose net:">
+  <input name=net value=[value net [netId]] size=9>
+  </form>
+<td>
+  <form TARGET=data action=table.snmp>
+  [formSession -group browse]
+  <input type=submit value="choose host">
+  [select host -choices [discover]]
+  </form>
+<td>
+  <form TARGET=_parent action=end.snmp>
+  [formSession]
+  <input type=hidden name=exit value=1>
+  <input type=submit value="exit session">
+  </form>
+</tr></table>

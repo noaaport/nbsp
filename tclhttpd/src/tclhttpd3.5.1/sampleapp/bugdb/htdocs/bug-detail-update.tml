@@ -1,0 +1,31 @@
+[html-strict::head {TclHttpd &gt; Sample Apps &gt; Bug Database} \
+{default.css screen} {} ]
+[Doc_Dynamic]
+
+[html::h1 {TclHttpd &gt; Sample Apps &gt; Bug Database &gt; Bug Details}]
+
+<p>
+    [html::foreach {title ref} $my_navigation {
+        <a href="$ref">$title</a> |
+    }]
+</p>
+
+<p>[bugdb::update [ncgi::value bug] [ncgi::value Status] \
+[ncgi::value Application] [ncgi::value OS] [ncgi::value Priority] \
+[ncgi::value Assigned] [ncgi::value Summary] [ncgi::value Description] ]</p>
+
+    <p>The bug has been updated.</p>
+    <p><strong>Bug Report:</strong></p>
+
+    <ul style="list-style: none;">
+        <li>Bug: [ncgi::value bug]</li>
+        <li>Status: [ncgi::value Status]</li>
+        <li>Application: [ncgi::value Application]</li>
+        <li>Operating System: [ncgi::value OS]</li>
+        <li>Priority: [ncgi::value Priority]</li>
+        <li>Assigned To: [ncgi::value Assigned]</li>
+        <li>Summary: [ncgi::value Summary]</li>
+        <li>Description: [ncgi::value Description]</li>
+    </ul>
+
+[html-strict::foot]

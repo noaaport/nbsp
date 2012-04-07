@@ -1,0 +1,9 @@
+[mypage::header "File Upload Form"]
+<form ENCtype=multipart/form-data action=testupload.tml method=post>
+
+<input type=hidden name=hide_me value="hello, world">
+File <input type=file name=the_file>
+<p>
+<input type=submit>
+</form>
+[mypage::footer]

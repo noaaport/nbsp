@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+DOCS = api.README nbsp.README ../LICENSE
+SAMPLES = gempak.env-sample
+
+all: ${SAMPLES}
+
+gempak.env-sample: gempak.env
+	cp gempak.env gempak.env-sample
+
+install: all
+	${INSTALL} -m 0644 ${DOCS} ${SAMPLES} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile

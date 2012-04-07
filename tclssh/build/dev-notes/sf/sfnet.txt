@@ -1,0 +1,56 @@
+(Message inbox:389)
+Date:    Mon, 09 Mar 2009 22:05:02 GMT
+To:      nieves@ltp.upr.clu.edu
+From:    "SourceForge.net" <noreply@sourceforge.net>
+Subject: SourceForge.net Project Approved
+
+Return-Path: noreply@sourceforge.net
+Delivery-Date: Mon Mar  9 18:05:04 2009
+Return-Path: <noreply@sourceforge.net>
+X-Spam-Checker-Version: SpamAssassin 3.2.3 (2007-08-08) on ltp.upr.clu.edu
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.0 required=5.0 tests=RCVD_IN_DNSWL_MED
+	 autolearn=failed version=3.2.3
+Mime-Version: 1.0
+X-Spam-Seen: Yes
+
+part       text/plain                1081
+[7mPress <return> to show content...[27mWelcome to SourceForge.net!
+
+
+The following project has been approved for hosting:
+
+Descriptive Name:  Tclssh
+Unix Name:         tclssh
+
+By using the SourceForge.net site, you agree to be bound by the
+terms and conditions of the SourceForge.net Terms of Use Agreement.
+
+SourceForge.net project hosting is available solely to Open Source
+software development projects.  If you are not releasing your project
+under an Open Source license, please contact SourceForge.net staff for
+assistance (see "Support", below).
+
+
+Project Administration:
+
+To manage your project, login and go to:
+https://sourceforge.net/project/admin/?group_id=255821
+
+For help in getting started with your new project:
+http://p.sf.net/sitedocs/getstarted
+
+
+Support:
+
+SourceForge.net maintains a full-time support team; we are ready to
+assist you with any questions you have about your new project.
+
+We can be contacted by submitting a ticket at:
+http://p.sf.net/sitedocs/submitticket
+
+We may also be reached directly during business hours via IRC:
+http://p.sf.net/sitedocs/irc 
+
+
+    -- the SourceForge.net crew

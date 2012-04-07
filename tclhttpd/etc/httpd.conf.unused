@@ -1,0 +1,27 @@
+# uid - the server executes as the following user ID.
+#
+### set Config(uid)		80
+
+# gid - the server executes as the following group ID.
+#
+### set Config(gid)		80
+
+# https_host - the name of the server (i.e., www.yourcompany.com)
+# This should be fully qualified.
+#
+### set Config(https_host)	[info hostname]
+
+# https_port - the listening port for the server for HTTPS requests.
+# The standard SSL port is 443.
+#
+### set Config(https_port)	8016
+
+# https_ipaddr - ditto, but for https (i.e., SSL) connections
+#
+### set Config(https_ipaddr)	{}
+
+# MaxFileDescriptors - the maximum number of file descriptors the
+# server can have open.  This impacts the number of simultaneous
+# client requests it can have open.
+#
+### set Config(MaxFileDescriptors)	256

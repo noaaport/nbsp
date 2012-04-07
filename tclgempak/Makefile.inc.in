@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+PKGNAME = tclgempak
+
+# This is for manipulation by the packaging tools
+PKGBUILDDIR =
+
+#
+# These directories are assumed to exist
+#
+PREFIX = @PREFIX@
+
+DESTDIR = ${PKGBUILDDIR}/${PREFIX}
+LIBDIR = ${DESTDIR}/lib
+DOCDIR = ${DESTDIR}/share/doc
+
+#
+# These directories must be created
+#
+MYDOCDIR = ${DOCDIR}/${PKGNAME}
+MYLIBDIR = ${LIBDIR}/${PKGNAME}
+MYEXAMPLESDIR = ${DOCDIR}/${PKGNAME}/examples

@@ -1,0 +1,8 @@
+<title>Discovery Results</title>
+<h1>Select a host on network [netId]</h1>
+<p>
+<form action=system.snmp>
+[formSession -group demo]
+[select host  -show 5 -choices [discover]]
+<input type=submit value=choose!>
+</form>

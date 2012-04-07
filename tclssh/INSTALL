@@ -1,0 +1,54 @@
+#
+# $Id$
+#
+
+- Requirements
+
+  The following are required and must be installed:
+
+    Tcllib
+
+- Installing from Packages
+
+  Binary packages exist for FreeBSD (tbz), CentOS (rpm) and Debian (deb).
+  Since tclssh is written entirely in tcl and no compilation is involved,
+  the rpm packages should work anywhere rpm is the package management tool,
+  and similarly with deb packages.
+
+  The packages are available from the software section in
+
+	http://www.noaaport.net
+
+  which can be installed with the native package management tools
+  (e.g., rpm, pkg_add, dpkg).
+
+- Installation using the Makefile
+
+  This boils down to executing
+
+	./configure.sh
+	make install-dirs
+	make install
+
+  inside the ``tclssh'' distribution directory.
+
+- Manual installation
+
+  Tclssh is written entirely in tcl, so there is no compilation
+  involved. The package consists of a single file ``ssh.tcl''
+  and the accompanying index file ``pkgIndex.tcl''.
+
+  Perhaps the best option is to create a directory ``tclssh'' at the same
+  as the tcllib directory, and put both of the above files in that
+  directory.
+
+  The files can be saved anywhere, for example
+
+	/usr/local/lib/tcl_site
+
+  A script that will use the package can then add the line
+
+	lappend auto_path "/usr/local/lib/tcl_site"
+
+  before the ``package require ssh'' and it will be found.
+-

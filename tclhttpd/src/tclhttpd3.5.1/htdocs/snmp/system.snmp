@@ -1,0 +1,10 @@
+<h1>Basic Configuration</h1>
+<h2>SNMP Device: [DisplayMib sysName.0 -group demo]</h2>
+[mibTable -group demo]
+<ul>
+<li><a HREF="allport.snmp?session=[session]">Configure Device Ports</a> 
+<li><a HREF="browser/browser.snmp?session=[session]">SNMP Browser/Manager</a> 
+<li><a HREF="demoend.snmp?session=[session]&exit=1">Exit Session</a> 
+</ul>
+<p>
+<a HREF="host.snmp?session=[session]">Choose Another Device</a> 

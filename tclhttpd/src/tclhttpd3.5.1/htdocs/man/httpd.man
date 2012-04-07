@@ -1,0 +1,694 @@
+[manpage_begin httpd n 1.6]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {HTTP protocol implementation}]
+[moddesc   {Tcl Web Server}]
+[require httpd [opt 1.6]]
+[description]
+
+The package [package httpd] implements the server side of the HTTP
+protocol and as such can be used as the core of any Tcl based web
+server implementation. One such full-fledged web server is
+[syscmd tclhttpd].
+
+[para]
+
+[emph Note:] This package does [emph not] provide the ability to
+register a callback when a request was received completely. It
+dispatches all collected requests to the package [package httpd::url]
+instead. This package then provides an interface for the definition
+and usage of a database mapping from urls to implementations,
+i.e. Tcl commands handling them.
+
+[para]
+
+The API is divided into the following four categories, each described in
+its own section.
+
+[section {Server Management}]
+[para]
+
+Operations to handle the server at large.
+
+[list_begin definitions]
+
+[call [cmd Httpd_Init]]
+
+Initializes the internal data structures of the package. Has to be
+called before [cmd Httpd_Server] or [cmd Httpd_SecureServer]. Some
+of the others public commands of this package will call this
+command on their own if it had not been called before.
+
+[comment {
+	It is not clear to me (andreask) why this is not done
+	automatically, the moment the package is loaded into an
+	interp.
+}]
+
+
+[call [cmd Httpd_Shutdown]]
+
+A convenience command. It calls [cmd Httpd_ServerShutdown],
+[cmd Httpd_SecureServerShutdown], and all callback commands
+registered with the package through [cmd Httpd_RegisterShutdown].
+
+[nl]
+
+The registered callbacks are called before the two shutdown commands
+of this package. Any errors thrown by the callbacks are logged via the
+package [package httpd::log], but ignored otherwise.
+
+[nl]
+
+The result of the command is a boolean value. [const false] signals to
+the caller that at least one of the registered callbacks threw an
+error.
+
+
+[call [cmd Httpd_RegisterShutdown] [arg cmd]]
+
+Registers [arg cmd] as a callback which will be called when the server
+is shutdown via [cmd Httpd_Shutdown]. Errors thrown by [arg cmd]
+during its invocation are logged, but otherwise ignored. Any result
+returned by [arg cmd] is ignored]. The [arg cmd] is called without any
+argument.
+
+
+[call [cmd Httpd_Server] [opt [arg port]] [opt [arg name]] [opt [arg ipaddr]]]
+
+Starts the server by listening for connections on the desired
+[arg port]. This may be re-run to re-start the server.
+
+[nl]
+
+If no [arg port] was specified it defaults to [const 80]. The caller
+can specify the qualified host name returned in the Host field of each
+server response. This defaults to the result of [cmd {info hostname}]. 
+
+A non-default interface address can be specified through [arg ipaddr].
+Otherwise [const IP_ADDR_ANY] is used so the server can accept
+connections from any interface.
+
+[nl]
+
+Automatically calls [cmd Httpd_Init] if it has not been
+done manually before.
+
+[nl]
+
+The command returns the empty string.
+
+[nl]
+
+[emph Note:] It is possible for the package to have the server listen
+on multiple ports, just call this command more than once.  However
+note that the package remembers only the last port opened for
+listening. This means that a shutdown will stop only connections on
+the last port opened with this command, and nothing else.
+
+
+
+[call [cmd Httpd_ServerShutdown]]
+
+This command closes the listening socket of the server. Existing
+HTTP connections are kept open, but no new connection will be
+possible.
+
+
+[call [cmd Httpd_SecureServer] [opt [arg port]] [opt [arg name]] [opt [arg ipaddr]]]
+
+Like [cmd Httpd_Server], except that additional setup for SSL is
+performed, requiring the package [package TLS], and that the port
+defaults to [const 443].
+
+
+[call [cmd Httpd_SecureServerShutdown]]
+
+Like [cmd Httpd_ServerShutdown], except that listening socket
+for secure connections is closed.
+
+
+[call [cmd Httpd_CurrentSocket] [opt [arg sock]]]
+
+If a [arg sock] is specified it is remembered globally as the current
+socket. Otherwise the globally remembered current socket is returned.
+
+[call [cmd Httpd_Webmaster] [opt [arg email]]]
+
+Defines a global [arg email] address for the webmaster. If no address
+was specified the last address set is returned.
+
+
+[call [cmd Httpd_VirtualHost] [arg {host file}]]
+
+Initialize a virtual server.  The file is an alternate
+config file, (e.g., [file tclhttpd.rc]).  The pages for each
+virtual server are processed inside their own safe interpreter.
+
+[call [cmd Httpd_VirtualHosts] [arg {hostNames file}]]
+
+Like  [cmd Httpd_VirtualHost] except that the first argument
+is a list of host names.  All of these share the same config file.
+
+[lst_item [var ::Httpd]]
+
+A global array variable containing global configuration information.
+
+[list_begin definitions]
+
+[lst_item [const bufsize]]
+Chunk size for copies. For example POST data.
+
+[lst_item [const initialized]]
+Exists and true after package was initialized by [cmd Httpd_Init].
+
+[lst_item [const ipaddr]]
+Non-default ipaddr for the server (for multiple interfaces).
+
+[lst_item [const library]]
+Path of the directory containing the Tcl scripts.
+
+[lst_item [const port]]
+The port this server is serving.
+
+[lst_item [const listen]]
+The main listening socket id.
+
+[lst_item [const server]]
+The server ID for the HTTP protocol.
+
+[lst_item [const shutdown]]
+A list of Tcl callbacks to run when the server shuts down.
+
+[lst_item [const sockblock]]
+Blocking mode value for sockets (normally this should be 0).
+
+[lst_item [const timeout1]]
+Time before the server closes a kept-alive socket (msecs).
+
+[lst_item [const timeout2]]
+Time before the server kills an in-progress transaction (msecs).
+
+[lst_item [const timeout3]]
+Time allowed to drain extra post data.
+
+[lst_item [const version]]
+The version number.
+
+[lst_item [const maxused]]
+Max number of transactions per socket (keep alive).
+
+[list_end]
+[list_end]
+
+
+[section {Connection Management}]
+[para]
+
+Management operations for connections.
+
+
+[list_begin definitions]
+
+[lst_item [var ::Httpd[arg \$sock]]]
+
+The state of the open connection is stored in global variables, one
+per connection. These variables are arrays and have the prefix
+
+[const Httpd]. Their distinguishing suffix is the handle of the
+channel (socket) they belong to. This means that any user code which
+has a connection handle can import the connection state into its
+current scope via a command like
+
+[nl][example {
+	upvar #0 Httpd$sock data
+}][nl]
+
+The elements of this array are documented here.  URL implementations
+are free to hang additional state off the data array as long as they
+do not clobber the elements documented below. These keys in the state
+array are semi-public, or "well known".  There are a few API's to
+access them, but URL implementations can rely on these:
+
+[list_begin definitions]
+[lst_item [const self]]
+
+A list of protocol ([const http] or [const https]), name, and port
+that capture the server-side of the socket address. Available through
+the [cmd Httpd_Protocol], [cmd Httpd_Name], and [cmd Httpd_Port] API's.
+
+[lst_item [const uri]]
+The complete URL, including protocol, servername, and query.
+
+[lst_item [const proto]]
+Either [const http] or [const https].
+
+[lst_item [const url]]
+
+The URL after the server name and before the '?'. In other words,
+the url path.
+
+[lst_item [const query]]
+The URL after the '?'.
+
+[lst_item [const ipaddr]]
+The remote client's IP address.
+
+[lst_item [const cert]]
+Client certificate (The result of [cmd tls::status]). This is
+only relevant to connections coming in over a secure port.
+
+[lst_item [const host]]
+The host specified in the URL, if any (proxy case).
+
+[lst_item [const port]]
+The port specified in the URL, if any.
+
+[lst_item [const mime,*]]
+HTTP header request lines (e.g., mime,content-type).
+
+[lst_item [const count]]
+Content-Length.
+
+[lst_item [const set-cookie]]
+List of Set-Cookie headers to stick into the response.
+Use [cmd Httpd_SetCookie] to append to this.
+
+[lst_item [const prefix]]
+Set by [cmd Url_Dispatch] (in package [package httpd::url]) to be the
+URL domain prefix.
+
+[lst_item [const suffix]]
+Set by [cmd Url_Dispatch] to be the URL domain suffix.
+
+[lst_item [const auth_type]]
+Set by the package [package httpd::auth] to "Basic", etc.
+
+[lst_item [const remote_user]]
+Set by the package [package httpd::auth] to the
+username from Basic authentication.
+
+[lst_item [const session]]
+Set by the package [package httpd::auth] to the
+"realm,$username" from Basic auth.
+You can overwrite this session ID with something more useful.
+
+[lst_item [const Internal]]
+Fields used by this module.
+
+[lst_item [const left]]
+The number of keep-alive connections allowed.
+
+[lst_item [const cancel]]
+AfterID of event that will terminate the connection on timeout.
+
+[lst_item [const state]]
+State of request processing.
+
+[lst_item [const version]]
+1.0 or 1.1.
+
+[lst_item [const line]]
+The current line of the HTTP request.
+
+[lst_item [const mimeorder]]
+List indicating the order of MIME header lines.
+
+[lst_item [const key]]
+Current header key.
+
+[lst_item [const checkNewLine]]
+State bit for Netscape SSL newline bug hack.
+
+[lst_item [const callback]]
+Command to invoke when request has completed.
+
+[lst_item [const file_size]]
+Size of file returned by [cmd Httpd_ReturnFile].
+
+[lst_item [const infile]]
+Open file used by [cmd fcopy] to return a file, or CGI pipe.
+
+[list_end]
+
+[lst_item [var ::env]]
+
+During the dispatch of a request the element [const HTTP_CHANNEL]
+contains the channel handle of the connection for that request.
+
+[nl]
+
+[emph Danger:] This is true only until the URL implementation enters
+the event loop on its own. After that this element can be overwritten
+by another request served in parallel. In other words this information
+is not reliable.
+
+A package using this variable is [package httpd::cookie], especially
+the command [cmd Cookie_Get].
+
+[nl]
+
+It would have been better to provide a cookie retrieval command
+in this API here.
+
+
+[call [cmd Httpd_Port] [opt [arg sock]]]
+
+If no socket handle [arg sock] is provided the regular (non-secure)
+listening port is returned. Otherwise the port for the connection
+running over the specified socket is returned.
+
+
+[call [cmd Httpd_SecurePort]]
+
+Returns the port number of the secure listening port, if a secure
+server was activated. An empty string will be returned if no secure
+server is running.
+
+
+[call [cmd Httpd_Peername] [arg sock]]
+
+Returns the DNS name of the client connected to the server over
+the socket [arg sock].
+
+
+[call [cmd Httpd_Protocol] [arg sock]]
+
+Returns the protocol for the connection.
+Either [const http] or [const https].
+Used by [cmd Httpd_SelfUrl].
+
+
+[call [cmd Httpd_Name] [arg sock]]
+
+Return the server name for the connection [arg sock].
+Used by [cmd Httpd_SelfUrl].
+
+
+[call [cmd Httpd_SelfUrl] [arg url] [opt [arg sock]]]
+
+This command takes a server-relative [arg url] and returns the
+equivalent absolute url (containing server name, port, etc). The
+connection [arg sock] is required to be able to distinguish between
+regular and secure ports.
+
+
+[call [cmd Httpd_CompletionCallback] [arg {sock cmd}]]
+
+Register a procedure [arg cmd] to be called when an HTTP request is
+completed on the socket [arg sock], either normally or forcibly
+closed.  This gives a URL implementation a guaranteed callback to
+clean up or log requests.
+
+[nl]
+
+The callback will be invoked with two additional arguments, [arg sock]
+and a string, in this order. The string can be empty. If the string is
+not empty it will contain an error message.
+
+[nl]
+
+Note that completed here does [emph not] mean completion of getting
+all input for the request, but rather that the response to the
+request was completed and sent to the client as well.
+
+
+[call [cmd Httpd_SockClose] [arg {sock closeit}] [opt [arg message]]]
+
+"Closes" the connection [arg sock]. [emph Note] that the socket
+channel the connection runs over might actually remain open for a
+keep-alive connection.  Calling this means a HTTP transaction is fully
+complete. The optional [arg message] defaults to [const Close]. If the
+boolean flag [arg closeit] is set the socket for the connection is
+closed no matter what type the connection.
+
+[nl] 
+
+This cleans up all state associated with the connection, including
+after events for timeouts, the data array, and fileevents.
+
+
+[call [cmd Httpd_RequestComplete] [arg sock]]
+
+Detect if a request has been sent and completed.  The holder of a
+socket might need to know if the URL request was completed with one of
+the return-data commands, or is still lingering open. The result is a
+boolean value. [const true] signals that the last request was fully
+completed.
+
+[call [cmd Httpd_Suspend] [arg sock] [opt [arg timeout]]]
+
+This command, and its counterpart [cmd Httpd_Resume] can be used by
+the backend handling an url to temporarily disable and re-enable the
+reception of data from the connection [arg sock]. For example if there
+are long-lasting server-side operations to handle the request which
+block and then enter the event loop on their own.
+
+[nl]
+
+If a [arg timeout] is set for the suspension the pending request will
+be forcibly aborted with an error reply when the time runs out.
+
+[nl]
+
+An example user of this mechanism are the all commands reading posted
+data (see below). They suspend normal operation, take over the socket
+to read the posted data and when reactivate the normal processing.
+
+
+[call [cmd Httpd_Resume] [arg sock] [opt [arg timeout]]]
+
+See [cmd Httpd_Suspend] above.
+
+
+[call [cmd Httpd_Pair] [arg {sock fd}]]
+
+Connects the connection coming in over [arg sock] with the channel
+[arg fd]. Any data arriving on [arg sock] is copied over to [arg fd]
+and vice versa. If either channel is closed the other will be closed
+too.
+
+[nl]
+
+This is the basic mechanism to redirect the internal processing of a
+request to an external application, i.e. for CGI processing, or to a
+a subordinate web server.
+
+
+[call [cmd Httpd_DumpHeaders] [arg sock]]
+
+This command returns a dictionary containing the received HTTP
+protocol headers for the connection [arg sock]. The keys are header
+names without the trailing colon and mapped to lower case (e.g.,
+content-type).  The system adds two pseudo-headers: One that contains
+the original request URL; its name is "url". Another that contains the
+request protocol; its name is "method". There are no duplications in
+the header keys.  If any headers were repeated, their values were
+combined by separating them with commas.
+
+[list_end]
+
+
+[section {POST Management and Reading}]
+[para]
+
+The commands listed here technically belong to the section
+
+[sectref {Connection Management}], but are important enough to
+warrant their own section. They deal with data which was POST'ed as part
+of a request (form data, uploaded files).
+
+
+[list_begin definitions]
+[call [cmd Httpd_PostDataSize] [arg sock]]
+
+Returns the amount of post data available in bytes for the current
+request, i.e. sent over the connection associated with the socket
+[arg sock].
+
+
+[call [cmd Httpd_GetPostData] [arg {sock varName}] [opt [arg size]]]
+
+Synchronously reads posted data from the socket [arg sock] and appends
+it to the buffer variable [arg varName]. If [arg size] is not
+specified [var Httpd(bufsize)] bytes will be read.
+
+[nl]
+
+The command returns the total number of bytes accumulated so far.
+
+
+[call [cmd Httpd_ReadPostDataAsync] [arg {sock cmd}]]
+
+Activates the asynchronous reading of posted data from the socket
+
+[arg sock], as it arrives. Whenever more posted data arrives on the
+socket [arg sock] the specified command prefix [cmd cmd] will be
+called.
+
+This is a convenience command wrapped around
+
+[cmd Httpd_GetPostDataAsync] (see below) setting things up so that
+arriving data is added to the [var query] component of the status
+variable for the connection.
+
+
+[call [cmd Httpd_GetPostDataAsync] [arg {sock varName blockSize cmd}]]
+
+Activates the asynchronous reading of posted data from the socket
+
+[arg sock], as it arrives. Whenever more posted data arrives on the
+socket [arg sock] the data is appended to the specified variable
+
+([arg varName]) and specified command prefix [cmd cmd] will be called.
+The data is read in [arg blocksize] chunks.
+
+[nl]
+
+The specified command prefix [arg cmd] is called with three additional
+arguments, the [arg sock], the [arg varName], and an additional string,
+either empty or containing an error message, in this order.
+
+
+[call [cmd Httpd_CopyPostData] [arg {sock channel cmd}]]
+
+An alternative to [cmd Httpd_GetPostDataAsync]. Sets up the
+asynchronous copying of the data posted to the socket [arg sock] to
+the [arg channel]. The command prefix [arg cmd] is called when the
+copying completed, with two additional argument, [arg sock] and
+[arg channel], in this order.
+
+
+[call [cmd Httpd_GetPostChannel] [arg {sock sizeName}]]
+
+Returns the socket [arg sock] containing the posted data, as long as
+there is POST data to read for the connection over this socket. If no
+data is present (anymore) an error will be thrown. The number of bytes
+present is written into the variable [arg sizeName].
+
+[list_end]
+
+
+[section {Result Management and Generation}]
+[para]
+
+The commands listed here technically belong to the section
+
+[sectref {Connection Management}], but are important enough to
+warrant their own section. They deal with the generation of replies in
+general, predefined and generic. The latter ones can to be used by the
+packages implementing the handling of urls
+
+
+[list_begin definitions]
+
+[call [cmd Httpd_SetCookie] [arg {sock cookie}] [opt [arg modify]]]
+
+Add the encoded [arg cookie] to the reply for the current request on
+connection [arg sock]. This command has to be called before using
+either [cmd Httpd_ReturnFile] or [cmd Httpd_ReturnData].
+
+[nl]
+
+See [uri http://wp.netscape.com/newsref/std/cookie_spec.html]
+for the specification of what cookies are and how they work.
+
+[nl]
+
+See package [package httpd::cookie] for commands to help in
+the creation of cookies.
+
+
+[call [cmd Httpd_RemoveCookies] [arg {sock pattern}]]
+
+Remove previously set cookies from the reply for the current request
+on connection [arg sock]. Any cookies that match the glob
+
+[arg pattern] are removed.  This is useful for expiring a cookie that
+was previously set.
+
+
+[call [cmd Httpd_ReturnFile] [arg {sock type path}] [opt [arg offset]]]
+
+Sends the contents of the file with name [arg path] and mime type
+[arg type] as the reply to the current request on the connection
+[arg sock]. If an [arg offset] is specified that number of bytes are
+skipped from the start of the file.
+
+[nl]
+
+The request will be completed by the time this command returns.
+This implies that completion callback have been called and that
+[arg sock] has been closed.
+
+
+[call [cmd Httpd_ReturnData] [arg {sock type content}] [opt [arg code]] [opt [arg close]]]
+
+Like [cmd Httpd_ReturnFile], except that the content is specified
+directly as an argument to the command. This command also allows the
+specification of an HTTP return code. If none is specified it will
+default to [const 200] (Data follows).
+
+Beyond that the caller can order the command to keep the connection
+[arg sock] open after the data was sent ("[arg close] == 1"). By
+default the connection would be closed, like it is done by
+[cmd Httpd_ReturnFile].
+
+
+[call [cmd Httpd_ReturnCacheableData] [arg {sock type content date}] [opt [arg code]]]
+
+Like [cmd Httpd_ReturnData], except that a Last-Modified header is
+part of the reply so that proxy servers can cache it. The information
+for this header line is taken from [arg date]. In contrast to 
+[cmd Httpd_ReturnData] the connection is always closed. This is
+like for [cmd Httpd_ReturnFile].
+
+
+[call [cmd Httpd_Error] [arg {sock code}] [opt [arg detail]]]
+
+Send the error message [arg detail] with HTTP response [arg code], log
+it, and close the connection [arg sock]. This is the most basic error
+response the server can generate. Other packages may generate their
+own error responses. The package [package httpd::doc] is an example of
+this.
+
+
+[call [cmd Httpd_Redirect] [arg {newurl sock}]]
+
+This command generates a redirect to [arg newurl] reply (code 302) and
+then closes the connection [arg sock]. It assumes that [arg newurl]
+contains an absolute url.
+
+
+[call [cmd Httpd_RedirectSelf] [arg {newurl sock}]]
+
+A wrapper around [cmd Httpd_Redirect] for a [arg newurl] which is on
+this server. In other words, this commands expects a server relative
+url, and not an absolute one.
+
+
+[call [cmd Httpd_RedirectDir] [arg sock]]
+
+Generate a redirect reply for the connection [arg sock] because the
+trailing slash is not present on a URL that corresponds to a
+directory.
+
+
+[call [cmd Httpd_NotModified] [arg sock]]
+
+This command generates a "Not modified" reply (code 304) and
+then closes the connection [arg sock].
+
+
+[call [cmd Httpd_RequestAuth] [arg {sock type realm}]]
+
+Generates a "Authorization required" reply (code 401) and then closes
+the connection [arg sock]. The type is usually [const basic]. The data
+in [arg realm] is used by browsers to cache credentials.
+
+[list_end]
+
+[see_also httpd::url http::log httpd::logstd httpd::version]
+[see_also httpd::config httpd::threadmgr httpd::counter]
+[see_also httpd::cookie]
+[keywords {web server} http tclhttpd]
+[manpage_end]

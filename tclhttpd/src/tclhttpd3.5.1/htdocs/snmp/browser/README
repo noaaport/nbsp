@@ -1,0 +1,30 @@
+Fancy device config page (SAU 5/97 (c) Sun Microsystems
+Re-do for new session management stuff
+
+* To begin
+  Go to "start.html" to begin the browser. Alternately you may go to:
+    browse2.snmp?session=new
+  to start the "enhanced" page
+
+* Page layout browser.snmp
+
+browser.snmp:   Main frame
+  title.html	The main title page
+  walker.snmp	The mib browser frame set
+      walk.snmp	The mib walker - parent frame
+      walk.snmp	The mib walker - child frame
+  table.snmp	The mib table
+  control.snmp	The table format control panel
+
+* control modules
+
+  Walk:		Implements the mib walker functionality
+  MibTable	Displays the mib table
+  Discover	does network snmp discovery (browser2.snmp only)
+
+* Notes
+  browser2.snmp Enhanced version that includes host selection, 
+                network discovery, and clean session termination
+  title.snmp    The discovery, host selection and session termination
+                controls.  This replaces title.html above
+  end.snmp	The target for session termination		    

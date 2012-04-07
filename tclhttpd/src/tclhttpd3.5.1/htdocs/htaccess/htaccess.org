@@ -1,0 +1,8 @@
+# Default .htaccess, permitting only webmaster
+AuthName webmaster
+AuthType Basic
+
+<Limit GET POST>
+require group webmaster
+</Limit>
+

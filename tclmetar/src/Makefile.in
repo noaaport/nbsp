@@ -1,0 +1,22 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+SOURCES = init.tcl decode.tcl util.tcl
+INDEXFILE = pkgIndex.tcl
+TARGET = metar.tcl
+LIBFILES = ${TARGET} ${INDEXFILE}
+
+all: ${TARGET}
+
+${TARGET}: ${SOURCES}
+	cat ${SOURCES} > ${TARGET}
+
+install: all
+	${INSTALL} -m 0644 ${LIBFILES} ${MYLIBDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

@@ -1,0 +1,5 @@
+<!-- walker sub-frames>
+<frameset rows="50%,*">
+  <frame src=walk.snmp?session=[session]&group=browse&page=walker.snmp&part=up&target=walker&name2=mib&page2=table.snmp name=up>
+  <frame src=walk.snmp?session=[session]&group=browse&page=walker.snmp&part=down&target=walker&target2=data name=down>
+</frameset>

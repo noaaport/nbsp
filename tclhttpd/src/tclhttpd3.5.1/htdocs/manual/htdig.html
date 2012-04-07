@@ -1,0 +1,733 @@
+<Html>
+<Head>
+<Title>SXC - TR4 - htdig&tclhttp&solaris2.5.1</Title>
+<!-- Author: vloetp -->
+</Head>
+<Body bgcolor="#FFFFFF" background="/images/mlbk102.gif">
+
+<a href="mailto:petrus.vloet@siemens.at"><img BORDER=0 SRC="/images/s_cont.gif" alt="WWW"></a><address>Last
+Change: P. Vloet, 07.04.99 
+<br>
+
+</address>
+<pre>
+
+First I tried to install htdig on Solaris2.3. To be short, the combination of tclhttpd and htdig
+did not work. The combination htdig, tclhttpd and Solaris 2.5.1 works fine. The installation,... 
+was free of troubles. Congratulations to all who worked on the different products!
+
+The installation of htdig on Solaris2.5.1 is straightforward:
+
+Solaris: 2.5.1 
+         Kernel version: SunOS 5.5.1 Generic 103640-23 July 1998
+
+tclhttpd: 2.1.7
+<a HREF="http://www.tcl.tk/software/tclhttpd/">tclhttpd</a>
+
+Tcl/Tk: 8.0.4+  (Jan Nijtmans' version)
+
+htdig: 3.1.1
+internet: <a HREF="http://www.htdig.org">http://www.htdig.org</a>
+local info: <a HREF="htdoc/index.html">htdig<br>
+</a>
+Compiler: gcc g++: 2.8.1
+Make: GNU make: 3.77
+<a HREF="http://www.gnu.org">http://www.gnu.org</a>
+
+Extract the Software:
+
+% gunzip -c   htdig-3.1.1.tar.gz  | tar xf - 
+
+Change to the newly created directory htdig-3.1.1:
+
+% cd  htdig-3.1.1
+
+Execute configure without additional parameters:
+
+% ./configure
+
+creating cache ./config.cache
+checking for a BSD compatible install... ./install-sh -c
+checking whether build environment is sane... yes
+checking whether make sets ${MAKE}... yes
+checking for working aclocal... missing
+checking for working autoconf... found
+checking for working automake... missing
+checking for working autoheader... found
+checking for working makeinfo... found
+configuring ht://Dig version 3.1.1
+checking for gcc... gcc
+checking whether the C compiler (gcc  ) works... yes
+checking whether the C compiler (gcc  ) is a cross-compiler... no
+checking whether we are using GNU C... yes
+checking whether gcc accepts -g... yes
+checking for c++... c++
+checking whether the C++ compiler (c++  ) works... yes
+checking whether the C compiler (gcc  ) is a cross-compiler... no
+checking whether we are using GNU C... yes
+checking whether gcc accepts -g... yes
+checking for c++... c++
+checking whether the C++ compiler (c++  ) works... yes
+checking whether the C++ compiler (c++  ) is a cross-compiler... no
+checking whether we are using GNU C++... yes
+checking whether c++ accepts -g... yes
+checking for ranlib... ranlib
+checking for ar... /usr/ccs/bin/ar
+checking for sh... /bin/sh
+checking for sed... /bin/sed
+checking for sort... /bin/sort
+checking for find... /bin/find
+checking for gunzip... /usr/local/bin/gunzip
+checking for tar... tar
+checking for acroread... /opt/Acrobat3/bin/acroread
+checking for sendmail... /usr/lib/sendmail
+checking how to run the C preprocessor... gcc -E
+checking for AIX... no
+checking for socket in -lsocket... yes
+checking for t_accept in -lnsl... yes
+checking for deflate in -lz... yes
+checking for ANSI C header files...  yes
+checking whether time.h and sys/time.h may both be included... yes
+checking how to run the C++ preprocessor... c++ -E
+checking for fcntl.h... yes
+checking for limits.h... yes
+checking for malloc.h... yes
+checking for sys/file.h... yes
+checking for sys/ioctl.h... yes
+checking for sys/time.h... yes
+checking for unistd.h... yes
+checking for getopt.h... no
+checking for strings.h... yes
+checking for zlib.h... yes
+checking for fstream.h... yes
+checking for working const... yes
+checking whether struct tm is in sys/time.h or time.h... time.h
+checking for strdup... yes
+checking for strerror... yes
+checking for strstr... yes
+checking for localtime_r... yes
+checking for timegm... no
+checking whether we need gethostname() prototype?... yes
+checking how to call getpeername?... int
+checking for tsort... /usr/ccs/bin/tsort
+updating cache ./config.cache
+creating ./config.status 
+creating CONFIG
+creating Makefile
+creating Makefile.config
+creating htcommon/Makefile
+creating htlib/Makefile
+creating htdig/Makefile
+creating htmerge/Makefile
+creating htnotify/Makefile
+creating htfuzzy/Makefile
+creating htsearch/Makefile
+creating makedp
+creating include/htconfig.h
+configuring in db/dist
+running /bin/sh ./configure  --cache-file=../.././config.cache --srcdir=.
+loading cache ../.././config.cache
+checking if building in the top-level directory... checking for a BSD compatible install... ./install-sh -c
+checking host system type... sparc-sun-solaris2.5.1
+checking if --enable-debug option specified... no
+checking for cc... (cached) gcc
+checking for gcc... (cached) gcc
+checking for gcc... (cached) gcc
+checking whether the C compiler (gcc -O ) works... yes
+checking whether the C compiler (gcc -O ) is a cross-compiler... no
+checking whether we are using GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking if --enable-diagnostic option specified... no
+checking if --enable-cxx option specified... no
+checking if --enable-compat185 option specified... no
+checking if --enable-dump185 option specified... no
+checking for ar... /usr/ccs/bin/ar
+checking for chmod... /bin/chmod
+checking for cp... /bin/cp
+checking for mkdir... /bin/mkdir
+checking for ranlib... /usr/ccs/bin/ranlib
+checking for rm... /bin/rm
+checking for sh... /bin/sh
+checking for strip... /usr/ccs/bin/strip
+checking how to run the C preprocessor... (cached) gcc -E
+checking for ANSI C header files... (cached) yes
+checking for ssize_t... yes
+checking whether byte ordering is bigendian... yes
+checking for working const... (cached) yes
+checking for st_blksize in struct stat... yes
+checking whether stat file-mode macros are broken... no
+checking for mode_t... yes
+checking for off_t... yes
+checking for pid_t... yes
+checking for size_t... yes
+checking for dirent.h that defines DIR... yes
+checking for opendir in -ldir... no
+checking for sys/select.h... yes
+checking for sys/time.h... (cached) yes
+checking for getcwd... yes
+checking for getopt... yes
+checking for memcmp... yes
+checking for memcpy... yes
+checking for memmove... yes
+checking for raise... yes
+checking for snprintf... no
+checking for strerror... (cached) yes
+checking for strsep... no
+checking for vsnprintf... no
+checking for getuid... yes
+checking for pread... yes
+checking for pstat_getdynamic... no
+checking for sysconf... yes
+checking for shmget... yes
+checking for mmap... yes
+checking for munmap... yes
+checking for qsort... yes
+checking for select... yes
+checking for sigfillset... yes
+checking for int type sprintf return value... yes
+checking if --disable-bigfile option specified... no
+checking for spinlocks... solaris/func
+checking for u_char... yes
+checking for u_short... yes
+checking for u_int... yes
+checking for u_long... yes
+checking for u_int8_t... unsigned char
+checking for u_int16_t... unsigned short
+checking for int16_t... short
+checking for u_int32_t... unsigned int
+checking for int32_t... int
+checking if --enable-test option specified... no
+updating cache ../.././config.cache
+creating ./config.status
+creating Makefile
+creating include.tcl
+creating db.h
+creating db_int.h
+creating db_185.h
+creating config.h
+configuring in rx
+running /bin/sh ./configure  --cache-file=.././config.cache --srcdir=.
+loading cache .././config.cache
+creating ./config.status
+creating Makefile
+configuring in rx
+running /bin/sh ./configure  --cache-file=../.././config.cache --srcdir=.
+loading cache ../.././config.cache
+checking for gcc... (cached) gcc
+checking whether we are using GNU C... (cached) yes
+checking whether gcc accepts -g... yes
+checking how to run the C preprocessor... (cached) gcc -E
+checking for ranlib... (cached) ranlib
+checking for a BSD compatible install... ./../install-sh -c
+checking for working const... (cached) yes
+checking whether cross-compiling... no
+checking for ANSI C header files... (cached) yes
+updating cache ../.././config.cache
+creating ./config.status
+creating Makefile
+ 
+ 
+Now you must run 'make' followed by 'make install'
+ 
+
+% gmake
+
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/db/dist'
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_compare.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_conv.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_curadj.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_cursor.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_delete.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_open.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_page.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_put.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_rec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_recno.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_rsearch.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_search.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_split.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/bt_stat.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../btree/btree_auto.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_appinit.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_am.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_apprec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_auto.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_byteorder.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_conv.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_dispatch.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_dup.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_err.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_iface.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_join.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_log2.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_overflow.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_pr.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_rec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_region.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db/db_ret.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_salloc.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../common/db_shash.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../dbm/dbm.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_auto.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_conv.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_dup.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_func.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_page.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_rec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hash/hash_stat.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../hsearch/hsearch.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../lock/lock.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../lock/lock_conflict.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../lock/lock_deadlock.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../lock/lock_util.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../lock/lock_region.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_archive.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_auto.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_compare.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_findckp.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_get.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_put.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_rec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../log/log_register.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_bh.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_fget.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_fopen.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_fput.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_fset.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_open.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_pr.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_region.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mp/mp_sync.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../mutex/mutex.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_abs.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_alloc.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_config.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_dir.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_fid.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_fsync.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_map.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_oflags.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_open.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_rpath.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_rw.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_seek.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_sleep.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_spin.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_stat.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_tmpdir.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../os/os_unlink.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../txn/txn.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../txn/txn_auto.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../txn/txn_rec.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../xa/xa.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../xa/xa_db.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../xa/xa_map.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../clib/snprintf.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../clib/strsep.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../clib/vsnprintf.c
+/bin/rm -f libdb.a
+/usr/ccs/bin/ar cr libdb.a bt_compare.o bt_conv.o bt_curadj.o bt_cursor.o bt_delete.o bt_open.o bt_page.o bt_put.o bt_rec.o bt_recno.o bt_rsearch.o bt_search.o bt_split.o bt_stat.o btree_auto.o db.o db_appinit.o db_am.o db_apprec.o ...
+test ! -f /usr/ccs/bin/ranlib || /usr/ccs/bin/ranlib libdb.a
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_archive/db_archive.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../clib/err.c
+gcc -c -O -I. -I./../include -D_REENTRANT  ../clib/getlong.c
+gcc -o db_archive  db_archive.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_checkpoint/db_checkpoint.c
+gcc -o db_checkpoint  db_checkpoint.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_deadlock/db_deadlock.c
+gcc -o db_deadlock  db_deadlock.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_dump/db_dump.c
+gcc -o db_dump  db_dump.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_load/db_load.c
+gcc -o db_load  db_load.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_printlog/db_printlog.c
+gcc -o db_printlog  db_printlog.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_recover/db_recover.c
+gcc -o db_recover  db_recover.o err.o getlong.o libdb.a -lthread 
+gcc -c -O -I. -I./../include -D_REENTRANT  ../db_stat/db_stat.c
+gcc -o db_stat  db_stat.o err.o getlong.o libdb.a -lthread 
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/db/dist'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/rx'
+gmake[2]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/rx/rx'
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. hashrexp.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rx.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxanal.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxbasic.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxbitset.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxcset.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxdbug.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxgnucomp.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxhash.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxnfa.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxnode.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxposix.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxsimp.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxspencer.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxstr.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxsuper.c
+gcc -c -I. -I. -I./../libsystas -g -O -DSTDC_HEADERS=1  -I. rxunfa.c
+rm -f librx.a
+ar rc librx.a hashrexp.o rx.o rxanal.o rxbasic.o rxbitset.o rxcset.o rxdbug.o rxgnucomp.o rxhash.o rxnfa.o rxnode.o rxposix.o rxsimp.o rxspencer.o rxstr.o rxsuper.o rxunfa.o 
+ranlib librx.a
+gmake[2]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/rx/rx'
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/rx'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htlib'
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Configuration.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Connection.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Database.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Dictionary.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 DB2_db.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 IntObject.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 List.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Object.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 ParsedString.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Queue.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 QuotedStringList.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Stack.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 String.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 StringList.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 StringMatch.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 String_fmt.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 URL.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 URLTrans.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 cgi.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 good_strtok.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 io.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 strcasecmp.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 strptime.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 mytimegm.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 HtCodec.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 HtWordCodec.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 HtURLCodec.cc
+/usr/ccs/bin/ar rcv libht.a Configuration.o Connection.o Database.o Dictionary.o DB2_db.o IntObject.o List.o Object.o ParsedString.o Queue.o QuotedStringList.o Stack.o String.o StringList.o StringMatch.o String_fmt.o URL.o URLTrans.o cgi.o good_strtok.o io.o strcasecmp.o strptime.o mytimegm.o HtCodec.o HtWordCodec.o HtURLCodec.o
+a - Configuration.o
+a - Connection.o
+a - Database.o
+a - Dictionary.o
+a - DB2_db.o
+a - IntObject.o
+a - List.o
+a - Object.o
+a - ParsedString.o
+a - Queue.o
+a - QuotedStringList.o
+a - Stack.o
+a - String.o
+a - StringList.o
+a - StringMatch.o
+a - String_fmt.o
+a - URL.o
+a - URLTrans.o
+a - cgi.o
+a - good_strtok.o
+a - io.o
+a - strcasecmp.o
+a - strptime.o
+a - mytimegm.o
+a - HtCodec.o
+a - HtWordCodec.o
+a - HtURLCodec.o
+ar: writing libht.a
+ranlib libht.a
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htlib'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htcommon'
+c++ -c -DBIN_DIR=\"/opt/www/htdig/bin\" -DCOMMON_DIR=\"/opt/www/htdig/common\" -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDATABASE_DIR=\"/opt/www/htdig/db\" -DIMAGE_URL_PREFIX=\"/htdig\" -DPDF_PARSER=\"/opt/Acrobat3/bin/acroread\" -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 DocumentDB.cc
+c++ -c -DBIN_DIR=\"/opt/www/htdig/bin\" -DCOMMON_DIR=\"/opt/www/htdig/common\" -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDATABASE_DIR=\"/opt/www/htdig/db\" -DIMAGE_URL_PREFIX=\"/htdig\" -DPDF_PARSER=\"/opt/Acrobat3/bin/acroread\" -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 DocumentRef.cc
+c++ -c -DBIN_DIR=\"/opt/www/htdig/bin\" -DCOMMON_DIR=\"/opt/www/htdig/common\" -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDATABASE_DIR=\"/opt/www/htdig/db\" -DIMAGE_URL_PREFIX=\"/htdig\" -DPDF_PARSER=\"/opt/Acrobat3/bin/acroread\" -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 WordList.cc
+c++ -c -DBIN_DIR=\"/opt/www/htdig/bin\" -DCOMMON_DIR=\"/opt/www/htdig/common\" -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDATABASE_DIR=\"/opt/www/htdig/db\" -DIMAGE_URL_PREFIX=\"/htdig\" -DPDF_PARSER=\"/opt/Acrobat3/bin/acroread\" -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 defaults.cc
+/usr/ccs/bin/ar rcv libcommon.a DocumentDB.o DocumentRef.o WordList.o defaults.o
+a - DocumentDB.o
+a - DocumentRef.o
+a - WordList.o
+a - defaults.o
+ar: writing libcommon.a
+ranlib libcommon.a
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htcommon'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Endings.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 EndingsDB.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Exact.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Fuzzy.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Metaphone.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Soundex.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 SuffixEntry.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Synonym.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 htfuzzy.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Substring.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Prefix.cc
+c++ -o htfuzzy -L../htlib -L../htcommon -L../db/dist -L../rx/rx -L/usr/lib Endings.o EndingsDB.o Exact.o Fuzzy.o Metaphone.o Soundex.o SuffixEntry.o Synonym.o htfuzzy.o Substring.o Prefix.o ../htcommon/libcommon.a ../htlib/libht.a ../db/dist/libdb.a ../rx/rx/librx.a -lz -lnsl -lsocket 
+/usr/ccs/bin/ar rcv libfuzzy.a Endings.o Exact.o Fuzzy.o Metaphone.o Soundex.o Synonym.o EndingsDB.o SuffixEntry.o Substring.o Prefix.o
+a - Endings.o
+a - Exact.o
+a - Fuzzy.o
+a - Metaphone.o
+a - Soundex.o
+a - Synonym.o
+a - EndingsDB.o
+a - SuffixEntry.o
+a - Substring.o
+a - Prefix.o
+ar: writing libfuzzy.a
+ranlib libfuzzy.a
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Document.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 HTML.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Images.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Parsable.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Plaintext.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Postscript.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Retriever.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 SGMLEntities.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Server.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 URLRef.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 main.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 ExternalParser.cc
+c++ -c  -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 PDF.cc
+c++ -o htdig -L../htlib -L../htcommon -L../db/dist -L../rx/rx -L/usr/lib Document.o HTML.o Images.o Parsable.o Plaintext.o Postscript.o Retriever.o SGMLEntities.o Server.o URLRef.o main.o ExternalParser.o PDF.o ../htcommon/libcommon.a ../htlib/libht.a ../db/dist/libdb.a ../rx/rx/librx.a -lz -lnsl -lsocket 
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Display.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 DocMatch.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 ResultList.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 ResultMatch.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 Template.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 TemplateList.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 WeightWord.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 htsearch.cc
+c++ -c -DCONFIG_DIR=\"/opt/www/htdig/conf\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 parser.cc
+c++ -o htsearch -L../htlib -L../htcommon -L../db/dist -L../rx/rx -L/usr/lib Display.o DocMatch.o ResultList.o ResultMatch.o Template.o TemplateList.o WeightWord.o htsearch.o parser.o ../htfuzzy/libfuzzy.a ../htcommon/libcommon.a ../htlib/libht.a ../db/dist/libdb.a ../rx/rx/librx.a -lz -lnsl -lsocket 
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+c++ -c -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 db.cc
+c++ -c -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 docs.cc
+c++ -c -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 htmerge.cc
+c++ -c -DSORT_PROG=\"/bin/sort\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 words.cc
+c++ -o htmerge -L../htlib -L../htcommon -L../db/dist -L../rx/rx -L/usr/lib db.o docs.o htmerge.o words.o  ../htcommon/libcommon.a ../htlib/libht.a ../db/dist/libdb.a ../rx/rx/librx.a -lz -lnsl -lsocket 
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+c++ -c -DSENDMAIL=\"/usr/lib/sendmail\" -DDEFAULT_CONFIG_FILE=\"/opt/www/htdig/conf/htdig.conf\" -I../htlib -I../htcommon -I../db/dist -I../rx/rx -I../include -g -O2 htnotify.cc
+c++ -o htnotify -L../htlib -L../htcommon -L../db/dist -L../rx/rx -L/usr/lib htnotify.o  ../htcommon/libcommon.a ../htlib/libht.a ../db/dist/libdb.a ../rx/rx/librx.a -lz -lnsl -lsocket 
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+
+Edit the CONFIG file
+
+I made following changes in the config file.
+
+
+
+% diff CONFIG /tmp
+6a7
+&gt; httpd=                 /home/sxcsw/tcltk/tclhttpd2.1.7
+65c66,67
+&lt; CGIBIN_DIR=             /opt/www/cgi-bin
+---
+&gt; #CGIBIN_DIR=             /opt/www/cgi-bin
+&gt; CGIBIN_DIR=              ${httpd}/htdocs/cgi-bin
+72c74,75
+&lt; IMAGE_DIR=              /opt/www/htdocs/htdig
+---
+&gt; #IMAGE_DIR=              /opt/www/htdocs/htdig
+&gt; IMAGE_DIR=               ${httpd}/htdocs/images
+78c81,82
+&lt; IMAGE_URL_PREFIX=        /htdig
+---
+&gt; #IMAGE_URL_PREFIX=        /htdig
+&gt; IMAGE_URL_PREFIX=        /images
+85c89,90
+&lt; SEARCH_DIR=           /opt/www/htdocs/htdig
+---
+&gt; #SEARCH_DIR=          /opt/www/htdocs/htdig
+&gt; SEARCH_DIR=           ${httpd}/htdocs/forms
+
+
+In the case you do not change the default installation path of htdig,
+you have to change the permissions of the directory /opt.
+You have to be root to be able to change the access rights.
+
+% su 
+Password: ... 
+# /usr/bin/chmod 777 /opt
+# exit
+%
+
+
+Install the htdig software:
+% gmake install
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/db/dist'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/db/dist'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/rx'
+gmake[2]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/rx/rx'
+gmake[2]: Nothing to be done for `all'.
+gmake[2]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/rx/rx'
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/rx'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htlib'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htlib'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htcommon'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htcommon'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+gmake[1]: Nothing to be done for `all'.
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+Installing ht://Dig
+ 
+Creating directories (if needed)...
+mkdir /opt/www
+mkdir /opt/www/htdig
+mkdir /opt/www/htdig/bin
+mkdir /opt/www/htdig/conf
+mkdir /opt/www/htdig/common
+mkdir /opt/www/htdig/db
+mkdir /opt/www/htdocs
+mkdir /opt/www/htdocs/htdig
+mkdir /opt/www/cgi-bin
+ 
+Installing individual programs...
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+transform=s,x,x,
+.././install-sh -c htfuzzy /opt/www/htdig/bin/`echo htfuzzy | sed ''`
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htfuzzy'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+transform=s,x,x,
+.././install-sh -c htdig /opt/www/htdig/bin/`echo htdig | sed ''`
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htdig'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+transform=s,x,x,
+.././install-sh -c htsearch /opt/www/cgi-bin/`echo htsearch | sed ''`
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htsearch'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+transform=s,x,x,
+.././install-sh -c htmerge /opt/www/htdig/bin/`echo htmerge | sed ''`
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htmerge'
+gmake[1]: Entering directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+transform=s,x,x,
+.././install-sh -c htnotify /opt/www/htdig/bin/`echo htnotify | sed ''`
+gmake[1]: Leaving directory `/home/sxcsw/htdig/htdig-3.1.1/htnotify'
+ 
+Installing default configuration files...
+/opt/www/htdig/conf/htdig.conf
+/opt/www/htdocs/htdig/search.html
+/opt/www/htdig/common/header.html
+/opt/www/htdig/common/footer.html
+/opt/www/htdig/common/wrapper.html
+/opt/www/htdig/common/nomatch.html
+/opt/www/htdig/common/syntax.html
+/opt/www/htdig/common/bad_words
+/opt/www/htdig/common/english.0
+/opt/www/htdig/common/english.aff
+/opt/www/htdig/common/synonyms
+Installing images...
+/opt/www/htdocs/htdig/button1.gif
+/opt/www/htdocs/htdig/button2.gif
+/opt/www/htdocs/htdig/button3.gif
+/opt/www/htdocs/htdig/button4.gif
+/opt/www/htdocs/htdig/button5.gif
+/opt/www/htdocs/htdig/button6.gif
+/opt/www/htdocs/htdig/button7.gif
+/opt/www/htdocs/htdig/button8.gif
+/opt/www/htdocs/htdig/button9.gif
+/opt/www/htdocs/htdig/buttonl.gif
+/opt/www/htdocs/htdig/buttonr.gif
+/opt/www/htdocs/htdig/button10.gif
+/opt/www/htdocs/htdig/htdig.gif
+/opt/www/htdocs/htdig/star.gif
+/opt/www/htdocs/htdig/star_blank.gif
+/opt/www/htdocs/htdig/button1.png
+/opt/www/htdocs/htdig/button2.png
+/opt/www/htdocs/htdig/button3.png
+/opt/www/htdocs/htdig/button4.png
+/opt/www/htdocs/htdig/button5.png
+/opt/www/htdocs/htdig/button6.png
+/opt/www/htdocs/htdig/button7.png
+/opt/www/htdocs/htdig/button8.png
+/opt/www/htdocs/htdig/button9.png
+/opt/www/htdocs/htdig/buttonl.png
+/opt/www/htdocs/htdig/buttonr.png
+/opt/www/htdocs/htdig/button10.png
+/opt/www/htdocs/htdig/htdig.png
+/opt/www/htdocs/htdig/star.png
+/opt/www/htdocs/htdig/star_blank.png
+Creating rundig script...
+Installation done.
+ 
+Before you can start searching, you will need to create a
+search database.  A sample script to do this has been
+installed as  /opt/www/htdig/bin/rundig
+%
+
+Change the permissions on /opt
+% su 
+Password: ...
+# /usr/bin/chmod 775 /opt
+# exit
+%
+
+Change to the the configuration directory
+
+% cd /opt/www/htdig/conf
+
+Edit the configurationfile htdig.conf
+As example you can index  www.htdig.org (internet access needed)
+In each case change the maintainer:
+
+
+&lt; maintainer:           unconfigured@htdig.searchengine.maintainer
+---
+&gt; #maintainer:          unconfigured@htdig.searchengine.maintainer
+&gt; maintainer:           petrus.vloet@siemens.at
+
+Change to the the bin directory and index a WEB Server. This can take a while!
+% cd /opt/www/htdig/bin
+% ./rundig
+
+
+
+A HTML Page called search.html has been installed in the tclhttpd-directory htdocs/forms
+
+Fill out the form and wait for the results:
+
+e.g.:
+
+a search for "welch" returns following matches:
+
+Documents 1 - 2 of 2 matches. More 's indicate a better match. 
+
+
+Templates and State 
+     ... state information is available. This page is used as an example. Hit this page with form data: Orange
+     Blue Green Violet Red page arrayauthorBrent Welch body1 dynamic1
+     filename/home/sxcsw/tcltk/tclhttpd2.1.7/htdocs/templates/form.tml head1 locationhome root../
+     template/home/sxcsw/tcltk/tclhttpd2.1.7 ...
+     http://xxx:8015/templates/form.tml , 2804 bytes 
+
+Tcl Web Server Registration 
+     ... register your use of the Tcl Web Server. Your registration is very important. If you are unable to post
+     the registration form, an informal note to welch@acm.org would be appreciated. User Registration * Name
+     * Email Do not contact me about new releases * Title * Company * How do you plan to use the ...
+     http://xxx:8015/register.html 08/11/98, 1558 bytes 
+
+
+Now it is time to study how each tool works and can be configured!
+
+</pre>
+
+</Body>
+</Html>
+

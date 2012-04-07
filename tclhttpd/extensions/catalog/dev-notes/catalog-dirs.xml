@@ -1,0 +1,51 @@
+<catalog version="1.0.1">
+
+<service name="all" serviceType="Compound" base="">
+  <service name="odap" serviceType="OPENDAP" base="/thredds/dodsC/"/>
+  <service name="http" serviceType="HTTPServer" base="/thredds/fileServer/"/>
+</service>
+
+<dataset name="all" ID="da">
+
+  <metadata inherited="true">
+    <serviceName>all</serviceName>
+  </metadata>
+
+<catalogRef
+    xlink:href="wavobs/catalog.xml"
+    xlink:title="wavobs"
+    ID="da/wavobs"
+    name=""
+/>
+
+<catalogRef xlink:href="warnings/catalog.xml" xlink:title="warnings" ID="da/warnings" name=""/>
+<catalogRef xlink:href="upperair/catalog.xml" xlink:title="upperair" ID="da/upperair" name=""/>
+<catalogRef xlink:href="taf/catalog.xml" xlink:title="taf" ID="da/taf" name=""/>
+<catalogRef xlink:href="syn/catalog.xml" xlink:title="syn" ID="da/syn" name=""/>
+<catalogRef xlink:href="surface/catalog.xml" xlink:title="surface" ID="da/surface" name=""/>
+<catalogRef xlink:href="storm/catalog.xml" xlink:title="storm" ID="da/storm" name=""/>
+<catalogRef xlink:href="soundings/catalog.xml" xlink:title="soundings" ID="da/soundings" name=""/>
+<catalogRef xlink:href="ship6hr/catalog.xml" xlink:title="ship6hr" ID="da/ship6hr" name=""/>
+<catalogRef xlink:href="ship/catalog.xml" xlink:title="ship" ID="da/ship" name=""/>
+<catalogRef xlink:href="scd/catalog.xml" xlink:title="scd" ID="da/scd" name=""/>
+<catalogRef xlink:href="sat/catalog.xml" xlink:title="sat" ID="da/sat" name=""/>
+<catalogRef xlink:href="rdf/catalog.xml" xlink:title="rdf" ID="da/rdf" name=""/>
+<catalogRef xlink:href="profiler/catalog.xml" xlink:title="profiler" ID="da/profiler" name=""/>
+<catalogRef xlink:href="pirep/catalog.xml" xlink:title="pirep" ID="da/pirep" name=""/>
+<catalogRef xlink:href="nwx/catalog.xml" xlink:title="nwx" ID="da/nwx" name=""/>
+<catalogRef xlink:href="nexrad/catalog.xml" xlink:title="nexrad" ID="da/nexrad" name=""/>
+<catalogRef xlink:href="ncon/catalog.xml" xlink:title="ncon" ID="da/ncon" name=""/>
+<catalogRef xlink:href="mos/catalog.xml" xlink:title="mos" ID="da/mos" name=""/>
+<catalogRef xlink:href="isig/catalog.xml" xlink:title="isig" ID="da/isig" name=""/>
+<catalogRef xlink:href="idft/catalog.xml" xlink:title="idft" ID="da/idft" name=""/>
+<catalogRef xlink:href="hurricane/catalog.xml" xlink:title="hurricane" ID="da/hurricane" name=""/>
+<catalogRef xlink:href="grib/catalog.xml" xlink:title="grib" ID="da/grib" name=""/>
+<catalogRef xlink:href="drops/catalog.xml" xlink:title="drops" ID="da/drops" name=""/>
+<catalogRef xlink:href="csig/catalog.xml" xlink:title="csig" ID="da/csig" name=""/>
+<catalogRef xlink:href="aloft/catalog.xml" xlink:title="aloft" ID="da/aloft" name=""/>
+<catalogRef xlink:href="airm/catalog.xml" xlink:title="airm" ID="da/airm" name=""/>
+<catalogRef xlink:href="acft/catalog.xml" xlink:title="acft" ID="da/acft" name=""/>
+<catalogRef xlink:href="acars/catalog.xml" xlink:title="acars" ID="da/acars" name=""/>
+
+</dataset>
+</catalog>

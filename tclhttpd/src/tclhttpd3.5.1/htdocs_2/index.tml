@@ -1,0 +1,13 @@
+[html::description "TclHttpd, the Tcl Web Server, is an extensible
+platform for web application development."]
+[html::keywords Tcl TclHttpd Tcl/Tk "Tcl Web Server" "Web Server"]
+[html::author "Brent Welch"]
+[mypage::header "Main page of domain added with Doc_Root"]
+[Doc_Dynamic]
+[clock format [clock seconds] -format "%B %d, %Y %H:%M:%S"]
+
+This page was added with a Doc_AddRoot command.
+<p>
+[AddrootProc]
+
+[mypage::footer]

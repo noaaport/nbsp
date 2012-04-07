@@ -1,0 +1,22 @@
+#!/bin/sh
+
+requires="tcllib"
+
+# so that FreeBSD runs it only once 
+name=$1
+key=$2
+[ "$key" = "DEINSTALL" ] && exit 0
+
+exit_status=0
+for p in $requires
+do
+    result=`pkg_info -I ${p}* 2> /dev/null`
+    status=$?
+    if [ $status -ne 0 ]
+    then
+	echo "$p not found"
+	exit_status=1
+    fi
+done
+
+exit $exit_status

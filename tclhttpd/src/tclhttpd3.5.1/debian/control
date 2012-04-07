@@ -1,0 +1,23 @@
+Source: tclhttpd
+Section: web
+Priority: extra
+Maintainer: Colin McCormack <colin@chinix.com>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev, adduser
+Standards-Version: 3.6.0
+
+Package: tclhttpd
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, tclsh
+Recommends: tcllib, tclthread
+Suggests: xinetd, rinetd, redir
+Provides: httpd
+Description: A web server implemented in pure Tcl.
+ TclHttpd works out of the box as a Web server, but is really designed to be
+ a Tcl application server.
+ It supports HTML+Tcl templates, and is extensible in a variety of ways.
+ .
+ For added security, this daemon does not run as root, and therefore listens only on port 8015.
+ It is suggested xinetd, rinetd, redir or ipchains be used to redirect port 80 to port 8015 if this
+ is desired.
+ .
+ Homepage: http://tclhttpd.sourceforge.net/

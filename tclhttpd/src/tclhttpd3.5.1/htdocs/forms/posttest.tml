@@ -1,0 +1,27 @@
+[mypage::header "POST Test"]
+
+The three forms on this page all pass data to the server
+in two ways: via the URL and via POST data.
+Different web servers handle this case differently.
+The first form is serviced by this server.  You should see
+values for "name1" (passed in the URL) and "name2"
+(passed in the POST data).
+<form action=/debug/echo?name1=value1 method=post>
+<input type=hidden name=name2 value=value2>
+<input type=submit name=submit value="Hit Tcl Server">
+</form>
+You'll have to edit this page so the following
+form is serviced by an Apache server.
+<form action=http://www.apache.org/cgi-bin/test.cgi?name1=value1 method=post>
+<input type=hidden name=name2 value=value2>
+<input type=submit name=submit value="Hit Apache Server">
+</form>
+You'll have to edit this page so the following
+form is serviced by a Netscape server.
+<form action=http://www.netscape.com/cgi-bin/test.cgi?name1=value1 method=post>
+<input type=hidden name=name2 value=value2>
+<input type=submit name=submit value="Hit Netscape Server">
+</form>
+
+[mypage::footer]
+

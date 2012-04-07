@@ -1,0 +1,23 @@
+#!%TCLSH%
+#
+# $Id$
+#
+set Config(vhost) 0;
+
+# Run the init script
+source "/usr/local/libexec/nbsp/tclhttpd/httpd.init";
+
+#
+# main loop
+#
+set done 0
+while {$done == 0} {
+    fileevent stdin readable {set done 1}
+    vwait done
+    if {[gets stdin line] >= 0} {
+        set done 0
+    }
+}
+
+Httpd_ServerShutdown
+#Httpd_SecureServerShutdown

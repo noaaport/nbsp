@@ -1,0 +1,13 @@
+The "AuthNullCallback" proc implements a sort of auto-login feature.
+If you login with the same username and password twice, it remembers
+that (until the server is restarted).
+<p>
+[if {[info exist env(REMOTE_USER)]} {
+    set _ "You logged in as $env(REMOTE_USER)"
+} elseif {[info exist env(HTTP_AUTHORIZATION)]} {
+    set _ "HTTP_AUTHORIZATION $env(HTTP_AUTHORIZATION)"
+} else {
+    set _ Hello World
+}]
+<p>
+[clock format [clock seconds]]

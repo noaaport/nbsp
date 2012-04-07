@@ -1,0 +1,35 @@
+%description
+Tcl library to decode Upperair reports
+
+%prep
+
+%setup
+./configure.sh
+
+%build
+cd build/rpm
+make 
+
+%install
+cd build/rpm
+make install
+
+%post
+@POSTINSTALL@
+
+%postun
+
+%clean
+cd build/rpm
+make clean
+
+%files
+%defattr(-,root,root)
+/usr/lib/tclupperair/fm35.tcl
+/usr/lib/tclupperair/pkgIndex.tcl
+/usr/share/doc/tclupperair/LICENSE
+/usr/share/doc/tclupperair/api.README
+/usr/share/doc/tclupperair/examples/examples.README
+/usr/share/doc/tclupperair/examples/examples.tgz
+
+%changelog

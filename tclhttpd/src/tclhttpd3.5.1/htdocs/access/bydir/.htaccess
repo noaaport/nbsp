@@ -1,0 +1,8 @@
+AuthUserFile /usr/local/htaccess/passwd
+AuthGroupFile /usr/local/htaccess/group
+AuthName TCL97
+AuthType Basic
+ 
+<Limit GET POST>
+require user tcl97
+</Limit>              

@@ -1,0 +1,309 @@
+#
+# $Id$
+#
+
+#
+# Configuration
+#
+
+set Config(prefix) /usr/local
+set Config(home) /var/noaaport/www
+set Config(confdir) [file join $Config(prefix) etc nbsp]
+set Config(localconfdirs) [list [file join $Config(confdir) defaults] \
+				[file join $Config(confdir) site]]
+set Config(config) [file join $Config(confdir) httpd.conf]
+set Config(init) [file join $Config(prefix) libexec/nbsp/tclhttpd/httpd.init]
+set Config(main) [file join $Config(prefix) \
+	libexec/nbsp/tclhttpd/httpdthread.tcl]
+set Config(lib) [file join $Config(prefix) libexec/nbsp/tclhttpd/dist]
+set Config(library) [file join $Config(prefix) libexec/nbsp/tclhttpd/nbsp]
+
+#
+# The rest can be redefined in the configuration file
+#
+
+# local additions
+#
+set Config(syslog) 1
+set Config(syslogident) tclhttpd
+set Config(debugurl) 1
+#
+# Definitions for the site library functions
+#
+set Config(nbspwwwdir) $Config(home)
+set Config(nbsplibdir) $Config(library)
+set Config(nbsphtdocsdir) [file join $Config(nbspwwwdir) htdocs]
+set Config(nbsphtincludedir) [file join $Config(nbsphtdocsdir) include]
+set Config(nbspextlibdirs) [list \
+    [file join $Config(prefix) libexec/nbsp/tclhttpd/extensions] \
+    [file join $Config(prefix) libexec/nbsp/tclhttpd/site] \
+]
+#
+# These settings are initialized from those in defaults.h
+#
+set _nbspdinit "/usr/local/libexec/nbsp/nbspd.init"
+if {[file exists ${_nbspdinit}] == 0} {
+    puts "${_nbspdinit} not found";
+    exit 1;
+}
+source ${_nbspdinit}
+unset _nbspdinit
+set Config(nbspstatusfile)	$nbspd(statusfile)
+set Config(nbspmissinglogfile)	$nbspd(missinglogfile)
+set Config(nbsprtxlogfile) 	$nbspd(rtxlogfile)
+set Config(nbspqstatelogfile)	$nbspd(qstatelogfile)
+set Config(nbspqdbstatslogfile)	$nbspd(qdbstatslogfile)
+set Config(nbspmspoolbdb_dbstats_logfile) $nbspd(mspoolbdb_dbstats_logfile)
+set Config(nbspserveractivefile) $nbspd(serveractivefile)
+set Config(nbspslavestatsfile)  $nbspd(slavestatsfile)
+set Config(nbspstatsdir)	[file dirname $nbspd(statusfile)]
+set Config(nbspspooldir)	$nbspd(spooldir)
+#
+set Config(nbspstats_logperiod_secs) $nbspd(nbspstats_logperiod_secs)
+set Config(qstate_logperiod_secs) $nbspd(qstate_logperiod_secs)
+#
+set Config(nbspmetarplothtdir) metarplot;
+set Config(nbspstatplothtdir) statplot;
+#
+# The next settings must be in sync with those in the inv, metar, rss filters
+# (and they are not configurable in httpd.conf).
+#
+#X set Config(nbspmetarcldir) /var/noaaport/data/metar/cl
+#X set Config(nbspmetarstdir) /var/noaaport/data/metar/st
+#X set Config(nbspmetaricaodef) /usr/local/etc/nbsp/metarfilter-icao.def
+#X set Config(nbspinvdir) /var/noaaport/nbsp/inv
+#X set Config(nbspinvfext) ".log"
+#X set Config(nbsprssdir) /var/noaaport/nbsp/rss/xml
+#X set Config(nbsprsswfodef) /usr/local/etc/nbsp/rssfilter-wfo.def
+#X set Config(nbsprssstconf) /usr/local/etc/nbsp/rssfilter-st.conf
+#X set Config(nbsprssfext) ".xml"
+
+interp create slave
+slave eval {
+    set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
+    if {[file exists ${_defaultsfile}] == 0} {
+	puts "${_defaultsfile} not found.";
+    	exit 1;
+    }
+    source ${_defaultsfile}
+
+    set _metarinit [file join $common(libdir) metarfilter.init]
+    set _inventoryinit [file join $common(libdir) inventory.init]
+    set _rssinit [file join $common(libdir) rssfilter.init]
+
+    if {[file exists ${_metarinit}] == 0} {
+    	puts "${_metarinit} not found"
+    	exit 1
+    }
+    if {[file exists ${_inventoryinit}] == 0} {
+    	puts "${_inventoryinit} not found"
+        exit 1
+    }
+    if {[file exists ${_rssinit}] == 0} {
+    	puts "${_rssinit} not found"
+    	exit 1
+    }
+
+    source ${_metarinit}
+    source ${_inventoryinit}
+    source ${_rssinit}
+}
+set Config(nbspmetarcldir) [slave eval {
+    return [file join $metarfilter(datadir) $metarfilter(collectivedatadir)]
+}]
+set Config(nbspmetarstdir) [slave eval {
+    return [file join $metarfilter(datadir) $metarfilter(stationdatadir)]
+}]
+set Config(nbspmetaricaodef) [slave eval {return $metarfilter(icaodef)}]
+set Config(nbspinvdir) [slave eval {return $inventory(dir)}]
+set Config(nbspinvfext) [slave eval {return $inventory(fext)}]
+#
+set Config(nbsprssdir) [slave eval {
+    return [file join $rssfilter(datadir) $rssfilter(xmlsubdir)]
+}]
+set Config(nbsprsswfodef) [slave eval {return $rssfilter(wfodef)}]
+set Config(nbsprssstconf) [slave eval {return $rssfilter(stationconf)}]
+set Config(nbsprssfext) [slave eval {return $rssfilter(xmlfext)}]
+#
+interp delete slave;
+
+# Location of the external programs used by the server.
+set env(PATH) "/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin";
+
+#
+# Common configuration of tclhttpd
+#
+set v 3.5.1
+set Config(threads)  0
+set Config(debug) 0
+set Config(compat) 3.3
+
+# docRoot - the name of the file system directory containing
+# the root of your document tree.
+#
+set Config(docRoot) [file join $Config(home) htdocs/pub]
+set Config(indexFile) "index.{html,tml}"
+
+# host - the name of the server (i.e., www.yourcompany.com)
+#
+set Config(host)		[info hostname]
+
+# port - the listening port for the server for HTTP requests.
+# The standard web port is 80, but ports below 1023 must be opened by root.
+# Since nbspd by default runs as the "noaaport" user the port must
+# be 1024 or greater.
+#
+set Config(port)		8015
+
+# ipaddr - the IP address of the server's end of the HTTP socket.
+# Only specify this if you have a machine with several IP addresses
+# and you want the server to only listen on one IP address.
+# If this is the empty string, then it will listen on all
+# network interfaces for connections.
+#
+set Config(ipaddr)	{}
+
+# webmaster - an email address for error mailings
+#
+set Config(webmaster)	webmaster@[info hostname]
+
+# secsPerMinute - The seconds-per-minute value used when creating the
+# time-based histograms on the /status page.  This should
+# be between 1 and 60, inclusive.
+#
+set Config(secsPerMinute)	60
+set Config(secs) $Config(secsPerMinute)
+
+# LogFile - the file used for standard logging informaation.
+# This is actually the prefix of the name.  The port and current date stamp
+# is append to this file, and it is rolled every night at midnight
+#
+set Config(LogFile)	"/var/log/nbsp/www/tclhttpd_"
+
+# LogFlushMinutes - how frequently the log file is flushed to disk.
+# Use 0 to have each URL request cause a log flush.
+#
+set Config(LogFlushMinutes) 0
+
+# LogDebug - set up a debug logfile - default: no
+#
+set Config(LogDebug) 0
+
+# Authentication Configuration
+
+# The auth config creates a default authentication array.
+# To create passwords for user $u and group $g
+# Config Auth {user,$u $password group,$g group}
+# Note: these passwords are plaintext, so it's not very secure.
+#
+# If Auth is undefined, a random password
+# is created and logged per invocation of the server
+# If Auth is defined (even if empty, it is considered authoritative and
+# no default passwords are generated.
+#set Config(Auth) {}
+set Config(AuthDefaultFile) [file join $Config(home) auth/tclhttpd.auth]
+
+# Default password file - used if .htaccess doesn't specify AuthUserFile
+# this defaults to the authentication array authdefault()
+#set Config(AuthUserFile) {}
+
+# Default group file - used if .htaccess doesn't specify AuthGroupFile
+# this defaults to the authentication array authdefault()
+#set Config(AuthGroupFile) {}
+
+# Default mail servers - the smtp servers to use when sending mail
+set Config(MailServer) {}
+
+#
+# See http.conf for the Virtual host configuration syntax
+#
+
+#
+# Config file (optional)
+#
+if {[file exists $Config(config)]} {
+    source $Config(config)
+}
+
+#
+# virtual host overrides - If this file is being sourced by the
+# virtual initalization function (see override.tcl), then source
+# that virtual host configuration file
+#
+if {[info exists Config(vhost)] && ($Config(vhost) != 0)} {
+   source $Config(vhost,conffile);
+}
+
+#
+# Initialization
+#
+
+# Configure the auto_path so we can find the script library.
+#
+if {![info exists Config(lib)]} {
+    error "Cannot find TclHttpd library in auto_path:\n[join $auto_path \n]"
+}
+set auto_path [concat [list $Config(lib)] $auto_path]
+
+# Search around for the Standard Tcl Library
+#
+if {[catch {package require md5 1}]} {
+  error "Cannot find Standard Tcl Library in auto_path:\n[join $auto_path \n]"
+}
+
+if {[info exists Config(library)] && ($Config(library) ne "")} {
+    lappend auto_path $Config(library)
+}
+
+package require httpd 1.6
+package require httpd::version		;# For Version proc
+package require httpd::utils		;# For Stderr
+package require httpd::counter		;# For Count
+package require httpd::compat
+package require httpd::url
+
+# Start the server
+Httpd_Init
+
+# Open the listening sockets
+if {![info exists Config(vhost)] || ($Config(vhost) == 0)} {
+    Httpd_Server $Config(port) $Config(host) $Config(ipaddr)
+}
+
+# Initialize worker thread pool, if requested
+
+if {$Config(threads) > 0} {
+    package require Thread              ;# C extension
+    package require httpd::threadmgr            ;# Tcl layer on top
+    Stderr "Threads enabled"
+    Thread_Init $Config(threads)
+} else {
+    # Stub out Thread_Respond so threadmgr isn't required
+    proc Thread_Respond {args} {return 0}
+    proc Thread_Enabled {} {return 0}
+}
+
+##################################
+# Main application initialization
+##################################
+
+if {[catch {source $Config(main)} message]} then {
+    global errorInfo
+    set error "Error processing main startup script $Config(main)."
+    append error "\n$errorInfo"
+    error $error
+}
+
+# The main thread owns the log
+Log_SetFile		$Config(LogFile)$Config(port)_
+Log_FlushMinutes	$Config(LogFlushMinutes)
+Log_Flush
+
+# Configure the virtual hosts
+if {![info exists Config(vhost)] || ($Config(vhost) == 0)} {
+   if {[info exists Config(virtual)]} {
+       foreach {hostNames file} $Config(virtual) {
+           Httpd_VirtualHosts $hostNames $file $Config(init)
+       }
+    }
+}

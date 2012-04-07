@@ -1,0 +1,46 @@
+<h1>Session Demo with sequence: $page(url)</h2>
+<hr><h2>State</h2>
+[
+ # grab form data
+ upvar #0 Httpd$::Httpd(currentSocket) data
+ array set query [list session new]	;# default session id
+ array set query [Url_DecodeQueryOnly $data(query)]
+
+ # get the session
+ set session_error ""
+ set session [Session_Match [array get query] Demo session_error]
+ unset query
+ upvar #0 Session:$session state
+ Session_Sequence $session
+
+ # output session state
+ set html <p>$session_error</p>\n
+ append html "<p>Session ID: $session</p>\n"
+ append html [html::tableFromArray state "border=1" *]
+ return ${html}\n
+]
+
+<hr><h2>Examples</h2>
+<ul>
+<li>Example: a <a href="$page(url)?session=$session&sequence=$state(sequence)">Link</a> can be used to link to this session, but must contain a valid sequence.</li>
+<li>Example: this link will fail: <a href="$page(url)?session=$session">No Sequence</a></li>
+<li>Example: this link will fail: <a href="$page(url)?session=$session&sequence=1000">Wrong Sequence</a></li>
+
+<li><form action="$page(url)" action=get>
+<input type=hidden name=session value=$session>
+<input type=hidden name=sequence value=$state(sequence)>
+Example: a form using <input type=submit value="get"> can reference this session.
+</form></li>
+
+<li><form action="$page(url)" action=post>
+<input type=hidden name=session value="$session">
+<input type=hidden name=sequence value=$state(sequence)>
+Example: a form using <input type=submit value="post"> can reference this session.
+</form></li>
+</ul>
+
+<hr><p><a href=".">return to index</a></p>
+[
+ unset session
+ Session_Reap 500 Demo
+]

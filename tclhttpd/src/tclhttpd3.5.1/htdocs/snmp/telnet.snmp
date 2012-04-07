@@ -1,0 +1,3 @@
+<title>zack telnet page</title>
+[Telnet zack -start_page telnet_pass.snmp -session Telnet -page telnet.snmp]
+<hr>

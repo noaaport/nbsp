@@ -1,0 +1,61 @@
+[manpage_begin httpd::mtype n 1.1]
+[copyright {2003 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[titledesc {Mime types}]
+[moddesc   {Tcl Web Server}]
+[require httpd::mtype [opt 1.1]]
+[description]
+
+The package [package httpd::mtype] provides functionality which
+determines the MIME type of a file and related utilities.
+The MIME type (e.g., text/html or image/jpeg) is used by
+the Document domain to dispatch out to type-specific document
+handlers.  For example, if there is a procedure named [cmd Doc_image/jpeg]
+then the Document domain will use that procedure to handle
+requests for files of that type.
+
+[section {Public API}]
+[para]
+
+[list_begin definitions]
+
+[call [cmd Mtype] [arg path]]
+
+Determines the MIME type of the file specified by [arg path] and
+returns it as the result of the command.
+
+
+[call [cmd Mtype_ReadTypes] [arg file]]
+
+Set a number of hardwired mappings from file extensions to mime types
+first and then reads the specified types [arg file] to set up more.
+
+
+[call [cmd Mtype_Accept] [arg sock]]
+
+Extract the mime-types favored by the browser making the
+current request on the connection [arg sock] and returns
+them as the result of the command. The result is a list.
+
+
+[call [cmd Mtype_Match] [arg {accept type}]]
+
+Compares the mime [arg type] to the list of acceptable types and
+return a boolean flag. If true then the [arg type] is acceptable.
+
+
+[call [cmd Mtype_Add] [arg suffix] [arg type]]
+
+Adds a mapping from the file extension [arg suffix]
+to the mime [arg type] to the database maintained by this package
+
+
+
+[call [cmd Mtype_Reset]]
+
+Clears all type mappings stored in the internal database.
+
+[list_end]
+
+
+[keywords {web server} mime type files filesystem]
+[manpage_end]

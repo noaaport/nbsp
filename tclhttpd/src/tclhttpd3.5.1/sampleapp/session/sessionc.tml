@@ -1,0 +1,34 @@
+<h1>Session Cookies Demo: $page(url)</h2>
+
+<hr><h2>State</h2>
+<p>This is the state associated with the session</p>
+[
+ # grab form data - used to implement session_cmd
+ upvar #0 Httpd$::Httpd(currentSocket) data
+ array set query [list session new]	;# default session id
+ array set query [Url_DecodeQueryOnly $data(query)]
+
+ # get the session
+ set session_errror ""
+ set session [Session_Cookie [array get query session*] Demo session_error]
+ unset query
+ upvar #0 Session:$session state
+
+ # output session state
+ set html <p>$session_error</p>\n
+ append html "<p>Session ID: $session</p>\n"
+ append html [html::tableFromArray state "border=1" *]
+ return ${html}\n
+]
+
+<hr><h2>Examples</h2>
+<ul>
+<li>a <a href="$page(url)">Link</a> can be used to link to this page, and reference this session.  Note the state(count) element incrementing on each access.</li>
+
+<li>this <a href="$page(url)?session=new">Link</a> reloads this page, and generates a new session.</li>
+<li>this <a href="$page(url)?session_cmd=save">Link</a> will save the session.</li>
+<hr><p><a href=".">return to index</a></p>
+[
+ unset session
+ Session_Reap 500 Demo
+]
