@@ -1,0 +1,6 @@
+1) http://www.unidata.ucar.edu/support/help/MailArchives/ldm/msg00802.html
+
+actually the 24 byte CCB length is calculated from bits 2-16 of the CCB
+(the first 2 bits are a checksum identifier),
+
+2) FCM-S3-1991

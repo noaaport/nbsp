@@ -1,0 +1,155 @@
+BMX	KBMX	Birmingham, AL
+MXX	KBMX	East Alabama (Carrville)
+EOX	KBMX	Fort Rucker, AL
+MOB	KMOB	Mobile, AL
+HTX	KBMX	Northeastern Alabama (Hytop)
+AHG	PAFC	Anchorage, AK (Kenai)
+ABC	PACR	Bethel, AK
+APD	PAFG	Fairbanks, AK
+AKC	PACR	King Salmon, AK
+AIH	PAFC	Middleton Island, AK
+AEC	PAFG	Nome, AK
+ACG	PAJK	Sitka, AK (Biorka Island)
+FSX	KFGZ	Flagstaff, AZ
+IWA	KPSR	Phoenix, AZ
+EMX	KTWC	Tucson, AZ (Empire Mountain)
+YUX	KPSR	Yuma, AZ
+LZK	KLZK	Little Rock, AR
+SRX	KTSA	Western Arkansas
+BBX	KSTO	Beale Air Force Base, CA
+EYX	KLOX	Edwards Air Force Base, CA
+BHX	KEKA	Eureka, CA
+VTX	KLOX	Los Angeles, CA
+DAX	KSTO	Sacramento, CA
+NKX	KSGX	San Diego, CA
+MUX	KMTR	San Francisco Bay Area, CA
+HNX	KHNX	San Joaquin Valley, CA
+SOX	KSGX	Santa Ana Mountains, CA
+VBX	KLOX	Vandenberg Air Force Base, CA
+FTG	KBOU	Denver/Boulder, CO
+GJX	KGJT	Grand Junction, CO
+PUX	KPUB	Pueblo, CO
+DOX	KAKQ	Dover Air Force Base, DE
+JAX	KJAX	Jacksonville, FL
+BYX	KMFL	Key West, FL
+MLB	KMLB	Melbourne, FL
+AMX	KMFL	Miami, FL
+EVX	KTAE	Northwest Florida
+TLH	KTAE	Tallahassee, FL
+TBW	KTBW	Tampa Bay Area, FL
+FFC	KFCC	Atlanta, GA
+VAX	KFCC	Moody Air Force Base, GA
+JGX	KFCC	Robins Air Force Base, GA
+GUA	PGUA	Andersen Air Force Base, GU
+HKM	PHFO	Kohala, HI
+HMO	PHFO	Molokai, HI
+HKI	PHFO	South Kauai, HI
+HWA	PHFO	South Shore Hawaii, HI
+CBX	KBOI	Boise, ID
+SFX	KPIH	Pocatello/Idaho Falls, ID
+ILX	KILX	Central Illinois (Lincoln)
+LOT	KLOT	Chicago, IL
+VWX	KPAH	Evansville, IN
+IND	KIND	Indianapolis, IN
+IWX	KIWX	Northern Indiana
+DMX	KDMX	Des Moines, IA
+DVN	KDVN	Quad Cities, IA (Davenport)
+DDC	KDDC	Dodge City, KS
+GLD	KGLD	Goodland, KS
+TWX	KTOP	Topeka, KS
+ICT	KICT	Wichita, KS
+HPX	KPAH	Fort Campbell, KY
+JKL	KJKL	Jackson, KY
+LVX	KLMX	Louisville, KY
+PAH	KPAH	Paducah, KY
+POE	KLCH	Fort Polk, LA
+LCH	KLCH	Lake Charles, LA
+LIX	KLIX	New Orleans/Baton Rouge, LA
+SHV	KSHV	Shreveport, LA
+CBW	KGYX	Caribou, ME
+GYX	KGYX	Portland, ME (Gray) 
+BOX	KBOX	Boston, MA (Taunton)
+DTX	KDTX	Detroit, MI
+GRR	KGRR	Grand Rapids/Muskegon, MI
+MQT	KMQT	Marquette, MI
+APX	KAPX	North Central Lower Michigan
+DLH	KDLH	Duluth, MN
+MPX	KMPX	Minneapolis, MN
+GWX	KMEG	Columbus Air Force Base, MS
+DGX	KJAN	Brandon, MS
+EAX	KEAX	Kansas City/Pleasant Hill, MO
+SGF	KSGF	Springfield, MO
+LSX	KLSX	St. Louis, MO
+BLX	KBYZ	Billings, MT
+GGW	KGGW	Glasgow, MT
+TFX	KTFX	Great Falls, MT
+MSX	KMSO	Missoula, MT
+UEX	KGID	Hastings, NE
+LNX	KLBF	North Platte, NE
+OAX	KOAX	Omaha, NE
+LRX	KLNX	Elko, NV
+ESX	KVEF	Las Vegas, NV
+RGX	KREV	Reno, NV
+ABX	KABQ	Albuquerque, NM
+FDX	KABQ	Cannon Air Force Base, NM
+HDX	KEPZ	Holloman Air Force Base, NM
+ENX	KALY	Albany, NY
+BGM	KBGM	Binghamton, NY
+BUF	KBUF	Buffalo, NY
+TYX	KBTV	Montague, NY (Ft. Drum)
+OKX	KOKX	New York, NY (Brookhaven)
+MHX	KMHX	Morehead City, NC
+RAX	KRAH	Raleigh/Durham, NC
+LTX	KILM	Wilmington, NC
+BIS	KBIS	Bismarck, ND
+MVX	KFGW	Eastern North Dakota
+MBX	KBIS	Minot Air Force Base, ND
+ILN	KILN	Cincinnati/Dayton, OH
+CLE	KCLE	Cleveland, OH 
+FDR	KOUN	Frederick, OK
+TLX	KOUN	Oklahoma City, OK (Norman)
+INX	KTSA	Tulsa, OK
+VNX	KOUN	Vance Air Force Base, OK
+MAX	KMFR	Medford, OR
+PDT	KPDT	Pendleton, OR
+RTX	KPQR	Portland, OR
+CCX	KCTP	Central Pennsylvania
+DIX	KPHI	Philadelphia, PA
+PBZ	KPBZ	Pittsburgh, PA 
+JUA	TSJU	San Juan, PR
+CLX	KCHS	Charleston, SC
+CAE	KCAE	Columbia, SC
+GSP	KGSP	Greer, SC
+ABR	KABR	Aberdeen, SD
+UDX	KUNR	Rapid City, SD
+FSD	KFSD	Sioux Falls, SD
+MRX	KMRX	Knoxville/Tri Cities, TN
+NQA	KMEG	Memphis, TN
+OHX	KOHX	Nashville, TN 
+AMA	KAMA	Amarillo, TX
+EWX	KEWX	Austin/San Antonio, TX
+BRO	KBRO	Brownsville, TX
+GRK	KEWD	Central Texas (Granger)
+CRP	KCRP	Corpus Christi, TX
+FWS	KFWD	Dallas/Fort Worth, TX
+DYX	KFWD	Dyess Air Force Base, TX
+EPZ	KEPZ	El Paso, TX
+HGX	KHGX	Houston/Galveston, TX
+DFX	KEWX	Laughlin Air Force Base, TX
+LBB	KLUB	Lubbock, TX
+MAF	KMAF	Midland/Odessa, TX
+SJT	KSJT	San Angelo, TX 
+ICX	KSLC	Cedar City, UT
+MTX	KSLC	Salt Lake City, UT
+CXX	KBTV	Burlington, VT
+LWX	KLWX	Baltimore, MD/Washington, DC
+AKQ	KAKQ	Norfolk/Richmond, VA
+FCX	KFCX	Roanoke, VA (Blacksburg) 
+ATX	KSEW	Seattle/Tacoma, WA
+OTX	KOTX	Spokane, WA
+RLX	KRLX	Charleston, WV
+GRB	KGRB	Green Bay, WI
+ARX	KARX	La Crosse, WI
+MKX	KMKX	Milwaukee, WI
+CYS	KCYS	Cheyenne, WY
+RIW	KRIW	Riverton, WY

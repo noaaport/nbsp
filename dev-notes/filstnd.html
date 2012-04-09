@@ -1,0 +1,1587 @@
+Skip Navigation Links <#contents> weather.gov </> 
+
+NOAA logo-Select to go to the NOAA homepage <http://www.noaa.gov>
+National Oceanic Atmospheric Administration 	  	Select to go to the NWS
+homepage </>
+National Weather Service <http://weather.gov/datamgmt/>
+
+	Site Map <http://www.nws.noaa.gov/sitemap.html> 	News
+<http://www.srh.noaa.gov/srnews/> 	Organization
+<http://www.srh.noaa.gov/organization.htm> 	
+Search 
+
+	  	  	
+
+ 
+
+
+  Directory and File Naming Standards
+
+
+      for
+      FTP Servers *
+
+* This is a working document on an evolving concept. Further change is
+to be expected.
+
+------------------------------------------------------------------------
+
+*1. Introduction*
+
+Draft Directory and File naming Standards for FTP Servers were first
+adopted at a Restricted Session of the CBS Working Group on Data
+Management (WGDM) in February, 1995. These standards were intended for
+use by FTP servers participating in trial implementations of the CBS
+Distributed Databases Concept. Since the standards adopted referred to
+an emerging concept, evolution in the standards themselves was expected.
+Related software development was therefore suggested to be approached
+with caution. Since that time, evolution has occurred, but not in a
+coordinated manner.
+
+In a 1997 meeting of the COPC, it was requested that the OFCM WG/CIDE
+look into developing standards for directory and file naming standards
+for FTP servers used by centers within the US. The subsequent meeting of
+the WG/CIDE requested a small group consisting of representatives from
+FNMOC, NWSTG, and NCEP undertake such a development. The group reviewed
+the experiences of the CBS WGDM effort and found some of the concepts in
+the 1995 draft standards were deficient and should be discarded, while
+others were useful and should be retained. In the next section, some of
+the issues that must be addressed in the standards are discussed. A
+proposal for some basic features the standard should contain is
+presented in Section 3.
+
+*2.Some Issues for the Standards* /(background)/
+
+_Type of Information_: The first issue is what set of information the
+revised standards should contain in the directory and file names. There
+is some commonality in the types of information FTP servers now use, for
+most contain some of the following kinds of information (referred to as
+information elements in this paper) in their directory and file names
+(note that this list is not exhaustive):
+
+_Order of Information_: Once the type of information to be contained in
+the revised standards is established, the order that information should
+appear needs to be decided. For example, should reference date precede
+generating process or should generating process precede reference date?
+Should level of data precede grid or should reverse be true? Different
+centers maintain their servers for different purposes, and the order
+this information appears has a significant effect on the ease or
+difficulty of retrieving the information contained. A brief review of
+some FTP servers suggests that while there is considerable commonality
+with respect to the information elements they use, there is no
+commonality regarding how these information elements are assembled into
+directory and file names. /The group felt that consensus would be
+difficult to reach on this point, and the standards must _therefore
+permit the center maintaining the server to decide the order of the
+information elements._/
+
+_Length of Directory and File Names_: If we adopt the position of using
+convenient UNIX constructs to create user-friendly directory and file
+names, the issue of how many characters are allowed for the directory
+and file names must be addressed. Long file names can be made more user
+friendly than short ones. However, different server implementations have
+different restrictions. A quite small sample revealed permissible file
+name lengths from 14 characters to over a thousand. Lengths of 14
+characters leave precious little opportunity to create user-friendly
+file names.
+
+_Composition of Information Elements_: A decision to rely more heavily
+on alphabetic rather than numeric information elements carries with it
+the challenge of reaching agreement on what the alphabetic entrees
+should be. This will be particularly challenging when complete
+common-usage names must be abbreviated in the interests of compactness.
+
+_Number of Directory Levels_: Different servers may also permit
+different numbers of directory levels. Once the type of information to
+be contained in the revised standards is established, the number of
+directory levels and the number of characters allowed in the directory
+and file names could be considered. /However, as no consensus is likely
+to exist on this point either, _the revised standards must also allow
+the center maintaining the server to decide the number of directory
+levels and the lengths of the directory and file names_/.
+
+*3. The Current Evolution of the Directory and File Naming Standards for
+FTP Servers*
+
+In light of the past experience, the group felt revised standards should
+incorporate several basic features. //
+
+/ First/, the individual information elements that comprise the
+standards must be nationally coordinated with respect to their form and
+content.
+
+/ Second/, except for insisting the server location be the first
+directory level, the centers responsible for the servers should be
+allowed to assemble these information elements into directory and file
+names as needed.
+
+/ Third/, use should be made of alphabetic or alphanumeric entrees
+whenever possible.
+
+/Fourth/, the individual information elements should be of limited but
+fixed length.
+
+/Fifth/, the allowable character set should be restricted to A-Z, a-z,
+0-9, period (.), underscore (_), and hyphen (-).
+
+/Sixth/, an allowable "*.* character string" at the *file name level
+only* as an extension to the file for potential processing by standard
+commercial software applications. The normal extensions expected to be
+used are "*.*bin", "*.*txt", "*.*pdf", "*.*html", "*.*xml", "*.*gif",
+"*.*jpg", "*.*xls", "*.*doc", etc as they become commonly available
+within the industry. They will not have "element IDs" as defined within
+this standard.
+
+One method of allowing centers to assemble the information elements as
+they wish, yet ensure the information elements can always be uniquely
+identified, is to first consider each information element to consist of
+an *element ID* - made up of two letters followed by a period - and
+element information. This would ensure unique identification of which
+information element(s) each directory and file name entry consists of
+yet allow the needed flexibility. Second, each directory and file name
+should be allowed to consist of several information elements connected
+by an underscore. Finally, use of the dash should be reserved for
+indicating that the information element is a spatial or temporal
+interval. The following description of the individual elements adheres
+to these basic principles and represents the current evolution of our
+efforts:
+
+_*ELEMENT NAME*_ _*ELEMENT ID*_
+
+{SL <#sl>|sl}.ccnnnsss ==> server location
+
+============================== ROOT ===================================
+
+{AR <#ar>|ar}.a...a ==> area of data
+
+{BC <#bc>|bc}.x ==> bufr collectives
+
+{BS <#bs>|bs}.aaaaa ==> bufr stations
+
+{CU <#cu>|cu} lllll ==>customer
+
+{CS <#cs>|cs} aaaa ==>center supplier
+
+{CY <#cy>|cy}.hh ==> cycle of run
+
+{DC <#dc>|dc}.ccc(ccc) ==> data category
+
+{DD <#dd>|dd}.yyyymmdd ==> data date
+
+{DF <#df>|df}.ff(f)(.fff) ==> data format
+
+{DO <#do>|do}.dddd ==> documents
+
+{DP <#dp>|dp}.yy1mm1dd1-yy2mm2dd2 ==> data date period
+
+{DS <#ds>|ds}.sss(sss) ==> data subcategory
+
+{DT <#dt>|dt}.{hhnnss|aaaaaa} ==> data time
+
+{FD <#fd>|fd}.cc(c) ==> flow direction
+
+{FH <#fh>|fh}.hhhh(c) ==> forecast hour
+
+{GP <#gp>|gp}.ppppp(pppp) ==> generating process
+
+{GR <#gr>|gr}.gggggggg ==> grid
+
+{LV <#lv>|lv}.sddddd grid ==> level of data
+
+{LY <#ly>|ly}.sddddd1-sddddd2 ==> layer of data
+
+{MR <#mr>|mr}.rrr ==> run of model
+
+{MS <#ms>|ms}.ss(ssss) ==> model subcategory
+
+{MT <#mt>|mt}.mmm(mm) ==> type of model
+
+{NS <#ns>|ns}.xxx(xxxxxxxxxxxx) ==> name of storm
+
+{PA <#pa>|pa}.pppppppp ==> parameter
+
+{PT <#pt>|pt}.pppp ==> product type
+
+{RD <#rd>|rd}.yyyymmdd ==> reference date
+
+{RT <#rt>|rt}.hhnnss ==> reference time
+
+{SD <#sd>|sd}.ccnnnxxx ==> server directory tree
+
+{SF <#sf>|sf}.hhnnss ==>stat file
+
+{SI <#si>|si}.aa(aaaaaaaa) ==> data site
+
+{SN <#sn>|sn}.xx(xx) ==> sequence number
+
+{ST <#st>|st}.ssss ==> status of data files
+
+{TB <#tb>|tb}.tttt ==> tables
+
+{TE <#te>|te}.ddhhnnss ==> time written
+
+{TL <#tl>|tl}.ttttt ==> type of level or layer
+
+{TP <#tp>|tp}.hh1nn1-hh2nn2 ==> data time period
+
+ 
+
+
+        EXAMPLES
+
+In the above, the notation {a|b} indicates a choice may be made to use
+either "a" or "b". The convention suggested is to use upper case when
+the information element is used in a directory name and lower case when
+the information element is used in a file name. The specific description
+of these information elements is given in Annex 1. It should be noted
+that the above list of information elements is not exhaustive, and more
+can be anticipated to be needed. Furthermore, several tables described
+in Annex 1 are incomplete and others will need to be developed and
+maintained by the center responsible for the server.
+
+As a /first/ example, the US National Centers for Environmental
+Prediction (NCEP) might choose to
+
+assemble the above information elements into following directory and
+file naming configuration for observational data:
+
+*/(server location)/(reference date)/(reference time)/(generating
+process)/(data time period)/*
+
+* (area of data)_(data format)_(data category)_(data subcategory)*
+
+Symbolically, this would appear as:
+
+/SL.ccnnnsss/RD.yyyymmdd/RT.hhnnss/GP.ppppp/TP.hh_1 nn_1 -hh_2 nn_2 /
+ar.aaaaaaaa_df.ff_dc.ccccc_ds.sssss
+
+A file of radiosonde observations from fixed land sites for the period
+from 3 hours prior to 2 hours 59 minutes after a reference date/time of
+8 December, 1997/1200 UTC stored in BUFR on the NCEP DDBs server would
+then appear as:
+
+*/SL.us007003/RD.19971208/RT.120000/GP.obvns/TP.0300-0259/ar.allglobe_df.bu_dc.vsndn_ds.raobf*
+
+
+Note that other centers would be free to organize their directory and
+file names for the same observational data with a different combination
+of information elements, or with the same information elements but in a
+different order.
+
+As a /second/ example, the US National Weather Service (NWS) might
+choose to assemble the above elements into following directory and file
+naming configuration for a specific observational data type:
+
+*/(server location)/(area of data)/(data format)/(data
+category)/(customer sequence number)*
+
+Symbolically, this would appear as:
+
+/SL.ccnnnsss/AR.aaaaaaaa/DF.ff/DC.ccccc/cu.lllll_sn.xx(xx)
+
+A file of surface synoptic data for the area of South America in WMO
+character code for use by a customer would appear as:
+
+*/SL.us008001/AR.wmora03l/DF.an/DC.sflnd/cu.mitre_sn.01*
+
+Note this is the first "cu.mitre" file of the "DC.sflnd" data type
+subdirectory where there will be a number of sequences of sn=01 through
+sn=36, for 36 different file names under that subdirectory. This
+provides a way of generating files of data as they arrive at the
+communications switching center. As the definition of area is not yet
+defined here, this AR = wmo for World Meteorological Organization, ra
+for region, 03 for region number of South America, and l (lower case L)
+for continent specific area.
+
+
+        Stat File
+
+The _stat file_ is a mandatory file in the server root directory. This
+file contains the last new file(s) by file name written on the server
+from the time of the last written stat file. The stat file content
+structure _would be defined by the center_; however, a suggested form
+could be as follows.
+
+*/CONTENT SAMPLE/*
+
+*do.code_tb.bufr.dd.19990821_te.24133002* = is a new file added to the
+stat file
+
+where: {do.code_tb.bufr.dd.19990821} ==> Directory name(s) defined in
+Annex 1 "Optional Fields"
+
+{TE|te} ==> Indicator for information element "Time written"
+
+*dd* ==> day written
+*hh* ==> hour written (on 24 hour clock)
+*nn* ==> minutes written
+*ss* ==> seconds written
+
+This would represent an entry in the stat file of a document on BUFR
+code tables written on August 21, 1999 which was placed on the file
+server on day 24, hour 13, minute 30 and, second 02.
+
+
+        Server Directory Tree
+
+The _directory tree_ is a mandatory file in the server root directory
+which contains the directory structure of the server. The file content
+contains a list of all directory/sub-directory names from /highest/ to
+/lowest/ as defined by directory names from the Annex 1 listed "Selected
+IDs" that are directories defined on this file server. (See Annex 2)
+
+------------------------------------------------------------------------
+
+*Annex 1: Description of Directory and File Name Information Elements*
+_with element IDs_
+
+_MANDATORY FIELDS_
+
+*server location* ==> {SL|sl}.ccnnnsss
+
+where
+
+{SL|sl} ==> Indicator for information element "server location"
+
+cc ==> country [FIPS standard 10-4]
+nnn ==> center [WMO standard 306 Part II]{examples: 007 = NCEP/NCO; 008
+= RTH Washington}
+sss ==> sub-center [center defined]
+
+*server stat file* ==> {SF|sf}.hhnnss /or/ {STATx}
+
+where
+
+{SF|sf}or{STATx}==> Indicator for file status information
+
+x ==> numeric value for multiple files
+hh ==> hour
+nn ==> minutes
+ss ==> seconds
+
+_OPTIONAL FIELDS_ (Selected IDs and their order as determined by Center)
+
+*area of data* ==> {AR|ar}.a...a
+
+where
+
+{AR|ar} ==> Indicator for information element "area of data"
+aaaaaaaa ==> is a string of eight characters. International coordination
+of a
+group of frequently-used areas would be useful.
+
+aaaaaaaa = 8kmnest ==> 01 - 26 Geographic Locations
+aaaaaaaa = 8kmnst01 ==> PHI0=33.5N LAM0=121.0W,
+                                SW Corner=26.732N,127.602W NE
+Corner=39.859N, 113.312W
+aaaaaaaa = 8kmnst02 ==> PHI0=32.0N LAM0=114.0W,
+                                SW Corner=25.242N,120.519W, NE
+Corner=38.373N, 106.474W
+aaaaaaaa = 8kmnst03 ==> PHI0=31.0N LAM0=107.0W,
+                                SW Corner=24.429N,113.467W, NE
+Corner=37.381N, 99.575W
+aaaaaaaa = 8kmnst04 ==> PHI0=30.0N LAM0=100.0W,
+                                SW Corner=23.255N,106.417W, NE
+Corner=36.389N, 92.671W
+aaaaaaaa = 8kmnst05 ==> PHI0=30.0N LAM0=93.0W,
+                                SW Corner=23.255N, 99.417W, NE
+Corner=36.389N, 85.671W
+aaaaaaaa = 8kmnst06 ==> PHI0=30.0N LAM0=86.0W,
+                                SW Corner=23.255N, 92.417W, NE
+Corner=36.389N, 78.671W
+aaaaaaaa = 8kmnst07 ==> PHI0=29.0N LAM0=79.0W,
+                                SW Corner=22.261N, 85.717W, NE
+Corner=35.397N, 71.763W
+aaaaaaaa = 8kmnst08 ==> PHI0=39.5N LAM0=125.0W,
+                                SW Corner=32.690N, 132.008W, NE
+Corner=45.800N, 116.530W
+aaaaaaaa = 8kmnst09 ==> PHI0=39.5N LAM0=116.5W,
+                                SW Corner=32.690N, 123.508W, NE
+Corner=45.800N, 108.030W
+aaaaaaaa = 8kmnst10 ==> PHI0=39.0N LAM0=108.0W,
+                                SW Corner=32.194N, 114.970W, NE
+Corner=45.305N, 99.605W
+aaaaaaaa = 8kmnst11 ==> PHI0=37.5N LAM0=99.5W,
+                                SW Corner=30.705N, 106.359W, NE
+Corner=43.821N, 91.318W
+aaaaaaaa = 8kmnst12 ==> PHI0=37.5N LAM0=91.0W,
+                                SW Corner=30.705N, 97.859W, NE
+Corner=43.821N, 82.818W
+aaaaaaaagggggggg = 8kmnst13 ==> PHI0=36.5N LAM0=83.0W,
+                                SW Corner=29.712N, 89.790W, NE
+Corner=43.831N, 74.951W
+aaaaaaaagggggggg = 8kmnst14 ==> PHI0=36.0N LAM0=75.0W,
+                                SW Corner=29.216N, 81.757W, NE
+Corner=42.336N, 67.015W
+aaaaaaaa = 8kmnst15 ==> PHI0=46.0N LAM0=124.0W,
+                                SW Corner=39.138N, 131.608W, NE
+Corner=52.219N, 114.351W
+aaaaaaaa = 8kmnst16 ==> PHI0=45.5N LAM0=115.0W,
+                                SW Corner=38.642N, 122.555W, NE
+Corner=51.726N, 105.457W
+aaaaaaaa = 8kmnst17 ==> PHI0=45.0N LAM0=106.0W,
+                                SW Corner=38.146N, 113.503W, NE
+Corner=51.233N, 96.561W
+aaaaaaaa = 8kmnst18 ==> PHI0=44.5N LAM0=97.0W,
+                                SW Corner=37.651N, 104.452W, NE
+Corner=50.740N, 87.662W
+aaaaaaaa = 8kmnst19 ==> PHI0=44.0N LAM0=88.0W,
+                                SW Corner=37.155N, 95.403W, NE
+Corner=50.247N, 78.760W
+aaaaaaaa = 8kmnst20 ==> PHI0=43.5N LAM0=79.0W,
+                                SW Corner=36.659N, 86.354W, NE
+Corner=49.753N, 69.855W
+aaaaaaaa = 8kmnst21 ==> PHI0=43.0N LAM0=70.0W,
+                                SW Corner=36.163N, 77.307W, NE
+Corner=49.259N, 60.947W
+aaaaaaaa = 8kmnst22 ==> PHI0=21.5N LAM0=157.0W,
+                                SW Corner=14.805N, 77.307W, NE
+Corner=49.259N, 60.947W
+aaaaaaaa = 8kmnst23 ==> PHI0=61.0N LAM0=150.0W,
+                                SW Corner=53.965N, 160.053W, NE
+Corner=66.890N, 134.834W
+aaaaaaaa = 8kmnst24 ==> PHI0=65.0N LAM0=147.5W,
+                                SW Corner=57.897N, 158.641W, NE
+Corner=70.724N, 129.377W
+aaaaaaaa = 8kmnst25 ==> PHI0=58.5N LAM0=134.5W,
+                                SW Corner=51.501N, 143.995W, NE
+Corner=64.469N, 120.716W
+aaaaaaaa = 8kmnst26 ==> PHI0=18.5N LAM0=67.35W,
+                                SW Corner=11.822N, 73.372W, NE
+Corner=24.972N, 60.846W
+aaaaa = conus ==> Contiguous United States
+aaaaaaaa = alaska ==> Alaska
+aaaaaaaa = crgrlake ==> Central Great Lakes
+aaaaaaaa = crmissvy ==> Central Mississippi Valley
+aaaaaaaa = crplains ==> Central Plains
+aaaaaaaa = crrocks ==> Central Rockies
+aaaaaaaa = domain ==> Alaska 10km, West 8km, East 8km, Central 8km,
+Hawaii 8km, Puerto Rico 8km
+aaaaaaaa = ergrtlak ==> East Great Lakes
+aaaaaaaa = guam ==> Guam
+aaaaaaaa = hawaii ==> Hawaii
+aaaaaaaa = midatlan ==> Middle Atlantic
+aaaaaaaa = neast ==> North East
+aaaaaaaa = nplains ==> North Plains
+aaaaaaaa = nrockies ==> North Rockies
+aaaaaaaa = octante ==> 0 - 355 E Northern Hemisphere
+aaaaaaaa = octantf ==> 0 - 355 E Southern Hemisphere
+aaaaaaaa = octanti ==> 30W - 60 E Northern Hemisphere
+aaaaaaaa = octantj ==> 60W - 150E Northern Hemisphere
+aaaaaaaa = octantk ==> 150E - 120W Northern Hemisphere
+aaaaaaaa = octantl ==> 120W - 30W Northern Hemisphere
+aaaaaaaa = octantm ==> 30W - 60E Southern Hemisphere
+aaaaaaaa = octantn ==> 60W - 150E Southern Hemisphere
+aaaaaaaa = octanto ==> 150E - 120W Southern Hemisphere
+aaaaaaaa = octantp ==> 120W - 30W Southern Hemisphere
+aaaaaaaa = pacnwest ==> Pacific North West
+aaaaaaaa = pacswest ==> Pacific South West
+aaaaaaaa = puertori ==> Puerto Rico
+aaaaaaaa = seast ==> South East
+aaaaaaaa = smissvly ==> South Mississippi Valley
+aaaaaaaa = splains ==> South Plains
+aaaaaaaa = srockies ==> South Rockies
+aaaaaaaa = umissvly ==> Upper Mississippi Valley
+
+*bufr collectives* ==> {BC|bc}.x
+
+where
+
+{BC|bc} ==> Indicator for information element "bufr collectives"
+
+x ==> 1-7 and 9
+
+*bufr station* ==> {BS|bs}.aaaaa
+
+where
+
+{BS| bs} ==> Indicator for information element "bufr stations"
+
+aaaaa ==> is the station number
+
+
+x ==> 1-7 and 9
+
+*center supplier* ==> {CS|cs}.aaaa
+
+where
+
+{CS| cs} ==> Indicator for information element "center supplier"
+
+aaaa ==> is the center identifier.
+aaaa ==> knes ==> NESDIS, National Environmental Satellite, Data, and
+Information Service (Supplies data to the NWS.)
+
+
+
+*Customer* ==> {CU|cu}.lllll
+
+where
+
+{CU|cu} ==> Indicator of customer the file is established for
+
+lllll = faa ==> Federal Aviation Administration
+lllll = fnoc ==> Fleet Numerical Oceanographic Center
+lllll = genrl ==> general purpose files (implies file content is not
+customer restricted)
+lllll = hads ==> Hydrometeorological Automated Data System
+lllll = hydro ==> Office of Hydrologic Development
+lllll = knhc ==> National Hurricane Center
+lllll = kwbc ==> RTH Washington
+lllll = mitre ==> company name
+lllll = ncdc ==> National Climatic Data Center
+lllll = oejd ==> WMO Regional Telecommunications Hub Jeddah, Saudia Arabia
+lllll = srrs ==> NCDC records retention system
+lllll = usgs ==> US Geological Survey
+
+*cycle of run* ==> {CY|cy}.hh
+
+where
+
+{CY|cy} ==> Indicator for information element "cycle of run"
+hh(hh) ==> cycle time in hours or minutes /(see time of data - FM 92-X
+Ext. GRIB Section 1, Octet 16 & 17)/
+
+*data category* ==> {DC|dc}.ccc(ccc)
+
+where
+
+{DC|dc} ==> Indicator for information element "data category"
+
+ccc = mos ==> Model Output Statistics (MOS) guidance
+cccc = adst ==> Advective Statistical Forecast Guidance
+cccc = etss ==> extratropical storm surge forecasts
+cccc = lamp ==> Local AWIPS MOS Program (LAMP) Data
+cccc = ndfd ==> National Digital Forecasts Database
+cccc = traj ==> Trajectory Model Data
+ccccc = altyp ==> All types of data category
+ccccc = avspt ==> Aviation support products
+ccccc = awips ==> Special Products to Support AWIPS
+ccccc = gsati ==> GOES Satellite Imagery
+ccccc = radar ==> above Surface data - radar imagery
+ccccc = satim ==> upper atmosphere data - satellite imagery
+ccccc = sflnd ==> Surface data - land
+ccccc = sfmar ==> Surface data - sea
+ccccc = sfsat ==> Surface data - satellite
+ccccc = sluan ==> Single level upper-air data - other than satellite
+ccccc = sluas ==> Single-level upper-air data - satellite
+ccccc = textf ==> textual format written products - warnings,
+advisories, forecasts, discussions
+ccccc = vsndn ==> Vertical sounding - other than satellite
+ccccc = vsnds ==> Vertical sounding - satellite
+cccccc = ensmos ==> Ensamble Model Output Statistics (MOS) guidance
+*
+* *data date* ==> {DD|dd}.yyyymm(dd)
+
+where
+
+{DD|dd} ==> Indicator for information element "data date"
+yyyy ==> 4-digit Year
+mm ==> month
+dd ==> day (optional parameter)
+
+*data format* ==> {DF|df}.ff(f)(.fff)
+
+where
+
+{DF|df} ==> Indicator for information element "data format" that
+optionally can take on
+a final file attribute to meet commercial extension standards (ie.
+gif,wpd,doc,jpg,pdf,etc.)
+
+ff = an ==> WMO bulletins of alphanumeric data as GTS exchanged (ASCII)
+ff = bb ==> WMO bulletins of binary fields in GRIB as GTS exchanged
+ff = bf ==> WMO bulletins of binary fields in BUFR as GTS exchanged
+ff = c5 ==> Data in character code form alphabet 5 (ASCII)
+ff = f1 ==> CCITT T4-1D facsimile
+ff = f2 ==> CCITT T4-2D facsimile
+ff = gt ==> mixed information as exchanged on the GTS
+ff = of ==> other U.S. data formats (source defined)
+ff = rgb ==> U.S. Red Book Vector Graphics
+ff = xt ==> files with extensions
+fff = anf ==> Alphanumeric data - files
+fff = buf ==> WMO BUFR (binary) - files
+fff = crx ==> WMO CREX (ASCII character) - as GTS exchanged
+fff = gr1 ==> WMO GRIB version 1 (binary) - files
+fff = gr2 ==> WMO GRIB version 2 (binary) - files
+
+
+when ff = f1,
+file name(s) = ttaaii.fax ==> First 6 characters of WMO Heading
+facsimile charts in T4 format
+
+when ff = f1,
+file name(s) = ttaaii.gif ==> First 6 characters of WMO Heading
+facsimile charts in GIF format
+
+when ff = f1,
+file name(s) = ttaaii.tif ==> First 6 characters of WMO Heading
+facsimile charts in TIFF format
+
+*documents* ==> {DO|do}.dddd
+
+where
+
+{DO|do} ==> Indicator for information element "documents"
+dddd = code ==> data representation (code) form documents
+dddd = drft ==> draft documents
+dddd = prod ==> production documents
+dddd = tcom ==> telecommunications documents
+
+*data subcategory* ==> {DS|ds}.ss(ssss)
+
+where
+
+{DS|ds} ==> Indicator for information element "data subcategory"
+
+when cccc = adst,
+sssss = lghtg ==>Lightning
+sssss = precp ==> Precipitation
+sssss =svrst ==> Severe Storms
+
+when ccccc = avspt,
+sssss = cipgb ==> Integrated Icing Detection Algorithm product for aviation
+sssss = cip20 ==> Aviation Support 20 KM Resolution Current Icing
+Potential Products
+sssss = fipgb ==> Forecast Icing Potential product for aviation
+sssss = gtggb ==> Graphical Turbulence Guidance for aviation
+sssss = ncwd ==> National Convective Weather Diagnostic for aviation
+sssss = ncwf ==> National Convective Weather Forecast for aviation
+sssss = sigwx==> Aviation Support Significant Weather Products
+
+when cccc = ndfd,
+ss = td ==> Dew point Temperature
+ss = wx ==> Weather
+sss = qpf ==> Quantitative Precipitation Forecast
+sss = sky ==> Sky Cover
+ssss = maxt ==> Daytime Max Temperature
+ssss = mint ==> Nighttime Min Temperature
+ssss = snow ==> Snowfall Amount
+ssss = temp ==> Surface Temperature
+ssss = wdir ==> Wind Direction
+ssss = wspd ==> Wind Speed
+sssss = aespf ==> Auto Estimator Satellite Precipitation Estimate
+sssss = fwdir ==> Free Air Wind Direction
+sssss = fwspd ==> Free Air Wind Speed
+sssss = ghwnd ==> GOES Satellite Derived High Density Winds
+sssss = gsndr ==> GOES Satellite Derived Soundings
+sssss = miffa ==> Manual Interactive Flash Flood Analyzer
+sssss = phwnd ==> POES Satellite Derived High Density Winds
+sssss = pop12 ==> Probability of Precipitation (12 hour period)
+sssss = psndr ==> POES Satellite Derived Soundings
+sssss = wavwh ==> Wave Height
+
+
+when ccccc = sflnd,
+sssss = allsc ==> All sub-categories
+sssss = amosx ==> Aviation - AMOS
+sssss = asosx ==> Aviation - ASOS
+sssss = autob ==> Aviation - AUTOB
+sssss = autox ==> Aviation - AUTO(0-9)
+sssss = avnma ==> Aviation - manual
+sssss = awosx ==> Aviation - AWOS
+sssss = cipgb ==> Current Icing Analysis
+sssss = coavn ==> Synoptic - converted aviation
+sssss = coops ==> Cooperative - SHEF
+sssss = meson ==> Cooperative - MesoNet (various code forms)
+sssss = metar ==> Aviation - METAR
+sssss = ramos ==> Aviation - RAMOS
+sssss = sclim ==> Aviation - Supplementary Climate Data Report
+sssss = snotl ==> Cooperative - SNOTEL
+sssss = synop ==> Synoptic - manual and automatic
+sssss = tafst ==> Aviation - TAF (Terminal Area Forecast)
+
+
+when ccccc = sfmar,
+sssss = allsc ==> All sub-categories
+sssss = dbuoy ==> Drifting buoy
+sssss = lcman ==> Land-based CMAN station
+sssss = mbuoy ==> Moored buoy
+sssss = oilrg ==> Oil rig or platform
+sssss = ships ==> Ship - manual and automatic
+sssss = slpbg ==> Sea level pressure bogus
+sssss = wavob ==> WAVEOB
+
+
+when ccccc = vsndn,
+sssss = allsc ==> All sub-categories
+sssss = dropw ==> Dropwinsonde
+sssss = nxrdw ==> NEXRAD winds
+sssss = pibal ==> Pibal
+sssss = prflr ==> Profiler
+sssss = raobf ==> Rawinsonde - fixed land
+sssss = raobm ==> Rawinsonde - mobile land
+sssss = raobs ==> Rawinsonde - ship
+
+when ccccc = vsnds,
+sssss = allsc ==> All sub-categories
+sssss = geost ==> Geostationary
+sssss = mstbg ==> Moisture bogus
+sssss = synsy ==> Sun synchronous
+sssss = tovsx ==> Polar orbiting - TOVS
+
+when ccccc = sluan
+sssss = acars ==> ACARS
+sssss = airep ==> AIREP
+sssss = allsc ==> All sub-categories
+sssss = asdar ==> ASDAR
+sssss = pirep ==> PIREP
+sssss = recco ==> RECCO - flight level
+sssss = sigmt ==> SIGMET
+
+when ccccc = sluas
+sssss = allsc ==> All sub-categories
+sssss = comeu ==> Winds derived from motion observed in a combination of
+spectral channels by EUMETSAT
+sssss = comin ==> Winds derived from motion observed in a combination of
+spectral channels by India
+sssss = comja ==> Winds derived from motion observed in a combination of
+spectral channels by Japan
+sssss = comus ==> Winds derived from motion observed in a combination of
+spectral channels by the U.S.
+sssss = h20eu ==> Winds derived from motion observed in water vapor
+channels by EUMETSAT
+sssss = h20in ==> Winds derived from motion observed in water vapor
+channels by India
+sssss = h20ja ==> Winds derived from motion observed in water vapor
+channels by Japan
+sssss = h20us ==> Winds derived from motion observed in water vapor
+channels by the U.S.
+sssss = infeu ==> Winds derived from cloud motion observed in infrared
+channels by EUMETSAT
+sssss = infin ==> Winds derived from cloud motion observed in infrared
+channels by India
+sssss = infja ==> Winds derived from cloud motion observed in infrared
+channels by Japan
+sssss = infus ==> Winds derived from cloud motion observed in infrared
+channels by the U.S.
+sssss = viseu ==> Winds derived from cloud motion observed in visible
+channels by EUMETSAT
+sssss = visin ==> Winds derived from cloud motion observed in visible
+channels by India
+sssss = visja ==> Winds derived from cloud motion observed in visible
+channels by Japan
+sssss = visus ==> Winds derived from cloud motion observed in visible
+channels by the U.S.
+
+when ccccc = sfsat,
+sssss = allsc ==> All sub-categories
+sssss = clsr ==> Clear Sky Radiances
+sssss = csbt ==> Clear Sky Brightness
+sssss = cswv ==> Clear Sky Water Vapor Winds
+sssss = elrw ==> Expanded Low Resolution Winds
+sssss = ersal ==> ERS/Radar altimeter Data
+sssss = ersar ==> ERS/SAR
+sssss = erswn ==> ERS/scatterometer Wind
+sssss = gssd ==> GOES Sounder BUFR
+sssss = hdw ==> High Density Winds
+sssss = hrvw ==> High Resolution Visible Winds
+sssss = hrwv ==> High Resolution Water Vapour Wind
+sssss = qscat ==> Quick Scatterometer
+sssss = ssmie ==> SSM/I - Derived Products Environmental (EDR)
+sssss = ssmis ==> SSM/I - Derived Products Sensor (SDR)
+sssss = ssmit ==> SSM/I - Brightness Temperatures (TDR)
+sssss = sstns ==> DOC/NESDIS sea surface temperatures
+sssss = sstnv ==> DOD/Navy sea surface temperatures
+sssss = swind ==> Satellite Wind Products
+
+when ccccc = satim,
+sssss = satir ==> Satellite Infrared imagery
+sssss = satvs ==> Satellite visible imagery
+sssss = satwp ==> Satellite water vapor imagery
+
+when ccccc = gsati,
+sssss = goese ==> GOES East coverage for the CONUS
+sssss = goesw ==> GOES West coverage for the Eastern Pacific and Western
+half of the CONUS
+sssss = gwfll ==> GOES West full disk coverage for the Pacific and CONUS
+
+when ccccc = radar,
+ssss = tops ==> TOPS
+sssss = 31up1 ==> 31/UP1 User Selectable Precipitation 6 hour
+Accumulation (at 00Z, 06Z, 12Z, & 18Z)
+sssss = 31up2 ==> 31/UP2 User Selectable Precipitation (24 hour
+Accumulation (at 12Z)
+sssss = 32dhr ==> 32/DHR Digital Hybrid Reflectivity
+sssss = 34cfc ==> 34/CFC Clutter Filter Control
+sssss = 47swp ==> 47/SWP Severe Weather Probability
+sssss = 48vwp ==> 48/VWP Velocity Azimuth Display (VAD) Wind Profile
+sssss = 56srm ==> 56/SRM Storm Relative Mean radial velocity map
+sssss = 57vil ==> 57/VIL Vertical Integrated Liquid
+sssss = 58sti ==> 58/STI Storm Tracking Information
+sssss = 61tvs ==> 61/TVS Tornadic Vortex Signature
+sssss = 65lrm ==> 65/LRM Layer Composite Reflectivity Maximum (low)
+sssss = 66lrm ==> 66/LRM Layer Composite Reflectivity Maximum (middle)
+sssss = 67apr ==> 67/APR Layer Composite Reflectivity with AP removed
+sssss = 74rcm ==> 74/RCM Radar Coded message
+sssss = 75ftm ==> 75/FTM Free Text message
+sssss = 78ohp ==> 78/OHP Surface rainfall accums - one hr
+sssss = 79thp ==> 79/THP Surface rainfall accums - three hr
+sssss = 80stp ==> 80/STP Surface rainfall accums - storm total
+sssss = 81dpa ==> 81/DPA Hourly digital precip array
+sssss = 82spd ==> 82/SPD Supplemental precip data
+sssss = 83irm ==> 83/IRM Interim radar message
+sssss = 90lrm ==> 90/LRM Layer composite reflectivity max - high level
+sssss = cappi ==> CAPPI
+sssss = p19-r ==> 19/R Base reflectivity - 124 nmi Range
+sssss = p20-r ==> 20/R Base reflectivity - 248 nmi Range
+sssss = p25-v ==> 25/V Base Radial Velocity - 8 lowest angles
+sssss = p27-v ==> 27/V Base Radial Velocity - 16 lowest 4 angles
+sssss = p28sw ==> 28/SW Base spectrum Width - 32 lowest angles
+sssss = p30sw ==> 30/SW Base Spectrum Width - 124 lowest angles
+sssss = p36cr ==> 36/CR Composite Reflectivity - 8 levels, 248 nmi range
+sssss = p37cr ==> 37/CR Composite Reflectivity - 16 levels, 124 nmi range
+sssss = p38cr ==> 38/CR Composite Reflectivity - 16 levels, 248 nmi range
+sssss = p41et ==> 41/ET Echo Tops
+sssss = p59hi ==> 59/HI Hail Index
+sssss = p60-m ==> 60/M Mesocyclone
+sssss = p62ss ==> 62/SS Storm Structure
+ssssss = echtop ==> ECHOTOP
+
+
+where ccc = mos
+sss = fwc ==> short-range guidance based on the NGM model
+sss = mav ==> short-range guidance based on the Global Forecast System
+(GFS)
+sss = mcg ==> MOS Coop Forecasts from the Global Forecast System (GFS)
+sss = mcx ==> MOS Coop Forecasts from the extended GFS Global Forecast
+System (GFS)
+sss = met ==> short-range guidance based on the Global Forecast System
+(GFS)
+sss = mex ==> extended-range guidance based on the Global Forecast
+System (GFS)
+sssss = fmrfo ==> forecast medium-range guidance WMO Header developed in
+the 1990's
+sssss = fmrjs ==> buffer forecast medium-range guidance WMO Header
+developed in the 1990's
+sssss = fwcaf ==> short-range guidance for Air Force based on the NGM model
+sssss = fwcfo ==> short-range guidance WMO Header based on the NGM model
+sssss = fwcjs ==> buffer short-range guidance WMO Header based on the
+NGM model
+sssss = mavaf ==> short-range guidance for Air Force based on the Global
+Forecast System (GFS)
+sssss = mavak ==> short-range guidance for Alaska based on the Global
+Forecast System (GFS)
+sssss = mavfo ==> short-range guidance WMO Header based on the Global
+Forecast System (GFS)
+sssss = mavjs ==> buffer short-range guidance WMO Header based on the
+Global Forecast System (GFS)
+sssss = metak ==> short-range guidance for Alaska based on the Global
+Forecast System (GFS)
+sssss = metjs ==> buffer short-range guidance based on the Global
+Forecast System (GFS)
+sssss = mexaf ==> extended-range for Air Force guidance based on the
+Global Forecast System (GFS)
+sssss = mexak ==> extended-range for Alaska guidance based on the Global
+Forecast System (GFS)
+sssss = mexfe ==> extended-range guidance WMO Header based on the Global
+Forecast System (GFS)
+sssss = mexjs ==> buffer extended-range guidance WMO Header based on the
+Global Forecast System (GFS)
+ssssss = mavcns ==> short-range guidance for CONUS based on the Global
+Forecast System (GFS)
+ssssss = mavsvr ==> short-range thunderstorm and severe thunderstorm
+guidance based on the Global Forecast System (GFS)
+ssssss = metcns ==> short-range guidance for the CONUS based on the
+Global Forecast System (GFS)
+ssssss = metsvr ==> short-range thunderstorm and severe thunderstorm
+guidance based on the Global Forecast System (GFS)
+ssssss = mexcns ==> extended-range for the CONUS guidance based on the
+Global Forecast System (GFS)
+ssssss = mexsvr ==> extended-range thunderstorm guidance based on the
+Global Forecast System (GFS)
+
+where cccccc = ensmos
+sssss = c0mex ==> extended-range guidance based on the control run of
+the global ensemble
+sssss = n1mex ==> extended-range guidance based on the 1st negative
+perturbation of the global ensemble
+sssss = n2mex ==> extended-range guidance based on the 2nd negative
+perturbation of the global ensemble
+sssss = n3mex ==> extended-range guidance based on the 3rd negative
+perturbation of the global ensemble
+sssss = n4mex ==> extended-range guidance based on the 4th negative
+perturbation of the global ensemble
+sssss = n5mex ==> extended-range guidance based on the 5th negative
+perturbation of the global ensemble
+sssss = p1mex ==> extended-range guidance based on the 1st positive
+perturbation of the global ensemble
+sssss = p2mex ==> extended-range guidance based on the 2nd positive
+perturbation of the global ensemble
+sssss = p3mex ==> extended-range guidance based on the 3rd positive
+perturbation of the global ensemble
+sssss = p4mex ==> extended-range guidance based on the 4th positive
+perturbation of the global ensemble
+sssss = p5mex ==> extended-range guidance based on the 5th positive
+perturbation of the global ensemble
+
+
+where cccc = traj
+sssss = ftjfo ==> FOUS trajectory forecast WMO Header
+
+where cccc = etss
+sss = mrpfq ==> techniques development laboratory marine product WMO Header
+ssss = ssak ==> storm surge forecasts for Alaska
+ssss = ssar ==> storm surge forecasts for the Artic coast of Alaska
+ssss = ssec ==> storm surge forecasts for the East Coast
+ssss = ssgm ==> storm surge forecasts for the Gulf of Mexico
+ssss = sswc ==> storm surge forecasts for the West Coast
+
+when ccccc = textf,
+sssss = 30lfe ==> Average Monthly Weather Outlook (local)
+sssss = afdfx ==> Area Forecast Discussion
+sssss = afpfl ==> Area Forecast Product
+sssss = agffn ==> Agricultural Forecast
+sssss = apgae ==> Air Stagnation Guidance Narrative
+sssss = aqiae ==> Air Quality Index statement
+sssss = asaae ==> Air Stagnation Advisory
+sssss = awgwo ==> National Attack Warning
+sssss = awsaw ==> Area Weather Summary
+sssss = awufl ==> Area Weather Update
+sssss = awwww ==> Aviation Weather Warning
+sssss = ccffp ==> Coded City Forecast
+sssss = cfwwh ==> Coastal Flood Warnings, Watches or Statements
+sssss = clicd ==> Climatological Report (Daily)
+sssss = clmcx ==> Climatological Report (Misc, Inc monthly reports)
+sssss = cwffz ==> Coastal Waters Forecast
+sssss = cf6cx ==> WFO Daily Climate WEB Page Messages
+sssss = ddoau ==> Daily Dispersion Outlook
+sssss = efpfe ==> 3 to 5 day extended Forecast
+sssss = eolfe ==> Average 6 to 10 day weather outlook (local)
+sssss = eonfe ==> Average 6 to 10 day weather outlook (national)
+sssss = eqrse ==> Earthquake report
+sssss = esffg ==> Flood Potential outlook
+sssss = essfg ==> Water Supply Outlook
+sssss = fdifn ==> Fire Danger Indices
+sssss = ffawg ==> Flash Flood Watch
+sssss = ffgfo ==> Flash Flood Guidance
+sssss = ffhfo ==> Headwater Guidance
+sssss = ffswg ==> Flash Flood Statement
+sssss = ffwwg ==> Flash Flood Warning
+sssss = flnfg ==> National Flood Summary
+sssss = flswg ==> Flood Statement
+sssss = flwwg ==> Flood Warning
+sssss = fssfg ==> Urban and Small Stream Flood Advisory
+sssss = fwdfn ==> Fire Weather Outlook Discussion
+sssss = fwefe ==> Extended Fire Weather Outlook
+sssss = fwffn ==> Routine Fire WX FCST(with/without 6-10 day outlook)
+sssss = fwlfn ==> Land Management Forecasts
+sssss = fwmfn ==> Miscellaneous Fire Weather Product
+sssss = fwnsh ==> Fire Weather Notification
+sssss = fwsfn ==> Suppression Forecast
+sssss = glffz ==> Great Lakes Forecast
+sssss = glofz ==> Great Lakes Storm Outlook
+sssss = glsww ==> Great Lakes Storm Summary
+sssss = hcmng ==> Hydrometeorlogical Coordination Message
+sssss = hlswt ==> Hurricane Local Statement
+sssss = hsffz ==> High Seas Forecast
+sssss = hydsx ==> Daily Hydrometeorological Products
+sssss = hymcs ==> Monthly Hydrometeorological Plain Language Product
+sssss = hywcw ==> Weekly Hydrometeorological Plain Language Product
+sssss = icefz ==> Ice Forecast
+sssss = iobsv ==> Ice Observation
+sssss = lfpfl ==> Local Forecast
+sssss = lshwh ==> Lakeshore Warning or Statement
+sssss = lsrnw ==> Local Storm Report
+sssss = mapag ==> Mean Areal Precipitation
+sssss = mawfz ==> Amended Marine Forecast
+sssss = misax ==> Miscellaneous Local Product
+sssss = mrpag ==> Techniques Development Laboratory Marine Product
+sssss = mwsfz ==> Marine Weather Statement
+sssss = nowfp ==> Short Term Forecast
+sssss = npwww ==> Non-Precipitation Warnings, Watches, Advisories
+sssss = nshfz ==> Nearshore Marine Forecast / Surf Forecast
+sssss = offfz ==> Offshore Forecast
+sssss = opufp ==> Other Public Products
+sssss = oswag ==> Ocean Surface Winds
+sssss = pbffn ==> Prescribed Burn Forecast
+sssss = pnsno ==> Public Information Statement
+sssss = psmfx ==> Prognostic Snow Melt
+sssss = psnac ==> Post Storm Hurricane Report
+sssss = pwowo ==> Public Severe Weather Outlook
+sssss = rdffo ==> Revised Digital Forecast
+sssss = recsx ==> Recreational Report
+sssss = rersx ==> Record Report
+sssss = rfdfn ==> Rangeland Fire Danger Forecast
+sssss = rfwww ==> Red Flag Warning
+sssss = rtpas ==> Regional Max/Min Temp and Precipitation table
+sssss = rvasr ==> River Summary
+sssss = rvffg ==> River Forecast
+sssss = rvifi ==> River Ice Statement
+sssss = rvmsr ==> Miscellaneous River Product
+sssss = rvrfg ==> River Recreation Statement
+sssss = rvsfg ==> River Statement
+sssss = rwsaw ==> Regional Weather Summary
+sssss = rzffp ==> Regional Zone Forecast
+sssss = sabww ==> Snow Avalanche Bulletin
+sssss = saffn ==> Speci Agri Wx Fcst/Advisory/Flying Farmer FCST Outlook
+sssss = sagfw ==> Snow Avalanche Guidance
+sssss = sccac ==> Storm Summary
+sssss = scdcx ==> Supplementary Climatological Data (ASOS)
+sssss = scsfp ==> Selected Cities Summary
+sssss = sdsfu ==> Special Dispersion Statement
+sssss = selww ==> Severe Local Storm watch and watch Cancellation Msg
+sssss = sfdfx ==> State Forecast Discussion
+sssss = sfpfp ==> State Forecast
+sssss = sftfp ==> Tabular State Forecast
+sssss = sgwfa ==> Plain Language Significant Weather Forecast
+sssss = slsww ==> Severe Local Storm Watch and Areal Outline
+sssss = smaww ==> Marine Subtropical Storm Advisory
+sssss = smffn ==> Smoke Management Weather Forecast
+sssss = smwwh ==> Special Marine Warning
+sssss = spfwt ==> Storm Strike Probability Bulletin (TPC)
+sssss = spsww ==> Special Weather Statement
+sssss = stdat ==> Satellite Tropical Disturbance Summary
+sssss = stosx ==> Road Condition Reports (State Agencies)
+sssss = stpas ==> State Max/Min Temperature and Precipitation Table
+sssss = svrwu ==> Severe Thunderstorm Warning
+sssss = svsww ==> Severe Weather Statement
+sssss = swoac ==> Severe Storm Outlook Narrative (AC)
+sssss = swras ==> State Weather Roundup
+sssss = swsaw ==> State Weather Summary
+sssss = tavfp ==> Travelers Forecast Table
+sssss = tcafk ==> Tropical Cyclone Advisory
+sssss = tcdwt ==> Tropical Cyclone Discussion
+sssss = tcewt ==> Tropical Cyclone Position Estimate
+sssss = tcmwt ==> Msrine/Aviation Tropical Cyclone Advisory
+sssss = tcpwt ==> Public Tropical Cyclone Advisory
+sssss = tcstx ==> Satellite Tropical Cyclone Summary
+sssss = tcuwt ==> Tropical Cyclone Update
+sssss = tidso ==> Tide Report
+sssss = torwf ==> Tornado Warning
+sssss = tsmse ==> Tsunami Tide/Seismic Message
+sssss = tsuwe ==> Tsunami Watch/Warning
+sssss = tvlfp ==> Travelers Forecast
+sssss = twdac ==> Tropical Weather Discussion
+sssss = twoac ==> Tropical Weather Outlook and Summary
+sssss = twsac ==> Tropical Weather Summary
+sssss = uviae ==> UltraViolet Index
+sssss = vaafv ==> Volcanic Activity Advisory
+sssss = wcrax ==> Weekly Weather and Crop Report
+sssss = wdacx ==> Weekly Data For Agriculture
+sssss = wswww ==> Winter Weather Warnings, Watches, Advisories
+sssss = zfpfp ==> Zone Forecast Product
+
+
+when ccccc = altyp,
+
+sssss = (not used)
+
+*data site* ==> {SI|si}.aaaa
+
+where
+
+{SI|si} ==> Indicator for information element "data site"
+
+aaa(a) ==> is a string of three or four characters indicating the name
+of the site.
+aaa(a) = kwal ==> Wallops Island, Wallops Command and Data Acquisition
+Station
+aaa(a) = que ==> CMC, Quebec CANADA
+aaa(a) = xft ==> Franktown, CANADA
+
+*data time* ==> {DT|dt}.{hhnnss|a...a}
+
+where
+
+{DT|dt} ==> Indicator for information element "data time"
+hh ==> hour
+nn ==> minute
+ss ==> second
+aaaaaa ==> textual description (*/ie. latest/*)
+
+*data time period* ==> {TP|tp}.hh_1 nn_1 -hh_2 nn_2
+
+where
+
+{TP|tp} ==> Indicator for information element "data date period"
+
+hh_1 ==> number of hours (00-99) before reference date/time data time
+period begins
+nn_1 ==> number of minutes (00-99) before reference date/time data time
+period begins
+hh_2 ==> number of hours (00-99) after reference date/time data time
+period ends
+nn_2 ==> number of minutes (00-99) after reference date/time data time
+period ends
+
+*Flow Direction* ==> {FD|fd}.cc(c)
+
+where
+
+{FD|fd} ==> Indicator for the file communications flow direction
+
+cc(c) = in ==> incoming data on file server
+cc(c) = out ==> outgoing data on file server
+
+*forecast hour* ==> {FH|fh}.hhhh(c)
+
+where
+
+{FH|fh} ==> Indicator for information element "forecast hour"
+
+hhhh = afhr ==> all forecast hours
+hhhh = anal ==> analysis
+hhhh = #### ==> forecast hour (such as 1200 UTC forecast, 1500 UTC forecast)
+hhhhc = ####i ==> forecast hour index file
+hhhhc = anali ==> analysis index file
+
+*generating process* ==> {GP|gp}.pppppp(pppp)
+
+where
+
+{GP|gp} ==> Indicator for information element "generating process"
+
+pppppp = agrids ==> analysis grids
+pppppp = agrphs ==> analysis graphics
+pppppp = discsn ==> discussions
+pppppp = fgrids ==> forecast grids
+pppppp = fgrphs ==> forecast graphics
+pppppp = forcst ==> forecast (general)
+pppppp = obsvns ==> observations
+pppppp = warngs ==> warnings
+ppppppp = tractcf ==> tracker files
+
+*grid* ==> {GR|gr}.gggggggg
+
+where
+
+{GR|gr} ==> Indicator for information element "grid"
+
+gggggggg ==> is a string of eight characters indicating the grid used
+(table maintained by originating center). Multiple grids are indicated
+by setting gggggggg = allgrids. International coordination of a group of
+frequently-used grids would be useful.
+
+
+*layer of data* ==> {LY|ly}.s_1 ddddd_1 -s_2 ddddd_2
+
+where
+
+{LY|ly} ==> Indicator for information element "layer of data"
+
+{s_1 |s_2 } = h ==> height
+{s_1 |s_2 } = p ==> pressure
+{s_1 |s_2 } = s ==> sigma
+{s_1 |s_2 } = t ==> potential temperature
+ddddd_1 ==> value of lower surface of layer of type s_1 .
+ddddd_2 ==> value of upper surface of layer of type s_2 .
+(multiple layers are indicated by setting ddddd_1 = ddddd_2 = 99999)
+
+*level of data* ==> {LV|lv}. sddddd
+
+where
+
+{LV|lv} ==> Indicator for information element "level of data"
+s = h ==> height
+s = p ==> pressure
+s = s ==> sigma
+s = t ==> potential temperature
+ddddd ==> value of surface. Multiple levels are indicated by setting
+ddddd = 99999.
+
+*model subcategory* ==> {MS|ms}.ss(ssss)
+
+where
+
+{MS|ms} ==> Indicator for information element "model subcategory"
+
+ss(ssss) ==> is a string of two to six characters indicating the model
+subcategory.
+
+ss(ssss) = ocean ==> ocean
+
+
+*name of storm* ==> {NS|ns}.xxx(xxxxxxxxxxxx)
+
+where
+
+
+{NS|ns} = => Indicator for the name of storm
+
+xxx(xxxxxxx) = => is a string of three or ten characters indicating the
+name of the storm.
+
+*parameter* ==> {PA|pa}.pppppppp
+
+where
+
+{PA|pa} ==> Indicator for information element "parameter"
+
+pppppppp ==> is a string of eight characters or less indicating the
+parameter
+
+(table maintained by originating center)
+allparms ==> is multiple parameters
+ensmeans ==> is ensemble means
+membernn ==> where nn = iteration for a fcst on a redefind set of base
+values International coordination of a group of frequently-used
+parameters would be useful.
+modclim ==> is model climatology data
+modstd ==> is model standard deviation
+modvar ==> is model variance data
+monthavg ==> is monthly averages
+obsclim ==> is observations climatology data
+obsstd ==> is observations standard deviation
+obsvar ==> is observations variance data
+rmseclim ==> is root mean square error climatology data
+seasavg ==> is seasonal averages
+smodclim ==> is seasonal average model climatology data
+smodstd ==> is seasonal average model stadard deviation
+smodvar ==> is seasonal average model variance
+sobsclim ==> is seasonal average observation climatology data
+sobsstd ==> is seasonal average observation standard deviation
+sobsvar ==> is seasonal average observation variance
+srmseclm ==> is seasonal average root mean square error climatology data
+
+*product type* ==> {PT|pt}.ppp(p)
+
+where
+
+{PT|pt} ==> Indicator for information element "product type"
+
+pppp = bin ==> binary data products
+pppp = graf ==> graphic product
+pppp = grid ==> gridded product
+pppp = mrgm ==> meteogram
+pppp = sndn ==> sounding product
+pppp = txt ==> text product
+
+*reference date* ==> {RD|rd}.yyyymm(dd)
+
+where
+
+{RD|rd} ==> Indicator for information element "reference date"
+yyyy ==> 4-digit Year
+mm ==> month
+dd ==> day (optional parameter)
+
+*reference time* ==> {RT|rt}.hhnnss
+
+where
+
+{RT|rt} ==> Indicator for information element "reference time"
+hh ==> hour
+c nn ==> minute
+ss ==> second
+
+*run of model* ==> {MR|mr}.rrr(r)
+
+where
+
+{MR|mr} ==> Indicator for information element "run of model"
+rr(rr) ==> is a string of two to four characters indicating the model run
+
+(table maintained by originating center)
+rr(rr) = em ==> eulerian mass-core run
+rr(rr) = fcst ==> climate forecast model run
+rr(rr) = hind ==> climate hindcast model run
+rr(rr) = nmm ==> non-hydrostatic MESO meso model run
+
+*server directory tree* ==> {SD|sd}-ccnnnxxx
+
+ 
+
+where
+
+{SD|sd} ==> Indicator for directory tree on server
+cc ==> country [FIPS standard 10-4]
+nnn ==> center [WMO standard 306 Part II]
+xxx ==> file server number (001-999)
+
+*sequence number* ==> {SN|sn}.xx(xx)
+
+where
+
+{SN|sn} ==> Indicator for cycle sequence numbers
+
+xx(xx) = 01(01)
+
+thru 99(99) ==> sequence number, length of two or four digits determined
+when number of subdirectories or files are established by center writing
+the files
+
+*status of data files* ==> {ST|st}-ssss
+
+where
+
+{ST|st} ==> Indicator for status of data files for appropriate use level
+
+ssss = expr ==> experimental
+ssss = opnl ==> operational
+ssss = opnt ==> operational test
+
+*tables* ==> {TB|tb}.tttt
+
+where
+
+{TB|tb} ==> Indicator for information element "tables"
+tttt = bufr ==> BUFR tables
+tttt = crex ==> CREX tables
+tttt = grib ==> GRIB tables
+tttt = stns ==> observing station information
+
+*time entered* ==> {TE|te}-ddhhnnss (OPTIONAL)
+
+where
+
+{TE|te} ==> Indicator for information element in stat file "Time
+entered or written"
+
+dd ==> day written
+hh ==> hour written (on 24 hour clock)
+nn ==> minutes written
+ss ==> seconds written
+
+*type of level or layer* ==> {TL|tl}.ttt(tt)
+
+where
+
+{TL|tl} ==> Indicator for information element "type of level or layer"
+
+ttttt = aerol ==> aerological diagrams (ash cloud)
+ttttt = atmos ==> entire atmosphere considered as a single level or layer
+ttttt = cape ==> convective available potential energy
+ttttt = cin ==> convective inhibition
+ttttt = cloud ==> cloud parameters
+ttttt = cprec ==> convective precipitation
+ttttt = curnn ==> current component-V
+ttttt = curre ==> current component-U
+ttttt = danly ==> ocean depth anomaly
+ttttt = depth ==> ocean depth
+ttttt = dflt ==> default for unidentified file type
+ttttt = div ==> divergence
+ttttt = dspow ==> direction of spectral peak of the ocean waves
+ttttt = hight ==> geopotential height
+ttttt = htsww ==> height of swell waves
+ttttt = htwnw ==> height of wind waves
+ttttt = hlcy ==> helicity
+ttttt = iccon ==> ice concentration
+ttttt = iccvg ==> ice convergence/divergence
+ttttt = icdft ==> ice drift
+ttttt = icgrt ==> ice growth
+ttttt = icthk ==> ice thickness
+ttttt = icwfp ==> cloud or non-conforming ICWF parameters
+ttttt = lftdx ==> surface lifted index
+ttttt = mdsw ==> mean direction of swell waves
+ttttt = mdww ==> mean direction of wind waves
+ttttt = mixed ==> a variety of levels or layers
+ttttt = mpsw ==> mean period of swell waves
+ttttt = mpww ==> mean period of wind waves
+ttttt = mxdt ==> mixed data
+ttttt = mxwnd ==> maximum wind
+ttttt = ncprc ==> nonconvective precipitation
+ttttt = ocean ==> ocean
+ttttt = otemp ==> ocean temperature
+ttttt = ownde ==> U-wind component at 10m above msl
+ttttt = owndn ==> V-wind component at 10m above msl
+ttttt = plots ==> observational plotted data
+ttttt = potmp ==> potential temperature
+ttttt = prcrt ==> precipitation rate
+ttttt = precp ==> precipitation parameters
+ttttt = precw ==> precipital water
+ttttt = press ==> pressure
+ttttt = probp ==> probability parameters
+ttttt = proby ==> probability values (thunderstorms, precip)
+ttttt = pspow ==> period of spectral peak of the ocean waves
+ttttt = pwd ==> period of wave direction
+ttttt = pwp ==> primary wave period
+ttttt = radtn ==> long wave radiation
+ttttt = rhmdy ==> relative humidity
+ttttt = scwd ==> secondary wave direction
+ttttt = scwp ==> secondary wave period
+ttttt = sfcp ==> surface parameters
+ttttt = sflux ==> surface flux
+ttttt = sfsig ==> surface sigma
+ttttt = sigma ==> sigma
+ttttt = sigwx ==> significant weather
+ttttt = siwht ==> significant wave height
+ttttt = slnty ==> ocean salinity
+ttttt = snow ==> snow properties
+ttttt = snpar ==> snow parameters
+ttttt = soilp ==> soil parameters
+ttttt = stabi ==> stability index
+ttttt = strme ==> U-component of storm motion
+ttttt = strmn ==> V-component of storm motion
+ttttt = surfc ==> earth's surface
+ttttt = tempr ==> temperature
+ttttt = tempv ==> temperature values (max, min, dew point)
+ttttt = thkns ==> thickness (relative topography)
+ttttt = tmpwr ==> water temperature warming
+ttttt = tprec ==> total precipitation
+ttttt = tropx ==> tropopause
+ttttt = turbl ==> clear air turbulence
+ttttt = uvin ==> uv index
+ttttt = vis ==> visibility
+ttttt = vwind ==> vertical wind shear
+ttttt = vvel ==> vertical velocity
+ttttt = vortc ==> vorticity
+ttttt = waveh ==> wave height
+ttttt = waves ==> swell height
+ttttt = wdir ==> wind direction at 10m above msl
+ttttt = winde ==> eastward wind component-U
+ttttt = windn ==> northward wind component-V
+ttttt = wndsh ==> wind sea height
+ttttt = wspd ==> wind speed at 10m above msl
+ttttt = o1hac ==> 1-hour averaged categorical ozone concentration
+ttttt = o8hac ==> 8-hour averaged categorical ozone concentration
+ttttt = o1hba ==> 1-hour backward average
+ttttt = o8hba ==> 8-hour backward average
+
+*type of model* ==> {MT|mt}.mmm(mm)
+
+where
+
+{MT|mt} ==> Indicator for information element "type of model"
+
+mmm(mm) ==> is a string of four or five characters indicating the type
+of model used (table maintained by originating center)
+
+*_NCEP Models_*
+
+mmm(mm) = anoc ==> Ocean Analysis
+mmm(mm) = anst ==> Sea Surface Temperature Analysis
+mmm(mm) = cfs ==> Climate Forecast System Model
+mmm(mm) = clim ==> Climate Prediction Model
+mmm(mm) = cmaq ==> Community Multiscale Air Quality Model
+mmm(mm) = convc ==> National Aviation Convective Weather
+mmm(mm) = ensg ==> Global Ensembles
+mmm(mm) = ensr ==> Regional Ensembles
+mmm(mm) = etao ==> Eta Forecast Model (Olympics)
+mmm(mm) = fnl ==> Global Data Assimilation System (Final) Model
+mmm(mm) = gfs ==> Global Forecast System Model
+mmm(mm) = ghm ==> Geophysical Fluid Dynamics Laboratory Hurricane Model
+mmm(mm) = icing ==> Icing Detection & Forecast Models
+mmm(mm) = mrge ==> Merge of Models (ETA, RUC, & GFS)
+mmm(mm) = nam ==> North American Mesoscale Model
+mmm(mm) = ngm ==> Nested Grid Forecast Model
+mmm(mm) = ngx ==> Navy NOGAPS Model
+mmm(mm) = nmm ==> Non-Hydrostatic MESO Model
+mmm(mm) = ocen ==> Ocean Forecast
+mmm(mm) = rsas ==> RUC Surface Assimilation System
+mmm(mm) = rsm ==> Regional Spectral Model
+mmm(mm) = ruc ==> Rapid Update Cycle Forecast Model
+mmm(mm) = sref ==> Short Range Ensemble Forecast Model
+mmm(mm) = wrf ==> Weather Research and Forecasting Model
+mmm(mm) = wvwm ==> NOAA Wave Watch III Model
+
+
+*_JMA Models_*
+
+mmm(mm) = jmasm ==> Global Spectral Model
+
+*_UK Models_*
+
+mmm(mm) = bmoav ==> Global Aviation Forecast Model
+
+*_ECMWF Models_*
+
+mmm(mm) = cy23r ==> ECMWF Regional Forecast Model
+
+*_BMO Models_*
+
+mmm(mm) = gasp ==> GASP Global Assimilation& Prognosis spectral Model
+
+*_CMC Models_*
+
+mmm(mm) = gem ==> GEM model-uniform-resolution 100 km global grid
+
+------------------------------------------------------------------------
+
+*Annex 2 : Server Directory Tree Description and Structure*
+
+The contents of the *server directory tree* ==> {SD|sd}-ccnnnxxx
+
+Directory trees in this file are designated with /### and the end of
+each tree limb is flagged with ## ; therefore, any definition beyond the
+## flag would be /file names/ within that sub-directory. Depending on
+the size of the file server and extent of the directories and
+sub-directories used, this file could be very large, but would map the
+entire server site directory structure.
+
+For Example: *sd-us008001* ==> file name of server directory map on the
+RTH Washington (OSO Gateway) file server
+
+Content structure of this file (assume a continuous string of fields in
+the file):
+
+/###RD.19971208_RT.120000_GP.obvns_TP.0300-0259
+##RD.19991208_RT.120000_GP.warng_TP.0100-0359
+##RD.19971208_RT.000000_GP.obvns_TP.0300-0259
+##RD.19971207_RT.120000_GP.obvns_TP.0300-0259##
+/###CU.knhc##
+/###CU.ncep##
+/###DO.drft_DD.19990305_TB.crex
+##DO.code_DD.19990510
+##DO.tcom_DD.19990818
+##DO.tcom_DD.19990821##
+/###CU.genrl_RD.19990605_DC.sfmar
+##CU.genrl_RD.19990605_DC.sflnd
+##CU.genrl_RD.19990604_DC.sfmar
+##CU.genrl_RD.19990604_DC.sflnd
+##CU.genrl_RD.19990603_DC.sfmar
+##CU.genrl_RD.19990603_DC.sflnd##
+	 
+
+Taking the example set of defined directory tree limbs above, the more
+familiar display format would look like:
+
+
+        root
+
+
+|----RD.19971208  
+| |------RT.120000  
+| | |----- GP.obvns  
+| | | |----- TP.0300-0259  
+| | |----- GP.warng  
+| | |----- TP.0100-0259  
+| |------RT.000000  
+| |----- GP.obvns  
+| |------ TP.0300-0259  
+|-----RD.19971207  
+| |----- RT.120000  
+| |----- GP.obvns  
+| |----- TP.0300-0259  
+|-----CU.knhc  
+|-----CU.ncep  
+|-----DO.dfrt  
+| |-----DD.199990305  
+| |-----TB.crex  
+|-----DO.code  
+| |-----DD.199990510  
+|-----DO.tcom  
+| |----- DD.19990818  
+| |-----DD.19990821  
+|----CU.genrl  
+|------RD.1990605  
+| |------DC.sfmar  
+| |------DC.sflnd  
+|------RD.19990604  
+| |------DC.sfmar  
+| |------DC.sflnd  
+|------RD.19990603  
+|------DC.sfmar  
+|------DC.sflnd  
+
+Remembering that only *Directory* names will be listed in the
+*{SD|sd}-ccnnnxxx* file.
+
+
+------------------------------------------------------------------------
+
+US Dept of Commerce <http://www.doc.gov>
+National Oceanic and Atmospheric Administration <http://www.noaa.gov/>
+National Weather Service <http://www.nws.noaa.gov/>
+Office of the Chief Information Officer (OCIO11)
+1325 East West Highway
+Silver Spring, MD 20910
+Page last modified: July 26, 2005
+
+Page Author: _Data Management <mailto:NWS.DM@noaa.gov>_
+
+	Disclaimer <http://www.nws.noaa.gov/disclaimer.html>
+Feedback <http://weather.gov/feedback.php> 	
+Privacy Notice <http://www.nws.noaa.gov/notice.html>
+Credits <http://weather.gov/credits.html>
+

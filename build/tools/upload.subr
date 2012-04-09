@@ -1,0 +1,85 @@
+#
+# $Id$
+#
+upload_get_osparams () {
+
+    os=`uname`
+    case $os in
+	*BSD)
+	    osname=freebsd
+	    osrelease=`uname -r | cut -f 1 -d "-"`
+	    osarch=`uname -m`
+	    ;;
+	Linux)
+	    osarch=`uname -m`
+	    if [ -f /etc/fedora-release ]
+	    then
+		osname=fedoracore
+		release=`cat /etc/fedora-release`
+		osrelease=`echo $release | cut -d ' ' -f 3`
+	    elif [ -f /etc/SuSE-release ]
+	    then
+		osname=opensuse
+		release=`cat /etc/SuSE-release`
+		osrelease=`echo $release | cut -d ' ' -f 3`
+	    elif [ -f /etc/redhat-release ]
+	    then
+		release=`cat /etc/redhat-release`
+		osrelease=`echo $release | cut -d ' ' -f 4`
+		osname=`echo $release | cut -d ' ' -f 1`
+		if [ $osname = "CentOS" ]
+		then
+		    osname="centos"
+		else	
+		    osname="scientific-linux"
+		fi
+	    elif [ -f /etc/debian_version ]
+	    then
+		osname=debian
+		osrelease=`cat /etc/debian_version`
+		[ $osarch = "x86_64" ] && osarch="amd64"
+	    fi
+	    ;;
+	SunOS)
+	    osname=solaris
+	    osrelase=
+	    osarch=`uname -m`
+	    ;;
+	Darwin)
+	    osname=macosx
+	    osrelease="10.5"
+	    osarch=`uname -m`
+	    ;;
+    esac
+
+    echo $osname $osrelease $osarch
+}
+
+upload_get_pkgparams () {
+
+	osname=$1
+
+	savedir=`pwd`
+	case $osname in
+	    freebsd)
+	        cd ../bsd
+		pkgfilename=`ls ${name}-${version}*.tbz`
+		pkglocaldir="../bsd"
+		cd $savedir
+		;;
+	    fedoracore|opensuse|centos|scientific-linux)
+	        cd ../rpm
+		pkgfilename=`ls ${name}-${version}*.rpm`
+		pkglocaldir="../rpm"
+		cd $savedir
+		;;
+	    debian)
+	        cd ../debian
+		pkgfilename=`ls ${name}_${version}*.deb`
+		pkglocaldir="../debian"
+		cd $savedir
+		;;	   
+	esac
+
+	echo $pkgfilename $pkglocaldir
+}

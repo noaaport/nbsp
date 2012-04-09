@@ -1,0 +1,8 @@
+1) Disable in NetworkManager
+
+2) In rc.local
+   SL
+	ifconfig eth1 <ip> pointopoint 10.0.9.54
+
+   Debian
+	route add -net 224.0.0.0 netmask 240.0.0.0 dev eth1

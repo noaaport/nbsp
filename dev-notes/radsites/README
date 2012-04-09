@@ -1,0 +1,37 @@
+$Id$
+
+Wed Sep 22 14:41:22 AST 2010
+	
+nexrad-stations.csv was extacted from nexrad-stations.txt
+(which is a copy of the nexrad-stations.TXT refered to below)
+using cvt-nexrad-stations.tcl. It is the file used in the gisfilter.
+
+There is a correction in nexrad-stations.csv. This is the file used
+in the gisfilter.
+
+Wed Feb 17 20:03:32 AST 2010 -
+
+radplaces-2.txt was extracted from nexrad-stations.txt, which is a copy of
+
+	https://mi3.ncdc.noaa.gov//mi3report/MISC/nexrad-stations.TXT
+
+by filtering it through the s2.awk script, and eliminating the entries
+from Korea, Japan and Azores. It was not used any further.
+
+The sample file tdwr.cfg (in the ondas examples directory) was
+created using the information in tdwr-radar-list.pdf.
+
+A template for the dual polarization products was also created in the
+ondas example directory (using newproducts-2010/radar.txt).
+
+Original -
+
+- radplaces.txt was extracted from radar_places.txt from Gibson Ridge.
+- radsites.txt was extracted from radstations.txt, which in turn
+  was extracted from the NWS prod.hdrs.html
+
+It is clear that the four-letter code used in radplaces.txt is the
+three-letter code for the site, with the same first letter of
+the corresponding station (office) pre-pended.
+The file s.awk, applied to radsites.txt, yields the four-letter
+code that coincides with the radplaces.txt list.

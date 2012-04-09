@@ -1,0 +1,103 @@
+[Solved - Mon Aug  1 09:41:39 AST 2005]
+
+
+Thu Jul 28 20:28:19 AST 2005
+
+1) The first problem was that when the program starts from the boot
+process, the HUP signal is ignored. The solution to that was to reset
+the default signal actions before installing our signal handler thread.
+
+2) The second problem is seen here (filters.c):
+
+When the emwinfilter is activeted (sopen()), the reloading
+of filters after receiving a sighup signal hangs in bb.
+(In the filter in the list); that is in the pclose().
+I checked that it hangs after the fclose(), in the wait4()
+of pclose, as if the fclose() does not acuse the filter to quit.
+Only when the emwinfilter gets closed (by killing it externally
+or when the server reloads it [which is why I added that on a sighup])
+then this function proceeds with cc and so on with the other filters
+in the list.
+
+The problem does not occur if I use popen("r+") to open the emwin
+filter, but only with spopen(). This is what I don't understand.
+
+The question is why pclose() (specifically wait4()) blocks
+until the emwinfilter closes?
+
+static void delete_filter_entry(int i){
+
+  if(gflist.filters[i].fname != NULL)
+    log_info(gflist.filters[i].fname);
+
+  log_info("aa");
+  if(gflist.filters[i].fd != -1)
+    close(gflist.filters[i].fd);
+
+  log_info("bb");
+
+  if(gflist.filters[i].fp != NULL)
+    pclose(gflist.filters[i].fp);
+
+  log_info("cc");
+  if(gflist.filters[i].fname != NULL)
+    free(gflist.filters[i].fname);
+
+  gflist.filters[i].fd = -1;
+  gflist.filters[i].fp = NULL;
+  gflist.filters[i].type = FILTER_TYPE_NONE;
+  gflist.filters[i].fname = NULL;
+  --gflist.n;
+}
+
+3) The third problem, even when these two were solved, was similar
+to the SIGHUP problem but with the SIGTERM signal. The filters would
+hang, until the emwin filter was kiled eplicitly.
+
+The solution, but which I did not try, is to put close_server()
+in cleanup() _before_ kill_filters() so that the emwin filter
+is already closed at the time the filters are closed.
+
+Again, I don't understand why the filters can't pclose until
+the emwin filter closes. 
+
+I don't know if it is a deadlock between the pclose() wait()
+and our own wait or what.
+
+In all cases I found that the filters get hung in the call to gets.
+Even after the server calls pclose, the filter does not return from
+gets. Therefore the server hangs on the wait in pclose.
+
+[Sat Jul 30 20:27:06 AST 2005]
+My conclusion is that, for some reason, the call to the function
+spopen()/spclose() used by the two-way pipe for the emwin filter
+(which must be used in linux because there popen is not full duplex),
+causes the fclose in the normal pclose() not to signal EOF to
+the filters. So pclose() hangs in in the wait. 
+I never uderstood why that happens.
+
+My solution was to write the filters so that they quit when
+they are sent a blank line (i.e., just a "\n"). The server
+then sends that when it wants to close the filters.
+
+But the question is, why using popen(r+) [in FreeBSD] works
+but not spopen?
+
+[Mon Aug  1 09:40:24 AST 2005]
+SOLUTION: The problem we not closing all the previously opened pipes
+	in spopen. This has been fixed now in release-0.3p2
+
+	In addition the solution of 0_2p2 with a pipe for writing
+	and a fifo for reading was not working because we were calling
+	fclose on the pipe instead of pclose. It is fixed in 0_2p2b,
+	but that is not tagged.
+
+	We have two solutions. The advantage of pfopen.c vs. spopen.c
+	is that in the pfpoepn we use the native popen package.
+	The disadvantage is that we have an extra file (the fifo).
+
+	We have decided to follow the pipe + fifo solution
+	because it gives usa more portable solution since it is
+	based on the OS native popen package.
+	The version 0_2p2b referred to above, has been tagged as 0_4
+	and is the one we will continue to follow.

@@ -1,0 +1,212 @@
+From nws-changes-bounces@unidata.ucar.edu  Wed Jan  6 13:32:29 2010
+Return-Path: <nws-changes-bounces@unidata.ucar.edu>
+Received: from tropical.caribeweather.net (localhost [127.0.0.1])
+	by tropical.caribeweather.net (8.14.2/8.14.2) with ESMTP id o06H01cw001726
+	for <nieves@localhost>; Wed, 6 Jan 2010 13:32:29 -0400 (AST)
+	(envelope-from nws-changes-bounces@unidata.ucar.edu)
+Envelope-to: nieves@caribeweather.com
+Delivery-date: Wed, 06 Jan 2010 11:57:46 -0500
+Received: from mail.caribeweather.com [75.127.110.31]
+	by tropical.caribeweather.net with IMAP (fetchmail-6.3.8)
+	for <nieves@localhost> (single-drop); Wed, 06 Jan 2010 13:32:29 -0400 (AST)
+Received: from mail by www31.yourdnshost.com with spam-scanned (Exim 4.67)
+	(envelope-from <nws-changes-bounces@unidata.ucar.edu>)
+	id 1NSZCY-0006l7-Qd
+	for nieves@caribeweather.com; Wed, 06 Jan 2010 11:57:46 -0500
+X-Spam-Checker-Version: SpamAssassin 3.2.4 (2008-01-01) on
+	www31.yourdnshost.com
+X-Spam-Level: 
+X-Spam-Status: No, score=0.1 required=5.0 tests=AWL,BAYES_00,FH_DATE_PAST_20XX,
+	UPPERCASE_75_100 autolearn=no version=3.2.4
+Received: from laraine.unidata.ucar.edu ([128.117.140.62]:58114)
+	by www31.yourdnshost.com with esmtp (Exim 4.67)
+	(envelope-from <nws-changes-bounces@unidata.ucar.edu>)
+	id 1NSZCY-0006l4-Gy
+	for nieves@caribeweather.com; Wed, 06 Jan 2010 11:57:42 -0500
+Received: by laraine.unidata.ucar.edu (Postfix, from userid 60001)
+	id E606FCB22E; Wed,  6 Jan 2010 09:57:41 -0700 (MST)
+Received: from conan.unidata.ucar.edu (conan.unidata.ucar.edu [128.117.149.64])
+	by laraine.unidata.ucar.edu (Postfix) with ESMTP id 836D7CB22C;
+	Wed,  6 Jan 2010 09:57:34 -0700 (MST)
+Received: from conan.unidata.ucar.edu (localhost [127.0.0.1])
+	by conan.unidata.ucar.edu (Postfix) with ESMTP id 035BD79920;
+	Wed,  6 Jan 2010 09:57:34 -0700 (MST)
+X-Original-To: nws-changes@conanmail.unidata.ucar.edu
+Delivered-To: nws-changes@conanmail.unidata.ucar.edu
+Received: from laraine.unidata.ucar.edu (laraine.unidata.ucar.edu
+	[128.117.140.62])
+	by conan.unidata.ucar.edu (Postfix) with ESMTP id 613EC79916
+	for <nws-changes@conanmail.unidata.ucar.edu>;
+	Wed,  6 Jan 2010 09:57:31 -0700 (MST)
+Received: by laraine.unidata.ucar.edu (Postfix, from userid 206)
+	id E5A0DCB1BC; Wed,  6 Jan 2010 09:57:30 -0700 (MST)
+X-Original-To: nws-changes@unidata.ucar.edu
+Delivered-To: nws-changes@unidata.ucar.edu
+Received: from [128.117.140.22] (jay.unidata.ucar.edu [128.117.140.22])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "Linda Miller",
+	Issuer "mailhost.unidata.ucar.edu" (verified OK))
+	by laraine.unidata.ucar.edu (Postfix) with ESMTP id 368E2CB1B9;
+	Wed,  6 Jan 2010 09:57:30 -0700 (MST)
+Message-ID: <4B44C0F9.10805@unidata.ucar.edu>
+Date: Wed, 06 Jan 2010 09:57:29 -0700
+From: Linda Miller <lmiller@unidata.ucar.edu>
+User-Agent: Thunderbird 2.0.0.23 (Windows/20090812)
+MIME-Version: 1.0
+To: nws-changes@unidata.ucar.edu
+X-Loop: nws-changes@unidata.ucar.edu
+Subject: [nws-changes] 20100106: graphical turbulence guidance: ADMIN NOTICE
+	NOUS41 KWBC]
+X-BeenThere: nws-changes@unidata.ucar.edu
+X-Mailman-Version: 2.1.12rc2
+Precedence: list
+List-Id: Mailing list to announcement changes to the NWS data streams
+	<nws-changes.unidata.ucar.edu>
+List-Unsubscribe: <http://mailman.unidata.ucar.edu/mailman/options/nws-changes>, 
+	<mailto:nws-changes-request@unidata.ucar.edu?subject=unsubscribe>
+List-Archive: <http://mailman.unidata.ucar.edu/mailing_lists/archives/nws-changes>
+List-Post: <mailto:nws-changes@unidata.ucar.edu>
+List-Help: <mailto:nws-changes-request@unidata.ucar.edu?subject=help>
+List-Subscribe: <http://mailman.unidata.ucar.edu/mailman/listinfo/nws-changes>, 
+	<mailto:nws-changes-request@unidata.ucar.edu?subject=subscribe>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Sender: nws-changes-bounces@unidata.ucar.edu
+Errors-To: nws-changes-bounces@unidata.ucar.edu
+X-Spam-Seen: Yes
+Status: R
+
+
+
+-------- Original Message --------
+
+735 
+NOUS41 KWBC 061654
+PNSWSH
+
+TECHNICAL IMPLEMENTATION NOTICE 10-03
+NATIONAL WEATHER SERVICE HEADQUARTERS WASHINGTON DC
+1155 AM EST WED JANUARY 6 2010
+
+TO:       NATIONAL WEATHER SERVICE /NWS/ OFFICES
+          FAMILY OF SERVICES /FOS/ SUBSCRIBERS
+          FEDERAL AVIATION ADMINISTRATION /FAA/ OFFICES
+          OTHER NWS AVIATION CUSTOMERS AND PARTNERS
+
+FROM:     CYNTHIA ABELMAN
+          CHIEF...AVIATION SERVICES BRANCH
+
+SUBJECT:  ENHANCEMENT OF GRAPHICAL TURBULENCE 
+          GUIDANCE /GTG/: EFFECTIVE FEBURARY 9 2010
+
+NOTE: THE FOLLOWING CHANGES HAVE NO IMPACT ON NOAA WEATHER WIRE 
+SERVICE SUBSCRIBERS.
+
+THE GTG HAS BEEN AVAILABLE AS AN NWS OPERATIONAL PRODUCT SINCE 
+MARCH 2003. THE GTG IS AN AUTOMATICALLY GENERATED TURBULENCE 
+PRODUCT THAT DIAGNOSES AND PREDICTS THE LOCATION AND INTENSITY 
+OF TURBULENCE OVER THE CONTERMINOUS UNITED STATES AND ADJACENT 
+COASTAL WATERS /CONUS/. 
+
+EFFECTIVE FEBURARY 9 2010 AT 1300 COORDINATED UNIVERSAL TIME 
+/UTC/ THE NWS AVIATION WEATHER CENTER /AWC/ IN KANSAS CITY 
+MISSOURI WILL IMPLEMENT AN ENHANCED VERSION OF THE GRAPHICAL 
+TURBULENCE GUIDANCE /GTG/ PRODUCT. THIS ENHANCEMENT EXTENDS THE 
+VERTICAL DOMAIN OF THE GTG INTO THE MIDDLE LEVEL OF THE 
+ATMOSPHERE ... BETWEEN 10 AND 19 THOUSAND FEET ABOVE MEAN SEA 
+LEVEL /FLIGHT LEVELS 100 TO 190/. TABLE 1 CONTAINS THE 
+COMMUNICATION HEADERS FOR EACH FLIGHT LEVEL /FL/ AS WELL AS 
+COMPOSITE GRIB FILE CHANGE INFORMATION. 
+
+THE GTG PRODUCES AN ANALYSIS... 1... 2 AND 3-HOUR TURBULENCE 
+FORECAST EVERY HOUR AND A 6... 9 AND 12-HOUR FORECAST EVERY 3 
+HOURS IN GRIB FORMAT. THIS PRODUCT ALSO PROVIDES A COMPOSITE 
+FIELD REPRESENTING THE MAXIMUM TURBULENCE VALUE BETWEEN 10 AND 
+45 THOUSAND FEET FOR EACH ANALYSIS AND FORECAST.  
+
+FOR MORE INFORMATION ABOUT THE GTG PRODUCT...GO TO /USE LOWER 
+CASE LETTERS/:
+
+     HTTP://WWW.WEATHER.AERO/TURBULENCE/DESCRIPTION.PHP
+
+THE CURRENT PRODUCT DESCRIPTION DOCUMENT FOR THE GTG IS 
+AVAILABLE AT /USE LOWER CASE LETTERS/:
+
+     HTTP://PRODUCTS.WEATHER.GOV/
+
+TABLE 1: NEW GTG WMO HEADERS:
+
+    FL       HEADING
+---------   -----------
+   100      YVW*70 KKCI
+   110      YVW*67 KKCI
+   120      YVW*65 KKCI
+   130      YVW*62 KKCI
+   140      YVW*60 KKCI
+   150      YVW*57 KKCI
+   160      YVW*55 KKCI
+   170      YVW*53 KKCI
+   180      YVW*50 KKCI
+   190      YVW*48 KKCI
+   200      YVW*46 KKCI                       
+
+WHERE   * = A = 00 HOUR ANALYSIS
+        * = B = 01 HOUR FORECAST
+        * = C = 02 HOUR FORECAST
+        * = D = 03 HOUR FORECAST
+        * = G = 06 HOUR FORECAST
+        * = J = 09 HOUR FORECAST
+        * = M = 12 HOUR FORECAST
+
+THE LEVEL INDICATOR IN THE COMPOSITE GRIB FILE WILL CHANGE TO 
+.../ATMOS COL/. THIS ENHANCEMENT WAS MADE TO INDICATE THE DATA 
+IN THE FILE IS A COMPOSITE FOR ALL LEVELS FROM FL450 DOWN TO 
+FL100.  
+
+THE GTG PRODUCT WILL CONTINUE TO BE AVAILABLE IN GRIB FORMAT 
+FROM THE FOLLOWING SYSTEMS:
+
+1. SATELLITE BROADCAST NETWORK /SBN/ NOAAPORT CHANNEL
+    
+2. NWS FTP SERVERS AT /USE LOWER CASE LETTERS EXCEPT SL AND DC 
+MUST BE IN UPPER CASE/:
+
+     FTP://TGFTP.NWS.NOAA.GOV/SL.US008001/DC.AVSPT                                                                                      
+
+3. THE FAMILY OF SERVICES /FOS/ HIGH RESOLUTION DATA SERVICE AND 
+SERVER ACCESS SERVICE
+
+ADDITIONAL INFORMATION ON NWS AVIATION PRODUCT DISSEMINATION IS 
+AVAILABLE AT /USE LOWER CASE LETTERS/:
+
+     HTTP://WEATHER.GOV/OS/DISEMSYS.SHTML  
+
+IF YOU HAVE QUESTIONS REGARDING THIS PRODUCT...CONTACT: 
+
+    MICHAEL PAT MURPHY
+    WARNING COORDINATION METEOROLOGIST
+    AVIATION WEATHER CENTER
+    7220 NW 101ST TERRACE    
+    ROOM 101
+    KANSAS CITY MO 64153
+    PHONE: 816-584-72048    
+    E-MAIL: MICHAEL.PAT.MURPHY@NOAA.GOV
+
+THIS AND OTHER NWS TECHNICAL IMPLEMENTATION NOTICES ARE 
+AVAILABLE ONLINE AT /USE LOWER CASE LETTERS/
+
+      HTTP://WWW.NWS.NOAA.GOV/OM/NOTIF.HTM
+
+$$
+NNNN
+
+
+
+
+
+
+_______________________________________________
+nws-changes mailing list
+nws-changes@unidata.ucar.edu
+For list information or to unsubscribe, visit: http://www.unidata.ucar.edu/mailing_lists/ 
+

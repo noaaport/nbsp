@@ -1,0 +1,17 @@
+channel
+	required:
+		title
+		link
+		desc
+	optional:
+		lan
+		copyright
+		webmaster
+		pubdate
+		...
+
+item:
+	required:
+		title or description
+	optional:
+		...

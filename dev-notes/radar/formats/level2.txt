@@ -1,0 +1,561 @@
+http://www.unidata.ucar.edu/support/help/MailArchives/datastream/msg01662.html
+
+
+    * To: gatlin@xxxxxxxxxxxxx
+    * Subject: [Datastream #JDE-285071]: LDM nexrad level II file extension
+    * From: "Unidata Datastream Support" <support-datastream@xxxxxxxxxxxxxxxx>
+    * Date: Tue, 22 Apr 2008 14:04:48 -0600
+    * Delivered-to: support-datastream@unidata.ucar.edu by laraine.unidata.ucar.edu (Postfix) with ESMTP id 5D55CCB186; Tue, 22 Apr 2008 14:04:49 -0600 (MDT) id 34FB0D4FBA; Tue, 22 Apr 2008 14:04:49 -0600 (MDT)
+
+Hi Patrick,
+
+This is a follow-up to the email that Jeff Weber sent you yesterday...
+
+re:
+> Okay, the ".nb2" has been removed from the file we receive via LDM.
+
+OK.
+
+> So now if I try to uncompress the nexrad2 file (same header as below) with
+> "bunzip2" it still states that the "file is not a bzip2 file". Is there
+> some other decoder that needs to be used to uncompress this file (i.e.,
+> what do you use to uncompress these nexrad2 files)?
+
+Our GEMPAK distribution contains a decoder for the NEXRAD Level 2 data that
+are distributed in the IDD because the work to be done to uncompress the
+data requires more than bunzip2.  The data files in the NEXRAD2 datastream
+are composed of an uncompressed header followed by 'n' sections of bzip2-compressed
+blocks that are each prefaced by a 4-byte integer that represents the
+length of the bzip2-compressed section.  One wrinkle in this
+is that the integer size of the last block in the volume is the negative
+of the size of the last bzip2-compressed piece (i.e., -1 * length).
+
+> Could there something in the header of this nexrad2 file that is causing this
+> problem?
+
+Yes, the header is uncompressed, and the following sections are bzip2-compressed.
+
+> I see the header is different from archived level II data from NCDC.
+
+Yes.  It is possible that the archived level II data from NCDC is already uncompressed.
+The other possibility is that the station ID, which is contained in zero-based word
+24, is not included.
+
+=======================================================================
+NOTE (JFN) -
+The station ID KDMX can be added to bytes 21-24 of the archive2 format
+NCDC files (which is what dcnexr2 does in addition to un-bzipping).
+
+http://www.unidata.ucar.edu/support/help/MailArchives/gempak/msg03449.html
+======================================================================
+
+
+The best NOAA URL we have for NEXRAD Level 2 data is:
+
+http://www.ncdc.noaa.gov/oa/radar/leveliidoc.html
+
+Note that this document:
+
+- describes the file layout after the bzip2-compressed blocks have
+  been uncompressed
+
+- indicates that bytes 0-8 should be 'ARCHIVE2.'.  This is now incorrect;
+  bytes 0-3 should be 'ARCH' or 'AR2V'.
+
+- lacks the information that the station ID ** when included ** is
+  contained in header word 24
+
+I don't know if it will help you or not, but I am ataching the
+GEMPAK C routines, dcnexr2.c, bufread.c, and getbuf.c , that shows the
+flow of how to decode the NEXRAD Level 2 data delivered in the IDD.
+ 
+Cheers,
+
+Tom
+
+
+
+
+
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <bzlib.h>
+#include "mkdirs_open.h"
+
+#include "geminc.h"
+#include "gemprm.h"
+#include "bridge.h"
+#include "dccmn.h"
+
+int bufread(int fd, char *buf, int bsiz, int *blen);
+
+
+struct packet {
+  short junk1[6];
+  unsigned short size;
+  unsigned char id, type;
+  unsigned short seq, gen_date;
+  unsigned int gen_time;
+  unsigned short num_seg, seg;
+  unsigned int coll_time;
+  unsigned short coll_date, range, angle, radial, rad_status, elev_angle;
+  unsigned short elev_num;
+  short first_refl, first_dopp;
+  unsigned short refl_size, dopp_size;
+  unsigned short num_refl_gate, num_dopp_gate, sector;
+  float gain;
+  unsigned short refl_ptr, vel_ptr, spec_ptr, dopp_res, pattern;
+  short junk2[4];
+  unsigned short refl_ptr_rda, vel_ptr_rda, spec_ptr_rda, nyquist, atten;
+  short thresh;
+  short junk3[17];
+  unsigned char data[2304];
+  float dbz[460];
+};
+
+static char *compression_type = "BZIP2";
+
+
+/*
+   nexradII outfile
+*/
+static void
+usage(
+	char *av0 /*  id string */
+)
+{
+  (void)fprintf(stderr,
+		"Usage: %s [options] [filename]\t\nOptions:\n", av0);
+  (void)fprintf(stderr,
+		"\t-v		Verbose, tell me about each product\n");
+  (void)fprintf(stderr,
+		"\t-l logfile	Default logs to syslogd\n");
+  (void)fprintf(stderr,
+		"\t-C type	Compression BZIP2)\n");
+  (void)fprintf(stderr,
+		"\t-f           Filter out type 2 radials with status 28\n");
+  (void)fprintf(stderr,
+		"\t-s STID      Set bytes 21-24 with STID\n");
+	exit(1);
+}
+
+char filnam[DCMXLN+1]="";
+char *filptr=NULL;
+
+static void cleanup()
+{
+char command[1024];
+if(filptr != NULL) {
+   sprintf(command,"mv %s %s\0",filnam, filptr);
+   system(command);
+   }
+}
+
+int main(int argc, char *argv[], char *envp[])
+{
+    char clength[4];
+    char *block = (char *)malloc(8192), *oblock = (char *)malloc(262144);
+    unsigned isize = 8192, osize=262144, olength;
+    int length, go;
+    int compress = 0;
+    char *logfname = "";
+    int bzip2 = 1;
+    int filter = 0;
+    int fd;
+    char stid[5]={0};
+
+#define NUMEXP  1
+        int     nexp    = NUMEXP;
+        char    *prgnam = "DCNEXR2";
+	char	*defprm = " ";
+	char	*defstn = " ";
+	char	*dfstn2 = " ";
+	int	idfadd=0;
+	int	idfmax=0;
+	int	ndfhr1=0;
+	int	ndfhr2=0;
+	int     idfwdh  = 0;
+
+/*
+**      Do not change these variables. These variables are used by all
+**      decoders for getting the command line parameters.
+*/
+        char    parms[NUMEXP][DCMXLN], newfil[DCMXLN], curtim[DCMXLN];
+        int     i, j, num, iret, ier;
+
+	char    stntbl[DCMXLN], stntb2[DCMXLN], prmfil[DCMXLN];
+        int     iadstn, maxtim, nhours, txtflg, iwndht;
+
+        char    errstr[DCMXLN];
+	extern int optind, opterr;
+	extern char *optarg;
+	int ch;
+	long flen;
+
+	if(atexit(cleanup) != 0)
+	   {
+	   printf("could not register exit routine\n");
+	   }
+/*
+**      Initialize the output logs, set the time out and
+**      parse the command line parameters. dc_init calls in_bdta in 5.4.3+.
+*/
+
+	/*
+	 * process some extra arguments "fC:" for this routine
+	 */
+
+	num = argc;
+	i = 1;
+	while ( i < num )
+	   {
+	   if ( strcmp(argv[i], "-f") == 0 )
+	      {
+	      num--;
+	      filter = 1;
+	      for ( j = i+1; j < argc; j++ )
+		 argv[j-1] = argv[j];
+	      continue;
+	      }
+	   if ( strcmp(argv[i], "-C") == 0 )
+	      {
+	      /* optional compression specification for future use */
+	      num-=2;
+	      for ( j = i+2; j < argc; j++ )
+		 argv[j-2] = argv[j];
+	      continue;
+	      }
+	   i++;
+	   }
+
+	argc = num;
+
+        dc_init ( prgnam, argc, argv, nexp, parms, &num, &iret );
+
+/*
+**      Check for an initialization error.
+**      On an error, exit gracefully.
+*/
+	if  ( iret == -11 ) {
+	   fd = 1;
+	}
+        else if  ( iret < 0 ) {
+            sprintf ( errstr, "Error initializing\0" );
+            dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+            dc_exit ( &iret );
+        }
+	else {
+	    char *cpos = strrchr(parms[0],'/');
+
+	    if ( cpos == NULL )
+	        sprintf(filnam,".%s\0",parms[0]);
+	    else {
+		strncpy(filnam,parms[0],cpos - parms[0]+1);
+		strncat(filnam,".",1);
+		strcat(filnam,cpos+1);
+	    }
+
+	    cfl_inqr ( parms[0], NULL, &flen, newfil, &iret );
+	    if(iret != 0)
+		{
+		filptr = parms[0];
+		strcpy(newfil,filnam);
+		sprintf ( errstr, "new output file %s\0",newfil);
+                dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+		}
+
+	    if ((fd=mkdirs_open(newfil,O_WRONLY | O_CREAT, 0664)) == -1) {
+	            sprintf ( errstr, "Cannot open %s\0", newfil);
+	            iret = -10;
+	            dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+	            dc_exit( &iret );
+	            }
+
+	    lseek(fd, 0, SEEK_END);
+        }
+
+/*
+**      Set the decoder parameters to the command line entries or
+**      default values.
+*/
+        dc_gopt ( defprm, defstn, dfstn2, idfadd, idfmax, ndfhr1, ndfhr2,
+                  idfwdh, prmfil, stntbl, stntb2, &iadstn, &maxtim, curtim, &nhours,
+                  &txtflg, &iwndht, &iret );
+
+        if(stntbl[0] != '\0')
+           {
+	   strncat(stid,stntbl,4);
+	   sprintf ( errstr, "STID set to %s\0", stid );
+	   dc_wclg ( 2, "DCNEXR2", iret, errstr, &ier );
+	   }
+
+
+    /*
+     * set up signal handlers
+     */
+    go = 1;
+    while (go) {
+
+	/*bufread(0, (char *)(&length), 4, &i);*/
+	bufread(0, clength, 4, &i);
+	if (i != 4) {
+	    if (i > 0) {
+		sprintf ( errstr, "Short block length\0");
+		iret = -5;
+		dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+            }
+	    else
+		iret = 0;
+	    dc_exit(&iret);
+	}
+
+	if ( (memcmp(clength, "ARCH", 4)==0) ||
+	     (memcmp(clength, "AR2V", 4)==0) ) {
+	    memcpy(block, clength, 4);
+	    bufread(0, block+4, 20, &i);
+	    if (i != 20) {
+		sprintf ( errstr, "Missing header\0");
+		iret = -5;
+		dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+		dc_exit( &iret);
+	    }
+
+	    if ( stid[0] != 0 ) memcpy(block+20,stid,4);
+	    lseek(fd, 0, SEEK_SET);
+	    write(fd, block, 24);
+	    continue;
+	}
+
+	length = 0;
+	for(i=0;i<4;i++)
+	   length = ( length << 8 ) + (unsigned char)clength[i];
+
+	if(length < 0) {
+	    sprintf ( errstr, "EOF %ld\0",length);
+	    iret = -9;
+	    dc_wclg ( 2, "DCNEXR2", iret, errstr, &ier );
+	    length = -length;
+	    go = 0;
+	}
+	if (length > isize) {
+	    isize = length;
+	    sprintf ( errstr, "Expanding input buffer to %d\0", isize);
+	    iret = -7;
+	    dc_wclg ( 2, "DCNEXR2", iret, errstr, &ier );
+	    if ((block = (char *)realloc(block, isize)) == NULL) {
+	        sprintf ( errstr, "Cannot allocate input buffer\0");
+		iret = -4;
+	        dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+		dc_exit( &iret );
+	    }
+	}
+        sprintf(errstr, "read block size %d\0",length);
+	dc_wclg ( 4, "DCNEXR2", 0, errstr, &ier );
+	bufread(0, block, length, &i);
+	if (i != length) {
+	    sprintf ( errstr, "Short block read\0");
+	    iret = -5;
+	    dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+	    dc_exit( &iret );
+	}
+	if (length > 10) {
+	    int error;
+
+	tryagain:
+	    olength = osize;
+	    if (bzip2 == 1)
+#ifdef BZ_CONFIG_ERROR
+		error = BZ2_bzBuffToBuffDecompress(oblock, &olength,
+		/*error = bzBuffToBuffDecompress(oblock, &olength,*/
+#else
+		error = bzBuffToBuffDecompress(oblock, &olength,
+#endif
+					       block, length, 0, 0);
+	    if (error) {
+		if (error == BZ_OUTBUFF_FULL) {
+		    osize += 262144;
+		    sprintf(errstr, "Expanding output buffer to %d\0", osize);
+		    iret = -7;
+	            dc_wclg ( 2, "DCNEXR2", iret, errstr, &ier );
+		    if ((oblock=(char*) realloc(oblock, osize)) == NULL) {
+			sprintf(errstr, "Cannot allocate output buffer\0");
+			iret = -4;
+	                dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+			dc_exit(&iret);
+		    }
+		    goto tryagain;
+		}
+		sprintf(errstr, "decompress error - %d\0", error);
+		iret = -5;
+	        dc_wclg ( 0, "DCNEXR2", iret, errstr, &ier );
+		dc_exit( &iret);
+	    }
+	    if (filter) {
+	        int i;
+
+		for (i=0; i < olength; i += 2432) {
+		    struct packet *packet=(struct packet *) (oblock+i);
+
+		    if (packet->type != 2 || packet->rad_status != 28)
+			write(fd, oblock+i, 2432);
+		}
+	    }
+	    else write(fd, oblock, olength);
+	}
+    nbull++;
+    }
+    close(fd);
+    iret = 5;
+    dc_exit(&iret);
+}
+
+#include "geminc.h"
+#include "gemprm.h"
+#include "bridge.h"
+
+
+fd_set readfds;
+fd_set exceptfds;
+
+int bufread(fd,buf,bsiz, bread)
+int fd;
+char *buf;
+int bsiz;
+int *bread;
+{
+int width,ready;
+unsigned long idle=0;
+int binp;
+static int TV_SEC=3;
+struct timeval timeo;
+
+*bread = 0;
+width = fd + 1;
+
+while(*bread < bsiz)
+   {
+   FD_ZERO(&readfds);
+   FD_ZERO(&exceptfds);
+   FD_SET(fd, &readfds);
+   FD_SET(fd, &exceptfds);
+
+   timeo.tv_sec = TV_SEC;
+   timeo.tv_usec = 0;
+
+   ready = select(width, &readfds, 0, &exceptfds, &timeo);
+
+   if(ready <= 0)
+      {
+      idle += TV_SEC;
+      if(idle > DCDFTM)
+         {
+	 return(-3);
+         }
+      continue;
+      }
+
+   if(FD_ISSET(fd, &readfds) ) /* || FD_ISSET(fd, &exceptfds)) */
+      {
+      idle = 0;
+      binp = read(fd, buf + *bread,bsiz - *bread);
+ 
+      if(binp <= 0)
+         {
+         printf("End of Input\n");
+         return(-2);
+         }
+
+      *bread = *bread + binp;
+      if(*bread < bsiz)
+         {
+         FD_CLR(fd, &readfds);
+         FD_CLR(fd, &exceptfds);
+         }
+      }
+   else
+      {
+      /*printf("select returned %d but fd not set\n",ready); not ready on fd */
+      idle += TV_SEC;
+      if(idle > DCDFTM)
+	 return(-3);
+      continue;
+      }
+
+   }
+
+return(0);
+}
+
+
+
+#include <signal.h>
+#include <stdio.h>
+
+#define TIMEOUT 600
+
+static timeout_flag=0;
+
+static void alarm_handler()
+{
+    unotice("SIGALRM: no data, returning EOF");
+    timeout_flag++;
+}
+
+int getbuf(int unit, char *buf, int nbyte)
+
+{
+    static char initialized = 0;
+    char *p = buf;
+    int n = 0, status, i;
+
+    if (initialized) {
+        status  = 0;
+    } else {
+        struct sigaction        newact;
+        struct sigaction        oldact;
+
+        newact.sa_handler       = alarm_handler;
+#       ifdef SA_INTERRUPT
+            newact.sa_flags     = SA_INTERRUPT; /* for POSIX.1 semantics */
+#       else
+            newact.sa_flags     = 0;
+#       endif
+        (void) sigemptyset(&newact.sa_mask);
+
+        if (-1 == sigaction(SIGALRM, &newact, &oldact)) {
+            serror("getbuf: can't install SIGALRM handler");
+	    exit(2);
+        } else {
+            if (SIG_DFL != oldact.sa_handler && SIG_IGN != oldact.sa_handler) {
+                uerror("getbuf: SIGALRM handler already installed");
+		exit(2);
+            } else {
+                initialized     = 1;
+                status          = 0;
+            }
+        }
+    }
+    if(timeout_flag) return(0);
+    while (n < nbyte && !timeout_flag) {
+
+	alarm(TIMEOUT);
+	if ((i=read(unit, p, nbyte-n)) > 0) {
+	    n += i;
+	    p += i;
+	}
+	else if (i == 0) {
+	    break;
+	}
+	else {
+	    serror("Read error - getbuf");
+	    break;
+	}
+    }
+    alarm(0);
+    return(n);
+}

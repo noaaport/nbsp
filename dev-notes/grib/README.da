@@ -1,0 +1,44 @@
+Mon Feb  5 19:51:45 AST 2007
+
+The data directory
+
+	/var/noaaport/data/digatmos
+
+has files that can be read by both DA and IDV. In particular,
+those under the surface, syn, upperair and grib subdirectories.
+
+There is some quirk in DA that must be worked around when dealing
+with grib files. If you open DA and immediately try to open a grib file,
+it will write an error that it cannot access the file.
+I believe it is due to a bug in the DA initialization code (which is why
+I had stopped working on the grib stuff in DA). 
+
+The workaround is to first open some other data file, for example
+a surface or upperair.
+From the file menu, choose the "Import file" item. That file
+will not be used, but it has the effect of trigering the initalization
+code. After that, the grib files can be imported from the same File menu
+or from the buttons on the left hand side pannel (at the bottom).
+Then selcting the parameter to plot in that same pannel will
+produce the display.
+
+I have heard comments about DA not being able to handle large grib files,
+crashing and so on. It has never happened to me. 
+DA sometimes does take a long time to parse the file.
+It will do it, and in the end the plots are nice, but there are some files
+for which I take a walk and come back in a few minutes.
+
+Most other programs make a first pass through the file to build
+up a catalog and index of the file's contents.
+When requested to make a plot they go
+to the file again and get and decode the relevant data. It seems DA
+decodes the file as it goes through it, all in one pass, and that takes
+much longer time because all the data has to be decoded even if will
+request just a few plots. But after that waiting period, it
+does the plots well.
+
+Anyway, all this is work in progress, and I would be glad to hear
+confirmation/comments/suggestions about any of these things.
+
+-
+Jose

@@ -1,0 +1,10 @@
+Wed Jan 17 22:55:49 AST 2007
+
+This the implementation of the nbspdb as a RECNO db. The problem
+with this implementation is the requirement of the secondary db
+to be able to search the elements by the sequence number.
+
+The advantege of the implementation in terms of the fname
+is the absence of the secondary db, which apparently makes
+it faster. I decided to stick with the old version.
+

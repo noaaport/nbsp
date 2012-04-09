@@ -1,0 +1,68 @@
+# This version of the grib.m4 was copied from the gempak version,
+# omitting the decoder invocation.
+
+dnl
+dnl $Id$
+dnl 
+
+matchmore2_binary($rc(station), kwbe, $rc(wmoid), ^[lm],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), kwbh, $rc(wmoid), ^[yz].[aijkl],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), ^kwb, $rc(wmoid), ^[yz].[aijqhg],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+dnl
+dnl Commented out in gempak because it causes dcgrib2 to dump core too often
+dnl
+matchmore2_file($rc(station), kwbc, $rc(wmoid), ^[lm].r, model/gfs, $ymdh.gfs212)dnl
+
+matchmore2_file($rc(station), kwbc, $rc(wmoid), ^[lm].g, model/gfs, $ymdh.gfs160)dnl
+
+matchmore2_file($rc(station), kwbc, $rc(wmoid), ^[lm].o, model/gfs, $ymdh.gfs254)dnl
+
+matchmore2_file($rc(station), kwbc, $rc(wmoid), ^[lm].t, model/gfs, $ymdh.gfs161)dnl
+
+matchmore2_binary($rc(station), kwbc, $rc(wmoid), ^h.[i-p],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), kwbk, $rc(wmoid), ^h,
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), ^kwb, $rc(wmoid), ^h.[ef][a-z][0-9][0-9],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), ^kwb, $rc(wmoid), ^h.[abcd][a-z][0-9][0-9],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore_binary($rc(wmoid), ^h.[t-w],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore_binary($rc(wmoid), ^o,
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), k([^w]..|w[^b].), $rc(wmoid), ^[yz],
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), ^k, $rc(wmoid), haxa00,
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), ^ecm, $rc(wmoid), ^h,
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_binary($rc(station), egrr, $rc(wmoid), ^h,
+model/unknown/$rc(station), ${wmoid}_${ymd_hm}.grb)dnl
+
+matchmore2_file($rc(station), kwbe, $rc(wmoid), ^[lm].b, model/eta218, $ymdh.eta)dnl
+
+matchmore2_file($rc(station), kwbe, $rc(wmoid), ^[lm].s, model/eta-ak, $ymdh.eta)dnl
+
+matchmore2_file($rc(station), kwbd, $rc(wmoid), ^[lm].e, model/dgex, $ymdh.dgex)dnl
+
+matchmore2_file($rc(station), kwbd, $rc(wmoid), ^[lm].f, model/dgex-ak, $ymdh.dgex)dnl
+
+matchmore2_file($rc(station), kwbn, $rc(wmoid), ^[lm].u, model/ndfd, $ymdh.ndfd)dnl
+
+stopmatch

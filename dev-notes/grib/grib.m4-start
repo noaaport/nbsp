@@ -1,0 +1,36 @@
+dnl
+dnl $Id$
+dnl 
+
+# These entries are based on the rules suggested in the file
+# gribtonc entries in the netcdf decoders package.
+# (And they coincide with most of the rules that pqact.gempak
+# saves under model/unknown.)
+
+# ETA/NGM/RUC model on Lambert conformal CONUS grid
+match2_file($rc(station), ^kwb, $rc(wmoid), ^[yz].q,
+model/grib, ${ymdh}_eta.grb)dnl
+
+# RUC2 model on Lambert conformal CONUS grid
+match2_file($rc(station), ^kwb, $rc(wmoid), ^y.w,
+model/grib, ${ymdh}_ruc2.grb)dnl
+
+# ECMWF model on global 2.5 x 2.5 degree grid
+match2_file($rc(station), ecmf, $rc(wmoid), ^h.[a-l],
+model/grib, ${ymdh}_ecmwf.grb)dnl
+
+dnl # GFS model on thinned grids, interpolated to global 5.0 x 2.5 regular grid
+dnl match2_file($rc(station), ^kwb, $rc(wmoid), ^h.[i-p],
+dnl model/grib, ${ymdh}_gfs.grb)dnl
+
+# MRF model on global 5.0 x 2.5 degree grids
+match_file($rc(wmoid), ^h.[a-d],
+model/grib, ${ymdh}_mrf25.grb)dnl
+
+# MRF model on global 5.0 x 5.0 degree grid
+match2_file($rc(station), kwbc, $rc(wmoid), ^h.[ef],
+model/grib, ${ymdh}_mrf50.grb)dnl
+
+# SST model on global 2.0 x 2.0 degree grid
+match_file($rc(wmoid), ^h.[t-w],
+model/grib, ${ymdh}_sst.grb)dnl

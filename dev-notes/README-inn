@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+Configuring inn, either in sending or receiving mode, requires
+the installation of:
+	- the configuration files
+	- news.daily
+	- syslog
+
+In addition, in receiving mode, the nsbp spool directory must be writeable
+by the news user. There are two options:
+
+	- On options is to make the spool diectory
+	
+		root:news  0775
+
+	- the other is
+		
+		news:news  0755
+
+
+
+	
+

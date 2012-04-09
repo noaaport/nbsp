@@ -1,0 +1,307 @@
+From the Unysis web page
+Sat Jul  8 14:54:50 AST 2006
+This the text version of WMO_Header_Text.html
+-
+
+   WMO Header Information
+
+
+    Text Data
+
+
+    WMO Header information
+
+Syntax:
+
+TTAAII CCCC
+
+Where:
+
+    * * TT *- Report type
+      <file:////home1/web/root/wxp/Appendices/WMO.html#Types>
+    * * AA* - Region of the report
+      <file:////home1/web/root/wxp/Appendices/WMO.html#Region>
+    * *II* - Report number
+    * *CCCC* - Report dissimination location
+
+
+      Report Types
+
+*Type* 	*Description* 	*Codes*
+A	Summaries and analyses 	TEXT/WMO
+C	Climatic data		EXT/WMO
+D 	Grid point information 	GRID
+E 	Satellite imagery 	 
+F	Forecasts		TEXT/WMO
+G 	Grid point information 	GRID
+H 	Grid point information 	GRIB
+I 	Binary observations 	BUFR
+J 	Binary forecasts 	BUFR
+N 	Notices			TEXT
+O 	Oceanographic data 	GRIB
+P 	Pictorial data 	Redbook
+Q 	Pictorial data (regional) 	 
+R 	Hydrological data 	TEXT/WMO
+S	Surface data		TEXT/WMO
+T	Satellite data		TEXT/WMO
+U	Upper air data		TEXT/WMO
+V 	National data 	 
+W	Watches,warnings and advisories 	TEXT
+X 	Grid point information 	GRID
+Y 	Grid point information 	GRIB
+Z 	Grid point information 	GRIB
+
+*[A] Analyses and summaries*
+
+*TT* 	*Explanation* 	*Code Form*
+AB 	Weather summaries 	TEXT
+AC 	Convective/Cyclone discussions 	TEXT
+AI 	Ice discussions 	FM 44 (ICEAN)
+AO 	Ozone discussions 	TEXT
+AR 	Radar discussions 	TEXT
+AS 	Surface discussions/analyses 	FM 45 (IAC), FM 46 (IAC FLEET), TEXT
+AT 	Satellite discussions 	FM 85 (SAREP)
+AU 	Upper air discussions 	FM 45 (IAC)
+AX 	Tropical and miscellaneous discussions 	TEXT
+
+*[C] Climatic data*
+
+*TT* 	*Explanation* 	*Code Form*
+CA 	Climatic anomalies 	TEXT
+CE 	Monthly data - upper air 	FM 76 (CLIMAT TEMP SHIP)
+CH 	Monthly data - surface 	FM 72 (CLIMAT SHIP)
+CO 	Monthly data - ocean areas 	FM 73 (NACLI, CLINP, SPCLI, CLISA, INCLI)
+CS 	Monthly data - surface 	FM 71 (CLIMAT)
+CU 	Monthly data - upper air 	FM 75 (CLIMAT TEMP)
+
+*[F] Forecast information*
+
+*TT* 	*Explanation* 	*Code Form*
+FA 	Aviation forecasts 	FM 53 (ARFOR)
+FB 	Upper level windows and temperatures 	FM 50 (WINTEM)
+FC  	Aerodrome forecasts (VT < 12hr) 	FM 51 (TAF)
+FD 	Radiological trajectory 	FM 57 (RADOF)
+FE 	Extended forecasts 	TEXT
+FF 	Shipping forecasts 	FM 46 (IAC FLEET)
+FI 	Iceberg forecasts 	TEXT
+FJ 	Radio warning service 	TEXT
+FM 	Temperature extreme forecasts 	TEXT
+FO 	Model guidance forecasts 	Formatted TEXT
+FP 	Public forecasts 	TEXT
+FQ 	Other shipping forecasts 	TEXT
+FR 	Aviation route forecasts 	FM 54 (ROFOR)
+FS 	Surface forecasts 	FM 45 (IAC), FM 46 (IAC FLEET), TEXT
+FT 	Aerodrome forecasts (VT > 12hr) 	FM 51 (TAF)
+FU 	Upper air forecasts 	FM 45 (IAC)
+FW 	Winter sports forecasts 	TEXT
+FX 	Miscellaneous forecasts 	TEXT
+FZ 	Shipping area forecasts 	FM 61 (MAFOR)
+
+*[S] Surface data*
+
+*TT* 	*Explanation* 	*Code Form*
+SA 	Aviation routine reports 	FM 15 (METAR), SAO
+SB 	Radar reports (part A) 	FM 20 (RADOB)
+SC  	Radar reports (part B) 	FM 20 (RADOB)
+SD 	Radar reports (parts A & B) 	FM 20 (RADOB), Formatted TEXT
+SE 	Earthquake/Seismic reports 	Formatted TEXT
+SF 	Atmopsheric reports 	FM 81 (SFAZI), FM 82 (SFLOC), FM 83 (SFAZU)
+SG 	Radiological data reports 	FM 22 (RADREP)
+SI 	Intermediate synoptic hour reports 	FM12 (SYNOP), FM13 (SHIP)
+SM 	Main synoptic hour reports 	FM12 (SYNOP), FM13 (SHIP)
+SN 	Nonstandard synoptic reports 	FM12 (SYNOP), FM13 (SHIP)
+SO 	Oceanographic data 	TEXT
+SP 	Special aviation reports 	FM 16 (SPECI)
+SR 	Hydrological reports 	FM 67 (HYDRA)
+ST 	Sea ice reports 	TEXT
+SU 	Snow depth reports 	TEXT
+SV 	Lake ice reports 	TEXT
+SX 	Miscellaneous reports 	TEXT
+
+*[T] Satellite data*
+
+*TT* 	*Explanation* 	*Code Form*
+TB 	Satellite orbit parameters 	Formatted TEXT
+TC 	Satellite cloud interpretations 	FM 85 (SAREP)
+TH  	Satellite derived upper air soundings 	FM 86 (SATEM)
+TI 	Satellite imagery 	NOAAPORT Satellite Format
+TR 	Clear radiance observations 	FM 87 (SARAD)
+TT 	Sea surface temperatures 	FM 88 (SATOB)
+TW 	Winds and cloud temperatures 	FM 88 (SATOB)
+TX 	Miscellaneous satellite reports 	TEXT
+
+*[U] Upper air data*
+
+*TT* 	*Explanation* 	*Code Form*
+UA 	Aircraft reports 	AIREP
+UB 	Aircraft reports 	AIREP
+UC  	Constant balloon data 	COLBA
+UD 	Aircraft reports 	FM 42 (AMDAR)
+UE 	Upper air temp data (part D) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UF 	Upper air temp data (part C, D) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM
+38 (TEMP MOBIL)
+UG 	Upper air wind data (part B) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UH 	Upper air wind data (part C) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UI 	Upper air wind data (part A, B) 	FM 32 (PILOT), FM 33 (PILOT SHIP),
+FM 34 (PILOT MOBIL)
+UK 	Upper air temp data (part B) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UL 	Upper air temp data (part C) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UM 	Upper air temp data (part A, B) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM
+38 (TEMP MOBIL)
+UN 	Rocketsonde reports 	FM 39 (ROCOB), FM 40 (ROCOB SHIP)
+UP 	Upper air wind data (part A) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UQ 	Upper air wind data (part D) 	FM 32 (PILOT), FM 33 (PILOT SHIP), FM
+34 (PILOT MOBIL)
+UR 	Aircraft recon reports 	RECCO
+US 	Upper air temp data (part A) 	FM 35 (TEMP), FM 36 (TEMP SHIP), FM 38
+(TEMP MOBIL)
+UT 	Aircraft reports 	FM 41 (CODAR)
+UX 	Miscellaneous upper air reports 	TEXT
+UY 	Upper air wind data (part C, D) 	FM 32 (PILOT), FM 33 (PILOT SHIP),
+FM 34 (PILOT MOBIL)
+UZ 	Dropsonde reports 	FM 37 (TEMP DROP)
+
+*[W] Watch and warning information
+*
+
+*TT* 	*Explanation* 	*Code Form*
+WA 	Aviation AIRMETs 	TEXT
+WF
+	Tornado warnings
+	TEXT
+WG
+	Flood watches and warnings
+	TEXT
+WH  	Marine watches and warnings
+	TEXT
+WO
+	Miscellaneous watches and warnings
+	TEXT
+WT
+	Tropical advisories
+	TEXT
+WU
+	Severe thunderstorm warnings 	TEXT
+WW 	Special weather statements 	TEXT
+
+
+      Report Region
+
+
+        Countries, regions and islands
+
+*AA* 	*Region* 	*AA* 	*Region* 	*AA* 	*Region*
+AB 	Albania 	AG 	Argentina 	AH 	Afghanistan
+AI 	Ascension lsland 	AK 	Alaska 	AL 	Algeria
+AN 	Angola 	AT 	Antigua, St Kitts and
+other British Islands in the vicinity 	AU 	Australia
+AZ 	Azores 	BA 	Bahamas 	BC 	Botswana
+BD 	Bruei Darussalam 	BE 	Bermuda 	BH 	Belize
+BI 	Burundi 	BJ 	Benin 	BK 	Banks Island
+BM 	Myanmar 	BN 	Bahrain 	BO 	Bolivia
+BQ 	Baltic Sea area 	BR 	Barbados 	BU 	Bulgaria
+BV 	Bouvet Island 	BW 	Bangladesh 	BX 	Belgium, Luxembourg
+BY 	Belarus 	BZ 	Brazil 	CA 	Caribbean area and
+Central America
+CD 	Chad 	CE 	Central African Republic 	CG 	Congo
+CH 	Chile 	CI 	China 	CM 	Cameroon
+CN 	Canada 	CO 	Colombia 	CR 	Spain (Canary Islands)
+CS 	Costa Rica 	CT 	Canton Island 	CU 	Cuba
+CV 	Cape Verde 	CY 	Cyprus 	CZ 	Czechoslovakia
+DJ 	Djibouti 	DL 	Germany 	DN 	Denmark
+DO 	Dominica 	DR 	Dominican Republic 	EG 	Egypt
+EQ 	Ecuador 	ER 	United Arab Emirates 	ES 	El Salvador
+ET 	Ethiopia 	FA 	Faeroes 	FG 	French Guyana
+FL 	Finland 	FJ 	Fiji 	FK 	Falkland Islands (Malvinas)
+FP 	St Pierre and Miquelon 	FR 	France 	FW 	Wallis and Futuna Islands
+GB 	Gambia 	GC 	Cayman Islands 	GD 	Grenada
+GE 	Gough Island 	GH 	Ghana 	GI 	Gibraltar
+GL 	Greenland 	GM 	Guam 	GN 	Guinea
+GO 	Gabon 	GQ 	Equatorial Guinea 	GR 	Greece
+GU 	Guatemala 	GW 	Guinea-Bissau 	GY 	Guyana
+HA 	Haiti 	HE 	St. Helena 	HK 	Hong Kong
+HO 	Honduras 	HU 	Hungary, Republic of 	HV 	Burkina Faso
+HW 	Hawaiian Islands 	IC 	Comoros 	ID 	Indonesia
+IE 	Ireland 	IL 	Iceland 	IN 	India
+IQ 	Iraq 	IR 	Iran, Islamic Republic of 	IS 	Isreal
+IV 	Ivory Coast 	IY 	Italy 	JD 	Jordan
+JM 	Jamaica 	JP 	Japan 	KA 	Caroline Islands
+KB 	Kiribati 	KI 	Chistmas Island 	KK 	Cocos Islands
+KN 	Kenya 	KO 	Korea, Republic of 	KP 	Cambodia
+KR 	Democratic People's Republic
+of Korea 	KU 	Cook Islands 	KW 	Kuwait
+LA 	Lao People's Democratic
+Republic (Laos) 	LB 	Lebanon 	LC 	Saint Lucia
+LI 	Liberia 	LN 	Southern Line Islands 	LS 	Lesotho
+LU 	Aleutian Islands 	LY 	Libyan Arab Jamahiriya 	MA 	Mauritius
+MB 	Marion Island 	MC 	Morocco 	MD 	Madeira
+MF 	Saint Martin, Saint Bartholomew,
+Guadeloupe and other French Islands
+in the vicinity 	MG 	Madagascar 	MH 	Marshall Island
+MI 	Mali 	MK 	Macquarie Island 	ML 	Malta
+MN 	Mt Maarten, St Eustatius and
+Saba 	MO 	Mongolia 	MR 	Martinique
+MS 	Malaysia 	MT 	Mauritania 	MU 	Macao
+MV 	Maldives 	MW 	Malawi 	MX 	Mexico
+MY 	Mariana lslands 	MZ 	Mozambique 	NC 	New Caledonia
+NF 	Norfolk Island 	NG 	Papua New Guinea 	NI 	Nigeria
+NK 	Nicaragua 	NL 	Netherlands 	NM 	Namibia
+NO 	Norway 	NP 	Nepal 	NR 	Niger
+NU 	Netherlands Antilles
+(Aruba, Bonaire, Curacao) 	NV 	Vanuatu 	NW 	Nauru
+NZ 	New Zealand 	OM 	Oman 	OR 	South Orkney Islands
+OS 	Austria 	PF 	French Polynesia 	PH 	Phillippines
+PI 	Phoenix Islands 	PK 	Pakistan 	PL 	Poland, Republic of
+PM 	Panama 	PO 	Portugal 	PR 	Peru
+PT 	Pitcairn Island 	PU 	Puerto Rico 	PY 	Paraguay
+QT 	Qatar 	RA 	Russian Federation (Asia) 	RE 	Reunion and associated
+islands
+RO 	Romania 	RS 	Russian Federation (Europe) 	RW 	Rwanda
+SB 	Sri Lanka 	SC 	Seychelles 	SD 	Saudi Arabia
+SG 	Senegal 	SI 	Somalia 	SK 	Sarawak
+SL 	Sierra Leone 	SM 	Suriname 	SN 	Sweden
+SO 	Solomon Islands 	SR 	Singapore 	SP 	Spain
+SU 	Swaziland 	SV 	Switzerland 	SW 	Santa Cruz Islands
+SY 	Syria Arab Republic 	SZ 	Spitzbergen 	TC 	Tristan da Cunha
+TD 	Trinidad and Tobago 	TG 	Togo 	TH 	Thailand
+TI 	Turk Islands 	TK 	Tokelau Islands 	TM 	Timor
+TN 	Tanzania, United Republic of 	TO 	Tonga 	TP 	Sao Tome and Principe
+TS 	Tunisia 	TU 	Turkey 	TV 	Tuvalu
+UG 	Uganda 	UK 	United Kingdom of Great Britain and
+Northern Ireland 	UR 	Ukraine
+US 	United States of America 	UY 	Uraguay 	VI 	Virgin Islands
+VN 	Venezuela 	VS 	Vietnam, Socialist Republic of 	WK 	Wake Island
+YE 	Yemen, Republic of 	YG 	Yugoslavia 	ZA 	South Africa
+ZB 	Zambia 	ZM 	Western Samoa 	ZR 	Zaire
+ZW 	Zimbabwe 	  	  	  	 
+
+
+        Continents, Oceans and Hemispheres
+
+*AA* 	*Region* 	*AA* 	*Region* 	*AA* 	*Region*
+AA 	Antarctica 	AC 	Artic 	AE 	South-East Asia
+AF 	Africa 	AM 	Central Africa 	AO 	West Africa
+AP 	Southern Africa 	AR 	Arabian Sea area 	AS 	Asia
+AW 	Near East 	EA 	East Africa 	EC 	East China Sea area
+EE 	Eastern Europe 	EM 	Middle Europe 	EN 	Northern Europe
+EU 	Europe 	EW 	Western Europe 	FE 	Far East
+GA 	Gulf of Alaska area 	GX 	Gulf of Mexico area 	IO 	Indian Ocean area
+ME 	Eastern Mediterranean area 	MM 	Mediterranean area 	MP 	Central
+Mediterranean area
+MQ 	Western Mediterranean area 	NA 	North America 	NT 	North Atlantic area
+OC 	Oceania 	OH 	Sea of Okhotsk 	PA 	Pacific area
+PE 	Persian Gulf area 	PN 	North Pacific area 	PQ 	Western North Pacific
+PS 	South Pacific area 	PW 	Western Pacific area 	PZ 	Eastern Pacific area
+SA 	South America 	SE 	Southern Ocean area 	SJ 	Sea of Japan area
+SS 	South China Sea area 	ST 	South Atlantic area 	XE 	Eastern hemisphere
+XN 	Northern hemisphere 	XS 	Southern hemisphere 	XT 	Tropical belt
+XW 	Western hemisphere 	XX 	for use where other
+designator are not appropriate 	  	 
+
+

@@ -1,0 +1,541 @@
+
+OUTLINE OF WMO BULLETIN HEADERS
+USED WITH
+NCEP GRIB
+
+*
+Revised 04/21/2006*
+*Red text depicts changes made since 04/07/2006*
+
+
+WMO BULLETIN HEADER
+
+
+           The WMO abbreviated heading is used to identify the NCEP GRIB
+messages; however, it is not a complete description of their content. 
+The user is cautioned against using the header as the sole determiner of
+the record content; one should, of course, rely on the Product
+Definition Section for that purpose.
+
+            Note: In the following, a hexadecimal number is enclosed in
+parentheses followed by the designation "hex".  The information needed
+to identify the NCEP product is contained in 21 octets.  The characters
+are encoded using the CCITT-ITA No. 5, also known (in the US) as ASCII
+characters, and are defined as follows:
+
+Octet
+	Header Content
+1
+	The character 'H' for GRIB bulletins sent to the NWS Family of
+Services, used for the WAFS program, and for general International Exchange
+            or
+The character ?O? for oceanographic GRIB bulletins intended for general
+International and National Exchange and for use in the NWS AWIPS program
+            or
+The characters 'L', 'M', 'Y' or 'Z' for meteorological GRIB bulletins
+intended for the NWS AWIPS program.
+2
+	A letter character specifying the type parameter as shown in Table A.1
+<#table-a1>.
+3
+	A letter character specifying the grid area as defined in Table A.2
+<#table-a2>.
+4
+	A letter or numeric character indicating the time difference between
+the reference time and valid time of the data as listed in Table A.3
+<#table-a3>, i.e., the forecast length.
+5-6
+	Numeric characters as defined in Table A.4 <#table-a4>.  Usually the
+pressure level, sometimes just a sequence number.  Some values have
+special level or layer meanings.
+7
+	Blank (20)hex
+8-11
+	Four characters identifying the originating center.  The first three
+characters are always ?KWB? for NCEP-produced messages.  The last
+character is a letter specifying the NCEP model as defined in Table A.5
+<#table-a5>.
+12
+	Blank (20)hex
+13-14
+	Two numeric characters providing the reference day of the month (01-31)
+of the data.
+15-18
+	Four numeric characters providing the reference hour and minute of the
+data.
+19-22
+	Four OPTIONAL characters: one blank (20)hex, then 'Pxx', where xx=AA,
+AB, AC ... AY,AZ, BA, BB, BC ... etc.  Used to indicate sequential parts
+of a very long message that has been subdivided. The *last* part of the
+message will have xx=Zn, where n is the next letter in the appropriate
+sequence.  Example: a five part message would have the parts indicated
+by PAA, PAB, PAC, PAD, PZE.
+19-21 or 23-25
+	Two ASCII carriage returns and a line feed, (0D0D0A)hex.
+
+
+
+The first six characters are commonly referred to as:
+
+T_1 T_2 A_1 A_2   ii
+
+In summary...
+
+Generic Meaning of   T_1   T_2   A_1   A_2   ii:
+
+                        T_1 :        Type of bulletin:  "H" for GRIB
+messages for
+                                                                       
+Family of Services, WAFS, and
+                                                                       
+International Exchange;
+                                                                ?O? and
+"E" for Oceanographic GRIB messages
+                                                                       
+for National and International Exchange
+                                                                       
+and for AWIPS GRIB messages; or
+                                                                "L",
+"M", "Y" or "Z" for AWIPS GRIB messages
+
+                        T_2 :        Type of data/parameter
+
+                        A_1 :       Grid
+
+                        A_2 :       Analysis or forecast hour
+
+ii:          Numeric.  Usually the pressure level, sometimes just a
+sequence number.  Some values have special level or layer meanings.
+
+            In the following tables, the columns headed AWIPS are
+augmentations to the common Family of Services (FOS), National, and
+International Exchange variables.  FOS, National and International GRIB
+messages (with H as the initial character) draw upon the left hand
+columns only.  National, International, and AWIPS GRIB messages (with O
+as the initial character) draw upon the middle column only.  AWIPS GRIB
+messages (with Y or Z as the initial character) use letters from both
+the left and right columns.  If each column contains entries for the
+same designator, the T_1 character (H, O, L, M, Y, or Z) indicates which
+entry to use.
+
+
+
+TABLE A.1   TYPE PARAMETERS - T_2
+(Header Octet 2)
+
+Designator 	PARAMETER
+
+	FOS & International (H) 	AWIPS (E or O) 	AWIPS (L, M, Y or Z)
+A
+	
+	U-wind/current component 	Cloud of non-conforming ICWF* parameters
+B
+	
+	V-wind/current component 	Vertical Wind Shear
+C
+	Vorticity 	Total Significant Wave Height 	Vorticity
+D
+	
+	Depth 	Probability Parameters
+E
+	Total Precipitation 	Ice Concentration 	Total Precipitation
+F
+	Long Wave Radiation 	Ice Thickness 	Precipitable Water
+G
+	Convective Precipitation 	Ice Drift 	Convective Precipitation
+H
+	Height (geopotential) 	Ice Growth 	Height (geopotential)
+I
+	
+	Ice Convergence 	Non-Convective Precipitation
+J
+	Significant Wave Height 	Period of Spectral Peak of the Ocean Waves
+Precipitation  Rate
+K
+	Primary Wave Period 	Direction of Spectral Peak of the Ocean Waves
+Visibility
+L
+	Primary Wave Direction 	Height of Significant Wind Waves 	Soil Parameters
+M
+	Secondary Wave Period 	Mean Period of Wind Waves 	Catagorical
+Parameters (yes/no)
+N
+	Secondary Wave Direction 	Mean Direction of Wind Waves 	Wind Speed or Gust
+O
+	Vertical Velocity 	Height of Significant Swell Waves 	Vertical Velocity
+P
+	Pressure 	Mean Direction of Swell Waves 	Pressure
+Q
+	
+	Wind Speed 	Stability Index
+R
+	Relative Humidity 	Wind Direction 	Relative Humidity
+S
+	Snow 	Salinity 	Snow
+T
+	Air Temperature 	Ocean Temperature 	
+U
+	U Wind Component 	Vessel Icing 	U Wind Component
+V
+	V Wind Component 	Visibility 	V Wind Component
+W
+	
+	Ocean Temperature Warming 	CAPE
+X
+	Surface Lifted Index 	Mixed Data 	Surface Parameters
+Y
+	UV Index 	Mean Period of Swell Waves 	CIN
+Z
+	Refer to GRIB PDS 	Refer to GRIB PDS 	Helicity
+
+
+* Surface wind direction, surface wind speed, surface dew-point
+temperature,
+   maximum surface temperature, and minimum surface temperature
+
+
+TABLE A.2   GRID DESIGNATOR - A_1
+(Header Octet 3)
+
+Designator 	Grid Number (See Table B)
+
+	FOS and International (H) 	AWIPS (O) 	AWIPS (L, M, Y or Z)
+A
+	21
+	228 - 2.5x2.5 deg lat/lon global 	201 - 381 km Northern Hemisphere
+B
+	22
+	218 - 12-km CONUS 	218 - 12-km CONUS
+C
+	23
+	219 - N. Hemisphere High Res 	175 - 10 km lat/lon Guam
+D
+	24
+	220 - S. Hemisphere High Res 	130 - 13-km CONUS
+E
+	25
+	221 - N. American High Res 	185 - 12 km CONUS (DGEX)
+F
+	26
+	229 - 1.0x1.0 deg lat/lon global 	186 ? 12 km Alaska (DGEX)
+G
+	50
+	230 - 0.5x0.5 deg lat/lon global 	160 - 47.5 km Alaska NPS
+H
+	
+	231 - 0.5x0.5 deg lat/lon N.H. 	213 - 95 km CONUS
+I
+	37
+	232 - 1.0x1.0 deg lat/lon N.H. 	202 - 191 km CONUS
+J
+	38
+	233 - 1.25x1.00 deg lat/lon global 	203 - 191 km Alaska
+K
+	39
+	234 - 0.25x0.25 deg lat/lon ECGM regional 	204 - 160 km Hawaii
+L
+	40
+	235 - 0.5x0.5 deg lat/lon global 	205 - 191 km Puerto Rico
+M
+	41
+	238 - Western North Atlantic lat/lon 	227 - 5 km CONUS
+N
+	42
+	239 - Alaska Regional lat/lon 	207 - 95 km Alaska
+O
+	43
+	244 - North Atlantic lat/lon 	254 - 40 km Mercator Pacific Region
+P
+	44
+	251 - COFS lat/lon 	237 - 32 km Puerto Rico
+Q
+	
+	253 - Eastern North Pacific lat/lon 	211 - 80 km CONUS
+R
+	
+	212 - 40 km CONUS 	212 - 40 km CONUS
+S
+	
+	253 - Eastern North Pacific lat/lon 	242 - 11.25 km Alaska
+T
+	61
+	214 - 48 km Alaska 	161 - 0.5 degree lat/lon Puerto Rico
+U
+	62
+	215 - 20 km CONUS 	215 - 20 km CONUS
+V
+	63
+	216 - 45 km Alaska 	216 - 45 km Alaska
+W
+	64
+	173 - 1/12 degree global lat/lon 	236 - 40 km CONUS
+X
+	
+	
+	243 - 0.4 degree NE Pacific
+Y
+	
+	
+	217 - 22 km Alaska
+Z
+	Refer to GRIB PDS
+
+
+
+Table A.3 FORECAST HOUR DESIGNATOR
+(Header Octet 4)
+
+DESIGNATOR 	FORECAST HOUR
+FOS, International (H) and AWIPS (L or Y) 	National, International (O) and
+AWIPS (E or O) 	AWIPS (M or Z)
+Octet 8-11 = KWBM
+	Octet 8-11 = KWBJ
+A
+	00 hour analysis 	00 hour analysis 	00 hour analysis 	02 hour fcst
+B
+	06 hour fcst 	12 hour fcst 	03 hour fcst 	03 hour fcst
+C
+	12 hour fcst 	24 hour fcst 	06 hour fcst 	04 hour fcst
+D
+	18 hour fcst 	36 hour fcst 	09 hour fcst 	08 hour fcst
+E
+	24 hour fcst 	48 hour fcst 	12 hour fcst 	09 hour fcst
+F
+	30 hour fcst 	60 hour fcst 	15 hour fcst 	10 hour fcst
+G
+	36 hour fcst 	72 hour fcst 	18 hour fcst 	14 hour fcst
+H
+	42 hour fcst 	84 hour fcst 	21 hour fcst 	15 hour fcst
+I
+	48 hour fcst 	96 hour fcst 	24 hour fcst 	16 hour fcst
+J
+	60 hour fcst 	108 hour fcst 	30 hour fcst 	20 hour fcst
+K
+	72 hour fcst 	120 hour fcst 	36 hour fcst 	21 hour fcst
+L
+	84 hour fcst 	144 hour fcst 	42 hour fcst 	27 hour fcst
+M
+	96 hour fcst 	168 hour fcst 	48 hour fcst 	54 hour fcst
+N
+	108 hour fcst 	192 hour fcst 	60 hour fcst 	66 hour fcst
+O
+	120 hour fcst 	216 hour fcst 	72 hour fcst 	33 hour fcst
+P
+	132 hour fcst 	240 hour fcst 	84 hour fcst 	39 hour fcst
+Q
+	144 hour fcst 	264 hour fcst 	96 hour fcst 	45 hour fcst
+R
+	156 hour fcst 	288 hour fcst 	120 hour fcst 	51 hour fcst
+S
+	168 hour fcst 	312 hour fcst 	132 hour fcst 	57 hour fcst
+T
+	180 hour fcst 	336 hour fcst 	144 hour fcst 	78 hour fcst
+U
+	192 hour fcst 	360 hour fcst 	156 hour fcst 	90 hour fcst
+V
+	204 hour fcst 	384 hour fcst 	168 hour fcst 	102 hour fcst
+W
+	216 hour fcst 	-
+	-
+	114 hour fcst
+X
+	228 hour fcst 	-
+	54 hour fcst 	
+Y
+	240 hour fcst 	-
+	66 hour fcst 	-
+Z
+	Refer to GRIB PDS 	Refer to GRIB PDS 	108 hour fcst 	Refer to GRIB PDS
+
+
+
+The WMO headings for Eta model products generated on grid 237 (Puerto
+Rico) and RUC model products generated on grid 236 (CONUS 40 km)
+and grid 130 (CONUS 13 km) use a special table for the FORECAST HOUR
+DESIGNATOR - A_2 (Header Octet 4). 
+This table is defined as follows:
+
+DESIGNATOR 	FORECAST HOUR
+AWIPS (Y or Z) 	DESIGNATOR 	FORECAST HOUR
+AWIPS (Y or Z)
+A
+	00 Hour Analysis 	N
+	18 Hour Forecast
+B
+	01 Hour Forecast 	O
+	24 Hour Forecast
+C
+	02 Hour Forecast 	P
+	30 Hour Forecast
+D
+	03 Hour Forecast 	Q
+	36 Hour Forecast
+E
+	04 Hour Forecast 	R
+	42 Hour Forecast
+F
+	05 Hour Forecast 	S
+	48 Hour Forecast
+G
+	06 Hour Forecast 	T
+	60 Hour Forecast
+H
+	07 Hour Forecast 	U
+	72 Hour Forecast
+I
+	08 Hour Forecast 	V
+	84 Hour Forecast
+J
+	09 Hour Forecast 	W
+	96 Hour Forecast
+K
+	10 Hour Forecast 	X
+	108 Hour Forecast
+L
+	11 Hour Forecast 	Y
+	120 Hour Forecast
+M
+	12 Hour Forecast 	Z
+	Refer to GRIB PDS
+
+
+The above table is maintained by the NWS Office of the Chief Information
+Officer and can be found online at:
+
+   http://www.weather.gov/tg/tablec10.html
+
+
+TABLE A.4   LEVEL DESIGNATORS - ii
+(Header Octets 5 and 6)
+
+            The following version of Table A.4 contains changes
+implemented by the WMO on November 3, 1993.  Unless indicated in Table
+A.4 below, the designator given is the hundreds and tens digits of the
+hPa level in the atmosphere, e.g. 70=700hPa; 03=30hPa, etc.
+
+DESIGNATOR 	LEVEL or LAYER
+99
+	1000 hPa
+98
+	Air Properties at the Surface of Earth
+97
+	Level of the Tropopause
+96
+	Level of the Maximum Wind
+94
+	Level of the 0 deg. C isotherm
+93
+	975 hPa
+92
+	925 hPa
+91
+	875 hPa
+89
+	Any Parameter Reduced to Sea Level
+88
+	Land/Water Properties at the Surface of the Earth/Ocean
+87
+	1000-500 hPa thickness
+86
+	Boundary Layer
+82
+	825 hPa
+77
+	775 hPa
+74
+	Cloud Top Level
+73
+	Cloud Bottom Level (high, med, or low)
+72
+	725 hPa
+67
+	675 hPa
+62
+	625 hPa
+57
+	575 hPa
+52
+	525 hPa
+47
+	475 hPa
+42
+	425 hPa
+37
+	375 hPa
+32
+	325 hPa
+27
+	275 hPa
+22
+	225 hPa
+17
+	175 hPa
+12
+	125 hPa
+01
+	Refer to GRIB PDS
+00
+	Entire Atmosphere
+Note: The following levels are used to indicate geometric height for
+aviation flight levels, not pressure levels
+81
+	6000 ft FL (approximately 810 hPa)
+73
+	9000 ft FL (approximately 730 hPa)
+64
+	12000 ft FL (approximately 640 hPa)
+51
+	18000 ft FL (approximately 510 hPa)
+
+
+
+TABLE A.5   MODEL IDENTIFIERS
+  (Header Octet 11)
+
+            All NCEP GRIB products have a CCCC that starts with KWB(?). 
+The fourth letter of this identifier is defined as follows.
+
+DESIGNATOR 	NCEP MODEL
+A
+	Reserved for Future Use
+B
+	Reserved for Future Use
+C
+	Global Forecast System Model
+D
+	Downscaled GFS using Eta eXtension (DGEX)
+E
+	North American Mesoscale (NAM) Model
+F
+	Nested Grid Model (NGM)
+G
+	Rapid Update Cycle
+H
+	Medium Range Forecast (MRF)
+I
+	Sea Surface Temperature Analysis
+J
+	Wind-Wave Forecast Model
+K
+	Global Ensemble Forecasts
+L
+	Regional Ensemble Forecasts
+M
+	Ocean Models
+N
+	Used by NDFD Program
+O
+	Merge of Models
+P
+	EPA/CMAQ
+Q
+	Reserved for Future Use
+R
+	Real Time Mesoscale Analysis / Analysis of Error
+S-Y
+	Reserved for Future Use
+Z
+	Refer to GRIB PDS
+
+
+
