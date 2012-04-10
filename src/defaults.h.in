@@ -32,8 +32,11 @@
  *       set, at least temporarily, the user and group to NULL so that
  *       the deamon runs as root. Otherwise, the core files are generated
  *       only if several conditions are met (see Stevens, apue, p.265).
+ *
+ *	 The supplementary groupsd can be set by making the "GROUP" a
+ *       comma-separated list of groups (including the main group)
+ *       "noaaport,news,ldm,..."
  */
-
 #define NBSP_USER		"noaaport"
 #define NBSP_GROUP		"noaaport"
 #define NBSP_HOME		"/var/noaaport"

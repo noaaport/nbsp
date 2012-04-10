@@ -20,6 +20,7 @@
 #include "globals.h"
 #include "defaults.h"
 #include "util.h"
+#include "strsplit.h"
 #include "server.h"
 #include "pid.h"
 #include "pw.h"
@@ -360,32 +361,45 @@ int init_directories(void){
 }
 
 int drop_privs(void){
-  /*
-   * Change the group first.
-   */
+
+  struct strsplit_st *strp = NULL;
+  int ngroups = 0;
+  char **groups = NULL;
+  char *user = NULL;
+  char *home = NULL;
   int status = 0;
 
   if(valid_str(g.group)){
-    status = change_group(g.group);
-    if(status != 0)
-      log_err2("Could not change to group", g.group);
+    strp = strsplit_create(g.group, ",", 0);
+    if(strp == NULL){
+      log_err("Error from strsplit_create() in drop_privs()");
+      return(-1);
+    }
+
+    groups = strp->argv;
+    ngroups = strp->argc;
   }
 
-  if((status == 0) && valid_str(g.user)){
-    status = change_user(g.user);
-    if(status != 0)
-      log_err2("Could not change to user", g.user);
-  }
+  if(valid_str(g.user))
+    user = g.user;
 
-  /*
-   * This is needed when running as a normal user since otherwise
-   * it cannot dump core (to "/") if it has to.
-   */
-  if((status == 0) && valid_str(g.home)){
-    status = chdir(g.home);
-    if(status != 0)
-      log_err2("Could not chdir to", g.home);
-  }
+  if(valid_str(g.home))
+    home = g.home;
+
+  status = change_privs(ngroups, groups, user, home);
+
+  if(strp != NULL)
+    strsplit_delete(strp);
+
+  if(status == -1)
+    log_err2("Cannot change user", g.user);
+  else if(status == -2)
+    log_err2("Cannot set group(s)", g.group);
+  else if(status == -3)
+    log_err2("Cannot chdir to", g.home);
+
+  if(status != 0)
+    return(-1);
 
   return(status);
 }

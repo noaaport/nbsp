@@ -1,9 +1,11 @@
-nbsp (2.2.3p1-1) oneiric; urgency=low
+nbsp (2.2.3p2-1) oneiric; urgency=low
 
   * Revised (and corrected) the virtual hosts framework. The web server
     now supports virtual hosts, es explained in httpd-vhost.conf-ex
+	
+  * Added ability to set the noaaport users's supplementaru groups
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Tue, 03 Apr 2012 12:00:32 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 05 Apr 2012 14:37:32 -0400
 
 nbsp (2.2.2r7-1) oneiric; urgency=low
 
