@@ -1,6 +1,10 @@
 #!%TCLSH%
 #
 # $Id$
+#
+# In the case of deb and rpm packages, the version string output here
+# does not include the arch portion (this is also the convemtion sued
+# in nbspupdate).
 
 set pkgname "nbsp";
 
@@ -14,6 +18,8 @@ if {[file executable "/usr/sbin/pkg_info"]} {
 } elseif {[file executable "/bin/rpm"]} {
     set output [exec rpm -qa | grep "${pkgname}-"];
     regexp ${pkgname}-(.+) $output match version;
+    # Cut the arch
+    set version [file rootname $version];
 } else {
     set version "unknown";
 }
