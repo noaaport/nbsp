@@ -55,18 +55,13 @@ set gribfilter(slave,nam,ure) {^kwbe};
 set gribfilter(slave,ruc,ure) {^kwbg};
 set gribfilter(slave,default,ure) {.*};
 
-## The configuration file that override the defaults, if it exists.
-if {[file exists $gribfilter(conf)] == 1} {
-    source $gribfilter(conf);
-}
-
 #
-# Variables
+# Functions -
 #
-# gribfilter(manager) is set to 1 in the manager (if enabled), or
-# 0 in the slave or when running standlone.
+# Some of these functions (e.g., the default file naming functions)
+# can be overriden in the run-time configuration file and therefore
+# must appear before the configuration file is read.
 #
-set gribfilter(manager)		0;
 
 proc gribfilter_run_scheduler {} {
 #
@@ -244,3 +239,18 @@ proc gribfilter_join_default_name {model grid reftime forecast_time} {
     
     return [join $fname_parts "_"];
 }
+
+#
+## The configuration file that override the defaults, if it exists.
+#
+if {[file exists $gribfilter(conf)] == 1} {
+    source $gribfilter(conf);
+}
+
+#
+# Variables
+#
+# gribfilter(manager) is set to 1 in the manager (if enabled), or
+# 0 in the slave or when running standlone.
+#
+set gribfilter(manager)		0;

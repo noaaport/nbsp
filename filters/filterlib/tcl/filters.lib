@@ -281,6 +281,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(gribforecasttime2) "";
     set rc(gribforecasttimeri) ""; # time range indicator
     set rc(gribforecasttime)   ""; # our encoded combination of the above
+    set rc(gribforecasttimev)  ""; # the value without the unit
     set rc(radlat) "";
     set rc(radlon) "";
     set rc(radheight) "";
@@ -519,10 +520,11 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     		set rc(gribforecasttimeri) [lindex $gribparams 11];
 	  	# Our encoded combination of the forecast time parameters
 		# for convenience in the rc file rules.
-		set rc(gribforecasttime) $rc(gribforecasttime2);
+		set rc(gribforecasttimev) $rc(gribforecasttime2);
 		if {$rc(gribforecasttime2) == 0} {
-		    set rc(gribforecasttime) $rc(gribforecasttime1);
+		    set rc(gribforecasttimev) $rc(gribforecasttime1);
 		}
+		set rc(gribforecasttime) $rc(gribforecasttimev);
 		append rc(gribforecasttime) $rc(gribforecasttimeu);
 	    } else {
 		set rc(gribstatus) 1;

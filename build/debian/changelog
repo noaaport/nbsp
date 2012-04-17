@@ -1,9 +1,13 @@
-nbsp (2.2.3p2-1) oneiric; urgency=low
+nbsp (2.2.3p3-1) oneiric; urgency=low
 
   * Revised (and corrected) the virtual hosts framework. The web server
     now supports virtual hosts, es explained in httpd-vhost.conf-ex
 	
   * Added ability to set the noaaport users's supplementaru groups
+
+  * Revised gribfilter.init so that the functions that set the default
+    file names can be overriden in the configuration file. In a related
+    change, the variable rc(gribforecasttimev) was added in the filters.lib.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 05 Apr 2012 14:37:32 -0400
 
