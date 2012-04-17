@@ -20,7 +20,7 @@ if {[file executable "/usr/sbin/pkg_info"]} {
 } elseif {[file executable "/bin/rpm"]} {
     set output [exec rpm -qa | grep "${pkgname}-"];
     regexp ${pkgname}-(.+) $output match version;
-    # Cut the arch and "el<n>"
+    # Cut the ".el6.x86_64"
     set version [file rootname [file rootname $version]];
 } else {
     set version "unknown";
