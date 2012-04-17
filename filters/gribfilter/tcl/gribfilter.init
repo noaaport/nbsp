@@ -178,7 +178,7 @@ proc gribfilter_make_default_name {rc_array_name f_flag {modelname ""}} {
     # "modelname" is put as an argument because some rules use a special
     # value. If f_flag is 1, the forecast time is included in the name;
     # otherwise it is not.
-    #
+    # 
     upvar 1 $rc_array_name rc;
 
     if {$modelname eq ""} {
@@ -189,6 +189,13 @@ proc gribfilter_make_default_name {rc_array_name f_flag {modelname ""}} {
     append fname $modelname "_" $rc(gribgrid) "_" $rc(gribymdh);
     if {$f_flag == 1} {
 	append fname "_" $rc(gribforecasttime);
+	#
+	# To use a naming convention with the forecast hour appearing
+	# as "009h" or "036h", for example, use
+	#
+	# append fname "_" \
+	#      [format "%03d%s" $rc(gribforecasttimev) $rc(gribforecasttimeu)];
+	#
     }
     append fname [gribfilter_make_default_ext $rc(gribedition)];
 
