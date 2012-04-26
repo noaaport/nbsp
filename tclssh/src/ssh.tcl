@@ -145,12 +145,12 @@ proc ::ssh::pop_read {host numbytes output_varname} {
     return [string length $output];
 }
 
-proc ::ssh::hfileevent {host condition cmdlist} {
+proc ::ssh::hfileevent {host condition script} {
 
     variable ssh;
 
     _verify_connection $host;
-    fileevent $ssh($host,F) $condition $cmdlist;
+    fileevent $ssh($host,F) $condition $script;
 }
 
 proc ::ssh::hfconfigure {host args} {
@@ -182,7 +182,9 @@ proc ::ssh::set_var {host var val} {
     
     variable ssh;
 
-    _verify_connection $host;
+    # These functions can be used even when there is no valid connection
+    # and therefore we do not call _verify_connection here.
+
     set ssh($host,user,$var) $val;
 }
 
@@ -190,13 +192,49 @@ proc ::ssh::get_var {host var} {
     
     variable ssh;
 
-    _verify_connection $host;
-
-    if {[info exists ssh($host,user.$var)]} {
-	return $ssh($host,user,$var);
+    if {[info exists ssh($host,user,$var)] == 0} {
+	return -code error "$var not defined";
     }
 
-    return -code error "$var not defined";
+    return $ssh($host,user,$var);
+}
+
+proc ::ssh::incr_var {host var {step 1}} {
+
+    variable ssh;
+
+    if {[info exists ssh($host,user,$var)] == 0} {
+	return -code error "$var not defined";
+    }
+
+    puts "incr ssh($host,user,$var) by $step";
+    incr ssh($host,user,$var) $step;
+}
+
+proc ::ssh::set_lvar {var val} {
+
+    set host "localhost";
+    ::ssh::set_var $host $var $val;
+}
+
+proc ::ssh::get_lvar {var} {
+    
+    set host "localhost";
+    set status [catch {
+	set r [::ssh::get_var $host $var];
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error $errmsg;
+    }
+
+    return $r;
+}
+
+proc ::ssh::incr_lvar {var {step 1}} {
+
+    set host "localhost";
+    ::ssh::incr_var $host $var $step;
 }
 
 #
