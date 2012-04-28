@@ -4,6 +4,14 @@ dnl
 dnl
 dnl front, forecast, day1, day2. Since they are not hourly, we
 dnl produce a "latest" copy for da clients.
+dnl
+dnl In the HPC discussions, we use match_file and not matchstop_file
+dnl because some of the products in nwx/hpc are duplicated further down
+dnl in nwx/qpf. For example
+dnl
+dnl fxus04 -> qpfpfd
+dnl fpus11 -> qpfhsd
+dnl fous30 => qpfpfd
 
 #
 # NWX datasets 
@@ -255,7 +263,8 @@ matchstop_file($rc(wmoid), ^fous14|foak1[34], nwx/mos/ngm, $ymdh.ngmmos)
 # NGM City Guidance -- US, Canada, and the Gulf of Mexico
 matchstop_file($rc(wmoid), ^(fou[emw][6-9]|focn7|fogx),
 nwx/mos/ngm, $ymdh.ngmgd)
-match_file($rc(fname), kwno_fous(8[6-9]|90), nwx/mos/ngm, $ymdh.ngmgd)
+
+matchstop_file($rc(fname), kwno_fous(8[6-9]|90), nwx/mos/ngm, $ymdh.ngmgd)
 
 # ETA City Guidance -- US, Canada, and the Gulf of Mexico
 matchstop_file($rc(fname), kwno_fous67, nwx/mos/eta, $ymdh.etagd)
@@ -268,55 +277,55 @@ matchstop_file($rc(fname), kwno_fqus2[1-6], nwx/mos/marine, $ymdh.marnmos)
 #
 
 # Model Discussion
-matchstop_file($rc(awips), pmdhmd, nwx/hpc/prog, $ymdh.disc)
+match_file($rc(awips), pmdhmd, nwx/hpc/prog, $ymdh.disc)
 
 # Extended Forecast Discussion
-matchstop_file($rc(wmoid), ^fxus02, nwx/hpc/extend, $ymdh.extend)
+match_file($rc(wmoid), ^fxus02, nwx/hpc/extend, $ymdh.extend)
 
 # Hemispheric Map Discussion AND 500mb Map Type Correlations
-matchstop_file($rc(wmoid), fxus03, nwx/hpc/hemi, $ymdh.hemi)
+match_file($rc(wmoid), fxus03, nwx/hpc/hemi, $ymdh.hemi)
 
 # NMC Prognostic Discussion (Basic Weather)
-matchstop_file($rc(wmoid), ^fx(us01|us10|ca20|sa20|hw01),
+match_file($rc(wmoid), ^fx(us01|us10|ca20|sa20|hw01),
 nwx/hpc/prog, $ymdh.prog)
 
 # Quantitative Precipitation Forecast Discussion
-matchstop_file($rc(wmoid), fxus04, nwx/hpc/qpf, $ymdh.qpf)
+match_file($rc(wmoid), fxus04, nwx/hpc/qpf, $ymdh.qpf)
 
 # Quantitative Precipitation Forecast Excessive Rainfall Discussion
-matchstop_file($rc(wmoid), fous30, nwx/hpc/qpf, $ymdh.qpferp)
+match_file($rc(wmoid), fous30, nwx/hpc/qpf, $ymdh.qpferp)
 
 # Heavy Snowfall Discussion
-matchstop_file($rc(wmoid), fous11, nwx/hpc/hvysnow, $ymdh.hvysnow)
+match_file($rc(wmoid), fous11, nwx/hpc/hvysnow, $ymdh.hvysnow)
 
 # Coded Fronts Analysis
 match_file_noappend($rc(wmoid), asus01, nwx/hpc/fronts, latest)
-matchstop_file($rc(wmoid), asus01, nwx/hpc/fronts, $ymdh.front)
+match_file($rc(wmoid), asus01, nwx/hpc/fronts, $ymdh.front)
 
 # Coded Fronts Forecast
 match_file_noappend($rc(wmoid), fsus02, nwx/hpc/forecast, latest)
-matchstop_file($rc(wmoid), fsus02, nwx/hpc/forecast, $ymdh.fcst)
+match_file($rc(wmoid), fsus02, nwx/hpc/forecast, $ymdh.fcst)
 
 # Extended Pacific Forecast
-matchstop_file($rc(wmoid), fxpa00, nwx/hpc/expac, $ymdh.expac)
+match_file($rc(wmoid), fxpa00, nwx/hpc/expac, $ymdh.expac)
 
 # Heat Index - Mean
-matchstop_file($rc(awips), prb[ew]hi, nwx/hpc/heat, $ymdh.hmean)
+match_file($rc(awips), prb[ew]hi, nwx/hpc/heat, $ymdh.hmean)
 
 # Heat Index - Max
-matchstop_file($rc(awips), prb[ew]hh, nwx/hpc/heat, $ymdh.hmax)
+match_file($rc(awips), prb[ew]hh, nwx/hpc/heat, $ymdh.hmax)
 
 # Heat Index - Min
-matchstop_file($rc(awips), prb[ew]hl, nwx/hpc/heat, $ymdh.hmin)
+match_file($rc(awips), prb[ew]hl, nwx/hpc/heat, $ymdh.hmin)
 
 # SDM Messages
-matchstop_file($rc(fname), (kwbc|kwno)_nous42, nwx/hpc/sdm, $ymdh.sdm)
+match_file($rc(fname), (kwbc|kwno)_nous42, nwx/hpc/sdm, $ymdh.sdm)
 
 # International Messages
-matchstop_file($rc(fname), (kwbc|kwno)_npxx10, nwx/hpc/intl, $ymdh.intl)
+match_file($rc(fname), (kwbc|kwno)_npxx10, nwx/hpc/intl, $ymdh.intl)
 
 # Storm Summaries
-matchstop_file($rc(wmoid), acus4[1-5], nwx/hpc/storm, $ymdh.storm)
+match_file($rc(wmoid), acus4[1-5], nwx/hpc/storm, $ymdh.storm)
 
 #
 # CPC Products
@@ -439,6 +448,10 @@ matchstop_file($rc(wmoid), fxus02, nwx/extend, $ymdh.extend)
 
 # Hemispheric Map Discussion AND 500mb Map Type Correlations
 matchstop_file($rc(wmoid), fxus03, nwx/hemi, $ymdh.hemi)
+
+# STQ - Spot_Forecast_Request
+# TWB - Transcribed_Weather_Broadcast
+matchstop_file($rc(awips1), stq|twb, nwx/misc/$rc(awips1), $ymdh.$rc(awips1))
 
 #
 # Model Products
