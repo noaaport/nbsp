@@ -148,7 +148,13 @@
   The case in which the request was "=n1-" (with n2 blank) was not
   being handled correctly.
 
-2.2.3.p2
+2.2.3.p6
 - Revised (and corrected) the virtual hosts framework. The web server
   now supports virtual hosts, es explained in httpd-vhost.conf-ex
 - Added ability to set the noaaport user's supplementary groups
+- Revised gribfilter.init (to correct the error reported by Jason Brooks
+  not being able to override the default function for setting the output
+  grib file names).
+- Revised gpfilter.rc (file.m4) to correct the errors reported by
+  Jerry Robertson (MOS and qpf data files not being saved in the
+  apprpriate subdirectories).
