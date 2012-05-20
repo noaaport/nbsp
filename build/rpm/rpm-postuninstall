@@ -16,7 +16,7 @@ cat <<__EOF__
 To deinstall completely this package, the noaaport user and the directories
 
 /usr/local/etc/nbsp
-/usr/local/share/doc/nbsp
+/usr/local/share/nbsp
 /usr/local/libexec/nbsp
 /var/noaaport
 /var/log/noaaport
