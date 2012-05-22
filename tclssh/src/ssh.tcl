@@ -54,10 +54,16 @@ proc ::ssh::disconnect {host} {
     variable ssh;
 
     _verify_connection $host;
-    close $ssh($host,F);
+    set status [catch {
+	close $ssh($host,F);
+    } errmsg];
 
     unset ssh($host,F);
     unset ssh($host,script);
+
+    if {$status != 0} {
+	return -code error $errmsg;
+    }
 }
 
 proc ::ssh::push {host script} {
