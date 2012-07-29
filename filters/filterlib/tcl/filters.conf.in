@@ -86,10 +86,10 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # The following have an uncompressed nids header.
 #
-# tv0-tv2, tzl, dhr, dsp (+ the dual pol below + new dual pol next)
-# n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u dvl eet (dual pol)
-# daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (new dual pol)
-# (the new dual pol will be added between july 2010 and december 2012)
+# tv0-tv2, tzl, dhr, dsp (+ the hi res below + dual pol next)
+# n0q naq n1q nbq n2q n3q n0u nau n1u nbu n2u n3u dvl eet (hi res)
+# daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (dual pol)
+# (the dual pol will be added between july 2010 and december 2012)
 #
 # The radar files have wmoid sdus[2-8]. The sdus[23578] are data,
 # while 4 and 6 are status messages.
