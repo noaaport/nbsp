@@ -111,6 +111,9 @@
  * directory.) Otherwise, the program will silently limit it to be
  * no less than SPOOLDB_SLOTS_MIN. The third parameter is the file
  * used to save (or load) the spooldb when nbsp stops (or starts).
+ * At 2400(3000) files/min, the default value of SPOOLDB_SLOTS below
+ * implies a retention time of 1.82(1.45) hours, and assuming 6 Mbps it implies
+ * a spool size of 5(4) GB; at 8 Mbps the spool size is 6.5(5.2) GB.
  * (The value of SPOOLDB_SLOTS influences QUEUE_MAXSIZE_HARD below.)
  */
 #define SPOOLDB_SLOTS		262144		/* 2048*128 */
@@ -132,7 +135,7 @@
  * for retrieving the data from the db to send it to the nbs1 network clients
  * and the filter server. It should be set to a number of comparable to
  * expected number of clients to avoid contention between the network slave
- * threads. (Each buffer will grow to about 25 MB;the largest file size).
+ * threads. (Each buffer will grow to about 25 MB; the largest file size).
  * Each db is not allowed to grow larger than (maxsize_per128/128) in order
  * to reserve some of the allocated memory for the system. The default is
  * 96/128 or 75%.

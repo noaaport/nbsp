@@ -1,0 +1,30 @@
+Rates -
+
+noaaport:
+	2400 files/min
+	45 MB/min  (6 Mbps)
+
+level2:
+	18 files/min
+	48 MB/min (6.5 Mbps)
+
+Spool requirements -
+
+  Noaaport only
+  spool_slots = 262144 (2048 * 128):
+        - 1.8 hours
+	- spool size 5 GB
+
+  Level2 only
+  spool_slots = 2048
+        - 1.88 hours
+	- spool size 5.076 GB
+
+  Noaaport+level2
+  spool_slots = 65536 (2048 * 32)
+        - 0.45 hours (27 min)
+	- spool size 2.5 GB
+
+  spool_slots = 131072 (2048 * 64)
+        - 0.9 hours (54 min)
+	- spool size 5.078 GB
