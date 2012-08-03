@@ -17,13 +17,13 @@
  * of the network slave threads. The input is a "masterservers" string
  * of the form
  *
- * <protocol>,<server>,<port>,<options>:<protocol>,<server>,<port>,<options>:..
+ * <protocol>,<server>,<port>,<options>|<protocol>,<server>,<port>,<options>|..
  *
  * There are five options (the int's in slave_options_st below). Network
  * slaves have eight fields, infifo's have only seven (no port).
  */
-#define SLAVE_STRING_SEP1 ": \t\n"
-#define SLAVE_STRING_SEP2 ","
+#define SLAVE_STRING_SEP1 "| \t\n"
+#define SLAVE_STRING_SEP2 ",:"
 
 #define SLAVE_NUM_OPTIONS 5
 #define SLAVE_NET_STRING_FIELDS 8
