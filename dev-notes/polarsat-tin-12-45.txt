@@ -1,0 +1,214 @@
+(Message inbox:13)
+
+Date:    Mon, 24 Sep 2012 16:32:55 EST
+To:      noaaport@unidata.ucar.edu
+From:    Gilbert Sebenste <sebenste@weather.admin.niu.edu>
+Subject: [noaaport] New satellite imagery requiring changes to ldmd.conf
+
+Return-Path: noaaport-bounces@unidata.ucar.edu
+Delivery-Date: Mon Sep 24 17:33:10 2012
+Return-Path: <noaaport-bounces@unidata.ucar.edu>
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	 uni19.unidata.ucar.edu
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00
+	 autolearn=unavailable version=3.3.2
+X-Original-To: noaaport@conanmail.unidata.ucar.edu
+Delivered-To: noaaport@conanmail.unidata.ucar.edu
+X-Original-To: noaaport@unidata.ucar.edu
+Delivered-To: noaaport@unidata.ucar.edu
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+X-Loop:  noaaport@unidata.ucar.edu
+X-BeenThere: noaaport@unidata.ucar.edu
+X-Mailman-Version: 2.1.12rc2
+Precedence: list
+List-Id: A list for dicussing NOAAPORT <noaaport.unidata.ucar.edu>
+List-Unsubscribe: <http://mailman.unidata.ucar.edu/mailman/options/noaaport>, 
+	 <mailto:noaaport-request@unidata.ucar.edu?subject=unsubscribe>
+List-Archive: <http://mailman.unidata.ucar.edu/mailing_lists/archives/noaaport>
+List-Post: <mailto:noaaport@unidata.ucar.edu>
+List-Help: <mailto:noaaport-request@unidata.ucar.edu?subject=help>
+List-Subscribe: <http://mailman.unidata.ucar.edu/mailman/listinfo/noaaport>,
+	 <mailto:noaaport-request@unidata.ucar.edu?subject=subscribe>
+Sender:  noaaport-bounces@unidata.ucar.edu
+Errors-To: noaaport-bounces@unidata.ucar.edu
+X-Spam-Seen: Yes
+Status:  O
+
+Hello everyone,
+
+I got the below from NOAA last week. They are adding a new NOAAport
+channel (see the announcement below my .sig for details). Thus, as of
+early next month, for those of you who use the LDM NOAAport ingester with
+version 6.11.0 (current version), you'll need to have this in your
+ldmd.conf:
+
+# dvbs shared memory ingest processes
+exec    "dvbs_multicast -n -m 224.0.1.1"
+exec    "dvbs_multicast -n -m 224.0.1.2"
+exec    "dvbs_multicast -n -m 224.0.1.3"
+exec    "dvbs_multicast -n -m 224.0.1.4"
+exec    "dvbs_multicast -n -m 224.0.1.5"  <-----this is new
+
+# readnoaaport shared memory readers
+exec    "readnoaaport -m 224.0.1.1"
+exec    "readnoaaport -m 224.0.1.2"
+exec    "readnoaaport -m 224.0.1.3"
+exec    "readnoaaport -m 224.0.1.4"
+exec    "readnoaaport -m 224.0.1.5"  <-----this is new
+
+Anyway, read on for the tech message, if you haven't seen it yet.
+When I updated our LDM on the NOAAport ingester this afternoon, I added
+the two entries above to my ldmd.conf.
+
+Gilbert
+
+*******************************************************************************
+Gilbert Sebenste                                                    ********
+(My opinions only!)                                                  ******
+Staff Meteorologist, Northern Illinois University                      ****
+E-mail: sebenste@weather.admin.niu.edu                                  ***
+web: http://weather.admin.niu.edu                                      **
+Twitter: http://www.twitter.com/NIU_Weather                            **
+Facebook: http://www.facebook.com/niu.weather                           *
+*******************************************************************************
+
+Technical Implementation Notice 12-45
+National Weather Service Headquarters Washington DC
+1236 PM EDT Fri Sep 21 2012
+
+To:       Subscribers:
+           -Family of Services
+           -NOAA Weather Wire Service
+           -Emergency Managers Weather Information Network
+           -NOAAPORT
+           Other NWS Partners, Users and Employees
+
+From:     Timothy McClung
+           Chief, Science Plans Branch
+           Office of Science and Technology
+
+Subject:  Addition of Alaska Region NPP VIIRS Imagery to NOAAPORT
+       Test Channel Effective October 2, 2012
+
+On or about Tuesday, October 2, 2012, beginning approximately
+1500 Coordinated Universal Time (UTC), high resolution imagery
+from the Suomi National Polar-Orbiting Partnership (NPP)
+satellite will be broadcast across the NOAAPORT satellite
+broadcast network. This addition will consist of a limited set of
+NPP Visible Infrared Imaging Radiometer Suite (VIIRS) imagery
+covering the Alaska region. The imagery stream will be provided
+by the NOAA National Environmental Satellite, Data, and
+Information Service (NESDIS) NPP Data Exploitation (NDE) system,
+based on NPP VIIRS imagery Environmental Data Records (EDRs).
+
+The new NPP VIIRS imagery products will be transmitted across a
+test channel of the NOAAPORT satellite broadcast network.
+
+-Digital Video Broadcast (DVB) packet identifier: 105
+-Multicast address: 224.0.1.5
+-Port number: 1205
+-SBN Data Stream field setting in their frame-level headers: 7
+
+NWS anticipates this NOAAPORT channel will be populated with
+additional polar-orbiting satellite imagery. For clarity, this
+channel will be referred to as the POLARSAT.
+
+The Alaska region NPP VIIRS imagery will, in general, be within
+the following latitude-longitude box:
+
+Lower/Southern Latitude:  45 degrees North
+Upper/Northern Latitude:  75 degrees North
+Left/Western Longitude:  120 degrees East
+Right/Eastern Longitude: 120 degrees West
+
+This initial set of imagery products will be based on three NPP
+VIIRS I channels, the horizontal resolution of which, at nadir,
+is approximately 375 meters.
+
+The imagery products will be formatted in netCDF4, but compressed
+via gzip. Like all NOAAPORT products, each file will have a plain
+text WMO heading at its start. These headings are listed below.
+
+TIPB01 KNES - Imagery Channel 1 (0.64?m)
+TIPB04 KNES - Imagery Channel 4 (3.74?m)
+TIPB05 KNES - Imagery Channel 5 (11.45?m)
+
+The "P" in the third character place of the WMO Heading
+distinguishes this NPP-VIIRS imagery from pre-existing NOAAPORT
+satellite imagery.
+
+To access these products, users should take the following steps:
+
+-Read beyond or strip off the WMO heading
+-Decompress the resulting product, e.g., via gunzip
+-Use a netCDF4 reader, e.g., a decoder that invokes the Unidata
+netCDF4 software package
+
+Each product will consist of one granule of VIIRS imagery for a
+single channel. The VIIRS granules will cover approximately
+86 seconds of data, roughly 5 degrees or 556 kilometers of along-
+track geographical extent.
+
+Unlike existing NOAAPORT satellite imagery, formatted on
+prescribed maps, each NPP VIIRS imagery granule will be uniquely
+located. Geolocation information is contained in each product
+file. The geolocation information consists of three
+1541-dimension arrays of latitude/longitude pairs that correspond
+to the granule edge (first column), granule centerline, and
+granule edge (last column), with all three arrays oriented along
+the satellite track.
+
+Given the fixed resolution and gridded Ground Track Mercator
+representation of the VIIRS imagery, only these three columns of
+geographical information (latitudes and longitudes) are required
+to map the imagery. This reduced geolocation information can be
+interpreted based on the VIIRS Ground Track Mercator imagery
+algorithm (fine 375 meter resolution version) for accurate
+georeferencing. Related information (though not specific to the
+NOAAPORT stream of NPP VIIRS imagery) can be found in the
+following document: "Joint Polar Satellite System (JPSS)
+Operational Algorithm Description (OAD) Document for VIIRS Ground
+Track Mercator (GTM) Imagery Environmental Data Record (EDR)
+Software," Revision A, January 18, 2012, (e.g., section 2.0.4).
+
+The NOAAPORT feed of NPP VIIRS imagery is provided across a test
+channel of the satellite broadcast network. This NOAAPORT channel
+is under test and evaluation.  Product availability across this
+channel is nonetheless expected to approach or meet that of
+operational/baseline data (i.e., greater than 95% data
+availability). If the experimental period is successful, NWS
+intends to transition this NOAAPORT stream to full operational
+posture in early 2013.
+
+For questions regarding the scientific or technical content of
+the NOAAPORT NPP VIIRS imagery feed please contact:
+
+      ESPC Help Desk
+      Suitland, Maryland 20746
+      Phone: 301-817-3880
+      Email: ESPCOperations@noaa.gov
+
+For questions regarding the NOAAPORT activation or distribution
+of these data sets please contact:
+
+      Brian Gockel
+      NOAA/NWS Office of Science and Technology
+      Phone: 301-713-0304 x158
+      Email: Brian.Gockel@noaa.gov
+
+NWS Technical Implementation Notices are online at:
+
+      http://www.nws.noaa.gov/om/notif.htm
+
+$$
+
+
+
+
+_______________________________________________
+noaaport mailing list
+noaaport@unidata.ucar.edu
+For list information or to unsubscribe, visit: http://www.unidata.ucar.edu/mail
+ing_lists/ 

@@ -17,17 +17,15 @@
 #include "reader.h"
 
 struct reader_info_st {
-  int npchannel;
+  int channel_index;
+  struct sbn_frame sbnframe;
 };
-typedef struct reader_info_st *reader_info_t;
+static struct reader_info_st greader_info[NPCAST_NUM_CHANNELS];
 
-static struct reader_info_st reader_info[NPCAST_NUM_CHANNELS];
-static struct sbn_frame gsbnframe[NPCAST_NUM_CHANNELS];
-
-static int create_reader_thread(int i);
+static int create_reader_thread(int channel_index);
 static void *reader_thread_main(void *arg);
-static int loop_channel(int index);
-static int reader_thread_loop(int npchannel);
+static int loop_channel(int channel_index);
+static int reader_thread_loop(int channel_index);
 
 static void load_ave_cond_sleep(int channel_index);
 
@@ -39,10 +37,10 @@ int spawn_readers(void){
   int status = 0;
   int num_readers = NPCAST_NUM_CHANNELS;
 
-  for(i = 0; i <= num_readers - 1; ++i)
-    reader_info[i].npchannel = i;
+  for(i = 0; i < num_readers; ++i)
+    greader_info[i].channel_index = i;
 
-  for(i = 0; i <= num_readers - 1; ++i){
+  for(i = 0; i < num_readers; ++i){
     if(get_npcast_channel_enable(i))
       status = create_reader_thread(i);
       
@@ -71,7 +69,7 @@ void kill_reader_threads(void){
   int status;
   void *pthread_status;
 
-  for(i = 0; i <= num_readers - 1; ++i){
+  for(i = 0; i < num_readers; ++i){
     if(g.f_reader_thread_created[i] == 1){
 
       /* log_info("Canceling reader %d.", i); */
@@ -82,7 +80,7 @@ void kill_reader_threads(void){
     }
   }
 
-  for(i = 0; i <= num_readers - 1; ++i){
+  for(i = 0; i < num_readers; ++i){
     if(g.f_reader_thread_created[i] == 1){
       status = pthread_join(g.reader_thread_id[i], &pthread_status);
       if(status != 0)
@@ -102,7 +100,7 @@ static int create_reader_thread(int i){
   pthread_attr_t attr;
   void *arg;
 
-  arg = (void*)&reader_info[i];
+  arg = (void*)&greader_info[i];
 
   status = pthread_attr_init(&attr);
 
@@ -123,10 +121,10 @@ static int create_reader_thread(int i){
 static void *reader_thread_main(void *arg){
 
   int status;
-  reader_info_t rinfo = (reader_info_t)arg;
+  struct reader_info_st *rinfo = (struct reader_info_st*)arg;
 
   while(get_quit_flag() == 0){
-    status = reader_thread_loop(rinfo->npchannel);
+    status = reader_thread_loop(rinfo->channel_index);
     if(status != 0){
       /*
        * If there was an error, this (main thread loop) continues
@@ -154,7 +152,7 @@ static int loop_channel(int channel_index){
   ssize_t n;
   int status = 0;
   int cancel_state;
-  struct sbn_frame *sbnf = &gsbnframe[channel_index];
+  struct sbn_frame *sbnf = &greader_info[channel_index].sbnframe;
 
   pthread_testcancel();
   load_ave_cond_sleep(channel_index);

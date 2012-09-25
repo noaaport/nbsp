@@ -412,3 +412,8 @@ int get_npcast_channel_enable(int i){
 
   return(gnpcast.channel[i].f_enable);
 }
+
+int get_npcast_numchannels(void){
+
+  return(gnpcast.numchannels);
+}

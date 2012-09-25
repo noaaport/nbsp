@@ -1,8 +1,15 @@
+nbsp (2.2.4d1-1) oneiric; urgency=low
+
+  * Revised reader.[ch] and npcast.[ch] in anticipation of the addition
+    of the 5th (polarsat) channel.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 24 Sep 2012 21:14:35 -0400
+
 nbsp (2.2.3p3-1) oneiric; urgency=low
 
   * Revised (and corrected) the virtual hosts framework. The web server
     now supports virtual hosts, es explained in httpd-vhost.conf-ex
-	
+
   * Added ability to set the noaaport users's supplementaru groups
 
   * Revised gribfilter.init so that the functions that set the default
