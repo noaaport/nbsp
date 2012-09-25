@@ -41,11 +41,12 @@ int spawn_readers(void){
     greader_info[i].channel_index = i;
 
   for(i = 0; i < num_readers; ++i){
-    if(get_npcast_channel_enable(i))
+    if(get_npcast_channel_enable(i)){
       status = create_reader_thread(i);
-      
-    if(status != 0)
-      break;
+      if(status != 0)
+	break;
+    }else
+      log_info("Reader thread %d is not enabled", i);
   }
 
   return(status);
