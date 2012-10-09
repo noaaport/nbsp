@@ -1,5 +1,5 @@
 #
-# $Id$
+# $Id: decode.tcl,v 61056938dea7 2012/10/09 01:23:43 nieves $
 #
 
 #
@@ -137,6 +137,14 @@ proc metar::decode {line} {
 	append _pat "($metar(pat,weather.precipitation))?";
 	append _pat "($metar(pat,weather.obscuration))?";
 	append _pat "($metar(pat,weather.other))?";
+	append _pat {$};
+	#
+	# NOTE: Mon Oct  8 20:20:46 AST 2012
+	# The last statement avoids the problem with TSNO reported
+	# by Craig Fincher for example with
+        # M KJXI 081715Z AUTO 00000KT 10SM SCT031 BKN035 13/07 \
+	#   A3026 RMK AO2 TSNO
+	#
 
 	# Match any combination of these, but at least one of them.
 	if {[regexp ${_pat} $tok match s1 s2 s3 s4 s5] && ($match ne "")} {
@@ -329,6 +337,10 @@ proc metar::decode {line} {
 	set _verb "";
 	append _pat {^} "($metar(pat,weather.all))" \
 	       {(B|E)([[:digit:]]{2})((B|E)([[:digit:]]{2}))?};
+	                   # In contrast with the Weather section,
+	                   #   append _pat {$}; 
+	                   # is not included here because there can be
+	                   # additional BE parts.
 
 	if {[regexp ${_pat} $tok match s1 s2 s3 s4 s5 s6]} {
 	    lappend metar(obs,WEATHERLOG) $tok;
