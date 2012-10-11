@@ -14,7 +14,9 @@ Setup
 
    In the file in
    
-       site/nbspd.conf", put one of the lines below
+   "site/nbspd.conf"
+
+   put one of the lines below
 
    set feedmode 4;    # fifo alone (4)
    set feedmode 5;    # fifo and noaaport (4 + 1)
@@ -78,8 +80,8 @@ nbspinsert 0 0 0 0 0 \
 	   /var/noaaport/nbsp/spool/tjsj/tjsj_sdus32-nvwjua.110106_17763746
 	   < your_data_file
 
-where "your_data_file" is the (full) path to the data file you want
-to insert.
+where "your_data_file" is the (full) path to the file that has the
+data that you want to insert.
 
 In that first form of invoking nbspinsert, it will save the data in the
 specified fpath, and then process the file. In the second form,
