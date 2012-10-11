@@ -47,9 +47,13 @@
  * Almost all of the settings below can be modified in the runtime
  * configuration file.
  */
-#define NPCAST_NUM_CHANNELS	5
-#define MULTICASTIP     "224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4 224.0.1.5"
-#define MULTICASTPORT   "1201 1202 1203 1204 1205"
+
+/*
+ * Add two extra channels (polarsat and/or testing)
+ */
+#define NPCAST_NUM_CHANNELS	6
+#define MULTICASTIP     "224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4"
+#define MULTICASTPORT   "1201 1202 1203 1204"
 
 /* 
  * The global multicast ip's for each noaaport channel, and global port.
