@@ -1,0 +1,106 @@
+#
+# $Id$
+#
+
+nbspinsert is a comand-line utility (tcl script) that can be used
+to "insert" an external data file in the Nbsp data stream, so that
+Nbsp will pass it to the filters and server as if it had been received
+from the noaaport receiver. This file outlines the instructions.
+
+Setup
+=====
+
+1) Enable ingest from the "fifo"
+
+   In the file in
+   
+       site/nbspd.conf", put one of the lines below
+
+   set feedmode 4;    # fifo alone (4)
+   set feedmode 5;    # fifo and noaaport (4 + 1)
+   set feedmode 6;    # fifo and network slave (4 + 2)
+
+2) Make the user that will execute the "nbspinsert" script
+   a member of the group "noaaport" (so that he can write
+   to the nbspd input fifo)
+
+3) Be sure that the group of the directory
+
+       /var/noaaport/nbsp/spool
+   
+   is the group "noaaport", and make it writable by that group:
+
+	chmod 775 <dir>
+
+Usage
+=====
+
+nbspinsert can be used in thee ways:
+
+    1) nbspinsert -i [-f nbspinfifo] finfo < file
+    2) nbspinsert [-f nbspinfifo] finfo
+    3) nbspinsert [-f nbspinfifo] < file_with_finfolist
+
+If [-f] is not given to specify the location of the nbspd.infifo file,
+then the nbsp configuration files are read. So unless the location of
+the fifo has changed from the default, that option does not have to be
+used.
+
+The "finfo" stands for "file info" and it consists of the following
+seven parts:
+
+    seq type cat code npchidx fname fpath
+
+The first five are numbers and for most practical purposes
+can be set to just zero. The other two (fname and fpath) are
+related to the file name with the conventions used by Nbsp.
+Specifically, fpath is the full path and fname is the "rootnaname"
+of the tail (the file name without the extension).
+To give an example, consider the following file saved in the spool
+directory by Nbsp. The fpath is
+
+    /var/noaaport/nbsp/spool/tjsj/tjsj_sdus32-nvwjua.110106_17763746
+
+and the fname is
+
+    tjsj_sdus32-nvwjua
+
+Notice that the "fname" has three parts
+
+    <stationid>_<wmoid>-<awipsid>
+
+The files that will be inserted must adhere to this naming convention.
+Thus, for example, using the first form of invoking nbspinsert above,
+would be
+
+nbspinsert 0 0 0 0 0 \
+	   tjsj_sdus32-nvwjua \
+	   /var/noaaport/nbsp/spool/tjsj/tjsj_sdus32-nvwjua.110106_17763746
+	   < your_data_file
+
+where "your_data_file" is the (full) path to the data file you want
+to insert.
+
+In that first form of invoking nbspinsert, it will save the data in the
+specified fpath, and then process the file. In the second form,
+it assumes that the data has already been saved in the given fpath.
+The third form is like the second one, but it takes a list of finfo
+on stdin (like a filter does). In all cases, the fpath should be a
+"spool file" path, that is, a path to a file in the spool directory with
+the usual convention used by Nbsp.
+
+Maintenance - Spool cleanup
+===========================
+
+Since the files inserted by this means are saved in the spool directory
+by the caller of this script, or by this script itself,
+they do pass through the Nbsp reader and therefore they are not inserted
+in the spooldb that handles the deletion of the spooled files.
+Therefore the files that are inserted by this script must be
+deleted from the spool by the caller of this script, or by the cleanup
+scheduler. The latter is set automaticaly by the default hourly-cleanup.conf,
+but the files written by this script must be writable by the
+nbsp user (noaaport:noaaport) so that they can be deleted by the
+default cleanup process. One way to achieve this is to
+set the umask to 002 before the nbspinsert script is called.
+-
