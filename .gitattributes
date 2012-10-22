@@ -1,0 +1,16 @@
+.gitattributes	export-ignore
+build		export-ignore
+debug-notes	export-ignore
+dev-notes	export-ignore
+*.tcl*		ident export-subst
+*.conf*		ident export-subst
+*.def*		ident export-subst
+*.rc*		ident export-subst
+*.init*		ident export-subst
+*.g*		ident export-subst
+*.txt*		ident export-subst
+*.sh*		ident export-subst
+*README*	ident export-subst
+VERSION		ident export-subst
+RELEASE_NOTES	ident export-subst
+UPGRADING	ident export-subst

@@ -1,5 +1,7 @@
 #
 # $Id$
+# $Format:Commit: %H$
+# $Format:Author: <%aE> %aD$
 #
 
 - When installing from a binary package (rpm or tbz),
