@@ -1,0 +1,11 @@
+#
+# $Id$
+#
+Nbsp can support two additional noaaport channels besides the
+standard four, but they are not enabled by default. To enable,
+for example, the 5th (polarsat) channel, the following line
+must uncommented in "nbspd.conf" or put "site/nbspd.conf",
+
+set multicastip	  "224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4 224.0.1.5"
+set multicastport "1201 1202 1203 1204 1205"
+

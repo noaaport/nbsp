@@ -1,7 +1,6 @@
 nbsp (2.2.4d1-1) oneiric; urgency=low
 
-  * Revised reader.[ch] and npcast.[ch] in anticipation of the addition
-    of the 5th (polarsat) channel.
+  * Revised in anticipation of the addition of the 5th (polarsat) channel.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 24 Sep 2012 21:14:35 -0400
 

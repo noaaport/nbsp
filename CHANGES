@@ -160,3 +160,6 @@
 - Revised gpfilter.rc (file.m4) to correct the errors reported by
   Jerry Robertson (MOS and qpf data files not being saved in the
   apprpriate subdirectories).
+
+2.2.4p1
+- Added two extra channels to support the polarsat channel5

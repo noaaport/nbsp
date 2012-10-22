@@ -29,8 +29,11 @@
 #        The latter is set automaticaly by the default hourly-cleanup.conf,
 #        but the files written by this script must be writable by the
 #        nbsp user (noaaport:noaaport) so that they can be deleted by the
-#        default cleanup process. For an example of how to use this script
-#        see the craftinsert script and the craftinser.README.
+#        default cleanup process.
+#
+#        For more general instructions see the file "nbspinsert.README".
+#        For an example of how to use this script see the "craftinsert" script
+#        and "craftinsert.README".
 #
 package require cmdline;
 
