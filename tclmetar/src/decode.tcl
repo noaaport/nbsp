@@ -140,7 +140,7 @@ proc metar::decode {line} {
 	append _pat {$};
 	#
 	# NOTE: Mon Oct  8 20:20:46 AST 2012
-	# The last statement avoids the problem with TSNO reported
+	# The last apend statement above avoids the problem with TSNO reported
 	# by Craig Fincher for example with
         # M KJXI 081715Z AUTO 00000KT 10SM SCT031 BKN035 13/07 \
 	#   A3026 RMK AO2 TSNO
