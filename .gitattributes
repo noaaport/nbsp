@@ -1,7 +1,8 @@
 .gitattributes	export-ignore
-build		export-ignore
+build/tools	export-ignore
 debug-notes	export-ignore
 dev-notes	export-ignore
+examples	export-ignore
 *.tcl*		ident export-subst
 *.conf*		ident export-subst
 *.def*		ident export-subst
