@@ -4,7 +4,7 @@
 # $Format:Author: <%aE> %aD$
 #
 
-- Tue Apr  3 12:02:29 AST 2012
+- Wed Oct 24 16:31:44 AST 2012
 
 What's new -
 
@@ -19,7 +19,7 @@ Packages, sources and documentation are available from
 Packages for other operating systems or distributions not found there
 can be created upon request.
 
-Support for the 5th noaaport channel has been added in this update.
+Support for the 5th channel (polarsat) has been added in this update.
 
 Previous notes for the 2.2 version -
 
