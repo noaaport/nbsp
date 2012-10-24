@@ -1,0 +1,271 @@
+NOUS41 KWBC 281050 AAA
+
+PNSWSH
+
+ 
+
+Technical Implementation Notice 12-45, Amended
+
+National Weather Service Headquarters Washington DC
+
+650 AM EDT Fri Sep 28 2012
+
+ 
+
+To:       Subscribers:
+
+          -Family of Services
+
+          -NOAA Weather Wire Service
+
+          -Emergency Managers Weather Information Network
+
+          -NOAAPORT
+
+          Other NWS Partners, Users and Employees
+
+ 
+
+From:     Timothy McClung
+
+          Chief, Science Plans Branch
+
+          Office of Science and Technology
+
+ 
+
+Subject:  Amended Date: Addition of Alaska Region NPP VIIRS
+
+          Imagery to NOAAPORT Test Channel Effective
+
+          October 10, 2012
+
+ 
+
+Amended to reschedule the implementation to Wednesday, October
+
+10, 2012, to allow for additional testing.
+
+ 
+
+On or about Wednesday, October 10, 2012, beginning approximately
+
+1500 Coordinated Universal Time (UTC), high resolution imagery
+
+from the Suomi National Polar-Orbiting Partnership (NPP)
+
+satellite will be broadcast across the NOAAPORT satellite
+
+broadcast network. This addition will consist of a limited set of
+
+NPP Visible Infrared Imaging Radiometer Suite (VIIRS) imagery
+
+covering the Alaska region. The imagery stream will be provided
+
+by the NOAA National Environmental Satellite, Data, and
+
+Information Service (NESDIS) NPP Data Exploitation (NDE) system,
+
+based on NPP VIIRS imagery Environmental Data Records (EDRs).
+
+ 
+
+The new NPP VIIRS imagery products will be transmitted across a
+
+test channel of the NOAAPORT satellite broadcast network.
+
+ 
+
+-Digital Video Broadcast (DVB) packet identifier: 105
+
+-Multicast address: 224.0.1.5
+
+-Port number: 1205
+
+-SBN Data Stream field setting in their frame-level headers: 7
+
+ 
+
+NWS anticipates this NOAAPORT channel will be populated with
+
+additional polar-orbiting satellite imagery. For clarity, this
+
+channel will be referred to as the POLARSAT.
+
+ 
+
+The Alaska region NPP VIIRS imagery will, in general, be within
+
+the following latitude-longitude box:
+
+ 
+
+Lower/Southern Latitude:  45 degrees North
+
+Upper/Northern Latitude:  75 degrees North
+
+Left/Western Longitude:  120 degrees East
+
+Right/Eastern Longitude: 120 degrees West
+
+ 
+
+This initial set of imagery products will be based on three NPP
+
+VIIRS I channels, the horizontal resolution of which, at nadir,
+
+is approximately 375 meters.
+
+ 
+
+The imagery products will be formatted in netCDF4, but compressed
+
+via gzip. Like all NOAAPORT products, each file will have a plain
+
+text WMO heading at its start. These headings are listed below.
+
+ 
+
+TIPB01 KNES - Imagery Channel 1 (0.64um)
+
+TIPB04 KNES - Imagery Channel 4 (3.74um)
+
+TIPB05 KNES - Imagery Channel 5 (11.45um)
+
+ 
+
+The "P" in the third character place of the WMO Heading
+
+distinguishes this NPP-VIIRS imagery from pre-existing NOAAPORT
+
+satellite imagery.
+
+ 
+
+To access these products, users should take the following steps:
+
+ 
+
+-Read beyond or strip off the WMO heading
+
+-Decompress the resulting product, e.g., via gunzip
+
+-Use a netCDF4 reader, e.g., a decoder that invokes the Unidata
+
+netCDF4 software package
+
+ 
+
+Each product will consist of one granule of VIIRS imagery for a
+
+single channel. The VIIRS granules will cover approximately 86
+
+seconds of data, roughly 5 degrees or 556 kilometers of along-
+
+track geographical extent.
+
+ 
+
+Unlike existing NOAAPORT satellite imagery, formatted on
+
+prescribed maps, each NPP VIIRS imagery granule will be uniquely
+
+located. Geolocation information is contained in each product
+
+file. The geolocation information consists of three 1541-
+
+dimension arrays of latitude/longitude pairs that correspond to
+
+the granule edge (first column), granule centerline, and granule
+
+edge (last column), with all three arrays oriented along the
+
+satellite track.
+
+ 
+
+Given the fixed resolution and gridded Ground Track Mercator
+
+representation of the VIIRS imagery, only these three columns of
+
+geographical information (latitudes and longitudes) are required
+
+to map the imagery. This reduced geolocation information can be
+
+interpreted based on the VIIRS Ground Track Mercator imagery
+
+algorithm (fine 375 meter resolution version) for accurate
+
+georeferencing. Related information (though not specific to the
+
+NOAAPORT stream of NPP VIIRS imagery) can be found in the
+
+following document: "Joint Polar Satellite System (JPSS)
+
+Operational Algorithm Description (OAD) Document for VIIRS Ground
+
+Track Mercator (GTM) Imagery Environmental Data Record (EDR)
+
+Software," Revision A, January 18, 2012, (e.g., section 2.0.4).
+
+ 
+
+The NOAAPORT feed of NPP VIIRS imagery is provided across a test
+
+channel of the satellite broadcast network. This NOAAPORT channel
+
+is under test and evaluation.  Product availability across this
+
+channel is nonetheless expected to approach or meet that of
+
+operational/baseline data (i.e., greater than 95% data
+
+availability). If the experimental period is successful, NWS
+
+intends to transition this NOAAPORT stream to full operational
+
+posture in early 2013.
+
+ 
+
+For questions regarding the scientific or technical content of
+
+the NOAAPORT NPP VIIRS imagery feed please contact:
+
+ 
+
+     ESPC Help Desk
+
+     Suitland, Maryland 20746
+
+     Phone: 301-817-3880
+
+     Email: ESPCOperations@noaa.gov
+
+ 
+
+For questions regarding the NOAAPORT activation or distribution
+
+of these data sets please contact:
+
+ 
+
+     Brian Gockel
+
+     NOAA/NWS Office of Science and Technology
+
+     Phone: 301-713-0304 x158
+
+     Email: Brian.Gockel@noaa.gov
+
+ 
+
+NWS Technical Implementation Notices are online at:
+
+ 
+
+     http://www.nws.noaa.gov/om/notif.htm
+
+ 
+
+$$
