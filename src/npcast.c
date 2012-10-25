@@ -117,14 +117,14 @@ static int np_init(char *np_ip, char *np_port, char *ifname, char *ifip,
   /*
    * Disable all, and enable only those specified.
    */
-  for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i){
+  for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
     gnpcast.channel[i].f_enable = 0;
     gnpcast.channel[i].sfd = -1;
     gnpcast.channel[i].sa = NULL;
     gnpcast.channel[i].sender_sa = NULL;
   }
 
-  for(i = 0; i <= gnpcast.numchannels - 1; ++i){
+  for(i = 0; i < gnpcast.numchannels; ++i){
     gnpcast.channel[i].f_enable = 1;
     gnpcast.channel[i].ip = gip->argv[i];
     gnpcast.channel[i].port = gport->argv[i];
@@ -161,7 +161,7 @@ static int np_init(char *np_ip, char *np_port, char *ifname, char *ifip,
   }
 
   if(status == 0){
-    for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i){
+    for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
       if(gnpcast.channel[i].f_enable)
 	log_info("Enabling %s:%s", 
 		 gnpcast.channel[i].ip, gnpcast.channel[i].port);
@@ -225,7 +225,7 @@ static int np_open_channels(void){
   FD_ZERO(&grdset);
   gmaxfd = -1;
 
-  for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i){
+  for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
     if(get_npcast_channel_enable(i) == 0)
       continue;
 
@@ -248,7 +248,7 @@ static void np_close_channels(void){
 
   int i;
 
-  for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i)
+  for(i = 0; i < NPCAST_NUM_CHANNELS; ++i)
     close_channel(i);
 }
 
@@ -265,7 +265,7 @@ static int open_channel(int id){
   int gai_code;
   int status = 0;
 
-  assert(id <= NPCAST_NUM_CHANNELS - 1);
+  assert(id < NPCAST_NUM_CHANNELS);
 
   ip = gnpcast.channel[id].ip;
   port = gnpcast.channel[id].port;
@@ -310,7 +310,7 @@ static int open_channel(int id){
 
 static void close_channel(int id){
 
-  assert(id <= NPCAST_NUM_CHANNELS - 1);
+  assert(id < NPCAST_NUM_CHANNELS);
 
   if(gnpcast.channel[id].sfd != -1)
     close(gnpcast.channel[id].sfd);
@@ -333,7 +333,7 @@ ssize_t recvfrom_channel_nowait(int id, void *buf, size_t len){
   ssize_t n;
   int sfd;
 
-  assert(id <= NPCAST_NUM_CHANNELS - 1);
+  assert(id < NPCAST_NUM_CHANNELS);
 
   sfd = gnpcast.channel[id].sfd;
 
@@ -386,7 +386,7 @@ int np_select(unsigned int timeout_secs){
     tvp = &timeout;
   }
 
-  for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i){
+  for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
     if(gnpcast.channel[i].sfd != -1)
       FD_SET(gnpcast.channel[i].sfd, &grdset);
   }

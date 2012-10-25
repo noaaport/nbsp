@@ -120,7 +120,7 @@ int build_emwin_packet(struct emwin_packet_st *ep){
    *
    * header_and_data_size = ep->packet_size - 12;
    * p = &(ep->packet[6]);
-   * for(i = 0; i <= header_and_data_size - 1; ++i){
+   * for(i = 0; i < header_and_data_size; ++i){
    *  p[i] = p[i] ^ 0xff;
    * }
    */
@@ -210,7 +210,7 @@ static int build_emwin_header(struct emwin_packet_st *ep){
   char header[EMWIN_HEADER_SIZE + 1];
   char fname_caps[EMWIN_HEADER_FNAMESIZE + 1];
 
-  for(i = 0; i <= EMWIN_HEADER_FNAMESIZE - 1; ++i){
+  for(i = 0; i < EMWIN_HEADER_FNAMESIZE; ++i){
     fname_caps[i] = toupper(ep->fname[i]);
   }
   fname_caps[EMWIN_HEADER_FNAMESIZE] = '\0';

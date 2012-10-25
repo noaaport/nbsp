@@ -480,10 +480,10 @@ static struct pctl_element_st **create_pce_array(int numchannels,
   if(pcearray == NULL)
     return(NULL);
 
-  for(i = 0; i <= numchannels - 1; ++i)
+  for(i = 0; i < numchannels; ++i)
     pcearray[i] = NULL;
 
-  for(i = 0; i <= numchannels - 1; ++i){
+  for(i = 0; i < numchannels; ++i){
     pcearray[i] = create_pce(memfile_size);
     if(pcearray[i] == NULL){
       status = -1;
@@ -505,7 +505,7 @@ static void destroy_pce_array(struct pctl_element_st **pcearray,
 
   assert(pcearray != NULL);
 
-  for(i = 0; i <= numchannels - 1; ++i){
+  for(i = 0; i < numchannels; ++i){
     if(pcearray[i] != NULL)
       destroy_pce(pcearray[i]);
   }

@@ -582,7 +582,7 @@ static int pce_mcat_frames(struct pctl_element_st *pce,
 
   numfragments = pce->num_fragments;
 
-  for(i = 0; i <= numfragments - 1; ++i){
+  for(i = 0; i < numfragments; ++i){
     pdata_size = get_memframe(pce->mf, &pdata, &f_compressed);
     if(pdata_size <= 0){
       log_errx("Error reading frame %d from memfile %u.", i, pce->seq_number);

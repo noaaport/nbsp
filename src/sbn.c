@@ -54,7 +54,7 @@ static int unpack_fl_header(struct frame_level_header *flh,
 
   /* Our calculated checksum - includes all bytes except the last two */
   flh->data_cksum = 0;
-  for(i = 0; i <= FRAME_LEVEL_HEADER_SIZE - 3; ++i)
+  for(i = 0; i < FRAME_LEVEL_HEADER_SIZE - 2; ++i)
     flh->data_cksum += data[i];
 
   return(flh->sbn_cksum == flh->data_cksum? 0: 1);
@@ -404,7 +404,7 @@ int split_wmo_header(struct sbn_frame *sbnf,
    * start of the awips line, if any
    */
   i = 0;
-  while((*wmo != '\n') && (i <= data_size - 1)){
+  while((*wmo != '\n') && (i < data_size)){
      ++wmo;
      ++i;
   }
@@ -444,7 +444,7 @@ int split_wmo_header(struct sbn_frame *sbnf,
       wmo_awips[0] = '\0';
   }else{
     b = 0;
-    while((b <= WMO_NOTAWIPS_SIZE - 1) && (b <= n - 1)){
+    while((b < WMO_NOTAWIPS_SIZE) && (b < n)){
       wmo_notawips[b] = wmo[b];
 
       if(isalnum(wmo_notawips[b]) == 0)

@@ -87,7 +87,7 @@ void e_report_qstate(void){
   j = 0;
   buffer[j++] = g.queue_numchannels;
   buffer[j++] = (g.pctl->pctldb)->n;
-  for(i = 0; i <= g.queue_numchannels - 1; ++i){
+  for(i = 0; i < g.queue_numchannels; ++i){
     if(g.qtable != NULL)
       buffer[j++] = (g.qtable->nbspq[i])->n;
     else
@@ -95,7 +95,7 @@ void e_report_qstate(void){
   }
 
   buffer[j++] = (g.pctl->pctldb)->nmax;
-  for(i = 0; i <= g.queue_numchannels - 1; ++i){
+  for(i = 0; i < g.queue_numchannels; ++i){
     if(g.qtable != NULL)
       buffer[j++] = (g.qtable->nbspq[i])->nmax;
     else
@@ -252,7 +252,7 @@ void log_qstate(void){
 
   fprintf(f, "%" PRIuMAX " %" PRIu32, (uintmax_t)now, (g.pctl->pctldb)->n);
 
-  for(i = 0; i <= g.queue_numchannels - 1; ++i){
+  for(i = 0; i < g.queue_numchannels; ++i){
     if(g.qtable != NULL)
       n = (g.qtable->nbspq[i])->n;
     else

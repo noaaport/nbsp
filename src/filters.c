@@ -280,7 +280,7 @@ static int init_filter_list(void){
   }else
     gflist.nmax = INITIAL_SIZE;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     gflist.filters[i].fd = -1;
     gflist.filters[i].pfp = NULL;
     gflist.filters[i].type = FILTER_TYPE_NONE;
@@ -299,7 +299,7 @@ static void kill_filter_list(void){
   if(gflist.filters == NULL)
     return;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i)
+  for(i = 0; i < gflist.nmax; ++i)
     delete_filter_entry(i);
 
   free(gflist.filters);
@@ -416,7 +416,7 @@ static int e_reload_filters(void){
   int status = 0;
   int i;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     if(gflist.filters[i].type == FILTER_TYPE_PIPE)
 	delete_filter_entry(i);
   }
@@ -432,7 +432,7 @@ static int sendto_one_filter(int i, struct packet_info_st *packetinfo,
 
   int status = 0;
 
-  assert((i >= 0) && (i <= gflist.nmax - 1));
+  assert((i >= 0) && (i < gflist.nmax));
 
   if(gflist.filters[i].fname == NULL)
     return(0);
@@ -576,7 +576,7 @@ static int grow_list(void){
   gflist.nmax *= GROW_FACTOR;
   gflist.filters = f;
 
-  for(i = old_nmax; i <= gflist.nmax - 1; ++i){
+  for(i = old_nmax; i < gflist.nmax; ++i){
     gflist.filters[i].fd = -1;
     gflist.filters[i].pfp = NULL;
     gflist.filters[i].type = FILTER_TYPE_NONE;
@@ -633,7 +633,7 @@ static int find_empty_entry(void){
    */
   int i;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     if(gflist.filters[i].fname == NULL)
       return(i);
   }
@@ -648,7 +648,7 @@ static int find_entry(char *path){
    */
   int i;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     if((gflist.filters[i].fname != NULL) &&
        (strcmp(gflist.filters[i].fname, path) == 0)){
        return(i);
@@ -808,7 +808,7 @@ static void open_filters1(int reopen_flag){
   if(gflist.n == 0)
     return;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     if(reopen_flag == 0)
       status = open_one_filter(i);
     else
@@ -847,7 +847,7 @@ static int open_one_filter(int i){
 
   int status = 0;
 
-  assert((i >= 0) && (i <= gflist.nmax - 1));
+  assert((i >= 0) && (i < gflist.nmax));
 
   if(gflist.filters[i].fname == NULL)
     return(0);
@@ -868,7 +868,7 @@ static int reopen_one_filter(int i){
    */
   int status = 0;
 
-  assert((i >= 0) && (i <= gflist.nmax - 1));
+  assert((i >= 0) && (i < gflist.nmax));
 
   if(gflist.filters[i].fname == NULL)
     return(0);
@@ -1015,7 +1015,7 @@ static void report_filters_stats(void){
   /* Same format as the server active and connections file */
   now = time(NULL);
   fprintf(fp, "- %u\n", (unsigned int)now);
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     if(gflist.filters[i].fname != NULL){
       fprintf(fp, "  %s %u %u\n",
 	      gflist.filters[i].fname,
@@ -1030,7 +1030,7 @@ static void reset_filters_stats(void){
 
   int i;
 
-  for(i = 0; i <= gflist.nmax - 1; ++i){
+  for(i = 0; i < gflist.nmax; ++i){
     gflist.filters[i].stats.files_sent = 0;
     gflist.filters[i].stats.errors = 0;
   }

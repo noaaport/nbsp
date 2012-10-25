@@ -234,7 +234,7 @@ void init_globals(void){
   g.f_filter_thread_created = 0;
   g.f_server_thread_created = 0;
   g.f_processor_thread_created = 0;
-  for(i = 0; i <= NPCAST_NUM_CHANNELS - 1; ++i){
+  for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
     g.f_reader_thread_created[i] = 0;
   }
   g.f_slave_thread_created = 0;
