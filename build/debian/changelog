@@ -1,8 +1,9 @@
-nbsp (2.2.4d1-1) oneiric; urgency=low
+nbsp (2.2.4p1-1) oneiric; urgency=low
 
-  * Revised in anticipation of the addition of the 5th (polarsat) channel.
+  * Added two channels: polarsat and and extra one for testing/expansion
+    The polarsat channel is enabled by default.
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 24 Sep 2012 21:14:35 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 25 Oct 2012 10:23:35 -0400
 
 nbsp (2.2.3p3-1) oneiric; urgency=low
 

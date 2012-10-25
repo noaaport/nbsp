@@ -161,5 +161,7 @@
   Jerry Robertson (MOS and qpf data files not being saved in the
   apprpriate subdirectories).
 
-2.2.4p1
+2.2.4r1
 - Added two extra channels to support the polarsat channel5
+  Polarst channel is enabled by default (in defaults.h.in), leaving
+  one extra channel for testing and/or future expansion.
