@@ -20,6 +20,10 @@ FILTERTARGET-INIT = dafilter.init
 FILTERSOURCES-INIT = dafilter.init.in
 FILTERINCLUDE-INIT = dainit-nntp.tcl
 
+FILTERTARGET-CONF = dafilter.conf
+FILTERSOURCES-CONF = dafilter.conf.in
+FILTERINCLUDE-CONF = dainit-nntp.conf
+
 FILTERLIBFILES = dalib-archive.tcl \
 	dalib-dirlist.tcl \
 	dalib-enable.tcl \
@@ -42,7 +46,8 @@ M4MAIN-LITE =	dafilter-lite.m4
 M4TARGET-LITE =	dafilter-lite.rc-defaults
 SAMPLES =	dafilter.conf-sample dafilter.rc-sample archive.conf-sample
 DOCSAMPLES =	level3.cfg-sample level2.cfg-sample
-TARGET =	${FILTERTARGET} ${FILTERTARGET-INIT} ${FILTERTARGET-MGR} \
+TARGET =	${FILTERTARGET} \
+		${FILTERTARGET-INIT} ${FILTERTARGET-MGR} ${FILTERTARGET-CONF} \
 		${TOOLNAMES} ${M4TARGET} ${M4TARGET-LITE} \
 		${SAMPLES} ${DOCSAMPLES}
 
@@ -62,8 +67,14 @@ ${FILTERTARGET-MGR}: ${FILTERSOURCES-MGR}
 	sed -e /%TCLSH%/s##${TCLSH}# ${FILTERSOURCES-MGR} > ${FILTERTARGET-MGR}
 
 ${FILTERTARGET-INIT}: ${FILTERSOURCES-INIT} ${FILTERINCLUDE-INIT}
-	sed -e '/@dainit-nntp@/r ${FILTERINCLUDE-INIT}' -e '/@dainit-nntp@/d' \
+	sed -e '/@dainit-nntp@/r ${FILTERINCLUDE-INIT}' \
+	-e '/@dainit-nntp@/d' \
 	${FILTERSOURCES-INIT} > ${FILTERTARGET-INIT}
+
+${FILTERTARGET-CONF}: ${FILTERSOURCES-CONF} ${FILTERINCLUDE-CONF}
+	sed -e '/@dainit-nntp-conf@/r ${FILTERINCLUDE-CONF}' \
+	-e '/@dainit-nntp-conf@/d' \
+	${FILTERSOURCES-CONF} > ${FILTERTARGET-CONF}
 
 ${M4TARGET}: ${M4MAIN} ${M4SOURCES}
 	m4 ${M4MAIN} > ${M4TARGET}

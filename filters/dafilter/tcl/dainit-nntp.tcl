@@ -1,7 +1,9 @@
-# 
+#
+# $Id$
+#
 # Created by running the awk script
 #	printf("set dafilter(nntp_enable,%s)\t 1;\n", $1);
-# on the dadirs.txt file (in dev-notes/newsgroups).
+# on the dadirs.txt file (in dev-notes/inn/newsgroups).
 #
 set dafilter(nntp_enable,surface)	 1;
 set dafilter(nntp_enable,syn)	 1;

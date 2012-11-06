@@ -34,7 +34,8 @@
 ## set dafilter(rad_inv_enable) 1;
 ## set dafilter(sat_inv_enable) 1;
 
-# Configuration of the nntp gateway
+# Configuration of the nntp gateway. The individual group settings are
+# given further below.
 #
 ## set dafilter(nntp_enable)	0;
 ## set dafilter(nntp_server)	"news";
@@ -185,6 +186,8 @@
 ## set dafilter(slave,sat,ure) {_tig};
 ## set dafilter(slave,grib,ure) {\+grib};
 ## set dafilter(slave,default,ure) {.*};
+
+@dainit-nntp-conf@
 
 #
 # Read the local overrides
