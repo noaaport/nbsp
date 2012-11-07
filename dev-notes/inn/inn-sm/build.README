@@ -1,0 +1,11 @@
+cd /usr/ports/news/inn
+
+make INN_LAYOUT=new
+make INN_LAYOUT=new install
+make INN_LAYOUT=new package
+make INN_LAYOUT=new clean
+
+cd /usr/local/etc
+ln -s /usr/local/news/etc news
+
+

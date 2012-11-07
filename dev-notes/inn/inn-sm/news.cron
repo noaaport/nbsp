@@ -1,0 +1,6 @@
+# Install it via `crontab -u news news`
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/local/news/bin
+
+# min   hour    mday    month   wday    
+0       2       *       *       *       news.daily expireover lowmark delayrm
