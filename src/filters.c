@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -86,6 +86,7 @@ static int open_pipe_filter(int i);
 static int open_fifo_filter(int i);
 static int close_pipe_filter(int i);
 static int close_fifo_filter(int i);
+static int try_reopen_one_filter(int i);
 
 /*
  * Support for the filter server state
@@ -361,18 +362,28 @@ static void sendto_filters(struct packet_info_st *packetinfo, int timeout_ms){
     status = sendto_one_filter(i, packetinfo, timeout_ms);
     if(status == 1){
       /*
-       * This filter is not listening, we will remove it.
+       * This filter is not listening. Try to reopen and if that fails,
+       *  we will remove it.
        */
-      log_info("Removing %s. Filter not listening", gflist.filters[i].fname);
-      delete_filter_entry(i);
-    }else if(status == -1){
+      log_info("Filter %s not listening", gflist.filters[i].fname);
+      if(try_reopen_one_filter(i) == 0){
+	log_info("Reopened %s.", gflist.filters[i].fname);
+      } else {
+	log_info("Removing %s.", gflist.filters[i].fname);
+	delete_filter_entry(i);
+      }
+    } else if(status == -1){
       /*
-       * Write error. Remove it also.
+       * Write error. Try to reopen and remove it if that fails.
        */
       log_err_write(gflist.filters[i].fname);
-      log_info("Removing %s.", gflist.filters[i].fname);
-      delete_filter_entry(i);
-    }else if(status != 0){
+      if(try_reopen_one_filter(i) == 0){
+	log_info("Reopened %s.", gflist.filters[i].fname);
+      } else {
+	log_info("Removing %s.", gflist.filters[i].fname);
+	delete_filter_entry(i);
+      }
+    } else if(status != 0){
       /*
        * Write timeouts.
        * Only fifos can report these; assume it is a temporary situation.
@@ -882,6 +893,22 @@ static int reopen_one_filter(int i){
 	  (gflist.filters[i].pfp == NULL))
     status = open_pipe_filter(i);
 
+  return(status);
+}
+
+static int try_reopen_one_filter(int i){
+  /*
+   * This function is used when the server cannot write to the filter.
+   * It closes it, and tries to reopen it. If the open fails, then it
+   * deletes it from the list.
+   */
+  int status;
+
+  /* Ignore any error here */
+  (void)close_pipe_filter(i);
+
+  status = open_pipe_filter(i);
+  
   return(status);
 }
 
