@@ -165,3 +165,6 @@
 - Added two extra channels to support the polarsat channel5
   Polarst channel is enabled by default (in defaults.h.in), leaving
   one extra channel for testing and/or future expansion.
+- When writing to a filter fails the server used to delete the filter
+  entry from the table. Now it tries to reopen the filter, and   
+  if that fails then it deletes the filter entry.
