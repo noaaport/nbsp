@@ -1,11 +1,11 @@
-nbsp (2.2.4p1-1) oneiric; urgency=low
+nbsp (2.2.4p2-1) oneiric; urgency=low
 
   * Added two channels: polarsat and and extra one for testing/expansion
     The polarsat channel is enabled by default.
 
-  * When writing to a filter fails the server used to delete the filter
-    entry from the table. Now it tries to reopen the filter, and
-    if that fails then it deletes the filter entry.
+  * When writing to a pipe filter fails the server used to delete the filter
+    entry from the table. Now it assumes that it is a temporary
+  * situation and keeps trying to reopen the filter.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 23 Nov 2012 10:23:35 -0400
 
