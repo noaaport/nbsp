@@ -86,7 +86,6 @@ static int open_pipe_filter(int i);
 static int open_fifo_filter(int i);
 static int close_pipe_filter(int i);
 static int close_fifo_filter(int i);
-static int try_reopen_one_filter(int i);
 
 /*
  * Support for the filter server state
@@ -362,27 +361,24 @@ static void sendto_filters(struct packet_info_st *packetinfo, int timeout_ms){
     status = sendto_one_filter(i, packetinfo, timeout_ms);
     if(status == 1){
       /*
-       * This filter is not listening. Try to reopen and if that fails,
-       *  we will remove it.
+       * This filter is not listening. Assume that it is a temporary
+       * situation and let sendto_one_filter() continue trying
+       * to reopen it.
        */
-      log_info("Filter %s not listening", gflist.filters[i].fname);
-      if(try_reopen_one_filter(i) == 0){
-	log_info("Reopened %s.", gflist.filters[i].fname);
-      } else {
-	log_info("Removing %s.", gflist.filters[i].fname);
-	delete_filter_entry(i);
-      }
+      log_warnx("Filter %s not listening", gflist.filters[i].fname);
+      /*
+       * log_info("Removing %s.", gflist.filters[i].fname);
+       * delete_filter_entry(i);
+       */
     } else if(status == -1){
       /*
-       * Write error. Try to reopen and remove it if that fails.
+       * Write error. Same as above.
        */
       log_err_write(gflist.filters[i].fname);
-      if(try_reopen_one_filter(i) == 0){
-	log_info("Reopened %s.", gflist.filters[i].fname);
-      } else {
-	log_info("Removing %s.", gflist.filters[i].fname);
-	delete_filter_entry(i);
-      }
+      /*
+       * log_info("Removing %s.", gflist.filters[i].fname);
+       * delete_filter_entry(i);
+       */
     } else if(status != 0){
       /*
        * Write timeouts.
@@ -893,22 +889,6 @@ static int reopen_one_filter(int i){
 	  (gflist.filters[i].pfp == NULL))
     status = open_pipe_filter(i);
 
-  return(status);
-}
-
-static int try_reopen_one_filter(int i){
-  /*
-   * This function is used when the server cannot write to the filter.
-   * It closes it, and tries to reopen it. If the open fails, then it
-   * deletes it from the list.
-   */
-  int status;
-
-  /* Ignore any error here */
-  (void)close_pipe_filter(i);
-
-  status = open_pipe_filter(i);
-  
   return(status);
 }
 
