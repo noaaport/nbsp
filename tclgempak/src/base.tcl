@@ -18,7 +18,7 @@
 package provide gempak 1.0;
 package require cmdline;
 
-namespace eval ::gempak {
+namespace eval gempak {
 
     variable gempak;
     
@@ -28,7 +28,7 @@ namespace eval ::gempak {
     {^(gp(front|map)|sf(cntr|map|list)|gd(cntr|stream|wind|plot|plot2|map))$};
 }
 
-proc ::gempak::init {args} {
+proc gempak::init {args} {
 	
     variable gempak;
 
@@ -61,7 +61,7 @@ proc ::gempak::init {args} {
     return 0;
 }
 
-proc ::gempak::end {} {
+proc gempak::end {} {
 
     variable gempak;
 
@@ -82,14 +82,14 @@ proc ::gempak::end {} {
     return 0;
 }
 
-proc ::gempak::define {var value} {
+proc gempak::define {var value} {
 
     variable gempak;
 
     set gempak(param,$var) $value;
 }
 
-proc ::gempak::run {} {
+proc gempak::run {} {
 
     variable gempak;
 
@@ -115,7 +115,7 @@ proc ::gempak::run {} {
     return 0;
 }
 
-proc ::gempak::get {param_name} {
+proc gempak::get {param_name} {
 
     variable gempak;
 
@@ -125,14 +125,14 @@ proc ::gempak::get {param_name} {
 #
 # User defined variables
 #
-proc ::gempak::set_var {var_name var_val} {
+proc gempak::set_var {var_name var_val} {
 	
     variable gempak;
 
     set gempak(var,$var_name) $var_val;
 }
 
-proc ::gempak::get_var {var_name} {
+proc gempak::get_var {var_name} {
 
     variable gempak;
 

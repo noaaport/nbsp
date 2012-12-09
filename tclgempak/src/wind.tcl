@@ -9,56 +9,56 @@
 #       UNITS:   K = KNOTS       M = m/s
 #       COLOR:   Color number    0 = no wind plotted
 #
-proc ::gempak::wind_symbol_type {type} {
+proc gempak::wind_symbol_type {type} {
 
     variable gempak;
 
     set gempak(param,wind.symbol_type) $type;
 }
 
-proc ::gempak::wind_symbol_units {units} {
+proc gempak::wind_symbol_units {units} {
 
     variable gempak;
 
     set gempak(param,wind.symbol_units) $units;
 }
 
-proc ::gempak::wind_symbol_color {color} {
+proc gempak::wind_symbol_color {color} {
 
     variable gempak;
 
     set gempak(param,wind.symbol_color) $color;
 }
 
-proc ::gempak::wind_size {size} {
+proc gempak::wind_size {size} {
 
     variable gempak;
 
     set gempak(param,wind.size) $size
 }
 
-proc ::gempak::wind_width {width} {
+proc gempak::wind_width {width} {
 
     variable gempak;
 
     set gempak(param,wind.width) $width;
 }
 
-proc ::gempak::wind_type {type} {
+proc gempak::wind_type {type} {
 
     variable gempak;
 
     set gempak(param,wind.type) $type;
 }
 
-proc ::gempak::wind_arrow_head_size {size} {
+proc gempak::wind_arrow_head_size {size} {
 
     variable gempak;
 
     set gempak(param,wind.arrow_head_size) $size;
 }
 
-proc ::gempak::set_wind {} {
+proc gempak::set_wind {} {
 
     variable gempak;
 
@@ -71,12 +71,12 @@ proc ::gempak::set_wind {} {
     ::gempak::_set_param "wind" "/" $parts;
 }
 
-proc ::gempak::get_wind {} {
+proc gempak::get_wind {} {
 
     return [::gempak::get "wind"];
 }
 
-proc ::gempak::get_wind_list {} {
+proc gempak::get_wind_list {} {
 
     return [split [::gempak::get_wind] "/"];
 }

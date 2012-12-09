@@ -6,14 +6,14 @@
 #
 # Magnitude; x; y; text size/font/width/HW; string
 
-proc ::gempak::refvec_magnitude {magnitude} {
+proc gempak::refvec_magnitude {magnitude} {
 
     variable gempak;
 
     set gempak(param,refvec.magnitude) $magnitude;
 }
 
-proc ::gempak::refvec_xy {x y} {
+proc gempak::refvec_xy {x y} {
 
     variable gempak;
 
@@ -21,42 +21,42 @@ proc ::gempak::refvec_xy {x y} {
     set gempak(param,refvec.y) $y;
 }
 
-proc ::gempak::refvec_text_size {size} {
+proc gempak::refvec_text_size {size} {
 
     variable gempak;
 
     set gempak(param,refvec.text_size) $size;
 }
 
-proc ::gempak::refvec_text_font {font} {
+proc gempak::refvec_text_font {font} {
 
     variable gempak;
 
     set gempak(param,refvec.text_font) $width;
 }
 
-proc ::gempak::refvec_text_width {width} {
+proc gempak::refvec_text_width {width} {
 
     variable gempak;
 
     set gempak(param,refvec.text_width) $width;
 }
 
-proc ::gempak::refvec_text_hwflag {flag} {
+proc gempak::refvec_text_hwflag {flag} {
 
     variable gempak;
 
     set gempak(param,refvec.text_hwflag) $flag;
 }
 
-proc ::gempak::refvec_string {string} {
+proc gempak::refvec_string {string} {
 
     variable gempak;
 
     set gempak(param,refvec.string) $string;
 }
 
-proc ::gempak::set_refvec {} {
+proc gempak::set_refvec {} {
 
     variable gempak;
 
@@ -69,12 +69,12 @@ proc ::gempak::set_refvec {} {
     ::gempak::_set_param "refvec" ";" $parts;
 }
 
-proc ::gempak::get_refvec {} {
+proc gempak::get_refvec {} {
 
     return [::gempak::get "refvec"];
 }
 
-proc ::gempak::get_refvec_list {} {
+proc gempak::get_refvec_list {} {
 
     return [split [::gempak::get_refvec] ";"];
 }

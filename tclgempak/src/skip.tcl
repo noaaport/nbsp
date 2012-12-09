@@ -1,14 +1,14 @@
 #
 # $Id$
 #
-proc ::gempak::skip_contour {skip_contour} {
+proc gempak::skip_contour {skip_contour} {
 
     variable gempak;
 
     set gempak(param,skip.contour) $skip_contour
 }
 
-proc ::gempak::skip_plot_xy {skip_x skip_y} {
+proc gempak::skip_plot_xy {skip_x skip_y} {
 
     variable gempak;
 
@@ -16,7 +16,7 @@ proc ::gempak::skip_plot_xy {skip_x skip_y} {
     set gempak(param,skip.plot_y) $skip_y
 }
 
-proc ::gempak::set_skip {} {
+proc gempak::set_skip {} {
 
     variable gempak;
 
@@ -29,12 +29,12 @@ proc ::gempak::set_skip {} {
     ::gempak::_set_param "skip" "/" $parts;
 }
 
-proc ::gempak::get_skip {} {
+proc gempak::get_skip {} {
 
     return [::gempak::get "skip"];
 }
 
-proc ::gempak::get_skip_list {} {
+proc gempak::get_skip_list {} {
 
     return [split [::gempak::get_skip] "/"];
 }

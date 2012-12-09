@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-proc ::gempak::param_names {} {
+proc gempak::param_names {} {
 #
 # Return the names of the main parameters (garea, imcbar, latlon, ...)
 #
@@ -23,7 +23,7 @@ proc ::gempak::param_names {} {
     return $l;
 }
 
-proc ::gempak::param_vars {param_name} {
+proc gempak::param_vars {param_name} {
 #
 # Returns all the variables associated with a given parameter.
 #
@@ -38,14 +38,14 @@ proc ::gempak::param_vars {param_name} {
     return $l;
 }
 
-proc ::gempak::puts_param_vars {param} {
+proc gempak::puts_param_vars {param} {
 
     foreach q [lsort [::gempak::param_vars $param]] {
 	puts "$q = [::gempak::get $q]";
     }
 }
 
-proc ::gempak::puts_all_param_vars {} {
+proc gempak::puts_all_param_vars {} {
 
     foreach p [::gempak::param_names] {
 	puts "$p = [::gempak::get $p]";

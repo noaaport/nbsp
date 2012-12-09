@@ -2,7 +2,7 @@
 # $Id$
 #
 
-proc ::gempak::ijskip_i {args} {
+proc gempak::ijskip_i {args} {
 #
 # args should be in the order: start stop skip
 #
@@ -11,7 +11,7 @@ proc ::gempak::ijskip_i {args} {
     set gempak(param,ijskip.i) [join $args ";"];
 }
 
-proc ::gempak::ijskip_j {args} {
+proc gempak::ijskip_j {args} {
 #
 # args should be in the order: start stop skip
 #
@@ -20,7 +20,7 @@ proc ::gempak::ijskip_j {args} {
     set gempak(param,ijskip.j) [join $args ";"];
 }
 
-proc ::gempak::ijskip {iskip {jskip ""}} {
+proc gempak::ijskip {iskip {jskip ""}} {
 
     variable gempak;
 
@@ -30,7 +30,7 @@ proc ::gempak::ijskip {iskip {jskip ""}} {
     }
 }
 
-proc ::gempak::set_ijskip {} {
+proc gempak::set_ijskip {} {
 
     variable gempak;
 
@@ -39,12 +39,12 @@ proc ::gempak::set_ijskip {} {
     ::gempak::_set_param "ijskip" "/" $parts;
 }
 
-proc ::gempak::get_ijskip {} {
+proc gempak::get_ijskip {} {
 
     return [::gempak::get "ijskip"];
 }
 
-proc ::gempak::get_ijskip_list {} {
+proc gempak::get_ijskip_list {} {
 
     return [split [::gempak::get_ijskip] "/"];
 }

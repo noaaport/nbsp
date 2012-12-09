@@ -19,21 +19,21 @@
 #
 # ctype
 #
-proc ::gempak::ctype_fill {} {
+proc gempak::ctype_fill {} {
 
     variable gempak;
 
     set gempak(param,ctype) "f";
 }
 
-proc ::gempak::ctype_contour {} {
+proc gempak::ctype_contour {} {
 
     variable gempak;
 
     set gempak(param,ctype) "c";
 }
 
-proc ::gempak::ctype_fc {} {
+proc gempak::ctype_fc {} {
 
     variable gempak;
 
@@ -43,56 +43,56 @@ proc ::gempak::ctype_fc {} {
 #
 # line
 #
-proc ::gempak::line_color {color} {
+proc gempak::line_color {color} {
 
     variable gempak;
 
     set gempak(param,line.color) $color;
 }
 
-proc ::gempak::line_type {type} {
+proc gempak::line_type {type} {
 
     variable gempak;
 
     set gempak(param,line.type) $type;
 }
 
-proc ::gempak::line_width {width} {
+proc gempak::line_width {width} {
 
     variable gempak;
 
     set gempak(param,line.witdh) $width;
 }
 
-proc ::gempak::line_label {label} {
+proc gempak::line_label {label} {
 
     variable gempak;
 
     set gempak(param,line.label) $label;
 }
 
-proc ::gempak::line_smth {smth} {
+proc gempak::line_smth {smth} {
 
     variable gempak;
 
     set gempak(param,line.smth) $smth;
 }
 
-proc ::gempak::line_fltr {fltr} {
+proc gempak::line_fltr {fltr} {
 
     variable gempak;
 
     set gempak(param,line.fltr) $fltr;
 }
 
-proc ::gempak::line_scfflg {scflg} {
+proc gempak::line_scfflg {scflg} {
 
     variable gempak;
 
     set gempak(param,line.scflg) $scflg;
 }
 
-proc ::gempak::set_line {} {
+proc gempak::set_line {} {
 
     variable gempak;
 
@@ -101,17 +101,17 @@ proc ::gempak::set_line {} {
     ::gempak::_set_param "line" "/" $parts;
 }
 
-proc ::gempak::get_line {} {
+proc gempak::get_line {} {
 
     return [::gempak::get "line"];
 }
 
-proc ::gempak::get_line_list {} {
+proc gempak::get_line_list {} {
 
     return [split [::gempak::get_line] "/"];
 }
 
-proc ::gempak::append_cint {} {
+proc gempak::append_cint {} {
 #
 # gdplot2 can have several of these
 #
@@ -126,28 +126,28 @@ proc ::gempak::append_cint {} {
 #
 # contour interval
 #
-proc ::gempak::cint_interval {interval} {
+proc gempak::cint_interval {interval} {
 
     variable gempak;
 
     set gempak(param,cint.interval) $interval;
 }
 
-proc ::gempak::cint_min {min} {
+proc gempak::cint_min {min} {
 
     variable gempak;
 
     set gempak(param,cint.min) $min;
 }
 
-proc ::gempak::cint_max {max} {
+proc gempak::cint_max {max} {
 
     variable gempak;
 
     set gempak(param,cint.max) $max;
 }
 
-proc ::gempak::set_cint {} {
+proc gempak::set_cint {} {
 
     variable gempak;
 
@@ -156,17 +156,17 @@ proc ::gempak::set_cint {} {
     ::gempak::_set_param "cint" "/" $parts;
 }
 
-proc ::gempak::get_cint {} {
+proc gempak::get_cint {} {
 
     return [::gempak::get "cint"];
 }
 
-proc ::gempak::get_cint_list {} {
+proc gempak::get_cint_list {} {
 
     return [split [::gempak::get_cint] "/"];
 }
 
-proc ::gempak::append_cint {} {
+proc gempak::append_cint {} {
 #
 # gdplot2 can have several of these
 #
@@ -181,28 +181,28 @@ proc ::gempak::append_cint {} {
 #
 # fint
 #
-proc ::gempak::fint_interval {interval} {
+proc gempak::fint_interval {interval} {
 
     variable gempak;
 
     set gempak(param,fint.interval) $interval;
 }
 
-proc ::gempak::fint_min {min} {
+proc gempak::fint_min {min} {
 
     variable gempak;
 
     set gempak(param,fint.min) $min;
 }
 
-proc ::gempak::fint_max {max} {
+proc gempak::fint_max {max} {
 
     variable gempak;
 
     set gempak(param,fint.max) $max;
 }
 
-proc ::gempak::set_fint {} {
+proc gempak::set_fint {} {
 
     variable gempak;
 
@@ -211,17 +211,17 @@ proc ::gempak::set_fint {} {
     ::gempak::_set_param "fint" "/" $parts;
 }
 
-proc ::gempak::get_fint {} {
+proc gempak::get_fint {} {
 
     return [::gempak::get "fint"];
 }
 
-proc ::gempak::get_fint_list {} {
+proc gempak::get_fint_list {} {
 
     return [split [::gempak::get_fint] "/"];
 }
 
-proc ::gempak::append_fint {} {
+proc gempak::append_fint {} {
 #
 # gdplot2 can have several of these
 #
@@ -236,21 +236,21 @@ proc ::gempak::append_fint {} {
 #
 # fline
 #
-proc ::gempak::fline_color {color} {
+proc gempak::fline_color {color} {
 
     variable gempak;
 
     set gempak(param,fline.color) $color;
 }
 
-proc ::gempak::fline_type {type} {
+proc gempak::fline_type {type} {
 
     variable gempak;
 
     set gempak(param,fline.type) $type;
 }
 
-proc ::gempak::set_fline {} {
+proc gempak::set_fline {} {
 
     variable gempak;
 
@@ -259,17 +259,17 @@ proc ::gempak::set_fline {} {
     ::gempak::_set_param "fline" "/" $parts;
 }
 
-proc ::gempak::get_fline {} {
+proc gempak::get_fline {} {
 
     return [::gempak::get "fline"];
 }
 
-proc ::gempak::get_fline_list {} {
+proc gempak::get_fline_list {} {
 
     return [split [::gempak::get_fline] "/"];
 }
 
-proc ::gempak::append_fline {} {
+proc gempak::append_fline {} {
 #
 # gdplot2 can have several of these
 #
@@ -284,14 +284,14 @@ proc ::gempak::append_fline {} {
 #
 # for gdplot2
 #
-proc ::gempak::gdpfun {name} {
+proc gempak::gdpfun {name} {
 
     variable gempak;
 
     set gempak(param,gdpfun) $name;
 }
 
-proc ::gempak::append_gdpfun {name} {
+proc gempak::append_gdpfun {name} {
 
     variable gempak;
 
@@ -303,14 +303,14 @@ proc ::gempak::append_gdpfun {name} {
     }
 }
 
-proc ::gempak::get_gdpfun {} {
+proc gempak::get_gdpfun {} {
 
     variable gempak;
 
     return $gempak(param,gdpfun);
 }
 
-proc ::gempak::get_gdpfun_list {} {
+proc gempak::get_gdpfun_list {} {
 
     return [split [::gempak::get_gdpfun] "!"];
 }
@@ -318,7 +318,7 @@ proc ::gempak::get_gdpfun_list {} {
 #
 # type
 #
-proc ::gempak::type {args} {
+proc gempak::type {args} {
 #
 # For gdplot2, the type can have more flags than just f/c, and also there
 # is one type parameter for each gdpfun variable, which requires introducing
@@ -329,7 +329,7 @@ proc ::gempak::type {args} {
     set gempak(param,type) [join $args "/"];
 }
 
-proc ::gempak::append_type {args} {
+proc gempak::append_type {args} {
 
     variable gempak;
 

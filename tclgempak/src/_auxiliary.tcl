@@ -3,7 +3,7 @@
 #
 # Auxiliary functions
 #
-proc ::gempak::_set_param {param separator parts_list} {
+proc gempak::_set_param {param separator parts_list} {
 
     variable gempak;
 
@@ -22,7 +22,7 @@ proc ::gempak::_set_param {param separator parts_list} {
 	[string trimright [join $l $separator] $separator];
 }
 
-proc ::gempak::_join_subparam {param subparam separator subparts_list} {
+proc gempak::_join_subparam {param subparam separator subparts_list} {
 #
 # Used to join several parts of a subparameter in the set_<param>
 # functions. For example (ffa.tcl)
@@ -50,7 +50,7 @@ proc ::gempak::_join_subparam {param subparam separator subparts_list} {
 	[string trimright [join $l $separator] $separator];
 }
 
-proc ::gempak::_join_param_parts {param separator args} {
+proc gempak::_join_param_parts {param separator args} {
 #
 # Used to join sevaral parts of a parameter whose values are passed
 # as arguments to a function. For example (latlon.tcl)
@@ -70,7 +70,7 @@ proc ::gempak::_join_param_parts {param separator args} {
 
 }
 
-proc ::gempak::_script_translate {varname} {
+proc gempak::_script_translate {varname} {
 #
 # The "mapfil" parameter is a gempak variable and must appear in
 # in the script as $mapfil. We have two options: Use $mapfil

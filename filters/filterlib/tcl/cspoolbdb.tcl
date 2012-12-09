@@ -50,7 +50,7 @@ namespace eval nbsp::cspoolbdb {} {
     set cspoolbdb(data_size) 0;
 }
 
-proc ::nbsp::cspoolbdb::init {conffile {localconfdirs [list]}} {
+proc nbsp::cspoolbdb::init {conffile {localconfdirs [list]}} {
 #
 # This function should be called immediately after "package require".
 #
@@ -69,7 +69,7 @@ proc ::nbsp::cspoolbdb::init {conffile {localconfdirs [list]}} {
     }
 }
 
-proc ::nbsp::cspoolbdb::open {} {
+proc nbsp::cspoolbdb::open {} {
 
     variable cspoolbdb;
 
@@ -119,7 +119,7 @@ proc ::nbsp::cspoolbdb::open {} {
     set cspoolbdb(F_open) 1;
 }
 
-proc ::nbsp::cspoolbdb::close {} {
+proc nbsp::cspoolbdb::close {} {
 
     variable cspoolbdb;
     
@@ -143,7 +143,7 @@ proc ::nbsp::cspoolbdb::close {} {
     }
 }
 
-proc ::nbsp::cspoolbdb::read {key {size 0}} {
+proc nbsp::cspoolbdb::read {key {size 0}} {
 #
 # Returns a tcl list:  <code> <size> <data>
 # The <code> is "001" if the file was not found, "255" in case of an error or
@@ -215,7 +215,7 @@ proc ::nbsp::cspoolbdb::read {key {size 0}} {
     return [list $cspoolbdb(code) $cspoolbdb(data_size) $cspoolbdb(data)];
 }
 
-proc ::nbsp::cspoolbdb::get {key {size 0}} {
+proc nbsp::cspoolbdb::get {key {size 0}} {
     #
     # Passing size as 0 returns all the data
     #
@@ -226,28 +226,28 @@ proc ::nbsp::cspoolbdb::get {key {size 0}} {
     return $result;
 }
 
-proc ::nbsp::cspoolbdb::query_enable {} {
+proc nbsp::cspoolbdb::query_enable {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(enable);
 }
 
-proc ::nbsp::cspoolbdb::query_verbose {} {
+proc nbsp::cspoolbdb::query_verbose {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(verbose);
 }
 
-proc ::nbsp::cspoolbdb::query_open {} {
+proc nbsp::cspoolbdb::query_open {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(F_open);
 }
 
-proc ::nbsp::cspoolbdb::query_code_ok {} {
+proc nbsp::cspoolbdb::query_code_ok {} {
 
     variable cspoolbdb;
 
@@ -258,7 +258,7 @@ proc ::nbsp::cspoolbdb::query_code_ok {} {
     return 0;
 }
 
-proc ::nbsp::cspoolbdb::query_code_notfound {} {
+proc nbsp::cspoolbdb::query_code_notfound {} {
 
     variable cspoolbdb;
 
@@ -269,7 +269,7 @@ proc ::nbsp::cspoolbdb::query_code_notfound {} {
     return 0;
 }
 
-proc ::nbsp::cspoolbdb::query_code_error {} {
+proc nbsp::cspoolbdb::query_code_error {} {
 
     variable cspoolbdb;
 
@@ -280,35 +280,35 @@ proc ::nbsp::cspoolbdb::query_code_error {} {
     return 0;
 }
 
-proc ::nbsp::cspoolbdb::query_code {} {
+proc nbsp::cspoolbdb::query_code {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(code);
 }
 
-proc ::nbsp::cspoolbdb::query_data {} {
+proc nbsp::cspoolbdb::query_data {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(data);
 }
 
-proc ::nbsp::cspoolbdb::query_data_size {} {
+proc nbsp::cspoolbdb::query_data_size {} {
 
     variable cspoolbdb;
 
     return $cspoolbdb(data_size);
 }
 
-proc ::nbsp::cspoolbdb::set_verbose {{v 1}} {
+proc nbsp::cspoolbdb::set_verbose {{v 1}} {
 
     variable cspoolbdb;
 
     set cspoolbdb(verbose) $v;
 }
 
-proc ::nbsp::cspoolbdb::set_background {{v 1}} {
+proc nbsp::cspoolbdb::set_background {{v 1}} {
 
     variable cspoolbdb;
 

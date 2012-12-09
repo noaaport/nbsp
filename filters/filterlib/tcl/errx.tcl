@@ -13,7 +13,7 @@ namespace eval nbsp::syslog {
     set syslog(usesyslog) 0;
 }
 
-proc ::nbsp::errx::warn s {
+proc nbsp::errx::warn s {
 
     global argv0;
 
@@ -21,12 +21,12 @@ proc ::nbsp::errx::warn s {
     puts stderr "$name: $s";
 }
 
-proc ::nbsp::errx::errc s {
+proc nbsp::errx::errc s {
 
     warn $s;
 }
 
-proc ::nbsp::errx::err s {
+proc nbsp::errx::err s {
 
     warn $s;
     exit 1;
@@ -35,14 +35,14 @@ proc ::nbsp::errx::err s {
 #
 # syslog
 #
-proc ::nbsp::syslog::usesyslog {{flag 1}} {
+proc nbsp::syslog::usesyslog {{flag 1}} {
 
     variable syslog;
 
     set syslog(usesyslog) $flag;
 }
 
-proc ::nbsp::syslog::_log_msg s {
+proc nbsp::syslog::_log_msg s {
 
     global argv0;
 
@@ -50,7 +50,7 @@ proc ::nbsp::syslog::_log_msg s {
     exec logger -t $name -- $s;
 }
 
-proc ::nbsp::syslog::msg s {
+proc nbsp::syslog::msg s {
 
     variable syslog;
 
@@ -61,7 +61,7 @@ proc ::nbsp::syslog::msg s {
     }
 }
 
-proc ::nbsp::syslog::warn s {
+proc nbsp::syslog::warn s {
 
     variable syslog;
 
@@ -72,7 +72,7 @@ proc ::nbsp::syslog::warn s {
     }
 }
 
-proc ::nbsp::syslog::errc s {
+proc nbsp::syslog::errc s {
 
     variable syslog;
 
@@ -83,7 +83,7 @@ proc ::nbsp::syslog::errc s {
     }
 }
 
-proc ::nbsp::syslog::err s {
+proc nbsp::syslog::err s {
 
     variable syslog;
 
@@ -98,7 +98,7 @@ proc ::nbsp::syslog::err s {
 #
 # Log to a file
 #
-proc ::nbsp::filelog::msg {logfile s} {
+proc nbsp::filelog::msg {logfile s} {
 
     global argv0;
 

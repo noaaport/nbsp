@@ -21,14 +21,14 @@ package require cmdline;
 package require textutil;
 package require gempak;
 
-namespace eval ::gempak::sflist {
+namespace eval gempak::sflist {
 
     variable sflist;
     
     array set sflist {};
 }
 
-proc ::gempak::sflist::init {args} {
+proc gempak::sflist::init {args} {
 	
     variable sflist;
 
@@ -63,7 +63,7 @@ proc ::gempak::sflist::init {args} {
     return 0;
 }
 
-proc ::gempak::sflist::end {} {
+proc gempak::sflist::end {} {
 
     variable sflist;
 	
@@ -84,7 +84,7 @@ proc ::gempak::sflist::end {} {
     return 0;
 }
 
-proc ::gempak::sflist::run {} {
+proc gempak::sflist::run {} {
 
     variable sflist;
 
@@ -95,7 +95,7 @@ proc ::gempak::sflist::run {} {
     _exec "run";
 }
 
-proc ::gempak::sflist::_init {} {
+proc gempak::sflist::_init {} {
 
     variable sflist;
 
@@ -105,7 +105,7 @@ proc ::gempak::sflist::_init {} {
     set sflist(output_status) 0;
 }
 
-proc ::gempak::sflist::_exec {s} {
+proc gempak::sflist::_exec {s} {
 
     variable sflist;
     global expect_out;
@@ -185,70 +185,70 @@ proc ::gempak::sflist::_exec {s} {
     return 0;
 }
 
-proc ::gempak::sflist::output {} {
+proc gempak::sflist::output {} {
 
     variable sflist;
 
     return $sflist(output);
 }
 
-proc ::gempak::sflist::output_raw {} {
+proc gempak::sflist::output_raw {} {
 
     variable sflist;
 
     return $sflist(output_raw);
 }
 
-proc ::gempak::sflist::output_list {} {
+proc gempak::sflist::output_list {} {
 
     variable sflist;
 
     return $sflist(output_list);
 }
 
-proc ::gempak::sflist::output_status {} {
+proc gempak::sflist::output_status {} {
 
     variable sflist;
 
     return $sflist(output_status);
 }
 
-proc ::gempak::sflist::define {param val} {
+proc gempak::sflist::define {param val} {
 
     variable sflist;
 
     set sflist(param,$param) $val;
 }
 
-proc ::gempak::sflist::get {param} {
+proc gempak::sflist::get {param} {
 
     variable sflist;
 
     return $sflist(param,$param);
 }
 
-proc ::gempak::sflist::sfparm {args} {
+proc gempak::sflist::sfparm {args} {
 
     variable sflist;
 
     set sflist(param,sfparm) [join $args ";"];
 }
 
-proc ::gempak::sflist::dattim {val} {
+proc gempak::sflist::dattim {val} {
 
     variable sflist;
 
     set sflist(param,dattim) $val;
 }
 
-proc ::gempak::sflist::sffile {val} {
+proc gempak::sflist::sffile {val} {
 
     variable sflist;
 
     set sflist(param,sffile) $val;
 }
 
-proc ::gempak::sflist::stations {args} {
+proc gempak::sflist::stations {args} {
 
     variable sflist;
 
@@ -256,7 +256,7 @@ proc ::gempak::sflist::stations {args} {
     append sflist(param,area) "@" [join $args ";"];
 }
 
-proc ::gempak::sflist::state {state} {
+proc gempak::sflist::state {state} {
 
     variable sflist;
 
@@ -264,7 +264,7 @@ proc ::gempak::sflist::state {state} {
     append sflist(param,area) "@" $state;
 }
 
-proc ::gempak::sflist::latlon12 {lat1 lon1 lat2 lon2} {
+proc gempak::sflist::latlon12 {lat1 lon1 lat2 lon2} {
 
     variable sflist;
 
@@ -272,7 +272,7 @@ proc ::gempak::sflist::latlon12 {lat1 lon1 lat2 lon2} {
     set append sflist(param,area) [join [list $lat1 $lon1 $lat2 $lon2] ";"];
 }
 
-proc ::gempak::sflist::lat {lat1 lat2} {
+proc gempak::sflist::lat {lat1 lat2} {
 
     variable sflist;
 
@@ -280,7 +280,7 @@ proc ::gempak::sflist::lat {lat1 lat2} {
     set sflist(param,area.lat2) $lat2;
 }
 
-proc ::gempak::sflist::lon {lon1 lon2} {
+proc gempak::sflist::lon {lon1 lon2} {
 
     variable sflist;
 
@@ -288,7 +288,7 @@ proc ::gempak::sflist::lon {lon1 lon2} {
     set sflist(param,area.lon2) $lon2;
 }
 
-proc ::gempak::sflist::set_latlon {} {
+proc gempak::sflist::set_latlon {} {
 
     variable sflist;
 
@@ -307,14 +307,14 @@ proc ::gempak::sflist::set_latlon {} {
 #
 # User defined variables
 #
-proc ::gempak::sflist::set_var {var_name var_val} {
+proc gempak::sflist::set_var {var_name var_val} {
         
     variable sflist;
 
     set sflist(var,$var_name) $var_val;
 }
 
-proc ::gempak::sflist::get_var {var_name} {
+proc gempak::sflist::get_var {var_name} {
 
     variable sflist;
 

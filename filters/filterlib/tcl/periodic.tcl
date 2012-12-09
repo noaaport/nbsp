@@ -66,7 +66,7 @@ namespace eval nbsp::periodic {} {
     ::nbsp::syslog::usesyslog;
 }
 
-proc ::nbsp::periodic::set_run_period {run_period} {
+proc nbsp::periodic::set_run_period {run_period} {
 
     variable periodic;
 
@@ -77,14 +77,14 @@ proc ::nbsp::periodic::set_run_period {run_period} {
 	[::nbsp::periodic::_run_time_reset $now $run_period];
 }
 
-proc ::nbsp::periodic::get_run_period {} {
+proc nbsp::periodic::get_run_period {} {
 
     variable periodic;
 
     return $periodic(run_period);
 }
 
-proc ::nbsp::periodic::register {cmd {run_period ""}} {
+proc nbsp::periodic::register {cmd {run_period ""}} {
 #
 # run_period is a number in seconds, or:
 #   - the keyword "hourly", in this case the command is run every hour
@@ -107,7 +107,7 @@ proc ::nbsp::periodic::register {cmd {run_period ""}} {
     set periodic($cmd,run_time) $run_time;
 }
 
-proc ::nbsp::periodic::run {} {
+proc nbsp::periodic::run {} {
 
     variable periodic;
 
@@ -134,7 +134,7 @@ proc ::nbsp::periodic::run {} {
     }
 }
 
-proc ::nbsp::periodic::scheduler {rcfile} {
+proc nbsp::periodic::scheduler {rcfile} {
 
     variable periodic;
 
@@ -160,7 +160,7 @@ proc ::nbsp::periodic::scheduler {rcfile} {
 #
 # private
 #
-proc ::nbsp::periodic::_run_cmd {cmd} {
+proc nbsp::periodic::_run_cmd {cmd} {
 #
 # Checks if it is time to run a registered command and the runs it
 # and reinitializes its timer.
@@ -184,7 +184,7 @@ proc ::nbsp::periodic::_run_cmd {cmd} {
     eval $cmd;
 }
 
-proc ::nbsp::periodic::_verify_cmd {cmd} {
+proc nbsp::periodic::_verify_cmd {cmd} {
 
     variable periodic;
 
@@ -194,7 +194,7 @@ proc ::nbsp::periodic::_verify_cmd {cmd} {
     }
 }
 
-proc ::nbsp::periodic::_hourly_run_time_reset {now} {
+proc nbsp::periodic::_hourly_run_time_reset {now} {
 #
 # This function returns the time corresponding to the next hour.
 # now is the result of "clock seconds"
@@ -204,7 +204,7 @@ proc ::nbsp::periodic::_hourly_run_time_reset {now} {
     return [expr $now - ($current_minute * 60) + 3600];
 }
 
-proc ::nbsp::periodic::_minutely_run_time_reset {now} {
+proc nbsp::periodic::_minutely_run_time_reset {now} {
 #
 # This function returns the time corresponding to the next minute.
 # now is the result of "clock seconds"
@@ -214,7 +214,7 @@ proc ::nbsp::periodic::_minutely_run_time_reset {now} {
     return [expr $now - $current_second + 60];
 }
 
-proc ::nbsp::periodic::_run_time_reset {now run_period} {
+proc nbsp::periodic::_run_time_reset {now run_period} {
 
     if {$run_period eq "minutely"} {
 	set run_time [::nbsp::periodic::_minutely_run_time_reset $now];
@@ -227,7 +227,7 @@ proc ::nbsp::periodic::_run_time_reset {now run_period} {
     return $run_time;
 }
 
-proc ::nbsp::periodic::_verbose {{v 1}} {
+proc nbsp::periodic::_verbose {{v 1}} {
 #
 # Mostly for debuging
 #

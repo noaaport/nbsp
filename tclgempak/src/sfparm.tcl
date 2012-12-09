@@ -10,59 +10,59 @@
 #
 # These functions sfparm. The colors functions are in colors.tcl.
 #
-proc ::gempak::sfparm_name {name} {
+proc gempak::sfparm_name {name} {
 
     variable gempak;
 
     set gempak(param,sfparm.name) $name;
 }
 
-proc ::gempak::sfparm_size {size} {
+proc gempak::sfparm_size {size} {
 
     variable gempak;
 
     set gempak(param,sfparm.size) $size;
 }
 
-proc ::gempak::sfparm_width {width} {
+proc gempak::sfparm_width {width} {
 
     variable gempak;
 
     set gempak(param,sfparm.width) $width;
 }
 
-proc ::gempak::sfparm_type {type} {
+proc gempak::sfparm_type {type} {
 
     variable gempak;
 
     set gempak(param,sfparm.type) $type;
 }
 
-proc ::gempak::sfparm_headsiz {headsiz} {
+proc gempak::sfparm_headsiz {headsiz} {
 
     variable gempak;
 
     set gempak(param,sfparm.headsiz) $headsiz;
 }
 
-proc ::gempak::set_sfparm {} {
+proc gempak::set_sfparm {} {
 
     set parts [list name size width type headsiz];
 
     ::gempak::_set_param "sfparm" ":" $parts;
 }
 
-proc ::gempak::get_sfparm {} {
+proc gempak::get_sfparm {} {
 
     return [::gempak::get "sfparm"];
 }
 
-proc ::gempak::get_sfparm_list {} {
+proc gempak::get_sfparm_list {} {
 
     return [split [::gempak::get_sfparm] ";"];
 }
 
-proc ::gempak::append_sfparm {} {
+proc gempak::append_sfparm {} {
 #
 # Called instead of ::gempak::set_sfparm to append a map rather
 # than resetting it. Save current value, reset and join the new

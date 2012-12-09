@@ -47,7 +47,7 @@ package provide upperair::fm35 1.0;
 #
 package require textutil::split;
 
-namespace eval ::upperair::fm35 {} {
+namespace eval upperair::fm35 {} {
 
     variable fm35;
     variable fm35_raw_data;
@@ -77,7 +77,7 @@ namespace eval ::upperair::fm35 {} {
     set mandatory_levels(ttcc,10) 10;
 }
 
-proc ::upperair::fm35::_strip_zeros {v} {
+proc upperair::fm35::_strip_zeros {v} {
 
     set r [string trimleft $v 0];
     if {$r eq ""} {
@@ -87,7 +87,7 @@ proc ::upperair::fm35::_strip_zeros {v} {
     return $r;
 }
 
-proc ::upperair::fm35::_decode_temp_dewp {tttdd} {
+proc upperair::fm35::_decode_temp_dewp {tttdd} {
     #
     # Temp and Dewp
     #
@@ -140,7 +140,7 @@ proc ::upperair::fm35::_decode_temp_dewp {tttdd} {
     return [list $temp_c $dewp_c];
 }
 
-proc ::upperair::fm35::_decode_wind {dddff} {
+proc upperair::fm35::_decode_wind {dddff} {
     #
     # Wind
     #
@@ -189,7 +189,7 @@ proc ::upperair::fm35::_decode_wind {dddff} {
     return [list $ws_kt $wd_deg];
 }
 
-proc ::upperair::fm35::_decode_height_ttaa {pphhh} {
+proc upperair::fm35::_decode_height_ttaa {pphhh} {
 
     if {[regexp {/} $pphhh]} {
 	return [get_na];
@@ -233,7 +233,7 @@ proc ::upperair::fm35::_decode_height_ttaa {pphhh} {
     return $h;
 }
 
-proc ::upperair::fm35::_decode_height_ttcc {pphhh} {
+proc upperair::fm35::_decode_height_ttcc {pphhh} {
 
     if {[regexp {/} $pphhh]} {
 	return [get_na];
@@ -268,7 +268,7 @@ proc ::upperair::fm35::_decode_height_ttcc {pphhh} {
     return $h;
 }
 
-proc ::upperair::fm35::_decode_surface_tropopause {data} {
+proc upperair::fm35::_decode_surface_tropopause {data} {
 #
 # Here "data" is a list with the three elements, for the surface or
 # tropopause levels. The decoded data is returned in the order
@@ -303,7 +303,7 @@ proc ::upperair::fm35::_decode_surface_tropopause {data} {
     return [list $p_mb $temp_c $dewp_c $ws_kt $wd_deg];
 }
 
-proc ::upperair::fm35::_decode_windmax {data} {
+proc upperair::fm35::_decode_windmax {data} {
 #
 # Here "data" is a list with _two_ elements.
 # The decoded data is returned in the order
@@ -327,7 +327,7 @@ proc ::upperair::fm35::_decode_windmax {data} {
     return [list $p_mb  $ws_kt $wd_deg];
 }
 
-proc ::upperair::fm35::_decode_upperair_level {part level_data} {
+proc upperair::fm35::_decode_upperair_level {part level_data} {
 #
 # Here "level_data" is a list with the three elements, and "part" is
 # is "ttaa" or "ttcc".
@@ -360,7 +360,7 @@ proc ::upperair::fm35::_decode_upperair_level {part level_data} {
 # external interface functions
 #
 
-proc ::upperair::fm35::decode {body} {
+proc upperair::fm35::decode {body} {
 #
 # "body" is assumed to be a line of the form
 #
@@ -482,7 +482,7 @@ proc ::upperair::fm35::decode {body} {
     }
 }
 
-proc ::upperair::fm35::get_levels {} {
+proc upperair::fm35::get_levels {} {
 #
 # Returns the list of levels for which data is available. The order is:
 #
@@ -513,7 +513,7 @@ proc ::upperair::fm35::get_levels {} {
     return $r;
 }
 
-proc ::upperair::fm35::get_data {level} {
+proc upperair::fm35::get_data {level} {
 #
 # The returned list depends on the level:
 #
@@ -534,28 +534,28 @@ proc ::upperair::fm35::get_data {level} {
     return [list];
 }
 
-proc ::upperair::fm35::get_siteid {} {
+proc upperair::fm35::get_siteid {} {
 
     variable fm35_decoded_data;
 
     return $fm35_decoded_data(siteid);
 }
 
-proc ::upperair::fm35::get_time {} {
+proc upperair::fm35::get_time {} {
 
     variable fm35_decoded_data;
 
     return $fm35_decoded_data(time);
 }
 
-proc ::upperair::fm35::set_na {s} {
+proc upperair::fm35::set_na {s} {
 
     variable fm35;
 
     set fm35(na_symbol) $s;
 }
 
-proc ::upperair::fm35::get_na {} {
+proc upperair::fm35::get_na {} {
 
     variable fm35;
 

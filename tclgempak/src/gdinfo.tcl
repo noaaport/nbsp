@@ -20,14 +20,14 @@ package require Expect;
 package require cmdline;
 package require textutil;
 
-namespace eval ::gempak::gdinfo {
+namespace eval gempak::gdinfo {
 
     variable gdinfo;
     
     array set gdinfo {};
 }
 
-proc ::gempak::gdinfo::init {args} {
+proc gempak::gdinfo::init {args} {
 	
     variable gdinfo;
 
@@ -64,7 +64,7 @@ proc ::gempak::gdinfo::init {args} {
     return 0;
 }
 
-proc ::gempak::gdinfo::end {} {
+proc gempak::gdinfo::end {} {
 
     variable gdinfo;
 	
@@ -85,7 +85,7 @@ proc ::gempak::gdinfo::end {} {
     return 0;
 }
 
-proc ::gempak::gdinfo::run {} {
+proc gempak::gdinfo::run {} {
 
     variable gdinfo;
 
@@ -96,7 +96,7 @@ proc ::gempak::gdinfo::run {} {
     _exec "run";
 }
 
-proc ::gempak::gdinfo::_init {} {
+proc gempak::gdinfo::_init {} {
 
     variable gdinfo;
 
@@ -106,7 +106,7 @@ proc ::gempak::gdinfo::_init {} {
     set gdinfo(output_status) 0;
 }
 
-proc ::gempak::gdinfo::_exec {s} {
+proc gempak::gdinfo::_exec {s} {
 
     variable gdinfo;
     global expect_out;
@@ -152,21 +152,21 @@ proc ::gempak::gdinfo::_exec {s} {
     return 0;
 }
 
-proc ::gempak::gdinfo::output {} {
+proc gempak::gdinfo::output {} {
 
     variable gdinfo;
 
     return $gdinfo(output);
 }
 
-proc ::gempak::gdinfo::output_raw {} {
+proc gempak::gdinfo::output_raw {} {
 
     variable gdinfo;
 
     return $gdinfo(output_raw);
 }
 
-proc ::gempak::gdinfo::output_list {} {
+proc gempak::gdinfo::output_list {} {
 
     variable gdinfo;
 
@@ -178,33 +178,33 @@ proc ::gempak::gdinfo::output_list {} {
     return $gdinfo(output_list);
 }
 
-proc ::gempak::gdinfo::define {param val} {
+proc gempak::gdinfo::define {param val} {
 
     variable gdinfo;
 
     set gdinfo(param,$param) $val;
 }
 
-proc ::gempak::gdinfo::get {param} {
+proc gempak::gdinfo::get {param} {
 
     variable gdinfo;
 
     return $gdinfo(param,$param);
 }
 
-proc ::gempak::gdinfo::gdfile {gdfile} {
+proc gempak::gdinfo::gdfile {gdfile} {
 
     variable gdinfo;
 
     set gdinfo(param,gdfile) $gdfile;
 }
 
-proc ::gempak::gdinfo::get_gdfile {} {
+proc gempak::gdinfo::get_gdfile {} {
 
     return [::gempak::gdinfo::get "gdfile"];
 }
 
-proc ::gempak::gdinfo::_inventory {vars_array} {
+proc gempak::gdinfo::_inventory {vars_array} {
 
     upvar $vars_array vars;
 
@@ -242,7 +242,7 @@ proc ::gempak::gdinfo::_inventory {vars_array} {
     return 0;
 }
 
-proc ::gempak::gdinfo::_output_inventory {} {
+proc gempak::gdinfo::_output_inventory {} {
 #
 # This function puts each variable in its own line.
 #
@@ -271,14 +271,14 @@ proc ::gempak::gdinfo::_output_inventory {} {
 #
 # User defined variables
 #
-proc ::gempak::gdinfo::set_var {var_name var_val} {
+proc gempak::gdinfo::set_var {var_name var_val} {
         
     variable gdinfo;
 
     set gdinfo(var,$var_name) $var_val;
 }
 
-proc ::gempak::gdinfo::get_var {var_name} {
+proc gempak::gdinfo::get_var {var_name} {
 
     variable gdinfo;
 

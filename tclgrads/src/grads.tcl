@@ -21,14 +21,14 @@ package require cmdline;
 package require textutil;
 package require struct::matrix;
 
-namespace eval ::grads {
+namespace eval grads {
 
     variable grads;
     
     array set grads {};
 }
 
-proc ::grads::_init {} {
+proc grads::_init {} {
 
     variable grads;
 
@@ -41,7 +41,7 @@ proc ::grads::_init {} {
     set grads(output_value) "";
 }
 
-proc ::grads::_expect {} {
+proc grads::_expect {} {
 
     variable grads;
 
@@ -56,7 +56,7 @@ proc ::grads::_expect {} {
     set grads(_expect_output_buffer) [join $expect_output_buffer "\n"];
 }
 
-proc ::grads::_send {s} {
+proc grads::_send {s} {
 
     variable grads;
 
@@ -72,7 +72,7 @@ proc ::grads::_send {s} {
     return 0;
 }
 
-proc ::grads::init {args} {
+proc grads::init {args} {
 	
     variable grads;
 
@@ -119,7 +119,7 @@ proc ::grads::init {args} {
     return 0;
 }
 
-proc ::grads::end {} {
+proc grads::end {} {
 
     variable grads;
 	
@@ -138,7 +138,7 @@ proc ::grads::end {} {
     return 0;
 }
 
-proc ::grads::exec {args} {
+proc grads::exec {args} {
 
     variable grads;
 
@@ -184,24 +184,24 @@ proc ::grads::exec {args} {
     return 0;
 }
 
-proc ::grads::open {file} {
+proc grads::open {file} {
 
     return [exec open $file];
 }
 
-proc ::grads::output_value {} {
+proc grads::output_value {} {
 
     variable grads;
 
     return $grads(output_value);
 }
 
-proc ::grads::output {} {
+proc grads::output {} {
 
     return $grads(output);
 }
 
-proc ::grads::output_list {} {
+proc grads::output_list {} {
 
     variable grads;
 
@@ -212,19 +212,19 @@ proc ::grads::output_list {} {
     return $grads(output_list);
 }
 
-proc ::grads::output_line {lineindex} {
+proc grads::output_line {lineindex} {
 
     return [lindex [grads_output_list] $lineindex];
 }
 
-proc ::grads::output_word {lineindex wordindex} {
+proc grads::output_word {lineindex wordindex} {
 
     set line [grads_output_line $lineindex];
 
     return [lindex [split $line] $wordindex];
 }
 
-proc ::grads::get_dimensions {array_name} {
+proc grads::get_dimensions {array_name} {
 
     upvar $array_name a;
     variable grads;
@@ -312,7 +312,7 @@ proc ::grads::get_dimensions {array_name} {
     return 0;
 }
 
-proc ::grads::set_dimensions {array_name {vars xyzt}} {
+proc grads::set_dimensions {array_name {vars xyzt}} {
 #
 # Used for restoring the ranges after the executing the functions that
 # modify them (get_levels, get_times). "vars" is an optional argument
@@ -329,7 +329,7 @@ proc ::grads::set_dimensions {array_name {vars xyzt}} {
     } 
 }
 
-proc ::grads::get_vars {var_list} {
+proc grads::get_vars {var_list} {
 #
 # Returns a list in var_list (passed by name) with the names of the
 # variables.
@@ -357,7 +357,7 @@ proc ::grads::get_vars {var_list} {
     return 0;
 }
 
-proc ::grads::get_levels {level_list args} {
+proc grads::get_levels {level_list args} {
 #
 # Returns all the z levels as a list. If args is "-r", then only
 # the levels in the currently set range are returned.
@@ -396,7 +396,7 @@ proc ::grads::get_levels {level_list args} {
     return 0;
 }
 
-proc ::grads::get_times {time_list args} {
+proc grads::get_times {time_list args} {
 #
 # Returns all the times as a list. args means the same as in get_levels.
 # See also ::gradsu::times {time_list}
@@ -434,7 +434,7 @@ proc ::grads::get_times {time_list args} {
     return 0;
 } 
 
-proc ::grads::get_lons {lon_list args} {
+proc grads::get_lons {lon_list args} {
 #
 # Returns all the longitudes as a list. args means the same as in get_levels.
 # See also ::gradsu::lons {lon_list}
@@ -474,7 +474,7 @@ proc ::grads::get_lons {lon_list args} {
     return 0;
 }
 
-proc ::grads::get_lats {lat_list args} {
+proc grads::get_lats {lat_list args} {
 #
 # Returns all the latitudes as a list. args means the same as in get_levels.
 # See also ::gradsu::lats {lat_list}
@@ -514,7 +514,7 @@ proc ::grads::get_lats {lat_list args} {
     return 0;
 }
 
-proc ::grads::transform {cmd v1 v2 r1_name r2_name} {
+proc grads::transform {cmd v1 v2 r1_name r2_name} {
 #
 # cmd = xy2w, xy2gr, w2xy, w2gr, gr2w, gr2xy
 #
@@ -538,7 +538,7 @@ proc ::grads::transform {cmd v1 v2 r1_name r2_name} {
     return 0;
 }
 
-proc ::grads::eval_expr {expression args} {
+proc grads::eval_expr {expression args} {
 
     set usage {::grads::eval_expr <expr> <var_name>
 	[-s <input_sep>] [-S <output_sep>]};
@@ -552,7 +552,7 @@ proc ::grads::eval_expr {expression args} {
     return $r;
 }
 
-proc ::grads::eval_expr1 {expression param args} {
+proc grads::eval_expr1 {expression param args} {
 #
 # Here "param" is one of x,y,z,t. If args is "-r", then 
 # the list is restricted to the currently set range for "param".
@@ -589,7 +589,7 @@ proc ::grads::eval_expr1 {expression param args} {
     return $result;
 }
 
-proc ::grads::eval_expr_xy {expression args} {
+proc grads::eval_expr_xy {expression args} {
 #
 # The function assumes that z and t are fixed. It then
 # evaluates <expression> for all values of x and y and returns
@@ -689,14 +689,14 @@ proc ::grads::eval_expr_xy {expression args} {
 # Internal functions
 #
 
-proc ::grads::_eval_expr {expression} {
+proc grads::_eval_expr {expression} {
 
     ::grads::exec d $expression;
 
     return [::grads::output_value];
 }
 
-proc ::grads::_eval_expr_list {expr_list {sep ","}} {
+proc grads::_eval_expr_list {expr_list {sep ","}} {
 #
 # This is an internal function used by eval_expr_xy.
 #
@@ -713,39 +713,39 @@ proc ::grads::_eval_expr_list {expr_list {sep ","}} {
 #
 # Higher level utility functions
 #
-namespace eval ::gradsu {}
+namespace eval gradsu {}
 
-proc ::gradsu::display {args} {
+proc gradsu::display {args} {
 
     return [::grads::exec "display" [join $args]];
 }
 
-proc ::gradsu::draw {args} {
+proc gradsu::draw {args} {
 
     return [::grads::exec "draw" [join $args]];
 }
 
-proc ::gradsu::printim {args} {
+proc gradsu::printim {args} {
 
     return [::grads::exec "printim" [join $args]];
 }
 
-proc ::gradsu::clear {args} {
+proc gradsu::clear {args} {
 
     return [::grads::exec "clear" [join $args]];
 }
 
-proc ::gradsu::reinit {} {
+proc gradsu::reinit {} {
 
     return [::grads::exec "reinit"];
 }
 
-proc ::gradsu::reset {args} {
+proc gradsu::reset {args} {
 
     return [::grads::exec "reset" [join $args]];
 }
 
-proc ::gradsu::mset {args} {
+proc gradsu::mset {args} {
 
     foreach {name val} $args {
 	set status [::grads::exec "set" $name $val];
@@ -756,14 +756,14 @@ proc ::gradsu::mset {args} {
     return $status;
 }
 
-proc ::gradsu::dims {array_name} {
+proc gradsu::dims {array_name} {
 
     upvar $array_name a;
 
     return [::grads::get_dimensions "a"];
 }
 
-proc ::gradsu::levels {level_list args} {
+proc gradsu::levels {level_list args} {
 #
 # Returns the z levels as a list, with the first (0th) element of the list
 # being the number of levels (the same a the value of zsize). This is to
@@ -776,7 +776,7 @@ proc ::gradsu::levels {level_list args} {
     set levels [linsert ${_levels} 0 [llength ${_levels}]];
 }
 
-proc ::gradsu::times {time_list args} {
+proc gradsu::times {time_list args} {
 #
 # Returns the times as a list, with the first (0th) element of the list
 # being the number of times (the same a the value of tsize). This is to
@@ -789,7 +789,7 @@ proc ::gradsu::times {time_list args} {
     set times [linsert ${_times} 0 [llength ${_times}]];
 }
 
-proc ::gradsu::lons {lon_list args} {
+proc gradsu::lons {lon_list args} {
 #
 # Returns the longitudes as a list, with the first (0th) element of the list
 # being the number of times (the same a the value of xsize). This is to
@@ -802,7 +802,7 @@ proc ::gradsu::lons {lon_list args} {
     set lon [linsert ${_lon} 0 [llength ${_lon}]];
 }
 
-proc ::gradsu::lats {lat_list args} {
+proc gradsu::lats {lat_list args} {
 #
 # Similar to gradsu::lons, but for latitudes
 #
@@ -812,7 +812,7 @@ proc ::gradsu::lats {lat_list args} {
     set lat [linsert ${_lat} 0 [llength ${_lat}]];
 }
 
-proc ::gradsu::coords {name coord_list args} {
+proc gradsu::coords {name coord_list args} {
 
     upvar $coord_list coords;
 
@@ -829,19 +829,19 @@ proc ::gradsu::coords {name coord_list args} {
     return 0;
 }
 
-proc ::gradsu::cmd {args} {
+proc gradsu::cmd {args} {
 
     return [grads::exec $args];
 }
 
-proc ::gradsu::rline {linenumber} {
+proc gradsu::rline {linenumber} {
 
     set lineindex [expr $linenumber - 1];
 
     return [lindex [::grads::output_line $lineindex]];
 }
 
-proc ::gradsu::rword {linenumber wordnumber} {
+proc gradsu::rword {linenumber wordnumber} {
 
     set lineindex [expr $linenumber - 1];
     set wordindex [expr $wordnumber - 1];

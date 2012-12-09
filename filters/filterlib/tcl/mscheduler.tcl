@@ -8,7 +8,7 @@
 #
 # The main function of the library is
 #
-#     proc ::nbsp::mscheduler::match_timespec <spec>
+#     proc nbsp::mscheduler::match_timespec <spec>
 #
 # which returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -60,7 +60,7 @@ namespace eval nbsp::mscheduler {
     set option(gmt) "";
 }
 
-proc ::nbsp::mscheduler::match_timespec {spec} {
+proc nbsp::mscheduler::match_timespec {spec} {
 #
 # Returns 1 if the argument passed matches the current date-time
 # or 0 otherwise.
@@ -87,7 +87,7 @@ proc ::nbsp::mscheduler::match_timespec {spec} {
     return $match;
 }
 
-proc ::nbsp::mscheduler::match_minutespec {code} {
+proc nbsp::mscheduler::match_minutespec {code} {
 
     variable option;
 
@@ -121,7 +121,7 @@ proc ::nbsp::mscheduler::match_minutespec {code} {
     return $match;
 }
 
-proc ::nbsp::mscheduler::match_hourspec {hourspec} {
+proc nbsp::mscheduler::match_hourspec {hourspec} {
 
     variable option;
 
@@ -156,7 +156,7 @@ proc ::nbsp::mscheduler::match_hourspec {hourspec} {
     return $match;
 }
 
-proc ::nbsp::mscheduler::match_dayspec {dayspec} {
+proc nbsp::mscheduler::match_dayspec {dayspec} {
 
     variable option;
 
@@ -191,7 +191,7 @@ proc ::nbsp::mscheduler::match_dayspec {dayspec} {
     return $match;
 }
 
-proc ::nbsp::mscheduler::match_wdayspec {wdayspec} {
+proc nbsp::mscheduler::match_wdayspec {wdayspec} {
 
     variable option;
 

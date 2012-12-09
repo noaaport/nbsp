@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,7 @@ namespace eval ssh {
     array set ssh {};
 }
 
-proc ::ssh::connect {args} {
+proc ssh::connect {args} {
 
     variable ssh;
 
@@ -49,7 +49,7 @@ proc ::ssh::connect {args} {
     set ssh($host,script) [list];
 }
 
-proc ::ssh::disconnect {host} {
+proc ssh::disconnect {host} {
 
     variable ssh;
 
@@ -66,7 +66,7 @@ proc ::ssh::disconnect {host} {
     }
 }
 
-proc ::ssh::push {host script} {
+proc ssh::push {host script} {
 
     variable ssh;
 
@@ -75,7 +75,7 @@ proc ::ssh::push {host script} {
     lappend ssh($host,script) $script;
 }
 
-proc ::ssh::send {host} {
+proc ssh::send {host} {
 
     variable ssh;
 
@@ -93,13 +93,13 @@ proc ::ssh::send {host} {
     }
 }
 
-proc ::ssh::send_exit {host} {
+proc ssh::send_exit {host} {
 
     ::ssh::push $host "exit";
     ::ssh::send $host;
 }
 
-proc ::ssh::pop_line {host line_varname} {
+proc ssh::pop_line {host line_varname} {
 #
 # Returns: the same as "gets <filehandle> line"
 #
@@ -112,7 +112,7 @@ proc ::ssh::pop_line {host line_varname} {
     return $r;
 }
 
-proc ::ssh::pop_all {host output_varname} {
+proc ssh::pop_all {host output_varname} {
 #
 # Returns: 0 if eof before reading anything, or number of lines read.
 #
@@ -132,7 +132,7 @@ proc ::ssh::pop_all {host output_varname} {
     return $r;
 }
 
-proc ::ssh::pop_read {host numbytes output_varname} {
+proc ssh::pop_read {host numbytes output_varname} {
 #
 # Returns: numbytes read. If numbytes is not positive, then read is
 # called without the numbytes argument.
@@ -151,7 +151,7 @@ proc ::ssh::pop_read {host numbytes output_varname} {
     return [string length $output];
 }
 
-proc ::ssh::hfileevent {host condition script} {
+proc ssh::hfileevent {host condition script} {
 
     variable ssh;
 
@@ -159,7 +159,7 @@ proc ::ssh::hfileevent {host condition script} {
     fileevent $ssh($host,F) $condition $script;
 }
 
-proc ::ssh::hfconfigure {host args} {
+proc ssh::hfconfigure {host args} {
     
     variable ssh;
 
@@ -167,7 +167,7 @@ proc ::ssh::hfconfigure {host args} {
     eval fconfigure $ssh($host,F) $args;
 }
 
-proc ::ssh::rexec {host script output_varname} {
+proc ssh::rexec {host script output_varname} {
 
     upvar $output_varname output;
 
@@ -175,7 +175,7 @@ proc ::ssh::rexec {host script output_varname} {
     ::ssh::pop_all $host output;
 }
 
-proc ::ssh::rexec_nopop {host script} {
+proc ssh::rexec_nopop {host script} {
 
     ::ssh::push $host $script;
     ::ssh::send_exit $host;
@@ -184,7 +184,7 @@ proc ::ssh::rexec_nopop {host script} {
 #
 # Utility
 #
-proc ::ssh::set_var {host var val} {
+proc ssh::set_var {host var val} {
     
     variable ssh;
 
@@ -194,7 +194,7 @@ proc ::ssh::set_var {host var val} {
     set ssh($host,user,$var) $val;
 }
 
-proc ::ssh::get_var {host var} {
+proc ssh::get_var {host var} {
     
     variable ssh;
 
@@ -205,7 +205,7 @@ proc ::ssh::get_var {host var} {
     return $ssh($host,user,$var);
 }
 
-proc ::ssh::incr_var {host var {step 1}} {
+proc ssh::incr_var {host var {step 1}} {
 
     variable ssh;
 
@@ -217,13 +217,13 @@ proc ::ssh::incr_var {host var {step 1}} {
     incr ssh($host,user,$var) $step;
 }
 
-proc ::ssh::set_lvar {var val} {
+proc ssh::set_lvar {var val} {
 
     set host "localhost";
     ::ssh::set_var $host $var $val;
 }
 
-proc ::ssh::get_lvar {var} {
+proc ssh::get_lvar {var} {
     
     set host "localhost";
     set status [catch {
@@ -237,7 +237,7 @@ proc ::ssh::get_lvar {var} {
     return $r;
 }
 
-proc ::ssh::incr_lvar {var {step 1}} {
+proc ssh::incr_lvar {var {step 1}} {
 
     set host "localhost";
     ::ssh::incr_var $host $var $step;
@@ -246,7 +246,7 @@ proc ::ssh::incr_lvar {var {step 1}} {
 #
 # low level
 #
-proc ::ssh::get_filehandle {host} {
+proc ssh::get_filehandle {host} {
 
     variable ssh;
 
@@ -258,7 +258,7 @@ proc ::ssh::get_filehandle {host} {
 #
 # private
 #
-proc ::ssh::_verify_connection {host} {
+proc ssh::_verify_connection {host} {
 
     variable ssh;
 

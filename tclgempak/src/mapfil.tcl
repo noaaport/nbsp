@@ -6,7 +6,7 @@
 # function that build script takes care of making the translation
 # to the $mapfil gempak variable prior.
 #
-proc ::gempak::mapfil {args} {
+proc gempak::mapfil {args} {
 
     variable gempak;
 
@@ -17,7 +17,7 @@ proc ::gempak::mapfil {args} {
     set gempak(param,mapfil) [join $args "+"];
 }
 
-proc ::gempak::get_mapfil {} {
+proc gempak::get_mapfil {} {
 
     return [::gempak::get "mapfil"];
 }
