@@ -1,8 +1,7 @@
 #
 # $Id$
 #
-#
-# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -21,7 +20,7 @@ package require Expect;
 package require cmdline;
 package require textutil;
 
-namespace eval gempak::gdinfo {
+namespace eval ::gempak::gdinfo {
 
     variable gdinfo;
     

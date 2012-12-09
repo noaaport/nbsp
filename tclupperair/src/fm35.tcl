@@ -47,7 +47,7 @@ package provide upperair::fm35 1.0;
 #
 package require textutil::split;
 
-namespace eval upperair::fm35 {} {
+namespace eval ::upperair::fm35 {} {
 
     variable fm35;
     variable fm35_raw_data;
