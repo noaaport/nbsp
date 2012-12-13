@@ -1,4 +1,12 @@
-nbsp (2.2.4p2-1) oneiric; urgency=low
+nbsp (2.2.4p4-1) oneiric; urgency=low
+
+  * Added option to specify the txt file names in the rstfilter
+
+  * Added rc(ymd) and rc(hm) parameters in the filters.lib
+
+-- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 12 Dec 2012 23:34:52 -0400
+
+nbsp (2.2.4p3-1) oneiric; urgency=low
 
   * Added two channels: polarsat and and extra one for testing/expansion
     The polarsat channel is enabled by default.

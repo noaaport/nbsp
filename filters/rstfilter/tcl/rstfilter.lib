@@ -52,7 +52,7 @@ proc filter_text_old {fpath savedir} {
     return $output;
 }
 
-proc filter_text {fpath savedir} {
+proc filter_text {fpath savedir {savename ""}} {
 
     global rstfilter;
 
@@ -60,7 +60,9 @@ proc filter_text {fpath savedir} {
     file mkdir $savedir;
 
     set fname [file tail $fpath];
-    append savename $fname $rstfilter(txt_fext);
+    if {$savename eq ""} {
+        append savename $fname $rstfilter(txt_fext);
+    }
     set fpathout [file join $rstfilter(datadir) $savedir $savename];	
 
     set cmd [list nbspfile -t];      # do not add gempak-style headers

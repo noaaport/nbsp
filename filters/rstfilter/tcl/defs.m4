@@ -9,7 +9,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  set rc_output [filter_text $rc(fpath) $1];
+  set rc_output [filter_text $rc(fpath) $1 $2];
 })
 
 define(match_text_only,
@@ -19,7 +19,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  set rc_output [filter_text $rc(fpath) $3];
+  set rc_output [filter_text $rc(fpath) $3 $4];
 })
 
 define(match_text_except,
@@ -29,7 +29,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  set rc_output [filter_text $rc(fpath) $3];
+  set rc_output [filter_text $rc(fpath) $3 $4];
 })
 
 define(match_text_only_and,
@@ -40,7 +40,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  set rc_output [filter_text $rc(fpath) $5];
+  set rc_output [filter_text $rc(fpath) $5 $6];
 })
 
 define(match_text_only_except,
@@ -51,7 +51,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  set rc_output [filter_text $rc(fpath) $5];
+  set rc_output [filter_text $rc(fpath) $5 $6];
 })
 
 define(match_rad,

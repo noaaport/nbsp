@@ -296,11 +296,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(satchannel) "";
     set rc(satres) "";
     set rc(satseconds) "";
+    set rc(ymd) "";
+    set rc(hm) "";
     set rc(ymd_hm) "";
     set rc(ymdhm) "";
     set rc(ymd_h) "";
     set rc(ymdh) "";
-    set rc(ymd) "";
     set rc(ym) "";
     set rc(yyyy) "";
 
@@ -533,11 +534,12 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	unset gribparams;
     }
 
+    set rc(ymd) [clock format $rc(seconds) -gmt true -format "%Y%m%d"];
+    set rc(hm) [clock format $rc(seconds) -gmt true -format "%H%M"];
     set rc(ymd_hm) [clock format $rc(seconds) -gmt true -format "%Y%m%d_%H%M"];
     set rc(ymdhm) [clock format $rc(seconds) -gmt true -format "%Y%m%d%H%M"];
     set rc(ymd_h) [clock format $rc(seconds) -gmt true -format "%Y%m%d_%H"];
     set rc(ymdh) [clock format $rc(seconds) -gmt true -format "%Y%m%d%H"];
-    set rc(ymd) [clock format $rc(seconds) -gmt true -format "%Y%m%d"];
     set rc(ym) [clock format $rc(seconds) -gmt true -format "%Y%m"];
     set rc(yyyy) [clock format $rc(seconds) -gmt true -format "%Y"];
 }

@@ -9,31 +9,32 @@ divert(-1)
 #
 divert(0)
 
-dnl Metars are now handled by their own filter
-dnl 
-dnl match_pipe($rc(awips1), mtr, nbspdmtr,,
-dnl txt/METAR/$rc(station), $rc(awips).$rc(wmotime).txt)dnl
-
 # urgent
-match_text_only($rc(body), URGENT, txt/URGENT/$rc(station))
+match_text_only($rc(body), URGENT,
+txt/URGENT/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
 # eas
-match_text_only($rc(body), EAS ACTIVATION, txt/EAS/$rc(station))
+match_text_only($rc(body), EAS ACTIVATION,
+txt/EAS/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
 # warnings
 match_text_only($rc(awips1), npw|svr|svs|tor|wsw|ffw|flw,
-txt/WARNINGS/$rc(station))
+txt/WARNINGS/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
 # tsunamis
-match_text_only($rc(awips), tsuat1|tibat1|tsuate|tibate|eqiat1, txt/TSUNAMI)
+match_text_only($rc(awips), tsuat1|tibat1|tsuate|tibate|eqiat1,
+txt/TSUNAMI/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
 # administrative
 match_text_only($rc(wmoid),
-^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^46789]|nous9[^7]), txt/ADM)
-match_text_only($rc(fname), (kwno|kwbc|kncf)_nous[4678], txt/ADM)
+^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^46789]|nous9[^7]),
+txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+match_text_only($rc(fname), (kwno|kwbc|kncf)_nous[4678],
+txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
 # everything
-match_text_all(txt/$rc(station))
+match_text_all(txt/[subst $rstfilter(txt_dirfmt)],
+[subst $rstfilter(txt_namefmt)])
 
 stopmatch
 
