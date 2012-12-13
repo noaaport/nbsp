@@ -10,27 +10,38 @@ divert(-1)
 divert(0)
 
 # urgent
+if {$rstfilter(txt_urgent_enable) == 1} {
 match_text_only($rc(body), URGENT,
 txt/URGENT/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+}
 
 # eas
+if {$rstfilter(txt_eas_enable) == 1} {
 match_text_only($rc(body), EAS ACTIVATION,
 txt/EAS/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+}
 
 # warnings
+if {$rstfilter(txt_warn_enable) == 1} {
 match_text_only($rc(awips1), npw|svr|svs|tor|wsw|ffw|flw,
 txt/WARNINGS/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+}
 
 # tsunamis
+if {$rstfilter(txt_tsu_enable) == 1} {
 match_text_only($rc(awips), tsuat1|tibat1|tsuate|tibate|eqiat1,
 txt/TSUNAMI/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+}
 
 # administrative
+if {$rstfilter(txt_adm_enable) == 1} {
 match_text_only($rc(wmoid),
 ^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^46789]|nous9[^7]),
 txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+
 match_text_only($rc(fname), (kwno|kwbc|kncf)_nous[4678],
 txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
+}
 
 # everything
 match_text_all(txt/[subst $rstfilter(txt_dirfmt)],

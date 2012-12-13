@@ -1,3 +1,13 @@
+nbsp (2.2.4p5-1) oneiric; urgency=low
+
+  * Revised <type>.m4 so that the rules are not even inserted if <type> is
+    not enable (rad, sat, txt).  Also revised txt.m4 to do something similar
+    with the txt subsets (urgent, warnings, ...). Also introduced
+    configuration variables rstfilter(txt_..._enable) to enable/disable
+    those subsets on an individual basis.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 13 Dec 2012 18:41:02 -0400
+
 nbsp (2.2.4p4-1) oneiric; urgency=low
 
   * Added option to specify the txt file names in the rstfilter
