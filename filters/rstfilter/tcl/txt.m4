@@ -44,8 +44,10 @@ txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 }
 
 # everything
+if {$rstfilter(txt_any_enable) == 1} {
 match_text_all(txt/[subst $rstfilter(txt_dirfmt)],
 [subst $rstfilter(txt_namefmt)])
+}
 
 stopmatch
 

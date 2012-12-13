@@ -36,6 +36,8 @@ set rstfilter(txt_eas_enable)	1;
 set rstfilter(txt_warn_enable)	1;
 set rstfilter(txt_tsu_enable)	1;
 set rstfilter(txt_adm_enable)	1;
+set rstfilter(txt_any_enable)	1;
+
 #
 set rstfilter(sat_enable)	1;
 set rstfilter(sat_regex)	\
