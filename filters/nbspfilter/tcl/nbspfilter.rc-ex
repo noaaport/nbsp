@@ -40,8 +40,8 @@
 #       they are evaluated for each file received.
 # 
 # At the time the rules are evaluated, the following variables are visible
-# and can be used in this script:
-#
+# and can be used in this script (the compltete list of such rc variables
+# is in the file "rcvars.README"):
 #
 #	rc(seq), rc(type), rc(cat), rc(code) (see below)
 #	rc(fpath) = full path of the file

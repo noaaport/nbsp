@@ -1,0 +1,80 @@
+#
+# $Id$
+#
+
+#
+# List of rc() variables defined by the filters.lib that can be used
+# in the filters rc files.
+#
+
+rc(seq)		# sequence number
+rc(type)
+rc(cat)
+rc(code)
+rc(npchidx)
+rc(fname)
+rc(fpath)
+rc(metadata)
+rc(meta,fsize)
+rc(fpathout)	# initialized but not by the library
+rc(fbasename)
+rc(station)
+rc(wmoid)
+rc(awips)
+rc(awips1)
+rc(awips2)
+rc(nawips)
+rc(wmotime)
+rc(WMOHEADER)
+rc(STATION)
+rc(WMOID)
+rc(AWIPS)
+rc(AWIPS1)
+rc(AWIPS2)
+rc(NAWIPS)
+rc(body)
+rc(txtflag)
+rc(seconds)
+rc(gribedition)
+rc(gribstatus)
+rc(gribcenternum)
+rc(gribsubcnum)
+rc(gribmodelnum)
+rc(gribmodel)
+rc(gribmodelldm)
+rc(gribgrid)
+rc(gribmodelgridldm)
+rc(gribreftime)
+rc(gribymdh)
+rc(gribforecasttimeu)  # time unit (h, m, ...)
+rc(gribforecasttime1)
+rc(gribforecasttime2)
+rc(gribforecasttimeri) # time range indicator
+rc(gribforecasttime)   # our encoded combination of the above
+rc(gribforecasttimev)  # the value without the unit
+rc(radlat)
+rc(radlon)
+rc(radheight)
+rc(radseconds)
+rc(radmode)
+rc(radcode)
+rc(rad2seconds)        # rad2xxx are for level 2
+rc(rad2site)
+rc(satsource)
+rc(satcreatingentity)
+rc(satsector)
+rc(satchannel)
+rc(satres)
+rc(satseconds)
+rc(ymdhm)
+rc(yyyy)
+rc(m)
+rc(d)
+rc(H)
+rc(M)
+rc(ymd)
+rc(hm)
+rc(ymd_hm)
+rc(ymd_h)
+rc(ymdh)
+rc(ym)
