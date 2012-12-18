@@ -5,9 +5,9 @@
 #    nbsputil::split_first {str substr}
 #    nbsputil::set_var {varname varval}
 #    nbsputil::get_var {varname}
-#    nbsputil::pread {cmd}
-#    nbsputil::pwrite_block {data args}
-#    nbsputil::pwrite_nonblock {data args}
+#    nbsputil::pread {cmd args}
+#    nbsputil::pwrite_block {data cmd args}
+#    nbsputil::pwrite_nonblock {data cmd args}
 #    nbsputil::find_local_rcfile {rcfile localconfdirs {subdir ""}}
 #
 #    nbsputil::date::guess_clock_seconds {ddhhmm}
@@ -112,7 +112,7 @@ proc nbsp::util::get_var {varname} {
     return $nbsputil(var,$varname);
 }
 
-proc nbsp::util::pread {args} {
+proc nbsp::util::pread {cmd args} {
 #
 # A substitute for
 #
@@ -121,11 +121,11 @@ proc nbsp::util::pread {args} {
 # when the output from <program> is binary data that we don't want exec
 # to modify.
 #
-    set s [join $args " "];
+    set cmd [concat "|${cmd}" $args];
 
     set content "";
     set status [catch {
-	set F [open "|$s" r];
+	set F [open $cmd r];
 	fconfigure $F -encoding binary -translation binary
 	set content [read $F];
     } errmsg];
@@ -141,11 +141,11 @@ proc nbsp::util::pread {args} {
     return $content;
 }
 
-proc nbsp::util::pwrite_block {data args} {
+proc nbsp::util::pwrite_block {data cmd args} {
 
-    set s [join $args " "];
+    set cmd [concat "|${cmd}" $args];
     set status [catch {
-        set F [open "|$s" w];
+        set F [open $cmd w];
         fconfigure $F -buffering none -encoding binary -translation binary;
 	puts $F $data;
     } errmsg];
@@ -159,11 +159,11 @@ proc nbsp::util::pwrite_block {data args} {
     }
 }
 
-proc nbsp::util::pwrite_nonblock {data args} {
+proc nbsp::util::pwrite_nonblock {data cmd args} {
 
-    set s [join $args " "];
+    set cmd [concat "|${cmd}" $args];
     set status [catch {
-        set F [open "|$s" w];
+        set F [open $cmd w];
         fconfigure $F -buffering none -encoding binary -translation binary;
 	puts $F $data;
         fconfigure $F -blocking 0;
