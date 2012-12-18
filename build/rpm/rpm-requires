@@ -1,14 +1,18 @@
+# The following are not required by the default configuration
+# (required-pkgs.README)
+#
+# tk
+# mapserver
+#
 sharutils
 tcp_wrappers
 db4
 db4-utils
 tcl
 tcllib
-tk
 libpng
 netpbm-progs
 zlib
 bzip2
 gnuplot
 gifsicle
-# mapserver - removed until it is available for sl-6.1

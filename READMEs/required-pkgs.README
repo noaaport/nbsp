@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+
+The packages required by Nbsp to run in the default configuration
+are listed in the Nbsp package control files and therefore are
+installed by the package manager of each OS.
+
+Some additional packages are needed to enable some filters
+that are disabled in the default configuration. Apart from
+the notable cases
+
+    grads
+    gempak
+
+which are needed by the
+
+    gribfilter
+    gpfilter
+
+respectively, the following would be required:
+
+FreeBSD       Debian	    SL/CentOS		needed by
+tk85	      tk8.5	    tk	      		gribshell
+mapserver     mapserver-bin mapserver		gisfilter
+
+These can be installed as usual
+
+pkg_add -r tk85
+apt-get install tk8.5 mapserver-bin
+yum install tk mapserver
+
+The gisfilter requires the mapserver package with the gdal option,
+which is not in the default FreeBSD package. It must be built
+from the FreeBSD ports (a suitable one is usually provided in the
+Noaaport.Net site).

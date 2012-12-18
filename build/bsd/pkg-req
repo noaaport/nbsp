@@ -14,9 +14,13 @@
 # in the default package).
 # We must build our own.
 #
-requires="db5 tcl-8.6:tcl86 tcllib tk-8.6:tk86 png netpbm gifsicle \
-    gnuplot mapserver"
+# tk -
+# The tk is used by the gribshell and will not be installed by default
+# 
 
+## extra_requires="mapserver tk-8.6:tk86"
+requires="db5 tcl-8.6:tcl86 tcllib png netpbm gifsicle gnuplot"
+extra_requires=
 conflict="nbspgribrsh"
 
 # so that FreeBSD runs it only once 
@@ -36,7 +40,7 @@ do
     fi
 done
 
-for p in $requires
+for p in $requires $extra_requires
 do
   pkg=`echo $p | cut -f 1 -d :`
   port=`echo $p | cut -f 2 -d :`
