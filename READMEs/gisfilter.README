@@ -1,5 +1,5 @@
 #
-# $Id: gisfilter.README 831 2011-01-02 03:48:32Z jfnieves $
+# $Id$
 #
 
 The gisfilter is a special-purpose filter that transforms appropriate
@@ -25,6 +25,13 @@ in the "features.conf file". Then particular features
 can be enabled, disabled, (re)configured by appropriate settings in
 the configuration file(s) gisfilter.conf and other files.
 
+The "mapserver" software must be installed
+
+    debian:    apt-get install mapserver-bin
+    sl/centos: yum install mapserver
+    freebsd:   build from ports with the gdal option or
+               download from Noaaport.Net
+ 
 What follows is a short guide for enabling and configuring the filter.
 
 Quick guide

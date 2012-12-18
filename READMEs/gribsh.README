@@ -1,17 +1,20 @@
 #
-# $Id: gribsh.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 
 Several "client" applications are now included as part of the gribfilter
 package. Among them,
 
-	nbspgribsh	(local)
-	nbspgribrsh	(remote)
+    nbspgribsh	(local)
+    nbspgribrsh	(remote)
 
 are the primary ones. They in turn call others, which can be used
 independently as well if desired. This short note explains the usage
-of the above two. Both are Tk scripts which do some minor
-bookeeping and eventuallly can call GrADS.
+of the above two. Both are Tk scripts which do some minor bookeeping
+and eventually call GrADS. Therefore the following are required:
+
+    Tk
+    GrADS
 
 nbspgribsh is meant to be used in the same machine in which
 nbsp is running. nbspgribrsh does similar work but contacts
