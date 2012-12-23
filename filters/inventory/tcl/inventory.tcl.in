@@ -223,10 +223,12 @@ proc channel_stats_log {} {
     set inventory(chstats,1,files) 0;
     set inventory(chstats,2,files) 0;
     set inventory(chstats,3,files) 0;
+    set inventory(chstats,4,files) 0;
     set inventory(chstats,0,bytes) 0;
     set inventory(chstats,1,bytes) 0;
     set inventory(chstats,2,bytes) 0;
     set inventory(chstats,3,bytes) 0;
+    set inventory(chstats,4,bytes) 0;
 
     set hhmm [clock format [clock seconds] -gmt true -format "%H%M"];
     set inventory(chstats,hhmm) $hhmm;
