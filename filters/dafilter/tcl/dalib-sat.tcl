@@ -1,7 +1,8 @@
-proc filter_sat {seq fpath savedir savename} {
+proc filter_sat {seq fpath savedir savename {polarsatflag 0}} {
 #
 # This function optionally uncompresses the file, and renames it according
-# to the way the image files are saved by the rst filter.
+# to the way the image files are saved by the rst filter. This is done
+# only for the non-polarsat ginis.
 #
     global dafilter;
     global filtersprogs;
@@ -36,11 +37,15 @@ proc filter_sat {seq fpath savedir savename} {
     set datafpath [file join $dafilter(datadir) $savedir $savename];
 
     set status [catch {
-	if {$dafilter(satuncompress) == 0} {
-	    # Sat files do not have a ccb
-	    file copy -force $fpath $datafpath;
+	if {$polarsatflag == 0} {
+	    if {$dafilter(satuncompress) == 0} {
+	        # Gini sat files do not have a ccb
+	        file copy -force $fpath $datafpath;
+	    } else {
+	        exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	    }
 	} else {
-	    exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
 	}
     } errmsg];
 
@@ -56,33 +61,4 @@ proc filter_sat {seq fpath savedir savename} {
     make_sat_latest $savedir $savename;
 
     cd $_pwd;
-}
-
-proc filter_sat_info_unused {fpath} {
-#
-# In nbsp-2 this is no longer used. Instead, the satinfo is done in the
-# filterlib and stored in the rc().
-#
-    global filtersprogs;
-
-    set status [catch {
-	set params [exec $filtersprogs(nbspsat) -i $fpath];
-    } errmsg];
-
-    if {$status == 0} {
-	set sector [lindex $params 2]
-	set channel [lindex $params 3]
-	set res [lindex $params 4]
-	set time [lindex $params 5]
-    } else {
-	set time "";
-     }
-
-    if {$status != 0} {
-        log_msg $errmsg;
-    }
-
-    set output [list $status $time];
-
-    return $output;
 }

@@ -14,7 +14,7 @@ match_sat_archive($rc(wmoid), ^ti[^p],
 sat/gini/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt)])
 
-match_sat($rc(wmoid), ^tip,
+match_psat($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_tip)])
 
 match_sat_archive($rc(wmoid), ^tip,

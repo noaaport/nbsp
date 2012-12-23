@@ -65,27 +65,6 @@ lappend action {
   break;
 })
 
-define(match_file_compress,
-lappend cond {
-  [regexp {$2} $1]
-}
-lappend action {
-  set rc_status 0;
-  filter_file_compress $rc(seq) $rc(fpath) "$3" "$4";
-  $5
-})
-
-define(matchstop_file_compress,
-lappend cond {
-  [regexp {$2} $1]
-} 
-lappend action {
-  set rc_status 0;
-  filter_file_compress $rc(seq) $rc(fpath) "$3" "$4";
-  $5
-  break;
-})
-
 define(match_file_noappend,
 lappend cond {
   [regexp {$2} $1]
@@ -164,6 +143,16 @@ lappend cond {
 lappend action {
   set rc_status 0;
   filter_sat $rc(seq) $rc(fpath) "$3" "$4";
+  $5
+})
+
+define(match_psat,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_sat $rc(seq) $rc(fpath) "$3" "$4" 1;
   $5
 })
 

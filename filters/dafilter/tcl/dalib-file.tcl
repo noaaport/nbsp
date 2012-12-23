@@ -68,32 +68,3 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 	log_msg $errmsg;
     }
 }
-
-proc filter_file_compress {seq fpath savedir savename} {
-#
-# This is no longer used (Tue Sep 23 21:03:18 AST 2008)
-#
-    global dafilter;
-    global filtersprogs;
-
-    if {[is_file_rule_enabled $savedir] == 0} {
-	return;
-    }
-
-    cd $dafilter(datadir);
-    file mkdir $savedir;
-
-    set opts "-z 9";
-    if {$dafilter(ccbsaved) == 0} {
-	set opts "-z 9 -n";
-    }
-
-    set status [catch {
-	eval exec $filtersprogs(nbspfile) $opts -d $savedir -o $savename \
-		$fpath $seq;
-    } errmsg];
-
-    if {$status != 0} {
-	log_msg $errmsg;
-    }
-}
