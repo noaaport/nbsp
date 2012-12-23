@@ -47,7 +47,7 @@ then
    if [ -f /etc/os-release ]
    then
 	. /etc/os-release
-	[ $ID = "12.10" ] && ubuntu=1
+	[ $VERSION_ID = "12.10" ] && ubuntu=1
    fi
 fi
 
