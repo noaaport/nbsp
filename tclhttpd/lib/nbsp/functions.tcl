@@ -56,7 +56,7 @@ proc proc_stringtoarray {str} {
     return [array get a]
 }
 
-proc file_hasdata file {
+proc file_hasdata {file} {
 
     if {[file exists $file] && ([file size $file] != 0)} {
 	return 1;
@@ -135,7 +135,7 @@ proc nbsp_qstate {file logperiod_secs} {
     return $result
 }
 
-proc nbsp_missing file {
+proc nbsp_missing {file} {
 
     set fmt [proc_fmtrow 2]
 
@@ -158,22 +158,22 @@ proc nbsp_missing file {
     return $result
 }
 
-proc nbsp_chstats_hour file {
+proc nbsp_chstats_hour {file} {
 #
 # Outputs the table of produts received each minute in the hourly file.
 #
-    set fmt [proc_fmtrow 9]
-    set fmtheader [proc_fmtheader_chstats 4]
+    set fmt [proc_fmtrow 11]
+    set fmtheader [proc_fmtheader_chstats 5]
 
     set result "<h3>Current number of products and bytes received per channel per minute</h3>\n";
     append result "<table border>\n";
-    append result [format $fmtheader "time" "ch 1" "ch 2" "ch 3" "ch 4"]
+    append result [format $fmtheader "time" "ch 1" "ch 2" "ch 3" "ch 4" "ch 5"]
 
     set f [open $file r]
     while {[gets $f finfo] > 0} {
 	array set a [proc_stringtoarray $finfo]
-	append result [format $fmt $a(1) $a(2) $a(6) $a(3) $a(7) \
-			   $a(4) $a(8) $a(5) $a(9)]
+	append result [format $fmt $a(1) $a(2) $a(7) $a(3) $a(8) \
+			   $a(4) $a(9) $a(5) $a(10) $a(6) $a(11)]
     }
     close $f
 
@@ -182,21 +182,23 @@ proc nbsp_chstats_hour file {
     return $result
 }
 
-proc nbsp_chstats_hour_summary file {
+proc nbsp_chstats_hour_summary {file} {
 #
 # This outputs a one-line summary of the hourly file. It is used by
 # nbsp_chstats_day.
-
-    set fmt [proc_fmtrow 9]
+#
+    set fmt [proc_fmtrow 11]
 
     set files(0) 0
     set files(1) 0
     set files(2) 0
     set files(3) 0
+    set files(4) 0
     set bytes(0) 0
     set bytes(1) 0
     set bytes(2) 0
     set bytes(3) 0
+    set bytes(4) 0
 
     set f [open $file "r"]
     while {[gets $f stats] > 0} {
@@ -205,31 +207,34 @@ proc nbsp_chstats_hour_summary file {
         set files(1) [expr $files(1) + $a(3)];
         set files(2) [expr $files(2) + $a(4)];
         set files(3) [expr $files(3) + $a(5)];
-        set bytes(0) [expr $bytes(0) + $a(6)];
-        set bytes(1) [expr $bytes(1) + $a(7)];
-        set bytes(2) [expr $bytes(2) + $a(8)];
-        set bytes(3) [expr $bytes(3) + $a(9)];
+        set files(4) [expr $files(4) + $a(6)];
+        set bytes(0) [expr $bytes(0) + $a(7)];
+        set bytes(1) [expr $bytes(1) + $a(8)];
+        set bytes(2) [expr $bytes(2) + $a(9)];
+        set bytes(3) [expr $bytes(3) + $a(10)];
+        set bytes(4) [expr $bytes(4) + $a(11)];
     }
     close $f;
 
     set hh [string range $a(1) 0 1]
-    set result [format $fmt $hh $files(0) $bytes(0) $files(1) $bytes(1) \
-		       $files(2) $bytes(2) $files(3) $bytes(3)]
+    set result [format $fmt $hh \
+		    $files(0) $bytes(0) $files(1) $bytes(1) \
+		    $files(2) $bytes(2) $files(3) $bytes(3) \
+		    $files(4) $bytes(4)]
 
     return $result
 }
 
-proc nbsp_chstats_day filelist {
+proc nbsp_chstats_day {filelist} {
 #
 # This outputs a summary of the hourly files for the current day.
 #
-    set fmt [proc_fmtrow 5];
-    set fmtheader [proc_fmtheader_chstats 4];
+    set fmtheader [proc_fmtheader_chstats 5];
     array set statsfilelist $filelist;
 
     set result "<h3>Number of products and bytes received per channel since midnight</h3>\n";
     append result "<table border>\n";
-    append result [format $fmtheader "hour" "ch 1" "ch 2" "ch 3" "ch 4"]
+    append result [format $fmtheader "hour" "ch 1" "ch 2" "ch 3" "ch 4" "ch 5"]
 
     foreach hh [lsort [array names statsfilelist]] {
 	append result [nbsp_chstats_hour_summary $statsfilelist($hh)];
@@ -240,7 +245,7 @@ proc nbsp_chstats_day filelist {
     return $result;
 }
 
-proc nbsp_connections file {
+proc nbsp_connections {file} {
 
     set fmt [proc_fmtrow 4];
 
@@ -272,7 +277,7 @@ proc nbsp_connections file {
     return $result;
 }
 
-proc nbsp_slavestats file {
+proc nbsp_slavestats {file} {
 
     set fmt [proc_fmtrow 10]
 
@@ -358,7 +363,7 @@ proc display_config {} {
     append result "</table>\n";
 }
 
-proc nbsp_received file {
+proc nbsp_received {file} {
 
     set fmt [proc_fmtrow 3]
 

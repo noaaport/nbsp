@@ -1,3 +1,11 @@
+nbsp (2.2.4p6-1) oneiric; urgency=low
+
+  * Revised filters.lib to exclue the tipb 5th channel files from
+    being processed by nbspsatinfo (since they are in a different format
+    than the existing sat products).
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 22 Dec 2012 19:15:28 -0400
+
 nbsp (2.2.4p5-1) oneiric; urgency=low
 
   * Revised <type>.m4 so that the rules are not even inserted if <type> is

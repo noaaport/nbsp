@@ -482,7 +482,11 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	}
     }
 
-    if {[regexp {^ti} $rc(wmoid)] && ($dosat == 1)} {
+    #
+    # 2012 - The 5th channel tipb products cannot be included here
+    #        Only include the existing ones: ti(c|d|g|t)
+    #
+    if {[regexp {^ti[^p]} $rc(wmoid)] && ($dosat == 1)} {
 	set satinfo_status [catch {
 	    set satinfo [split [exec nbspsatinfo -b $rc(fpath)]];
 	} errmsg];
