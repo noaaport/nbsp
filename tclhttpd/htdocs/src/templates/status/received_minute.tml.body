@@ -1,0 +1,8 @@
+
+<div id="mainright">
+  [
+    set hhmm [::ncgi::value "hhmm"]
+    nbsp/status/received_minute $hhmm
+  ]
+</div>
+

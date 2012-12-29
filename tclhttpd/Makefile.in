@@ -40,11 +40,11 @@ ${WWWTGZFILE}: ${WWWTGZFILE}-force
 
 ${WWWTGZFILE}-force:
 	rm -rf ${WWWWORKDIR}
+	cd ${WWWHTDOCSDIR}; ${MAKE}
 	install -d ${WWWWORKDIR}/${WWWHTDOCSDIR}
 	install -d ${WWWWORKDIR}/${WWWEMPTYSUBDIRS}
-	cp -R ${WWWHTDOCSSUBDIRS} ${WWWWORKDIR}/${WWWHTDOCSDIR}
-	cd ${WWWWORKDIR}; \
-		tar -c @EXCLUDE@'*.svn*' -z -f ../${WWWTGZFILE} ${WWWDIRS}
+	cp -r ${WWWHTDOCSSUBDIRS} ${WWWWORKDIR}/${WWWHTDOCSDIR}
+	cd ${WWWWORKDIR}; tar -c -z -f ../${WWWTGZFILE} ${WWWDIRS}
 
 ${SAMPLECONFFILE}: ${CONFFILE}
 	cp ${CONFFILE} ${SAMPLECONFFILE}
@@ -119,12 +119,12 @@ lib/dist/license.terms
 NBSPLIBFILES = \
 lib/nbsp/override.tcl \
 lib/nbsp/extensions.tcl \
-lib/nbsp/nbsp.tcl \
+lib/nbsp/nbspstatus.tcl \
 lib/nbsp/nbsp_qstate.awk \
 lib/nbsp/nbsp_stats.awk \
 lib/nbsp/nbsp_status.awk \
 lib/nbsp/nbsp_received.awk \
-lib/nbsp/functions.tcl \
+lib/nbsp/functionsstatus.tcl \
 lib/nbsp/nbsp.tcl.awk \
 lib/nbsp/nbsp_missing.awk \
 lib/nbsp/nbspmetar.tcl \

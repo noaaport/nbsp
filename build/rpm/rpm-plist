@@ -351,12 +351,12 @@
 /usr/local/libexec/nbsp/tclhttpd/dist/license.terms
 /usr/local/libexec/nbsp/tclhttpd/nbsp/override.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/extensions.tcl
-/usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp.tcl
+/usr/local/libexec/nbsp/tclhttpd/nbsp/nbspstatus.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp_qstate.awk
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp_stats.awk
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp_status.awk
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp_received.awk
-/usr/local/libexec/nbsp/tclhttpd/nbsp/functions.tcl
+/usr/local/libexec/nbsp/tclhttpd/nbsp/functionsstatus.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp.tcl.awk
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsp_missing.awk
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbspmetar.tcl

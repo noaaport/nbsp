@@ -1,0 +1,75 @@
+/*
+ * $Id$
+ */
+h1.header {color:maroon}
+
+h1.menu {color:maroon}
+h2.menu {color:maroon}
+h3.menu {color:maroon}
+
+h1.main {color:maroon}
+h2.main {color:maroon}
+h3.main {color:maroon}
+
+a:link {text-decoration: none}
+a:visited {text-decoration: none}
+a:active {text-decoration: none}
+a:hover {text-decoration: underline; color: maroon;}
+
+ul.leftmenu1 {list-style-type:none; padding:0; margin: 0 0;}
+ul.leftmenu2 {list-style-type:none; padding:0; margin: 0 24;}
+
+ul.topmenu1 {list-style-type:none; padding:0; margin: 0 0;}
+ul.topmenu2 {list-style-type:none; padding:0; margin: 0 24;}
+
+/* body.main {font-size:80%; background-color:lightgray} */
+body {font: Tahoma,Verdana,sans-serif;}
+
+#main {
+   margin:10;
+}
+
+#mainleft {
+   float:left;
+   width:20%;
+   font-size:80%;
+}
+
+#mainright {
+   float:right;
+   width:80%;
+}
+
+#top {
+    margin: 10;
+}
+
+#topleft {
+   float:left;
+   width:20%;
+   font-size:80%;
+}
+
+#topcenterleft {
+   float:left;
+   width:20%;
+   font-size:80%;
+}
+
+#topcentercenter {
+   float:left;
+   width:20%;
+   font-size:80%;
+}
+
+#topcenterright {
+   float:left;
+   width:20%;
+   font-size:80%;
+}
+
+#topright {
+   float:left;
+   width:20%;
+   font-size:80%;
+}

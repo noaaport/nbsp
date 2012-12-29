@@ -353,12 +353,12 @@ libexec/nbsp/tclhttpd/dist/thread.tcl
 libexec/nbsp/tclhttpd/dist/license.terms
 libexec/nbsp/tclhttpd/nbsp/override.tcl
 libexec/nbsp/tclhttpd/nbsp/extensions.tcl
-libexec/nbsp/tclhttpd/nbsp/nbsp.tcl
+libexec/nbsp/tclhttpd/nbsp/nbspstatus.tcl
 libexec/nbsp/tclhttpd/nbsp/nbsp_qstate.awk
 libexec/nbsp/tclhttpd/nbsp/nbsp_stats.awk
 libexec/nbsp/tclhttpd/nbsp/nbsp_status.awk
 libexec/nbsp/tclhttpd/nbsp/nbsp_received.awk
-libexec/nbsp/tclhttpd/nbsp/functions.tcl
+libexec/nbsp/tclhttpd/nbsp/functionsstatus.tcl
 libexec/nbsp/tclhttpd/nbsp/nbsp.tcl.awk
 libexec/nbsp/tclhttpd/nbsp/nbsp_missing.awk
 libexec/nbsp/tclhttpd/nbsp/nbspmetar.tcl

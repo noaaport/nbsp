@@ -1,11 +1,14 @@
 #
 # $Id$
 #
-Direct_Url /nbsp nbsp
+
+#
+## Direct_Url /nbsp nbsp
+#
 
 package require html
 
-proc nbsp {} {
+proc nbsp/status/summary {} {
 
     global Config
 
@@ -36,7 +39,7 @@ proc nbsp {} {
     return $result
 }
 
-proc nbsp/stats {} {
+proc nbsp/status/stats {} {
 #
 # Daily Statistics summary of products and frames received and missed
 # and minute summary for the last ten minutes.
@@ -63,7 +66,7 @@ proc nbsp/stats {} {
     return $result
 }
 
-proc nbsp/qstate {} {
+proc nbsp/status/qstate {} {
 #
 # State of the queues
 #
@@ -81,7 +84,7 @@ proc nbsp/qstate {} {
     return $result
 }
 
-proc nbsp/qdbstats {} {
+proc nbsp/status/qdbstats {} {
 #
 # qdbstats
 #
@@ -102,7 +105,7 @@ proc nbsp/qdbstats {} {
     return $result;
 }
 
-proc nbsp/mdbstats {} {
+proc nbsp/status/mdbstats {} {
 #
 # mspool dbstats
 #
@@ -123,7 +126,7 @@ proc nbsp/mdbstats {} {
     return $result
 }
 
-proc nbsp/missing {} {
+proc nbsp/status/missing {} {
 #
 # List of missing products since midnight
 #
@@ -138,7 +141,7 @@ proc nbsp/missing {} {
     return [nbsp_missing $nbsp_missing_file]
 }
 
-proc nbsp/chstats {} {
+proc nbsp/status/chstats {} {
 #
 # Per-channel statistics.
 #
@@ -179,7 +182,7 @@ proc nbsp/chstats {} {
     return $result
 }
 
-proc nbsp/connections {} {
+proc nbsp/status/connections {} {
 #
 # Active connections
 #
@@ -194,7 +197,7 @@ proc nbsp/connections {} {
     return [nbsp_connections $nbsp_active_file];
 }
 
-proc nbsp/slavestats {} {
+proc nbsp/status/slavestats {} {
 #
 # The status/stats of connections of the slave threads.
 #
@@ -209,7 +212,7 @@ proc nbsp/slavestats {} {
     return [nbsp_slavestats $nbsp_slavestats_file];
 }
 
-proc nbsp/statplot {type} {
+proc nbsp/status/statplot {type} {
 #
 # Statistics plots.
 #
@@ -232,7 +235,7 @@ proc nbsp/statplot {type} {
     return $result;
 }
 
-proc nbsp/printconf {} {
+proc nbsp/status/printconf {} {
 #
 # Print current nbspd configuration.
 #
@@ -244,7 +247,7 @@ proc nbsp/printconf {} {
     return $result;
 }
 
-proc nbsp/received_last_minute {} {
+proc nbsp/status/received_last_minute {} {
 #
 # List of received products in the last minute
 #
@@ -262,7 +265,7 @@ proc nbsp/received_last_minute {} {
     return [nbsp_received $nbsp_received_file]
 }
 
-proc nbsp/received_minute {hhmm} {
+proc nbsp/status/received_minute {hhmm} {
 #
 # List of received products in a given minute.
 #
@@ -277,7 +280,7 @@ proc nbsp/received_minute {hhmm} {
     return [nbsp_received $nbsp_received_file]
 }
 
-proc nbsp/received_past_hour {} {
+proc nbsp/status/received_past_hour {} {
 #
 # List of products received in the past hour
 #
@@ -288,7 +291,7 @@ proc nbsp/received_past_hour {} {
     return [nbsp_received_hour $hh]
 }
 
-proc nbsp/received_last_hour {} {
+proc nbsp/status/received_last_hour {} {
 #
 # List of products received within the last hour
 #
@@ -299,7 +302,7 @@ proc nbsp/received_last_hour {} {
     return [nbsp_received_hour $hh $mm]
 }
 
-proc nbsp/received_last_24hours {} {
+proc nbsp/status/received_last_24hours {} {
 #
 # List of products received in the last 24 hours.
 #
@@ -326,7 +329,7 @@ proc nbsp/received_last_24hours {} {
     return $result;
 }
 
-proc nbsp/received_last_3hours {} {
+proc nbsp/status/received_last_3hours {} {
 #
 # List of products received in the last 3 hours.
 #

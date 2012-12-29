@@ -1,0 +1,8 @@
+
+<div id="mainright">
+  [
+    set type [::ncgi::value "type"]
+    nbsp/status/statplot $type
+  ]
+</div>
+

@@ -429,7 +429,7 @@ proc nbsp_received_hour {hh {mm 59}} {
     set result "<h3>Products received at $hh</h3>\n"; 
     foreach file $flist {
 	set hhmm [file rootname $file];
-	set href "<a href=\"received_minute?hhmm=$hhmm\">$hhmm</a>\n";
+	set href "<a href=\"/nbsp/status/received_minute.tml?hhmm=$hhmm\">$hhmm</a>\n";
 	append result $href;
     }
 

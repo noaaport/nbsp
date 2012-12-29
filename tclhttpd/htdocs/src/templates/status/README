@@ -1,0 +1,4 @@
+These scripts must be called with a query string:
+
+    received_minute.tml?hhmm=<hhmm>
+    statplot.tml?type=<type>

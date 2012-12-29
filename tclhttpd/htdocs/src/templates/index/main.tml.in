@@ -1,0 +1,19 @@
+[Doc_Dynamic]
+
+<html>
+<head>
+  <title>Nbsp@[exec hostname -s]</title>
+  <link rel="stylesheet" href="/css/nbsp.css" type="text/css"/>
+</head>
+
+<body>
+@header@
+@topmenu@
+
+<div id="main">
+@leftmenu@
+@body@
+</div>
+
+</body>
+</html>
