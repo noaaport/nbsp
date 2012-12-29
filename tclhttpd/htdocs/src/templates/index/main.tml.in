@@ -4,6 +4,7 @@
 <head>
   <title>Nbsp@[exec hostname -s]</title>
   <link rel="stylesheet" href="/css/nbsp.css" type="text/css"/>
+  <meta http-equiv="Refresh" content="60">
 </head>
 
 <body>
