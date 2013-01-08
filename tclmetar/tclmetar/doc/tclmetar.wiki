@@ -1,0 +1,107 @@
+=TclMetar= 
+
+**Tclmetar** is a library of procedures for decoding Metar reports
+in Tcl scripts, thus making available the extensive processing
+capabilities of [[http://www.tcl.tk|Tcl]] to manipulate the results
+of the commands.
+
+==Requirements==
+In addition to Tcl, Tclmetar requires
+[[http://www.tcl.tk/software/tcllib|Tcllib]],
+but it has no further requirements.
+
+==Downloading the software==
+The source //tclmetar-<version>.tgz// of the Tclmetar library can be
+downloaded from the software area of the
+[[http://www.noaaport.net|Nbsp]]project.
+The distribution comes with an INSTALL file that contains
+the installation instructions, a set of examples to illustrate
+the basic functionality, and with a README file that list the
+available procedures and their usage.
+
+In addition there are binary packages for FreeBSD and CentOS,
+in tbz and rpm formats respectively, that can be installed with
+the native package management tools (e.g., rpm, pkg_add).
+
+==Installation==
+
+===Requirements=== 
+
+The following are required and must be installed:
+
+> Tcl
+> Tcllib
+
+===Installing from Packages===
+
+Binary packages exist for FreeBSD (tbz) and CentOS (rpm).
+Since tclmetar is written entirely in Tcl and no compilation is involved,
+the rpm packages should work anywhere rpm is the package management tool.
+
+The packages, available from the software section at
+[[http://www.noaaport.net|noaaport.net]], can be installed with
+the native package management tools (e.g., rpm, pkg_add):
+
+> rpm -i tclmetar-<version>.rpm
+> pkg_add tclmetar-<version>.tbz
+
+===Installation using the Makefile===
+
+This boils down to executing
+
+> ./configure.sh
+> make install-dirs
+> make install
+
+inside the tclmetar distribution directory.
+
+===Manual installation===
+
+Tclmetar is written entirely in Tcl, so there is no compilation involved.
+The package consists of single file ``metar.tcl'' and the accompanying
+index file ``pkgIndex.tcl''.
+
+Perhaps the best option is to create a directory ``tclmetar'' at the same
+as the tcllib directory, and put both of the above files in that directory.
+
+The files can be saved anywhere, for example
+
+> /usr/local/lib/tcl_site
+
+Any script that will use the package can then add the line
+
+> lappend auto_path "/usr/local/lib/tcl_site"
+
+before the ``package require metar'' and it will be found.
+
+==Usage==
+
+A script will typically be of the form
+
+[[code]]
+#!/usr/local/bin/tlsh8.4
+
+package require tclmetar;
+
+''load data''
+
+foreach line $data {
+    metar::decode $line;
+    foreach param_name [lsort [::metar::get_param_list]] {
+        set param_val [::metar::get_param $param_name]
+    }
+}
+[[code]]
+
+The complete set of procedures contained in the package are listed
+and described in the README file mentioned above, and here we mention
+a few, taken from the examples that are provided with the distribution
+and the packages.
+
+==Examples==
+
+===Example 1===
+
+===Example 2===
+
+===Example 3===

@@ -4,7 +4,7 @@
 @include@ @q@../Makefile.inc@q@
 @include@ @q@Makefile.inc@q@
 
-DIRS = extensions
+DIRS = extensions htdocs
 
 TCLSH =         @TCLSH@
 INSTALL =       @INSTALL@
@@ -29,25 +29,23 @@ WWWWORKDIR = work
 #
 
 all: ${TCLTARGET} ${SAMPLECONFFILE} ${WWWTGZFILE}
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE}) \
-	done
 
 ${TCLTARGET}: ${TCLSOURCE} 
 	sed -e /%TCLSH%/s##${TCLSH}# ${TCLSOURCE} > ${TCLTARGET}
 
-${WWWTGZFILE}: ${WWWTGZFILE}-force
+${SAMPLECONFFILE}: ${CONFFILE}
+	cp ${CONFFILE} ${SAMPLECONFFILE}
 
-${WWWTGZFILE}-force:
+${WWWTGZFILE}:
+	for dir in ${DIRS}; do \
+	(cd $$dir; ${MAKE}) \
+	done
 	rm -rf ${WWWWORKDIR}
 	cd ${WWWHTDOCSDIR}; ${MAKE}
 	install -d ${WWWWORKDIR}/${WWWHTDOCSDIR}
 	install -d ${WWWWORKDIR}/${WWWEMPTYSUBDIRS}
 	cp -r ${WWWHTDOCSSUBDIRS} ${WWWWORKDIR}/${WWWHTDOCSDIR}
 	cd ${WWWWORKDIR}; tar -c -z -f ../${WWWTGZFILE} ${WWWDIRS}
-
-${SAMPLECONFFILE}: ${CONFFILE}
-	cp ${CONFFILE} ${SAMPLECONFFILE}
 
 install:
 	${INSTALL} -m 0755 ${TCLTARGET} ${MYLIBEXECDIR}

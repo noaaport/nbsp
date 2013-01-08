@@ -1,0 +1,23 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+SRC =		dc.tcl
+TARGET =	dc
+PROGNAME =	dc
+
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
+
+all: ${TARGET}
+
+${TARGET}: ${SRC}
+	sed -e /%TCLMETAR_INSTALLDIR%/d \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC} > ${TARGET}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}/${PROGNAME}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

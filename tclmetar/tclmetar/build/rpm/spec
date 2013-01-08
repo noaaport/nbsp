@@ -1,0 +1,35 @@
+%description
+Tcl library to decode Metar reports
+
+%prep
+
+%setup
+./configure.sh
+
+%build
+cd build/rpm
+make 
+
+%install
+cd build/rpm
+make install
+
+%post
+@POSTINSTALL@
+
+%postun
+
+%clean
+cd build/rpm
+make clean
+
+%files
+%defattr(-,root,root)
+/usr/lib/tclmetar/metar.tcl
+/usr/lib/tclmetar/pkgIndex.tcl
+/usr/share/doc/tclmetar/LICENSE
+/usr/share/doc/tclmetar/api.README
+/usr/share/doc/tclmetar/examples/examples.README
+/usr/share/doc/tclmetar/examples/examples.tgz
+
+%changelog

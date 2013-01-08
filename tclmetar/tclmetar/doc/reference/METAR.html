@@ -1,0 +1,588 @@
+<!-- From wxp.uniys.com -->
+
+<HTML>
+<HEAD>
+  <TITLE>METAR Format (FM-15)</TITLE>
+</HEAD>
+<BODY BGCOLOR="#ffffff">
+<H1 ALIGN=center>
+  METAR Format (FM-15)
+</H1>
+<H2 ALIGN=center>
+  Surface Meterological Airways Format
+</H2>
+<P>
+  <HR>
+<H3>
+  Syntax:
+</H3>
+<P>
+<CODE><A HREF="#METAR">METAR</A> </CODE><A HREF="#CCCC">CCCC</A>
+<A HREF="#TIME">TIME</A> <A HREF="#AUTO">AUTO</A> <A HREF="#WIND">WIND</A>
+<A HREF="#VISIBILITY">VISIBILITY </A><A HREF="#WEATHER">WEATHER</A>
+<A HREF="#CLOUDS">CLOUDS</A> <A HREF="#TEMP">TEMP/DEW</A>
+<A HREF="#ALTIMETER">ALTIMETER</A> <A HREF="#REMARKS">REMARKS </A>
+<H3>
+  <A NAME="METAR">METAR</A>
+</H3>
+<P>
+This defines the product type. &nbsp;This can either be the string
+"<B>METAR</B>" for a regularly reported observation (such as an hourly) or
+"<B>SPECI</B>" for a special observation.
+<H3>
+  <A NAME="CCCC">CCCC</A>
+</H3>
+<P>
+<I>CCCC</I> is the 4 letter ID uniquely defining the reporting station, for
+example KORD for O'Hare airport in Chicago.
+<H3>
+  <A NAME="TIME">TIME</A>
+</H3>
+<P>
+The full universal time (UTC) that the observation was taken. &nbsp;The format
+is:
+<P>
+<I>ddhhmm</I>Z. &nbsp;
+<P>
+<I>dd </I>is the day of the month, <I>hh</I> is the hour, <I>mm</I> is the
+minute.
+<H3>
+  <A NAME="AUTO">AUTO</A>
+</H3>
+<P>
+This is an optional grouping used to specify a station as being automated.
+<H3>
+  <A NAME="WIND">WIND</A>
+</H3>
+<P>
+The wind group 
+<P>
+<I>dddss</I>KT or <I>dddss</I>G<I>gg</I>KT
+<P>
+The value <I>ddd</I> is the wind direction in degrees. &nbsp;The value
+<I>ss</I> is the wind speed. &nbsp;The units are defined by the string "KT"
+which is knots. Some reports may have "MPS" for meters per second. If wind
+gusts are reported, they are specified with the group "G<I>gg</I>".
+<H3>
+  <A NAME="VISIBILITY">VISIBILITY </A>
+</H3>
+<P>
+The visibility group
+<P>
+<I>vv</I>SM or <I>vv</I>KM 
+<P>
+This specifies the visibility is either statue miles "SM" or kilometers "KM".
+&nbsp;The visibility can be partial values such as "1 1/2SM" or "3/16SM".
+<H3>
+  <A NAME="WEATHER">WEATHER </A>
+</H3>
+<P>
+The weather group 
+<P>
+<I>iiddppooxx </I>
+<P>
+<I>ii</I> is intensity group
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD><I>ii</I></TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>- </TD>
+    <TD>light </TD>
+  </TR>
+  <TR>
+    <TD></TD>
+    <TD>moderate </TD>
+  </TR>
+  <TR>
+    <TD>+ </TD>
+    <TD>heavy </TD>
+  </TR>
+  <TR>
+    <TD>VC </TD>
+    <TD>in the vicinity </TD>
+  </TR>
+</TABLE>
+<P>
+<I>dd</I> is the descriptor group 
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD><I>dd</I></TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>MI </TD>
+    <TD>shallow </TD>
+  </TR>
+  <TR>
+    <TD> PR </TD>
+    <TD>partial </TD>
+  </TR>
+  <TR>
+    <TD>BC </TD>
+    <TD>patches </TD>
+  </TR>
+  <TR>
+    <TD>DR </TD>
+    <TD>low drifting </TD>
+  </TR>
+  <TR>
+    <TD>BL </TD>
+    <TD>blowing </TD>
+  </TR>
+  <TR>
+    <TD>SH </TD>
+    <TD>shower </TD>
+  </TR>
+  <TR>
+    <TD> TS </TD>
+    <TD>thunderstorm </TD>
+  </TR>
+  <TR>
+    <TD>FZ </TD>
+    <TD>freezing </TD>
+  </TR>
+</TABLE>
+<P>
+<I>pp</I> is the precipitation group 
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD><I>pp</I></TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>DZ </TD>
+    <TD>drizzle </TD>
+  </TR>
+  <TR>
+    <TD>RA </TD>
+    <TD>rain </TD>
+  </TR>
+  <TR>
+    <TD>SN </TD>
+    <TD>snow </TD>
+  </TR>
+  <TR>
+    <TD>SG </TD>
+    <TD>snow grains </TD>
+  </TR>
+  <TR>
+    <TD>IC </TD>
+    <TD>ice crystals </TD>
+  </TR>
+  <TR>
+    <TD>PE </TD>
+    <TD>ice pellets </TD>
+  </TR>
+  <TR>
+    <TD>GR </TD>
+    <TD>hail </TD>
+  </TR>
+  <TR>
+    <TD>GS </TD>
+    <TD>small hail/snow pellets </TD>
+  </TR>
+  <TR>
+    <TD>UP </TD>
+    <TD>unknown </TD>
+  </TR>
+</TABLE>
+<P>
+<I>oo </I>is the obscuration group 
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD><I>oo</I></TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>BR </TD>
+    <TD>mist </TD>
+  </TR>
+  <TR>
+    <TD>FG </TD>
+    <TD>fog </TD>
+  </TR>
+  <TR>
+    <TD>FU </TD>
+    <TD>smoke </TD>
+  </TR>
+  <TR>
+    <TD> VA </TD>
+    <TD>volcanic ash </TD>
+  </TR>
+  <TR>
+    <TD>DU </TD>
+    <TD>dust </TD>
+  </TR>
+  <TR>
+    <TD> SA </TD>
+    <TD>sand </TD>
+  </TR>
+  <TR>
+    <TD>HZ </TD>
+    <TD>haze </TD>
+  </TR>
+  <TR>
+    <TD>PY </TD>
+    <TD>spray </TD>
+  </TR>
+</TABLE>
+<P>
+<I>xx</I> is the misc group 
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD><I>xx</I></TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>PO </TD>
+    <TD>dust whirls </TD>
+  </TR>
+  <TR>
+    <TD>SQ </TD>
+    <TD>squalls </TD>
+  </TR>
+  <TR>
+    <TD>FC </TD>
+    <TD>funnel cloud/tornado/waterspout </TD>
+  </TR>
+  <TR>
+    <TD>SS </TD>
+    <TD>duststorm </TD>
+  </TR>
+</TABLE>
+<H3>
+  <A NAME="CLOUDS">CLOUDS </A>
+</H3>
+<P>
+The cloud levels
+<P>
+<I>ccchhhtt</I>
+<P>
+<I>ccc</I> is the coverage <BR>
+CLR or SKC = clear <BR>
+FEW = 1/8 coverage <BR>
+SCT = 2,3,4/8 coverage <BR>
+BKN = 5,6,7/8 coverage <BR>
+OVC = overcast <BR>
+VV = vertical visibility for obscuration
+<P>
+<I>hhh </I>is the height of base in 30m or 100ft increments. ie 30 = 3000
+feet
+<P>
+<I> tt</I> is an optional type<BR>
+CU = cumulus<BR>
+CB = cumulonumbus<BR>
+TCU = towering cumulus <BR>
+CI = cirrus 
+<P>
+<B>CAVOK</B> = clear skies, unlimited visibility 
+<H3>
+  <A NAME="TEMP">TEMP/DEW </A>
+</H3>
+<P>
+is the temperature and dewpoint in Celsius 
+<P>
+<I>TT</I><B>/</B><I>DD</I>
+<P>
+negative values are preceded with a M (M03 = -3) 
+<H3>
+  <A NAME="ALTIMETER">ALTIMETER</A>
+</H3>
+<P>
+is the altimeter setting
+<P>
+Q<I>pppp</I> = altimeter in whole mb 
+<P>
+A<I>pppp</I> = altimeter in .01 in Hg 
+<H3>
+  <A NAME="REMARKS">REMARKS</A>
+</H3>
+<P>
+The remark section:
+<P>
+RMK <I>xxxx xxxx xxxx...</I>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>Remark</TD>
+    <TD>Description</TD>
+  </TR>
+  <TR>
+    <TD>AO1 </TD>
+    <TD>AMOS station </TD>
+  </TR>
+  <TR>
+    <TD> AO2 </TD>
+    <TD>ASOS station </TD>
+  </TR>
+  <TR>
+    <TD>OBS TAKEN +<I>xx</I></TD>
+    <TD>minute offset for observation time</TD>
+  </TR>
+  <TR>
+    <TD>SLP<I>ppp </I></TD>
+    <TD>Sea level pressure in .1 mb (142 = 1014.2 mb) </TD>
+  </TR>
+  <TR>
+    <TD>WEA:<I>www</I></TD>
+    <TD>Additional present weather information</TD>
+  </TR>
+  <TR VALIGN="Top">
+    <TD>T<I>ttttdddd </I></TD>
+    <TD>Current temperature/dewpoint in .1C<BR>
+      T01720144 = temp=17.2C, dew=14.4C, first digit 1 for negative </TD>
+  </TR>
+  <TR>
+    <TD>1<I>xxxx</I> </TD>
+    <TD>6 hour max temp in .1C, first digit 1 for negative </TD>
+  </TR>
+  <TR>
+    <TD>2<I>nnnn </I></TD>
+    <TD>6 hour min temp in .1C, first digit 1 for negative </TD>
+  </TR>
+  <TR>
+    <TD>4/<I>sss </I></TD>
+    <TD>Snow coverage in inches</TD>
+  </TR>
+  <TR>
+    <TD>4<I>xxxxnnnn </I></TD>
+    <TD>24 hour max/min temps in .1C, first digit 1 for negative </TD>
+  </TR>
+  <TR>
+    <TD>5<I>tppp </I></TD>
+    <TD>Pressure tendency in .1 mb for 3 hours, <I>t</I> is&nbsp;the trend</TD>
+  </TR>
+  <TR>
+    <TD>6<I>pppp </I></TD>
+    <TD>6 hour precipitation in .01 inches </TD>
+  </TR>
+  <TR>
+    <TD>7<I>pppp </I></TD>
+    <TD>24 hour precipitation in .01 inches </TD>
+  </TR>
+  <TR>
+    <TD>8/<I>lmh </I></TD>
+    <TD>Cloud type for low, medium, high </TD>
+  </TR>
+  <TR>
+    <TD>933<I>sss </I></TD>
+    <TD>New snow coverage, water equivalent </TD>
+  </TR>
+  <TR>
+    <TD>98<I>mmm </I></TD>
+    <TD>Equivalent sunshine for day in minutes </TD>
+  </TR>
+  <TR>
+    <TD>CITY <I>tt </I></TD>
+    <TD>City temperature </TD>
+  </TR>
+  <TR VALIGN="Top">
+    <TD>PCPN <I>pppp</I> <BR>
+      P<I>pppp</I></TD>
+    <TD>1 hour precipitation </TD>
+  </TR>
+  <TR>
+    <TD>PK WND <I>sss/nn </I></TD>
+    <TD>Peak wind, sss is speed, nn is the time </TD>
+  </TR>
+  <TR>
+    <TD>PRESFR </TD>
+    <TD>Pressure falling rapidly </TD>
+  </TR>
+  <TR>
+    <TD>PRESRR </TD>
+    <TD>Pressure rising rapidly </TD>
+  </TR>
+  <TR>
+    <TD>SNOINCR <I>xxx </I></TD>
+    <TD>Snow increasing rapidly, where <I>xxx</I> is amount of snow in last hour</TD>
+  </TR>
+  <TR>
+    <TD>WSHFT <I>nn </I></TD>
+    <TD>Wind shift at time nn </TD>
+  </TR>
+</TABLE>
+<H3>
+  Examples
+</H3>
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>KLAF </TD>
+    <TD>030445Z </TD>
+    <TD>35007KT </TD>
+    <TD>15SM </TD>
+    <TD></TD>
+    <TD>SKC </TD>
+    <TD>17/13 </TD>
+    <TD>A2986 </TD>
+    <TD></TD>
+  </TR>
+</TABLE>
+<P>
+KLAF = Station Identifier <BR>
+030445Z = Time (ddhhmmZ) <BR>
+35007KT = Winds (350 deg at 7 knots) <BR>
+15SM = Visibility (15 statute miles) <BR>
+SKC = Clear skies <BR>
+17/13 = Temperature/Dewpoint in Celsius <BR>
+A2986 = Altimieter setting (29.86 in Hg) 
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>KLAF </TD>
+    <TD>021915Z COR </TD>
+    <TD>22010KT </TD>
+    <TD>7SM </TD>
+    <TD>TSRA </TD>
+    <TD>BKN055 </TD>
+    <TD>30/17</TD>
+    <TD>A2974 </TD>
+    <TD>RMK T W MOVG NE </TD>
+  </TR>
+</TABLE>
+<P>
+TSRA = Weather (TS-Thunderstorm RA-Rain) <BR>
+BKN055 = Cloud level (Broken at 5500 feet) 
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>KLAF </TD>
+    <TD>021950Z </TD>
+    <TD>30008KT </TD>
+    <TD>7SM </TD>
+    <TD>-RA </TD>
+    <TD>BKN065CB </TD>
+    <TD>25/21 </TD>
+    <TD>A297</TD>
+    <TD>RMK TE40 </TD>
+  </TR>
+</TABLE>
+<P>
+BKN065CB = Cloud level (Broken at 6500 feet with cumulonimbus) 
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>LTCC </TD>
+    <TD>022250Z </TD>
+    <TD>32003KT </TD>
+    <TD></TD>
+    <TD></TD>
+    <TD>CAVOK </TD>
+    <TD>24/10 </TD>
+    <TD>Q1011 </TD>
+    <TD>NOSIG= </TD>
+  </TR>
+</TABLE>
+<P>
+CAVOK = Cloud/Visibility (OK=Clear with unlimited visibility) <BR>
+Q1011 = Altimeter setting (1011 mb) 
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>KFHU</TD>
+    <TD>022336Z </TD>
+    <TD>33011G25 </TD>
+    <TD>35SM </TD>
+    <TD>TS VCSH </TD>
+    <TD>FEW040 SCT060CB BKN100 BKN250 </TD>
+    <TD>31/14 </TD>
+    <TD>A3003 </TD>
+    <TD>RMK WSHFT 27 FRQ LTGICCG TS N MOV W SHRA N AND NE-SE= </TD>
+  </TR>
+</TABLE>
+<P>
+33011G25 = Winds (330 at 11 Gusts to 25) <BR>
+TS VCSH = Weather (TS=Thunderstorm, VC=Vicinty, SH=Shower) <BR>
+FEW040 = Clouds (FEW=few clouds or 1/8 coverage at 4000 feet) 
+<P>
+<TABLE BORDER CELLPADDING="2">
+  <TR>
+    <TD>CCCC</TD>
+    <TD>TIME</TD>
+    <TD>WIND</TD>
+    <TD>VIS</TD>
+    <TD>WEA</TD>
+    <TD>CLOUD</TD>
+    <TD>TT/DD</TD>
+    <TD>ALT</TD>
+    <TD>REMARKS</TD>
+  </TR>
+  <TR>
+    <TD>KIND</TD>
+    <TD>022356Z </TD>
+    <TD>26009KT </TD>
+    <TD>10SM </TD>
+    <TD></TD>
+    <TD>CLR </TD>
+    <TD>24/20 </TD>
+    <TD>A2973 </TD>
+    <TD>RMK AO2 SLP062 60000 T02440200 10317 20228 56009 $= </TD>
+  </TR>
+</TABLE>
+<P>
+AO2 = ASOS station <BR>
+SLP062 = Sea level pressure (062=1006.2 mb) <BR>
+60000 = 6 hour precipitation (0000=trace) <BR>
+T02440200 = Current temperature/dewpoint (temp=0244=24.4C,dew=0200=20.0C)
+<BR>
+10317 = 6 hour max temp (317=31.7C) <BR>
+20228 = 6 hour min temp (228=22.8C) <BR>
+56009 = Pressure tendency (6009=falling .9 mb in last 3 hours) 
+</BODY></HTML>

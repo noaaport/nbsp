@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+# The definitions here should appear without spaces around the '='
+# sign, so that the file can be read by either make or sh.
+#
+# d = development
+# p = prerelase (release candidate)
+# r = release
+name=tclmetar
+branch=0.5
+releasenumber=1
+releaselevel=p
+update=4
+version=${branch}.${releasenumber}${releaselevel}${update}

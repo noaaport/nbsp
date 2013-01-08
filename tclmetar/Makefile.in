@@ -1,0 +1,33 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+PROGNAME =	@PROGNAME@
+
+SRC =		${TCLMETAR_DIR}/src/dc/dc.tcl
+TARGET =	${PROGNAME}
+
+TCLMETAR_DIR = tclmetar
+TCLMETAR_LIB =	${TCLMETAR_DIR}/src/lib/metar.tcl
+TCLMETAR_PKGINDEX = ${TCLMETAR_DIR}/src/lib/pkgIndex.tcl
+TCLMETAR_FILES = ${TCLMETAR_LIB} ${TCLMETAR_PKGINDEX}
+TCLMETAR_INSTALLDIR = ${MYLIBEXECDIR}/tclmetar
+
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
+
+all: ${TARGET}
+
+${TARGET}: ${SRC}
+	cd ${TCLMETAR_DIR}; ${MAKE}
+	sed -e /%TCLMETAR_INSTALLDIR%/s##${TCLMETAR_INSTALLDIR}# \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC} > ${TARGET}
+
+install: all
+	${INSTALL} -m 644 ${TCLMETAR_FILES} ${TCLMETAR_INSTALLDIR}
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}/${PROGNAME}
+
+clean:
+	cd ${TCLMETAR_DIR}; ${MAKE} clean
+	rm -f *~ Makefile ${TARGET}
