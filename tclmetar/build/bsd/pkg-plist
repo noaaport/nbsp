@@ -1,8 +1,0 @@
-@owner root
-@group wheel
-lib/tclmetar/metar.tcl
-lib/tclmetar/pkgIndex.tcl
-share/doc/tclmetar/api.README
-share/doc/tclmetar/LICENSE
-share/doc/tclmetar/examples/examples.README
-share/doc/tclmetar/examples/examples.tgz
