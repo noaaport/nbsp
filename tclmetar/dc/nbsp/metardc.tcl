@@ -1,13 +1,13 @@
-#!%TCLSH%
+#!/usr/bin/tclsh
 #
-# Copyright (c) 2008 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# $Id$
+#
+# Copyright (c) 2008 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # See LICENSE
 #
-# $Id$
-
-# Usage: metardc [-c | -d] [-h | [-t [-k]]] [-l location] [-o outputfile]
-#		[-s recseparator] [-e obdata | inputfile];
+# Usage: metardc [-c | -d] [-h [-m] | [-t [-k]]] [-H <tag>] [-l location]
+#               [-o outputfile] [-s recseparator] [-e obdata | inputfile];
 #
 # The input must consist of just pure data, assumed to have been
 # checked and cleaned, one data record per line in inputfile or stdin,
@@ -18,7 +18,9 @@
 # (so that the type is not unknown). The output is either
 # the full report, or with [-t] just the parameter values; in the latter
 # case, [-k] will give the wind speed in knots instead of mph. If [-h]
-# is given instead of [-t] the report is an html table. The output
+# is given instead of [-t] the report is an html table, and the station
+# information is put in a title between <tag>,</tag> tags. If in addition [-m]
+# is given, then it is html formated but not in a table. The output
 # records can be separated by giving [-s], otherwise they are not separated;
 # passing -s "" will separate them by a blank line.
 # Output is to stdout unless [-o] is given. The [-l] option can specify
@@ -26,13 +28,15 @@
 # header of the report (only in the html version).
 
 package require cmdline;
-lappend auto_path %TCLMETAR_INSTALLDIR%;
-package require metar;
+#lappend auto_path %TCLMETAR_INSTALLDIR%;
+#package require metar;
+source "metar.tcl";
 
-set usage {Usage: metardc [-c | -d] [-h | [-t [-k]]] [-l location]
-    [-o outputfile] [-s recseparator] [-e obdata | inputfile]};
+set usage {Usage: metardc [-c | -d] [-h [-m] | [-t [-k]]] [-H <tag>]
+    [-l location] [-o outputfile] [-s recseparator] [-e obdata | inputfile]};
 
-set optlist {c d h t k {l.arg ""} {o.arg ""} {s.arg ""} {e.arg ""}};
+set optlist {c d h k m t {e.arg ""} {H.arg "h3"} {l.arg ""}
+    {o.arg ""} {s.arg ""}};
 
 set conflict_cd 0;
 set conflict_e 0;
@@ -43,7 +47,7 @@ proc print_report {fout line} {
 
     global option;
 
-    metar::decode $line;
+    ::metar::decode $line;
 
     puts $fout [format "Obs: %s" $line];
 
@@ -131,7 +135,7 @@ proc print_tabular {fout line} {
 
     global option
 
-    metar::decode $line;
+    ::metar::decode $line;
 
     # Use csv format because it is easier to spot any missing value.
     # The UTC part of the time is not printed.
@@ -158,19 +162,24 @@ proc print_report_html {fout line} {
 
     global option;
 
-    metar::decode $line;
+    ::metar::decode $line;
 
-    set fmt "<tr><td>%s</td><td>%s</td></tr>\n";
+    if {$option(m) == 0} {
+	set fmt "<tr><td>%s</td><td>%s</td></tr>\n";
+    } else {
+	set fmt "<b>%s</b><br/>%s<br/><br/>\n";
+    }
 
-    append _header $::metar::metar(param,type) " Report for " \
-	$::metar::metar(obs,STATION);
+    append _header $::metar::metar(param,type) " " $::metar::metar(obs,STATION);
     if {$option(l) ne ""} {
 	append _header " at " $option(l);
     }
-    append result "<h3>" ${_header} "</h3>\n";
-    
-    append result "<table border>\n";
-    
+    append result "<$option(H)>" ${_header} "</$option(H)>\n";
+
+    if {$option(m) == 0} {
+	append result "<table border>\n";
+    }
+
     append result [format $fmt "Obs" $line];
     append result [format $fmt "Date/Time" \
      "$::metar::metar(param,date.dd) at $::metar::metar(param,date.hhmm) UTC"];
@@ -236,7 +245,10 @@ proc print_report_html {fout line} {
 	append result [format $fmt "Remarks" $::metar::metar(text,snincr)];
     }
 
-    append result "</table>";
+    if {$option(m) == 0} {
+	append result "</table>";
+    }
+
     puts $fout $result;
 }
 
@@ -252,7 +264,7 @@ proc process_line {fout line} {
 
     if {$option(t) == 1} {
 	print_tabular $fout $line;
-    } elseif {$option(h) == 1} {
+    } elseif {$option(h) != 0} {
 	print_report_html $fout $line;
     } else {
 	print_report $fout $line;
@@ -264,6 +276,10 @@ proc process_line {fout line} {
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
+
+if {$option(m) != 0} {
+    set option(h) 1;
+}
 
 # Check for conflicting options
 if {$argc == 1} {

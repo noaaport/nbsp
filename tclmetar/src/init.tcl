@@ -1,7 +1,9 @@
 #
 # $Id$
 #
-# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2009 Jose F. Nieves <nieves@ltp.uprrp.edu>
+#
+# ISC License
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -86,9 +88,10 @@ namespace eval metar {
     set metar(text,sky.type.CI) "cirrus";
     set metar(pat,sky.type) {CU|CB|TCU|CI};
 
-    set metar(text,report_types.metar) "Routine Weather Report";
-    set metar(text,report_types.speci) "Special Weather Report";
-    set metar(text,report_types.unknown) "Unknown type Weather Report";
+    set metar(text,report_types.metar) "Routine Report";
+    set metar(text,report_types.speci) "Special Report";
+    # set metar(text,report_types.unknown) "Unknown type Weather Report";
+    set metar(text,report_types.unknown) "Report";
 
     set metar(text,wind_calm) "Calm";
     set metar(text,wind_dir_variable) "variable";
