@@ -1,0 +1,14 @@
+#
+# $Id: Makefile.in,v cf4fd7927017 2009/09/11 16:26:32 nieves $
+#
+@include@ @q@../Makefile.inc@q@
+
+DOCS = api.README nbsp.README ../LICENSE
+
+all:
+
+install: all
+	install -m 0644 ${DOCS} ${MYDOCDIR}
+
+clean:
+	rm -f *~ Makefile

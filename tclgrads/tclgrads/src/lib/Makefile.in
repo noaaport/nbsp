@@ -1,0 +1,14 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+SOURCES = grads.tcl pkgIndex.tcl
+
+all: ${SOURCES}
+
+install: all
+	install -m 0644 ${SOURCES} ${MYLIBDIR}
+
+clean:
+	rm -f *~ Makefile

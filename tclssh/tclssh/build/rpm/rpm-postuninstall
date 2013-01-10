@@ -1,0 +1,9 @@
+#
+# Undo what rpm-postistall does with the tcl library
+#
+[ -L /usr/share/tcl8.5/tclssh ] && rm /usr/share/tcl8.5/tclssh
+
+# Avoid exiting with non-zero status if the directory (link) does not exist
+# (because rpm will catch the non-zero status as a script error).
+#
+exit 0

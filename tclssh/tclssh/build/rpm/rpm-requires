@@ -1,0 +1,5 @@
+# If any requirements are put here, this line must be added in
+# the rpm-spec.in file
+#
+# Requires: @requires@
+tcl8.5, tcllib

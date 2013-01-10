@@ -1,0 +1,43 @@
+#
+# $Id: Makefile.in,v cf4fd7927017 2009/09/11 16:26:32 nieves $
+#
+@include@ @q@../Makefile.inc@q@
+
+EXAMPLES = ex-coords.tcl \
+ex-eval_expr_xy.tcl \
+ex-expr1.tcl \
+ex-get.tcl \
+ex-get_levels.tcl \
+ex-get_lons.tcl \
+ex-get_vars.tcl \
+ex-getval2.tcl \
+ex-printim-uvt.tcl \
+ex-printim.tcl \
+ex-transform.tcl \
+ex-uprintim-uvt.tcl \
+ex-uprintim.tcl
+
+DATA =	../src/test/yq*
+EXAMPLES_DOC =	examples.README
+TCLSH = @TCLSH@
+
+all:
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	sed -e /%TCLSH%/s##${TCLSH}# $${script} > $${scriptname}; \
+	done
+
+install: all
+	install -m 0644 ${DATA} ${MYEXAMPLESDIR}
+	install -m 0644 ${EXAMPLES_DOC} ${MYEXAMPLESDIR}
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	install -m 0755 $${scriptname} ${MYEXAMPLESDIR}/$${script}; \
+	done
+
+clean:
+	rm -f *~ Makefile
+	for script in ${EXAMPLES}; do \
+	scriptname=$${script%.tcl}; \
+	rm -f $${scriptname}; \
+	done

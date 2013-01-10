@@ -1,16 +1,12 @@
 #!/bin/sh
 
-. ./configure.inc
-
-config_dirs="src examples doc"
-
-configure_default
-configure_default Makefile.inc
+. ../configure.inc
 
 savedir=`pwd`
-for d in $config_dirs
-do
-    cd $d
-    ./configure.sh
-    cd $savedir
-done
+cd tclgempak
+./configure.sh
+cd $savedir
+
+sed -e "/@include@/s||$INCLUDE|" \
+    -e "/@q@/s||$Q|g" \
+    -e "/@INSTALL@/s||$INSTALL|" Makefile.in > Makefile

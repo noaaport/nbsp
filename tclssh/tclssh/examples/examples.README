@@ -1,0 +1,36 @@
+#
+# $Id$
+#
+To run the example scripts:
+
+1) Install the tclssh package
+
+2) Change the line
+   
+	source ../src/ssh.tcl
+   to
+	package require ssh
+
+3) Change the line
+
+   	set slave "diablo"
+   to
+        set slave <your_remote_host>
+
+   The remote host must be accessible via ssh keys without a password;
+   that is, for example, the contents of your "./ssh/is_rsa.pub" must
+   be added to the ".ssh/authorized_keys" file in the remote host.
+
+4) In the line
+
+      ::ssh::connect -t tclsh8.6 -- $slave
+
+   adjust the "-t tclssh8.6" to use the correct tcl shell in the
+   remote host. This is typically "tclsh" in Linux systems,
+   and tclsh8.6 or tclsh8.5 in FreeBSD. In addition it must
+   be in the PATH used by ssh, or use the full path.
+
+   When the "-t" option is not supplied, the library by default
+   uses just "tclsh", so that in Linux systems the "-t" option
+   can be omitted.
+-

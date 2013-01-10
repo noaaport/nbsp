@@ -1,0 +1,21 @@
+# In CentOS, the auto_path is
+#
+#   /usr/share/tcl8.5 /usr/lib64/tcl8.5 /usr/lib64/tk8.5 /usr/share/tk8.5
+#
+# but the tclssh lib is installed in /usr/share.
+
+if [ -d /usr/share/tcl8.5 ]
+then
+  cd /usr/share/tcl8.5
+  ln -s ../tclssh .
+fi
+
+cat <<__EOF__
+-
+The directory
+	
+	/usr/share/doc/tclssh
+
+contains documentation and examples to get started.
+-
+__EOF__

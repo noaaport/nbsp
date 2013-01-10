@@ -1,28 +1,24 @@
 #
 # $Id$
 #
-@include@ @q@Makefile.inc@q@
-@include@ @q@VERSION@q@
+@include@ @q@../Makefile.inc@q@
 
-DIRS = src doc examples
+TCLGRADS_DIR = tclgrads
+TCLGRADS_LDIR = ${TCLGRADS_DIR}/src/lib
+TCLGRADS_LIB =	${TCLGRADS_LDIR}/grads.tcl
+TCLGRADS_PKGINDEX = ${TCLGRADS_LDIR}/pkgIndex.tcl
+TCLGRADS_FILES = ${TCLGRADS_LIB} ${TCLGRADS_PKGINDEX}
+TCLGRADS_INSTALLDIR = ${MYLIBEXECDIR}/tclgrads
 
-all: 
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE}) \
-	done
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
 
-install:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} install) \
-	done
+all:
+	cd ${TCLGRADS_LDIR}; ${MAKE}
 
-install-dirs:
-	install -d ${MYDOCDIR}
-	install -d ${MYLIBDIR}
-	install -d ${MYEXAMPLESDIR}
+install: all
+	${INSTALL} -m 644 ${TCLGRADS_FILES} ${TCLGRADS_INSTALLDIR}
 
 clean:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} clean) \
-	done
-	rm -f *~ Makefile Makefile.inc
+	cd ${TCLGRADS_LDIR}; ${MAKE} clean
+	rm -f *~ Makefile

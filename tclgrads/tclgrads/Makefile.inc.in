@@ -1,0 +1,22 @@
+#
+# $Id: Makefile.inc.in,v cf4fd7927017 2009/09/11 16:26:32 nieves $
+#
+PKGNAME = tclgrads
+
+# This is for manipulation by the packaging tools
+PKGBUILDDIR =
+
+#
+# These directories are assumed to exist
+#
+PREFIX = @PREFIX@
+DESTDIR = ${PKGBUILDDIR}/${PREFIX}
+LIBDIR = ${DESTDIR}/lib
+DOCDIR = ${DESTDIR}/share/doc
+
+#
+# These directories must be created
+#
+MYDOCDIR = ${DOCDIR}/${PKGNAME}
+MYLIBDIR = ${LIBDIR}/${PKGNAME}
+MYEXAMPLESDIR = ${DOCDIR}/${PKGNAME}/examples

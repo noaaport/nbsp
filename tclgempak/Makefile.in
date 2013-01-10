@@ -1,28 +1,29 @@
 #
 # $Id$
 #
-@include@ @q@Makefile.inc@q@
-@include@ @q@VERSION@q@
+@include@ @q@../Makefile.inc@q@
 
-DIRS = src examples doc
+TCLGEMPAK_DIR = tclgempak
+TCLGEMPAK_LDIR = ${TCLGEMPAK_DIR}/src/lib
 
-all: 
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE}) \
-	done
+TCLGEMPAK_LIBS = \
+	${TCLGEMPAK_LDIR}/gempak.tcl \
+	${TCLGEMPAK_LDIR}/gdinfo.tcl \
+	${TCLGEMPAK_LDIR}/sflist.tcl
+TCLGEMPAK_PKGINDEX = ${TCLGEMPAK_LDIR}/pkgIndex.tcl
 
-install:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} install) \
-	done
+TCLGEMPAK_FILES = ${TCLGEMPAK_LIBS} ${TCLGEMPAK_PKGINDEX}
+TCLGEMPAK_INSTALLDIR = ${MYLIBEXECDIR}/tclgempak
 
-install-dirs:
-	install -d ${MYDOCDIR}
-	install -d ${MYLIBDIR}
-	install -d ${MYEXAMPLESDIR}
+INSTALL = @INSTALL@
+TCLSH = @TCLSH@
+
+all:
+	cd ${TCLGEMPAK_LDIR}; ${MAKE} all
+
+install: all
+	${INSTALL} -m 644 ${TCLGEMPAK_FILES} ${TCLGEMPAK_INSTALLDIR}
 
 clean:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} clean) \
-	done
-	rm -f *~ Makefile Makefile.inc
+	cd ${TCLGEMPAK_LDIR}; ${MAKE} clean
+	rm -f *~ Makefile

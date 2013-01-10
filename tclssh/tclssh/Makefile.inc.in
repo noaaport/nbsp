@@ -1,0 +1,27 @@
+#
+# $Id$
+#
+PKGNAME = tclssh
+
+# This is for manipulation by the packaging tools
+PKGBUILDDIR =
+
+#
+# These directories are assumed to exist
+#
+PREFIX = @PREFIX@
+
+DESTDIR = ${PKGBUILDDIR}/${PREFIX}
+LIBDIR = ${DESTDIR}/lib
+SHAREDIR = ${DESTDIR}/share
+DOCDIR = ${DESTDIR}/share/doc
+
+# Where we will put the tcl lib (must be in auto_path)
+TCLLIBDIR = ${DESTDIR}/@TCLLIBDIR@
+
+#
+# These directories must be created
+#
+MYDOCDIR = ${DOCDIR}/${PKGNAME}
+MYTCLLIBDIR = ${TCLLIBDIR}/${PKGNAME}
+MYEXAMPLESDIR = ${DOCDIR}/${PKGNAME}/examples

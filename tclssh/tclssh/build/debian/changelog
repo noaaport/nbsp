@@ -1,0 +1,5 @@
+tclssh (0.1.1p1-1) stable; urgency=low
+
+  * Initial debian package release
+
+ -- Jose F Nieves <nieves@1-loop.net>  Sat, 01 Dec 2012 12:16:15 -0400

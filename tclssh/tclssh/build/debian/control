@@ -1,0 +1,12 @@
+Source: tclssh
+Section: unknown
+Priority: extra
+Maintainer: Jose F Nieves <nieves@1-loop.net>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: tclssh
+Architecture: all
+Depends: tcl8.5, tcllib
+Description: Tcl script library for executing tcl scripts in a remote host
+ via ssh.

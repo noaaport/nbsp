@@ -1,28 +1,24 @@
 #
 # $Id$
 #
-@include@ @q@Makefile.inc@q@
-@include@ @q@VERSION@q@
+@include@ @q@../Makefile.inc@q@
 
-DIRS = src examples doc
+TCLSSH_DIR = tclssh
+TCLSSH_LDIR = ${TCLSSH_DIR}/src/lib
+TCLSSH_LIB = ${TCLSSH_LDIR}/ssh.tcl
+TCLSSH_PKGINDEX = ${TCLSSH_LDIR}/pkgIndex.tcl
+TCLSSH_FILES = ${TCLSSH_LIB} ${TCLSSH_PKGINDEX}
+TCLSSH_INSTALLDIR = ${MYLIBEXECDIR}/tclssh
 
-all: 
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE}) \
-	done
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
 
-install:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} install) \
-	done
+all:
+	cd ${TCLSSH_LDIR}; ${MAKE}
 
-install-dirs:
-	install -d ${MYDOCDIR}
-	install -d ${MYLIBDIR}
-	install -d ${MYEXAMPLESDIR}
+install: all
+	${INSTALL} -m 644 ${TCLSSH_FILES} ${TCLSSH_INSTALLDIR}
 
 clean:
-	for dir in ${DIRS}; do \
-	(cd $$dir; ${MAKE} clean) \
-	done
-	rm -f *~ Makefile Makefile.inc
+	cd ${TCLSSH_LDIR}; ${MAKE} clean
+	rm -f *~ Makefile
