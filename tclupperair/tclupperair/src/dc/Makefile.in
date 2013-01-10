@@ -1,0 +1,33 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+PROGNAME1 =	fm35dc
+PROGNAME2 =	uatocsv
+
+SRC1 =		fm35dc.tcl
+SRC2 =		uatocsv.tcl
+TARGET1 =	${PROGNAME1}
+TARGET2 =	${PROGNAME2}
+
+TARGET =	${TARGET1} ${TARGET2}
+
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
+
+all: ${TARGET}
+
+${TARGET1}: ${SRC1}
+	sed -e /%TCLUPPERAIR_INSTALLDIR%/d \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC1} > ${TARGET1}
+
+${TARGET2}: ${SRC2}
+	sed -e /%TCLUPPERAIR_INSTALLDIR%/d \
+	-e /%TCLSH%/s##${TCLSH}# ${SRC2} > ${TARGET2}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}
+
+clean:
+	rm -f *~ Makefile ${TARGET}

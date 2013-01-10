@@ -1,0 +1,23 @@
+#
+# $Id: Makefile.inc.in,v f54f2b62373a 2009/09/11 16:26:33 nieves $
+#
+PKGNAME = tclupperair
+
+# This is for manipulation by the packaging tools
+PKGBUILDDIR =
+
+#
+# These directories are assumed to exist
+#
+PREFIX = @PREFIX@
+
+DESTDIR = ${PKGBUILDDIR}/${PREFIX}
+LIBDIR = ${DESTDIR}/lib
+DOCDIR = ${DESTDIR}/share/doc
+
+#
+# These directories must be created
+#
+MYDOCDIR = ${DOCDIR}/${PKGNAME}
+MYLIBDIR = ${LIBDIR}/${PKGNAME}
+MYEXAMPLESDIR = ${DOCDIR}/${PKGNAME}/examples

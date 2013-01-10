@@ -1,16 +1,10 @@
 #
-# $Id$
+# $Id: Makefile.in,v f54f2b62373a 2009/09/11 16:26:33 nieves $
 #
 @include@ @q@Makefile.inc@q@
 @include@ @q@VERSION@q@
 
-DIRS = conf src utils scripts doc filters \
-	tclhttpd \
-	tclmetar \
-	tclupperair \
-	tclgrads/ext/nbsp \
-	tclgempak/ext/nbsp \
-	tclssh/ext/nbsp
+DIRS = src/lib examples doc
 
 all: 
 	for dir in ${DIRS}; do \
@@ -22,8 +16,12 @@ install:
 	(cd $$dir; ${MAKE} install) \
 	done
 
+install-dirs:
+	install -d ${MYDOCDIR}
+	install -d ${MYLIBDIR}
+	install -d ${MYEXAMPLESDIR}
+
 clean:
-	./configure.sh
 	for dir in ${DIRS}; do \
 	(cd $$dir; ${MAKE} clean) \
 	done

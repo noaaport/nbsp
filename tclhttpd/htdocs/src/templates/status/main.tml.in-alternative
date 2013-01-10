@@ -1,0 +1,27 @@
+# This is an alternative approach in which the common files
+# (header, top and left menu) are loaded dynamically.
+# (nbsp/status/cat would a proc defines in lib/nbspstatus.tcl).
+# The drawback is that this would be much slower because
+# each call to this template would involve a few additional
+# disk reads to load the common files. 
+
+[Doc_Dynamic]
+
+<html>
+<head>
+  <title>Nbsp@[exec hostname -s]</title>
+  <link rel="stylesheet" href="/css/nbsp.css" type="text/css"/>
+  <meta http-equiv="Refresh" content="60">
+</head>
+
+<body>
+[nbsp/status/cat header]
+[nbsp/status/cat topmenu]
+
+<div id="main">
+[nbsp/status/cat leftmenu]
+@body@
+</div>
+
+</body>
+</html>

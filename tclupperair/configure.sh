@@ -1,16 +1,18 @@
 #!/bin/sh
 
-. ./configure.inc
+. ../configure.inc
 
-config_dirs="src examples doc"
-
-configure_default
-configure_default Makefile.inc
+PROGNAME1=nbspfm35d
+PROGNAME2=nbspuatocsv
 
 savedir=`pwd`
-for d in $config_dirs
-do
-    cd $d
-    ./configure.sh
-    cd $savedir
-done
+cd ../..
+./configure.sh
+cd $savedir
+
+sed -e "/@include@/s||$INCLUDE|" \
+    -e "/@q@/s||$Q|g" \
+    -e "/@INSTALL@/s||$INSTALL|" \
+    -e "/@TCLSH@/s||$TCLSH|" \
+    -e "/@PROGNAME1@/s||$PROGNAME1|" \
+    -e "/@PROGNAME2@/s||$PROGNAME2|" Makefile.in > Makefile
