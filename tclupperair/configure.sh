@@ -6,7 +6,7 @@ PROGNAME1=nbspfm35d
 PROGNAME2=nbspuatocsv
 
 savedir=`pwd`
-cd ../..
+cd tclupperair
 ./configure.sh
 cd $savedir
 
