@@ -17,7 +17,7 @@ ex-transform.tcl \
 ex-uprintim-uvt.tcl \
 ex-uprintim.tcl
 
-DATA =	../src/test/yq*
+DATA =	../src/lib/test/yq*
 EXAMPLES_DOC =	examples.README
 TCLSH = @TCLSH@
 

@@ -2,7 +2,7 @@
 
 . ./configure.inc
 
-config_dirs="src examples doc"
+config_dirs="src/lib examples doc"
 
 configure_default
 configure_default Makefile.inc

@@ -4,7 +4,7 @@
 @include@ @q@Makefile.inc@q@
 @include@ @q@VERSION@q@
 
-DIRS = src doc examples
+DIRS = src/lib doc examples
 
 all: 
 	for dir in ${DIRS}; do \
