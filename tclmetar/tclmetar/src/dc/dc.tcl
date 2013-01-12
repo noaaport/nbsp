@@ -171,7 +171,7 @@ proc print_report_html {fout line} {
 
     append _header $::metar::metar(param,type) " " $::metar::metar(obs,STATION);
     if {$option(l) ne ""} {
-	append _header " at " $option(l);
+	append _header " " $option(l);
     }
     append result "<$option(H)>" ${_header} "</$option(H)>\n";
 
