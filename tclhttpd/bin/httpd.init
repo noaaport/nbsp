@@ -142,7 +142,7 @@ set Config(compat) 3.3
 # the root of your document tree.
 #
 set Config(docRoot) [file join $Config(home) htdocs/pub]
-set Config(indexFile) "index.{html,tml}"
+set Config(indexFile) "{index,m.index}.{html,tml}"
 
 # host - the name of the server (i.e., www.yourcompany.com)
 #
