@@ -38,6 +38,12 @@ upload_get_osparams () {
 		osname=debian
 		osrelease=`cat /etc/debian_version`
 		[ $osarch = "x86_64" ] && osarch="amd64"
+		if [ -f /etc/os-release ]
+		then
+		   . /etc/os-release
+		   osname=$ID
+		   osrelease=$VERSION_ID
+   		fi
 	    fi
 	    ;;
 	SunOS)
@@ -73,7 +79,7 @@ upload_get_pkgparams () {
 		pkglocaldir="../rpm"
 		cd $savedir
 		;;
-	    debian)
+	    debian|ubuntu)
 	        cd ../debian
 		pkgfilename=`ls ${name}_${version}*.deb`
 		pkglocaldir="../debian"
