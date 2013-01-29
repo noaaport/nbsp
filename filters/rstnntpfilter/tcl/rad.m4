@@ -9,6 +9,6 @@ dnl $rc(awips), $rstnntpfilter(rad_regex),
 dnl rad.img.$rc(awips2), $rc(awips))
 dnl
 match_binary($rc(wmoid), ^sdus[23578],
-rad.img.$rc(awips2), $rc(awips))
+rad.img.$rc(awips2), [subst $rstnntpfilter(rad_subject)])
 
 stopmatch
