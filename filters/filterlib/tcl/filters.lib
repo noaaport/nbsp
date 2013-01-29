@@ -355,8 +355,13 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     # contain all the required meta-data about the file, Currently that
     # is contained in fname and fbasename (specified in defaults.h).
     # We use now fbasename to get the wmotime.
+    # NOTE (29jan2013): The spool files do not have an extension, therefore the
+    # fbasename ends with "wmotime.seqnumber". But this function is also
+    # used by the rstnntpfilter, in which the input files have an extension.
+    # Therefore, a regexp (\d{6})_\d+$ would match only in the spool files
+    # and fail in the rstnntpfilter.
 
-    if {[regexp {\.(\d{6})_\d+$} $rc(fbasename) match s1]} {
+    if {[regexp {\.(\d{6})_\d+} $rc(fbasename) match s1]} {
 	set rc(wmotime) $s1;
 	append rc(WMOHEADER) $rc(WMOID) " " $rc(STATION) " " $rc(wmotime);
     }
