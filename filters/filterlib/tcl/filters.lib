@@ -207,9 +207,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # extracted as explained below is not meaningful). Other filters only require
 # the header information such as the metarfilter.
 # 
-# The rc(WMOHEADER) and rc(wmotime) are extracted from the body of the file.
-# The rc(WMOHEADER) is used by the ldmfilter; the rc(wmotime) is used
-# by the rst and emwin filter when producing the metar reports.
+# The rc(WMOHEADER) and rc(wmotime) are extacted from the finfo associated
+# with the file. The rc(WMOHEADER) is used by the ldmfilter;
+# the rc(wmotime) is used by the rst and emwin filter when producing
+# the metar reports.
 #
 # The overall assumption is that the required meta-data abouf the file
 # is encoded in the finfo in one way or another. In the current
