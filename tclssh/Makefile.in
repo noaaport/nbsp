@@ -14,11 +14,11 @@ INSTALL =       @INSTALL@
 TCLSH =		@TCLSH@
 
 all:
-	cd ${TCLSSH_LDIR}; ${MAKE}
+	cd ${TCLSSH_DIR}; ${MAKE}
 
 install: all
 	${INSTALL} -m 644 ${TCLSSH_FILES} ${TCLSSH_INSTALLDIR}
 
 clean:
-	cd ${TCLSSH_LDIR}; ${MAKE} clean
+	cd ${TCLSSH_DIR}; ${MAKE} clean
 	rm -f *~ Makefile

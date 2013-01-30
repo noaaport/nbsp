@@ -14,11 +14,11 @@ INSTALL =       @INSTALL@
 TCLSH =		@TCLSH@
 
 all:
-	cd ${TCLGRADS_LDIR}; ${MAKE}
+	cd ${TCLGRADS_DIR}; ${MAKE}
 
 install: all
 	${INSTALL} -m 644 ${TCLGRADS_FILES} ${TCLGRADS_INSTALLDIR}
 
 clean:
-	cd ${TCLGRADS_LDIR}; ${MAKE} clean
+	cd ${TCLGRADS_DIR}; ${MAKE} clean
 	rm -f *~ Makefile

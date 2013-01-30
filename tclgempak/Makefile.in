@@ -19,11 +19,11 @@ INSTALL = @INSTALL@
 TCLSH = @TCLSH@
 
 all:
-	cd ${TCLGEMPAK_LDIR}; ${MAKE} all
+	cd ${TCLGEMPAK_DIR}; ${MAKE} all
 
 install: all
 	${INSTALL} -m 644 ${TCLGEMPAK_FILES} ${TCLGEMPAK_INSTALLDIR}
 
 clean:
-	cd ${TCLGEMPAK_LDIR}; ${MAKE} clean
+	cd ${TCLGEMPAK_DIR}; ${MAKE} clean
 	rm -f *~ Makefile
