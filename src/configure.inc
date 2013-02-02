@@ -32,7 +32,7 @@ case $os in
 	LIBDIRS=$COMMON_LIBDIRS
 	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread -lrt"
 
-	# For CentOS use the local db-4.6 until it upgrades
+	# For CentOS use the local db if we have it
 	[ $flavor = centos ] && \
 		LIBDIRS="$COMMON_LIBDIRS $LOCAL_LIBDIR"
 	;;
