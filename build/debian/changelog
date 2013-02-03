@@ -1,8 +1,9 @@
-nbsp (2.3.1p1-1) oneiric; urgency=low
+nbsp (2.3.1p2-1) oneiric; urgency=low
 
   * Converted from frames to css the built-in web server pages.
+  * Revised how the rstnntpfilter writes the subject header
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 28 Dec 2012 22:07:36 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 03 Feb 2013 17:52:45 -0400
 
 nbsp (2.2.4p6-1) oneiric; urgency=low
 
