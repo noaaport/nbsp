@@ -4,7 +4,7 @@ Release:  @rpmrelease@%{?dist}
 Summary:  Noaaport Broadcast System Processor 
 Group:  Applications/Internet
 License:  BSD
-URL: http://www.noaaport.net
+URL: http://www.noaaport.net/software/packages/%{name}-%{version}/src
 Source0: %{name}-%{version}.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: @requires@
