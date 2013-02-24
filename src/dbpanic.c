@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -20,7 +20,7 @@ void nbsp_bdbpanic(void){
   if(get_dbpanic_flag() == 0)
     return;
 
-  fd = open(g.mspoolbdb_panicfile, O_CREAT, 0644);
+  fd = open(g.mspoolbdb_panicfile, O_CREAT, g.mspoolbdb_panicfile_mode);
   if(fd != -1)
     (void)close(fd);
 }

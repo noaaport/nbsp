@@ -18,7 +18,7 @@
 
 static pid_t read_pid(char *pidfile);
 
-int create_pidfile(char *name){
+int create_pidfile(char *name, mode_t mode){
   /* 
    * Creates the pid file. 
    * Returns:
@@ -30,10 +30,9 @@ int create_pidfile(char *name){
   pid_t pid;
   intmax_t pidmax;
   FILE *f = NULL;
-  mode_t mode = S_IRUSR + S_IWUSR + S_IRGRP + S_IROTH;
   int status = 0;
 
-  fd = open(name, O_RDWR | O_CREAT | O_EXCL,mode);
+  fd = open(name, O_RDWR | O_CREAT | O_EXCL, mode);
   if(fd == -1){
     return(1);
   }else{

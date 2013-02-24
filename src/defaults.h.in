@@ -151,7 +151,7 @@
  */
 #define CSPOOLBDB_DIR		"/var/noaaport/nbsp/cspool"
 #define CSPOOLBDB_NAME		"cspooldb"
-#define CSPOOLBDB_DBMODE	0644
+#define CSPOOLBDB_DBMODE	0666
 #define CSPOOLBDB_DBCACHE_MB	180
 #define CSPOOLBDB_NDB		4
 #define CSPOOLBDB_NSLOTS	4
@@ -196,6 +196,7 @@
  * take appropriate action.
  */
 #define MSPOOLBDB_PANICFILE "/var/run/nbsp/nbspd.bdbpanic"
+#define MSPOOLBDB_PANICFILE_MODE 0666
 
 /* Directory for putting the fifos and external filters */
 #define NBSP_FILTER_DEVDIR	"/var/noaaport/nbsp/dev"
@@ -240,6 +241,7 @@
 
 /* pid file */
 #define NBSP_PIDFILE		"/var/run/nbsp/nbspd.pid"
+#define NBSP_PIDFILE_MODE	0666
 
 /* status (statistics) file(s) */
 #define NBSP_STATUSFILE		"/var/noaaport/nbsp/stats/nbspd.status"
@@ -255,14 +257,14 @@
 
 /* fifo for queues state info */
 #define NBSP_QSTATEFIFO		"/var/run/nbsp/nbspd.fifo"
-#define NBSP_QSTATEFIFO_MODE	 0640
+#define NBSP_QSTATEFIFO_MODE	 0666
 
 /* log file for the output of dbstats */
 #define NBSP_QDBSTATSLOGFILE    "/var/noaaport/nbsp/stats/nbspd.qdbstats"
 
 /* creation modes for the product files and their subdirs */
-#define FILE_PRODUCT_MODE	0644
-#define SUBDIR_PRODUCT_MODE	0755
+#define FILE_PRODUCT_MODE	0666
+#define SUBDIR_PRODUCT_MODE	0777
 
 /* By default, if a ccb is present it is saved */
 #define SPOOL_SAVE_FMT		SAVEFORMAT_WITH_CCB
@@ -532,7 +534,7 @@
 #define SLAVE_REJECT_DUPLICATES 1
 
 #define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
-#define SLAVE_INPUT_FIFO_MODE	0660
+#define SLAVE_INPUT_FIFO_MODE	0666
 #define SLAVE_INPUT_FIFO_GRP	"noaaport"
 
 /*

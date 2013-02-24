@@ -102,6 +102,7 @@ void init_globals(void){
   g.mspoolbdb_dbstats_logperiod_secs = MSPOOLBDB_DBSTATS_LOGPERIOD_SECS;
 
   g.mspoolbdb_panicfile = MSPOOLBDB_PANICFILE;
+  g.mspoolbdb_panicfile_mode = MSPOOLBDB_PANICFILE_MODE;
 
   g.filterdevdir = NBSP_FILTER_DEVDIR;
   g.filterserver_enable = FILTERSERVER_ENABLE;
@@ -115,18 +116,19 @@ void init_globals(void){
   g.httpd_enable = NBSP_HTTPD_ENABLE;
   g.httpd = NBSP_HTTPD;
   g.pidfile = NBSP_PIDFILE;
+  g.pidfile_mode = NBSP_PIDFILE_MODE;
+  g.qstatefifo = NBSP_QSTATEFIFO;
+  g.qstatefifo_mode = NBSP_QSTATEFIFO_MODE;
   g.statusfile = NBSP_STATUSFILE;
   g.missinglogfile = NBSP_MISSINGLOGFILE;
   g.rtxlogfile = NBSP_RTXLOGFILE;
   g.qstatelogfile = NBSP_QSTATELOGFILE;
   g.qdbstatslogfile = NBSP_QDBSTATSLOGFILE;
-  g.qstatefifo = NBSP_QSTATEFIFO;
   g.serverstatefile = NBSP_SERVERSTATE_FILE;
   g.serveractivefile = NBSP_SERVERACTIVE_FILE;
   g.serverthreadsfile = NBSP_SERVERTHREADS_FILE;
   g.filterserver_statefile = NBSP_FILTERSERVER_STATEFILE;
   g.slavestatsfile = NBSP_SLAVESTATSFILE;
-  g.qstatefifo_mode = NBSP_QSTATEFIFO_MODE;
   g.product_mode = FILE_PRODUCT_MODE;
   g.subdir_product_mode = SUBDIR_PRODUCT_MODE;
   g.spoolsavefmt = SPOOL_SAVE_FMT;
@@ -340,7 +342,7 @@ int init_lock(void){
    */
   int status = 0;
 
-  if(create_pidfile(g.pidfile) != 0){
+  if(create_pidfile(g.pidfile, g.pidfile_mode) != 0){
     log_err2("Could not create", g.pidfile);
     status = 1;
   }else

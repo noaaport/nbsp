@@ -64,6 +64,7 @@ struct nbsp_globals {
   char *mspoolbdb_dbstats_logfile;   /* file to write the mspoolbdb dbstats */
   time_t mspoolbdb_dbstats_logperiod_secs;
   char *mspoolbdb_panicfile; /* file created when bdb returns DB_RUNRECOVERY */
+  mode_t mspoolbdb_panicfile_mode;
   char *filterdevdir;		/* directory for external filters and fifos */
   int filterserver_enable;
   char *sysfilterlist;		/* list of filters distributed with program */
@@ -76,18 +77,19 @@ struct nbsp_globals {
   int httpd_enable;
   char *httpd;			/* tclhttpd script */
   char *pidfile;
+  mode_t pidfile_mode;
+  char *qstatefifo;		/* state of the queues (continuous) */
+  mode_t qstatefifo_mode;
   char *statusfile;		/* statistics summary */
   char *missinglogfile;		/* missed products */
   char *rtxlogfile;		/* retransmitted (successfully) products */
   char *qstatelogfile;		/* state of the queues (periodic) */
   char *qdbstatslogfile;	/* file to write the qdb dbstats */
-  char *qstatefifo;		/* state of the queues (continuous) */
   char *serverstatefile;	/* server client connections */
   char *serveractivefile;	/* server active client connections */
   char *serverthreadsfile;	/* server threads stats */
   char *filterserver_statefile;
   char *slavestatsfile;		/* the slave threads stats logfile */
-  mode_t qstatefifo_mode;
   mode_t product_mode;
   mode_t subdir_product_mode;	/* mode of subdirs where produtcs are saved */
   int spoolsavefmt;             /* how the (ccb, wmo) header is saved */

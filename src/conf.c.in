@@ -104,6 +104,9 @@
 #define CONFOPT_MSPOOLBDB_PANICFILE	@counter@
 #define DEFVAL_MSPOOLBDB_PANICFILE	MSPOOLBDB_PANICFILE
 
+#define CONFOPT_MSPOOLBDB_PANICFILE_MODE	@counter@
+#define DEFVAL_MSPOOLBDB_PANICFILE_MODE		MSPOOLBDB_PANICFILE_MODE
+
 #define CONFOPT_DEVDIR			@counter@
 #define DEFVAL_DEVDIR			NBSP_FILTER_DEVDIR
 
@@ -141,6 +144,15 @@
 #define CONFOPT_PIDFILE			@counter@
 #define DEFVAL_PIDFILE			NBSP_PIDFILE
 
+#define CONFOPT_PIDFILEMODE		@counter@
+#define DEFVAL_PIDFILEMODE		NBSP_PIDFILE_MODE
+
+#define CONFOPT_QSTATEFIFO		@counter@
+#define DEFVAL_QSTATEFIFO		NBSP_QSTATEFIFO
+
+#define CONFOPT_QSTATEFIFOMODE		@counter@
+#define DEFVAL_QSTATEFIFOMODE		NBSP_QSTATEFIFO_MODE
+
 #define CONFOPT_STATUSFILE		@counter@
 #define DEFVAL_STATUSFILE		NBSP_STATUSFILE
 
@@ -156,9 +168,6 @@
 #define CONFOPT_QDBSTATSLOGFILE		@counter@
 #define DEFVAL_QDBSTATSLOGFILE		NBSP_QDBSTATSLOGFILE
 
-#define CONFOPT_QSTATEFIFO		@counter@
-#define DEFVAL_QSTATEFIFO		NBSP_QSTATEFIFO
-
 #define CONFOPT_SERVERSTATEFILE		@counter@
 #define DEFVAL_SERVERSTATEFILE		NBSP_SERVERSTATE_FILE
 
@@ -173,9 +182,6 @@
 
 #define CONFOPT_SLAVESTATSFILE		@counter@
 #define DEFVAL_SLAVESTATSFILE		NBSP_SLAVESTATSFILE;
-
-#define CONFOPT_QSTATEFIFOMODE		@counter@
-#define DEFVAL_QSTATEFIFOMODE		NBSP_QSTATEFIFO_MODE
 
 #define CONFOPT_PRODUCTMODE		@counter@
 #define DEFVAL_PRODUCTMODE		FILE_PRODUCT_MODE
@@ -441,6 +447,8 @@ static struct confoption_st confoptions[] = {
 	TCL_LINK_INT, NULL, DEFVAL_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS},
   {"mspoolbdb_panicfile", CONFOPT_MSPOOLBDB_PANICFILE,
 	TCL_LINK_STRING, NULL, 0},
+  {"mspoolbdb_panicfile_mode", CONFOPT_MSPOOLBDB_PANICFILE_MODE, TCL_LINK_INT,
+  	NULL, DEFVAL_MSPOOLBDB_PANICFILE_MODE},
   {"devdir", CONFOPT_DEVDIR, TCL_LINK_STRING, NULL, 0},
   {"filterserver_enable", CONFOPT_FILTERSERVER_ENABLE, TCL_LINK_INT, NULL,
 	DEFVAL_FILTERSERVER_ENABLE},
@@ -457,21 +465,23 @@ static struct confoption_st confoptions[] = {
   {"httpd_enable", CONFOPT_HTTPD_ENABLE, TCL_LINK_INT, NULL,
 	DEFVAL_HTTPD_ENABLE},
   {"httpd", CONFOPT_HTTPD, TCL_LINK_STRING, NULL, 0},
-  {"pidfile", CONFOPT_PIDFILE, TCL_LINK_STRING, NULL, 0},
+  {"pidfile", CONFOPT_PIDFILEMODE, TCL_LINK_STRING, NULL, 0},
+  {"pidfilemode", CONFOPT_PIDFILEMODE, TCL_LINK_INT, NULL,
+	DEFVAL_PIDFILEMODE},
+  {"qstatefifo", CONFOPT_QSTATEFIFO, TCL_LINK_STRING, NULL, 0},
+  {"qstatefifomode", CONFOPT_QSTATEFIFOMODE, TCL_LINK_INT, NULL,
+	DEFVAL_QSTATEFIFOMODE},
   {"statusfile", CONFOPT_STATUSFILE, TCL_LINK_STRING, NULL, 0},
   {"missinglogfile", CONFOPT_MISSINGLOGFILE, TCL_LINK_STRING, NULL, 0},
   {"rtxlogfile", CONFOPT_RTXLOGFILE, TCL_LINK_STRING, NULL, 0},
   {"qstatelogfile", CONFOPT_QSTATELOGFILE, TCL_LINK_STRING, NULL, 0},
   {"qdbstatslogfile", CONFOPT_QDBSTATSLOGFILE, TCL_LINK_STRING, NULL, 0},
-  {"qstatefifo", CONFOPT_QSTATEFIFO, TCL_LINK_STRING, NULL, 0},
   {"serverstatefile", CONFOPT_SERVERSTATEFILE, TCL_LINK_STRING, NULL, 0},
   {"serveractivefile", CONFOPT_SERVERACTIVEFILE, TCL_LINK_STRING, NULL, 0},
   {"serverthreadsfile", CONFOPT_SERVERTHREADSFILE, TCL_LINK_STRING, NULL, 0},
   {"filterserver_statefile", CONFOPT_FILTERSERVER_STATEFILE, TCL_LINK_STRING,
 	NULL, 0},
   {"slavestatsfile", CONFOPT_SLAVESTATSFILE, TCL_LINK_STRING, NULL, 0},
-  {"qstatefifomode", CONFOPT_QSTATEFIFOMODE, TCL_LINK_INT, NULL,
-	DEFVAL_QSTATEFIFOMODE},
   {"productmode", CONFOPT_PRODUCTMODE, TCL_LINK_INT, NULL, DEFVAL_PRODUCTMODE},
   {"subdirmode", CONFOPT_SUBDIRMODE, TCL_LINK_INT, NULL, DEFVAL_SUBDIRMODE},
   {"spoolsavefmt", CONFOPT_SPOOLSAVEFMT, TCL_LINK_INT, NULL,
@@ -645,6 +655,8 @@ int configure(void){
   setoptval(&g.mspoolbdb_dbstats_logperiod_secs, confoptions,
 	CONFOPT_MSPOOLBDB_DBSTATS_LOGPERIOD_SECS);
   setoptval(&g.mspoolbdb_panicfile, confoptions, CONFOPT_MSPOOLBDB_PANICFILE);
+  setoptval(&g.mspoolbdb_panicfile_mode, confoptions,
+  	CONFOPT_MSPOOLBDB_PANICFILE_MODE);
   setoptval(&g.filterdevdir, confoptions, CONFOPT_DEVDIR);
   setoptval(&g.filterserver_enable, confoptions, CONFOPT_FILTERSERVER_ENABLE);
   setoptval(&g.sysfilterlist, confoptions, CONFOPT_SYSFILTERLIST);
@@ -658,19 +670,20 @@ int configure(void){
   setoptval(&g.httpd_enable, confoptions, CONFOPT_HTTPD_ENABLE);
   setoptval(&g.httpd, confoptions, CONFOPT_HTTPD);
   setoptval(&g.pidfile, confoptions, CONFOPT_PIDFILE);
+  setoptval(&g.pidfile_mode, confoptions, CONFOPT_PIDFILEMODE);
+  setoptval(&g.qstatefifo, confoptions, CONFOPT_QSTATEFIFO);
+  setoptval(&g.qstatefifo_mode, confoptions, CONFOPT_QSTATEFIFOMODE);
   setoptval(&g.statusfile, confoptions, CONFOPT_STATUSFILE);
   setoptval(&g.missinglogfile, confoptions, CONFOPT_MISSINGLOGFILE);
   setoptval(&g.rtxlogfile, confoptions, CONFOPT_RTXLOGFILE);
   setoptval(&g.qstatelogfile, confoptions, CONFOPT_QSTATELOGFILE);
   setoptval(&g.qdbstatslogfile, confoptions, CONFOPT_QDBSTATSLOGFILE);
-  setoptval(&g.qstatefifo, confoptions, CONFOPT_QSTATEFIFO);
   setoptval(&g.serverstatefile, confoptions, CONFOPT_SERVERSTATEFILE);
   setoptval(&g.serveractivefile, confoptions, CONFOPT_SERVERACTIVEFILE);
   setoptval(&g.serverthreadsfile, confoptions, CONFOPT_SERVERTHREADSFILE);
   setoptval(&g.filterserver_statefile, confoptions,
 	CONFOPT_FILTERSERVER_STATEFILE);
   setoptval(&g.slavestatsfile, confoptions, CONFOPT_SLAVESTATSFILE);
-  setoptval(&g.qstatefifo_mode, confoptions, CONFOPT_QSTATEFIFOMODE);
   setoptval(&g.product_mode, confoptions, CONFOPT_PRODUCTMODE);
   setoptval(&g.subdir_product_mode, confoptions, CONFOPT_SUBDIRMODE);
   setoptval(&g.spoolsavefmt, confoptions, CONFOPT_SPOOLSAVEFMT);
@@ -827,6 +840,7 @@ void print_confoptions(void){
   fprintf(stdout, "mspoolbdb_dbstats_logperiod_secs " "%" PRIuMAX "\n",
 	(uintmax_t)g.mspoolbdb_dbstats_logperiod_secs);
   fprintf_str(stdout, fmt, "mspoolbdb_panicfile", g.mspoolbdb_panicfile);
+  fprintf(stdout, "mspoolbdb_panicfile_mode %o\n", g.mspoolbdb_panicfile_mode);
   fprintf_str(stdout, fmt, "filterdevdir", g.filterdevdir);
   fprintf(stdout, "filterserver_enable %d\n", g.filterserver_enable); 
   fprintf_str(stdout, fmt, "sysfilterlist", g.sysfilterlist);
@@ -840,18 +854,20 @@ void print_confoptions(void){
   fprintf(stdout, "httpd_enable %d\n", g.httpd_enable); 
   fprintf_str(stdout, fmt, "httpd", g.httpd);
   fprintf_str(stdout, fmt, "pidfile", g.pidfile);
+  fprintf(stdout, "pidfilemode %o\n", g.pidfile_mode);
+  fprintf_str(stdout, fmt, "qstatefifo", g.qstatefifo);
+  fprintf(stdout, "qstatefifo_mode %o\n", g.qstatefifo_mode);
   fprintf_str(stdout, fmt, "statusfile", g.statusfile);
   fprintf_str(stdout, fmt, "missinglogfile", g.missinglogfile);
   fprintf_str(stdout, fmt, "rtxlogfile", g.rtxlogfile);
   fprintf_str(stdout, fmt, "qstatelogfile", g.qstatelogfile);
   fprintf_str(stdout, fmt, "qdbstatslogfile", g.qdbstatslogfile);
-  fprintf_str(stdout, fmt, "qstatefifo", g.qstatefifo);
+
   fprintf_str(stdout, fmt, "serverstatefile", g.serverstatefile);
   fprintf_str(stdout, fmt, "serveractivefile", g.serveractivefile);
   fprintf_str(stdout, fmt, "serverthreadsfile", g.serverthreadsfile);
   fprintf_str(stdout, fmt, "filterserver_statefile", g.filterserver_statefile);
   fprintf_str(stdout, fmt, "slavestatsfile", g.slavestatsfile);
-  fprintf(stdout, "qstatefifo_mode %o\n", g.qstatefifo_mode);
   fprintf(stdout, "productmode %o\n", g.product_mode);
   fprintf(stdout, "subdirmode %o\n", g.subdir_product_mode);
   fprintf(stdout, "spoolsavefmt %d\n", g.spoolsavefmt);
@@ -1008,12 +1024,12 @@ int validate_configuration(void){
   VALIDATE_PARAMETER(g.httpd_enable, 0, 1, "httpd_enable");
   VALIDATE_STR(g.httpd, "httpd");
   VALIDATE_STR(g.pidfile, "pidfile");
+  VALIDATE_STR(g.qstatefifo, "qstatefifo");
   VALIDATE_STR(g.statusfile, "statusfile");
   VALIDATE_STR(g.missinglogfile, "missinglogfile");
   VALIDATE_STR(g.rtxlogfile, "rtxfile");
   VALIDATE_STR(g.qstatelogfile, "qstatefile");
   VALIDATE_STR(g.qdbstatslogfile, "qdbstatsfile");
-  VALIDATE_STR(g.qstatefifo, "qstatefifo");
   VALIDATE_STR(g.serverstatefile, "serverstatefile");
   VALIDATE_STR(g.serveractivefile, "serveractivefile");
   VALIDATE_STR(g.serverthreadsfile, "serverthreadsfile");
@@ -1021,7 +1037,8 @@ int validate_configuration(void){
   VALIDATE_STR(g.slavestatsfile, "slavestatsfile");
 
   /*
-   * mode_t qstatefifo_mode, product_mode, subdir_product_mode type
+   * mode_t pidfile_mode, mspoolbdb_panicfile_modem, qstatefifo_mode,
+   * product_mode, subdir_product_mode
    * (the type restrict the values)
    */
   VALIDATE_PARAM_L(g.spoolsavefmt, 0, "spoolsavefmt");
