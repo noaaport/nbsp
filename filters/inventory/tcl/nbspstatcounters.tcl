@@ -103,7 +103,7 @@ lappend keywords \
     products_rejected \
     products_aborted \
     products_bad \
-    qstate_unix_seconds \
+    qstate_time \
     queue_processor \
     queue_filter \
     queue_server;
