@@ -6,10 +6,12 @@
 #
 # nbsp counters in the last minute (ending at "unix_seconds").
 #
-# If no <statusfile> is given the default nbspd.status file is used.
-# If no <qstatefile> is given the default nbspd.qstate file is used.
-# The last line is written to stdout; the order of the columns is given below.
-# The <fmt> can be: std (default), xml, csv, csvk
+# The default files are:
+#
+#     <statusfile> nbspd.status
+#     <qstatefile> nbspd.qstate
+#
+# The <fmt> can be: std (default), stdh, xml, csv, csvk
 # The motivation for the existence of this tool is to use it for extracting
 # and feeding the data to rrdtool or similar programs (it is used
 # by the _inbsp extension in the web interface).
@@ -41,11 +43,19 @@ set argc [llength $argv];
 
 # defaults
 set fmt $option(f);
+set pidfile $nbspd(pidfile);
 set qstatefile $nbspd(qstatelogfile);
 set statusfile $nbspd(statusfile);
 #
 set nbspstats_logperiod_secs $nbspd(nbspstats_logperiod_secs);
 set qstate_logperiod_secs $nbspd(qstate_logperiod_secs);
+#
+# not configurable
+#
+set data_format 2;
+
+# Initialization
+set nbspd_start_time "";       # determined from the pid file
 
 if {$option(q) ne ""} {
     set qstatefile $option(q);
@@ -56,14 +66,27 @@ if {$option(s) ne ""} {
 }
 
 # The data is prepended by meta data (log periods)
-set keywords [list "nbspstats_logperiod_secs" "qstate_logperiod_secs"];
-set values [list $nbspstats_logperiod_secs $qstate_logperiod_secs];
+if {[file exists $pidfile]} {
+    set nbspd_start_time [file mtime $pidfile];
+}
+
+set keywords [list \
+		  data_format \
+		  nbspd_start_time \
+		  nbspstats_logperiod_secs \
+		  qstate_logperiod_secs];
+set values [list \
+		$data_format \
+		$nbspd_start_time \
+		$nbspstats_logperiod_secs \
+		$qstate_logperiod_secs];
 
 #
 # These are the fields of the nbspd.status file, followed by the 
 # nbspd.qstate file.
 #
-lappend keywords nbspstats_unix_seconds \
+lappend keywords \
+    stats_time \
     frames_received \
     frames_processed \
     frames_jumps \
@@ -85,20 +108,30 @@ lappend keywords nbspstats_unix_seconds \
     queue_filter \
     queue_server;
 
-set svalues [split [exec tail -n 1 $statusfile]];
-set qvalues [split [exec tail -n 1 $qstatefile]];
+if {[file exists $statusfile]} {
+    set svalues [split [exec tail -n 1 $statusfile]];
+}
+
+if {[file exists $qstatefile]} {
+    set qvalues [split [exec tail -n 1 $qstatefile]];
+}
+
 set values [concat $values $svalues $qvalues];
 
-if {$fmt eq "std" } {    
+if {$fmt eq "stdh" } {
     puts {#
 # nbsp counters in the last period (ending at "unix_seconds").
 #
 DATA_START};
 
     foreach k $keywords v $values {
-	puts "$k = $v";
+	puts "$k=$v";
     }
     puts "DATA_END";
+} elseif {$fmt eq "std"} {
+    foreach k $keywords v $values {
+	puts "$k=$v";
+    }
 } elseif {$fmt eq "csv"} {
     puts [join $values ","];
 } elseif {$fmt eq "csvk"} {

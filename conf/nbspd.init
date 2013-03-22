@@ -11,6 +11,7 @@
 interp create slave;
 slave eval {
     # The defaults according to "defaults.h"
+    set pidfile	        "/var/run/nbsp/nbspd.pid";
     set statusfile	"/var/noaaport/nbsp/stats/nbspd.status";
     set missinglogfile	"/var/noaaport/nbsp/stats/nbspd.missing";
     set rtxlogfile	"/var/noaaport/nbsp/stats/nbspd.rtx";
@@ -39,6 +40,7 @@ slave eval {
     unset _conf;
 }
 
+set nbspd(pidfile)		[slave eval {return $pidfile}];
 set nbspd(statusfile)		[slave eval {return $statusfile}];
 set nbspd(missinglogfile)	[slave eval {return $missinglogfile}];
 set nbspd(rtxlogfile)		[slave eval {return $rtxlogfile}];

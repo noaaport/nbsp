@@ -7,7 +7,7 @@
 #
 # where <command> is
 #
-# /_inbsp/stats[?format=xml|csv|csvk]     (status file)
+# /_inbsp/stats[?format=stdh|std|xml|csv|csvk]     (status file)
 # /_inbsp/missing[?format=xml|csv]   (missing file: unimplemented)
 # /_inbsp/<xxx>[?format=xml|csv]     (other file: unimplemented)
 #
@@ -18,11 +18,7 @@ set inbsp(confdir) $Config(confdir);
 set inbsp(localconfdirs) $Config(localconfdirs);
 
 # Non-configurable
-set inbsp(data_format) 1;
-#
-## set inbsp(statusfile) $Config(nbspstatusfile);
-## set inbsp(missinglogfile) $Config(missinglogfile);
-## set inbsp(rtxlogfile) $Config(rtxlogfile);
+set inbsp(data_type) "_inbsp/stats";
 
 # The local overrides
 set _inbspconf [file join $inbsp(confdir) $inbsp(conf)];
@@ -31,7 +27,7 @@ if {[file exists ${_inbspconf}]} {
 }
 unset _inbspconf;
 
-proc _inbsp/stats {{format "csvk"}} {
+proc _inbsp/stats {{format "std"}} {
 
     global inbsp;
 
@@ -41,8 +37,7 @@ proc _inbsp/stats {{format "csvk"}} {
 
     if {$format eq "xml"} {
 	set _inbsp/stats "text/xml";
-	set type "stats";
-	set r "[inbsp_output_xml_start $type]\n";
+	set r "[inbsp_output_xml_start $inbsp(data_type)]\n";
     } else {
 	set r "";
     }
@@ -50,7 +45,7 @@ proc _inbsp/stats {{format "csvk"}} {
     append r [inbsp_output_stats $format];
 
     if {$format eq "xml"} {
-	append r "\n[inbsp_output_xml_end $type]";
+	append r "\n[inbsp_output_xml_end $inbsp(data_type)]";
     }
 
     return $r;
@@ -68,11 +63,14 @@ proc inbsp_output_stats {format} {
 	return "";
     }
 
-    # Prepend the data_format and any other metadata before the data
-    # output by nbspstatcounters
+    # Prepend the data_type and any other metadata before the data
+    # output by npemwinstatcounters (unless the requested format is "stdh"
+    # which contains the header from nbspstatcounters).
     set r "";
-    foreach k [list data_format] {
-	if {$format eq "csv"} {
+    foreach k [list data_type] {
+	if {$format eq "std"} {
+	    append r "$k=$inbsp($k)\n";
+	} elseif {$format eq "csv"} {
 	    append r "$inbsp($k),";
 	} elseif {$format eq "csvk"} {
 	    append r "$k=$inbsp($k),";
@@ -88,14 +86,14 @@ proc inbsp_output_stats {format} {
 
 proc inbsp_output_xml_start {type} {
 
-    set r "<?inbsp_${type} version=\"1.0\"?>";
+    set r "<?${type} version=\"1.0\"?>";
 
     return $r;
 }
 
 proc inbsp_output_xml_end {type} {
 
-    set r "</inbsp_${type}>";
+    set r "</${type}>";
 
     return $r;
 }
