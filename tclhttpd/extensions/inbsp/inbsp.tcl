@@ -7,7 +7,7 @@
 #
 # where <command> is
 #
-# /_inbsp/stats[?format=stdh|std|xml|csv|csvk]     (status file)
+# /_inbsp/stats[?format=std|yaml|xml|csv|csvk]     (status file)
 # /_inbsp/missing[?format=xml|csv]   (missing file: unimplemented)
 # /_inbsp/<xxx>[?format=xml|csv]     (other file: unimplemented)
 #

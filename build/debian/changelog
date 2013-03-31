@@ -4,8 +4,9 @@ nbsp (2.3.1p3-1) oneiric; urgency=low
   * Revised how the rstnntpfilter writes the subject header
   * Revised nbspstatcounters (std format does not include the header
     and there are no spaces around the = between the key-val pairs).
+  * Added yaml output to nbspstatcounters 
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 22 Mar 2013 17:04:59 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 31 Mar 2013 19:05:10 -0400
 
 nbsp (2.2.4p6-1) oneiric; urgency=low
 
