@@ -11,7 +11,8 @@
 #     <statusfile> nbspd.status
 #     <qstatefile> nbspd.qstate
 #
-# The <fmt> can be: std (default), stdh, xml, csv, csvk
+# The <fmt> can be: std (default), yaml, xml, csv, csvk
+
 # The motivation for the existence of this tool is to use it for extracting
 # and feeding the data to rrdtool or similar programs (it is used
 # by the _inbsp extension in the web interface).
@@ -118,16 +119,13 @@ if {[file exists $qstatefile]} {
 
 set values [concat $values $svalues $qvalues];
 
-if {$fmt eq "stdh" } {
+if {$fmt eq "yaml" } {
     puts {#
 # nbsp counters in the last period (ending at "unix_seconds").
-#
-DATA_START};
-
+#};
     foreach k $keywords v $values {
-	puts "$k=$v";
+	puts "${k}:${v}";
     }
-    puts "DATA_END";
 } elseif {$fmt eq "std"} {
     foreach k $keywords v $values {
 	puts "$k=$v";
