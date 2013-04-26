@@ -58,7 +58,14 @@ proc proc_nbsp {ppath} {
         file mkdir [file dirname $fpath];
 
 	file rename -force $ppath $fpath;
-	exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+	set status [catch {
+	    exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+	} errmsg];
+
+	if {$status != 0} {
+	    file delete $fpath;
+	    return -code error $errmsg;
+	}
     }
 
     umask $oldmask;

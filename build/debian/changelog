@@ -1,12 +1,14 @@
-nbsp (2.3.1p4-1) oneiric; urgency=low
+nbsp (2.3.1p5-1) oneiric; urgency=low
 
   * Converted from frames to css the built-in web server pages.
   * Revised how the rstnntpfilter writes the subject header
   * Revised nbspstatcounters (std format does not include the header
     and there are no spaces around the = between the key-val pairs).
   * Added yaml output to nbspstatcounters 
+  * Revised nbspinsert and craftinsert to remove the spooled files when
+    there are nbspdfifo errors (i.e., when nbspd is running)
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 31 Mar 2013 19:05:10 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 26 Apr 2013 13:57:57 -0400
 
 nbsp (2.2.4p6-1) oneiric; urgency=low
 

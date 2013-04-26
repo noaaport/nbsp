@@ -1,5 +1,5 @@
 #
-# $Id: craftinsert.README 908 2011-03-02 22:49:24Z jfnieves $
+# $Id$
 #
 Installation instructions -
 
@@ -60,6 +60,10 @@ Then perform the following:
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 
    The level2 data fills about 48 MB/min (2.8 GB/hr). It is important to adjust
-   the spool retention time and the run period of the spool entry in
-   the cleanup script according to the size of the spool directory. 
+   the spool size (number of files in the queue) and the run period of the
+   spool entry in the cleanup script according to the size of the spool
+   directory. The spool size should be small enough that the circular queue
+   is period is shorter than the cleanup script period to avoid the warnings
+   when nbspd tries to remove non-existent spool directory files that have
+   already been removed by the cleanup script.
 -

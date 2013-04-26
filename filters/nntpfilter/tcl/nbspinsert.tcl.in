@@ -71,11 +71,20 @@ if {$option(f) ne ""} {
     set nbspinfifo $nbspd(infeedfifo);
 }
 
-proc err s {
+proc err_msg {s} {
 
     global argv0;
 
-    puts "$argv0: $s";
+    set name [file tail $argv0];
+
+    puts stderr "$name: $s";
+    exec logger -t $name $s;
+}
+
+proc err {s} {
+
+    err_msg $s;
+
     exit 1;
 }
 
@@ -83,14 +92,25 @@ proc process {finfo nbspinfifo} {
 
     global option;
 
+   if {[llength [split $finfo]] != 7} {
+	return -code error "Not enough arguments: $finfo.";
+   }
+
     if {$option(i) == 1} {
-        set status [save_fpath $finfo];
-	if {$status != 0} {
-	    return 1;
-    	}
+        save_fpath $finfo;
     }
 
-    sendtof $finfo $nbspinfifo;    
+    set status [catch {
+	sendtof $finfo $nbspinfifo;
+    } errmsg];
+    
+    if {($status != 0) && ($option(i) == 1)} {
+	delete_fpath $finfo;
+    }
+
+    if {$status != 0} {
+       return -code error $errmsg;
+    }
 }
 
 proc save_fpath {finfo} {
@@ -101,8 +121,7 @@ proc save_fpath {finfo} {
     set spooldir [file dirname $fdirname];
 
     if {[file isdirectory $spooldir] == 0} {
-	err "Directory $spooldir does not exist.";
-	return 1;
+	return -code error "Directory $spooldir does not exist.";
     }
 
     set status [catch {
@@ -116,23 +135,23 @@ proc save_fpath {finfo} {
     } errmsg];
 
     if {[info exists fout]} {
-	close $fout;
+	catch {close $fout};
     }
 
     if {$status != 0} {
-	err $errmsg;
-	return 1;
+	file delete $fpath;
+	return -code error $errmsg;
     }
+}
 
-    return 0;
+proc delete_fpath {finfo} {
+
+    scan $finfo "%u %d %d %d %d %s %s" seq type cat code npchidx fname fpath;
+
+    file delete $fpath;
 }
 
 proc sendtof {finfo nbspinfifo} {
-
-   if {[llength [split $finfo]] != 7} {
-	err "Not enough arguments: $finfo.";
-	return 1;
-   }
 
    set status [catch {
        set FIFO [open $nbspinfifo {WRONLY NONBLOCK}]
@@ -143,12 +162,11 @@ proc sendtof {finfo nbspinfifo} {
    } errmsg];
 
    if {[info exists FIFO]} {
-       close $FIFO;
+       catch {close $FIFO};
    }
 
    if {$status != 0} {
-       err $errmsg;
-       return 1;
+       return -code error $errmsg;
    }
 }
 
@@ -161,26 +179,27 @@ proc process_finfo_list {nbspinfifo} {
 	    continue;
         }
 
-	set status [catch {process $finfo $nbspinfifo} errmsg];
-	if {$status != 0} {
-    	    err $errmsg;
-	}
+	process $finfo $nbspinfifo;
     }
-  
-    return $status;
 }
 
 #
 # main
 #
 if {$argc == 0} {
-    set status [process_finfo_list $nbspinfifo];
-    return $status;
+    set status [catch {
+	process_finfo_list $nbspinfifo;
+    } errmsg];
+
+    if {$status != 0} {
+	err $errmsg;
+    }
 }
 
 set finfo [join $argv " "];
 
 set status [catch {process $finfo $nbspinfifo} errmsg];
+
 if {$status != 0} {
     err $errmsg;
 }
