@@ -95,7 +95,7 @@ case $os in
 	then
 	   TCL_INCDIR=
 	   TCL_LIB="tcl8.5"
-	   TCLSH=/usr/bin/tclsh
+	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
 	   DB_LIB="db-4.7"
 	elif [ $flavor = debian ]
@@ -104,7 +104,7 @@ case $os in
 	   TCL_LIB="tcl8.5"
 	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
-	   DB_LIB="db-4.8"
+	   DB_LIB="db-5.1"
 	   [ $ubuntu -eq 1 ] && DB_LIB="db-5.1"
     	fi
 	;;
