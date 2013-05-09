@@ -168,3 +168,8 @@
 - When writing to a pipe filter fails the server used to delete the filter
   entry from the table. Now it assumes that it is a temporary situation
   and keeps trying to reopen the filter.
+
+2.3.1p5
+- Revised nbspstatcounters to produce output in yaml format
+- Revised nbspinsert and craftinsert to remove the spooled files
+  when there are nbspdfifo errors.
