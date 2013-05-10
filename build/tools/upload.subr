@@ -11,10 +11,40 @@ upload_get_osparams () {
 	    osarch=`uname -m`
 	    ;;
 	Linux)
-	    osname=`lsb_release -i -s | tr '[A-Z]' '[a-z]'`
-	    osrelease=`lsb_release -r -s`
 	    osarch=`uname -m`
-	    [ $osarch = "x86_64" ] && osarch="amd64"
+	    if [ -f /etc/fedora-release ]
+	    then
+		osname=fedoracore
+		release=`cat /etc/fedora-release`
+		osrelease=`echo $release | cut -d ' ' -f 3`
+	    elif [ -f /etc/SuSE-release ]
+	    then
+		osname=opensuse
+		release=`cat /etc/SuSE-release`
+		osrelease=`echo $release | cut -d ' ' -f 3`
+	    elif [ -f /etc/redhat-release ]
+	    then
+		release=`cat /etc/redhat-release`
+		osrelease=`echo $release | cut -d ' ' -f 4`
+		osname=`echo $release | cut -d ' ' -f 1`
+		if [ $osname = "CentOS" ]
+		then
+		    osname="centos"
+		else	
+		    osname="scientific-linux"
+		fi
+	    elif [ -f /etc/debian_version ]
+	    then
+		osname=debian
+		osrelease=`cat /etc/debian_version`
+		[ $osarch = "x86_64" ] && osarch="amd64"
+		if [ -f /etc/os-release ]
+		then
+		   . /etc/os-release
+		   osname=$ID
+		   osrelease=$VERSION_ID
+   		fi
+	    fi
 	    ;;
 	SunOS)
 	    osname=solaris
@@ -43,7 +73,7 @@ upload_get_pkgparams () {
 		pkglocaldir="../bsd"
 		cd $savedir
 		;;
-	    centos|scientific|fedoracore|opensuse)
+	    fedoracore|opensuse|centos|scientific-linux)
 	        cd ../rpm
 		pkgfilename=`ls ${name}-${version}*.rpm`
 		pkglocaldir="../rpm"
