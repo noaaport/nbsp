@@ -43,7 +43,7 @@ upload_get_pkgparams () {
 		pkglocaldir="../bsd"
 		cd $savedir
 		;;
-	    fedoracore|opensuse|centos|scientific-linux)
+	    centos|scientific|fedoracore|opensuse)
 	        cd ../rpm
 		pkgfilename=`ls ${name}-${version}*.rpm`
 		pkglocaldir="../rpm"
