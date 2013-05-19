@@ -1,5 +1,5 @@
 #
-# $Id: exporter.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 The exporter module, which is enabled by default, allows client
 programs to access the noaaport data files by http. The api consists

@@ -1,5 +1,5 @@
 #
-# $Id: netfilter.README 242 2010-04-13 00:31:22Z nieves $
+# $Id$
 #
 
 The netfilter is not a separate filter like the other ones. It

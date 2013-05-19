@@ -1,5 +1,5 @@
 #
-# $Id: trackfilter.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 The ``trackfilter'' collects the data from the NHC bulletins
 and plots the tracks and forecasts of each hurricane.

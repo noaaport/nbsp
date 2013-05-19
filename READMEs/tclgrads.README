@@ -1,5 +1,5 @@
 #
-# $Id: tclgrads.README 90 2009-10-18 22:17:21Z nieves $
+# $Id$
 #
 Tclgrads is a separate package, written purely in Tcl, for executing
 Grads commands from a Tcl script. This file explains how to use tclgrads

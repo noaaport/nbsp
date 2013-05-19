@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # See LICENSE
 #
@@ -12,7 +12,7 @@ SAT_OBJECTS = nbspsat.o ${COMMON_OBJECTS} ${DC_OBJECTS}
 SATINFO_OBJECTS = nbspsatinfo.o ${COMMON_OBJECTS} ${DC_OBJECTS}
 SATGIS_OBJECTS = nbspsatgis.o ${COMMON_OBJECTS} ${DC_OBJECTS}
 
-SAT_LIBS = -lz -lpng
+SAT_LIBS = -lz -lpng -lm
 SATINFO_LIBS = -lz -lm
 SATGIS_LIBS = -lz -lm
 

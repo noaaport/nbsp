@@ -1,5 +1,5 @@
 #
-# $Id: gribfilter.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 
 The gribfilter is designed to work with GrADS, but it can be used also

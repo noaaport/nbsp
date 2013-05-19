@@ -1,5 +1,5 @@
 /*
- * $Id: nbspsatgis.README 848 2011-01-12 20:50:46Z jfnieves $
+ * $Id$
  *
  * Usage: nbspsatgis [-a] [-b] [-q] [-AFOPVX] [-d outputdir]
  *    [-a <ascfile>] [-f <dbfname>] [-n <basename>] [-o <infofile>]

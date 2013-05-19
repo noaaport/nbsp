@@ -1,5 +1,5 @@
 #
-# $Id: nbspradmapc.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 nbspradmapc is a (tcl script) utility that will generate radar image files
 from the command line. It can create severalk individual images at once

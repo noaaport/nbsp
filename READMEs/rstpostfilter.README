@@ -1,5 +1,5 @@
 #
-# $Id: rstpostfilter.README 2 2009-09-11 16:26:26Z nieves $
+# $Id$
 #
 The rstfilter has a "postfilter" facility work on the final text files
 and images produced by the rstfilter.

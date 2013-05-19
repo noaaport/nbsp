@@ -1,5 +1,5 @@
 /*
- * $Id: nbspradinfo.README 848 2011-01-12 20:50:46Z jfnieves $
+ * $Id$
  *
  * Usage: nbspradinfo [-b] [-c <count> | -C] [-l] [-t] <file> | < <file>
  *
