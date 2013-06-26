@@ -12,7 +12,7 @@ set inventory(fext)	".log";
 set inventory(fnameformat) "%H%M";
 # These settings are used to support the nbspstatplot tools.
 set inventory(plotfmt) "png";
-set inventory(plotfmtoptions) "small size 320,240 xe0e0e0";
+set inventory(plotfmtoptions) {small size 320,240 background "#e0e0e0"};
 set inventory(plotfname) "stat";
 set inventory(plotfdatname) "stat.dat";
 set inventory(plottemplatedirs) $common(localconfdirs);
