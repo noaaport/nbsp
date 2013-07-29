@@ -12,7 +12,7 @@ set gnuplot(script) {
   set title "$gplot(STATION)\n$gplot(start) - $gplot(end)"
 
   # set size 0.5,0.5
-  set lmargin 8
+  set lmargin 12
   set bmargin 4
 
   # time series specification for x axis, such as
