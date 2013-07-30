@@ -1,8 +1,9 @@
-nbsp (2.3.2p1-1) oneiric; urgency=low
+nbsp (2.3.2p2-1) oneiric; urgency=low
 
   * Updated metarfilter and statsplos for gnuplot-4.6.
+  * Revised the lmargin setting in the metar gnuplot templates
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 26 Jun 2013 16:05:43 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 29 Jul 2013 21:00:27 -0400 
 
 nbsp (2.3.1p5-1) oneiric; urgency=low
 
