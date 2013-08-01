@@ -1,2 +1,7 @@
   tcl: {origin: lang/tcl86, version: 8.6}
   tcllib: {origin: devel/tcllib, version: 1.14}
+  db5: {origin: databases/db5, version: 5.3}
+  png: {origin: graphics/png, version: 1.5}
+  netpbm: {origin: graphics/netpbm, version: 10.35}
+  gifsicle: {origin: graphics/gifsicle, version: 1.63}
+  gnuplot-nox: {origin: local/gnuplot-nox, version: 4.6}
