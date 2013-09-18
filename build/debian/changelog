@@ -1,3 +1,10 @@
+nbsp (2.3.2r-1) oneiric; urgency=low
+
+  * Updated metarfilter and statsplos for gnuplot-4.6.
+  * Revised the lmargin setting in the metar gnuplot templates
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 10 Aug 2013 22:17:16 -0400
+
 nbsp (2.3.1p5-1) oneiric; urgency=low
 
   * Converted from frames to css the built-in web server pages.
@@ -6,7 +13,7 @@ nbsp (2.3.1p5-1) oneiric; urgency=low
     and there are no spaces around the = between the key-val pairs).
   * Added yaml output to nbspstatcounters 
   * Revised nbspinsert and craftinsert to remove the spooled files when
-    there are nbspdfifo errors (i.e., when nbspd is running)
+    there are nbspdfifo errors (i.e., when nbspd is not running)
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 26 Apr 2013 13:57:57 -0400
 

@@ -1,0 +1,6 @@
+  The Noaaport Broadcast System Processor (nbsp) receives the
+  multicast transmission of a noaaport system attached
+  to a local network, and processes and stores the received files.
+  Facilities are provided for filtering and saving only those products
+  of interest, postprocessing them in various ways, and
+  redistributing the data to local or remote clients.

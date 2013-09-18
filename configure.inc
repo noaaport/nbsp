@@ -77,16 +77,15 @@ case $os in
 	SUFFIXRULES="%.o: %.c"
 	EXCLUDE="--exclude "
 
-	# opensuse/fedora
 	TCL_INCDIR=
 	TCL_LIB="tcl8.5"
 	TCLSH=/usr/bin/tclsh8.5
 	WISH=/usr/bin/wish
 	EXPECT=/usr/bin/expect
-
+	#
 	DB_INCDIR=
 	DB_BINDIR=
-	DB_LIB="db-4.8"
+	DB_LIB="db-5.1"
 
 	LOCAL_INCDIR=
 	LOCAL_LIBDIR=
@@ -97,6 +96,7 @@ case $os in
 	   TCL_LIB="tcl8.5"
 	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
+	   DB_BINDIR=
 	   DB_LIB="db-4.7"
 	elif [ $flavor = debian ]
 	then
@@ -118,6 +118,7 @@ case $os in
 	TCLSH=/usr/bin/tclsh
 	WISH=/sw/bin/wish
 	EXPECT=/sw/bin/expect
+	#
 	DB_INCDIR="-I /usr/local/include/db46"
 	DB_LIB="db-4.6"
 

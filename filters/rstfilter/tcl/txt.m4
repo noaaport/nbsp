@@ -36,10 +36,10 @@ txt/TSUNAMI/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 # administrative
 if {$rstfilter(txt_adm_enable) == 1} {
 match_text_only($rc(wmoid),
-^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^46789]|nous9[^7]),
+^(admn[0-68]|admn9[^9]|admn7[^5]|noxx|nous[^456789]|nous9[^7]),
 txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 
-match_text_only($rc(fname), (kwno|kwbc|kncf)_nous[4678],
+match_text_only($rc(fname), (kwno|kwbc|kncf)_nous[4678]],
 txt/ADM/[subst $rstfilter(txt_dirfmt)], [subst $rstfilter(txt_namefmt)])
 }
 

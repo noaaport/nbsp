@@ -1,0 +1,21 @@
+name: @name@
+version: @version@_@pkgbuild@
+origin: misc
+categories: misc
+arch: @abi@
+www: http://www.noaaport.net
+maintainer: nieves@1-loop.net
+licenses: ISC
+comment: Noaaport Broadcast System Processor
+prefix: /usr/local
+
+deps:
+@deps@
+
+desc: |
+@desc@
+
+scripts:
+
+  post-install: |
+  @postinstall@

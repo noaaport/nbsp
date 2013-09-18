@@ -40,10 +40,11 @@ set metarfilter(ws_hourly_subdir) "hourly";
 # These settings are used by the nbspmtrplot tool.
 # The xe0e0e0 makes a light gray background, size is the plot (canvas) size
 # and small is the font size (tiny, small, medium, large).
-# size and tiny depend on gd and they are not in gnuplot-4.0 which is what
-# centos-5.x has by default. gnuplot-4.2 or higher is required.
+# size and tiny depend on gd. The specification of the color changed
+# in 4.6 and xe0e0e0 must be specified as bacground "#e0e0e0".
+#
 set metarfilter(plotfmt) "png";
-set metarfilter(plotfmtoptions) "small size 320,240 xe0e0e0";  # tiny xe0e0e0
+set metarfilter(plotfmtoptions) {small size 320,240 background "#e0e0e0"};
 set metarfilter(plotdataext) ".dat";
 set metarfilter(plottemplatedirs) $common(localconfdirs);
 set metarfilter(plottemplatesubdir) [file join "gnuplot" "metar"];
