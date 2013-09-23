@@ -14,7 +14,7 @@ set udprcvsize	[expr 224 * 1024]
 # However this requires some sysctl settings that are not in the default
 # kernel. See the file
 #
-#     dist/sysctl.conf-ex
+#   dist/sysctl.conf-ex
 #
 # for indications.
 #

@@ -4,14 +4,14 @@
 # For correct reception of dvb-s2, the sysctl settings given below
 # are recommended. This file can be saved as
 #
-#  /etc/sysctl.conf.local
+#   /etc/sysctl.conf.local
 #
 # so that the settings take effect every time that computer boots.
 # To take advantage of these settings, the file
 #
-# /usr/local/etc/nbsp/defaults/nbspd.conf
+#   /usr/local/etc/nbsp/defaults/nbspd.conf
 #
-# should be edited as indicated there.
+# should then be edited as indicated there.
 
 # Maximum udp buffer size (1024 * 1024 * 4)
 kern.ipc.maxsockbuf=4194304

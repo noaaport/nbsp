@@ -1,10 +1,17 @@
 #
 # $Id$
 #
-# For correct reception of the dvb-s2 data, the recommendation is to
-# add the line given below to "/etc/sysctl.conf" so that it takes
-# effect every time that the computer boots. 
+# For correct reception of dvb-s2, the sysctl settings given below
+# are recommended. This file can be saved as
 #
+#   /etc/sysctl.d/local-noaaport.conf
+#
+# so that the settings take effect every time that computer boots.
+# To take advantage of these settings, the file
+#
+#   /usr/local/etc/nbsp/defaults/nbspd.conf
+#
+# should then be edited as indicated there.
 
 # Maximum udp buffer size (4 MB)
 net.core.rmem_max = 4194304

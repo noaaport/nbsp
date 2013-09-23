@@ -13,12 +13,9 @@ case $os in
     	;;
     Linux)
 	NBSPDDEFAULTS=nbspd.conf-linux
+	SYSCTLDEFAULTS=sysctl.conf-linux
+	SYSCTLCONFLOCAL=sysctl.d/local-noaaport.conf
 	UDPRECVSIZEDEFAULTS=udprecvsize.conf-linux
-	SYSCTLCONFLOCAL=sysctl.conf
-	[ $flavor = centos ] && SYSCTLDEFAULTS=sysctl.conf-linux
-	[ $flavor = centos ] && SYSCTLCONFLOCAL=sysctl.conf
-	[ $flavor = debian ] && SYSCTLDEFAULTS=sysctl.conf-debian
-	[ $flavor = debian ] && SYSCTLCONFLOCAL=sysctl.d/local-noaaport.conf
     	;;
     Darwin)
 	NBSPDDEFAULTS=nbspd.conf-macosx

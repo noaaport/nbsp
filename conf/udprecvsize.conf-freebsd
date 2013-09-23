@@ -2,7 +2,6 @@
 # $Id$
 #
 
-#
 # For correct reception of dvb-s2, the recommended setting is
 # (Note that this requires the sysctl settings indicated in
 # dist/sysctl.conf-ex)
