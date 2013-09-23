@@ -43,7 +43,7 @@ then
 elif [ -f /etc/debian_version ] 
 then
    flavor=debian
-   ubuntu=
+   ubuntu="0"
    if [ -f /etc/os-release ]
    then
 	. /etc/os-release
@@ -105,7 +105,7 @@ case $os in
 	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
 	   DB_LIB="db-5.1"
-	   [ $ubuntu != "" ] && DB_LIB="db-5.1"
+	   [ $ubuntu != "0" ] && DB_LIB="db-5.1"
     	fi
 	;;
     Darwin)
