@@ -9,7 +9,7 @@ set udprcvsize	[expr 224 * 1024]
 
 # For correct reception of dvb-s2, the recommended setting is
 #
-### set udprcvsize [expr 224 * 1024 * 4]
+### set udprcvsize [expr 256 * 1024 * 5]
 #
 # However this requires some sysctl settings that are not in the default
 # kernel. See the file
