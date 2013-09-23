@@ -6,8 +6,8 @@
 # effect every time that the computer boots. 
 #
 
-# Maximum udp buffer size (5 MB)
-net.core.rmem_max = 5242880
+# Maximum udp buffer size (4 MB)
+net.core.rmem_max = 4194304
 
 # Maximum number of fragments in queue (0 => no limit)
 net.ipv4.ipfrag_max_dist = 0

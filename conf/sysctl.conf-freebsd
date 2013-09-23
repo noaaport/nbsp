@@ -13,8 +13,8 @@
 #
 # should be edited as indicated there.
 
-# Maximum udp buffer size (1024 * 1024 * 5)
-kern.ipc.maxsockbuf=5242880
+# Maximum udp buffer size (1024 * 1024 * 4)
+kern.ipc.maxsockbuf=4194304
 
 # Maximum number of fragments in queue (-1 => no limit)
 net.inet.ip.maxfragpackets=-1

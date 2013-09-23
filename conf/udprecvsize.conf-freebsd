@@ -7,4 +7,4 @@
 # (Note that this requires the sysctl settings indicated in
 # dist/sysctl.conf-ex)
 #
-set udprcvsize [expr 256 * 1024 * 5]
+set udprcvsize [expr 1024 * 1024]
