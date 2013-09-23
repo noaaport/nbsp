@@ -80,7 +80,7 @@
 #define SPOOLTYPE_CBDB  4    /* file backed bdb spool (cspool) */
 #define SPOOLTYPE_MCBDB  5   /* shared memory based cspool (mpool_nofile) */
 #define SPOOLTYPE_MIN_VAL 1
-#define SPOOLTYPE_MAX_VAL 5
+#define SPOOLTYPE_MAX_VAL 3  /* 4 and 5 are not operational */
 
 /*
  * Logfiles that are meant to be read by other programs will be written
