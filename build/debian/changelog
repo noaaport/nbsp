@@ -1,3 +1,9 @@
+nbsp (2.3.3p1-1) oneiric; urgency=low
+
+  * Revised the udprecvsize settings.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 22 Sep 2013 23:28:16 -0400
+
 nbsp (2.3.2r-1) oneiric; urgency=low
 
   * Updated metarfilter and statsplos for gnuplot-4.6.
