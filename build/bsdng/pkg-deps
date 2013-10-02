@@ -4,4 +4,4 @@
   png: {origin: graphics/png, version: 1.5}
   netpbm: {origin: graphics/netpbm, version: 10.35}
   gifsicle: {origin: graphics/gifsicle, version: 1.7}
-  gnuplot-nox: {origin: local/gnuplot-nox, version: 4.6}
+  gnuplot-nox: {origin: math/gnuplot-nox, version: 4.6}
