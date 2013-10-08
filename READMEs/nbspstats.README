@@ -21,7 +21,7 @@ The same data can be retrieved remotely from the url
 	http://<nbsp_server_name_or_ip>:8015/_inbsp/stats?format=xxx
 
 where is one of the formats above. The phrase "?format=xxx" can be omitted
-and in that case it defaults to "csvk".
+and in that case the default is used.
 
 The motivation for the existence of these tools is to use them for extracting
 and feeding the data to rrdtool or similar programs.
