@@ -68,9 +68,9 @@ upload_get_pkgparams () {
 	savedir=`pwd`
 	case $osname in
 	    freebsd)
-	        cd ../bsd
-		pkgfilename=`ls ${name}-${version}*.tbz`
-		pkglocaldir="../bsd"
+	        cd ../bsdng/pkg
+		pkgfilename=`ls ${name}-${version}*.txz`
+		pkglocaldir="../bsdng/pkg"
 		cd $savedir
 		;;
 	    fedoracore|opensuse|centos|scientific-linux)
