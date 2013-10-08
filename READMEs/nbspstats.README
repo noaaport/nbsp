@@ -11,7 +11,7 @@ will output the nbsp counters in the last minute (ending at "unix_seconds").
 If no <statusfile> is given the default nbspd.status file is used.
 The counters data for the last minute is written to stdout. The <fmt> can be:
 
-	std, xml, csv, csvk
+	std, xml, yaml, csv, csvk
 
 (csvk is like csv but inluding the keywords in addition to the values).
 The "std" format is used if nothing is specified.
