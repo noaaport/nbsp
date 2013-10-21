@@ -1,4 +1,4 @@
-  tcl: {origin: lang/tcl86, version: 8.6}
+  tcl86: {origin: lang/tcl86, version: 8.6}
   tcllib: {origin: devel/tcllib, version: 1.15}
   db5: {origin: databases/db5, version: 5.3}
   png: {origin: graphics/png, version: 1.5}
