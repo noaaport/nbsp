@@ -26,8 +26,8 @@ DB_INCDIR="-I /usr/local/include/db5"
 DB_LIB="db-5"
 DB_BINDIR=/usr/local/bin/db5
 
-LOCAL_LIBDIR="-L /usr/local/lib"
 LOCAL_INCDIR="-I /usr/local/include"
+LOCAL_LIBDIR="-L /usr/local/lib"
 
 os=`uname`
 [ $os = Linux ] && flavor=unknown
