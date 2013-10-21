@@ -29,12 +29,20 @@ case $os in
 	LIBS="$COMMON_LIBS -lpthread -lsocket -lnsl -lresolv"
 	;;
     Linux)
-	LIBDIRS=$COMMON_LIBDIRS
 	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread -lrt"
+	[ $flavor = debian ] && \
+		LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread"
 
-	# For CentOS use the local db if we have it
-	[ $flavor = centos ] && \
-		LIBDIRS="$COMMON_LIBDIRS $LOCAL_LIBDIR"
+	# In Ubuntu-12.04-i386 the default db-5.1 library apparently
+	# cannot be used in a threaded application. We will use the
+	# locally (static) compiled version, for both amd and i386.
+	#
+	## if [ $ubuntu = "12.04" ]
+	## then
+	##     _BDBDIR="/usr/local/BerkeleyDB.5.1"
+	##     INCDIRS="$TCL_INCDIR -I ${_BDBDIR}/include"
+	##     LIBDIRS="$COMMON_LIBDIRS -L ${_BDBDIR}/lib"
+	## fi
 	;;
     Darwin)
 	COMMON_LIBDIRS="-L./libconnth -L./libqdb -L./libspoolbdb"
