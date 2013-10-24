@@ -1,3 +1,10 @@
+nbsp (2.3.3p2-1) oneiric; urgency=low
+
+  * Corrected ldmfilter (mk_ldm_sat_prodid); the ymd and hm variables
+    were not being calculated correctly from the output of nbspsatinfo.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:48:09 -0400
+
 nbsp (2.3.3p1-1) oneiric; urgency=low
 
   * Revised the udprecvsize settings.

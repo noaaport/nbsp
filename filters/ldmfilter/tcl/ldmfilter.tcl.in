@@ -240,12 +240,11 @@ proc mk_ldm_sat_prodid {fname fpath} {
     set sector [lindex $params 2];
     set channel [lindex $params 3];
     set res [lindex $params 4];
-    set time [lindex $params 5];
+    set seconds [lindex $params 5];    # unix seconds
 
-    set datetime [split $time "_"];
-    set ymd [lindex $datetime 0];
-    set hm [lindex $datetime 1];
-
+    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
+    set hm [clock format $seconds -gmt true -format "%H%M"];
+ 
     if {[info exists ldmfilter(satdef,sat_sector,$sector)]} {
 	set sector_name $ldmfilter(satdef,sat_sector,$sector);
     } else {
@@ -260,7 +259,7 @@ proc mk_ldm_sat_prodid {fname fpath} {
 
     set sat_res_suffix $ldmfilter(satdef,sat_res_suffix);
 
-    # There are spaces here.
+    # There are spaces here
     set prodid "satz/ch$source/$creating_entity/$channel_name/$ymd";
     append prodid " $hm/$sector_name/${res}${sat_res_suffix}/";
     append prodid " $fname";
