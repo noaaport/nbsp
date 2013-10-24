@@ -1,6 +1,13 @@
+nbsp (2.3.3p2+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Corrected the determination of ymd and hm in the function
+    mk_ldm_sat_prodid in ldmfilter.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:54:25 -0400
+
 nbsp (2.3.3p1+ubuntu1204.1-1) oneiric; urgency=low
 
-  * Ubuntu-12.04 branch, which uses the gnuplot-4.4 syntax of the 
+  * Ubuntu-12.04 branch, which uses the gnuplot-4.4 syntax of the
     plotfmtoptions in the metar and inventory filters.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 23 Sep 2013 19:55:18 -0400
