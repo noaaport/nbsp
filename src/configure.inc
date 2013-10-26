@@ -30,8 +30,6 @@ case $os in
 	;;
     Linux)
 	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread -lrt"
-	[ $flavor = debian ] && \
-		LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread"
 
 	# In Ubuntu-12.04-i386 the default db-5.1 library apparently
 	# cannot be used in a threaded application. We will use the
