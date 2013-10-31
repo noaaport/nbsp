@@ -20,6 +20,7 @@ unset filters_init_status;
 # default configuration
 set nbspfilter(conf)	[file join $common(confdir) "nbspfilter.conf"];
 set nbspfilter(rc)	[file join $common(confdir) "nbspfilter.rc"];
+set nbspfilter(rq)	[file join $common(confdir) "nbspfilter.rq"];
 set nbspfilter(rcdir)	[file join $common(rcdir) "nbsp"];
 set nbspfilter(lib)	[file join $common(libdir) "nbspfilter.lib"];
 set nbspfilter(rcfiles) [list];
@@ -100,6 +101,56 @@ proc process {finfo} {
     }
 }
 
+proc quit {} {
+
+    global nbspfilter;
+
+    # Read any termination code from the files:
+    #
+    # nbspfilter.rq
+    # defaults/nbspfilter.rq
+    # site/nbspfilter.rq
+    # rc.d/nbsp/*.rq
+    #
+    
+    if {[file exists $nbspfilter(rq)] == 1} {
+	source $nbspfilter(rq);
+    }
+
+    #
+    # defaults and site
+    #
+    set _qname [file tail $nbspfilter(rq)]
+    foreach _d $nbspfilter(localconfdirs) {
+	set _localqname ${_d}/${_qname}
+	if {[file exists ${_localqname}] == 1} {
+	    source ${_localqname};
+	}
+    }
+    unset _d;
+    unset _qname;
+    unset _localqname;
+
+    #
+    # rc.d/nbsp
+    #
+    if {[file isdirectory $nbspfilter(rcdir)] == 1} {
+       set _q "";
+	foreach _q [glob -nocomplain -directory $nbspfilter(rcdir) *.rq] {
+	    if {[file exists ${_q}] == 1} {
+		source ${_q};
+	    }
+	}
+	unset _q;
+    }
+}
+
 filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
+
+# Read any termination code in the "rq" files
+set status [catch {quit} errmsg];
+if {$status != 0} {
+    log_msg $errmsg;
+}

@@ -1,3 +1,9 @@
+nbsp (2.3.3p3-1) oneiric; urgency=low
+
+  * Added ability to insert termination code in the nbspfilter
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 30 Oct 2013 20:45:26 -0400
+
 nbsp (2.3.3p2-1) oneiric; urgency=low
 
   * Corrected ldmfilter (mk_ldm_sat_prodid); the ymd and hm variables
