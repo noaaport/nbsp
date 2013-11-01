@@ -14,6 +14,11 @@ directory of the ldm include and lib subdirectories), for example
 # make LDMHOME=/usr/local/lib/ldm
 # make install
 
+NOTE for Ubuntu (and perhaps others)
+===============
+
+In the Makefile, "-lssl" may have to be replaced by "-lcrypto"
+
 NOTE for ldm-6.10.1
 ===================
 
