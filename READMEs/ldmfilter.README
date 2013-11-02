@@ -51,10 +51,6 @@ ldm side -
 
     The nbsp2ldm program is installed in /usr/local/bin.
 
-    NOTE -
-    ----- 
-    In the Makefile, "-lssl" may have to be substituted by "-lcrypto"
-
 RUNNING -
 ------
 Start ldm as usual and then nbsp. 
