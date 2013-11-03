@@ -1,3 +1,10 @@
+nbsp (2.3.3p4+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Revised the mk_sat_ldm function in the ldmfilter and added
+    the creating entity mapping in the gpfilter-sat.def
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 02 Nov 2013 20:09:00 -0400
+
 nbsp (2.3.3p3+ubuntu1204.1-1) oneiric; urgency=low
 
   * Added ability to insert termination code in nbspfilter
