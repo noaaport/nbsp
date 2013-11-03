@@ -14,6 +14,9 @@ directory of the ldm include and lib subdirectories), for example
 # make LDMHOME=/usr/local/lib/ldm
 # make install
 
+The complete installation and configuration instructions are
+in the file "ldmfilter.README".
+
 NOTE for ldm-6.10.1
 ===================
 
