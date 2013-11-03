@@ -213,17 +213,22 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
     }
 }
 
-proc mk_ldm_sat_prodid {fname fpath} {
+proc mk_ldm_sat_prodid {rc_name} {
 #
 # In case of error this function returns "", which must be checked in
-# the "filter_ldmfeed" function. The gpfilter would be needed if the
-# satdef file is sourced in the global scope.
-
+# the "filter_ldmfeed" function.
+#
+    upvar $rc_name rc;
     global ldmfilter;
 
     if {$ldmfilter(satdef_sourced) == 0} {
         return "";
     }
+
+    # Extract from rc the variables that we use below, once and for all
+    set fpath $rc(fpath);
+    set WMOID $rc(WMOID)
+    set STATION $rc(STATION);
 
     # This command just extracts the information from the nesdis pdb
     set status [catch {
@@ -244,6 +249,12 @@ proc mk_ldm_sat_prodid {fname fpath} {
 
     set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
     set hm [clock format $seconds -gmt true -format "%H%M"];
+
+    if {[info exists ldmfilter(satdef,sat_centity,$creating_entity)]} {
+	set centity_name $ldmfilter(satdef,sat_centity,$creating_entity);
+    } else {
+	append centity_name "centity" $creating_entity;
+    }
  
     if {[info exists ldmfilter(satdef,sat_sector,$sector)]} {
 	set sector_name $ldmfilter(satdef,sat_sector,$sector);
@@ -260,9 +271,9 @@ proc mk_ldm_sat_prodid {fname fpath} {
     set sat_res_suffix $ldmfilter(satdef,sat_res_suffix);
 
     # There are spaces here
-    set prodid "satz/ch$source/$creating_entity/$channel_name/$ymd";
+    set prodid "satz/ch$source/$centity_name/$channel_name/$ymd";
     append prodid " $hm/$sector_name/${res}${sat_res_suffix}/";
-    append prodid " $fname";
+    append prodid " " $WMOID " " $STATION;
 
     return $prodid;
 }

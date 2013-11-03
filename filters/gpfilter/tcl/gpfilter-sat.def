@@ -57,3 +57,23 @@ set gpfilter(satdef,sat_channel,63)	"3.74";
 set gpfilter(satdef,sat_channel,64)	"11.0";
 
 set gpfilter(satdef,sat_res_suffix)	"km";
+
+# These are used only in the ldmfilter
+set gpfilter(satdef,sat_centity,2)	"MISC";
+set gpfilter(satdef,sat_centity,3)	"JERS";
+set gpfilter(satdef,sat_centity,4)	"ERS";
+set gpfilter(satdef,sat_centity,5)	"POES";
+set gpfilter(satdef,sat_centity,6)	"COMPOSITE";
+set gpfilter(satdef,sat_centity,7)	"DMSP";
+set gpfilter(satdef,sat_centity,8)	"GMS";
+set gpfilter(satdef,sat_centity,9)	"METEOSTAT";
+set gpfilter(satdef,sat_centity,10)	"GOES-7";
+set gpfilter(satdef,sat_centity,11)	"GOES-8";
+set gpfilter(satdef,sat_centity,12)	"GOES-9";
+set gpfilter(satdef,sat_centity,13)	"GOES-10";
+set gpfilter(satdef,sat_centity,14)	"GOES-11";
+set gpfilter(satdef,sat_centity,15)	"GOES-12";
+set gpfilter(satdef,sat_centity,16)	"GOES-13";
+set gpfilter(satdef,sat_centity,17)	"GOES-14";
+set gpfilter(satdef,sat_centity,18)	"GOES-15";
+set gpfilter(satdef,sat_centity,19)	"GOES-16";

@@ -1,3 +1,10 @@
+nbsp (2.3.3p4-1) oneiric; urgency=low
+
+  * Revised the mk_sat_ldm function in the ldmfilter; added
+    the "creating identity" mapping in the gpfilter-sat.def.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 02 Nov 2013 20:09:00 -0400
+
 nbsp (2.3.3p3-1) oneiric; urgency=low
 
   * Added ability to insert termination code in the nbspfilter
