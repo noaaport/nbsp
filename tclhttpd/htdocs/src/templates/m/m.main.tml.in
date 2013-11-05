@@ -9,7 +9,7 @@
 
 <body>
 
-<b class="menu">Nbsp Http Server</b><br/>
+<b class="menu">Nbsp Monitor</b><br/>
 <button
 type="button"
 onclick='window.location="/m/"'>

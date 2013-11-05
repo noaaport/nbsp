@@ -31,7 +31,7 @@
 <option value="lasthour">Last hour</option>
 <option value="pasthour">Past hour</option>
 <option value="last24hours">Last 24 hours</option>
-<option value="missing">Products missing</option>
+<option value="missing">Missing</option>
 </select>
 </form>
 
@@ -50,9 +50,3 @@ onclick='window.location="http://noaaport.mobi/"'>
 mNoaaport
 </button>
 <br/>
-
-<button
-type="button"
-onclick='window.location="http://www.iemwin.net/"'>
-iEmwin
-</button>
