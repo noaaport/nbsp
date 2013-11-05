@@ -25,6 +25,10 @@ status_pages="summary \
     received_last_24hours \
     received_last_3hours"
 
+m_pages="m.index \
+    m.action_prods \
+    m.prods_received_minute"
+
 #
 # main
 #
@@ -33,9 +37,10 @@ build_dir=$1
 
 index_dir=${build_dir}
 status_dir=${build_dir}/nbsp/status
+m_dir="${build_dir}/m"
 
 rm -rf ${build_dir}
-mkdir -p ${index_dir} ${status_dir}
+mkdir -p ${index_dir} ${status_dir} ${m_dir}
 
 for p in $index_pages
 do
@@ -61,4 +66,11 @@ do
 	-e "/@body@/r ${templates_dir}/status/${p}.tml.body" \
 	-e "/@body@/d" \
 	${templates_dir}/status/main.tml.in > ${status_dir}/${p}.tml
+done
+
+for p in $m_pages
+do
+    sed -e "/@body@/r ${templates_dir}/m/${p}.tml.body" \
+	-e "/@body@/d" \
+	${templates_dir}/m/m.main.tml.in > ${m_dir}/${p}.tml
 done

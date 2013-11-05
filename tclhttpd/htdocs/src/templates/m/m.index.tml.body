@@ -1,0 +1,57 @@
+
+<form method="post" action="/m/m.action_server.tml">
+<b class="menu">Server</b>
+<br/>
+<input type="submit" name="action" value="View">
+<select name="server">
+<option value="statistics" selected>Statistics</option>
+<option value="clients">Clients</option>
+<option value="servers">Servers</option>
+<option value="webserver">Web Server</option>
+</select>
+</form>
+
+<b class="menu">Products</b><br/>
+<form method="post" action="/m/m.action_products.tml">
+<input type="submit" name="action" value="View">
+<select name="products">
+<option value="lastminute" selected>Last Minute</option>
+<option value="lasthour">Last hour</option>
+<option value="pasthour">Past hour</option>
+<option value="last24hours">Last 24 hours</option>
+</select>
+</form>
+
+<b class="menu">Data</b><br/>
+<form method="post" action="/m/m.action_data.tml">
+<input type="submit" name="action" value="View">
+<select name="data">
+<option value="metar">Metar</option>
+<option value="text">Text</option>
+<option value="gif">GIF</option>
+<option value="jpg">JPG</option>
+</select>
+</form>
+
+<br/>
+<b class="menu">About</b><br/>
+
+<button
+type="button"
+onclick='window.location="http://www.noaaport.net/"'>
+Noaaport.Net
+</button>
+
+<button
+type="button"
+onclick='window.location="http://www.iemwin.net/"'>
+iEmwin
+</button>
+
+<button
+type="button"
+onclick='window.location="http://emwin.mobi/"'>
+mEmwin
+</button>
+<br/>
+
