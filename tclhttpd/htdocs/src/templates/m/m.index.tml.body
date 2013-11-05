@@ -1,13 +1,25 @@
 
-<form method="post" action="/m/m.action_server.tml">
-<b class="menu">Server</b>
+<form method="post" action="/m/m.action_statistics.tml">
+<b class="menu">Statistics</b>
 <br/>
 <input type="submit" name="action" value="View">
-<select name="server">
-<option value="statistics" selected>Statistics</option>
-<option value="clients">Clients</option>
-<option value="servers">Servers</option>
-<option value="webserver">Web Server</option>
+<select name="statistics">
+<option value="products" selected>Products</option>
+<option value="queues">Queues</option>
+<option value="perchannel">Channel</option>
+<option value="bdbqueues">BDB</option>
+</select>
+</form>
+
+<b class="menu">Graphs</b><br/>
+<form method="post" action="/m/m.action_graphs.tml">
+<input type="submit" name="action" value="View">
+<select name="graphs">
+<option value="hourlysummary" selected>Hourly summary</option>
+<option value="currenthour">Current hour</option>
+<option value="lasthour">Last hour</option>
+<option value="lasttwohours">Last two hours</option>
+<option value="sincemidnight">Snce midnight</option>
 </select>
 </form>
 
@@ -19,17 +31,7 @@
 <option value="lasthour">Last hour</option>
 <option value="pasthour">Past hour</option>
 <option value="last24hours">Last 24 hours</option>
-</select>
-</form>
-
-<b class="menu">Data</b><br/>
-<form method="post" action="/m/m.action_data.tml">
-<input type="submit" name="action" value="View">
-<select name="data">
-<option value="metar">Metar</option>
-<option value="text">Text</option>
-<option value="gif">GIF</option>
-<option value="jpg">JPG</option>
+<option value="missing">Products missing</option>
 </select>
 </form>
 
@@ -44,14 +46,13 @@ Noaaport.Net
 
 <button
 type="button"
-onclick='window.location="http://www.iemwin.net/"'>
-iEmwin
-</button>
-
-<button
-type="button"
-onclick='window.location="http://emwin.mobi/"'>
-mEmwin
+onclick='window.location="http://noaaport.mobi/"'>
+mNoaaport
 </button>
 <br/>
 
+<button
+type="button"
+onclick='window.location="http://www.iemwin.net/"'>
+iEmwin
+</button>

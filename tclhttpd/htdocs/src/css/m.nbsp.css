@@ -1,0 +1,16 @@
+/*
+ * $Id$
+ */
+h1 {color:maroon}
+h2 {color:maroon}
+h3 {color:maroon}
+h4 {color:maroon}
+
+b.menu {color:maroon}
+
+body {background-color:lightgray}
+
+a:link {text-decoration:none}
+a:visited {text-decoration:none}
+a:active {text-decoration:none}
+a:hover {text-decoration:none}
