@@ -15,11 +15,11 @@
 <form method="post" action="/m/m.action_graphs.tml">
 <input type="submit" name="action" value="View">
 <select name="graphs">
-<option value="hourlysummary" selected>Hourly summary</option>
-<option value="currenthour">Current hour</option>
-<option value="lasthour">Last hour</option>
-<option value="lasttwohours">Last two hours</option>
-<option value="sincemidnight">Snce midnight</option>
+<option value="0" selected>Hourly summary</option>
+<option value="1">Current hour</option>
+<option value="2">Last hour</option>
+<option value="3">Last two hours</option>
+<option value="4">Since midnight</option>
 </select>
 </form>
 
@@ -47,6 +47,6 @@ Noaaport.Net
 <button
 type="button"
 onclick='window.location="http://noaaport.mobi/"'>
-mNoaaport
+Noaaport.Mobi
 </button>
 <br/>

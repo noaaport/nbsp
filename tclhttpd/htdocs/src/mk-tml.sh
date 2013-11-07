@@ -26,6 +26,8 @@ status_pages="summary \
     received_last_3hours"
 
 m_pages="m.index \
+    m.action_statistics \
+    m.action_graphs \
     m.action_products \
     m.prods_received_minute"
 

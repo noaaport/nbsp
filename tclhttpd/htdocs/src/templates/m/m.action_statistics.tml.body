@@ -1,0 +1,14 @@
+
+[
+  set val [::ncgi::value "statistics"]
+  if {$val eq "products"} {
+    nbsp/status/stats
+  } elseif {$val eq "queues"} {
+    nbsp/status/qstate
+  } elseif {$val eq "perchannel"} {
+    nbsp/status/chstats
+  } elseif {$val eq "bdbqueues"} {
+    nbsp/status/qdbstats
+  }
+]
+
