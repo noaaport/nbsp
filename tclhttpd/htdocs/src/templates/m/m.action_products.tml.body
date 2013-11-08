@@ -2,16 +2,17 @@
 [
   set val [::ncgi::value "products"];
   if {$val eq "lastminute"} {
-    return [npemwin/status/received_last_minute]
+    nbsp/status/received_last_minute
   } elseif {$val eq "lasthour"} {
-    return [npemwin/status/received_last_hour \
-    	   "/m/m.received_minute.tml"]
+    nbsp/status/received_last_hour "/m/m.prods_received_minute.tml"
   } elseif {$val eq "pasthour"} {
-    return [npemwin/status/received_past_hour \
-    	   "/m/m.received_minute.tml"]
+    nbsp/status/received_past_hour "/m/m.prods_received_minute.tml"
   } elseif {$val eq "last24hours"} {
-    return [npemwin/status/received_last_24hours \
-    	   "/m/m.received_minute.tml"]
+    nbsp/status/received_last_24hours "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "last3hours"} {
+    nbsp/status/received_last_3hours "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "missing"} {
+    nbsp/status/missing
   }
 ]
 

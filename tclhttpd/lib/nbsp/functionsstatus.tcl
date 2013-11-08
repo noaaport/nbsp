@@ -396,7 +396,7 @@ proc nbsp_received {file} {
     return $result
 }
 
-proc nbsp_received_hour {hh {mm 59}} {
+proc nbsp_received_hour {received_minute_tml hh {mm 59}} {
 #
 # The mm argument, if given, determines the maximum minute to include. It is
 # used when the function is called for the current hour.
@@ -429,14 +429,16 @@ proc nbsp_received_hour {hh {mm 59}} {
     set result "<h3>Products received at $hh</h3>\n"; 
     foreach file $flist {
 	set hhmm [file rootname $file];
-	set href "<a href=\"/nbsp/status/received_minute.tml?hhmm=$hhmm\">$hhmm</a>\n";
+	# set href "<a href=\"/nbsp/status/received_minute.tml?hhmm=$hhmm\">$hhmm</a>\n";
+	set href \
+	    "<a href=\"${received_minute_tml}?hhmm=${hhmm}\">${hhmm}</a>\n";
 	append result $href;
     }
 
     return $result;
 }
 
-proc nbsp_received_last_Nhours {N} {
+proc nbsp_received_last_Nhours {received_minute_tml N} {
 #
 # List of products received in the last N (e.g. 4) hours.
 #
@@ -446,14 +448,14 @@ proc nbsp_received_last_Nhours {N} {
     # Current hour
     set hh [clock format $now -format "%H" -gmt true];
     set mm [clock format $now -format "%M" -gmt true];
-    set result [nbsp_received_hour $hh $mm];
+    set result [nbsp_received_hour $received_minute_tml $hh $mm];
 
     set t $now;
     set i 1;
     while {$i < $N} {
 	incr t -3600;
 	set hh [clock format $t -gmt true -format "%H"];
-	append result [nbsp_received_hour $hh];
+	append result [nbsp_received_hour $received_minute_tml $hh];
 
 	incr i;
     }

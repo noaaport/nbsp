@@ -1,6 +1,6 @@
 
 [
   set hhmm [::ncgi::value "hhmm"]
-  npemwin/status/received_minute $hhmm
+  nbsp/status/received_minute $hhmm
 ]
 
