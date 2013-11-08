@@ -1,0 +1,6 @@
+
+[
+  set type [::ncgi::value "graphs"]
+  nbsp/status/statplot $type
+]
+

@@ -160,7 +160,7 @@ proc nbsp/status/chstats {} {
     # This outputs the satistics for each minute in the current hour.
     set result [nbsp_chstats_hour $nbsp_chstats_file]
 
-    # Now the table of all the hour sats files, since midnight until
+    # Now the table of all the hour stats files, since midnight until
     # the current hour. Build the file list that will be pased to the function.
     
     set h 0
@@ -280,7 +280,7 @@ proc nbsp/status/received_minute {hhmm} {
     return [nbsp_received $nbsp_received_file]
 }
 
-proc nbsp/status/received_past_hour {} {
+proc nbsp/status/received_past_hour {received_minute_tml} {
 #
 # List of products received in the past hour
 #
@@ -288,10 +288,10 @@ proc nbsp/status/received_past_hour {} {
     set t [expr $now - 3600]
     set hh [clock format $t -format "%H" -gmt true]
 
-    return [nbsp_received_hour $hh]
+    return [nbsp_received_hour $received_minute_tml $hh]
 }
 
-proc nbsp/status/received_last_hour {} {
+proc nbsp/status/received_last_hour {received_minute_tml} {
 #
 # List of products received within the last hour
 #
@@ -299,10 +299,10 @@ proc nbsp/status/received_last_hour {} {
     set hh [clock format $now -format "%H" -gmt true]
     set mm [clock format $now -format "%M" -gmt true]
 
-    return [nbsp_received_hour $hh $mm]
+    return [nbsp_received_hour $received_minute_tml $hh $mm]
 }
 
-proc nbsp/status/received_last_24hours {} {
+proc nbsp/status/received_last_24hours {received_minute_tml} {
 #
 # List of products received in the last 24 hours.
 #
@@ -312,7 +312,7 @@ proc nbsp/status/received_last_24hours {} {
     # Current hour
     set hh [clock format $now -format "%H" -gmt true]
     set mm [clock format $now -format "%M" -gmt true]	
-    set result [nbsp_received_hour $hh $mm]   
+    set result [nbsp_received_hour $received_minute_tml $hh $mm]   
 
     set t $now;
     set done 0;
@@ -322,16 +322,16 @@ proc nbsp/status/received_last_24hours {} {
 	if {$hh eq $hh_now} {
 	    set done 1;
 	} else {
-	    append result [nbsp_received_hour $hh]
+	    append result [nbsp_received_hour $received_minute_tml $hh]
 	}
     }
 
     return $result;
 }
 
-proc nbsp/status/received_last_3hours {} {
+proc nbsp/status/received_last_3hours {received_minute_tml} {
 #
 # List of products received in the last 3 hours.
 #
-    return [nbsp_received_last_Nhours 3];
+    return [nbsp_received_last_Nhours $received_minute_tml 3];
 }
