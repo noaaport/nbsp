@@ -1,0 +1,52 @@
+
+<form method="post" action="/m/m.action_statistics.tml">
+<b class="menu">Statistics</b>
+<br/>
+<input type="submit" name="action" value="View">
+<select name="statistics">
+<option value="products" selected>Products</option>
+<option value="queues">Queues</option>
+<option value="perchannel">Channel</option>
+<option value="bdbqueues">BDB</option>
+</select>
+</form>
+
+<b class="menu">Graphs</b><br/>
+<form method="post" action="/m/m.action_graphs.tml">
+<input type="submit" name="action" value="View">
+<select name="graphs">
+<option value="0" selected>Hourly summary</option>
+<option value="1">Current hour</option>
+<option value="2">Last hour</option>
+<option value="3">Last two hours</option>
+<option value="4">Since midnight</option>
+</select>
+</form>
+
+<b class="menu">Products</b><br/>
+<form method="post" action="/m/m.action_products.tml">
+<input type="submit" name="action" value="View">
+<select name="products">
+<option value="lastminute" selected>Last Minute</option>
+<option value="lasthour">Last hour</option>
+<option value="pasthour">Past hour</option>
+<option value="last24hours">Last 24 hours</option>
+<option value="missing">Missing</option>
+</select>
+</form>
+
+<br/>
+<b class="menu">About</b><br/>
+
+<button
+type="button"
+onclick='window.location="http://www.noaaport.net/"'>
+Noaaport.Net
+</button>
+
+<button
+type="button"
+onclick='window.location="http://noaaport.mobi/"'>
+Noaaport.Mobi
+</button>
+<br/>

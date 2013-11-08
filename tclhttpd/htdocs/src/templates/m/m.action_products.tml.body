@@ -1,0 +1,18 @@
+
+[
+  set val [::ncgi::value "products"];
+  if {$val eq "lastminute"} {
+    nbsp/status/received_last_minute
+  } elseif {$val eq "lasthour"} {
+    nbsp/status/received_last_hour "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "pasthour"} {
+    nbsp/status/received_past_hour "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "last24hours"} {
+    nbsp/status/received_last_24hours "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "last3hours"} {
+    nbsp/status/received_last_3hours "/m/m.prods_received_minute.tml"
+  } elseif {$val eq "missing"} {
+    nbsp/status/missing
+  }
+]
+

@@ -1,0 +1,25 @@
+[Doc_Dynamic]
+
+<html>
+<head>
+  <title>Nbsp@[exec hostname -s]</title>
+  <link rel="stylesheet" href="/css/m.nbsp.css" type="text/css"/>
+  <meta name="viewport" content="width=device-width">
+</head>
+
+<body>
+
+<b class="menu">Nbsp Monitor</b><br/>
+<button
+type="button"
+onclick='window.location="/m/"'>
+Home
+</button>
+<br/>
+<br/>
+<br/>
+
+@body@
+
+</body>
+</html>

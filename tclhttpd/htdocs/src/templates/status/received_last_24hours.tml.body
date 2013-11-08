@@ -1,5 +1,5 @@
 
 <div id="mainright">
-  [nbsp/status/received_last_24hours]
+  [nbsp/status/received_last_24hours "/nbsp/status/received_minute.tml"]
 </div>
 
