@@ -1,5 +1,11 @@
 nbsp (2.3.3p4-1) oneiric; urgency=low
 
+  * Added mobile version.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 07 Nov 2013 20:46:06 -0400
+
+nbsp (2.3.3p4-1) oneiric; urgency=low
+
   * Revised the mk_sat_ldm function in the ldmfilter; added
     the "creating identity" mapping in the gpfilter-sat.def.
 
