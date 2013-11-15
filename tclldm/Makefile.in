@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+@include@ @q@../Makefile.inc@q@
+
+TCLLDM_DIR = tclldm
+TCLLDM_LDIR = ${TCLLDM_DIR}/src/lib
+TCLLDM_LIB = ${TCLLDM_LDIR}/ldm.tcl
+TCLLDM_PKGINDEX = ${TCLLDM_LDIR}/pkgIndex.tcl
+TCLLDM_FILES = ${TCLLDM_LIB} ${TCLLDM_PKGINDEX}
+TCLLDM_INSTALLDIR = ${MYLIBEXECDIR}/tclldm
+
+INSTALL =       @INSTALL@
+TCLSH =		@TCLSH@
+
+all:
+	cd ${TCLLDM_DIR}; ${MAKE}
+
+install: all
+	${INSTALL} -m 644 ${TCLLDM_FILES} ${TCLLDM_INSTALLDIR}
+
+clean:
+	cd ${TCLLDM_DIR}; ${MAKE} clean
+	rm -f *~ Makefile

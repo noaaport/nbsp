@@ -9,8 +9,9 @@ usr/local/libexec/nbsp/tclhttpd/dist
 usr/local/libexec/nbsp/tclhttpd/nbsp
 usr/local/libexec/nbsp/tclhttpd/extensions
 usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope
-usr/local/libexec/nbsp/tclgrads
 usr/local/libexec/nbsp/tclgempak
+usr/local/libexec/nbsp/tclgrads
+usr/local/libexec/nbsp/tclldm
 usr/local/libexec/nbsp/tclmetar
 usr/local/libexec/nbsp/tclssh
 usr/local/libexec/nbsp/tclupperair
