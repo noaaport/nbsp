@@ -1,0 +1,13 @@
+proc nbsp::ldm::open {args}
+proc nbsp::ldm::close {}
+proc nbsp::ldm::push {option {value ""}}
+proc nbsp::ldm::push_args {args}
+proc nbsp::ldm::push_opt_ccbsize {ccbsize}
+proc nbsp::ldm::push_opt_feedtype {feedtype}
+proc nbsp::ldm::push_opt_addgpheader {}
+proc nbsp::ldm::push_opt_noccb {}
+proc nbsp::ldm::push_opt_origin {origin}
+proc nbsp::ldm::push_opt_prodid {prodid}
+proc nbsp::ldm::push_opt_md5seqstr {str}
+proc nbsp::ldm::send {}
+proc nbsp::ldm::_verify_connection {}

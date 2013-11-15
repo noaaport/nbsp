@@ -142,12 +142,14 @@ libexec/nbsp/mscheduler.tcl
 libexec/nbsp/periodic.tcl
 libexec/nbsp/syslog.tcl
 libexec/nbsp/util.tcl
-libexec/nbsp/tclgrads/grads.tcl
-libexec/nbsp/tclgrads/pkgIndex.tcl
 libexec/nbsp/tclgempak/gempak.tcl
 libexec/nbsp/tclgempak/gdinfo.tcl
 libexec/nbsp/tclgempak/sflist.tcl
 libexec/nbsp/tclgempak/pkgIndex.tcl
+libexec/nbsp/tclgrads/grads.tcl
+libexec/nbsp/tclgrads/pkgIndex.tcl
+libexec/nbsp/tclldm/ldm.tcl
+libexec/nbsp/tclldm/pkgIndex.tcl
 libexec/nbsp/tclmetar/metar.tcl
 libexec/nbsp/tclmetar/pkgIndex.tcl
 libexec/nbsp/tclssh/ssh.tcl

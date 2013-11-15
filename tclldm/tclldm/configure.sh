@@ -2,14 +2,7 @@
 
 . ./configure.inc
 
-config_dirs="conf src utils scripts doc filters \
-    tclhttpd \
-    tclgempak \
-    tclgrads \
-    tclldm \
-    tclmetar \
-    tclssh \
-    tclupperair"
+config_dirs="src/lib doc"
 
 configure_default
 configure_default Makefile.inc

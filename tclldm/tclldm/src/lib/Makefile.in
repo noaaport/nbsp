@@ -1,0 +1,24 @@
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+INSTALL = @INSTALL@
+
+SOURCES = ldm.tcl
+INDEXFILE = pkgIndex.tcl
+TARGET =
+LIBFILES = ${SOURCES} ${INDEXFILE}
+
+CLEANFILES = ${TARGET} Makefile
+
+all: ${TARGET}
+
+# ${TARGET}: ${SOURCES}
+#	cat ${SOURCES} > ${TARGET}
+
+install: all
+	${INSTALL} -m 0644 ${LIBFILES} ${MYTCLLIBDIR}
+
+clean:
+	rm -f *~ ${CLEANFILES}
