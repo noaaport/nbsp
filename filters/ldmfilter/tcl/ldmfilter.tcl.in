@@ -151,6 +151,8 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
 #
     global ldmfilter;
 
+    set opts [list];
+
     # The satellite name can be empty in case of error from the
     # mk_ldm_sat_prodid function.
     if {$prodid eq ""} {
@@ -167,16 +169,16 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
 
     # For satellite file, do not add header/trailer, and there is no ccb.
     if {$feedtype eq "NIMAGE"} {
-	set opts "-n";
+	lappend opts "-n";
     } else {
-	set opts "-g";
+	lappend opts "-g";
 	if {$ldmfilter(ccbsaved) == 1} {
-	    append opts " -c " $ldmfilter(ccbsize);
+	    lappend opts "-c" $ldmfilter(ccbsize);
 	}
     }
  
     if {$ldmfilter(useseqnumid) == 1} {
-	append opts " -m";
+	lappend opts "-m";
     }
 
     # By default everything is sent as is
@@ -189,8 +191,8 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
     set status [catch {
         # prodid contains blanks
 	if {$unzflag == 0} {
-	    eval exec nbsp2ldm \
-		$opts -q $pq -f $feed -p \"$prodid\" -s $seq $fpath;
+	    lappend opts -q $pq -f $feed -p $prodid -s $seq $fpath;
+	    filter_ldmfeed_send $opts;
 	} else {
 	    set fin [open "|nbspunz $fpath" r];
 	    fconfigure $fin -encoding binary -translation binary;
@@ -211,6 +213,11 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
     if {$status != 0} {
         log_msg $msg;
     }
+}
+
+proc filter_ldmfeed_send {opts_list} {
+
+    eval exec [concat nbsp2ldm $opts_list];
 }
 
 proc mk_ldm_sat_prodid {rc_name} {
