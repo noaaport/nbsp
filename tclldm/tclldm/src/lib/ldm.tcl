@@ -87,17 +87,18 @@ proc nbsp::ldm::reopen {} {
 
     variable nbspldm;
 
-    set saved_script $nbspldm(script);
+    catch {nbsp::ldm::close};
 
     set status [catch {
-	nbsp::ldm::close;
+	set F [::open $nbspldm(cmd) w];
+	set nbspldm(F) $F;
     } errmsg];
 
-    set F [::open $nbspldm(cmd) w];
-    set nbspldm(F) $F;
     set nbspldm(script) [list];
-    
-    nbsp::ldm::push_list $saved_script;
+
+    if {$status != 0} {
+	return -code error $errmsg;
+    }
 }
 
 proc nbsp::ldm::push {option {value ""}} {
