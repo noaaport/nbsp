@@ -17,6 +17,9 @@ if {$filters_init_status == 1} {
 }
 unset filters_init_status;
 
+# Nbsp packages used by this filter
+package require nbsp::ldm;
+
 # default configuration file and rc script
 set ldmfilter(conf)	"$common(confdir)/ldmfilter.conf";
 set ldmfilter(rc)	"$common(confdir)/ldmfilter.rc";
@@ -26,7 +29,9 @@ set ldmfilter(rcdir)	"$common(rcdir)/ldm";
 set ldmfilter(localconfdirs) $common(localconfdirs);
 # The file for determining the name of the sat files
 set ldmfilter(satdef)     [file join $common(confdir) "gpfilter-sat.def"];
-set ldmfilter(useseqnumid) 0;
+#
+set ldmfilter(useseqnumid) 1;
+set ldmfilter(verbose) 0;
 #
 set ldmfilter(ldmpq)	"/var/ldm/ldm.pq";
 #
@@ -40,7 +45,7 @@ set ldmfilter(NIMAGE,unzflag) 0;
 #
 # Variables
 #
-set ldmfilter(rcfiles) [list];
+set ldmfilter(rcfiles)		[list];
 set ldmfilter(ccbsaved)		$common(ccbsaved);
 set ldmfilter(ccbsize)		$common(ccbsize);
 #
@@ -178,7 +183,11 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
     }
  
     if {$ldmfilter(useseqnumid) == 1} {
-	lappend opts "-m";
+    	lappend opts "-m";
+    }
+
+    if {$ldmfilter(verbose) == 1} {
+    	lappend opts "-v";
     }
 
     # By default everything is sent as is
@@ -191,8 +200,10 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
     set status [catch {
         # prodid contains blanks
 	if {$unzflag == 0} {
-	    lappend opts -q $pq -f $feed -p $prodid -s $seq $fpath;
-	    filter_ldmfeed_send $opts;
+	    # lappend opts -q $pq -f $feed -p $prodid -s $seq $fpath;
+	    # filter_ldmfeed_send $opts;
+	    lappend opts -f $feed -p $prodid -s $seq $fpath;
+	    filter_ldmfeed_send_pipe $opts;
 	} else {
 	    set fin [open "|nbspunz $fpath" r];
 	    fconfigure $fin -encoding binary -translation binary;
@@ -218,6 +229,41 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
 proc filter_ldmfeed_send {opts_list} {
 
     eval exec [concat nbsp2ldm $opts_list];
+}
+
+proc filter_ldmfeed_send_pipe {opts_list} {
+
+    set status 0;
+    set retry 2;
+    while {$retry > 0} {
+	incr retry -1;
+
+	set status [catch {
+	    if {$retry != 1} {
+		::nbsp::ldm::reopen;
+	    }
+	    ::nbsp::ldm::push_list $opts_list;
+	    ::nbsp::ldm::send;
+	} errmsg];
+
+	if {$status == 0} {
+	    if {$retry == 0} {
+		log_msg "Wrote to nbsp2ldm pipe";
+	    }
+	    break;
+	} else {
+	    if {$retry > 0} {
+		log_msg "Could not write to nbsp2ldm: $errmsg. Retrying";
+	    }
+	}
+    }
+
+    if {$status != 0} {
+	log_msg "Could not write to nbsp2ldm pipe.";
+	catch {::nbsp::ldm::close};
+    } 
+
+    return $status;
 }
 
 proc mk_ldm_sat_prodid {rc_name} {
@@ -285,6 +331,34 @@ proc mk_ldm_sat_prodid {rc_name} {
     return $prodid;
 }
 
+# Open the nbsp2pdm pipe
+set status [catch {
+    set opts [list];
+    # if {$ldmfilter(useseqnumid) == 1} {
+    #	lappend opts "-m";
+    # }
+    # if {$ldmfilter(verbose) == 1} {
+    #	lappend opts "-v";
+    # }
+    lappend opts -q $ldmfilter(ldmpq);
+    eval ::nbsp::ldm::open $opts;
+} errmsg];
+
+if {$status != 0} {
+    log_msg "Error opening nbsp2ldm pipe: $errmsg";
+    return 1;
+}
+
+# main
 filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
+
+# Close the nbsp2pdm pipe
+set status [catch {
+    ::nbsp::ldm::close;
+} errmsg];
+
+if {$status != 0} {
+    log_msg "Error closing nbsp2ldm pipe: $errmsg";
+}
