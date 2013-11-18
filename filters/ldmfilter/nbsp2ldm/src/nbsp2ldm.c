@@ -158,7 +158,7 @@ static void resetdefaults(void) {
   g.opt_ccbsize = gdefault.opt_ccbsize;
   g.opt_feedtype = gdefault.opt_feedtype;
   g.opt_gempak = gdefault.opt_gempak;
-  g.opt_md5seq = gdefault_md5seq;
+  g.opt_md5seq = gdefault.opt_md5seq;
   g.opt_noccb = gdefault.opt_noccb;
   g.opt_origin = gdefault.opt_origin;
   g.opt_prodid = NULL;		/* there is no default for this */
