@@ -12,7 +12,7 @@
  *   nbsp2ldm -S <filesize> [OPTIONS] < stdin
  *
  *   OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \
- *             [-o origin] [-p prodid] [-q pqfname] [-s seq]
+ *             [-o origin] [-p prodid] [-q pqfname] [-s seq] [-v]
  *
  *   In the first form the file name (path) is given in the argument.
  *   In the second form the list of file names is read from stdin. Each
@@ -42,6 +42,8 @@
 #define DEFAULT_FEEDTYPE	WMO
 #define DEFAULT_CCB_SIZE	24
 
+#define DEFAULT_VERBOSE		0
+
 #define DEFAULT_STRSPLIT_DELIM ":,"
 
 struct {
@@ -57,6 +59,7 @@ struct {
   char *opt_pqfname;	/* [-q] */
   char *opt_seq_str;	/* [-s] => calculate md5 from the given sequence */
   unsigned int opt_filesize;	/* [-S] => must be given when file is stdin */
+  int opt_verbose;	/* [-v] */
   /* variables */
   unsigned int seq;
   char *input_fname;
@@ -68,7 +71,7 @@ struct {
 } g = {0, DEFAULT_CCB_SIZE, DEFAULT_STRSPLIT_DELIM, DEFAULT_FEEDTYPE, 0, 0, 0,
        DEFAULT_PRODORIGIN, NULL,
        DEFAULT_PQFNAME, NULL,
-       0, DEFAULT_SEQNUM, NULL, NULL, NULL, NULL, 0, -1};
+       0, DEFAULT_VERBOSE, DEFAULT_SEQNUM, NULL, NULL, NULL, NULL, 0, -1};
 
 struct {
   unsigned int opt_ccbsize;
@@ -76,9 +79,10 @@ struct {
   int opt_gempak;
   int opt_md5seq;
   int opt_noccb;
+  int opt_verbose;
   char *opt_origin;
   char *opt_pqfname;
-} gdefault =  {DEFAULT_CCB_SIZE, DEFAULT_FEEDTYPE, 0, 0, 0,
+} gdefault =  {DEFAULT_CCB_SIZE, DEFAULT_FEEDTYPE, 0, 0, 0, DEFAULT_VERBOSE,
 	       DEFAULT_PRODORIGIN, DEFAULT_PQFNAME};
 
 #define GMPK_TRAILER_SIZE	4
@@ -160,6 +164,7 @@ static void resetdefaults(void) {
   g.opt_gempak = gdefault.opt_gempak;
   g.opt_md5seq = gdefault.opt_md5seq;
   g.opt_noccb = gdefault.opt_noccb;
+  g.opt_verbose = gdefault.opt_verbose;
   g.opt_origin = gdefault.opt_origin;
   g.opt_prodid = NULL;		/* there is no default for this */
   g.opt_pqfname = gdefault.opt_pqfname;
@@ -243,7 +248,7 @@ static void process_args(int argc, char **argv,
 nbsp2ldm [OPTIONS] < stdin \n\
 nbsp2ldm -S <filesize> [OPTIONS] < stdin \n\
 OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \n\
-          [-o origin] [-p prodid] [-q pqfname] [-s seq]";
+          [-o origin] [-p prodid] [-q pqfname] [-s seq] [-v]";
   int status = 0;
   int c;
 
@@ -321,6 +326,12 @@ OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \n\
 	log_errx(1, "Invalid value for [-S].");
 
       break;
+    case 'v':
+      g.opt_verbose = 1;
+      if(f_set_defaults)
+	gdefault.opt_verbose = 1;
+
+      break;
     case 'h':
     default:
       status = 1;
@@ -335,7 +346,7 @@ OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \n\
 
 int main(int argc, char **argv){
   
-  char *optstr = "bc:d:f:ghmno:p:q:s:S:";
+  char *optstr = "bc:d:f:ghmno:p:q:s:S:v";
   int status = 0;
 
   set_progname(basename(argv[0]));
@@ -498,6 +509,8 @@ static int process_file(void) {
     log_warnx("Product already in queue: %s.", prod.info.ident);
   }else if(status != 0)
     log_errx(1, "Error from pq_insert: %d", status);
+  else if(g.opt_verbose == 1)
+    log_info("Inserted %s", prod.info.ident);
 
   if((g.fd != -1) && (g.fd != STDIN_FILENO)){
     close(g.fd);
@@ -549,7 +562,7 @@ static int process_stdin(void) {
 
 static int process_stdin_entry(void) {
 
-  char *optstr = "c:f:gmno:p:s:";
+  char *optstr = "c:f:gmno:p:s:v";
   int status = 0;
 
   process_args(g.strp->argc, g.strp->argv, optstr, 0);
