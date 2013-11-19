@@ -31,10 +31,10 @@ proc nbsp::ldm::open {args} {
     variable nbspldm;
 
     set usage {::nbspldm::open [-c ccbsize] [-d sep] [-f feedtype]
-	[-g] [-m] [-n] [-o origin] [-q pqfname]};
+	[-g] [-m] [-n] [-o origin] [-q pqfname] [-v]};
 
     set optlist {{c.arg 24} {d.arg ":"} {f.arg 15} g m n {o.arg "nbsp"}
-	{q.arg "/var/ldm/ldm.pq"}};
+	{q.arg "/var/ldm/ldm.pq"} v};
 
     array set option [::cmdline::getoptions args $optlist $usage];
 
@@ -50,6 +50,10 @@ proc nbsp::ldm::open {args} {
 
     if {$option(n) == 1} {
 	lappend cmd "-n";
+    }
+
+    if {$option(v) == 1} {
+	lappend cmd "-v";
     }
 
     lappend cmd "-o" $option(o) "-q" $option(q);
