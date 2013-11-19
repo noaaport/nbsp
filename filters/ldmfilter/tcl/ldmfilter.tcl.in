@@ -41,8 +41,6 @@ set ldmfilter(feeds,NEXRAD) 134217728;
 set ldmfilter(feeds,NIMAGE) 2097152;
 set ldmfilter(feeds,NGRID) 8388608;
 #
-set ldmfilter(NIMAGE,unzflag) 0;
-#
 # Variables
 #
 set ldmfilter(rcfiles)		[list];
@@ -182,48 +180,9 @@ proc filter_ldmfeed {seq fpath feedtype prodid} {
 	}
     }
  
-    if {$ldmfilter(useseqnumid) == 1} {
-    	lappend opts "-m";
-    }
-
-    if {$ldmfilter(verbose) == 1} {
-    	lappend opts "-v";
-    }
-
-    # By default everything is sent as is
-    set unzflag 0;
-    if {[info exists ldmfilter($feedtype,unzflag)]} {
-	set unzflag $ldmfilter($feedtype,unzflag);
-    }
-
-    set pq $ldmfilter(ldmpq);
-    set status [catch {
-        # prodid contains blanks
-	if {$unzflag == 0} {
-	    # lappend opts -q $pq -f $feed -p $prodid -s $seq $fpath;
-	    # filter_ldmfeed_send $opts;
-	    lappend opts -f $feed -p $prodid -s $seq $fpath;
-	    filter_ldmfeed_send_pipe $opts;
-	} else {
-	    set fin [open "|nbspunz $fpath" r];
-	    fconfigure $fin -encoding binary -translation binary;
-	    set fdata [read $fin];
-	    close $fin;
-
-	    set fsize [string length $fdata];
-	    fconfigure stdout -encoding binary -translation binary;
-
-	    set fout [open "|nbsp2ldm $opts -q $pq -f $feed -p \"$prodid\" \
-		-s $seq -S $fsize" w];
-	    fconfigure $fout -encoding binary -translation binary;
-	    puts -nonewline $fout $fdata;
-	    close $fout;
-	}
-    } msg];
-
-    if {$status != 0} {
-        log_msg $msg;
-    }
+    # prodid contains blanks
+    lappend opts -f $feed -p $prodid -s $seq $fpath;
+    filter_ldmfeed_send_pipe $opts;
 }
 
 proc filter_ldmfeed_send {opts_list} {
@@ -262,8 +221,6 @@ proc filter_ldmfeed_send_pipe {opts_list} {
 	log_msg "Could not write to nbsp2ldm pipe.";
 	catch {::nbsp::ldm::close};
     } 
-
-    return $status;
 }
 
 proc mk_ldm_sat_prodid {rc_name} {
@@ -334,12 +291,12 @@ proc mk_ldm_sat_prodid {rc_name} {
 # Open the nbsp2pdm pipe
 set status [catch {
     set opts [list];
-    # if {$ldmfilter(useseqnumid) == 1} {
-    #	lappend opts "-m";
-    # }
-    # if {$ldmfilter(verbose) == 1} {
-    #	lappend opts "-v";
-    # }
+    if {$ldmfilter(useseqnumid) == 1} {
+    	lappend opts "-m";
+    }
+    if {$ldmfilter(verbose) == 1} {
+    	lappend opts "-v";
+    }
     lappend opts -q $ldmfilter(ldmpq);
     eval ::nbsp::ldm::open $opts;
 } errmsg];
