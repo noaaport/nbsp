@@ -1,3 +1,10 @@
+nbsp (2.3.3p6+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Revised ldmfilter. It now uses tclldm, which in turn communicated with
+    the new nbsp2ldm as a pipe.
+      
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 22 Nov 2013 21:06:15 -0400
+       
 nbsp (2.3.3p5+ubuntu1204.1-1) oneiric; urgency=low
 
   * Added mobile version.
