@@ -241,7 +241,7 @@ static int process_file(void){
 	  yyyy, mm, dd, hh, MM);
 
   if(g.opt_extended == 1)
-    fprintf(stdout, " %hu %u %u %hu", ftu, p1, p2, tri);
+    fprintf(stdout, " %hhu %u %u %hhu", ftu, p1, p2, tri);
 
   fprintf(stdout, "\n");
 
