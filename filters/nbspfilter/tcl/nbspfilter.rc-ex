@@ -122,6 +122,20 @@
 # 	/var/noaaport/nbsp/spool/KNES/knes_tige05.<key>
 
 #
+# - Initialization and Termination -
+#
+
+# Before (after) entering the processing loop, the filter can read
+# initialization (termination) code from the files nbspfilter.ri
+# (nbspfilter.rq) that can be located in various directories within
+# the main configuration directory:
+#
+# nbspfilter.${ext}
+# defaults/nbspfilter.${ext}
+# site/nbspfilter.${ext}
+# rc.d/nbsp/*.${ext}
+
+#
 # - Examples
 #
 
