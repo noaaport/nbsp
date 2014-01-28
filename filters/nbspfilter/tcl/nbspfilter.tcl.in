@@ -20,6 +20,7 @@ unset filters_init_status;
 # default configuration
 set nbspfilter(conf)	[file join $common(confdir) "nbspfilter.conf"];
 set nbspfilter(rc)	[file join $common(confdir) "nbspfilter.rc"];
+set nbspfilter(ri)	[file join $common(confdir) "nbspfilter.ri"];
 set nbspfilter(rq)	[file join $common(confdir) "nbspfilter.rq"];
 set nbspfilter(rcdir)	[file join $common(rcdir) "nbsp"];
 set nbspfilter(lib)	[file join $common(libdir) "nbspfilter.lib"];
@@ -101,26 +102,26 @@ proc process {finfo} {
     }
 }
 
-proc quit {} {
+proc init_quit {ext} {
 
     global nbspfilter;
 
-    # Read any termination code from the files:
+    # Read any initoialization or termination code from the files:
     #
-    # nbspfilter.rq
-    # defaults/nbspfilter.rq
-    # site/nbspfilter.rq
-    # rc.d/nbsp/*.rq
+    # nbspfilter.${ext}
+    # defaults/nbspfilter.${ext}
+    # site/nbspfilter.${ext}
+    # rc.d/nbsp/*.${ext}
     #
     
-    if {[file exists $nbspfilter(rq)] == 1} {
-	source $nbspfilter(rq);
+    if {[file exists $nbspfilter(${ext})] == 1} {
+	source $nbspfilter(${ext});
     }
 
     #
     # defaults and site
     #
-    set _qname [file tail $nbspfilter(rq)]
+    set _qname [file tail $nbspfilter(${ext})]
     foreach _d $nbspfilter(localconfdirs) {
 	set _localqname ${_d}/${_qname}
 	if {[file exists ${_localqname}] == 1} {
@@ -136,7 +137,7 @@ proc quit {} {
     #
     if {[file isdirectory $nbspfilter(rcdir)] == 1} {
        set _q "";
-	foreach _q [glob -nocomplain -directory $nbspfilter(rcdir) *.rq] {
+	foreach _q [glob -nocomplain -directory $nbspfilter(rcdir) *.${ext}] {
 	    if {[file exists ${_q}] == 1} {
 		source ${_q};
 	    }
@@ -145,12 +146,20 @@ proc quit {} {
     }
 }
 
+# Read any initialization code in the ri files
+set status [catch {init_quit "ri"} errmsg];
+if {$status != 0} {
+    log_msg $errmsg;
+    return 1;
+}
+
 filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
 
-# Read any termination code in the "rq" files
-set status [catch {quit} errmsg];
+# Read any termination code in the rq files
+set status [catch {init_quit "rq"} errmsg];
 if {$status != 0} {
     log_msg $errmsg;
+    return 1;
 }
