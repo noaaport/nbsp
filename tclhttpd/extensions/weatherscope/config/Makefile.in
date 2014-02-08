@@ -19,8 +19,9 @@ all:
 	rm -rf ${PACKDIR}
 	install -d ${PACKDIR}
 #	cp -R src/* ${PACKDIR}
-	tar -c -C ${SRCDIR} @EXCLUDE@'*.svn*' -f - ${SRCFILES} | \
-		tar -x -C ${PACKDIR} -f -
+#	tar -c -C ${SRCDIR} @EXCLUDE@'*.svn*' -f - ${SRCFILES} | \
+#		tar -x -C ${PACKDIR} -f -
+	tar -c -C ${SRCDIR} -f - ${SRCFILES} | tar -x -C ${PACKDIR} -f -
 	cp ${FILES} ${PACKDIR}
 	tar -c -z -f ${PACKFILE} ${PACKDIR}
 
