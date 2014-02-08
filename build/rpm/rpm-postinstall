@@ -180,7 +180,7 @@ cd htdocs/pub
 # Display message
 #
 cat <<__EOF__
-
+-
 The configuration files are installed in /usr/local/etc/nbsp.
 
 The installation process should have created various directories

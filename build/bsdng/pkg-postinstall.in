@@ -186,7 +186,7 @@ cd htdocs/pub
 # Display message
 #
 cat <<__EOF__
-
+-
 To start the nbspd daemon automatically out of the local rc.d directory,
 set the variable
 
