@@ -241,5 +241,4 @@ and check the files in
 Executing 'nbspreconfigure' without arguments, will revert to the
 standard default configuration.
 -
-
 __EOF__
