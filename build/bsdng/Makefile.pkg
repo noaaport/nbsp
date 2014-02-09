@@ -48,7 +48,7 @@ pkg/+MANIFEST: manifest.in pkg/pkg-postinstall
 	-e "/@desc@/d" \
 	manifest.in > pkg/+MANIFEST
 
-package: install pkg/+MANIFEST pkg/+MANIFEST
+package: install pkg/+MANIFEST pkg/+DISPLAY
 	pkg create ${pkg_options}
 
 clean:
