@@ -32,6 +32,9 @@ pkg/pkg-postinstall: pkg-postinstall.in
 	awk '{printf("    %s\n", $$0);}' pkg-postinstall.in > \
 	pkg/pkg-postinstall
 
+pkg/+DISPLAY: pkg-display
+	cp pkg-display pkg/+DISPLAY
+
 pkg/+MANIFEST: manifest.in pkg/pkg-postinstall
 	sed -e "/@name@/s//${name}/" \
 	-e "/@version@/s//${version}/" \
@@ -45,7 +48,7 @@ pkg/+MANIFEST: manifest.in pkg/pkg-postinstall
 	-e "/@desc@/d" \
 	manifest.in > pkg/+MANIFEST
 
-package: install pkg/+MANIFEST
+package: install pkg/+MANIFEST pkg/+MANIFEST
 	pkg create ${pkg_options}
 
 clean:
