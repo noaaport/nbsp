@@ -6,9 +6,9 @@
 
 # In linux the default udp buffer is around 109 KB and the maximum 255 KB.
 # Although manually setting it would disable autotuning,
-# for correct reception of dvb-s2 a higher value is recommended,
+# for correct reception of dvb-s2 a higher value is recommended, e.g.,
 #
-### set udprcvsize [expr 1024 * 1024]
+### set udprcvsize [expr 1024 * 1024 * 2]
 #
 # However this requires some sysctl settings that are not in the default
 # kernel. See the file
