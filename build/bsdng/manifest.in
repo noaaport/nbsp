@@ -1,6 +1,6 @@
 name: @name@
 version: @version@_@pkgbuild@
-origin: misc
+origin: misc/nbsp
 categories: misc
 arch: @abi@
 www: http://www.noaaport.net
