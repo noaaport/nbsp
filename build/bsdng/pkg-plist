@@ -223,6 +223,7 @@ etc/nbsp/dist/uafilter.conf-sample
 etc/nbsp/dist/uafilter-siteloc.def-sample
 etc/nbsp/dist/wsfilter.conf-sample
 etc/nbsp/dist/wsfilter-schedule.rc-sample
+etc/nbsp/dist/wsfilter-schedule-nogrib.rc-sample
 etc/nbsp/dist/wsfilter-metar-siteloc.def-sample
 etc/nbsp/dist/wsfilter-upperair-siteloc.def-sample
 etc/nbsp/dist/gisfilter.conf-sample
