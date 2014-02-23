@@ -17,6 +17,9 @@ set wsfilter(ws_upperairdir) "upperair";
 set wsfilter(ws_gribdir) "model";
 #
 set wsfilter(schedule) [file join $common(confdir) "wsfilter-schedule.rc"];
+#
+# or "wsfilter-schedule-nogrib.rc"
+#
 set wsfilter(schedule_run_period) "minutely";	# run every minute
 
 # The default configuration settings below that depend on the
