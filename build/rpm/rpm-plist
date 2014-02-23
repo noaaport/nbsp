@@ -221,6 +221,7 @@
 /usr/local/etc/nbsp/dist/uafilter-siteloc.def-sample
 /usr/local/etc/nbsp/dist/wsfilter.conf-sample
 /usr/local/etc/nbsp/dist/wsfilter-schedule.rc-sample
+/usr/local/etc/nbsp/dist/wsfilter-schedule-nogrib.rc-sample
 /usr/local/etc/nbsp/dist/wsfilter-metar-siteloc.def-sample
 /usr/local/etc/nbsp/dist/wsfilter-upperair-siteloc.def-sample
 /usr/local/etc/nbsp/dist/gisfilter.conf-sample
