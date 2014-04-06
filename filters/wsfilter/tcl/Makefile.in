@@ -15,7 +15,7 @@ TOOLNAMES =	nbspws-metartomdf nbspws-metartomts nbspws-uatomdf \
 		nbspws-gribtomdf
 SAMPLES =	wsfilter.conf-sample wsfilter-metar-siteloc.def-sample \
 		wsfilter-upperair-siteloc.def-sample \
-		wsfilter-schedule.rc-sample
+		wsfilter-schedule.rc-sample wsfilter-schedule-nogrib.rc-sample
 
 TARGET =	${TCLTARGET} ${TOOLNAMES} ${SAMPLES}
 
@@ -32,6 +32,9 @@ wsfilter.conf-sample: wsfilter.conf
 
 wsfilter-schedule.rc-sample: wsfilter-schedule.rc
 	cp wsfilter-schedule.rc wsfilter-schedule.rc-sample
+
+wsfilter-schedule-nogrib.rc-sample: wsfilter-schedule-nogrib.rc
+	cp wsfilter-schedule-nogrib.rc wsfilter-schedule-nogrib.rc-sample
 
 wsfilter-metar-siteloc.def-sample: wsfilter-metar-siteloc.def
 	cp wsfilter-metar-siteloc.def wsfilter-metar-siteloc.def-sample

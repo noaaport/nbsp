@@ -19,3 +19,6 @@ scripts:
 
   post-install: |
   @postinstall@
+
+  post-deinstall: |
+  @postdeinstall@

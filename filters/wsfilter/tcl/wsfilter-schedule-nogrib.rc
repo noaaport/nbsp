@@ -1,0 +1,68 @@
+#
+# $Id$
+#
+
+# This is a version of the scheduler rc file of the wsfilter to convert
+# the metar and upperair data to the WS format, excluding the
+# the model (grib) data. This does not require that GrADS be installed.
+#
+# The scheduler looks for this file first in the main directory,
+# then in "defaults" and "site" and it uses the last one found.
+# 
+# This file is run by "nbspscheduler -m". 
+# The current date-time is calculated in gmt if the <spec> ends with "g";
+# otherwise local time is used. The "spec" argument is a time
+# specification in one of the following forms, optionally followed by "g"
+# as mentioned above.
+#
+# The syntax (copied from the mscheduler package) is:
+#
+# M             => run <program> every minute
+# M=ll|mm|nn    => run at the minutes in the list (e.g., 00, 15, 30, 45)
+# M/n           => run if the remainder of the (current minute)/n is zero. 
+#
+# H=hhmm|h'h'm'm'|...   => run at the hours and minutes in the list.
+# Hmm|m'm'|.../n        => run if the remainder of (current hour)/n is zero
+#                          and if the current minute is in the list
+#
+# D=ddhhmm|d'd'h'h'm'm'|... => run at the days of the month
+#                              and hours and minutes in the list.
+#                              Here the dd is between 01-31.
+# Dhhmm|h'h'm'm'|.../n  => run if the remainder of (current day of month)/n
+#                          is zero and the current hour and minute are
+#                          in the list.
+#                       
+# W=dhhmm|d'h'h'm'm'|... => run at the days of the week and hours and minutes
+#                           in the list.
+#                           Here the d is between 0-6 with 0 = sunday.
+# Whhmm|h'h'm'm'|.../n  => run if the remainder of (current day of week)/n
+#                          is zero and the current hour and minute are
+#                          in the list.
+# Examples
+#
+# M      => run every minute
+# M/4    => run every four minutes
+# M=03|09|18|23  => run at minutes 03, 09, 18 and 23.
+# H00/3  => run every three hours: 0, 3, 6, ...
+# H=0300|0900|1800|2355  => run at 03, 09, 18 and 23:55
+# H=0300|0900|1800|2355g => same thing but the times are relative to gmt
+# W=52300 => run on fridays at 11 pm
+# D=010100 => run on the first day of the month at 1 am.
+# D0300|2100/2  => run every other day at 3 am and 9 pm.
+
+#
+# WS schedule
+#
+
+# Update the hourly mdf metar and upperair files
+# every ten minutes and at minute 55
+schedule M/10 nbspws-metartomdf &;
+schedule H55/1 nbspws-metartomdf &;
+schedule M/10 nbspws-uatomdf &;
+schedule H55/1 nbspws-uatomdf &;
+
+# Every hour at minute 10 and 50, the daily summary (mts) files
+# for individual stations
+foreach s [list tjsj tjps tjbq tist tisx] {
+    schedule H10|50/1 nbspws-metartomts $s &;
+}
