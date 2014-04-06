@@ -1,0 +1,16 @@
+[ -f /usr/local/etc/rc.d/nbspd ] && rm /usr/local/etc/rc.d/nbspd
+
+cat <<EOF
+
+To deinstall completely this package, the noaaport user and the directories
+
+/usr/local/etc/nbsp
+/usr/local/share/nbsp
+/usr/local/libexec/nbsp
+/var/noaaport
+/var/log/noaaport
+/var/log/nbsp
+/var/run/nbsp
+
+must be removed manually.
+EOF
