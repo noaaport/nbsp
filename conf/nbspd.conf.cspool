@@ -478,7 +478,7 @@ if {[file exists ${_featuresinit}]} {
 # Milliseconds to wait while writing to network clients, and how many
 # more times to try if a timeout occurs.
 #
-### set client_write_timeout_ms		1000
+### set client_write_timeout_ms		5000
 ### set client_write_timeout_retry	2
 
 # How long the server thread of each client waits for a client to reconnect
@@ -492,9 +492,9 @@ if {[file exists ${_featuresinit}]} {
 # can be set on a per-host basis by setting this variable
 #
 # set clientoptions {
-#     ltp.cnnet.upr.edu,2000,2,10,12,10000
-#     thunder.wxpro.net,5000
-#     indra.wxpro.net,5000,x,x,12
+#     ltp.uprrp.edu,2000,2,10,12,10000
+#     thunder.wxpro.net,10000
+#     indra.wxpro.net,10000,x,x,12
 #     ...
 # }
 #
