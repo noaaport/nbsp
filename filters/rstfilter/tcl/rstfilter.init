@@ -51,7 +51,8 @@ set rstfilter(sat_dirfmt)     	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 set rstfilter(satmap_enable)	0;	   # set to 1 to add map outlines
 set rstfilter(satmap_regex)	$rstfilter(sat_regex);
 append rstfilter(satmap_regex)  {,!ticb17|ticb60|tice40|tici17|tici60} \
-    {|ticn17|ticn60|ticq17|ticq60|ticw40|tign28};  # have no imgtyp.tbl entry
+    {|ticn17|ticn60|ticq17|ticq60|ticw40} \
+    {|tign28|tigi16|tigi18|tigi27|tigi28};   # have no imgtyp.tbl entry
 set rstfilter(satmap_mapsize)	"800;600";
 set rstfilter(satmap_nopng)	0;         # set to 1 to keep only the gif
 set rstfilter(satmap_rcdirs)	$rstfilter(localconfdirs);
