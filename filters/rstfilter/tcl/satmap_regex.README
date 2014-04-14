@@ -15,6 +15,10 @@ set _satmap_reject_re_list [list ticb17 \
 				ticq17 \
 				ticq60 \
 				ticw40 \
+				tigi16 \
+				tigi18 \
+				tigi27 \
+				tigi28 \
 				tign28];
 
 set _satmap_reject_re [join $_satmap_reject_re_list "|"];
