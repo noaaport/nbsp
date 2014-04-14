@@ -1,0 +1,22 @@
+#!/usr/bin/tclsh
+#
+# One way to specify and construct the satmap_regex
+#
+set rstfilter(satmap_regex) \
+    {tig.(0[1-7]|13|14|15|25|39|[41-59]),tic.(0[1-7]|13|14|15|[61-65])};
+
+set _satmap_reject_re_list [list ticb17 \
+				ticb60 \
+				tice40 \
+				tici17 \
+				tici60 \
+				ticn17 \
+				ticn60 \
+				ticq17 \
+				ticq60 \
+				ticw40 \
+				tign28];
+
+set _satmap_reject_re [join $_satmap_reject_re_list "|"];
+append rstfilter(satmap_regex) ",!" $_satmap_reject_re;
+puts $rstfilter(satmap_regex);
