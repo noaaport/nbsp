@@ -1,0 +1,51 @@
+#
+# Copyright (c) 2006-2014 Jose F. Nieves <nieves@ltp.uprrp.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../../Makefile.inc@q@
+
+TCLTARGET =	capfilter.tcl
+TCLSOURCES =	capfilter.tcl.in capfilter.init
+SAMPLES =	capfilter.conf-sample \
+		capfilter.rc-sample \
+		capfilter.def-sample
+TXMLSOURCES =	atom.txml
+TXMLTARGET =	captxml-templates.tgz
+TXMLDIR =	cap
+
+TARGET =	${TCLTARGET} ${SAMPLES} ${TXMLTARGET}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+capfilter.tcl: capfilter.tcl.in
+	sed -e /%TCLSH%/s##${TCLSH}# capfilter.tcl.in > capfilter.tcl
+
+capfilter.conf-sample: capfilter.conf
+	cp capfilter.conf capfilter.conf-sample
+
+capfilter.rc-sample: capfilter.rc 
+	cp capfilter.rc capfilter.rc-sample
+
+capfilter.def-sample: capfilter.def
+	cp capfilter.def capfilter.def-sample
+
+${TXMLTARGET}: ${TXMLSOURCES}
+	rm -rf ${TXMLDIR}
+	mkdir ${TXMLDIR}
+	cp ${TXMLSOURCES} ${TXMLDIR}
+	tar -czf ${TXMLTARGET} ${TXMLDIR}
+
+install: ${TARGET}
+	${INSTALL} -m 755 capfilter.tcl ${MYLIBEXECDIR}/capfilter
+	${INSTALL} -m 755 capfilter.init ${MYLIBEXECDIR}
+	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile
+	rm -rf ${TXMLDIR}
