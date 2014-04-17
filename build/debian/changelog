@@ -1,3 +1,9 @@
+nbsp (2.3.4d1-1) oneiric; urgency=low
+
+  * Added capfilter
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 07 Apr 2014 17:06:10 -0400
+
 nbsp (2.3.3p7-1) oneiric; urgency=low
 
   * Revised the default value of the client_write_timoue_ms; from 1000ms

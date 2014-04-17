@@ -114,6 +114,8 @@ libexec/nbsp/gisfilter.init2
 libexec/nbsp/gis.tcl
 libexec/nbsp/radstations.tcl
 libexec/nbsp/panfilter
+libexec/nbsp/capfilter
+libexec/nbsp/capfilter.init
 libexec/nbsp/gribfilter
 libexec/nbsp/gribfilter-manager
 libexec/nbsp/gribfilter-ctlfiles
@@ -237,6 +239,10 @@ etc/nbsp/dist/gis-bundle-etc-templates.tgz
 etc/nbsp/dist/panfilter.conf-sample
 etc/nbsp/dist/panfilter.rc-sample
 etc/nbsp/dist/panfilter.rc-ex
+etc/nbsp/dist/capfilter.conf-sample
+etc/nbsp/dist/capfilter.rc-sample
+etc/nbsp/dist/capfilter.def-sample
+etc/nbsp/dist/captxml-templates.tgz
 etc/nbsp/dist/gribfilter.conf-sample
 etc/nbsp/dist/gribfilter.rc-sample
 etc/nbsp/dist/gribfilter.rc-defaults

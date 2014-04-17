@@ -8,6 +8,7 @@ nntpfilter
 rstnntpfilter
 inventory
 rssfilter
+capfilter
 filterlib
 ldmfilter
 metarfilter

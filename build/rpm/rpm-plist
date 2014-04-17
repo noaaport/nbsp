@@ -112,6 +112,8 @@
 /usr/local/libexec/nbsp/gis.tcl
 /usr/local/libexec/nbsp/radstations.tcl
 /usr/local/libexec/nbsp/panfilter
+/usr/local/libexec/nbsp/capfilter
+/usr/local/libexec/nbsp/capfilter.init
 /usr/local/libexec/nbsp/gribfilter
 /usr/local/libexec/nbsp/gribfilter-manager
 /usr/local/libexec/nbsp/gribfilter-ctlfiles
@@ -235,6 +237,10 @@
 /usr/local/etc/nbsp/dist/panfilter.conf-sample
 /usr/local/etc/nbsp/dist/panfilter.rc-sample
 /usr/local/etc/nbsp/dist/panfilter.rc-ex
+/usr/local/etc/nbsp/dist/capfilter.conf-sample
+/usr/local/etc/nbsp/dist/capfilter.rc-sample
+/usr/local/etc/nbsp/dist/capfilter.def-sample
+/usr/local/etc/nbsp/dist/captxml-templates.tgz
 /usr/local/etc/nbsp/dist/gribfilter.conf-sample
 /usr/local/etc/nbsp/dist/gribfilter.rc-sample
 /usr/local/etc/nbsp/dist/gribfilter.rc-defaults

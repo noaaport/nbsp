@@ -1,0 +1,225 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+## The common defaults
+set filters_init_file "/usr/local/libexec/nbsp/filters.init";
+if {[file exists $filters_init_file] == 0} {
+    puts "capfilter disabled: $filters_init_file not found.";
+    return 1;
+}
+source $filters_init_file;
+unset filters_init_file;
+
+if {$filters_init_status == 1} {
+    return 1;
+}
+unset filters_init_status;
+
+package require nbsp::util;
+
+# The default configuration is shared between the filter and cmd-line tools
+# and therefore it is out in a separate file that is read by both.
+#
+set init_file [file join $common(libdir) "capfilter.init"];
+if {[file exists $init_file] == 0} {
+    log_msg "capfilter disabled: $init_file not found.";
+    return 1;
+}
+source $init_file;
+unset init_file;
+
+if {[file exists $capfilter(def)] == 0} {
+    log_msg "Filter disabled: $capfilter(def) not found.";
+    return 1;
+}
+source $capfilter(def);
+
+#
+# variables
+#
+set capfilter(rcfiles) 		[list];
+set capfilter(condition)	[list];
+set capfilter(action)		[list];
+set capfilter(atomtxmlfpath) "";
+
+if {[file exists $capfilter(rc)] == 0} {
+    log_msg "Filter disabled: $capfilter(rc) not found.";
+    return 1;
+}
+
+# Build the list of rc files
+set capfilter(rcfiles) [filterlib_get_rcfiles [file tail $capfilter(rc)] \
+        $capfilter(localconfdirs) $capfilter(rcdir) \
+        $capfilter(prerc) $capfilter(postrc)];
+
+# Load the rules sets
+source $capfilter(rc);
+
+# Look for the template in capfilter(txmldirs) and use the last one
+set _txml_fpath [filterlib_find_conf \
+    $capfilter(atomtxml) $capfilter(txmldirs) $capfilter(txmlsubdir)];
+
+if {$_txml_fpath eq ""} {
+    log_msg "$capfilter(atomtxml) not found.";
+    return;
+}
+
+set capfilter(atomtxmlfpath) $_txml_fpath;
+
+proc main {} {
+
+    global capfilter;
+    global errorInfo;
+
+    # The cap directory must exist
+    if {[file isdirectory $capfilter(datadir)] == 0} {
+	log_msg "$capfilter(datadir) does not exist.";
+	return 1;
+    }
+
+    # gets returns -1 on eof. In addition the server explicitly
+    # signals the filters to quit by sending a blankline
+    # (gets returns 0 in this case, and finfo is "").
+
+    while {[gets stdin finfo] >= 0} {
+	if {$finfo == ""} {
+	    log_msg "Received request to quit.";
+	    break;
+	}
+
+	set status [catch {process $finfo} errmsg];
+	if {$status == 1} {
+	    log_msg "Error processing $finfo";
+	    log_msg $errmsg;
+	    log_msg $errorInfo;
+	}
+    }
+}
+
+proc process {finfo} {
+
+    global capfilter;
+
+    filterlib_get_rcvars rc $finfo;
+
+    # Restrict the files processed right here.
+    if {$rc(awips1) ne "cap"} {
+	return;
+    }
+
+    set prod_body [::fileutil::cat -translation crlf $rc(fpath)];
+    #
+    # We remove everything up to the start of the xml data
+    # (including the WMO header) so there is no need to check
+    # if the CCB was saved and then remove it.
+    #
+    set start [string first {<?xml} $prod_body];
+    set prod_body [string range $prod_body $start end];
+
+    # Set rc(cap,...) vars
+    set rc(cap,filebody) $prod_body;
+    foreach {city state} [split $capfilter(site,$rc(awips2)) ","] {};
+    set rc(cap,city) $city;
+    set rc(cap,state) $state;
+    #
+    set rc(cap,identifier) [caplib_get_identifier $prod_body];
+    set rc(cap,zone) [caplib_get_zone $prod_body];
+    set rc(cap,expires) [caplib_get_expires $prod_body];
+    set rc(cap,summary) [caplib_get_summary $prod_body];
+
+    # split expires into date-time
+    foreach {d t} [split $rc(cap,expires) "T"] {};
+    set rc(cap,expires,date) $d;
+    set rc(cap,expires,time) $t;
+
+    # The partial and full path of the file
+    set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
+    set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
+
+    # The catalog files
+    set rc(cap,catpath,global) $capfilter(catppath,global);
+    set rc(cap,catppath,bystate) [subst $capfilter(catppathfmt,bystate)];
+    set rc(cap,catppath,byzone) [subst $capfilter(catppathfmt,byzone)];
+
+    # Save the file
+    capfilter_write_file rc;
+
+    # Add to catalog(s)
+    capfilter_write_catalog rc;
+
+    # Evaluate the condition/action pairs, from all sets.
+    set rc_status 1;
+    set i 0;		# counts the sets
+    foreach condlist $capfilter(condition) {
+        set actionlist [lindex $capfilter(action) $i];
+	set j 0;	# counts the rules with each set
+	foreach c $condlist {
+	    set a [lindex $actionlist $j];
+            if {[expr $c]} {
+                eval $a;
+            }
+	    incr j;
+        }
+        incr i;
+    }
+
+    if {[file executable $capfilter(rcbin)] == 0} {
+	return;
+    }
+
+    set status [catch {
+	::nbsp::util::pwrite_block $rc(cap,filebody) \
+	    $capfilter(rcbin) $rc(cap,filefpath);
+    } errmsg];
+    
+    if {$status != 0} {
+	log_msg $errmsg;
+	return;
+    }
+}
+
+proc capfilter_write_file {rc_name} {
+
+    upvar $rc_name rc;
+    global capfilter;
+
+    filterlib_file_write $rc(cap,fileppath) $rc(cap,filebody);
+    
+    # Add the fpath to the inventory
+    set invppath [subst $capfilter(invppathfmt)];
+    filterlib_file_append $invppath $rc(cap,filefpath);
+}
+
+proc capfilter_write_catalog {rc_name} {
+
+    upvar $rc_name rc;
+    global capfilter;
+
+    source $capfilter(atomtxmlfpath);
+    set entry [subst $cap(atomtxml)];
+
+    # Until we know what to do
+    return;
+
+    filterlib_file_write $rc(cap,catpath,global) $entry;
+    filterlib_file_write $rc(cap,catppath,bystate) $entry;
+    filterlib_file_write $rc(cap,catppath,byzone) $entry;
+}
+
+#
+# main
+#
+
+# cd to the base data dir once and for all
+if {[file isdirectory $capfilter(datadir)]} {
+    cd $capfilter(datadir);
+} else {
+    log_msg "Filter disabled: $capfilter(datadir) not found.";
+    return 1;
+}
+
+filterlib_init;		# open the cpool if enabled
+main
+filterlib_end;		# close the cpool if enabled
