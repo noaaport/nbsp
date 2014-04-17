@@ -1,52 +1,51 @@
+nbsp (2.3.4d1-1) oneiric; urgency=low
+
+  * Added capfilter
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 07 Apr 2014 17:06:10 -0400
+
 nbsp (2.3.3p7-1) oneiric; urgency=low
 
   * Revised the default value of the client_write_timoue_ms; from 1000ms
     to 5000 ms, which is better in linux (debian).
 
   * Revised the rstfilter(satmap_regex) to reject those files that
-      apparently do not yet have an entry in imgtyp.tbl.
+    apparently do not yet have an entry in imgtyp.tbl.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 07 Apr 2014 17:06:10 -0400
 
-nbsp (2.3.3p6+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p6-1) oneiric; urgency=low
 
   * Revised ldmfilter. It now uses tclldm, which in turn communicated with
     the new nbsp2ldm as a pipe.
-      
+
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 22 Nov 2013 21:06:15 -0400
-       
-nbsp (2.3.3p5+ubuntu1204.1-1) oneiric; urgency=low
+
+nbsp (2.3.3p5-1) oneiric; urgency=low
 
   * Added mobile version.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 07 Nov 2013 20:46:06 -0400
 
-nbsp (2.3.3p4+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p4-1) oneiric; urgency=low
 
-  * Revised the mk_sat_ldm function in the ldmfilter and added
-    the creating entity mapping in the gpfilter-sat.def
+  * Revised the mk_sat_ldm function in the ldmfilter; added
+    the "creating identity" mapping in the gpfilter-sat.def.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 02 Nov 2013 20:09:00 -0400
 
-nbsp (2.3.3p3+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p3-1) oneiric; urgency=low
 
-  * Added ability to insert termination code in nbspfilter
+  * Added ability to insert termination code in the nbspfilter
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 30 Oct 2013 20:45:26 -0400
 
-nbsp (2.3.3p2+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p2-1) oneiric; urgency=low
 
-  * Corrected the determination of ymd and hm in the function
-    mk_ldm_sat_prodid in ldmfilter.
+  * Corrected ldmfilter (mk_ldm_sat_prodid); the ymd and hm variables
+    were not being calculated correctly from the output of nbspsatinfo.
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:54:25 -0400
-
-nbsp (2.3.3p1+ubuntu1204.1-1) oneiric; urgency=low
-
-  * Ubuntu-12.04 branch, which uses the gnuplot-4.4 syntax of the
-    plotfmtoptions in the metar and inventory filters.
-
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 23 Sep 2013 19:55:18 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:48:09 -0400
 
 nbsp (2.3.3p1-1) oneiric; urgency=low
 

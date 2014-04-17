@@ -28,6 +28,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/gis
 /var/noaaport/data/metar
 /var/noaaport/data/msg
+/var/noaaport/data/cap
 /var/noaaport/data/upperair
 /var/noaaport/data/grib
 /var/noaaport/data/track
@@ -59,6 +60,7 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/etc/nbsp/rc.d/rstnntp
 /usr/local/etc/nbsp/rc.d/ldm
 /usr/local/etc/nbsp/rc.d/pan
+/usr/local/etc/nbsp/rc.d/cap
 /usr/local/etc/nbsp/rc.d/grib
 /usr/local/etc/nbsp/rc.d/net
 /usr/local/share/nbsp/defaults
@@ -180,7 +182,7 @@ cd htdocs/pub
 # Display message
 #
 cat <<__EOF__
-
+-
 The configuration files are installed in /usr/local/etc/nbsp.
 
 The installation process should have created various directories
