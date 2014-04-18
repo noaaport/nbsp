@@ -5,11 +5,9 @@
 #
 # Template
 #
-set cap(atomtxml) {
+set cap(atomtxml,zone) {
   <entry>
     <cap:expires>$rc(cap,expires)</cap:expires>
-    <cap:zone>$rc(cap,zone)</cap:zone>
-    <cap:zone>$rc(cap,zone)</cap:zone>
     <cap:summary>$rc(cap,summary)</cap:summary>
   </entry>
 }

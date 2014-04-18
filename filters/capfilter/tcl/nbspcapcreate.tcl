@@ -3,8 +3,9 @@
 # $Id$
 #
 
-set usage {capcreate [-b] [-t <atomtxml>] awips2};
-set optlist {b {t.arg ""}};
+set usage {capcreate [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
+    [-z <atomtxml_zone>] awips2};
+set optlist {b {g.arg ""} {s.arg ""} {z.arg ""}};
 
 # To find the nbsp packages and load the filter library
 source "/usr/local/etc/nbsp/filters.conf";
@@ -21,7 +22,9 @@ package require cmdline;
 package require nbsp::errx;
 
 # variables
-set g(atomtxmlfpath) "";
+set g(atomtxmlfpath,global) "";
+set g(atomtxmlfpath,state) "";
+set g(atomtxmlfpath,zone) "";
 
 #
 # functions
@@ -29,19 +32,29 @@ set g(atomtxmlfpath) "";
 proc capfilter_write_catalog {rc_name} {
 
     upvar $rc_name rc;
-    global g;
-
-    source $g(atomtxmlfpath);
-    set entry [subst $cap(atomtxml)];
+    global capfilter g;
 
     # Until we know what to do
-    puts $rc(cap,zone)
+    # return;
 
-    return;
+    # Get the templates
+    foreach type [list global state zone] {
+	source $g(atomtxmlfpath,$type);
+    }
 
-    filterlib_file_write $rc(cap,catpath,global) $entry;
-    filterlib_file_write $rc(cap,catppath,bystate) $entry;
-    filterlib_file_write $rc(cap,catppath,byzone) $entry;
+    set rc(cap,catpath,global) $capfilter(catppath,global);
+    set rc(cap,catppath,state) [subst $capfilter(catppathfmt,state)];
+    set entry_global [subst $cap(atomtxml,global)];
+    set entry_state [subst $cap(atomtxml,state)];
+    filterlib_file_write $rc(cap,catpath,global) $entry_global;
+    filterlib_file_write $rc(cap,catppath,state) $entry_state;
+
+    foreach zone $rc(cap,zones) {
+	set rc(cap,zone) $zone;
+	set rc(cap,catppath,zone) [subst $capfilter(catppathfmt,zone)];
+	set entry_zone [subst $cap(atomtxml,zone)];
+	filterlib_file_write $rc(cap,catppath,zone) $entry_zone;
+    }
 }
 
 #
@@ -59,37 +72,46 @@ if {$argc != 1} {
 }
 set g(awips2) [lindex $argv 0];
 
-if {$option(t) ne ""} {
-    set g(atomtxmlfpath) $option(t);
-} else {
+# set the default templates
+foreach type [list global state zone] {
     # Look for the template in capfilter(txmldirs) and use the last one
-    set _txml_fpath [filterlib_find_conf \
-	$capfilter(atomtxml) $capfilter(txmldirs) $capfilter(txmlsubdir)];
+    set _txml_fpath [filterlib_find_conf $capfilter(atomtxml,$type) \
+			 $capfilter(txmldirs) $capfilter(txmlsubdir)];
+    set g(atomtxmlfpath,$type) $_txml_fpath;
+}
 
-    if {$_txml_fpath eq ""} {
-	::nbsp::syslog::err "$capfilter(atomtxml) not found.";
+if {$option(g) ne ""} {
+    set g(atomtxmlfpath,global) $option(g);
+}
+
+if {$option(s) ne ""} {
+    set g(atomtxmlfpath,state) $option(s);
+}
+
+if {$option(z) ne ""} {
+    set g(atomtxmlfpath,zone) $option(z);
+}
+
+foreach type [list global state zone] {
+    if {$g(atomtxmlfpath,$type) eq ""} {
+	::nbsp::syslog::err "$capfilter(atomtxml,$type) not found.";
     }
-
-    set g(atomtxmlfpath) $_txml_fpath;
 }
 
 #
 # main
 #
 set prod_body [read stdin];
+set prod_body_list [split $prod_body "\n"];
 
 set rc(cap,identifier) [caplib_get_identifier $prod_body];
-set rc(cap,zone) [caplib_get_zone $prod_body];
 set rc(cap,expires) [caplib_get_expires $prod_body];
 set rc(cap,summary) [caplib_get_summary $prod_body];
+set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
 
 # get the awips from the cmdline
 foreach {city state} [split $capfilter(site,$g(awips2)) ","] {};
 set rc(cap,city) $city;
 set rc(cap,state) $state;
-
-set rc(cap,catpath,global) $capfilter(catppath,global);
-set rc(cap,catppath,bystate) [subst $capfilter(catppathfmt,bystate)];
-set rc(cap,catppath,byzone) [subst $capfilter(catppathfmt,byzone)];
 
 capfilter_write_catalog rc;
