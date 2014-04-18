@@ -123,12 +123,16 @@ proc process {finfo} {
 	return;
     } 
 
-    set seconds [::nbsp::util::date::clock_seconds $rc(wmotime)];
-    set ymd_hm [clock format $seconds -gmt true -format "%Y%m%d_%H%M"];
-    set ymdh [clock format $seconds -gmt true -format "%Y%m%d%H"];
-    set ymd [clock format $seconds -gmt true -format "%Y%m%d"];
-    set ym [clock format $seconds -gmt true -format "%Y%m"];
-    set yyyy [clock format $seconds -gmt true -format "%Y"];
+    # These variables are based on the time determined by the filterlib
+    # The default is the wmotime, except when the data file gives a true time,
+    # for example radar and sat files, or the rc(gribymdh),..., variables
+    # form the grib files which are the ones used in this filer.
+    #
+    # set ymd_hm $rc(ymd_hm);
+    # set ymdh $rc(ymdh);
+    # set ymd $rc(ymd);
+    # set ym $rc(ym);
+    # set yyyy $rc(yyyy);
 
     set rc_status 1;
 

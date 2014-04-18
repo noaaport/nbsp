@@ -6,7 +6,6 @@
 # Template
 #
 set cap(atomtxml) {
-
   <entry>
     <cap:expires>$rc(cap,expires)</cap:expires>
     <cap:zone>$rc(cap,zone)</cap:zone>
