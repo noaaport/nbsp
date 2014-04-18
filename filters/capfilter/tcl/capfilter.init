@@ -17,17 +17,21 @@ set capfilter(def) [file join $common(confdir) "capfilter.def"];
 #
 set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(cap,identifier).xml};
 ## set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(wmotime)_$rc(seq).xml};
-set capfilter(catppath,global) {cat/global.xml};
-set capfilter(catppathfmt,bystate) {cat/state/$rc(cap,state).xml};
-set capfilter(catppathfmt,byzone) {cat/zone/$rc(cap,state)/$rc(cap,zone).xml};
 #
 set capfilter(invppathfmt) {inv/$rc(cap,expires,date).log};
 set capfilter(invdir) "inv";   # Needed by nbspcapcleanup
 #
+# catalog paths and templates
+#
+set capfilter(catppath,global) {cat/global.xml};
+set capfilter(catppathfmt,state) {cat/state/$rc(cap,state).xml};
+set capfilter(catppathfmt,zone) {cat/zone/$rc(cap,state)/$rc(cap,zone).xml};
+#
 set capfilter(txmldirs) $capfilter(localconfdirs);
 set capfilter(txmlsubdir) "cap";
-set capfilter(atomtxml) "atom.txml";
-set capfilter(def) [file join $common(confdir) "capfilter.def"];
+set capfilter(atomtxml,global) "global.txml";
+set capfilter(atomtxml,state) "state.txml";
+set capfilter(atomtxml,zone) "zone.txml";
 #
 
 # Overrides in the configuration file. 
@@ -44,19 +48,6 @@ proc caplib_get_identifier {body} {
 
     set r "";
     if {[regexp $re  $body match s]} {
-	set r $s;
-    }
-
-    return [string tolower $r];
-}
-
-proc caplib_get_zone {body} {
-
-    set re \
-    {<geocode>\s+<valueName>UGC</valueName>\s+<value>(.+)</value>\s+</geocode>};
-
-    set r "";
-    if {[regexp $re $body match s]} {
 	set r $s;
     }
 
@@ -85,4 +76,41 @@ proc caplib_get_summary {body} {
     }
 
     return $r;
+}
+
+proc caplib_get_zone {body} {
+
+    set re {<valueName>UGC</valueName>\s+<value>(.+)</value>};
+
+    set r "";
+    if {[regexp $re $body match s]} {
+	set r $s;
+    }
+
+    return [string tolower $r];
+}
+
+proc caplib_get_zone_list {body_list} {
+
+    set zone_list [list];
+
+    set content "";
+    set stage "stop";
+    foreach line $body_list {
+	if {[regexp {<geocode>} $line]} {
+	    set stage collect;
+	    continue;
+	} elseif {[regexp {</geocode>} $line]} {
+	    set stage stop;
+	    set zone [caplib_get_zone $content];
+	    set content "";
+	    if {$zone ne ""} {
+		lappend zone_list $zone;
+	    }
+	} elseif {$stage eq "collect"} {
+	    append content $line;
+	}
+    }
+
+    return $zone_list
 }

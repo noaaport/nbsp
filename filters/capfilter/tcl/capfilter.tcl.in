@@ -118,6 +118,10 @@ proc process {finfo} {
     #
     set start [string first {<?xml} $prod_body];
     set prod_body [string range $prod_body $start end];
+    
+    # Some functions work on the entire body and some must work
+    # line by line
+    set prod_body_list [split $prod_body "\n"];
 
     # Set rc(cap,...) vars
     set rc(cap,filebody) $prod_body;
@@ -126,9 +130,9 @@ proc process {finfo} {
     set rc(cap,state) $state;
     #
     set rc(cap,identifier) [caplib_get_identifier $prod_body];
-    set rc(cap,zone) [caplib_get_zone $prod_body];
     set rc(cap,expires) [caplib_get_expires $prod_body];
     set rc(cap,summary) [caplib_get_summary $prod_body];
+    set rc(cap,zones) [caplib_get_zone_list $prod_body_list];  # a tcl list
 
     # split expires into date-time
     foreach {d t} [split $rc(cap,expires) "T"] {};
@@ -138,11 +142,6 @@ proc process {finfo} {
     # The partial and full path of the file
     set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
     set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
-
-    # The catalog files
-    set rc(cap,catpath,global) $capfilter(catppath,global);
-    set rc(cap,catppath,bystate) [subst $capfilter(catppathfmt,bystate)];
-    set rc(cap,catppath,byzone) [subst $capfilter(catppathfmt,byzone)];
 
     # Save the file
     capfilter_write_file rc;

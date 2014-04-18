@@ -1,0 +1,13 @@
+#
+# $Id$
+#
+
+#
+# Template
+#
+set cap(atomtxml,state) {
+  <entry>
+    <cap:expires>$rc(cap,expires)</cap:expires>
+    <cap:summary>$rc(cap,summary)</cap:summary>
+  </entry>
+}

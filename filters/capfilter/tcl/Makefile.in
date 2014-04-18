@@ -13,7 +13,7 @@ TCLSOURCES =	capfilter.tcl.in capfilter.init \
 SAMPLES =	capfilter.conf-sample \
 		capfilter.rc-sample \
 		capfilter.def-sample
-TXMLSOURCES =	atom.txml
+TXMLSOURCES =	global.txml state.txml zone.txml
 TXMLTARGET =	captxml-templates.tgz
 TXMLDIR =	cap
 
