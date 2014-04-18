@@ -18,6 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 package require nbsp::util;
+package require nbsp::periodic;
 
 # The default configuration is shared between the filter and cmd-line tools
 # and therefore it is out in a separate file that is read by both.
