@@ -36,8 +36,8 @@ capfilter.rc-sample: capfilter.rc
 capfilter.def-sample: capfilter.def
 	cp capfilter.def capfilter.def-sample
 
-nbspcapcleaup: nbspcapcleaup.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcleaup.tcl > nbspcapcleaup
+nbspcapcleanup: nbspcapcleanup.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcleanup.tcl > nbspcapcleanup
 
 nbspcapcreate: nbspcapcreate.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcreate.tcl > nbspcapcreate
