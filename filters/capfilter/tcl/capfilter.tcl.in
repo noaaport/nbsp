@@ -18,6 +18,7 @@ if {$filters_init_status == 1} {
 unset filters_init_status;
 
 package require nbsp::util;
+package require nbsp::periodic;
 
 # The default configuration is shared between the filter and cmd-line tools
 # and therefore it is out in a separate file that is read by both.
@@ -173,8 +174,9 @@ proc process {finfo} {
     
     if {$status != 0} {
 	log_msg $errmsg;
-	return;
     }
+
+    ::nbsp::periodic::run;
 }
 
 proc capfilter_write_file {rc_name} {
@@ -189,6 +191,13 @@ proc capfilter_write_file {rc_name} {
     filterlib_file_append $invppath $rc(cap,filefpath);
 }
 
+proc capfilter_cleanup_expired_files {} {
+
+     global capfilter;
+
+     exec nbspexec nbspcapcleanup -b;
+}
+
 #
 # main
 #
@@ -200,6 +209,8 @@ if {[file isdirectory $capfilter(datadir)]} {
     log_msg "Filter disabled: $capfilter(datadir) not found.";
     return 1;
 }
+
+::nbsp::periodic::register capfilter_cleanup_expired_files "daily";
 
 filterlib_init;		# open the cpool if enabled
 main
