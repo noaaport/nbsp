@@ -28,7 +28,7 @@
 # ::nbsp::periodic::register <cmd> <period>
 #
 # where <cmd> is a procedure. <period> is the period in seconds or the words
-# "hourly" or "minutely".
+# "minutely", "hourly" or "daily".
 # 
 # 2) Call
 #
@@ -87,11 +87,13 @@ proc nbsp::periodic::get_run_period {} {
 proc nbsp::periodic::register {cmd {run_period ""}} {
 #
 # run_period is a number in seconds, or:
-#   - the keyword "hourly", in this case the command is run every hour
-#     at minute 0
 #   - the keyword "minutely", in which case the command is run every minute
 #     at second 0.
-# 
+#   - the keyword "hourly", in this case the command is run every hour
+#     at minute 0
+#   - the keyword "daily", in this case the command is run every day
+#     at 00:000.
+#
     variable periodic;
 
     set now [clock seconds];
@@ -194,24 +196,37 @@ proc nbsp::periodic::_verify_cmd {cmd} {
     }
 }
 
+proc nbsp::periodic::_minutely_run_time_reset {now} {
+#
+# This function returns the time corresponding to the next minute.
+# now is the result of "clock seconds". Use scan to convert properly
+# convert when return value from clock format has a leading zero (e.g., 05).
+#
+    scan [clock format $now -format "%S"] "%d" current_second;
+
+    return [expr $now - $current_second + 60];
+}
+
 proc nbsp::periodic::_hourly_run_time_reset {now} {
 #
 # This function returns the time corresponding to the next hour.
-# now is the result of "clock seconds"
+# now is the result of "clock seconds".
 #
     scan [clock format $now -format "%M"] "%d" current_minute;
 
     return [expr $now - ($current_minute * 60) + 3600];
 }
 
-proc nbsp::periodic::_minutely_run_time_reset {now} {
+proc nbsp::periodic::_daily_run_time_reset {now} {
 #
-# This function returns the time corresponding to the next minute.
-# now is the result of "clock seconds"
+# This function returns the time corresponding to the next day.
+# now is the result of "clock seconds".
 #
-    scan [clock format $now -format "%S"] "%d" current_second;
+    scan [clock format $now -format "%H"] "%d" current_hour;
+    scan [clock format $now -format "%M"] "%d" current_minute;
+    set current_minutes [expr ($current_hour * 60) + $current_minute];
 
-    return [expr $now - $current_second + 60];
+    return [expr $now - ($current_minutes * 60) + 24 * 3600];
 }
 
 proc nbsp::periodic::_run_time_reset {now run_period} {
@@ -220,6 +235,8 @@ proc nbsp::periodic::_run_time_reset {now run_period} {
 	set run_time [::nbsp::periodic::_minutely_run_time_reset $now];
     } elseif {$run_period eq "hourly"} {
 	set run_time [::nbsp::periodic::_hourly_run_time_reset $now];
+    } elseif {$run_period eq "daily"} {
+	set run_time [::nbsp::periodic::_daily_run_time_reset $now];
     } else {
 	set run_time [expr $now + $run_period];
     }
