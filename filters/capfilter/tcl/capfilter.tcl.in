@@ -146,9 +146,6 @@ proc process {finfo} {
     # Save the file
     capfilter_write_file rc;
 
-    # Add to catalog(s)
-    capfilter_write_catalog rc;
-
     # Evaluate the condition/action pairs, from all sets.
     set rc_status 1;
     set i 0;		# counts the sets
@@ -171,7 +168,7 @@ proc process {finfo} {
 
     set status [catch {
 	::nbsp::util::pwrite_block $rc(cap,filebody) \
-	    $capfilter(rcbin) $rc(cap,filefpath);
+	    $capfilter(rcbin) $rc(awips2);
     } errmsg];
     
     if {$status != 0} {
@@ -190,22 +187,6 @@ proc capfilter_write_file {rc_name} {
     # Add the fpath to the inventory
     set invppath [subst $capfilter(invppathfmt)];
     filterlib_file_append $invppath $rc(cap,filefpath);
-}
-
-proc capfilter_write_catalog {rc_name} {
-
-    upvar $rc_name rc;
-    global capfilter;
-
-    source $capfilter(atomtxmlfpath);
-    set entry [subst $cap(atomtxml)];
-
-    # Until we know what to do
-    return;
-
-    filterlib_file_write $rc(cap,catpath,global) $entry;
-    filterlib_file_write $rc(cap,catppath,bystate) $entry;
-    filterlib_file_write $rc(cap,catppath,byzone) $entry;
 }
 
 #
