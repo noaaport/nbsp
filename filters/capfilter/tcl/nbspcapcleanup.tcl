@@ -67,7 +67,7 @@ foreach invfile $invfilelist {
 	continue;
     }
 
-    invfpath [file join  $g(invdir) $invfile];
+    set invfpath [file join  $g(invdir) $invfile];
     foreach capfpath [split [exec cat $invfpath] "\n"] {
 	nbspcapcleanup_delete_file $capfpath;
     }

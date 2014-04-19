@@ -42,21 +42,11 @@ if {[file exists $capfilter(conf)] == 1} {
 #
 # lib
 #
-proc caplib_get_identifier {body} {
+proc caplib_get_key {key body} {
 
-    set re {<identifier>(.+)</identifier>};
-
-    set r "";
-    if {[regexp $re  $body match s]} {
-	set r $s;
-    }
-
-    return [string tolower $r];
-}
-
-proc caplib_get_expires {body} {
-
-    set re {<expires>(.+)</expires>};
+    set re "<${key}>";
+    append re {(.+)};
+    append re "</${key}>";
 
     set r "";
     if {[regexp $re $body match s]} {
@@ -66,14 +56,30 @@ proc caplib_get_expires {body} {
     return $r;
 }
 
-proc caplib_get_summary {body} {
+proc caplib_get_identifier {body} {
+     
+    set r [caplib_get_key "identifier" $body];
 
-    set re {<summary>(.+)</summary>};
+    return [string tolower $r];
+}
 
-    set r "";
-    if {[regexp $re $body match s]} {
-	set r $s;
-    }
+proc caplib_get_expires {body} {
+
+    set r [caplib_get_key "expires" $body];
+
+    return $r;
+}
+
+proc caplib_get_headline {body} {
+
+    set r [caplib_get_key "headline" $body];
+
+    return $r;
+}
+
+proc caplib_get_instruction {body} {
+
+    set r [caplib_get_key "instruction" $body];
 
     return $r;
 }
