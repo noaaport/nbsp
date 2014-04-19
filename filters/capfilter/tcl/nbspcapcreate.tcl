@@ -4,7 +4,7 @@
 #
 
 set usage {capcreate [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
-    [-z <atomtxml_zone>] awips2};
+    [-z <atomtxml_zone>]};
 set optlist {b {g.arg ""} {s.arg ""} {z.arg ""}};
 
 # To find the nbsp packages and load the filter library
@@ -67,10 +67,9 @@ if {$option(b) == 1} {
     ::nbsp::syslog::usesyslog
 }
 
-if {$argc != 1} {
+if {$argc != 0} {
         ::nbsp::syslog::err $usage;
 }
-set g(awips2) [lindex $argv 0];
 
 # set the default templates
 foreach type [list global state zone] {
@@ -109,8 +108,13 @@ set rc(cap,expires) [caplib_get_expires $prod_body];
 set rc(cap,summary) [caplib_get_summary $prod_body];
 set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
 
-# get the awips from the cmdline
-foreach {city state} [split $capfilter(site,$g(awips2)) ","] {};
+set rc(cap,pil) [caplib_get_pil $prod_body];
+set rc(cap,awips) [string range $rc(cap,pil) 3 end];
+set rc(cap,awips1) [string range $rc(cap,awips) 0 2];
+set rc(cap,awips2) [string range $rc(cap,awips) 3 6];
+
+# Get the city/state from capfilter(site,<awips2>) 
+foreach {city state} [split $capfilter(site,$rc(cap,awips2)) ","] {};
 set rc(cap,city) $city;
 set rc(cap,state) $state;
 
