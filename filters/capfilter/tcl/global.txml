@@ -1,13 +1,26 @@
-#
-# $Id$
-#
+set atomtxml(global) {
+<entry>
+<cap:event>$rc(cap,key,event)</cap:event>
+<cap:effective>$rc(cap,key,effective)</cap:effective>
+<cap:expires>$rc(cap,key,expires)</cap:expires>
+<cap:status>$rc(cap,key,status)</cap:status>
+<cap:msgType>$rc(cap,key,msgType)</cap:msgType>
+<cap:category>$rc(cap,key,category)</cap:category>
+<cap:urgency>$rc(cap,key,urgency)</cap:urgency>
+<cap:severity>$rc(cap,key,severity)</cap:severity>
+<cap:certainty>$rc(cap,key,certainty)</cap:certainty>
+<cap:areaDesc>$rc(cap,key,areaDesc)</cap:areaDesc>
 
-#
-# Template
-#
-set cap(atomtxml,global) {
-  <entry>
-    <cap:expires>$rc(cap,expires)</cap:expires>
-    <cap:summary>$rc(cap,summary)</cap:summary>
-  </entry>
+<cap:headline>
+[string trim $rc(cap,key,headline)]
+</cap:headline>
+
+<cap:instruction>
+[string trim $rc(cap,key,instruction)]
+</cap:instruction>
+
+<cap:description>
+[string trim $rc(cap,key,description)]
+</cap:description>
+</entry>
 }
