@@ -43,7 +43,9 @@ source $capfilter(def);
 set capfilter(rcfiles) 		[list];
 set capfilter(condition)	[list];
 set capfilter(action)		[list];
-set capfilter(atomtxmlfpath) "";
+set capfilter(atomtxmlfpath,global) "";
+set capfilter(atomtxmlfpath,state) "";
+set capfilter(atomtxmlfpath,zone) "";
 
 if {[file exists $capfilter(rc)] == 0} {
     log_msg "Filter disabled: $capfilter(rc) not found.";
@@ -58,16 +60,20 @@ set capfilter(rcfiles) [filterlib_get_rcfiles [file tail $capfilter(rc)] \
 # Load the rules sets
 source $capfilter(rc);
 
-# Look for the template in capfilter(txmldirs) and use the last one
-set _txml_fpath [filterlib_find_conf \
-    $capfilter(atomtxml) $capfilter(txmldirs) $capfilter(txmlsubdir)];
-
-if {$_txml_fpath eq ""} {
-    log_msg "$capfilter(atomtxml) not found.";
-    return;
+# set the default templates
+foreach type [list global state zone] {
+    # Look for the template in capfilter(txmldirs) and use the last one
+    set _txml_fpath [filterlib_find_conf $capfilter(atomtxml,$type) \
+			 $capfilter(txmldirs) $capfilter(txmlsubdir)];
+    set capfilter(atomtxmlfpath,$type) $_txml_fpath;
 }
 
-set capfilter(atomtxmlfpath) $_txml_fpath;
+foreach type [list global state zone] {
+    if {$capfilter(atomtxmlfpath,$type) eq ""} {
+	log_msg "$capfilter(atomtxml,$type) not found.";
+	return;
+    }
+}
 
 proc main {} {
 
@@ -129,15 +135,22 @@ proc process {finfo} {
     set rc(cap,city) $city;
     set rc(cap,state) $state;
     #
-    set rc(cap,identifier) [caplib_get_identifier $prod_body];
-    set rc(cap,expires) [caplib_get_expires $prod_body];
-    set rc(cap,summary) [caplib_get_summary $prod_body];
     set rc(cap,zones) [caplib_get_zone_list $prod_body_list];  # a tcl list
+    #
+    set rc(cap,key,pil) [caplib_get_pil $prod_body];
+    set rc(cap,key,awips) [string range $rc(cap,key,pil) 3 end];
+    set rc(cap,key,awips1) [string range $rc(cap,key,awips) 0 2];
+    set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
+
+    foreach key $capfilter(capkeylist) {
+        set r [caplib_get_key $key $prod_body];
+        set rc(cap,key,$key) $r;
+    }
 
     # split expires into date-time
-    foreach {d t} [split $rc(cap,expires) "T"] {};
-    set rc(cap,expires,date) $d;
-    set rc(cap,expires,time) $t;
+    foreach {d t} [split $rc(cap,key,expires) "T"] {};
+    set rc(cap,key,expires,date) $d;
+    set rc(cap,key,expires,time) $t;
 
     # The partial and full path of the file
     set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
@@ -162,13 +175,12 @@ proc process {finfo} {
         incr i;
     }
 
-    if {[file executable $capfilter(rcbin)] == 0} {
+    if {$capfilter(rcbin) eq ""} {
 	return;
     }
 
     set status [catch {
-	::nbsp::util::pwrite_block $rc(cap,filebody) \
-	    $capfilter(rcbin) $rc(awips2);
+	::nbsp::util::pwrite_block $rc(cap,filebody) $capfilter(rcbin);
     } errmsg];
     
     if {$status != 0} {

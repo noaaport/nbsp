@@ -7,9 +7,9 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapcreate
+TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapfeed
 TCLSOURCES =	capfilter.tcl.in capfilter.init \
-			nbspcapcleanup.tcl nbspcapcreate.tcl
+			nbspcapcleanup.tcl nbspcapfeed.tcl
 SAMPLES =	capfilter.conf-sample \
 		capfilter.rc-sample \
 		capfilter.def-sample
@@ -39,8 +39,8 @@ capfilter.def-sample: capfilter.def
 nbspcapcleanup: nbspcapcleanup.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcleanup.tcl > nbspcapcleanup
 
-nbspcapcreate: nbspcapcreate.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcreate.tcl > nbspcapcreate
+nbspcapfeed: nbspcapfeed.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcapfeed.tcl > nbspcapfeed
 
 ${TXMLTARGET}: ${TXMLSOURCES}
 	rm -rf ${TXMLDIR}
@@ -53,7 +53,7 @@ install: ${TARGET}
 	${INSTALL} -m 755 capfilter.init ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 	${INSTALL} -m 755 nbspcapcleanup ${BINDIR}
-	${INSTALL} -m 755 nbspcapcreate ${BINDIR}
+	${INSTALL} -m 755 nbspcapfeed ${BINDIR}
 
 clean:
 	rm -f *~ ${TARGET} Makefile

@@ -8,17 +8,16 @@ set capfilter(conf)	[file join $common(confdir) "capfilter.conf"];
 set capfilter(rc)	[file join $common(confdir) "capfilter.rc"];
 set capfilter(prerc)    "";
 set capfilter(postrc)   "";
-set capfilter(rcbin)    "";
+set capfilter(rcbin)    "nbspcapfeed";
 set capfilter(localconfdirs) $common(localconfdirs);
 set capfilter(rcdir)	[file join $common(rcdir) "cap"];
 set capfilter(datadir)  [file join $common(datadir) "cap"];
 #
 set capfilter(def) [file join $common(confdir) "capfilter.def"];
 #
-set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(cap,identifier).xml};
-## set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(wmotime)_$rc(seq).xml};
+set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(cap,key,identifier).xml};
 #
-set capfilter(invppathfmt) {inv/$rc(cap,expires,date).log};
+set capfilter(invppathfmt) {inv/$rc(cap,key,expires,date).log};
 set capfilter(invdir) "inv";   # Needed by nbspcapcleanup
 #
 # catalog paths and templates
@@ -33,6 +32,10 @@ set capfilter(atomtxml,global) "global.txml";
 set capfilter(atomtxml,state) "state.txml";
 set capfilter(atomtxml,zone) "zone.txml";
 #
+set capfilter(capkeylist) [list identifier event effective \
+    expires status msgType \
+    category urgency severity certainty areaDesc \
+    headline instruction description];
 
 # Overrides in the configuration file. 
 if {[file exists $capfilter(conf)] == 1} {
@@ -52,34 +55,6 @@ proc caplib_get_key {key body} {
     if {[regexp $re $body match s]} {
 	set r $s;
     }
-
-    return $r;
-}
-
-proc caplib_get_identifier {body} {
-     
-    set r [caplib_get_key "identifier" $body];
-
-    return [string tolower $r];
-}
-
-proc caplib_get_expires {body} {
-
-    set r [caplib_get_key "expires" $body];
-
-    return $r;
-}
-
-proc caplib_get_headline {body} {
-
-    set r [caplib_get_key "headline" $body];
-
-    return $r;
-}
-
-proc caplib_get_instruction {body} {
-
-    set r [caplib_get_key "instruction" $body];
 
     return $r;
 }

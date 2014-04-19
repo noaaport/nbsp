@@ -3,7 +3,7 @@
 # $Id$
 #
 
-set usage {capcreate [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
+set usage {capfeed [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
     [-z <atomtxml_zone>]};
 set optlist {b {g.arg ""} {s.arg ""} {z.arg ""}};
 
@@ -44,16 +44,16 @@ proc capfilter_write_catalog {rc_name} {
 
     set rc(cap,catpath,global) $capfilter(catppath,global);
     set rc(cap,catppath,state) [subst $capfilter(catppathfmt,state)];
-    set entry_global [subst $cap(atomtxml,global)];
-    set entry_state [subst $cap(atomtxml,state)];
-    filterlib_file_write $rc(cap,catpath,global) $entry_global;
-    filterlib_file_write $rc(cap,catppath,state) $entry_state;
+    set entry_global [subst $atomtxml(global)];
+    set entry_state [subst $atomtxml(state)];
+    filterlib_file_append $rc(cap,catpath,global) $entry_global;
+    filterlib_file_append $rc(cap,catppath,state) $entry_state;
 
     foreach zone $rc(cap,zones) {
 	set rc(cap,zone) $zone;
 	set rc(cap,catppath,zone) [subst $capfilter(catppathfmt,zone)];
-	set entry_zone [subst $cap(atomtxml,zone)];
-	filterlib_file_write $rc(cap,catppath,zone) $entry_zone;
+	set entry_zone [subst $atomtxml(zone)];
+	filterlib_file_append $rc(cap,catppath,zone) $entry_zone;
     }
 }
 
@@ -103,19 +103,26 @@ foreach type [list global state zone] {
 set prod_body [read stdin];
 set prod_body_list [split $prod_body "\n"];
 
-set rc(cap,identifier) [caplib_get_identifier $prod_body];
-set rc(cap,expires) [caplib_get_expires $prod_body];
-set rc(cap,summary) [caplib_get_summary $prod_body];
-set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
-
-set rc(cap,pil) [caplib_get_pil $prod_body];
-set rc(cap,awips) [string range $rc(cap,pil) 3 end];
-set rc(cap,awips1) [string range $rc(cap,awips) 0 2];
-set rc(cap,awips2) [string range $rc(cap,awips) 3 6];
+set rc(cap,key,pil) [caplib_get_pil $prod_body];
+set rc(cap,key,awips) [string range $rc(cap,key,pil) 3 end];
+set rc(cap,key,awips1) [string range $rc(cap,key,awips) 0 2];
+set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
 
 # Get the city/state from capfilter(site,<awips2>) 
-foreach {city state} [split $capfilter(site,$rc(cap,awips2)) ","] {};
+foreach {city state} [split $capfilter(site,$rc(cap,key,awips2)) ","] {};
 set rc(cap,city) $city;
 set rc(cap,state) $state;
+
+foreach key $capfilter(capkeylist) {
+    set r [caplib_get_key $key $prod_body];
+    set rc(cap,key,$key) $r;
+}
+
+set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
+
+# split expires into date-time
+foreach {d t} [split $rc(cap,key,expires) "T"] {};
+set rc(cap,key,expires,date) $d;
+set rc(cap,key,expires,time) $t;
 
 capfilter_write_catalog rc;
