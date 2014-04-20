@@ -175,16 +175,14 @@ proc process {finfo} {
         incr i;
     }
 
-    if {$capfilter(rcbin) eq ""} {
-	return;
-    }
+    if {$capfilter(rcbin) ne ""} {
+	set status [catch {
+	    ::nbsp::util::pwrite_block $rc(cap,filebody) $capfilter(rcbin);
+	} errmsg];
 
-    set status [catch {
-	::nbsp::util::pwrite_block $rc(cap,filebody) $capfilter(rcbin);
-    } errmsg];
-    
-    if {$status != 0} {
-	log_msg $errmsg;
+	if {$status != 0} {
+	    log_msg $errmsg;
+	}
     }
 
     ::nbsp::periodic::run;
