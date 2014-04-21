@@ -120,9 +120,14 @@ foreach key $capfilter(capkeylist) {
 
 set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
 
-# split expires into date-time
-foreach {d t} [split $rc(cap,key,expires) "T"] {};
-set rc(cap,key,expires,date) $d;
-set rc(cap,key,expires,time) $t;
+# From the expires date-time extract the gmt date and time.
+# The expires value is a string of the form "2014-04-20T12:00:00-04:00".
+# The corresponding format for the tcl "clock scan" function is:
+set _fmt "%Y-%m-%dT%H:%M:%S%z";
+set expires_seconds [clock scan $rc(cap,key,expires) -format $_fmt];
+set expires_date_gmt [clock format $expires_seconds -format "%Y-%m-%d" -gmt 1];
+set expires_time_gmt [clock format $expires_seconds -format "%H:%M" -gmt 1];
+set rc(cap,key,expires,date_gmt) $expires_date_gmt;
+set rc(cap,key,expires,time_gmt) $expires_time_gmt;
 
 capfilter_write_catalog rc;

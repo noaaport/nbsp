@@ -55,7 +55,7 @@ if {$argc > 1} {
 # main
 #
 set seconds [expr [clock seconds] - 24*3600];
-set yesterday [clock format $seconds -gmt true -format $option(f)];
+set yesterday [clock format $seconds -gmt 1 -format $option(f)];
 
 set invfilelist [glob -directory $g(invdir) -nocomplain -tails "*"];
 if {[llength $invfilelist] == 0} {
@@ -67,7 +67,7 @@ foreach invfile $invfilelist {
 	continue;
     }
 
-    invfpath [file join  $g(invdir) $invfile];
+    set invfpath [file join  $g(invdir) $invfile];
     foreach capfpath [split [exec cat $invfpath] "\n"] {
 	nbspcapcleanup_delete_file $capfpath;
     }
