@@ -17,7 +17,7 @@ set capfilter(def) [file join $common(confdir) "capfilter.def"];
 #
 set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(cap,key,identifier).xml};
 #
-set capfilter(invppathfmt) {inv/$rc(cap,key,expires,date).log};
+set capfilter(invppathfmt) {inv/$rc(cap,key,expires,date_gmt).log};
 set capfilter(invdir) "inv";   # Needed by nbspcapcleanup
 #
 # catalog paths and templates
