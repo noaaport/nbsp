@@ -101,33 +101,5 @@ foreach type [list global state zone] {
 # main
 #
 set prod_body [read stdin];
-set prod_body_list [split $prod_body "\n"];
-
-set rc(cap,key,pil) [caplib_get_pil $prod_body];
-set rc(cap,key,awips) [string range $rc(cap,key,pil) 3 end];
-set rc(cap,key,awips1) [string range $rc(cap,key,awips) 0 2];
-set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
-
-# Get the city/state from capfilter(site,<awips2>) 
-foreach {city state} [split $capfilter(site,$rc(cap,key,awips2)) ","] {};
-set rc(cap,city) $city;
-set rc(cap,state) $state;
-
-foreach key $capfilter(capkeylist) {
-    set r [caplib_get_key $key $prod_body];
-    set rc(cap,key,$key) $r;
-}
-
-set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
-
-# From the expires date-time extract the gmt date and time.
-# The expires value is a string of the form "2014-04-20T12:00:00-04:00".
-# The corresponding format for the tcl "clock scan" function is:
-set _fmt "%Y-%m-%dT%H:%M:%S%z";
-set expires_seconds [clock scan $rc(cap,key,expires) -format $_fmt];
-set expires_date_gmt [clock format $expires_seconds -format "%Y-%m-%d" -gmt 1];
-set expires_time_gmt [clock format $expires_seconds -format "%H:%M" -gmt 1];
-set rc(cap,key,expires,date_gmt) $expires_date_gmt;
-set rc(cap,key,expires,time_gmt) $expires_time_gmt;
-
+caplib_get_rcvars rc $prod_body;
 capfilter_write_catalog rc;
