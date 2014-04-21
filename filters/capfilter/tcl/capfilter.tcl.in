@@ -124,46 +124,9 @@ proc process {finfo} {
     #
     set start [string first {<?xml} $prod_body];
     set prod_body [string range $prod_body $start end];
-    
-    # Some functions work on the entire body and some must work
-    # line by line
-    set prod_body_list [split $prod_body "\n"];
 
     # Set rc(cap,...) vars
-    set rc(cap,filebody) $prod_body;
-    foreach {city state} [split $capfilter(site,$rc(awips2)) ","] {};
-    set rc(cap,city) $city;
-    set rc(cap,state) $state;
-    #
-    set rc(cap,zones) [caplib_get_zone_list $prod_body_list];  # a tcl list
-    #
-    set rc(cap,key,pil) [caplib_get_pil $prod_body];
-    set rc(cap,key,awips) [string range $rc(cap,key,pil) 3 end];
-    set rc(cap,key,awips1) [string range $rc(cap,key,awips) 0 2];
-    set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
-
-    foreach key $capfilter(capkeylist) {
-        set r [caplib_get_key $key $prod_body];
-        set rc(cap,key,$key) $r;
-    }
-
-    # From the expires date-time extract the gmt date and time.
-    # The expires value is a string of the form "2014-04-20T12:00:00-04:00".
-    # The corresponding format for the tcl "clock scan" function is:
-    set _fmt "%Y-%m-%dT%H:%M:%S%z";
-
-    set expires_seconds [clock scan $rc(cap,key,expires) -format $_fmt];
-    set expires_date_gmt \
-	[clock format $expires_seconds -format "%Y-%m-%d" -gmt 1];
-    set expires_time_gmt \
-	[clock format $expires_seconds -format "%H:%M" -gmt 1];
-
-    set rc(cap,key,expires,date_gmt) $expires_date_gmt;
-    set rc(cap,key,expires,time_gmt) $expires_time_gmt;
-
-    # The partial and full path of the file
-    set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
-    set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
+    caplib_get_rcvars rc $prod_body;
 
     # Save the file
     capfilter_write_file rc;
@@ -186,7 +149,7 @@ proc process {finfo} {
 
     if {$capfilter(rcbin) ne ""} {
 	set status [catch {
-	    ::nbsp::util::pwrite_block $rc(cap,filebody) $capfilter(rcbin);
+	    ::nbsp::util::pwrite_block $prod_body $capfilter(rcbin);
 	} errmsg];
 
 	if {$status != 0} {
