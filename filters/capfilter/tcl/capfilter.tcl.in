@@ -128,6 +128,10 @@ proc process {finfo} {
     # Set rc(cap,...) vars
     caplib_get_rcvars rc $prod_body;
 
+    # The partial and full path of the file
+    set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
+    set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
+
     # Save the file
     capfilter_write_file rc;
 
@@ -165,7 +169,7 @@ proc capfilter_write_file {rc_name} {
     upvar $rc_name rc;
     global capfilter;
 
-    filterlib_file_write $rc(cap,fileppath) $rc(cap,filebody);
+    filterlib_file_write $rc(cap,fileppath) $rc(cap,prod_body);
     
     # Add the fpath to the inventory
     set invppath [subst $capfilter(invppathfmt)];
