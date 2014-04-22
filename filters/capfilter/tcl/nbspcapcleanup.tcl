@@ -6,8 +6,9 @@
 set usage {capcleanup [-b] [-f namefmt] [<invdir>]};
 set optlist {b {f.arg "%Y-%m-%d.log"}};
 
-# To find the nbsp packages
+# To find the nbsp packages and load the filter library
 source "/usr/local/etc/nbsp/filters.conf";
+source $common(filterslib);
 
 # Load the capfilter variables
 source [file join $common(libdir) "capfilter.init"];
@@ -68,7 +69,7 @@ foreach invfile $invfilelist {
     }
 
     set invfpath [file join $g(invdir) $invfile];
-    foreach capfpath [split [exec cat $invfpath] "\n"] {
+    foreach capfpath [split [filterlib_file_cat $invfpath] "\n"] {
 	nbspcapcleanup_delete_file $capfpath;
     }
     nbspcapcleanup_delete_file $invfpath;

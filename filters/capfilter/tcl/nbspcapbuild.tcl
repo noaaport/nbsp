@@ -6,8 +6,9 @@
 set usage {capbuild [-b] [-c <catdir>] [-i <invdir>]};
 set optlist {b {c.arg ""} {i.arg ""}};
 
-# To find the nbsp packages
+# To find the nbsp packages and load the filter library
 source "/usr/local/etc/nbsp/filters.conf";
+source $common(filterslib);
 
 # Load the capfilter variables
 source [file join $common(libdir) "capfilter.init"];
@@ -17,6 +18,7 @@ package require cmdline;
 
 # Nbsp packages - syslog enabled below if -b is given.
 package require nbsp::errx;
+package require nbsp::util;
 
 # variables
 set g(catdir) $capfilter(catdir);

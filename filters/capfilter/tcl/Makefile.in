@@ -57,6 +57,7 @@ install: ${TARGET}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 	${INSTALL} -m 755 nbspcapcleanup ${BINDIR}
 	${INSTALL} -m 755 nbspcapfeed ${BINDIR}
+	${INSTALL} -m 755 nbspcapbuild ${BINDIR}
 
 clean:
 	rm -f *~ ${TARGET} Makefile

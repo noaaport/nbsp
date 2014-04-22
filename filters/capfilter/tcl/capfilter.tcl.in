@@ -17,6 +17,7 @@ if {$filters_init_status == 1} {
 }
 unset filters_init_status;
 
+# Nbsp packages
 package require nbsp::util;
 package require nbsp::periodic;
 
