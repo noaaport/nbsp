@@ -151,9 +151,9 @@ proc process {finfo} {
         incr i;
     }
 
-    if {$capfilter(rcbin) ne ""} {
+    if {$capfilter(feedbin) ne ""} {
 	set status [catch {
-	    ::nbsp::util::pwrite_block $prod_body $capfilter(rcbin);
+	    ::nbsp::util::pwrite_block $prod_body $capfilter(feedbin);
 	} errmsg];
 
 	if {$status != 0} {
@@ -180,7 +180,8 @@ proc capfilter_cleanup_expired_files {} {
 
      global capfilter;
 
-     exec nbspexec nbspcapcleanup -b;
+     exec nbspexec $capfilter(cleanupbin) -b;
+     exec nbspexec $capfilter(buildbin) -b;
 }
 
 #

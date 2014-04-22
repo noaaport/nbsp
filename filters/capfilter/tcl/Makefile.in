@@ -7,7 +7,7 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapfeed
+TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapfeed nbspcapbuild
 TCLSOURCES =	capfilter.tcl.in capfilter.init \
 			nbspcapcleanup.tcl nbspcapfeed.tcl
 SAMPLES =	capfilter.conf-sample \
@@ -41,6 +41,9 @@ nbspcapcleanup: nbspcapcleanup.tcl
 
 nbspcapfeed: nbspcapfeed.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspcapfeed.tcl > nbspcapfeed
+
+nbspcapbuild: nbspcapbuild.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcapbuild.tcl > nbspcapbuild
 
 ${TXMLTARGET}: ${TXMLSOURCES}
 	rm -rf ${TXMLDIR}

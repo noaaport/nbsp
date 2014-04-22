@@ -3,7 +3,7 @@
 # $Id$
 #
 
-set usage {capcleanup [-f namefmt] [<invdir>]};
+set usage {capcleanup [-b] [-f namefmt] [<invdir>]};
 set optlist {b {f.arg "%Y-%m-%d.log"}};
 
 # To find the nbsp packages
@@ -67,7 +67,7 @@ foreach invfile $invfilelist {
 	continue;
     }
 
-    set invfpath [file join  $g(invdir) $invfile];
+    set invfpath [file join $g(invdir) $invfile];
     foreach capfpath [split [exec cat $invfpath] "\n"] {
 	nbspcapcleanup_delete_file $capfpath;
     }

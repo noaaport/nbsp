@@ -68,6 +68,7 @@
 /usr/local/bin/nbsprsscreate
 /usr/local/bin/nbspcapcleanup
 /usr/local/bin/nbspcapfeed
+/usr/local/bin/nbspcapbuild
 /usr/local/bin/nbsprecover
 /usr/local/bin/nbspaloftcsv
 /usr/local/bin/nbsptrackdata
