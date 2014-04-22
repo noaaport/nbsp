@@ -3,8 +3,8 @@
 # $Id$
 #
 
-set usage {capcleanup [-b] [-f namefmt] [<invdir>]};
-set optlist {b {f.arg "%Y-%m-%d.log"}};
+set usage {capbuild [-b] [-c <catdir>] [-i <invdir>]};
+set optlist {b {c.arg ""} {i.arg ""}};
 
 # To find the nbsp packages and load the filter library
 source "/usr/local/etc/nbsp/filters.conf";
@@ -18,23 +18,11 @@ package require cmdline;
 
 # Nbsp packages - syslog enabled below if -b is given.
 package require nbsp::errx;
+package require nbsp::util;
 
 # variables
+set g(catdir) $capfilter(catdir);
 set g(invdir) $capfilter(invdir);
-
-#
-# functions
-#
-proc nbspcapcleanup_delete_file {fpath} {
-
-    set status [catch {
-	file delete $fpath;
-    } errmsg];
-
-    if {$status != 0} {
-	::nbsp::syslog::err $errmsg;
-    }
-}
 
 #
 # init
@@ -46,31 +34,39 @@ if {$option(b) == 1} {
     ::nbsp::syslog::usesyslog
 }
 
-if {$argc > 1} {
+if {$argc > 0} {
         ::nbsp::syslog::err $usage;
-} elseif {$argc == 1} {
-    set g(invdir) [lindex $argv 0];   
+}
+
+if {$option(c) ne ""} {
+    set g(catdir) $option(c);
+}
+
+if {$option(i) ne ""} {
+    set g(invdir) $option(i);
 }
 
 #
 # main
 #
-set seconds [expr [clock seconds] - 24*3600];
-set yesterday [clock format $seconds -gmt 1 -format $option(f)];
-
-set invfilelist [glob -directory $g(invdir) -nocomplain -tails "*"];
+set invfilelist [lsort [glob -directory $g(invdir) -nocomplain -tails "*"]];
 if {[llength $invfilelist] == 0} {
     return;
 }
 
-foreach invfile $invfilelist {
-    if {[string compare $invfile $yesterday] == 1} {
-	continue;
-    }
+file delete -force $g(catdir);
 
+foreach invfile $invfilelist {
     set invfpath [file join $g(invdir) $invfile];
     foreach capfpath [split [filterlib_file_cat $invfpath] "\n"] {
-	nbspcapcleanup_delete_file $capfpath;
+	set prod_body [filterlib_file_cat $capfpath];
+
+	set status [catch {
+	    ::nbsp::util::pwrite_block $prod_body $capfilter(feedbin);
+	} errmsg];
+
+	if {$status != 0} {
+	    ::nbsp::syslog::errc $errmsg;
+	}
     }
-    nbspcapcleanup_delete_file $invfpath;
 }
