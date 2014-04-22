@@ -70,6 +70,7 @@ bin/nbspexec
 bin/nbsprsscreate
 bin/nbspcapcleanup
 bin/nbspcapfeed
+bin/nbspcapbuild
 bin/nbsprecover
 bin/nbspaloftcsv
 bin/nbsptrackdata
