@@ -69,7 +69,7 @@ bin/nbspinvrm
 bin/nbspexec
 bin/nbsprsscreate
 bin/nbspcapcleanup
-bin/nbspcapfeed
+bin/nbspcapcatalog
 bin/nbspcapbuild
 bin/nbsprecover
 bin/nbspaloftcsv
