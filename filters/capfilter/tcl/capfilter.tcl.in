@@ -154,9 +154,10 @@ proc process {finfo} {
 
     foreach p [list "feed" "catalog"] {
 	if {$capfilter(${p}_enable) == 1} {
-	set status [catch {
-	    ::nbsp::util::pwrite_block $prod_body $capfilter(${p}bin);
-	} errmsg];
+	    set status [catch {
+		::nbsp::util::pwrite_block $prod_body $capfilter(${p}bin);
+	    } errmsg];
+	}
 
 	if {$status != 0} {
 	    log_msg $errmsg;
