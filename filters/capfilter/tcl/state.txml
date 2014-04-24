@@ -1,5 +1,6 @@
 set atomtxml(state) {
 <entry>
+<cap:identifier>$rc(cap,key,identifier)</cap:identifier>
 <cap:event>$rc(cap,key,event)</cap:event>
 <cap:effective>$rc(cap,key,effective)</cap:effective>
 <cap:expires>$rc(cap,key,expires)</cap:expires>

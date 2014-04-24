@@ -7,9 +7,9 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapfeed nbspcapbuild
+TCLTARGET =	capfilter.tcl nbspcapcleanup nbspcapcatalog nbspcapbuild
 TCLSOURCES =	capfilter.tcl.in capfilter.init \
-			nbspcapcleanup.tcl nbspcapfeed.tcl
+			nbspcapcleanup.tcl nbspcapcatalog.tcl
 SAMPLES =	capfilter.conf-sample \
 		capfilter.rc-sample \
 		capfilter.def-sample
@@ -39,8 +39,8 @@ capfilter.def-sample: capfilter.def
 nbspcapcleanup: nbspcapcleanup.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcleanup.tcl > nbspcapcleanup
 
-nbspcapfeed: nbspcapfeed.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspcapfeed.tcl > nbspcapfeed
+nbspcapcatalog: nbspcapcatalog.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcapcatalog.tcl > nbspcapcatalog
 
 nbspcapbuild: nbspcapbuild.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspcapbuild.tcl > nbspcapbuild
@@ -56,7 +56,7 @@ install: ${TARGET}
 	${INSTALL} -m 755 capfilter.init ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 	${INSTALL} -m 755 nbspcapcleanup ${BINDIR}
-	${INSTALL} -m 755 nbspcapfeed ${BINDIR}
+	${INSTALL} -m 755 nbspcapcatalog ${BINDIR}
 	${INSTALL} -m 755 nbspcapbuild ${BINDIR}
 
 clean:
