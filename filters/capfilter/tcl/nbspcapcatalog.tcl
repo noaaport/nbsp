@@ -3,7 +3,7 @@
 # $Id$
 #
 
-set usage {capfeed [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
+set usage {capcatalog [-b] [-g <atomtxml_global>] [-s <atomtxml_state>]
     [-z <atomtxml_zone>]};
 set optlist {b {g.arg ""} {s.arg ""} {z.arg ""}};
 
@@ -33,9 +33,6 @@ proc capfilter_write_catalog {rc_name} {
 
     upvar $rc_name rc;
     global capfilter g;
-
-    # Until we know what to do
-    # return;
 
     # Get the templates
     foreach type [list global state zone] {

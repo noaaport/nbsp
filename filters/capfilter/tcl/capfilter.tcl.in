@@ -152,9 +152,10 @@ proc process {finfo} {
         incr i;
     }
 
-    if {$capfilter(feedbin) ne ""} {
+    foreach p [list "feed" "catalog"] {
+	if {$capfilter(${p}_enable) == 1} {
 	set status [catch {
-	    ::nbsp::util::pwrite_block $prod_body $capfilter(feedbin);
+	    ::nbsp::util::pwrite_block $prod_body $capfilter(${p}bin);
 	} errmsg];
 
 	if {$status != 0} {
@@ -182,7 +183,10 @@ proc capfilter_cleanup_expired_files {} {
      global capfilter;
 
      exec nbspexec $capfilter(cleanupbin) -b;
-     exec nbspexec $capfilter(buildbin) -b;
+
+     if {$capfilter(catalog_enable) == 1} {
+	 exec nbspexec $capfilter(buildbin) -b;
+     }
 }
 
 #

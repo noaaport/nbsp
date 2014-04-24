@@ -8,12 +8,15 @@ set capfilter(conf)	[file join $common(confdir) "capfilter.conf"];
 set capfilter(rc)	[file join $common(confdir) "capfilter.rc"];
 set capfilter(prerc)    "";
 set capfilter(postrc)   "";
-set capfilter(feedbin)    "nbspcapfeed";
-set capfilter(cleanupbin) "nbspcapcleanup";
-set capfilter(buildbin)   "nbspcapbuild";
 set capfilter(localconfdirs) $common(localconfdirs);
 set capfilter(rcdir)	[file join $common(rcdir) "cap"];
 set capfilter(datadir)  [file join $common(datadir) "cap"];
+set capfilter(catalogbin) "nbspcapcatalog";
+set capfilter(cleanupbin) "nbspcapcleanup";
+set capfilter(buildbin)   "nbspcapbuild";
+set capfilter(feedbin)    "nbspcapfeed";
+set capfilter(catalog_enable) 1;
+set capfilter(feed_enable) 0;
 #
 set capfilter(def) [file join $common(confdir) "capfilter.def"];
 #
