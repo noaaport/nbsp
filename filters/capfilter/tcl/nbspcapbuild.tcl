@@ -62,7 +62,7 @@ foreach invfile $invfilelist {
 	set prod_body [filterlib_file_cat $capfpath];
 
 	set status [catch {
-	    ::nbsp::util::pwrite_block $prod_body $capfilter(feedbin);
+	    ::nbsp::util::pwrite_block $prod_body $capfilter(catalogbin);
 	} errmsg];
 
 	if {$status != 0} {
