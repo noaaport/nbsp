@@ -153,7 +153,7 @@ proc process {finfo} {
     }
 
     foreach p [list "feed" "catalog"] {
-	if {$capfilter(${p}_enable) == 1} {
+	if {$capfilter(${p}_enable) == 0} {
 	    continue;
 	}
 
