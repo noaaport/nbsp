@@ -1,9 +1,0 @@
-This file exists only for documentation purposes and not used in any way
-by the build system.
-
-The following are not required by the default Nbsp configuration
-(required-pkgs.README) and therefore are not included in the
-deb econtrol file:
-
-tk8.5
-mapserver-bin

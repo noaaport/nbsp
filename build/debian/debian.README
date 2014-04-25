@@ -5,3 +5,11 @@
 The nntpfilter uses "uudecode" and that is in the "sharutils"
 package.
 -
+
+The following are not required by the default Nbsp configuration
+(required-pkgs.README) and therefore are not included in the
+deb control file:
+
+tk
+mapserver-bin
+-

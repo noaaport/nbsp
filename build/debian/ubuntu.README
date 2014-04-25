@@ -1,8 +1,0 @@
-#
-# $Id$
-#
-
-The debian package can be used in Ubuntu LTS as well. In Ubuntu 12.10
-the db library is 5.1 and "ubuntu.control" must be used as the control
-file.
--

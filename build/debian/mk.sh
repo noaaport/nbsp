@@ -9,6 +9,7 @@ rm -rf ${name}-${version}
 cp -r $branchname ${name}-${version}
 
 cd ${name}-${version}
+(cd build/debian; ./mk-control.sh)
 rm -rf debian
 cp -R build/debian .
 dpkg-buildpackage -rfakeroot -uc -us
