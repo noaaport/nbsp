@@ -100,6 +100,18 @@ set filterslib(doradinfoboth) {nmd|net};  # use {^$} for empty, {} for all
 # This actually disables reading the header altogether
 set filterslib(noradinfo) {nmd};          # use {^$} for empty
 
+# Whether to report all the (informational) messages that the library
+# may emit when processing some of the above files. A typical sequence is:
+#
+# Apr 25 18:10:59 genstor nbspradinfo: \
+#   Invalid pdb header; maybe a zlib compressed header.
+# Apr 25 18:10:59 genstor dafilter: \
+#   Retrying with zlib compressed kewx_sdus34-ptaewx.252209_107856197.
+# Apr 25 18:10:59 genstor dafilter: \
+#  OK with zlib compressed kewx_sdus34-ptaewx.252
+#
+set filterslib(radinfoverbose) 0;
+
 # Global variables of the filtererr library.
 # By default the filters report errors using syslog.
 # Otherwise, if usesyslog is set to 0 they will report to stderr or,
@@ -112,6 +124,7 @@ set common(debug)		0;
 set filterserrlib(usesyslog)	1;
 set filterserrlib(logdir)	"/var/log/noaaport";
 set filterserrlib(errorInfo)	$common(debug);
+set filterserrlib(radinfoverbose) $filterslib(radinfoverbose);
 
 # The definitions used by the gribid library to extract information
 # from the grib files (used by the dafilter, gpfilter and ldmfilter).

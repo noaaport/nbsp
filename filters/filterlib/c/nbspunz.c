@@ -347,7 +347,7 @@ static int parse_args(int argc, char ** argv){
     }
   }
 
-  if(opt_cC> 1)
+  if(opt_cC > 1)
     log_errx(1, "Conflicting options -c and -C");
 
   if(optind <= argc - 1)
