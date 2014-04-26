@@ -421,8 +421,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    if {($radinfo_status != 0) && \
 		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
 		set radinfo_status -2;
-		log_radinfo_msg \
-			"Retrying without uncompressing $rc(fbasename).";
+		log_msg "Retrying without uncompressing $rc(fbasename).";
 	    }
         }
 
@@ -448,7 +447,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
             } errmsg];
 
 	    if {($old_status == -2) && ($radinfo_status == 0)} {
-		log_radinfo_msg "OK with uncompressed $rc(fbasename).";
+		log_msg "OK with uncompressed $rc(fbasename).";
 	    } elseif {($old_status == -1) && ($radinfo_status != 0)} {
                 #
 	        # This catches the files that were not processed by nbspunz
@@ -458,12 +457,14 @@ proc filterlib_get_rcvars {rc_name finfo args} {
                 # This is happening (Wed Jan 12 17:30:38 AST 2011) with
                 # some dsp, dvl, eet files (and maybe others).
                 #
-                log_radinfo_msg "Retrying with zlib compressed $rc(fbasename).";
+                log_radinfo_msg \
+			"Retrying with zlib compressed $rc(fbasename).";
 	        set radinfo_status [catch {
 	            set radinfo [split [exec nbspunz -b -n 1 $rc(fpath) | \
 		    	nbspradinfo -b -C]];
 	        } errmsg];
                 if {$radinfo_status == 0} {
+		    ## exec echo $rc(fname) >> /var/noaaport/radinfo.log
                     log_radinfo_msg "OK with zlib compressed $rc(fbasename).";
                 }
             }
