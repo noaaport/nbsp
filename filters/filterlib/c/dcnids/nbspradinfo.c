@@ -7,7 +7,7 @@
  */
 
 /*
- * Usage: nbspradinfo [-b] [-c <count> | -C] [-l] [-t] <file> | < <file>
+ * Usage: nbspradinfo [-b] [-c <count> | -C] [-l] [-q] [-t] <file> | < <file>
  *
  * The program reads from a file or stdin, but in either case the file
  * must be the uncompressed file, including the wmo header, but with the
@@ -48,6 +48,12 @@
  *
  * If [-t] is given then only the "seconds" is printed, and if [-l] is given
  * then the m_msglength is also printed.
+ *
+ * Exit codes:
+ *   0 => no errors
+ *   1 => some error
+ *   2 => Invalid pdb header; maybe a zlib compressed header. This is
+ *        implemented only when -q is given.
  */
 
 #include <assert.h>
@@ -73,9 +79,10 @@ struct {
   int opt_skipcount;	/* -c <count> => skip the first <count> bytes */
   int opt_timeonly;	/* -t => only extract and print the time (unix secs) */
   int opt_lengthonly;	/* -l => only extract and print the m_msglength */
+  int opt_quiet_invalid_pdb;	/* -q => do not emit invalid pdb error msg */
   /* variables */
   int fd;
-} g = {NULL, 0, 0, 0, 0, -1};
+} g = {NULL, 0, 0, 0, 0, 0, -1};
 
 /* general functions */
 static int process_file(void);
@@ -89,8 +96,9 @@ static void cleanup(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bCltc:";
-  char *usage = "nbspradinfo [-b] [-c <count> | -C] [-l] [-t] <file> | < file";
+  char *optstr = "bClqtc:";
+  char *usage = "nbspradinfo [-b] [-c <count> | -C] [-l] [-q] [-t] "
+		"<file> | < file";
   int status = 0;
   int c;
   int opt_cC = 0;	/* c and C together is a conflict */
@@ -104,6 +112,9 @@ int main(int argc, char **argv){
       break;
     case 'l':
       g.opt_lengthonly = 1;
+      break;
+    case 'q':
+      g.opt_quiet_invalid_pdb = 1;
       break;
     case 't':
       g.opt_timeonly = 1;
@@ -175,8 +186,12 @@ int process_file(void){
   if(dcnids_verify_wmoawips_header(nheader.buffer) != 0)
     log_errx(1, "Invalid wmo header.");
 
-  if(dcnids_decode_header(&nheader) != 0)
-    log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
+  if(dcnids_decode_header(&nheader) != 0){
+    if(g.opt_quiet_invalid_pdb == 0)
+      log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
+    else
+      exit(2);
+  }
 
   if((g.opt_timeonly != 0) && (g.opt_lengthonly != 0))
     fprintf(stdout, "%" PRIuMAX " %u",
