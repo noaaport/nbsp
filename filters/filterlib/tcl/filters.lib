@@ -421,27 +421,34 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    if {($radinfo_status != 0) && \
 		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
 		set radinfo_status -2;
-		log_msg "Retrying without uncompressing $rc(fbasename).";
+		log_radinfo_msg \
+			"Retrying without uncompressing $rc(fbasename).";
 	    }
         }
 
 	# Now try those that were not seen above, and those that were seen
 	# but gave an error and are set to retry without unzip (nmd,net).
+	# Here we call nbspradinfo with the q flag unless
+	# filterslib(radinfoverbose) is set.
 
 	if {$radinfo_status < 0} {
 	    set old_status $radinfo_status;
+
+	    set _cmd [list nbspradinfo -b];
+	    if {$filterslib(radinfoverbose) == 0} {
+	        lappend _cmd "-q";
+	    }
+	    if {$ccbsaved == 1} {
+	        lappend _cmd "-C";
+	    }
+	    lappend _cmd $rc(fpath);
+
             set radinfo_status [catch {
-		if {$ccbsaved == 1} {
-                    set radinfo [split \
-                      [exec nbspradinfo -b -C $rc(fpath)]];
-        	} else {
-                    set radinfo [split \
-                      [exec nbspradinfo -b $rc(fpath)]];
-		}
+                    set radinfo [split [eval exec ${_cmd}]];
             } errmsg];
 
 	    if {($old_status == -2) && ($radinfo_status == 0)} {
-		log_msg "OK with uncompressed $rc(fbasename).";
+		log_radinfo_msg "OK with uncompressed $rc(fbasename).";
 	    } elseif {($old_status == -1) && ($radinfo_status != 0)} {
                 #
 	        # This catches the files that were not processed by nbspunz
@@ -451,13 +458,13 @@ proc filterlib_get_rcvars {rc_name finfo args} {
                 # This is happening (Wed Jan 12 17:30:38 AST 2011) with
                 # some dsp, dvl, eet files (and maybe others).
                 #
-                log_msg "Retrying with zlib compressed $rc(fbasename).";
+                log_radinfo_msg "Retrying with zlib compressed $rc(fbasename).";
 	        set radinfo_status [catch {
-	            set radinfo [split \
-        	      [exec nbspunz -b -n 1 $rc(fpath) | nbspradinfo -b -C]];
+	            set radinfo [split [exec nbspunz -b -n 1 $rc(fpath) | \
+		    	nbspradinfo -b -C]];
 	        } errmsg];
                 if {$radinfo_status == 0} {
-                    log_msg "OK with zlib compressed $rc(fbasename).";
+                    log_radinfo_msg "OK with zlib compressed $rc(fbasename).";
                 }
             }
         }

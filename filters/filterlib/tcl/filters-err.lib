@@ -12,7 +12,7 @@ if {$filterserrlib(usesyslog) == 0} {
     ::nbsp::syslog::usesyslog 0;
 }
 
-proc log_msg s {
+proc log_msg {s} {
 
     global filterserrlib;
 
@@ -23,17 +23,17 @@ proc log_msg s {
     }
 }
 
-proc log_warn s {
+proc log_warn {s} {
 
     log_msg "Warning: $s";
 }
 
-proc log_errc s {
+proc log_errc {s} {
 
     log_msg "Error: $s";
 }
 
-proc filelog_msg s {
+proc filelog_msg {s} {
 
     global argv0 filterserrlib;
 
@@ -48,5 +48,14 @@ proc log_errInfo {} {
 
     if {$filterserrlib(errorInfo) == 1} {
 	log_msg $errorInfo;
+    }
+}
+
+proc log_radinfo_msg {s} {
+
+    global filterserrlib;
+
+    if {$filterserrlib(radinfoverbose) == 1} {
+        log_msg $s;
     }
 }
