@@ -10,11 +10,14 @@ set atomtxml(global) {
 <cap:urgency>$rc(cap,key,urgency)</cap:urgency>
 <cap:severity>$rc(cap,key,severity)</cap:severity>
 <cap:certainty>$rc(cap,key,certainty)</cap:certainty>
-<cap:areaDesc>$rc(cap,key,areaDesc)</cap:areaDesc>
 
 <cap:headline>
 [string trim $rc(cap,key,headline)]
 </cap:headline>
+
+<cap:areaDesc>
+[string trim $rc(cap,key,areaDesc)]
+</cap:areaDesc>
 
 <cap:instruction>
 [string trim $rc(cap,key,instruction)]
