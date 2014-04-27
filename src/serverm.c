@@ -775,6 +775,7 @@ static int server_send_client_queues(struct packet_info_st *packetinfo){
   int protocol;
   int f_thread_created;
   char *nameorip;
+  time_t now, last;
   int status = 0;
   int status1 = 0;	/* error from emwin filter */
   int dberror = 0;
@@ -856,12 +857,11 @@ static int server_send_client_queues(struct packet_info_st *packetinfo){
 
     if((g.netfilter_enable == 1) &&
        (allow_filter_get_flag(&g.ct->ce[i]) == 0)){
-      log_verbose(1, "%s is not allowed for %s", packetinfo->fname,
-		  conn_element_get_nameorip(&g.ct->ce[i]));
+      log_verbose(1, "%s is not allowed for %s", packetinfo->fname, nameorip);
       continue;
     } else {
       log_verbose(1, "Queueing %s for client %d [%s]", packetinfo->fname,
-		  i, conn_element_get_nameorip(&g.ct->ce[i]));
+		  i, nameorip);
     }
 
     if((protocol == PROTOCOL_EMWIN) && (status1 == 0)){
@@ -882,10 +882,20 @@ static int server_send_client_queues(struct packet_info_st *packetinfo){
      */
     if(status == -1)
       log_err2_db("Error writing to client queue", nameorip, dberror);
-    else if(status == 1)
-      log_info("Soft limit reached for client thread %d [%s].", i, nameorip);
-    else if(status == 2)
-      log_errx("Hard limit reached for client thread %d [%s].", i, nameorip);
+    else if(status != 0){
+      now = time(NULL);
+      last = get_client_qlimit_log_last(&g.ct->ce[i]);
+      if(now > last + g.server_clientqlimit_logperiod_secs){
+	set_client_qlimit_log_last(&g.ct->ce[i], now);
+
+	if(status == 1)
+	  log_info("Soft limit reached for client thread %d [%s].",
+		   i, nameorip);
+	else if(status == 2)
+	  log_errx("Hard limit reached for client thread %d [%s].",
+		   i, nameorip);
+      }
+    }
   }
 
   return(0);

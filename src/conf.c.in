@@ -225,6 +225,10 @@
 #define CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS	@counter@
 #define DEFVAL_SERVER_CLIENTID_TIMEOUT_SECS	SERVER_CLIENTID_TIMEOUT_SECS
 
+#define CONFOPT_SERVER_CLIENTQLIMIT_LOGPERIOD_SECS @counter@
+#define DEFVAL_SERVER_CLIENTQLIMIT_LOGPERIOD_SECS \
+	SERVER_CLIENTQLIMIT_LOGPERIOD_SECS
+
 #define CONFOPT_BROADCAST_READ_TIMEOUT_SECS	@counter@
 #define DEFVAL_BROADCAST_READ_TIMEOUT_SECS   BROADCAST_READ_TIMEOUT_SECS
 
@@ -505,6 +509,9 @@ static struct confoption_st confoptions[] = {
 	DEFVAL_SERVER_SO_SNDBUF},
   {"server_clientid_timeout_secs", CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_SERVER_CLIENTID_TIMEOUT_SECS},
+  {"server_clientqlimit_logperiod_secs",
+        CONFOPT_SERVER_CLIENTQLIMIT_LOGPERIOD_SECS, TCL_LINK_INT, NULL,
+	DEFVAL_SERVER_CLIENTQLIMIT_LOGPERIOD_SECS},
   {"broadcast_read_timeout_secs", CONFOPT_BROADCAST_READ_TIMEOUT_SECS,
 	TCL_LINK_INT, NULL, DEFVAL_BROADCAST_READ_TIMEOUT_SECS},
   {"fifo_write_timeout_ms", CONFOPT_FIFO_WRITE_TIMEOUT_MS, TCL_LINK_INT, NULL,
@@ -704,6 +711,8 @@ int configure(void){
   setoptval(&g.server_so_sndbuf, confoptions, CONFOPT_SERVER_SO_SNDBUF);
   setoptval(&g.server_clientid_timeout_secs, confoptions,
 	CONFOPT_SERVER_CLIENTID_TIMEOUT_SECS);
+  setoptval(&g.server_clientqlimit_logperiod_secs, confoptions,  
+        CONFOPT_SERVER_CLIENTQLIMIT_LOGPERIOD_SECS);
   setoptval(&g.broadcast_read_timeout_secs, confoptions,
 	CONFOPT_BROADCAST_READ_TIMEOUT_SECS);
   setoptval(&g.fifo_write_timeout_ms, confoptions,
@@ -888,6 +897,8 @@ void print_confoptions(void){
   fprintf(stdout, "server_so_sndbuf %d\n", g.server_so_sndbuf);
   fprintf(stdout, "server_clientid_timeout_secs %d\n",
 	g.server_clientid_timeout_secs);
+  fprintf(stdout, "server_clientqlimit_logperiod_secs %d\n",
+        g.server_clientqlimit_logperiod_secs);
   fprintf(stdout, "broadcast_read_timeout_secs %d\n",
 	g.broadcast_read_timeout_secs);
   fprintf(stdout, "fifo_write_timeout_ms %d\n", g.fifo_write_timeout_ms);
@@ -1051,6 +1062,8 @@ int validate_configuration(void){
   VALIDATE_PARAM_L(g.server_so_sndbuf, -1, "server_so_sndbuf");
   VALIDATE_PARAM_L(g.server_clientid_timeout_secs, 1,
 	"server_clientid_timeout_secs");
+  VALIDATE_PARAM_L(g.server_clientqlimit_logperiod_secs, 1,
+	"server_clientqlimit_logperiod_secs");
 
   VALIDATE_PARAM_L(g.nbspstats_logperiod_secs, 0, "nbspstats_logperiod_secs");
   VALIDATE_PARAM_L(g.qstate_logperiod_secs, 0, "qstate_logperiod_secs");
