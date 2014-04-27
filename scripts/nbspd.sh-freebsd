@@ -15,6 +15,6 @@ name=nbspd
 command=/usr/local/sbin/${name}
 [ -z "$nbspd_enable" ] && nbspd_enable=0
 
-rcvar=`set_rcvar`
+rcvar=nbspd_enable
 load_rc_config $name
 run_rc_command "$1"

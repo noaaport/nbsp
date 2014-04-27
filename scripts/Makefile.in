@@ -12,6 +12,7 @@ CLEANUP =	@CLEANUP@
 HOURLYCONF =	@HOURLYCONF@
 STARTCLEANCONF = @STARTCLEANCONF@
 STARTSTOPRC = 	@STARTSTOPRC@
+POSTINSTALLSRC = @POSTINSTALLSRC@
 
 SAMPLES =	hourly-cleanup.conf-sample start-cleanup.conf-sample \
 		startstop.rc-sample
@@ -45,6 +46,14 @@ nbspctl: nbspctl.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# \
 	-e /%RCFPATH%/s##${RCFPATH}# \
 	nbspctl.tcl > nbspctl
+
+nbsppostinstall: ${POSTINSTALLSRC}
+	if [ `grep '#!/bin/sh' ${POSTINSTALLSRC}` ]; then \
+	cat ${POSTINSTALLSRC} > nbsppostinstall; \
+	else \
+	echo '#!/bin/sh' > nbsppostinstall; \
+	cat ${POSTINSTALLSRC} >> nbsppostinstall; \
+	fi
 
 startstop: startstop.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# startstop.tcl > startstop
