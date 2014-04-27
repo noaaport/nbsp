@@ -10,8 +10,7 @@ HOURLYCONF=hourly-cleanup.conf-freebsd
 CLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
 STARTSTOPRC=startstop.rc-freebsd
-POSTINSTALL_SRC=../build/bsd/pkg-postinstall
-POSTINSTALL_TARGET=nbsppostinstall
+POSTINSTALLSRC=../build/bsd/pkg-postinstall
 
 case $os in
     FreeBSD) 
@@ -35,9 +34,9 @@ case $os in
 
 	[ $flavor = debian ] && STARTSTOPRC=startstop.rc-debian
 	[ $flavor = debian ] && RCCONF=nbspd.sh.conf-debian
-	[ $flavor = debian ] && POSTINSTALL_SRC=../build/debian/postinst
+	[ $flavor = debian ] && POSTINSTALLSRC=../build/debian/postinst
 
-	[ $flavor = centos ] && POSTINSTALL_SRC=../build/rpm/rpm-postinstall
+	[ $flavor = centos ] && POSTINSTALLSRC=../build/rpm/rpm-postinstall
     	;;
     Darwin)
 	RCINIT=nbspd.sh-macosx
