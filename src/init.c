@@ -140,6 +140,7 @@ void init_globals(void){
   g.server_maxclients = SERVER_MAXCLIENTS;
   g.server_so_sndbuf = SERVER_SO_SNDBUF;
   g.server_clientid_timeout_secs = SERVER_CLIENTID_TIMEOUT_SECS;
+  g.server_clientqlimit_logperiod_secs = SERVER_CLIENTQLIMIT_LOGPERIOD_SECS;
 
   g.nbspstats_logperiod_secs = NBSP_STATS_LOGPERIOD_SECS;
   g.qstate_logperiod_secs = QSTATE_LOGPERIOD_SECS;

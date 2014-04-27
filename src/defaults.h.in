@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2012 Jose F. Nieves <nieves@ltp.uprrpedu>
+ * Copyright (c) 2005-2012 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -299,6 +299,12 @@
  * the default (assumed to be emwin).
  */
 #define SERVER_CLIENTID_TIMEOUT_SECS	10
+
+/*
+ * How many seconds the server waits before re-sending the
+ * message when a client's queue has reached the soft or hard limit.
+ */
+#define SERVER_CLIENTQLIMIT_LOGPERIOD_SECS 60
 
 /* How often to recollect the statistics (in seconds). */
 #define NBSP_STATS_LOGPERIOD_SECS	60	/* 1 min */

@@ -20,4 +20,7 @@ int ident_client_protocol(struct conn_table_st *ct, int i,
 int get_client_protocol(struct conn_table_st *ct, int i);
 int get_client_protocol_byce(struct conn_element_st *ce);
 
+int set_client_qlimit_log_last(struct conn_element_st *ce, time_t unixsecs);
+time_t get_client_qlimit_log_last(struct conn_element_st *ce);
+
 #endif

@@ -100,6 +100,7 @@ struct nbsp_globals {
   int server_maxclients;
   int server_so_sndbuf;
   int server_clientid_timeout_secs; /* net client limit to identify itself */
+  int server_clientqlimit_logperiod_secs;
   time_t nbspstats_logperiod_secs;
   time_t qstate_logperiod_secs;	/* how often to log the state of the queues */
   time_t serverstate_logperiod_secs; /* how often to log the server state */
