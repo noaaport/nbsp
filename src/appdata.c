@@ -13,6 +13,7 @@
 
 struct appdata_st {
   int protocol;
+  time_t qlimit_log_last;
 };
 
 static int set_client_protocol(struct conn_table_st *ct, int i, int protocol);
@@ -111,6 +112,7 @@ static int set_client_protocol(struct conn_table_st *ct, int i, int protocol){
     return(-1);
 
   p->protocol = protocol;
+  p->qlimit_log_last = 0;
   conn_table_set_element_appdata(ct, i, p, free_appdata_st);
 
   return(status);
@@ -132,4 +134,36 @@ static void free_appdata_st(void *p){
 
   if(p != NULL)
     free(p);
+}
+
+int set_client_qlimit_log_last(struct conn_element_st *ce, time_t unixsecs){
+
+  struct appdata_st *p;
+
+  p = (struct appdata_st*)conn_element_get_appdata(ce);
+  if(p == NULL){
+    /*
+     * This client never identified itself.
+     */
+    return(1);
+  }
+
+  p->qlimit_log_last = unixsecs;
+
+  return(0);
+}
+
+time_t get_client_qlimit_log_last(struct conn_element_st *ce){
+
+  struct appdata_st *p;
+
+  p = (struct appdata_st*)conn_element_get_appdata(ce);
+  if(p == NULL){
+    /*
+     * This client never identified itself.
+     */
+    return(0);
+  }
+
+  return(p->qlimit_log_last);
 }
