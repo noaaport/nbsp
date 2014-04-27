@@ -51,7 +51,7 @@ nbsppostinstall: ${POSTINSTALLSRC}
 	if [ `grep '#!/bin/sh' ${POSTINSTALLSRC}` ]; then \
 	cat ${POSTINSTALLSRC} > nbsppostinstall; \
 	else \
-	echo '#!/bin/sh' > nbsppostinstall \
+	echo '#!/bin/sh' > nbsppostinstall; \
 	cat ${POSTINSTALLSRC} >> nbsppostinstall; \
 	fi
 
