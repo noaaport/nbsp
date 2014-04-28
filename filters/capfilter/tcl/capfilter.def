@@ -1,3 +1,8 @@
+#
+# $Id$
+#
+# http://alerts.weather.gov/cap/pdf/NWS-CAPmessageIDs.pdf
+#
 set capfilter(site,aly) "albany,ny"
 set capfilter(site,bgm) "binghamton,ny"
 set capfilter(site,btv) "burlington,vt"
@@ -131,3 +136,7 @@ set capfilter(site,spc) "spc_norman,ok"
 set capfilter(site,swx) "swpc_boulder,co"
 set capfilter(site,paq) "ak_wctwc_palmer,ak"
 set capfilter(site,heb) "ptwc_ewa_beach,hi"
+#
+# Added by hand
+#
+set capfilter(site,wcz) "yukon,ak"
