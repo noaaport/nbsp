@@ -2,6 +2,9 @@ set atomtxml(state) {
 <entry>
 <cap:identifier>$rc(cap,key,identifier)</cap:identifier>
 <cap:pil>$rc(cap,key,pil)</cap:pil>
+<cap:ppath>$rc(cap,fileppath)</cap:ppath>
+<cap:fpath>$rc(cap,filefpath)</cap:fpath>
+
 <cap:event>$rc(cap,key,event)</cap:event>
 <cap:effective>$rc(cap,key,effective)</cap:effective>
 <cap:expires>$rc(cap,key,expires)</cap:expires>
