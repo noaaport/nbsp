@@ -132,7 +132,15 @@ proc caplib_get_rcvars {rc_name prod_body} {
     set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
 
     # Get the city/state from capfilter(site,<awips2>) 
-    foreach {city state} [split $capfilter(site,$rc(cap,key,awips2)) ","] {};
+    set status [catch {
+    	foreach {city state} \
+		[split $capfilter(site,$rc(cap,key,awips2)) ","] {};
+    } errmsg];
+    if {$status != 0} {
+        # capfilter(site,<awips2>) is not defined for this awips2.
+        set city "xxxx";
+	set state "xx";
+    }
     set rc(cap,city) $city;
     set rc(cap,state) $state;
 
@@ -150,7 +158,8 @@ proc caplib_get_rcvars {rc_name prod_body} {
     set expires_seconds [clock scan $rc(cap,key,expires) -format $_fmt];
     set expires_date_gmt \
 	[clock format $expires_seconds -format "%Y-%m-%d" -gmt 1];
-    set expires_time_gmt [clock format $expires_seconds -format "%H:%M" -gmt 1];
+    set expires_time_gmt \
+    	[clock format $expires_seconds -format "%H:%M" -gmt 1];
     set rc(cap,key,expires,date_gmt) $expires_date_gmt;
     set rc(cap,key,expires,time_gmt) $expires_time_gmt;
 
