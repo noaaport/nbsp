@@ -20,7 +20,8 @@ set capfilter(feed_enable) 0;
 #
 set capfilter(def) [file join $common(confdir) "capfilter.def"];
 #
-set capfilter(fileppathfmt) {files/$rc(awips2)/$rc(cap,key,identifier).xml};
+set capfilter(fileppathfmt) \
+    {files/$rc(cap,key,awips2)/$rc(cap,key,identifier).xml};
 #
 set capfilter(invppathfmt) {inv/$rc(cap,key,expires,date_gmt).log};
 set capfilter(invdir) "inv";   # Needed by nbspcapcleanup
@@ -132,7 +133,15 @@ proc caplib_get_rcvars {rc_name prod_body} {
     set rc(cap,key,awips2) [string range $rc(cap,key,awips) 3 end];
 
     # Get the city/state from capfilter(site,<awips2>) 
-    foreach {city state} [split $capfilter(site,$rc(cap,key,awips2)) ","] {};
+    set status [catch {
+    	foreach {city state} \
+		[split $capfilter(site,$rc(cap,key,awips2)) ","] {};
+    } errmsg];
+    if {$status != 0} {
+        # capfilter(site,<awips2>) is not defined for this awips2.
+        set city "xxxx";
+	set state "xx";
+    }
     set rc(cap,city) $city;
     set rc(cap,state) $state;
 
@@ -150,7 +159,15 @@ proc caplib_get_rcvars {rc_name prod_body} {
     set expires_seconds [clock scan $rc(cap,key,expires) -format $_fmt];
     set expires_date_gmt \
 	[clock format $expires_seconds -format "%Y-%m-%d" -gmt 1];
-    set expires_time_gmt [clock format $expires_seconds -format "%H:%M" -gmt 1];
+    set expires_time_gmt \
+    	[clock format $expires_seconds -format "%H:%M" -gmt 1];
     set rc(cap,key,expires,date_gmt) $expires_date_gmt;
     set rc(cap,key,expires,time_gmt) $expires_time_gmt;
+
+    # The partial and full path of the file.
+    # They are defined by the local configuration (not extracted from
+    # the original file), and they are included in the catalog as
+    # pointers to the original file.
+    set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
+    set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
 }
