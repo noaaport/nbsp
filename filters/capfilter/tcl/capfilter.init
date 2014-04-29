@@ -153,4 +153,11 @@ proc caplib_get_rcvars {rc_name prod_body} {
     set expires_time_gmt [clock format $expires_seconds -format "%H:%M" -gmt 1];
     set rc(cap,key,expires,date_gmt) $expires_date_gmt;
     set rc(cap,key,expires,time_gmt) $expires_time_gmt;
+
+    # The partial and full path of the file.
+    # They are defined by the local configuration (not extracted from
+    # the original file), and they are included in the catalog as
+    # pointers to the original file.
+    set rc(cap,fileppath) [subst $capfilter(fileppathfmt)];
+    set rc(cap,filefpath) [file join $capfilter(datadir) $rc(cap,fileppath)];
 }
