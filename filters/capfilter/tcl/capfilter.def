@@ -140,3 +140,5 @@ set capfilter(site,heb) "ptwc_ewa_beach,hi"
 # Added by hand
 #
 set capfilter(site,wcz) "yukon,ak"
+set capfilter(site,aer) "fairbanks,ak"
+set capfilter(site,nsb) "fairbanks,ak"
