@@ -39,18 +39,47 @@ proc capfilter_write_catalog {rc_name} {
 	source $g(atomtxmlfpath,$type);
     }
 
-    set rc(cap,catpath,global) $capfilter(catppath,global);
-    set rc(cap,catppath,state) [subst $capfilter(catppathfmt,state)];
-    set entry_global [subst $atomtxml(global)];
-    set entry_state [subst $atomtxml(state)];
-    filterlib_file_append $rc(cap,catpath,global) $entry_global;
-    filterlib_file_append $rc(cap,catppath,state) $entry_state;
+    # The xml files
+    set catppath_global $capfilter(catppath,global);
+    set catppath_state [subst $capfilter(catppathfmt,state)];
+
+    # The body xml files
+    set catbodyppath_global [file rootname $catppath_global];
+    append catbodyppath_global $capfilter(catbodyfext);
+    set catbodyppath_state [file rootname $catppath_state];
+    append catbodyppath_state $capfilter(catbodyfext);
+
+    # The content of the body
+    set entry_global [subst $atomtxml(global,entry)];
+    set entry_state [subst $atomtxml(state,entry)];
+    
+    # Append to the body files
+    filterlib_file_append $catbodyppath_global $entry_global;
+    filterlib_file_append $catbodyppath_state $entry_state;
+
+    # Re-create the xml files
+    filterlib_file_write $catppath_global [subst $atomtxml(global,header)];
+    filterlib_file_append \
+	$catppath_global [::fileutil::cat $catbodyppath_global];
+    filterlib_file_append $catppath_global [subst $atomtxml(global,footer)];
+
+    filterlib_file_write $catppath_state [subst $atomtxml(state,header)];
+    filterlib_file_append \
+	$catppath_state [::fileutil::cat $catbodyppath_state];
+    filterlib_file_append $catppath_state [subst $atomtxml(state,footer)];
 
     foreach zone $rc(cap,zones) {
 	set rc(cap,zone) $zone;
-	set rc(cap,catppath,zone) [subst $capfilter(catppathfmt,zone)];
-	set entry_zone [subst $atomtxml(zone)];
-	filterlib_file_append $rc(cap,catppath,zone) $entry_zone;
+	set catppath_zone [subst $capfilter(catppathfmt,zone)];
+	set catbodyppath_zone [file rootname $catppath_zone];
+	append catbodyppath_zone $capfilter(catbodyfext);
+	set entry_zone [subst $atomtxml(zone,entry)];
+	filterlib_file_append $catbodyppath_zone $entry_zone;
+
+	filterlib_file_write $catppath_zone [subst $atomtxml(zone,header)];
+	filterlib_file_append \
+	    $catppath_zone [::fileutil::cat $catbodyppath_zone];
+	filterlib_file_append $catppath_zone [subst $atomtxml(zone,footer)];
     }
 }
 
