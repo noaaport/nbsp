@@ -1,5 +1,5 @@
-set atomtxml(state,header) {
-<?xml version = '1.0' encoding = 'UTF-8' standalone = 'yes'?>
+set atomtxml(state,header) \
+{<?xml version = '1.0' encoding = 'UTF-8' standalone = 'yes'?>
 
 <feed
 xmlns = 'http://www.w3.org/2005/Atom'
