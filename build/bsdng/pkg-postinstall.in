@@ -38,6 +38,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data/inv/digatmos
 /var/noaaport/data/inv/gempak
 /var/noaaport/data/inv/gis
+/var/noaaport/data/inv/cap
 /var/noaaport/archive
 /var/noaaport/archive/data
 /var/noaaport/archive/data/digatmos
@@ -166,6 +167,7 @@ cd htdocs/pub
 [ -e "gempak" ] || ln -s /var/noaaport/data/gempak gempak
 [ -e "grib" ] || ln -s /var/noaaport/data/grib grib
 [ -e "msg" ] || ln -s /var/noaaport/data/msg msg
+[ -e "cap" ] || ln -s /var/noaaport/data/cap cap
 [ -e "track" ] || ln -s /var/noaaport/data/track track
 [ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
 [ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot
