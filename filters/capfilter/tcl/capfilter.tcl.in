@@ -178,7 +178,8 @@ proc capfilter_write_file {rc_name} {
     
     # Add the fpath to the inventory
     set invppath [subst $capfilter(invppathfmt)];
-    filterlib_file_append $invppath $rc(cap,filefpath);
+    set invfpath [file join $capfilter(invdir) $invppath];
+    filterlib_file_append $invfpath $rc(cap,filefpath);
 }
 
 proc capfilter_cleanup_expired_files {} {
