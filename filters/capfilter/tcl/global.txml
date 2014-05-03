@@ -6,14 +6,11 @@ xmlns = 'http://www.w3.org/2005/Atom'
 xmlns:cap = 'urn:oasis:names:tc:emergency:cap:1.1'
 xmlns:ha = 'http://www.alerting.net/namespace/index_1.0'
 >
-<!-- http-date = Wed, 30 Apr 2014 11:16:00 GMT -->
 <!-- http-date [clock format [clock seconds] -gmt 1 \
      -format "%a, %d %b %Y %H:%M:%S %Z"] -->
-
 <id>http://alerts.weather.gov/cap/us.atom</id>
 <logo>http://alerts.weather.gov/images/xml_logo.gif</logo>
 <generator>NWS CAP Server</generator>
-<updated>2014-04-30T19:16:00-04:00</updated>
 <updated>[clock format [clock seconds] -format "%Y-%m-%dT%H:%M:%S%z"]</updated>
 <author>
 <name>w-nws.webmaster@noaa.gov</name>
