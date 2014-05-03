@@ -9,37 +9,34 @@ CAP is handled by the ``capfilter''.
 
 Reference:
     http://alerts.weather.gov/
-  
+
 1) To enable it, 
 
    set feature(captilter) 1
 
    in
 
-   /usr/local/etc/nbsp/features.conf
-
-   You may want disable all the others (except the "inventory filter")
-   while testing.
+   /usr/local/etc/nbsp/site/features.conf
 
 2) The data files are saved under
 
    /var/noaaport/data/cap/files
 
-   An inventory of files is kept in
+   and the inventory of files are kept in
 
-   /var/noaaport/data/cap/inv
+   /var/noaaport/data/inv/cap
 
    where the log files are labeled by the expiration date (without
-   the time). A daily run will cleanup what has expired up to
-   the previous day (not yet implemented - but easy).
+   the time). A daily run cleans up what has expired up to
+   the previous day.
 
-3) There are a few placeholders to append the appropriate entries
-   to the catalog (index) files.
+3) Catalog (index) files are saved in
 
-   I still need to understand what information goes in those files.
-   In other words, what to extract from the full data file, and how
-   to reformat it (I noticed that they change the xml tag names in
-   the global state or natrional file).
+   /var/noaaport/data/cap/cat
 
-   So we need to define this part.
+   by state, zone and a global file.
+
+4) The files abd catalogs are available via the web interface
+
+   http://<server>:8015/cap
 -
