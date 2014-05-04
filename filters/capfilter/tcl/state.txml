@@ -1,4 +1,4 @@
-set atomtxml(global,header) \
+set atomtxml(state,header) \
 {<?xml version = '1.0' encoding = 'UTF-8' standalone = 'yes'?>
 
 <feed
@@ -22,11 +22,11 @@ Issued by the National Weather Service
 <link href='http://alerts.weather.gov/cap/us.atom'/>
 }
 
-set atomtxml(global,footer) {
+set atomtxml(state,footer) {
 </feed>
 }
 
-set atomtxml(global,entry) {
+set atomtxml(state,entry) {
 <entry>
 <cap:identifier>$rc(cap,key,identifier)</cap:identifier>
 <cap:pil>$rc(cap,key,pil)</cap:pil>
