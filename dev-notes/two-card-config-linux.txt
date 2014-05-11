@@ -1,9 +1,17 @@
-1) Disable in NetworkManager
+#
+# $Id$
+#
+
+Assuming that eth1 is the interface that is connected to the receiver,
+
+1) Disable eth1 in NetworkManager
 
 2) In rc.local
-   SL
+
+   SL, Centos (redhat clones)
 	ifconfig eth1 <ip> pointopoint 10.0.9.54
 
    Debian
-	ifconfig eth1 192.168.5.10 pointopoint 10.0.9.54
+	ifconfig eth1 <ip> pointopoint 10.0.9.54
 	route add -net 224.0.0.0 netmask 240.0.0.0 dev eth1
+-
