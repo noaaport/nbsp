@@ -1,7 +1,7 @@
 May 2014
 
 Background
-=========
+==========
 
 During high activity, the linux kernel seems to give priority to the
 CPU and IO processes vs the network, while freebsd seems to be the
@@ -23,7 +23,7 @@ but in the slaves I am using Linux (Debian) because the current version of
 Gempak does not compile in FreeBSD-10.
 
 Linux (Debian)
-=============
+==============
 
 In Linux the best setup is to use several disks with lvm for
 /var/noaaport/data, and a tmpfs for /var/noaaport/nbsp/spool. In fstab
@@ -47,7 +47,7 @@ Therefore in FreeBSD I use several disks with zfs, which is
 what I have been using since zfs was introduced.
 
 Examples
-=======
+========
 
 Linux
 =====
