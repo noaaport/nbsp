@@ -1,0 +1,31 @@
+#
+# $Id$
+#
+
+- Sun May 18 12:18:13 AST 2014
+
+As of this date
+
+  r = 1 MB/s = 60 MB/min
+  f = 2500 files/min
+
+Let
+
+  s = spoolsize in GB
+
+then
+
+  minutes = s*1000/60
+  slots = minutes*2500
+
+and
+
+  minutes = slots/2500
+  s = minutes*60/1000
+
+Therefore, each 1 GB in the spool can hold about (1000/60) = 16.66 minutes
+of data, which is about 16.66*2500 = 41650 files.
+
+So, the recommendation is to set the spooldb slots parameter to 32768
+for each GB of the spool. This in turn implies a retention time
+of about 13 minutes.
