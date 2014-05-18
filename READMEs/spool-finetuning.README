@@ -28,12 +28,17 @@ we want a 2 GB tmpfs spool.
 
 The size of the spool is determined by the "spooldb_slots" parameter
 in the nbspd.conf file. The default value, 262144, gives a spool of
-about 5-6 GB in the average. Therefore, setting in nbspd.conf
+about 7-8 GB in the average. To reduce it, consider the following.
+With a noaaport data rate of 60 MB/min, 1 GB in the spool can
+hold about (1000/60) = 16.66 minutes of data; at 2500 files/min
+that is about (16.66 * 2500) = 41650 files. Therefore, setting in nbspd.conf
 
 set spooldb_slots 32768      (equal to 262144 / 8)
 
-would limit the spool average size to be around 1 GB.
-Then the following command creates the 2 GB tmpfs spool,
+would limit the spool average retention time to about 13 minutes
+(assuming 2500 files/minute) and a size of about 1 GB (assuming 60 MB/min rate),
+which fit safely in 2 GB. Then the following command creates the 2 GB tmpfs
+spool,
 
 mount -t tmpfs -o size=2g tmpfs /var/noaaport/nbsp/spool
 
