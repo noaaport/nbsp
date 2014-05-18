@@ -1,0 +1,84 @@
+May 2014
+
+Background
+=========
+
+During high activity, the linux kernel seems to give priority to the
+CPU and IO processes vs the network, while freebsd seems to be the
+other way around.  As a result, the linux slaves require a higher
+read timeout compared to freebsd, so I have raised the default
+value of the master->slave write timeout in Nbsp so that linux slaves
+do not need manual configuration.
+
+During high activity, Linux works out the queues better, at the
+expense of poorer network response. FreeBSD is the other way around;
+so the queues accumulate somewhat more, but eventually they are worked out
+as well. It just takes longer to work the backlog, but it responds better.
+
+So, performance-wise I cannot prefer one over the other. I prefer
+FreeBSD, but because I am a freebsd die hard fan.
+
+I summary, I am using FreeBSD in the ingest machine(s),
+but in the slaves I am using Linux (Debian) because the current version of
+Gempak does not compile in FreeBSD-10.
+
+Linux (Debian)
+=============
+
+In Linux the best setup is to use several disks with lvm for
+/var/noaaport/data, and a tmpfs for /var/noaaport/nbsp/spool. In fstab
+
+  tmpfs /var/noaaport/nbsp/spool tmpfs  size=6G   0     0
+
+This setup has been working well.
+
+FreeBSD
+=======
+
+In FreeBSD, I also tried a tmpfs for the spool, by setiing in fstab,
+
+  tmpfs   /var/noaaport/nbsp/spool tmpfs  rw      0       0
+
+but it dod not work well. After 1-2 days the kernel panics, and it happened
+in different machines with very different hardware. It seems
+that tmpfs in FreeBSD is not robust enough for this application.
+
+Therefore in FreeBSD I use several disks with zfs, which is
+what I have been using since zfs was introduced.
+
+Examples
+=======
+
+Linux
+=====
+
+  # pvcreate /dev/sdb /dev/sdc /dev/sdd
+  # vgcreate lvm0 /dev/sdb /dev/sdc /dev/sdd
+  # lvcreate -n noaaport -l 100%FREE lvm0
+  # mkfs -t ext4 /dev/lvm0/noaaport
+
+In /etc/fstab
+
+  /dev/lvm0/noaaport     /var/noaaport     ext4       defaults    0 2
+  tmpfs /var/noaaport/nbsp/spool	    tmpfs      size=6G	   0 0
+
+Another option, similat to the FreeBSD setup below, is
+
+  # lvcreate -n noaaport-nbsp-spool -L 6G lvm0
+  # lvcreate -n noaaport-data -l 100%FREE lvm0
+  # mkfs -t ext4 /dev/lvm0/noaaport-nbsp-spool
+  # mkfs -t ext4 /dev/lvm0/noaaport-data
+
+and then in /etc/fstab
+
+/dev/lvm0/noaaport-data /var/noaaport/data ext4 defaults    0 2
+/dev/lvm0/noaaport-nbsp-spool /var/noaaport/nbsp/spool ext4 defaults,noatime 0 2
+
+FreeBSD
+=======
+
+  # zpool create zpool0 da1 da2 da3
+  # zfs create -o mountpoint=/var/noaaport/nbsp/spool -o atime=off \
+    	zpool0/noaaport-nbsp-spool
+  # zfs create -o mountpoint=/var/noaaport/data -o atime=off \
+    	zpool0/noaaport-data
