@@ -26,8 +26,7 @@ Linux (Debian)
 ==============
 
 In Linux the best setup is to use several disks with lvm for
-/var/noaaport/data, and a tmpfs for /var/noaaport/nbsp/spool.
-In /etc/fstab
+/var/noaaport/data, and a tmpfs for /var/noaaport/nbsp/spool. In fstab
 
   tmpfs /var/noaaport/nbsp/spool tmpfs  size=6G   0     0
 
@@ -36,10 +35,16 @@ This setup has been working well.
 FreeBSD
 =======
 
-In FreeBSD I use several disks with zfs for /var/noaaport/data.
-As with Linux, I have also used a tmpfs for the spool. In /etc/fstab,
+In FreeBSD, I also tried a tmpfs for the spool, by setting in fstab,
 
   tmpfs   /var/noaaport/nbsp/spool tmpfs  rw      0       0
+
+but it dod not work well. After 1-2 days the kernel panics, and it happened
+in different machines with very different hardware. It seems
+that tmpfs in FreeBSD is not robust enough for this application.
+
+Therefore in FreeBSD I use several disks with zfs, which is
+what I have been using since zfs was introduced.
 
 Examples
 ========
@@ -73,11 +78,7 @@ FreeBSD
 =======
 
   # zpool create zpool0 da1 da2 da3
-  # zfs create -o mountpoint=/var/noaaport/data -o atime=off \
-    	zpool0/noaaport-data
   # zfs create -o mountpoint=/var/noaaport/nbsp/spool -o atime=off \
     	zpool0/noaaport-nbsp-spool
-
-An alternative is to put the spool in a tmpfs, i.e. in /etc/fstab
-
-  tmpfs   /var/noaaport/nbsp/spool tmpfs  rw      0       0
+  # zfs create -o mountpoint=/var/noaaport/data -o atime=off \
+    	zpool0/noaaport-data
