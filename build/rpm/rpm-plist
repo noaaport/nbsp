@@ -77,6 +77,7 @@
 /usr/local/bin/nbspcspoolr
 /usr/local/bin/nbspreconfigure
 /usr/local/bin/nbspconfigure-dvbs2
+/usr/local/bin/nbspconfigure-updatedb
 /usr/local/libexec/nbsp/features.init
 /usr/local/libexec/nbsp/nbspd.init
 /usr/local/libexec/nbsp/nbspfilter

@@ -79,6 +79,7 @@ bin/nbspscheduler
 bin/nbspcspoolr
 bin/nbspreconfigure
 bin/nbspconfigure-dvbs2
+bin/nbspconfigure-updatedb
 libexec/nbsp/features.init
 libexec/nbsp/nbspd.init
 libexec/nbsp/nbspfilter
