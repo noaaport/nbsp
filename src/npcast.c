@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -162,9 +162,11 @@ static int np_init(char *np_ip, char *np_port, char *ifname, char *ifip,
 
   if(status == 0){
     for(i = 0; i < NPCAST_NUM_CHANNELS; ++i){
-      if(gnpcast.channel[i].f_enable)
-	log_info("Enabling %s:%s", 
-		 gnpcast.channel[i].ip, gnpcast.channel[i].port);
+      if(gnpcast.channel[i].f_enable){
+	log_info("Enabled channel %d: %s:%s", 
+		 i, gnpcast.channel[i].ip, gnpcast.channel[i].port);
+      } else
+	log_verbose(1, "Unconfigured channel %d", i); 
     }
   }
 
