@@ -32,6 +32,7 @@ set atomtxml(state,entry) {
 <cap:pil>$rc(cap,key,pil)</cap:pil>
 <cap:ppath>$rc(cap,fileppath)</cap:ppath>
 <cap:fpath>$rc(cap,filefpath)</cap:fpath>
+<cap:url>http://[info hostname]:8015/cap/$rc(cap,fileppath)</cap:url>
 
 <cap:event>$rc(cap,key,event)</cap:event>
 <cap:effective>$rc(cap,key,effective)</cap:effective>
@@ -58,5 +59,26 @@ set atomtxml(state,entry) {
 <cap:description>
 [string trim $rc(cap,key,description)]
 </cap:description>
+
+[
+    set r [list];
+
+    if {$rc(cap,key,polygon) ne ""} {
+	lappend r "<cap:polygon>$rc(cap,key,polygon)</cap:polygon>";
+    }
+
+    foreach k [array names rc "cap,key,parameter:*"] {
+        # Replace "cap,key," by "cap:"
+        set key [string replace $k 3 7 ":"];
+	lappend r "<$key>$rc($k)</$key>";
+    }
+
+    foreach k [array names rc "cap,key,geocode:*"] {
+	set key [string replace $k 3 7 ":"];
+	lappend r "<$key>$rc($k)</$key>";
+    }
+
+    return [join $r "\n"];
+]
 </entry>
 }
