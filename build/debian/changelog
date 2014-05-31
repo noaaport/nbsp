@@ -1,3 +1,9 @@
+nbsp (2.3.5p1-1) oneiric; urgency=low
+
+  * Revised capfilter
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 31 May 2014 17:48:46 -0400
+
 nbsp (2.3.4r-1) oneiric; urgency=low
 
   * Added capfilter

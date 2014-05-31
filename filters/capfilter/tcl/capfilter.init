@@ -43,7 +43,9 @@ set capfilter(atomtxml,zone) "zone.txml";
 set capfilter(capkeylist) [list identifier event effective \
     expires status msgType \
     category urgency severity certainty areaDesc \
-    headline instruction description];
+    headline instruction description polygon];
+#
+set capfilter(capnodelist) [list parameter geocode];
 
 # Overrides in the configuration file. 
 if {[file exists $capfilter(conf)] == 1} {
@@ -116,6 +118,39 @@ proc caplib_get_pil {body} {
     return [string tolower $r];
 }
 
+proc caplib_get_node_list {rc_name bodylist} {
+
+    global capfilter;
+    upvar $rc_name rc;
+
+    array set a {};
+    set stage "";
+    foreach line $bodylist {
+	foreach node $capfilter(capnodelist) {
+	    if {[regexp "<${node}>" $line]} {
+		set stage $node;
+		continue;
+	    }
+	}
+
+	if {$stage eq ""} {
+	    continue;
+	}
+
+	if {[regexp {<valueName>(.+)</valueName>} $line match code]} {
+	    set param "${stage}:${code}";
+	}
+	
+	if {[regexp {<value>(.+)</value>} $line match value]} {
+	    lappend a(${param}) $value;
+	}
+    }
+
+    foreach k [array names a] {
+	set rc(cap,key,${k}) [join $a($k) ","];
+    }
+}
+
 proc caplib_get_rcvars {rc_name prod_body} {
 
     upvar $rc_name rc;
@@ -151,7 +186,8 @@ proc caplib_get_rcvars {rc_name prod_body} {
 	set rc(cap,key,$key) $r;
     }
 
-    set rc(cap,zones) [caplib_get_zone_list $prod_body_list];    # a tcl list
+    set rc(cap,zones) [caplib_get_zone_list $prod_body_list]; # a tcl list
+    caplib_get_node_list rc $prod_body_list;
 
     # From the expires date-time extract the gmt date and time.
     # The expires value is a string of the form "2014-04-20T12:00:00-04:00".
