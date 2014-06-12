@@ -198,12 +198,10 @@ proc filter_sendnntp_encode {newsgroups subject fpath} {
 
 proc filter_sendnntp_pipe {newsgroups subject pipe_name cmd_options fpath} {
 
-    global filtersprogs;
-
     set header [make_nntp_header $newsgroups $subject];
     set status [catch {
 	append content $header \
-	    [eval exec $filtersprogs($pipe_name) $cmd_options $fpath];
+	    [eval exec $pipe_name $cmd_options $fpath];
     } errmsg];
 
     if {$status != 0} {

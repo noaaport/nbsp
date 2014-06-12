@@ -202,16 +202,15 @@ proc filter_sendnntp_encode_stripccb {header fpath seq} {
 # DA also seems to like).
 
     global nntpfilter;
-    global filtersprogs;
 
     set fbasename [file tail $fpath];
     set status [catch {
       if {$nntpfilter(ccbsaved) == 1} {
 	append content $header \
-	  [exec $filtersprogs(nbspfile) $fpath $seq | uuencode $fbasename];
+	  [exec nbspfile $fpath $seq | uuencode $fbasename];
 	} else {
 	 append content $header \
-	  [exec $filtersprogs(nbspfile) -n $fpath $seq | uuencode $fbasename];
+	  [exec nbspfile -n $fpath $seq | uuencode $fbasename];
 	}	
     } errmsg];
 
