@@ -5,7 +5,6 @@ proc filter_sat {seq fpath savedir savename {polarsatflag 0}} {
 # only for the non-polarsat ginis.
 #
     global dafilter;
-    global filtersprogs;
 
     if {[is_sat_rule_enabled $savedir] == 0} {
 	return;
@@ -42,7 +41,7 @@ proc filter_sat {seq fpath savedir savename {polarsatflag 0}} {
 	        # Gini sat files do not have a ccb
 	        file copy -force $fpath $datafpath;
 	    } else {
-	        exec $filtersprogs(nbspunz) -o $datafpath $fpath;
+	        exec nbspunz -o $datafpath $fpath;
 	    }
 	} else {
 	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;

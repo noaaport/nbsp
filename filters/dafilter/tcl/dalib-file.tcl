@@ -26,7 +26,6 @@ proc filter_file {rc_array seq fpath savedir savename {pass_through 0}} {
 proc filter_file_noappend {seq fpath savedir savename} {
 
     global dafilter;
-    global filtersprogs;
 
     if {[is_file_rule_enabled $savedir] == 0} {
 	return;

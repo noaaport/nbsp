@@ -152,27 +152,6 @@ set filtersprogs(pnmtojpeg)	$common(netpbmbindir)/pnmtojpeg;
 set filtersprogs(ppmtogif)	$common(netpbmbindir)/ppmtogif;
 set filtersprogs(pnmtopng)	$common(netpbmbindir)/pnmtopng;
 set filtersprogs(innsm)		$common(innbindir)/sm;
-#
-set filtersprogs(nbspfile)	$common(nbspbindir)/nbspfile;
-set filtersprogs(nbspunz)	$common(nbspbindir)/nbspunz;
-set filtersprogs(nbsppipe)	$common(nbspbindir)/nbsppipe;
-set filtersprogs(nbspgrib)	$common(nbspbindir)/nbspgrib;
-set filtersprogs(nbspgrib2)	$common(nbspbindir)/nbspgrib2;
-set filtersprogs(nbspsat)	$common(nbspbindir)/nbspsat;
-set filtersprogs(nbspsatinfo)	$common(nbspbindir)/nbspsatinfo;
-set filtersprogs(nbspsatmap)	$common(nbspbindir)/nbspsatmap;
-set filtersprogs(nbspradmap)	$common(nbspbindir)/nbspradmap;
-set filtersprogs(nbspnntpsend)	$common(nbspbindir)/nbspnntpsend;
-set filtersprogs(nbsppngcvt)	$common(nbspbindir)/nbsppngcvt;
-set filtersprogs(nbspdmtr)	$common(nbspbindir)/nbspdmtr;
-set filtersprogs(nbspmtrd)	$common(nbspbindir)/nbspmtrd;
-set filtersprogs(nbspmtrcsv)	$common(nbspbindir)/nbspmtrcsv;
-set filtersprogs(nbspmtr)	$common(nbspbindir)/nbspmtr;
-set filtersprogs(nbspmtrplot)	$common(nbspbindir)/nbspmtrplot;
-set filtersprogs(nbspstatplot)	$common(nbspbindir)/nbspstatplot;
-set filtersprogs(nbspstatplot1)	$common(nbspbindir)/nbspstatplot1;
-set filtersprogs(nbspstatplotdat) $common(nbspbindir)/nbspstatplotdat;
-set filtersprogs(nbspudpsend)	$common(nbspbindir)/nbspudpsend;
 
 # Gempak installation directory and bin directory of the decoders and tools.
 # The settings below correspond to a Gempak installation via the gpak package.
