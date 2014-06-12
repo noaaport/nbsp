@@ -150,7 +150,6 @@ proc dafilter_nntp {} {
 proc dafilter_nntp_now {subdir filename subgroup} {
 
     global dafilter;
-    global filtersprogs;
 
     if {$dafilter(nntp_enable) == 0} {
 	return;
@@ -162,8 +161,8 @@ proc dafilter_nntp_now {subdir filename subgroup} {
     set uuencode_flag 1;
 
     set status [catch {
-	exec $filtersprogs(nbspnntpsend) $dafilter(nntp_server) \
-		$dafilter(nntp_from) $newsgroup $subject $fpath $uuencode_flag;
+	exec nbspnntpsend $dafilter(nntp_server) \
+	     $dafilter(nntp_from) $newsgroup $subject $fpath $uuencode_flag;
     } errmsg];
 
     if {$status != 0} {

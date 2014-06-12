@@ -378,7 +378,6 @@ proc filter_rad {awips fpath savedir savename} {
 # The awips is passed to nbspradmap (as a define) for the template use.
 #
     global rstfilter;
-    global filtersprogs;
 
     cd $rstfilter(datadir);
     file mkdir $savedir;

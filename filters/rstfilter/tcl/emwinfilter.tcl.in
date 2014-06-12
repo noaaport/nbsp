@@ -445,12 +445,11 @@ proc emwin_fname fbasename {
 proc cvt_to_jpg_old fpathin {
 
     global emwinfilter;
-    global filtersprogs;
 
     set fpathout $fpathin;
     set extension [file extension $fpathin];
-    if {($extension == ".png") && ($emwinfilter(sat_imgfmt) == "jpg")} {
-	set status [catch {exec $filtersprogs(nbsppngcvt) $fpathin} msg];
+    if {($extension eq ".png") && ($emwinfilter(sat_imgfmt) eq "jpg")} {
+	set status [catch {exec nbsppngcvt $fpathin} msg];
 	if {$status == 0} {
 	    set fpathout $msg;
 	} else {

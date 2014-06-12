@@ -1,7 +1,6 @@
 proc filter_grib {seq fpath savedir savename} {
 
     global dafilter;
-    global filtersprogs;
 
     if {[is_grib_rule_enabled $savedir] == 0} {
 	return;
