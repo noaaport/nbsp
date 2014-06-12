@@ -35,7 +35,7 @@ set nbspinnfeedconf	[file join $common(confdir) "nbspinnfeed.conf"];
 set nbspinnfeedconfdirs	$common(localconfdirs);
 set spooldir		$nbspd(spooldir);
 set nbspinfifo		$nbspd(infeedfifo);
-set innsm		$filterprogs(innsm);
+set innsm		$filtersprogs(innsm);
 # This can be modified in the configuration file
 set nbspinnfeedrc	[file join $common(confdir) "nbspinnfeed.rc"];
 set subdirsmode		0755;
