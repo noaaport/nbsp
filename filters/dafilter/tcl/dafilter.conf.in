@@ -46,7 +46,7 @@
 # Whether or not the satellite data files will be processed.
 # This is normally done by the rstfilter, but if
 # that is disabled, that functionality can be enabled here.
-# The regex variable is a uwilregex that is matched against
+# The regex variable is a uwildregex that is matched against
 # the directory name (e.g. "sat/gini/tigp01") to
 # specify which files to process.
 #
@@ -88,7 +88,7 @@
 # 	http://nexrad.allisonhouse.com/support/developers/ondas.txt
 # (The list and latest are created by default.)
 #
-# The regex variable is a uwilregex that is matched against
+# The regex variable is a uwildregex that is matched against
 # the directory name (e.g. "nexrad/nids/jua/n0r") to
 # specify which files to process.
 #
