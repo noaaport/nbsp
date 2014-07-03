@@ -70,7 +70,7 @@ static int slave_element_configure(struct slave_element_st *slave,
   char *infifo;
   char **options_argv = NULL;    /* the numeric options, if given in "s" */
   int options_argc = 0;
-    
+
   ssplit = strsplit_create(s, SLAVE_STRING_SEP2, STRSPLIT_FLAG_INCEMPTY);
   if(ssplit == NULL){
     log_err("strsplit_create()");
@@ -93,11 +93,12 @@ static int slave_element_configure(struct slave_element_st *slave,
       if(valid_str(infifo) == 0)
 	status = 1;
     } else 
-      status = 1;
+      status = 2;
 
     if(status != 0){
+      log_errx("Invalid configuration [%d] string for SLAVETYPE_INFIFO: %s",
+	       s, status);
       status = 1;
-      log_errx("Invalid configuration string for SLAVETYPE_INFIFO: %s", s);
       goto End;
     }
 

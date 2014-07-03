@@ -200,8 +200,8 @@ static void slave_kill_thread(struct slave_element_st *slave){
 static char *slave_make_configuration_string(void){
   /*
    * This function should be called after calling
-   * feedmode_inputfifo_enabled(), and if that function returns 1. It will
-   * then add the infifo configuration to the masterservers list.
+   * feedmode_inputfifo_enabled(), and if that function returns 1.
+   * It will then add the infifo configuration to the masterservers list.
    */
   char *r;
   int n;
@@ -215,7 +215,7 @@ static char *slave_make_configuration_string(void){
   }
 
   /* Leave room for 3, */
-  n = strlen(g.infifo) + 1 + strlen(SLAVE_STRING_SEP2);
+  n = strlen(g.infifo) + 1 + strlen(SLAVE_STRING_JOIN2);
 
   if(feedmode_masterservers_enabled()){
     if(valid_str(g.masterservers) == 0){
@@ -225,8 +225,8 @@ static char *slave_make_configuration_string(void){
       log_errx("Invalid setting of masterservers.");
       return(NULL);
     }
-    /* Leave room for the : */
-    n += strlen(g.masterservers) + strlen(SLAVE_STRING_SEP1);
+    /* Leave room for the SEP1 char */
+    n += strlen(g.masterservers) + strlen(SLAVE_STRING_JOIN1);
   }
 
   r = malloc(n + 1);
@@ -235,14 +235,14 @@ static char *slave_make_configuration_string(void){
 
   if(feedmode_masterservers_enabled()){
     if(snprintf(r, n + 1, "3%s%s%s%s",
-		SLAVE_STRING_SEP2, g.infifo,
-		SLAVE_STRING_SEP1, g.masterservers) != n){
+		SLAVE_STRING_JOIN2, g.infifo,
+		SLAVE_STRING_JOIN1, g.masterservers) != n){
       log_errx("Configuration error in slave_make_configuration_string().");
       free(r);
       return(NULL);
     }
   }else{
-    if(snprintf(r, n + 1, "3%s%s", SLAVE_STRING_SEP2, g.infifo) != n){
+    if(snprintf(r, n + 1, "3%s%s", SLAVE_STRING_JOIN2, g.infifo) != n){
       log_errx("Configuration error in slave_make_configuration_string().");
       free(r);
       return(NULL);
