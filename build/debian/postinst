@@ -70,6 +70,16 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/share/nbsp/site
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
+#
+# target directories for optional
+#
+docdir=/usr/local/share/doc/nbsp
+confdir=/usr/local/etc/nbsp
+sharedir=/usr/local/share/nbsp
+rcdir=/etc/init.d
+defaultdir=/etc/default
+nexraddir=/var/noaaport/data/digatmos/nexrad
+logrotatedir=/etc/logrotate.d
 
 useradd -d $home $user > /dev/null 2>&1
 status=$?
@@ -92,14 +102,10 @@ done
 #
 # install optional files from doc directory
 #
-docdir=/usr/local/share/doc/nbsp
-confdir=/usr/local/etc/nbsp
-sharedir=/usr/local/share/nbsp
-rcdir=/etc/init.d
-nexraddir=/var/noaaport/data/digatmos/nexrad
-logrotatedir=/etc/logrotate.d
-
 install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
+[ -f $defaultdir/nbspd ] || \
+    install -m 0644 $docdir/nbspd.sh.conf-debian $defaultdir/nbspd
+
 if [ -n "`which chkconfig`" ]
 then
 	chkconfig --add nbspd
