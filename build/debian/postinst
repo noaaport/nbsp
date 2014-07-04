@@ -71,7 +71,7 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
 #
-# target directories for optional
+# target directories for optional files
 #
 docdir=/usr/local/share/doc/nbsp
 confdir=/usr/local/etc/nbsp
@@ -81,6 +81,9 @@ defaultdir=/etc/default
 nexraddir=/var/noaaport/data/digatmos/nexrad
 logrotatedir=/etc/logrotate.d
 
+#
+# the noaaport user
+#
 useradd -d $home $user > /dev/null 2>&1
 status=$?
 if [ $status -ne 9 -a $status -ne 0 ]
