@@ -17,3 +17,6 @@
 # RUNDIR=/var/run/nbsp
 # OWNER=noaaport
 # GROUP=noaaport
+
+# Uncomment to disable
+# ENABLE=0
