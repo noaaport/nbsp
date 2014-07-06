@@ -3,9 +3,9 @@
 #
 Installation instructions -
 
-First of all install TclX, by e.g.,
+First of all install TclX, by e.g. (in FreeBSD)
 
-	pkg_add -r tclX
+	pkg install tclX
 
 See (6) below for the explanation of this requirement. 
 
