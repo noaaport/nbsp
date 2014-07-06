@@ -159,7 +159,7 @@
   grib file names).
 - Revised gpfilter.rc (file.m4) to correct the errors reported by
   Jerry Robertson (MOS and qpf data files not being saved in the
-  apprpriate subdirectories).
+  appropriate subdirectories).
 
 2.2.4r1
 - Added two extra channels to support the polarsat channel5
@@ -181,3 +181,6 @@
 - Added wsfilter-schedule-nogrib.rc-sample file, which does not include
   grib data and therefore does not require that Grads is installed.
 
+2.3.5p1
+- Includes final version of the capfilter
+  http://alerts.weather.gov/
