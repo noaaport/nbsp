@@ -43,7 +43,7 @@ nbspinsert can be used in thee ways:
     2) nbspinsert [-f nbspinfifo] finfo
     3) nbspinsert [-f nbspinfifo] < file_with_finfolist
 
-If [-f] is not given to specify the location of the nbspd.infifo file,
+If [-f] is not given to specify the location of the nbspd input fifo file,
 then the nbsp configuration files are read. So unless the location of
 the fifo has changed from the default, that option does not have to be
 used.
@@ -104,5 +104,6 @@ scheduler. The latter is set automaticaly by the default hourly-cleanup.conf,
 but the files written by this script must be writable by the
 nbsp user (noaaport:noaaport) so that they can be deleted by the
 default cleanup process. One way to achieve this is to
-set the umask to 002 before the nbspinsert script is called.
+set the umask to 002 before the nbspinsert script is called, and make
+the noaaport user a member of the group under which nbspinsert is executed.
 -
