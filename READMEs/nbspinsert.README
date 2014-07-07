@@ -106,4 +106,5 @@ nbsp user (noaaport:noaaport) so that they can be deleted by the
 default cleanup process. One way to achieve this is to
 set the umask to 002 before the nbspinsert script is called, and make
 the noaaport user a member of the group under which nbspinsert is executed.
+(See craftinsert.README for a specific instructions with ldm and craftinsert.)
 -

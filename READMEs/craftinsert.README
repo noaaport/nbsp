@@ -16,7 +16,9 @@ Then perform the following:
    
    Make the user "noaaport" a member of the group "ldm
    (so that the noaaport cleanup script can delete the file
-   that ldm writes in the spool. See (6) below.)
+   that ldm writes in the spool; see (6) below).
+   Alternatively, set the groups of the nbspd daemon to
+   "noaaport,ldm" in nbspd.conf.
 
 2) Be sure that the group of the directory
 
