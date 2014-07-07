@@ -33,7 +33,7 @@
  *       the deamon runs as root. Otherwise, the core files are generated
  *       only if several conditions are met (see Stevens, apue, p.265).
  *
- *	 The supplementary groupsd can be set by making the "GROUP" a
+ *	 The supplementary groups can be set by making the "GROUP" a
  *       comma-separated list of groups (including the main group)
  *       "noaaport,news,ldm,..."
  */
@@ -540,7 +540,7 @@
 #define SLAVE_REJECT_DUPLICATES 1
 
 #define SLAVE_INPUT_FIFO	"/var/run/nbsp/infeed.fifo"
-#define SLAVE_INPUT_FIFO_MODE	0666
+#define SLAVE_INPUT_FIFO_MODE	0660          /* absolute mode */
 #define SLAVE_INPUT_FIFO_GRP	"noaaport"
 
 /*

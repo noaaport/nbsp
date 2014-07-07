@@ -12,7 +12,13 @@ See (6) below for the explanation of this requirement.
 Then perform the following:
 
 1) Make the user "ldm" a member of the group "noaaport"
-   (so that ldm it can write to the nbspd input fifo)
+   (so that ldm can write to the nbspd input fifo)
+   
+   Make the user "noaaport" a member of the group "ldm
+   (so that the noaaport cleanup script can delete the file
+   that ldm writes in the spool; see (6) below).
+   Alternatively, set the groups of the nbspd daemon to
+   "noaaport,ldm" in nbspd.conf.
 
 2) Be sure that the group of the directory
 
@@ -55,15 +61,28 @@ Then perform the following:
    writes there. This can be accomplished, for example, by assiging to the
    the ldm user the same uid as the nbsp user noaaport:noaaport, or by
    setting the umask to 002 in the craftfilter script (this is the default
-   approach, and it requires TclX).
+   approach, and it requires TclX and making the noaaport user a member
+   of the ldm group as indicated in (1) above).
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 
    The level2 data fills about 48 MB/min (2.8 GB/hr). It is important to adjust
-   the spool size (number of files in the queue) and the run period of the
+   spooldb_slots (number of files in the queue) and the run period of the
    spool entry in the cleanup script according to the size of the spool
-   directory. The spool size should be small enough that the circular queue
-   is period is shorter than the cleanup script period to avoid the warnings
-   when nbspd tries to remove non-existent spool directory files that have
-   already been removed by the cleanup script.
+   directory. When level2 data only is received, the spooldb
+   is actually not used and therefore the spooldb_slots setting is inmaterial.
+   But when other data is received, spooldb_slots should be small enough
+   that the circular queue period is shorter than the cleanup script period
+   in order to avoid the warnings that will arise when nbspd tries to
+   remove non-existent spool directory files that have already been
+   removed by the cleanup script.
+
+   A setting similar to the following can be put in site/hourly-cleanup.conf,
+   with a corresponding spooldb_slots setting in site/nbspd.conf:
+
+   # freebsd
+   ## H:/var/noaaport/nbsp/spool: -mtime +1h
+
+   # linux
+   ## H:/var/noaaport/nbsp/spool: -mmin +60
 -
