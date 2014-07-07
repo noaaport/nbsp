@@ -11,14 +11,17 @@ See (6) below for the explanation of this requirement.
 
 Then perform the following:
 
-1) Make the user "ldm" a member of the group "noaaport"
+1) Make the user "ldm" a member of the group "noaaport" (in /etc/group)
    (so that ldm can write to the nbspd input fifo)
    
-   Make the user "noaaport" a member of the group "ldm
-   (so that the noaaport cleanup script can delete the file
-   that ldm writes in the spool; see (6) below).
-   Alternatively, set the groups of the nbspd daemon to
-   "noaaport,ldm" in nbspd.conf.
+   Set the groups of the nbspd daemon site/nbspd.conf
+
+       set group "noaaport,ldm"
+
+   (so that the noaaport cleanup script can delete the file that ldm writes
+   in the spool; see (6) below). Notice that setting the "noaaport" user
+   a member of the ldm group does not work because the nbspd sets the
+   group as which it runs internally to whatever the "group" variable is set.
 
 2) Be sure that the group of the directory
 
@@ -61,8 +64,8 @@ Then perform the following:
    writes there. This can be accomplished, for example, by assiging to the
    the ldm user the same uid as the nbsp user noaaport:noaaport, or by
    setting the umask to 002 in the craftfilter script (this is the default
-   approach, and it requires TclX and making the noaaport user a member
-   of the ldm group as indicated in (1) above).
+   approach, and it requires TclX and making ldm one of the auxiliary
+   groups of nbspd as indicated in (1) above).
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 

@@ -100,11 +100,12 @@ they do pass through the Nbsp reader and therefore they are not inserted
 in the spooldb that handles the deletion of the spooled files.
 Therefore the files that are inserted by this script must be
 deleted from the spool by the caller of this script, or by the cleanup
-scheduler. The latter is set automaticaly by the default hourly-cleanup.conf,
+scheduler. The latter is set automatically by the default hourly-cleanup.conf,
 but the files written by this script must be writable by the
 nbsp user (noaaport:noaaport) so that they can be deleted by the
 default cleanup process. One way to achieve this is to
-set the umask to 002 before the nbspinsert script is called, and make
-the noaaport user a member of the group under which nbspinsert is executed.
-(See craftinsert.README for a specific instructions with ldm and craftinsert.)
+set the umask to 002 before the nbspinsert script is called, and set
+the group under which nbspinsert is executed as one of the auxiliary groups
+of nbspd. (See craftinsert.README for an example of specific instructions
+with ldm and craftinsert.)
 -
