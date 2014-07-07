@@ -19,7 +19,8 @@ set craftinsert(nbspd_enable) 0;
 set craftinsert(nbspd_spooldir) "/var/noaaport/nbsp/spool";
 set craftinsert(nbspd_infifo) "/var/run/nbsp/infeed.fifo";
 set craftinsert(nbspd_wmoid) "level2";
-set craftinsert(mvtospool) 0;  # move to spool or insert (default is ins)
+set craftinsert(mvtospool) 0;  # move to spool or insert (default is insert)
+set craftinsert(delete) 0;     # delete after insert
 set craftinsert(umask) "002";
 #
 set craftinsert(ldm_fext) ".tmp";    # must match what is used in pqact.conf
@@ -86,6 +87,9 @@ proc proc_nbsp {ppath} {
 
     if {$craftinsert(mvtospool) == 0} {
 	exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
+	if {$craftinsert(delete) == 1} {
+	    file delete $ppath;
+	}
     } else {
         # The spooldir must exist
         if {[file isdirectory $spooldir] == 0} {
