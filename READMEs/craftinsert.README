@@ -69,7 +69,7 @@ Then perform the following:
 
    [Developer Note: See the note in "nbspinsert", which this script calls.]
 
-   The level2 data fills about 48 MB/min (2.8 GB/hr). It is important to adjust
+   The level2 data fills about 80 MB/min (5 GB/hr). It is important to adjust
    spooldb_slots (number of files in the queue) and the run period of the
    spool entry in the cleanup script according to the size of the spool
    directory. When level2 data only is received, the spooldb
