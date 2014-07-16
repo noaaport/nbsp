@@ -1,0 +1,95 @@
+==== Summary of the master and slave settings ====
+
+=== Settings in the master to write to clients ===
+
+Milliseconds to wait while writing to network clients, and how many
+more times to try if a timeout occurs:
+
+<code>
+set client_write_timeout_ms    5000
+set client_write_timeout_retry 2
+</code>
+
+How long the server thread of each client waits for a client to reconnect
+and how many times to wakeup and check before droping the client.
+
+<code>
+set client_reconnect_wait_sleep_secs  10
+set client_reconnect_wait_sleep_retry 6
+</code>
+
+The parameter //client_queue_read_timeout_ms// specifies the timeout for
+reading from these queues by the servers' threads that service the
+individual network client connections.
+
+<code>
+set client_queue_read_timeout_ms  10000
+</code>
+
+If we send the radar files for one or two sites, then it is
+better to use something like a 10 minute timeout while reading from
+the queue; same thing for the infifo. So set that as the default
+
+<code>
+set client_queue_read_timeout_ms [expr 600 * 1000]
+</code>
+
+These //client_xxx// parameters, can be set on a per-host basis
+by setting this variable
+
+<code>
+set clientoptions {
+    ltp.uprrp.edu,2000,2,10,12,10000
+    thunder.wxpro.net,10000
+    indra.wxpro.net,10000,x,x,12
+}
+</code>
+
+=== Settings in a slave ===
+
+The reading timeout (in seconds), retry attempts and how long to wait
+(in seconds) before trying to reconnect. 
+
+<code>
+set slave_read_timeout_secs    10
+</code>
+
+Timeout for reading from the master (fifo in the case of the level2)
+
+<code>
+set slave_read_timeout_secs     60
+set slave_read_timeout_retry    2
+set slave_reopen_timeout_secs   1
+</code>
+
+The tcp buffer size; -1 leaves the default.
+
+<code>
+set slave_so_rcvbuf -1
+</code>
+
+How often the slave threads report the stats (in seconds).
+
+<code>
+set slave_stats_logperiod_secs 60
+</code>
+
+The masterservers is a string of the form
+
+<code>
+<protocol>,<server>[,<port>][,<options>]|<protocol>,<server>[,<port>],...
+</code?
+
+where the separating character can be any combination of //| \t\n//;
+for example
+
+<code>
+set masterservers {
+    1,nbsp.uprrp.edu
+    1,nbsp.noaaport.net,2210
+    2,laurel.wxpro.net,2210,10
+    2,hardy.wxpro.net,2210,10,,,,300
+    2,joshua.wxpro.net,,10,,,,300
+    2,scooby.wxpro.net,,10,x,x,x,300
+}
+</code>
