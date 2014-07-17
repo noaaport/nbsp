@@ -106,6 +106,10 @@ proc process {finfo} {
     reopen_inv_file $invfrootname;
     log_inv_file $finfo;
 
+    if {$inventory(verbose) == 1} {
+	log_msg $finfo;
+    }
+
     # Update the per-channel counters
     set _v $inventory(chstats,$rc(npchidx),files);
     set inventory(chstats,$rc(npchidx),files) [expr ${_v} + 1];

@@ -76,9 +76,12 @@ proc proc_nbsp {ppath} {
     set station [string tolower $STATION];
     append dhm [string range $ymd 6 7] $hm;
 
-    # For the sequence number use the unix seconds
-    append _datestr $ymd "T" $hm "00";
-    set seq [clock scan ${_datestr} -gmt 1];
+    # For the sequence number use the milliseconds seconds since midnight
+    append _datestr $ymd "T000000";
+    set s1 [clock scan ${_datestr} -gmt 1];
+    append s1 "000";
+    set s2 [clock milliseconds];
+    set seq [expr $s2 - $s1];
     
     append fname $station "_" $wmoid;
     append fbasename $fname "." $dhm "_" $seq;
