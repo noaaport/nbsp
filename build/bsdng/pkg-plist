@@ -299,6 +299,7 @@ share/doc/nbsp/nbspd.sh-sample
 share/doc/nbsp/macosx-launchd.plist-sample
 share/doc/nbsp/level3.cfg-sample
 share/doc/nbsp/level2.cfg-sample
+share/doc/nbsp/leveld.cfg-sample
 share/doc/nbsp/nbspudpread.pl
 share/doc/nbsp/nbspudpread.tcl
 share/doc/nbsp/gis-bundle-www-templates.tgz

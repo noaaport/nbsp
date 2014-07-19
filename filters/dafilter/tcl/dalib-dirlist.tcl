@@ -10,10 +10,12 @@ proc make_rad_dirlist {dir {level2flag 0}} {
     if {$level2flag == 0} {
 	if {$dafilter(rad_dirlist_enable) != 0} {
 	    set rad_dirlistname $dafilter(rad_dirlistname);
+	    set rad_dirlistlink $dafilter(rad_dirlistlink);
 	    set rad_latestname $dafilter(rad_latestname);
 	}
     } elseif {$dafilter(rad2_dirlist_enable) != 0} {
 	set rad_dirlistname $dafilter(rad2_dirlistname);
+	set rad_dirlistlink $dafilter(rad2_dirlistlink);
 	set rad_latestname $dafilter(rad2_latestname);
     }
 
@@ -23,6 +25,7 @@ proc make_rad_dirlist {dir {level2flag 0}} {
 
     set dirpath [file join $dafilter(datadir) $dir];
     set dirlistpath [file join $dirpath $rad_dirlistname];
+    set dirlistlinkpath [file join $dirpath $rad_dirlistlink];
     set filelist [lsort \
 	[glob -nocomplain -tails -directory $dirpath "*"]];
 
@@ -55,6 +58,15 @@ proc make_rad_dirlist {dir {level2flag 0}} {
 
     if {[info exists F]} {
     	close $F;
+    }
+
+    if {($status == 0) && ([file exists $dirlistlinkpath] == 0)} {
+	set savedir [pwd];
+	cd $dirpath;
+	set status [catch {
+	    exec ln -s $rad_dirlistname $rad_dirlistlink;
+	} errmsg];
+	cd $savedir;
     }
 
     if {$status != 0} {

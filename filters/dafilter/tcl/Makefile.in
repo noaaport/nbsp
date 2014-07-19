@@ -45,7 +45,7 @@ M4TARGET =	dafilter.rc-defaults
 M4MAIN-LITE =	dafilter-lite.m4
 M4TARGET-LITE =	dafilter-lite.rc-defaults
 SAMPLES =	dafilter.conf-sample dafilter.rc-sample archive.conf-sample
-DOCSAMPLES =	level3.cfg-sample level2.cfg-sample
+DOCSAMPLES =	level3.cfg-sample level2.cfg-sample leveld.cfg-sample
 TARGET =	${FILTERTARGET} \
 		${FILTERTARGET-INIT} ${FILTERTARGET-MGR} ${FILTERTARGET-CONF} \
 		${TOOLNAMES} ${M4TARGET} ${M4TARGET-LITE} \
@@ -93,6 +93,9 @@ level3.cfg-sample: level3.cfg
 
 level2.cfg-sample: level2.cfg
 	cp level2.cfg level2.cfg-sample
+
+leveld.cfg-sample: leveld.cfg
+	cp leveld.cfg leveld.cfg-sample
 
 archive.conf-sample: archive.conf
 	cp archive.conf archive.conf-sample

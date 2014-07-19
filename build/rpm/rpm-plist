@@ -297,6 +297,7 @@
 /usr/local/share/doc/nbsp/macosx-launchd.plist-sample
 /usr/local/share/doc/nbsp/level3.cfg-sample
 /usr/local/share/doc/nbsp/level2.cfg-sample
+/usr/local/share/doc/nbsp/leveld.cfg-sample
 /usr/local/share/doc/nbsp/nbspudpread.pl
 /usr/local/share/doc/nbsp/nbspudpread.tcl
 /usr/local/share/doc/nbsp/gis-bundle-www-templates.tgz
