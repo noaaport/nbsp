@@ -22,7 +22,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data
 /var/noaaport/data/rst
 /var/noaaport/data/digatmos
-/var/noaaport/data/digatmos/nexrad
+/var/noaaport/data/digatmos/nexrad/nids
 /var/noaaport/data/digatmos/nexrad/craft
 /var/noaaport/data/gempak
 /var/noaaport/data/gis
@@ -68,6 +68,14 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/share/nbsp/site
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
+#
+# Directories for optional files
+#
+docdir=/usr/local/share/doc/nbsp
+confdir=/usr/local/etc/nbsp
+sharedir=/usr/local/share/nbsp
+rcdir=/usr/local/etc/rc.d
+nexraddir=/var/noaaport/data/digatmos/nexrad
 
 # user/group
 pw groupadd $user -q
@@ -98,21 +106,22 @@ do
 done
 
 #
-# install optional files from doc directory, templates, etc
+# install optional files from doc directory
 #
-docdir=/usr/local/share/doc/nbsp
-confdir=/usr/local/etc/nbsp
-sharedir=/usr/local/share/nbsp
-rcdir=/usr/local/etc/rc.d
-nexraddir=/var/noaaport/data/digatmos/nexrad
-
 install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
-# [ -e $nexraddir/grlevel3.cfg ] || \
-    install -m 0644 $docdir/level3.cfg-sample $nexraddir/grlevel3.cfg
-[ -e $nexraddir/config.cfg ] || \
-    ln -s $nexraddir/grlevel3.cfg $nexraddir/config.cfg
-# [ -e $nexraddir/craft/grlevel2.cfg ] || \
-    install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/grlevel2.cfg
+
+### [ -e $nexraddir/config.cfg ] || \
+    install -m 0644 $docdir/leveld.cfg-sample $nexraddir/config.cfg
+[ -e $nexraddir/grlevel3.cfg ] || \
+    ln -s $nexraddir/config.cfg $nexraddir/grlevel3.cfg
+### [ -e $nexraddir/nids/config.cfg ] || \
+    install -m 0644 $docdir/level3.cfg-sample $nexraddir/nids/config.cfg
+[ -e $nexraddir/nids/grlevel3.cfg ] || \
+    ln -s $nexraddir/nids/config.cfg $nexraddir/nids/grlevel3.cfg
+### [ -e $nexraddir/craft/config.cfg ] || \
+    install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/config.cfg
+[ -e $nexraddir/craft/grlevel2.cfg ] || \
+    ln -s $nexraddir/craft/config.cfg $nexraddir/craft/grlevel2.cfg
 
 #
 # configure default

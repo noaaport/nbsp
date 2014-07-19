@@ -24,7 +24,7 @@ userdirs="/var/run/nbsp
 /var/noaaport/data
 /var/noaaport/data/rst
 /var/noaaport/data/digatmos
-/var/noaaport/data/digatmos/nexrad
+/var/noaaport/data/digatmos/nexrad/nids
 /var/noaaport/data/digatmos/nexrad/craft
 /var/noaaport/data/gempak
 /var/noaaport/data/gis
@@ -70,7 +70,20 @@ rootdirs="/usr/local/etc/nbsp/defaults
 /usr/local/share/nbsp/site
 /usr/local/libexec/nbsp/site
 /usr/local/libexec/nbsp/tclhttpd/site"
+#
+# Directories for optional files
+#
+docdir=/usr/local/share/doc/nbsp
+confdir=/usr/local/etc/nbsp
+sharedir=/usr/local/share/nbsp
+rcdir=/etc/init.d
+defaultdir=/etc/default
+nexraddir=/var/noaaport/data/digatmos/nexrad
+logrotatedir=/etc/logrotate.d
 
+#
+# the noaaport user
+#
 useradd -d $home $user > /dev/null 2>&1
 status=$?
 if [ $status -ne 9 -a $status -ne 0 ]
@@ -92,14 +105,10 @@ done
 #
 # install optional files from doc directory
 #
-docdir=/usr/local/share/doc/nbsp
-confdir=/usr/local/etc/nbsp
-sharedir=/usr/local/share/nbsp
-rcdir=/etc/init.d
-nexraddir=/var/noaaport/data/digatmos/nexrad
-logrotatedir=/etc/logrotate.d
-
 install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
+[ -f $defaultdir/nbspd ] || \
+    install -m 0644 $docdir/nbspd.sh.conf-debian $defaultdir/nbspd
+
 if [ -n "`which chkconfig`" ]
 then
 	chkconfig --add nbspd
@@ -108,12 +117,18 @@ then
 	update-rc.d nbspd defaults 99
 fi
 
-# [ -e $nexraddir/grlevel3.cfg ] || \
-    install -m 0644 $docdir/level3.cfg-sample $nexraddir/grlevel3.cfg
-[ -e $nexraddir/config.cfg ] || \
-    ln -s $nexraddir/grlevel3.cfg $nexraddir/config.cfg
-# [ -e $nexraddir/craft/grlevel2.cfg ] || \
-    install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/grlevel2.cfg
+### [ -e $nexraddir/config.cfg ] || \
+    install -m 0644 $docdir/leveld.cfg-sample $nexraddir/config.cfg
+[ -e $nexraddir/grlevel3.cfg ] || \
+    ln -s $nexraddir/config.cfg $nexraddir/grlevel3.cfg
+### [ -e $nexraddir/nids/config.cfg ] || \
+    install -m 0644 $docdir/level3.cfg-sample $nexraddir/nids/config.cfg
+[ -e $nexraddir/nids/grlevel3.cfg ] || \
+    ln -s $nexraddir/nids/config.cfg $nexraddir/nids/grlevel3.cfg
+### [ -e $nexraddir/craft/config.cfg ] || \
+    install -m 0644 $docdir/level2.cfg-sample $nexraddir/craft/config.cfg
+[ -e $nexraddir/craft/grlevel2.cfg ] || \
+    ln -s $nexraddir/craft/config.cfg $nexraddir/craft/grlevel2.cfg
 
 #
 # configure default
@@ -202,40 +217,47 @@ The program will run in this default installation without further
 configuration.
 
 An init script is also installed to start automatically the program
-at boot time, and stop when the system is shutdown.
+at boot time, and stop when the system at shutdown.
 It can also be started or stoped manually by executing
 
 	/etc/init.d/nbspd start
 	/etc/init.d/nbspd stop
 
 NOTE:
-----
-  As of version 2.0.r2, nbspd runs as user noaaport, and therefore
-  the directories where the daemon writes must be owned by that user:
+====
+As of version 2.0.r2, nbspd runs as user noaaport, and therefore
+the directories where the daemon writes must be owned by that user:
 
-    chown -R noaaport:noaaport /var/noaaport
-    chown -R noaaport:noaaport /var/log/noaaport
-    chown -R noaaport:noaaport /var/log/nbsp
-    chown -R noaaport:noaaport /var/run/nbsp
+	chown -R noaaport:noaaport /var/noaaport
+	chown -R noaaport:noaaport /var/log/noaaport
+	chown -R noaaport:noaaport /var/log/nbsp
+	chown -R noaaport:noaaport /var/run/nbsp
 
-  During a fresh install, the package installer will create the
-  directories with the appropriate ownership, but not during an upgrade.
-  If you are uprading from an older version, those commands must be
-  executed manually.
+During a fresh install, the package installer will create the
+directories with the appropriate ownership, but not during an upgrade.
+If you are uprading from an older version, those commands must be
+executed manually.
 -
 
+NOTE:
+====
 See the files
 
 	/usr/local/etc/nbsp/defaults/nbspd.conf
 	/usr/local/etc/nbsp/dist/sysctl.conf-ex
 
-for sysctl notes.  NOTE: Alternatively execute 'nbspconfigure-dvbs2' and
-it will carry out the steps indicated in those files.
+for sysctl notes.  Alternatively execute
+
+	nbspconfigure-dvbs2
+
+and it will carry out the steps indicated in those files.
 -
 
+NOTE
+====
 To configure Nbsp with a memory based spool for a pure ingest role
 (no processing but network aware and the inventory enabled), execute
-
+	
 	nbspreconfigure mspoolbdb
 
 and check the files in
@@ -244,5 +266,16 @@ and check the files in
 
 Executing 'nbspreconfigure' without arguments, will revert to the
 standard default configuration.
+-
+
+NOTE:
+====
+It is recommended to omit scanning the directory "/var/noaaport"
+by the periodic updatedb script. Executing
+
+	nbspconfigure-updatedb
+
+updates the "/etc/updatedb.conf" to include the noaaport directory in
+the list of directories to omit.
 -
 __EOF__

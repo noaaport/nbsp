@@ -46,7 +46,7 @@
 # Whether or not the satellite data files will be processed.
 # This is normally done by the rstfilter, but if
 # that is disabled, that functionality can be enabled here.
-# The regex variable is a uwilregex that is matched against
+# The regex variable is a uwildregex that is matched against
 # the directory name (e.g. "sat/gini/tigp01") to
 # specify which files to process.
 #
@@ -88,7 +88,7 @@
 # 	http://nexrad.allisonhouse.com/support/developers/ondas.txt
 # (The list and latest are created by default.)
 #
-# The regex variable is a uwilregex that is matched against
+# The regex variable is a uwildregex that is matched against
 # the directory name (e.g. "nexrad/nids/jua/n0r") to
 # specify which files to process.
 #
@@ -96,6 +96,7 @@
 ## set dafilter(rad_regex)	{.*};
 ## set dafilter(rad_dirlist_enable)	1;
 ## set dafilter(rad_dirlistname)	"list";
+## set dafilter(rad_dirlistlink)	"dir.list";
 ## set dafilter(rad_latest_enable)	1;   # make a link to newest
 ## set dafilter(rad_latestname)	"latest";
 ## set dafilter(rad_namefmt)	{$rc(awips)_${ymd_hm}.nids};
@@ -105,8 +106,9 @@
 #           BEH 4/13/2010 , gr2a does not read "list", must be "dir.list"
 #
 ## set dafilter(rad2_dirlist_enable) 1;
-## set dafilter(rad2_dirlistname)	"dir.list";
-## set dafilter(rad2_latest_enable)	0;
+## set dafilter(rad2_dirlistname)	"list";
+## set dafilter(rad2_dirlistlink)	"dir.list";
+## set dafilter(rad2_latest_enable)	1;
 ## set dafilter(rad2_latestname)	"latest";
 ## set dafilter(rad2_namefmt)		{$rc(STATION)_${ymd_hm}};   
 ## set dafilter(rad2_dirfmt)     	{$rc(STATION)};
@@ -121,7 +123,6 @@
 # (As of this writing (11 Nov 2008) SL does not support the config.cfg file.
 # When it does, these settings should be unnecessary.)
 #
-#### set dafilter(rad_dirlistname)	"dir.list";
 #### set dafilter(rad_namefmt)  {$rc(AWIPS2)_${ymdhm}};
 #### set dafilter(rad_dirfmt)   {$rc(AWIPS2)/$rc(AWIPS1)};
 
