@@ -39,4 +39,42 @@ Reference:
 4) The files abd catalogs are available via the web interface
 
    http://<server>:8015/cap
--
+
+
+
+Postprocessing
+==============
+
+One way to trigger a script to process each file when it comes in
+is as follows:
+
+1)  Create the file
+
+    /usr/local/etc/nbsp/site/capfilter.rc
+
+with the following content:
+
+lappend cond {1}
+lappend action {
+	exec <somewhere>/<scriptname> $rc(cap,filefpath)
+}
+
+
+2) Your <somewhere>/<scriptname> script will be called with one argument,
+the full path name of the file after it as been saved, for example,
+
+   /var/noaaport/data/cap/files/jax/NWS-140501-723361.xml
+
+Your script (or program) can be written in any language, and for example
+this shell script will write a log file of all such files received
+and also concatenate each file to a global file:
+
+!/bin/sh
+
+fpath=$1
+
+echo $fpath >> /var/noaaport/test.log
+cat $fpath >> /var/noaaport/test.xml
+
+Of course you can open it and parse the contents to dump it to a db
+or do anything with it.
