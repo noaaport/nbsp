@@ -67,16 +67,25 @@ set atomtxml(state,entry) {
 	lappend r "<cap:polygon>$rc(cap,key,polygon)</cap:polygon>";
     }
 
+    lappend r "<cap:parameter>";
     foreach k [array names rc "cap,key,parameter:*"] {
-        # Replace "cap,key," by "cap:"
-        set key [string replace $k 3 7 ":"];
-	lappend r "<$key>$rc($k)</$key>";
+	# Get the parameter name
+	foreach {dummy pname} [split $k ":"] {};
+	set pval $rc($k);
+	lappend r "<valueName>$pname</valueName>";
+	lappend r "<value>$pval</value>";
     }
+    lappend r "</cap:parameter>";
 
+    lappend r "<cap:geocode>";
     foreach k [array names rc "cap,key,geocode:*"] {
-	set key [string replace $k 3 7 ":"];
-	lappend r "<$key>$rc($k)</$key>";
+	# Get the geocode name
+	foreach {dummy pname} [split $k ":"] {};
+	set pval $rc($k);
+	lappend r "<valueName>$pname</valueName>";
+	lappend r "<value>$pval</value>";
     }
+    lappend r "</cap:geocode>";
 
     return [join $r "\n"];
 ]
