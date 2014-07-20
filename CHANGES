@@ -183,4 +183,8 @@
 
 2.3.5p1
 - Includes final version of the capfilter
-  http://alerts.weather.gov/
+    http://alerts.weather.gov/
+- Revised the installation and setup of the level2,3 configuration files.
+- Added verbose option to the inventory filter, and revised
+  the calculation of the sequence number in craftinsert.
+- Added option to delete orginal after insertion in craftinsert
