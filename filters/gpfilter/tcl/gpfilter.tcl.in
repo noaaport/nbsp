@@ -437,6 +437,21 @@ proc filter_sat {seq fpath} {
     }
 }
 
+proc filter_psat {seq fpath} {
+
+    global gpfilter;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+
+    # Until we learn how to extract the information from these files
+    # (e.g., what nbspsat does) to decide where to save them in the gempak
+    # datadir we ignore them.
+
+    return;
+}
+
 proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 
     global gpfilter;
