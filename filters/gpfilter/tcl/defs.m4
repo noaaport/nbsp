@@ -121,6 +121,16 @@ lappend action {
   break;
 })
 
+define(match_psat,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_psat $rc(seq) $rc(fpath);
+  break;
+})
+
 define(match_stop,
 lappend cond {
   [regexp {$2} $1]
