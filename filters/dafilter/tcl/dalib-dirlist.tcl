@@ -29,8 +29,8 @@ proc make_rad_dirlist {dir {level2flag 0}} {
     set filelist [lsort \
 	[glob -nocomplain -tails -directory $dirpath "*"]];
 
-    # Delete the <latest> and <dir list> files.
-    foreach f [list $rad_dirlistname $rad_latestname] {
+    # Delete the <latest>, <dirlist> file and link.
+    foreach f [list $rad_dirlistname $rad_dirlistlink $rad_latestname] {
 	set i [lsearch -sorted -exact $filelist $f];
 	if {$i >= 0} {
 	    set filelist [lreplace $filelist $i $i];
