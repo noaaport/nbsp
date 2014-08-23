@@ -20,7 +20,7 @@
 #include "mcast.h"
 #include "npcast.h"
 
-#define NP_DELIM_STR		": \t"
+#define NP_DELIM_STR		": \t\n"
 
 static struct npcast_st gnpcast = {NULL, 0};
 static fd_set grdset;
