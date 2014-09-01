@@ -294,9 +294,9 @@
  * noaaport        2210/tcp   NOAAPORT Broadcast Network
  * noaaport        2210/udp   NOAAPORT Broadcast Network
  *
- * SERVER_NAME == NULL => uses gethostbyname in getadrinfo
- * SERVER_NAME == "*"  => uses NULL in getadrinfo and ai_family = AF_INET
- * SERVER_NAME == "**"  => uses NULL in getadrinfo and ai_family = AF_UNSPEC
+ * SERVER_NAME == NULL => uses gethostbyname in getaddrinfo
+ * SERVER_NAME == "*"  => uses NULL in getaddrinfo and ai_family = AF_INET
+ * SERVER_NAME == "**"  => uses NULL in getaddrinfo and ai_family = AF_UNSPEC
  */
 #define SERVER_NAME		NULL
 #define SERVER_PORT             "2210"
