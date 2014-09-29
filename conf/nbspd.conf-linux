@@ -20,6 +20,12 @@
 # After the sysctl settings are made, the udprcvsize setting above can
 # be used (uncommented), or put in a file (e.g., udprcvsize.conf) in
 # the subdirectory "nbspd.conf.d".
+#
+# Alternatively execute
+#
+#	nbspconfigure-dvbs2
+#
+# and it will carry out the steps indicated in those files.
 
 # Source all .conf files in the subdirectory "defaults/nbspd.conf.d"
 foreach f [glob -nocomplain \
