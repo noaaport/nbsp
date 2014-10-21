@@ -41,12 +41,21 @@ set inventory(chstats,0,files) 0;
 set inventory(chstats,1,files) 0;
 set inventory(chstats,2,files) 0;
 set inventory(chstats,3,files) 0;
-set inventory(chstats,4,files) 0;    # 5th (polarsat) channel
+set inventory(chstats,4,files) 0;    # 5th polarsat
+set inventory(chstats,5,files) 0;    # 6th experimental
+set inventory(chstats,6,files) 0;    # 7th goes-r west
+set inventory(chstats,7,files) 0;    # 8th goes-r east
+set inventory(chstats,8,files) 0;    # 9th weather wire
 set inventory(chstats,0,bytes) 0;
 set inventory(chstats,1,bytes) 0;
 set inventory(chstats,2,bytes) 0;
 set inventory(chstats,3,bytes) 0;
-set inventory(chstats,4,bytes) 0;    # 5th (polarsat) channel
+set inventory(chstats,4,bytes) 0;    # 5th polarsat
+set inventory(chstats,5,bytes) 0;    # 6th experimental
+set inventory(chstats,6,bytes) 0;    # 7th goes-r west
+set inventory(chstats,7,bytes) 0;    # 8th goes-r east
+set inventory(chstats,8,bytes) 0;    # 9th weather wire
+#
 set inventory(chstats,hhmm) \
     [clock format [clock seconds] -gmt true -format "%H%M"];
 
@@ -207,14 +216,19 @@ proc channel_stats_log {} {
 
     set status [catch {
 	set fp [open $inventory(chstats,fpath) {WRONLY APPEND CREAT}];
-	puts $fp [format "%s %s %s %s %s %s %s %s %s %s %s" \
+	puts $fp [format \
+	    "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" \
 	    $inventory(chstats,hhmm) \
 	    $inventory(chstats,0,files) $inventory(chstats,1,files) \
 	    $inventory(chstats,2,files) $inventory(chstats,3,files) \
 	    $inventory(chstats,4,files) \
+	    $inventory(chstats,5,files) $inventory(chstats,6,files) \
+	    $inventory(chstats,7,files) $inventory(chstats,8,files) \
 	    $inventory(chstats,0,bytes) $inventory(chstats,1,bytes) \
 	    $inventory(chstats,2,bytes) $inventory(chstats,3,bytes) \
-	    $inventory(chstats,4,bytes)];
+	    $inventory(chstats,4,bytes) \
+	    $inventory(chstats,5,bytes) $inventory(chstats,6,bytes) \
+	    $inventory(chstats,7,bytes) $inventory(chstats,8,bytes)];
 	close $fp;
     } errmsg];
 
@@ -228,11 +242,20 @@ proc channel_stats_log {} {
     set inventory(chstats,2,files) 0;
     set inventory(chstats,3,files) 0;
     set inventory(chstats,4,files) 0;
+    set inventory(chstats,5,files) 0;
+    set inventory(chstats,6,files) 0;
+    set inventory(chstats,7,files) 0;
+    set inventory(chstats,8,files) 0;
+
     set inventory(chstats,0,bytes) 0;
     set inventory(chstats,1,bytes) 0;
     set inventory(chstats,2,bytes) 0;
     set inventory(chstats,3,bytes) 0;
     set inventory(chstats,4,bytes) 0;
+    set inventory(chstats,5,bytes) 0;
+    set inventory(chstats,6,bytes) 0;
+    set inventory(chstats,7,bytes) 0;
+    set inventory(chstats,8,bytes) 0;
 
     set hhmm [clock format [clock seconds] -gmt true -format "%H%M"];
     set inventory(chstats,hhmm) $hhmm;
