@@ -15,3 +15,14 @@ Assuming that eth1 is the interface that is connected to the receiver,
 	ifconfig eth1 <ip> pointopoint 10.0.9.54
 	route add -net 224.0.0.0 netmask 240.0.0.0 dev eth1
 -
+
+The following comment apears in 
+
+   https://www.unidata.ucar.edu/software/ldm/ldm-current/noaaport/index.html
+
+The value of parameter net.ipv4.conf.default.rp_filter should be 2 in order
+to obtain correct support for a multi-homed system.
+For example, as root, execute the commands
+
+    sysctl -w net.ipv4.ipfrag_max_dist=4096
+    sysctl -w net.ipv4.conf.default.rp_filter=2
