@@ -362,8 +362,8 @@ int pctldb_rcv_pce(struct pctldb_st *pctldb,
     if(status == ETIMEDOUT)
       status = 1;
     else{
-      status = -1;
       *dberror = status;
+      status = -1;
     }
   }else{
     /*
