@@ -1,0 +1,30 @@
+1) Example spooled files
+
+   kwbc_xous53-capapx.131604_19109173
+   kwbc_xous53-capapx.131604_19109174
+   kwbc_xous53-capapx.131604_19109175
+   kwbc_xous53-capapx.131604_19109176
+   kwbc_xous53-caplbf.131607_19115798
+
+2) Example files from
+
+   http://weather.noaa.gov/pub/SL.us008001/DF.xml/DC.cap/
+
+   T_XOAK52_C_KWBC_20141108011041_NWS-141029-632385-601463-O-EXT-PAFC-HW-W-0014.xml 
+
+   T_XOAK52_C_KWBC_20141110053422_NWS-141029-633770.xml
+   
+3) Information in the first file
+
+   <identifier>NWS-141029-632385-601463</identifier>
+   <parameter>
+	<valueName>VTEC</valueName>
+   	<value>/O.EXT.PAFC.HW.W.0014.000000T0000Z-141108T2100Z/</value>
+   </parameter>
+
+4) The struture of the NWS names seems to be
+
+   T_<wmoid>_C_<station>_<datetime>_<identifier>[-<vtec>].xml
+
+   The vtec is only the portion omting the <time>Z-<time>Z and with "."
+   replaced by "-"; and some files do not have it.
