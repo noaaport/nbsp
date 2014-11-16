@@ -140,17 +140,17 @@
 /*
  * Default parameters for the shared memory bdb spool (cspool)
  *
- * Ndb = 4         (12 minutes)
+ * Ndb = 4         (4 minutes)
  * dbcache_mb = 180 (each one)
  * Nslots = 4	   (number of buffer slots for reading)
  * maxsize_per128 = 96 (max grow size as a fraction of 128)
  *
  * There are Ndb = 4 databases, with each database configured such
- * that it can hold the files received in about 3 minutes (180 MB).
+ * that it can hold the files received in about 1 minute (180 MB).
  * This requires 720 MB + 20% (overhead) of free memory, to hold a cache of
- * 12 minutes of data. The "Nslots = 4" parameter configure 4 reading buffers
+ * 4 minutes of data. The "Nslots = 4" parameter configure 4 reading buffers
  * for retrieving the data from the db to send it to the nbs1 network clients
- * and the filter server. It should be set to a number of comparable to
+ * and the filter server. It should be set to a number comparable to
  * expected number of clients to avoid contention between the network slave
  * threads. (Each buffer will grow to about 25 MB; the largest file size).
  * Each db is not allowed to grow larger than (maxsize_per128/128) in order
@@ -174,22 +174,22 @@
  * based spool has the additional restrictions that most filters must be
  * disabled.
  *
- * Ndb = 4         (8 minutes)
- * dbcache_mb = 60 (each one)
- * Nslots = 4	   (number buffer slots for reading)
+ * Ndb = 4          (4 minutes)
+ * dbcache_mb = 180 (each one)
+ * Nslots = 4	    (number buffer slots for reading)
  * dbmaxsize_per128 = 96  
  *
  * There are Ndb = 4 databases, with each database configured such
- * that it can hold the files received in about one minute (60 MB).
+ * that it can hold the files received in about one minute (180 MB).
  * This requires 240 MB + 20% (overhead) of free memory, to hold a backlog
  * of 4 minutes of data. The "Nslots = 4" parameter configure 4 reading buffers
  * for retrieving the data from the db to send it to the nbs1 network clients.
  * and the filter server. It should be set to a number of comparable to
  * expected number of clients to avoid contention between the network slave
  * threads. (Each buffer will grow to about 25 MB;the largest file size).
- * The maxsize_per128 variable has the same meaning as in the mspool above.
+ * The maxsize_per128 variable has the same meaning as in the cspool above.
  */
-#define MSPOOLBDB_DBCACHE_MB	60
+#define MSPOOLBDB_DBCACHE_MB	180
 #define MSPOOLBDB_NDB		4
 #define MSPOOLBDB_NSLOTS	4
 #define MSPOOLBDB_MAXSIZE_PER128 96

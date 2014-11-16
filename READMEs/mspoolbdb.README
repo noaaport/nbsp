@@ -124,9 +124,9 @@ in the features.conf file. The default parametes for the spool cache are
 ### set cspoolbdb_nslots	4;
 
 These define ndb = 4 databases, with each database configured such that it
-can hold the files received in about 3 minutes (180 MB).
+can hold the files received in about 1 minutes (180 MB).
 This requires 720 MB + 20% (overhead) of free memory, to hold a cache
-of 12 minutes of data. The "nslots = 4" parameter configure 4 reading buffers
+of 4 minutes of data. The "nslots = 4" parameter configure 4 reading buffers
 for retrieving the data from the db to send it to the nbs1 network clients.
 Since there is only one reader, the network server, nslots can be set to 1.
 
