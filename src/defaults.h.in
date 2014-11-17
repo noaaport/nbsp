@@ -13,8 +13,8 @@
 
 /*
  * Some of the settings defined here are also used in the main
- * configuration files used by he filters "filters.conf".
- * That to file should be checked anytime this file is modified.
+ * configuration file "filters.conf" used by the filters.
+ * That file should be checked anytime this file is modified.
  */
 
 #define DAEMON_NAME		"nbspd"
