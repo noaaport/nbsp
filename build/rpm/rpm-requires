@@ -2,14 +2,20 @@
 # (required-pkgs.README)
 #
 # tk
+# tclx
 # mapserver
+#
+# However, in centos-7 rpm detects the scripts that use "wish" and refuses
+# to install it if "wish" is not installed. Until we split the package
+# as "minimal", or "server", etc, we need to include tk here now.
 #
 sharutils
 tcp_wrappers
-db4
-db4-utils
+libdb
+libdb-utils
 tcl
 tcllib
+tk
 libpng
 netpbm-progs
 zlib
