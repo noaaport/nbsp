@@ -6,7 +6,7 @@
  * $Id$
  */
 #ifndef UNZ_H
-#define UNZ_h
+#define UNZ_H
 
 int unz(char *out, int *outlen, char *in, int inlen);
 int zip(char **out, int *outlen, char *in, int inlen, int level);
