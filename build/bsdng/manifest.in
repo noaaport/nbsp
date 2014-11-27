@@ -8,17 +8,4 @@ maintainer: nieves@1-loop.net
 licenses: ISC
 comment: Noaaport Broadcast System Processor
 prefix: /usr/local
-
-deps:
 @deps@
-
-desc: |
-@desc@
-
-scripts:
-
-  post-install: |
-  @postinstall@
-
-  post-deinstall: |
-  @postdeinstall@

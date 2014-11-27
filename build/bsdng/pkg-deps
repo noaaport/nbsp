@@ -1,7 +1,9 @@
-  tcl86: {origin: lang/tcl86, version: 8.6}
-  tcllib: {origin: devel/tcllib, version: 1.15}
-  db5: {origin: databases/db5, version: 5.3}
-  png: {origin: graphics/png, version: 1.5}
-  netpbm: {origin: graphics/netpbm, version: 10.35}
-  gifsicle: {origin: graphics/gifsicle, version: 1.7}
-  gnuplot-nox: {origin: math/gnuplot-nox, version: 4.6}
+deps: {
+  tcl86: {origin: "lang/tcl86", version: "8.6.1"},
+  tcllib: {origin: "devel/tcllib", version: "1.16"},
+  db5: {origin: "databases/db5", version: "5.3.28"},
+  png: {origin: "graphics/png", version: "1.5.18"},
+  netpbm: {origin: "graphics/netpbm", version: "10.35.92"},
+  gifsicle: {origin: "graphics/gifsicle", version: "1.83"},
+  gnuplot-nox: {origin: "math/gnuplot-nox", version: "4.6.5"}
+}
