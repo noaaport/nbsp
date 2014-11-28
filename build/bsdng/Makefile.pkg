@@ -46,7 +46,7 @@ ${pkg_metadir}/pkg-post-install: pkg-postinstall.in
 ${pkg_metadir}/pkg-post-deinstall: pkg-postdeinstall.in
 	cp pkg-postdeinstall.in ${pkg_metadir}/pkg-post-deinstall
 
-pkg/+MANIFEST: manifest.in pkg-deps
+${pkg_metadir}/+MANIFEST: manifest.in pkg-deps
 	sed -e "/@name@/s//${name}/" \
 	-e "/@version@/s//${version}/" \
 	-e "/@pkgbuild@/s//${pkg_build}/" \
