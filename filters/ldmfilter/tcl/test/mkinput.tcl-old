@@ -1,0 +1,9 @@
+#!/usr/bin/tclsh
+
+foreach file [split [string trim [exec cat filelist]] "\n"] {
+    regexp {(.*)_(.*)-(.*)\.} $file match station wmoid awips;
+    set AWIPS [string toupper $awips];
+    set firstline [exec head -n 1 $file];
+    set wmo [string trim [string range $firstline 24 end]];
+    puts "nbsp2ldm:-c:24:-f:15:-g:-p:$wmo /p${AWIPS}:$file";
+}
