@@ -25,13 +25,14 @@ upload_get_osparams () {
 	    elif [ -f /etc/redhat-release ]
 	    then
 		release=`cat /etc/redhat-release`
-		osrelease=`echo $release | cut -d ' ' -f 4`
 		osname=`echo $release | cut -d ' ' -f 1`
 		if [ $osname = "CentOS" ]
 		then
 		    osname="centos"
+		    osrelease=`echo $release | cut -d ' ' -f 3`
 		else	
 		    osname="scientific-linux"
+		    osrelease=`echo $release | cut -d ' ' -f 4`
 		fi
 	    elif [ -f /etc/debian_version ]
 	    then
