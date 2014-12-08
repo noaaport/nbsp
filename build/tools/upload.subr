@@ -24,16 +24,25 @@ upload_get_osparams () {
 		osrelease=`echo $release | cut -d ' ' -f 3`
 	    elif [ -f /etc/redhat-release ]
 	    then
-		release=`cat /etc/redhat-release`
+		release=`cat /etc/redhat-release`		
 		osname=`echo $release | cut -d ' ' -f 1`
 		if [ $osname = "CentOS" ]
 		then
-		    osname="centos"
-		    osrelease=`echo $release | cut -d ' ' -f 3`
+                    osname="centos"
+		    # This is correct for centos-6, but not for centos-7
+                    osrelease=`echo $release | cut -d ' ' -f 3`
 		else	
 		    osname="scientific-linux"
-		    osrelease=`echo $release | cut -d ' ' -f 4`
+		    # This is correct for centos-6
+                    osrelease=`echo $release | cut -d ' ' -f 4`
 		fi
+
+		# This will get the correct version for centos-7
+		if [ -f /etc/os-release ]
+		then
+		   . /etc/os-release
+		   osrelease=$VERSION_ID
+   		fi
 	    elif [ -f /etc/debian_version ]
 	    then
 		osname=debian
