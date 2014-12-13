@@ -1,11 +1,11 @@
 name: @name@
 version: @version@_@pkgbuild@
 origin: misc/@name@
-categories: misc
+categories: [local]
 arch: @abi@
 www: http://www.noaaport.net
 maintainer: nieves@1-loop.net
-licenses: ISC
+licenses: [ISC]
 comment: Noaaport Broadcast System Processor
 prefix: /usr/local
 @deps@
