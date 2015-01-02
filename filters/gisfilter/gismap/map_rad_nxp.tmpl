@@ -1,0 +1,234 @@
+#
+# $Id$
+#
+package require nbsp::gis;
+
+# Load the color definitions - the default is that they are in the file
+# gis-color-def in the same directory as this template.
+#
+::nbsp::gis::init [file join [file dirname [info script]] "gis-colors.def"];
+
+# Colors can be overriden here. For example this will set a light
+# grey background for n1p images.
+#
+# ::nbsp::gis::radcolor_set "n1p" "background" {196 196 196}
+
+# When this file is sourced (by nbspgismap), the following parameters
+# will have been set:
+#
+# map(awips1)	= e.g., n1p
+# map(geodata)
+# map(mapfonts)
+# map(inputfile,<i>)
+# map(extent)
+# map(size)
+# map(imagetype) = png, gif, ...
+#
+# These (extent and size) defaults can (should) be overriden via
+# the -D switch to nbspgismap. In practice, they are set in the
+# "bundle configuration file".
+#
+set _map(extent) {-126 30 -66 50};
+set _map(size) {800 600};
+set _map(imagetype) png;
+#
+foreach _k [list extent size imagetype] {
+    if {[info exists map($_k)] == 0} {
+        set map($_k) $_map($_k);
+    }
+}
+
+set header {
+MAP
+	#
+	# Allow the possibility that the extent parameters are
+	# specified as "a b c d" or "a;b;c;d", and similarly with the size.
+	#
+	UNITS  DD
+	EXTENT [string map [list ";" " "] $map(extent)]
+	SIZE [string map [list ";" " "] $map(size)]
+	IMAGETYPE $map(imagetype)
+	IMAGECOLOR [::nbsp::gis::radcolor $map(awips1) background]
+	FONTSET "$map(mapfonts)/fonts.list"
+	#
+	# IMAGECOLOR 196 196 196  will give a light grey background
+	#
+}
+
+#
+# The "nexrad" layer; one for each site.
+#
+set nexrad {
+LAYER
+  NAME $name
+  DATA $datafile	# shapefile
+  TYPE POLYGON
+  STATUS ON
+  TRANSPARENCY 100	# or OPACITY 0 (TRANSPARENCY is deprecated)
+  #
+  # PROCESSING "SCALE=0,80"
+  # PROCESSING "SCALE_BUCKETS=16"
+  #
+
+  CLASSITEM "level"
+
+   CLASS
+     EXPRESSION (\[level\] == 0)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 0]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] > 0 && \[level\] < 10)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 5]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 10 && \[level\] < 25)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 10]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 25 && \[level\] < 50)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 25]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 50 && \[level\] < 75)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 50]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 75 && \[level\] < 100)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 75]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 100 && \[level\] < 125)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 100]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 125 && \[level\] < 150)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 125]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 150 && \[level\] < 175)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 150]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 175 && \[level\] < 200)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 175]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 200 && \[level\] < 250)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 200]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 250 && \[level\] < 300)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 250]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 300 && \[level\] < 400)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 300]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 400 && \[level\] < 600)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 400]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 600 && \[level\] < 800)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 600]
+     END
+   END
+
+   CLASS
+     EXPRESSION (\[level\] >= 800)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 800]
+     END
+   END
+
+END
+}
+
+set counties {
+LAYER
+    NAME "counties"
+    TYPE POLYGON
+    STATUS ON
+    DATA "$map(geodata)/c_15jl09/c_15jl09.shp"
+    TRANSPARENCY 100
+    LABELITEM "countyname"
+    CLASS
+       NAME "counties"
+       STYLE
+         OUTLINECOLOR 90 90 90
+       END
+      LABEL
+        COLOR 132 31 31
+        SHADOWCOLOR 218 218 218
+        SHADOWSIZE 2 2
+        TYPE TRUETYPE
+        FONT arial-bold
+        SIZE 6
+        ANTIALIAS TRUE
+        POSITION CL
+        PARTIALS FALSE
+        MINDISTANCE 300
+        BUFFER 4
+      END # end of label 
+    END
+END
+}
+
+#
+# Build the main script
+#
+set MAP [subst $header];
+set i 1;
+foreach k [array names map "inputfile,*"] {
+    set name "nexrad-$i";
+    set datafile $map($k);
+    append MAP "\n" [subst $nexrad];
+    incr i;
+}
+append MAP "\n" [subst $counties];
+append MAP "\n" "END";
+
+set map(scriptstr) $MAP;
