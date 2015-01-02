@@ -1,0 +1,37 @@
+#
+# $Id$
+#
+    set radcolor(nxp,background) [::nbsp::gis::x11color white];
+
+    set radcolor(nxp,0) $radcolor(nxp,background);
+
+    set radcolor(nxp,1) [::nbsp::gis::rgbcolor gray 36];
+    set radcolor(nxp,3) [::nbsp::gis::rgbcolor gray 36];
+    set radcolor(nxp,5) [::nbsp::gis::rgbcolor gray 36];
+    set radcolor(nxp,7) [::nbsp::gis::rgbcolor gray 36];
+    set radcolor(nxp,9) [::nbsp::gis::rgbcolor gray 36];
+
+    set radcolor(nxp,10) [::nbsp::gis::rgbcolor gray 88];
+    set radcolor(nxp,14) [::nbsp::gis::rgbcolor gray 88];
+    set radcolor(nxp,18) [::nbsp::gis::rgbcolor gray 88];
+    set radcolor(nxp,22) [::nbsp::gis::rgbcolor gray 88];
+
+    set radcolor(nxp,25) [::nbsp::gis::rgbcolor blue 1];
+    set radcolor(nxp,30) [::nbsp::gis::rgbcolor blue 1];
+    set radcolor(nxp,35) [::nbsp::gis::rgbcolor blue 1];
+    set radcolor(nxp,40) [::nbsp::gis::rgbcolor blue 1];
+    set radcolor(nxp,45) [::nbsp::gis::rgbcolor blue 1];
+
+    set radcolor(nxp,50) {0 175 175};
+    set radcolor(nxp,75) {0 255 0};
+    set radcolor(nxp,100) {0 143 0};
+    set radcolor(nxp,125) [::nbsp::gis::rgbcolor magenta 1];
+    set radcolor(nxp,150) {175 50 125};
+    set radcolor(nxp,175) [::nbsp::gis::rgbcolor blue 256];
+    set radcolor(nxp,200) {50 0 150};
+    set radcolor(nxp,250) [::nbsp::gis::rgbcolor yellow 128];
+    set radcolor(nxp,300) {255 170 0};
+    set radcolor(nxp,400) [::nbsp::gis::rgbcolor red 129];
+    set radcolor(nxp,600) [::nbsp::gis::rgbcolor red 210];
+
+    set radcolor(nxp,800) [::nbsp::gis::rgbcolor red 256];
