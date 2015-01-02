@@ -225,8 +225,8 @@ proc get_input_files_list {argv} {
 proc verify_inputfile_namefmt {inputfile} {
 
     set fbasename [file tail $inputfile];
-    # set re {^[[:alnum:]]{6}.+\.nids$};  # don't require nids extension
-    set re {^[[:alnum:]]{6}};
+    # set re {^[[:alnum:]]{6}.*\.nids$};  
+    set re {^[[:alnum:]]{6}};           # don't require nids extension
 
     if {[regexp $re $fbasename] == 0} {
 	return -code error "Invalid input file name: $inputfile";
@@ -239,8 +239,10 @@ proc select_mapname_keyword {awips1} {
 	set mapname "bref";
     } elseif {[regexp {^n.(u|v)$} $awips1]} {
 	set mapname "rvel";
+    } elseif {[regexp {^n(1|3|t)p$} $awips1]} {
+	set mapname "nxp";
     } else {
-	return -code error "Unsupported nids type";
+	return -code error "Unsupported nids type: $awips1";
     }
 
     return $mapname;
@@ -318,7 +320,7 @@ foreach inputfile $nbspgismap(input_files_list) {
 # This returns a keyword: "bref", "rvel", ...
 set mapname_keyword [select_mapname_keyword $awips1];
 
-if {[regexp {^n.(r|v|z)} $awips1]} {
+if {[regexp {^n.(r|v|z)} $awips1] || [regexp {^n(1|3|t)p$} $awips1]} {
     set do_nbspunz 1;
     set map(extent) [::nbsp::radstations::extent_bysitelist $sitelist];
 } else {
@@ -380,7 +382,9 @@ foreach k [list extent geodata mapfonts] {
     }
 }
 
-if {[file exists $nbspgismap(map_tmplfile)] == 0} {
+if {$nbspgismap(map_tmplfile) eq ""} {
+    log_err "Map template file not found.";
+} elseif {[file exists $nbspgismap(map_tmplfile)] == 0} {
     log_err "$nbspgismap(map_tmplfile) not found.";
 }
 

@@ -23,4 +23,10 @@
  *  -x <shx file>
  *
  * The default action is the same as specifying "-FOPX" (excluding csv).
+ *
+ * The data is output in the following units:
+ *
+ * reflectivity: dbZ
+ * rel velocity: knots
+ * acumulated rain: hundredth of inch
  */

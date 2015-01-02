@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2014 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
- * $Id$
+ * $Id: nbspradgis.c,v f4498a73fe59 2015/01/01 17:31:34 nieves $
  */
 
 /*
@@ -11,7 +11,7 @@
  *
  * The program reads from a file or stdin, but the data must start with the
  * wmo header (i.e., the ccb must have been removed). The [-c] amd [-C]
- * options work as in nbspradinfo. See nbspradinfo.c.
+ * options work as in nbspradinfo. ee nbspradinfo.c.
  *
  * The output options are:
  *
@@ -29,6 +29,12 @@
  *  -x <shx file>
  *
  * The default action is the same as specifying "-FOPX" (excluding csv).
+ *
+ * The data is output in the following units
+ *
+ *  reflectivity: dbZ
+ *  rel velocity: knots
+ *  acumulated rain: hundredth of inch (nids_decode_nxp_codetolevel())
  */
 
 #include <assert.h>
@@ -444,13 +450,17 @@ static void nids_decode_data(struct nids_data_st *nd){
        (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXQ)){
       nd->polygon_map.level_min = NIDS_BREF_LEVEL_MIN_VAL;
       nd->polygon_map.level_max = NIDS_BREF_LEVEL_MAX_VAL;
-    }else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV) ||
+    } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV) ||
 	     (nd->nids_header.pdb_code == NIDS_PDB_CODE_NXU)){
       nd->polygon_map.level_min = NIDS_RVEL_LEVEL_MIN_VAL;
       nd->polygon_map.level_max = NIDS_RVEL_LEVEL_MAX_VAL;
-    }else
-      log_errx(1, "Invalid value of nd->nids_header.pdb_code.");
-
+    } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXP) ||
+	      (nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
+      nd->polygon_map.level_min = NIDS_NXP_LEVEL_MIN_VAL;
+      nd->polygon_map.level_max = NIDS_NXP_LEVEL_MAX_VAL;
+    } else
+	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
+		 nd->nids_header.pdb_code);
     /*
      * If the user specified min and max the use them.
      */
@@ -467,7 +477,7 @@ static void nids_decode_data(struct nids_data_st *nd){
     nids_decode_radials_af1f(nd);
   else if(packet_code == NIDS_PACKET_DIGITAL_RADIALS_16)
     nids_decode_digital_radials_16(nd);
-  else{
+  else {
     /* Already caught above */
     log_errx(1, "Unsupported packet code: %d", packet_code);
   }
