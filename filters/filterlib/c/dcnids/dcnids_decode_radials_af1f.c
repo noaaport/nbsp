@@ -609,7 +609,7 @@ static int nids_decode_nxp_codetolevel(int run_code){
    * 
    *   http://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620003T.pdf
    */
-  int run_level;
+  int run_level = 0;
 
   switch(run_code){
   case 0:
