@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
- * $Id$
+ * $Id: dcnids_decode_radials_af1f.c,v f4498a73fe59 2015/01/01 17:31:34 nieves $
  */
 #include <assert.h>
 #include <stdio.h>
@@ -34,6 +34,7 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd);
 static void nids_count_polygons_radials_af1f(struct nids_data_st *nd);
 static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
 static int nids_decode_rvel_codetolevel(int run_code);
+static int nids_decode_nxp_codetolevel(int run_code);
 
 #if 0
 void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
@@ -154,10 +155,14 @@ void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
 	 (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z)){
 	run_level = nids_decode_bref_codetolevel(nd->nids_header.pdb_mode,
 						 run_code);
-      }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV){
+      } else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV){
 	run_level = nids_decode_rvel_codetolevel(run_code);
-      }else{
-	log_errx(1, "Unsupported value of nd->nids_header.pdb_code.");
+      } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXP) || 
+		(nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
+	  run_level = nids_decode_nxp_codetolevel(run_code);
+      } else {
+	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
+		 nd->nids_header.pdb_code);
       }
 
       if(nd->polygon_map.flag_usefilter == 1){
@@ -327,8 +332,12 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 						 run_code);
       }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXV){
 	run_level = nids_decode_rvel_codetolevel(run_code);
-      }else{
-	log_errx(1, "Unsupported value of nd->nids_header.pdb_code.");
+      } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXP) || 
+		(nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
+	  run_level = nids_decode_nxp_codetolevel(run_code);
+      } else {
+	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
+		 nd->nids_header.pdb_code);
       }
 
       if(nd->polygon_map.flag_usefilter == 1){
@@ -582,6 +591,74 @@ static int nids_decode_rvel_codetolevel(int run_code){
     break;
   case 15:
     run_level = NIDS_RVEL_LEVEL_ND_MAX;
+    break;
+  default:
+    log_errx(1, "Invalid value of run_code.");
+    break;
+  }
+
+  return(run_level);
+}
+
+static int nids_decode_nxp_codetolevel(int run_code){
+  /*
+   * The value of the level returned here is in hundredth of an inch. That is,
+   * 200 is 2 in, and 5 is 0.05 inches. The correspondnce is taken from the
+   * interpretation/meaning of the run_code, according to the code color table
+   * in page 28-1 of 2620003T.pdf; for example in (2014-12-29)
+   * 
+   *   http://www.roc.noaa.gov/wsr88d/PublicDocs/ICDs/2620003T.pdf
+   */
+  int run_level;
+
+  switch(run_code){
+  case 0:
+    run_level = 0;
+    break;
+  case 1:
+    run_level = 5;
+    break;
+  case 2:
+    run_level = 10;
+    break;
+  case 3:
+    run_level = 25;
+    break;
+  case 4:
+    run_level = 50;
+    break;
+  case 5:
+    run_level = 75;
+    break;
+  case 6:
+    run_level = 100;
+    break;
+  case 7:
+    run_level = 125;
+    break;
+  case 8:
+    run_level = 150;
+    break;
+  case 9:
+    run_level = 175;
+    break;
+  case 10:
+    run_level = 200;
+    break;
+  case 11:
+    run_level = 250;
+    break;
+  case 12:
+    run_level = 300;
+    break;
+  case 13:
+    run_level = 400;
+    break;
+  case 14:
+    run_level = 600;
+    break;
+  case 15:
+    run_level = 800;
     break;
   default:
     log_errx(1, "Invalid value of run_code.");
