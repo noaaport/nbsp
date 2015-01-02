@@ -1,3 +1,9 @@
+nbsp (2.3.6p1+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Added support for n?p in gisfilter and nbspgis tools
+  
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 02 Jan 2015 18:48:19 -0400
+   
 nbsp (2.3.5p1+ubuntu1204.1-1) oneiric; urgency=low
 
   * Added capfilter
