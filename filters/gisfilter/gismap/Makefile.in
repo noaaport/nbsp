@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # See LICENSE
 #
@@ -12,14 +12,16 @@ TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl \
 		nbspgisradmap.tcl nbspgissatmap.tcl
 
 TMPLSOURCES =	gis-colors.def.in \
-		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def
+		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def \
+		gis-colors-nxp.def
 TMPLOBJECTS =	gis-colors.def
 
 TMPLFILES =	${TMPLOBJECTS} \
 		map_sat.tmpl \
 		map_rad_bref.tmpl \
 		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl \
-		map_rad_rvel.tmpl map_rad_rvel_1.tmpl
+		map_rad_rvel.tmpl map_rad_rvel_1.tmpl \
+		map_rad_nxp.tmpl
 
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
@@ -54,13 +56,16 @@ gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
 
 gis-colors.def: gis-colors.def.in \
-	gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def
+	gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def \
+	gis-colors-nxp.def
 	sed -e '/@gis-colors-rgb@/r gis-colors-rgb.def' \
 	-e '/@gis-colors-rgb@/d' \
 	-e '/@gis-colors-bref@/r gis-colors-bref.def' \
 	-e '/@gis-colors-bref@/d' \
 	-e '/@gis-colors-rvel@/r gis-colors-rvel.def' \
-	-e '/@gis-colors-rvel@/d' gis-colors.def.in > gis-colors.def 
+	-e '/@gis-colors-rvel@/d' \
+	-e '/@gis-colors-nxp@/r gis-colors-nxp.def' \
+	-e '/@gis-colors-nxp@/d' gis-colors.def.in > gis-colors.def 
 
 #geodata-share.tgz:
 #	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
