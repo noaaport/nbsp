@@ -1,9 +1,9 @@
 #
-# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
-#
-# See LICENSE
+# Copyright (c) 2007-2015 Jose F. Nieves <nieves@ltp.uprrp..edu>
 #
 # $Id$
+#
+# See LICENSE
 
 # This file has the names of the models that the gribfilter uses
 # when saving the grib data files in the grib/grb directory.
@@ -19,26 +19,36 @@
 # subcenter using
 #	<center>,<subcenter>
 #	<center>,<station>
-# and if it is not found it uses the <station> as the name, prepended by
-# an underscore.
+# and if it is not found it uses k-<station> as the name.
 #
 # The names are taken from
-# ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 08/13/2007),
+#
+#      http://www.nco.ncep.noaa.gov/pmb/docs/on388/appendixa.html
+#
+# ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 08/13/2007)
+# ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 11/25/2014)
+#
 #  and
 # 	http://www.weather.gov/datamgmt/x_ref/xr07_Center_ID_List.html
+#
 # See also:
 #	pqact.gempak
 #	gempak/tables/grid/gribkey.tbl
 #	gempak/tables/grid/ncepsubcenters.tbl
+#	gempak/tables/grid/wmocenter.tbl
 #
 ##set filtersgribid(model,7,kwba) ""; # Reserved for Future Use
 ##set filtersgribid(model,7,kwbb) ""; # Reserved for Future Use
+##                                    # KWD(A-Z) are reserved for future use.
 set filtersgribid(model,7,kwbc) "gfs"; # Global Forecast System Model
-set filtersgribid(model,7,kwbd) "dgex"; # Downscaled GFS using NAM eXt. DGEX)
+set filtersgribid(model,7,kwbd) "dgex"; # Downscaled GFS using NAM ext. DGEX)
 set filtersgribid(model,7,kwbe) "nam"; # North American Mesoscale (NAM) Model
-set filtersgribid(model,7,kwbf) "ngm"; # Nested Grid Model (NGM)
-set filtersgribid(model,7,kwbg) "ruc"; # Rapid Update Cycle
-set filtersgribid(model,7,kwbh) "mrf"; # Medium Range Forecast (MRF)
+#set filtersgribid(model,7,kwbf) "ngm"; # Nested Grid Model (NGM)
+set filtersgribid(model,7,kwbf) "cfs"; # Climate Forecast System (CFS) (2014)
+#set filtersgribid(model,7,kwbg) "ruc"; # Rapid Update Cycle
+set filtersgribid(model,7,kwbg) "rap"; # Rapid Refresh  (2014)
+#set filtersgribid(model,7,kwbh) "mrf"; # Medium Range Forecast (MRF)
+#set filtersgribid(model,7,kwbh) ""; # Reserved for Future Use (2014)
 set filtersgribid(model,7,kwbi) "sst"; # Sea Surface Temperature Analysis
 set filtersgribid(model,7,kwbj) "wind-wave"; # Wind-Wave Forecast Models
 set filtersgribid(model,7,kwbk) "gefs"; # Global Ensemble Forecast System
@@ -50,12 +60,21 @@ set filtersgribid(model,7,kwbp) "aqm-air"; # EPA/CMAQ
 set filtersgribid(model,7,kwbq) "gmos"; # from gmosheaders.pdf 
 set filtersgribid(model,7,kwbr) "rtma"; # Real Time Mesoscale Analysis of Error
 ##set filtersgribid(model,7,kwbs) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbs) "arw-nmm"; # Hires Window Model(ARW, NMM)(2014)
 ##set filtersgribid(model,7,kwbt) ""; # Reserved for Future Us
+set filtersgribid(model,7,kwbt) "gfs-dng"; # GFS Downscale Numerical Guidance
+                                           # 2014
 ##set filtersgribid(model,7,kwbu) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbu) "hurrwave"; # Hurricane Wave Model (2014)
 ##set filtersgribid(model,7,kwbv) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbv) "naefs"; # North American
+                                         # Ensemble Forecast System
+                                         # (NAEFS) - CMC (2014)
 ##set filtersgribid(model,7,kwbw) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwbw) "rtofs"; # Real Time Ocean Forecast Sys (2014)
 set filtersgribid(model,7,kwbx) "ecmwf"; # ECMWF
 ##set filtersgribid(model,7,kwby) ""; # Reserved for Future Use
+set filtersgribid(model,7,kwby) "hrrr"; # High Resolution Rapid Refresh (2014)
 ##set filtersgribid(model,7,kwbz) ""; # Refer to GRIB PDS
 
 # Indexed by <center>,<subcenter>,<model>
@@ -348,12 +367,12 @@ set filtersgribid(ftu,unknown) "x";
 #
 # Read the local overrides and/or additions
 #
-set _confname "filtersgribid.rc";
+set _confname "filters-gribid.def";
 
-if {[info exists source_filtersgribid_defined]} {
+if {[info exists source_filters_gribid_def_defined]} {
     return;
 }
-set source_filtersgribid_defined 1;
+set source_filters_gribid_def_defined 1;
 
 foreach _d $common(localconfdirs) {
     set _localconfname ${_d}/${_confname}
