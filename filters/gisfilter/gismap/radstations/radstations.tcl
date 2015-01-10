@@ -13,6 +13,7 @@
 #
 package provide nbsp::radstations 1.0;
 package require textutil::split;
+package require cmdline;
 
 namespace eval nbsp::radstations {} {
 
@@ -478,13 +479,19 @@ proc nbsp::radstations::extent_bysite {site {shift 2}} {
 }
 
 proc nbsp::radstations::extent_bysitelist {args} {
+#
+# Usage:
+#  set s1 "ama bro crp";
+#  set s2 "fdr inx tlx";
+#  set r [nbsp::radstations::extent_bysitelist -s <shift> $s1 $s2];
 
     variable radstations;
 
-    set lat1 1000;
-    set lat2 0;
-    set lon1 0;
-    set lon2 -1000;
+    set usage {nbsp::radstations::extent_bysitelist [-s <shift>] <lists>};
+    set optlist {{s.arg "2"}};
+    
+    array set option [::cmdline::getoptions args $optlist $usage];
+    set argc [llength $args];
 
     # Construct the (tcl) site list
     set sitelist [list];
@@ -497,6 +504,11 @@ proc nbsp::radstations::extent_bysitelist {args} {
     } elseif {[llength $sitelist] == 0} {
 	return -code error "Empty site list";
     }
+
+    set lat1 1000;
+    set lat2 0;
+    set lon1 0;
+    set lon2 -1000;
 
     foreach site $sitelist {
 	set data [split $radstations(site,$site) ","];
@@ -520,22 +532,28 @@ proc nbsp::radstations::extent_bysitelist {args} {
 	}
     }
 
-    incr lon1 -2;
-    incr lat1 -2;
-    incr lon2 2;
-    incr lat2 2;
+    incr lon1 -$option(s);
+    incr lat1 -$option(s);
+    incr lon2 $option(s);
+    incr lat2 $option(s);
 
     return [list $lon1 $lat1 $lon2 $lat2];
 }
 
 proc nbsp::radstations::extent_bystate {args} {
+#
+# Usage:
+#  set s1 "tx ok";
+#  set s2 "pa ny";
+#  set r [nbsp::radstations::extent_bystatev $s1 $s2];
 
     variable radstations;
 
-    set lat1 1000;
-    set lat2 0;
-    set lon1 0;
-    set lon2 -1000;
+    set usage {nbsp::radstations::extent_bystate [-s <shift>] <lists>};
+    set optlist {{s.arg "2"}};
+    
+    array set option [::cmdline::getoptions args $optlist $usage];
+    set argc [llength $args];
 
     # Construct the (tcl) state list
     set statelist [list];
@@ -551,5 +569,5 @@ proc nbsp::radstations::extent_bystate {args} {
 	}
     }
 
-    return [extent_bysitelist $sitelist];
+    return [extent_bysitelist -s $option(s) $sitelist];
 }

@@ -1,4 +1,4 @@
-#!/usr/local/bin/tclsh8.6
+#!/usr/bin/tclsh
 
 source "radstations.tcl";
 
