@@ -66,9 +66,9 @@ foreach h [list 6 12 24 48 60 72 84 96 120 240] {
   }
 }
 
-## ruc 236
+## rap 236
 #  (Use -I end-1 to choose the file from the previous, just finished, hour)
-set m ruc;
+set m rap;
 set g 236;
 foreach h [list 1 2 3] {
   foreach p [list uvtprs tmpprs rhprs mslmamsl] {

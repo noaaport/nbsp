@@ -57,7 +57,7 @@ matchstop_and_file($rc(station), ^kwb, $rc(wmoid) s s1 s2, ^([yz]).(q.),
 $gribfilter(grbdatadir)/$rc(gribmodel)/$rc(gribymdh),
 [gribfilter_make_default_name rc 1])
 
-# RUC2 model on Lambert conformal CONUS grid
+# RAP model on Lambert conformal CONUS grid
 matchstop_and_file($rc(station), kwbg, $rc(wmoid) s s1 s2, ^(y).(w.),
 $gribfilter(grbdatadir)/ruc2/$rc(gribymdh),
 [gribfilter_make_default_name rc 1 ruc2])
@@ -76,16 +76,6 @@ $gribfilter(grbdatadir)/ukmet/$rc(gribymdh),
 matchstop_and_file($rc(station), kwbc, $rc(wmoid) s s1 s2, ^(h).([i-p].),
 $gribfilter(grbdatadir)/gfs/$rc(gribymdh),
 [gribfilter_make_default_name rc 1 gfs])
-
-# MRF model on global 5.0 x 2.5 degree grids
-matchstop_and_file($rc(station), kwbh, $rc(wmoid) s s1 s2, ^(h).([a-d].),
-$gribfilter(grbdatadir)/mrf25/$rc(gribymdh),
-[gribfilter_make_default_name rc 1 mrf25])
-
-# MRF model on global 5.0 x 5.0 degree grid
-matchstop_and_file($rc(station), kwbh, $rc(wmoid) s s1 s2, ^(h).([ef].),
-$gribfilter(grbdatadir)/mrf50/$rc(gribymdh),
-[gribfilter_make_default_name rc 1 mrf50])
 
 # SST model on global 2.0 x 2.0 degree grid
 matchstop_and_file($rc(station), kwbi, $rc(wmoid) s s1 s2, ^(h).([t-w].),
