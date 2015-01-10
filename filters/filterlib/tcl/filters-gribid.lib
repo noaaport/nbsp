@@ -92,9 +92,13 @@ proc get_grib_model_params {fpath station wmoid} {
     }
 
     # For grib2 try to get the gridid from the wmoid.
-    if {($gribedition == 2) && ($gridid == "0")} {
-	set _g [get_gridid_from_wmoid $wmoid];
-	if {${_g} != "0"} {
+    if {($gribedition == 2) && ($gridid eq "0")} {
+       	# First check if it is an ncep
+	set _g [get_gridid_from_ncep_kwbx $station $wmoid];
+	if {${_g} eq "0"} {
+	   set _g [get_gridid_from_wmoid $wmoid];
+	}
+	if {${_g} ne "0"} {
 	    set gridid ${_g};
 	}
 	unset _g;
@@ -143,7 +147,28 @@ proc get_gridid_from_wmoid {wmoid} {
 	if {[info exists filtersgribid(gridid,$s1,$s2)]} {
 	    return $filtersgribid(gridid,$s1,$s2);
 	}
-    } else {
-	return 0;
     }
+
+    return "0";
+}
+
+proc get_gridid_from_ncep_kwbx {station wmoid} {
+
+    global filtersgribid;
+
+    if {[regexp {^kwb} $station] == 0} {
+       return "0";
+    }
+
+    if {[regexp {([lmyz]).(.)...} $wmoid s s1 s2]} {
+	if {[info exists filtersgribid(gridid,$station,lmyz,$s2)]} {
+	    return $filtersgribid(gridid,$station,lmyz,$s2);
+	}
+    } elseif {[regexp {([e]).(.)...} $wmoid s s1 s2]} {
+	if {[info exists filtersgribid(gridid,$station,$s1,$s2)]} {
+	    return $filtersgribid(gridid,$station,$s1,$s2);
+	}
+    }
+
+    return "0";
 }

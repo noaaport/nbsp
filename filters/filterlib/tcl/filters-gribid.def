@@ -248,89 +248,225 @@ set filtersgribid(center,161) "nssl";
 # Grid numbers - Writing a wmoid as <t1><t2><a1><a2><ii>, these are
 # the definitions according to the <t1> and <a1>; i.e.,
 #
+# filtersgribid(gridid,<t1>,<a1>)
+#
+# So for example,
+#
 # filtersgribid(gridid,h,g)
 #
 # means <t1> = h and <a1> = g. In entries like filtersgribid(gridid,lmyz,g)
 # below, it means the value holds for any of <t1> = l,m,y,z.
+# For ncep products (that start with kwb<c>), we define
+#
+# filtersgribid(gridid,kwb<c>,<t1>,<a1>)
+#
+# and try to use that first.
+#
 # (Taken from appendix A of ON388)
+#
 set filtersgribid(gridid,h,a) "21";
 set filtersgribid(gridid,o,a) "228";
-set filtersgribid(gridid,lmyz,a) "381";
+set filtersgribid(gridid,e,a) "11";
+set filtersgribid(gridid,lmyz,a) "201";
+
 set filtersgribid(gridid,h,b) "22";
 set filtersgribid(gridid,o,b) "218";
+set filtersgribid(gridid,e,b) "12";
 set filtersgribid(gridid,lmyz,b) "218";
+
 set filtersgribid(gridid,h,c) "23";
 set filtersgribid(gridid,o,c) "219";
-set filtersgribid(gridid,lmyz,c) "175";
+set filtersgribid(gridid,e,c) "13";
+set filtersgribid(gridid,lmyz,c) "225";
+
 set filtersgribid(gridid,h,d) "24";
 set filtersgribid(gridid,o,d) "220";
+set filtersgribid(gridid,e,d) "14";
 set filtersgribid(gridid,lmyz,d) "130";
+
 set filtersgribid(gridid,h,e) "25";
 set filtersgribid(gridid,o,e) "221";
+set filtersgribid(gridid,e,e) "15";
 set filtersgribid(gridid,lmyz,e) "185";
+
 set filtersgribid(gridid,h,f) "26";
 set filtersgribid(gridid,o,f) "229";
+set filtersgribid(gridid,e,f) "16";
 set filtersgribid(gridid,lmyz,f) "186";
+
 set filtersgribid(gridid,h,g) "50";
 set filtersgribid(gridid,o,g) "230";
+set filtersgribid(gridid,e,g) "17";
 set filtersgribid(gridid,lmyz,g) "160";
+
 set filtersgribid(gridid,h,h) "0";
 set filtersgribid(gridid,o,h) "231";
+set filtersgribid(gridid,e,h) "18";
 set filtersgribid(gridid,lmyz,h) "213";
+
 set filtersgribid(gridid,h,i) "37";
 set filtersgribid(gridid,o,i) "232";
+set filtersgribid(gridid,e,i) "176";
 set filtersgribid(gridid,lmyz,i) "202";
+
 set filtersgribid(gridid,h,j) "38";
 set filtersgribid(gridid,o,j) "233";
+set filtersgribid(gridid,e,j) "0";
 set filtersgribid(gridid,lmyz,j) "203";
+
 set filtersgribid(gridid,h,k) "39";
 set filtersgribid(gridid,o,k) "234";
+set filtersgribid(gridid,e,k) "2.5km";    # XXX
+                                          #2.5 km - Lambert Conformal Great Lake
+                                          #Wave High Resolution grid
 set filtersgribid(gridid,lmyz,k) "204";
+
 set filtersgribid(gridid,h,l) "40";
 set filtersgribid(gridid,o,l) "235";
+set filtersgribid(gridid,e,l) "0";
 set filtersgribid(gridid,lmyz,l) "205";
+
 set filtersgribid(gridid,h,m) "41";
 set filtersgribid(gridid,o,m) "238";
+set filtersgribid(gridid,e,m) "238";
 set filtersgribid(gridid,lmyz,m) "227";
+
 set filtersgribid(gridid,h,n) "42";
 set filtersgribid(gridid,o,n) "239";
+set filtersgribid(gridid,e,n) "";
 set filtersgribid(gridid,lmyz,n) "207";
+
 set filtersgribid(gridid,h,o) "43";
 set filtersgribid(gridid,o,o) "244";
+set filtersgribid(gridid,e,o) "";
 set filtersgribid(gridid,lmyz,o) "254";
+
 set filtersgribid(gridid,h,p) "44";
 set filtersgribid(gridid,o,p) "251";
+set filtersgribid(gridid,e,p) "";
 set filtersgribid(gridid,lmyz,p) "237";
+
 set filtersgribid(gridid,h,q) "0";
 set filtersgribid(gridid,o,q) "253";
+set filtersgribid(gridid,e,q) "253";
 set filtersgribid(gridid,lmyz,q) "211";
+
 set filtersgribid(gridid,h,r) "0";
 set filtersgribid(gridid,o,r) "212";
+set filtersgribid(gridid,e,r) "260";
 set filtersgribid(gridid,lmyz,r) "212";
+
 set filtersgribid(gridid,h,s) "0";
 set filtersgribid(gridid,o,s) "253";
+set filtersgribid(gridid,e,s) "0";
 set filtersgribid(gridid,lmyz,s) "242";
+
 set filtersgribid(gridid,h,t) "61";
 set filtersgribid(gridid,o,t) "214";
+set filtersgribid(gridid,e,t) "";
 set filtersgribid(gridid,lmyz,t) "161";
+
 set filtersgribid(gridid,h,u) "62";
 set filtersgribid(gridid,o,u) "215";
+set filtersgribid(gridid,e,u) "261";
 set filtersgribid(gridid,lmyz,u) "215";
+
 set filtersgribid(gridid,h,v) "63";
 set filtersgribid(gridid,o,v) "216";
+set filtersgribid(gridid,e,v) "";
 set filtersgribid(gridid,lmyz,v) "216";
+
 set filtersgribid(gridid,h,w) "64";
 set filtersgribid(gridid,o,w) "173";
+set filtersgribid(gridid,e,w) "";
 set filtersgribid(gridid,lmyz,w) "236";
+
 set filtersgribid(gridid,h,x) "0";
 set filtersgribid(gridid,o,x) "0";
+set filtersgribid(gridid,e,x) "0";
 set filtersgribid(gridid,lmyz,x) "243";
+
 set filtersgribid(gridid,h,y) "0";
 set filtersgribid(gridid,o,y) "0";
+set filtersgribid(gridid,e,y) "0";
 set filtersgribid(gridid,lmyz,y) "217";
+
 set filtersgribid(gridid,h,z) "0";
 set filtersgribid(gridid,o,z) "0";
+set filtersgribid(gridid,e,z) "0";
 set filtersgribid(gridid,lmyz,z) "0";
+
+# Grids for ncep kwb?
+
+# XXX - no names
+set filtersgribid(gridid,kwbs,lmyz,a) "5km-e";
+set filtersgribid(gridid,kwbs,lmyz,b) "5km-w";
+set filtersgribid(gridid,kwbs,lmyz,c) "5km-a";
+set filtersgribid(gridid,kwbs,lmyz,d) "5km-h";
+set filtersgribid(gridid,kwbs,lmyz,e) "5km-p";
+set filtersgribid(gridid,kwbs,lmyz,f) "5km-g";
+
+set filtersgribid(gridid,kwbr,lmyz,a) "198";
+set filtersgribid(gridid,kwbr,lmyz,c) "195";
+set filtersgribid(gridid,kwbr,lmyz,d) "92";
+set filtersgribid(gridid,kwbr,lmyz,g) "199";
+set filtersgribid(gridid,kwbr,lmyz,h) "196";
+set filtersgribid(gridid,kwbr,lmyz,i) "184";
+set filtersgribid(gridid,kwbr,lmyz,j) "90";
+set filtersgribid(gridid,kwbr,lmyz,k) "91";
+set filtersgribid(gridid,kwbr,lmyz,m) "197";
+set filtersgribid(gridid,kwbr,lmyz,n) "188";
+set filtersgribid(gridid,kwbr,lmyz,p) "190";
+set filtersgribid(gridid,kwbr,lmyz,q) "184";
+set filtersgribid(gridid,kwbr,lmyz,r) "188";
+
+set filtersgribid(gridid,kwbe,lmyz,a) "198";
+set filtersgribid(gridid,kwbe,lmyz,b) "218";
+set filtersgribid(gridid,kwbe,lmyz,c) "195";
+set filtersgribid(gridid,kwbe,lmyz,h) "196";
+set filtersgribid(gridid,kwbe,lmyz,i) "184";
+set filtersgribid(gridid,kwbe,lmyz,k) "91";
+set filtersgribid(gridid,kwbe,lmyz,m) "227";
+set filtersgribid(gridid,kwbe,lmyz,n) "207";
+set filtersgribid(gridid,kwbe,lmyz,o) "197";
+set filtersgribid(gridid,kwbe,lmyz,p) "237";
+set filtersgribid(gridid,kwbe,lmyz,r) "212";
+set filtersgribid(gridid,kwbe,lmyz,s) "242";
+set filtersgribid(gridid,kwbe,lmyz,u) "215";
+set filtersgribid(gridid,kwbe,lmyz,v) "216";
+
+set filtersgribid(gridid,kwbt,lmyz,g) "199";
+set filtersgribid(gridid,kwbt,lmyz,q) "211";
+
+set filtersgribid(gridid,kwbm,e,i) "184";
+set filtersgribid(gridid,kwbm,e,p) "1.25km-pr";    # XXX - noname
+
+# XXX - no names
+set filtersgribid(gridid,kwbw,e,a) "0.3km-a"
+set filtersgribid(gridid,kwbw,e,b) "0.08m-bering"
+set filtersgribid(gridid,kwbw,e,c) "0.08m-w"
+set filtersgribid(gridid,kwbw,e,d) "0.08m-artic"
+set filtersgribid(gridid,kwbw,e,g) "0.08m-g"
+set filtersgribid(gridid,kwbw,e,h) "0.08m-h"
+set filtersgribid(gridid,kwbw,e,i) "0.5km-gulf-a"
+set filtersgribid(gridid,kwbw,e,j) "0.25m-hudson-baffin"
+set filtersgribid(gridid,kwbw,e,k) "0.08m-watlantic"
+set filtersgribid(gridid,kwbw,e,m) "0.05m-atlantic"
+set filtersgribid(gridid,kwbw,e,s) "0.08m-samoa"
+set filtersgribid(gridid,kwbw,e,t) "1km-trop-pacific"
+
+set filtersgribid(gridid,kwbk,lmyz,a) "3";
+set filtersgribid(gridid,kwbk,lmyz,e) "221";
+
+set filtersgribid(gridid,kwbf,lmyz,c) "t126";
+
+set filtersgribid(gridid,kwbv,lmyz,a) "3";
+
+# XXX - guessed (Robert Firth mentioned)
+set filtersgribid(gridid,kwby,lmyz,c) "184"; # 2.5 km NDFD over conus
+
+set filtersgribid(gridid,kwbd,lmyz,a) "198";
+set filtersgribid(gridid,kwbd,lmyz,o) "197";
 
 # The forecast time units. They are not exactly the same for grib 1 and 2,
 # so we have two sets.
@@ -379,7 +515,7 @@ foreach _d $common(localconfdirs) {
     if {[file exists ${_localconfname}] == 1} {
         source ${_localconfname};
     }
+    unset _d;
+    unset _localconfname;
 }
-unset _d;
 unset _confname;
-unset _localconfname;
