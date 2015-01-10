@@ -29,10 +29,9 @@ set gribfilter(idxfext)		".idx";
 set gribfilter(pdeffext)	".pdef";
 set gribfilter(grbcatalog)	"grb.cat";
 set gribfilter(ctlcatalog)	"ctl.cat";
-set gribfilter(gridsmodels_uwildpatt) {gefs|gfs|hrrr|mrf|nam|rap};
+set gribfilter(gridsmodels_uwildpatt) {gfs|nam|rap};
 set gribfilter(gradsctl_enable)	0;
-set gribfilter(gradsctl_uwildpatt) {ecmwf|gfs|mrf|nam|ruc,!\.grb2,
-	!gfs_[26][1-4](_|\.)};
+set gribfilter(gradsctl_uwildpatt) {gfs|nam|rap,!\.grb2,!gfs_[26][1-4](_|\.)};
 set gribfilter(scheduler_enable) 0;
 set gribfilter(schedule) [file join $common(confdir) \
 	"gribfilter-schedule.rc"];
@@ -49,10 +48,10 @@ set gribfilter(gradsprompt)	"ga*";
 
 # Work-crew configuration for gribfilter-manager
 set gribfilter(slave) [file join $common(libdir) "gribfilter"];
-set gribfilter(slave,types) [list "gfs" "nam" "ruc" "default"];
+set gribfilter(slave,types) [list "gfs" "nam" "rap" "default"];
 set gribfilter(slave,gfs,ure) {^kwbc} ;
 set gribfilter(slave,nam,ure) {^kwbe};
-set gribfilter(slave,ruc,ure) {^kwbg};
+set gribfilter(slave,rap,ure) {^kwbg};
 set gribfilter(slave,default,ure) {.*};
 
 #

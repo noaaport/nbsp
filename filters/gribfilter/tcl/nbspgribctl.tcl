@@ -2,16 +2,19 @@
 #
 # $Id$
 #
-# Usage: nbspgribctl [-c ctlfile] [-i idxfile] [-p <pdeffile>] <gribfile>
+# Usage: nbspgribctl [-e] [-c ctlfile] [-i idxfile] [-p <pdeffile>] <gribfile>
 #
 # If <ctlfile>, <idxfile> <pdeffile> are existing directories, then the
 # ctl and idx files are placed there with the default names.
 #
+# The default is to process grib1. If the file ends with grb2 or grib2, or
+# if "-e" is given, then it processes it as grib2.
+#
 package require cmdline;
 
-set usage {Usage: nbspgribctl [-c ctlfile] [-i idxfile]
+set usage {Usage: nbspgribctl [-e] [-c ctlfile] [-i idxfile]
     [-p pdeffile] <gribfile>};
-set optlist {{c.arg ""} {i.arg ""} {p.arg ""}};
+set optlist {e {c.arg ""} {i.arg ""} {p.arg ""}};
 
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
@@ -22,9 +25,10 @@ if {$argc != 1} {
 set grads(grbfile) [lindex $argv 0];
 
 # First set the defaults, then check the cmd-line overrides
-set grads(ctlfile) "[file rootname [file tail $grads(grbfile)]].ctl";
-set grads(idxfile) "[file rootname [file tail $grads(grbfile)]].idx";
-set grads(pdeffile) "[file rootname [file tail $grads(grbfile)]].pdef";
+set _rootname [file rootname [file tail $grads(grbfile)]];
+append grads(ctlfile) ${_rootname} ".ctl";
+append grads(idxfile) ${_rootname} ".idx";
+append grads(pdeffile) ${_rootname} ".pdef";
 
 if {$option(c) ne ""} {
     if {[file isdirectory $option(c)]} {
@@ -50,16 +54,24 @@ if {$option(p) ne ""} {
     }
 }
 
-# grib2ctl sometimes emits an informational message. We will flag it as error
+# Get the grib edition from the extension of the -e switch
+set _ext [file extension [file tail $grads(grbfile)]];
+if {[regexp {gri?b2} ${_ext}] || ($option(e) == 1)} {
+    set grib2ctl_cmd "g2ctl";
+} else {
+    set grib2ctl_cmd "grib2ctl -verf";
+}
+
+# In case grib2ctl emits an informational message, we will flag it as error
 # only if the ctl file cannot be produced.
 set msg "";
 set status [catch {
-    set msg [exec grib2ctl -verf $grads(grbfile) \
+    set msg [eval exec $grib2ctl_cmd $grads(grbfile) \
 		 $grads(idxfile) $grads(pdeffile) > $grads(ctlfile)];
 } errmsg];
 
 if {[file exists $grads(ctlfile)] == 0} {
-    puts "grib2ctl could not create $grads(ctlfile)";
+    puts "grib2ctl (or g2ctl) could not create $grads(ctlfile)";
     if {$msg ne ""} {
 	puts $msg;
     }
