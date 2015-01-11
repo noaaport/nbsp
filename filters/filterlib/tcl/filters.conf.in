@@ -199,7 +199,7 @@ foreach _d $common(localconfdirs) {
     if {[file exists ${_localconfname}] == 1} {
         source ${_localconfname};
     }
-    unset _d;
-    unset _localconfname;
 }
+unset -nocomplain _d;
+unset -nocomplain _localconfname;
 unset _confname;

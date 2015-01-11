@@ -31,7 +31,7 @@ if {[llength $gpfilter(rcfiles)] != 0} {
 	    lappend gpfilter(action) $action;
         }
     }
-    unset _rc;
-    unset cond;
-    unset action;
+    unset -nocomplain _rc;
+    unset -nocomplain cond;
+    unset -nocomplain action;
 }

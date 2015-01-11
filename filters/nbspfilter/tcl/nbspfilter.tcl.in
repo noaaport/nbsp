@@ -106,7 +106,7 @@ proc init_quit {ext} {
 
     global nbspfilter;
 
-    # Read any initoialization or termination code from the files:
+    # Read any initialization or termination code from the files:
     #
     # nbspfilter.${ext}
     # defaults/nbspfilter.${ext}
@@ -128,9 +128,9 @@ proc init_quit {ext} {
 	    source ${_localqname};
 	}
     }
-    unset _d;
+    unset -nocomplain _d;
+    unset -nocomplain _localqname;
     unset _qname;
-    unset _localqname;
 
     #
     # rc.d/nbsp

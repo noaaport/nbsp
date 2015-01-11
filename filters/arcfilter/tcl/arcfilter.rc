@@ -31,7 +31,7 @@ if {[llength $arcfilter(rcfiles)] != 0} {
 	    lappend arcfilter(action) $action;
         }
     }
-    unset _rc;
-    unset cond;
-    unset action;
+    unset -nocomplain _rc;
+    unset -nocomplain cond;
+    unset -nocomplain action;
 }

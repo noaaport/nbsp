@@ -69,7 +69,7 @@ proc filterlib_get_rcfiles {rcfname confdirs rcdir prercfile postrcfile} {
     if {${_localrc} != ""} {
         lappend _rcfiles ${_localrc};
     }
-    unset _d;
+    unset -nocomplain _d;
     unset _rc;
     unset _localrc;
 
