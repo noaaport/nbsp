@@ -4,3 +4,4 @@ foreach f [glob -nocomplain \
         netfilter-*.conf] {
     source $f
 }
+unset -nocomplain f;

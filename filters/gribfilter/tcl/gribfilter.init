@@ -31,7 +31,8 @@ set gribfilter(grbcatalog)	"grb.cat";
 set gribfilter(ctlcatalog)	"ctl.cat";
 set gribfilter(gridsmodels_uwildpatt) {gfs|nam|rap};
 set gribfilter(gradsctl_enable)	0;
-set gribfilter(gradsctl_uwildpatt) {gfs|nam|rap,!\.grb2,!gfs_[26][1-4](_|\.)};
+# set gribfilter(gradsctl_uwildpatt) {gfs|nam|rap,!\.grb2,!gfs_[26][1-4](_|\.)};
+set gribfilter(gradsctl_uwildpatt) {gfs,!gfs_[26][1-4](_|\.),nam,rap};
 set gribfilter(scheduler_enable) 0;
 set gribfilter(schedule) [file join $common(confdir) \
 	"gribfilter-schedule.rc"];
