@@ -30,6 +30,7 @@
 #
 #  and
 # 	http://www.weather.gov/datamgmt/x_ref/xr07_Center_ID_List.html
+#       http://www.nco.ncep.noaa.gov/pmb/docs/grib2/
 #
 # See also:
 #	pqact.gempak
