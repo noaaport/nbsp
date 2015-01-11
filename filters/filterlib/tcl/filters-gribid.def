@@ -65,7 +65,7 @@ set filtersgribid(model,7,kwbs) "arw-nmm"; # Hires Window Model(ARW, NMM)(2014)
 set filtersgribid(model,7,kwbt) "gfs-dng"; # GFS Downscale Numerical Guidance
                                            # 2014
 ##set filtersgribid(model,7,kwbu) ""; # Reserved for Future Use
-set filtersgribid(model,7,kwbu) "hurrwave"; # Hurricane Wave Model (2014)
+set filtersgribid(model,7,kwbu) "hurr-wave"; # Hurricane Wave Model (2014)
 ##set filtersgribid(model,7,kwbv) ""; # Reserved for Future Use
 set filtersgribid(model,7,kwbv) "naefs"; # North American
                                          # Ensemble Forecast System
