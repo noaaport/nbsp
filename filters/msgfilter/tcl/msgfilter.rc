@@ -26,6 +26,6 @@ if {[llength $msgfilter(rcfiles)] != 0} {
 	    lappend msgfilter(subscribers) $subscribers;
         }
     }
-    unset _rc;
-    unset subscribers;
+    unset -nocomplain _rc;
+    unset -nocomplain subscribers;
 }

@@ -503,19 +503,18 @@ set filtersgribid(ftu,unknown) "x";
 #
 # Read the local overrides and/or additions
 #
-set _confname "filters-gribid.def";
-
 if {[info exists source_filters_gribid_def_defined]} {
     return;
 }
 set source_filters_gribid_def_defined 1;
 
+set _confname "filters-gribid.def";
 foreach _d $common(localconfdirs) {
     set _localconfname ${_d}/${_confname}
     if {[file exists ${_localconfname}] == 1} {
         source ${_localconfname};
     }
-    unset _d;
-    unset _localconfname;
 }
+unset -nocomplain _d;
+unset -nocomplain _localconfname;
 unset _confname;

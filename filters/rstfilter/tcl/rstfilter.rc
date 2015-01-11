@@ -35,9 +35,9 @@ if {[llength $rstfilter(rcfiles)] != 0} {
 	    lappend rstfilter(postaction) $postaction;
         }
     }
-    unset _rc;
-    unset cond;
-    unset action;
-    unset postcond;
-    unset postaction;
+    unset -nocomplain _rc;
+    unset -nocomplain cond;
+    unset -nocomplain action;
+    unset -nocomplain postcond;
+    unset -nocomplain postaction;
 }
