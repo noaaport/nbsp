@@ -41,7 +41,7 @@ if {[info exists _featuresconf]} {
 	}
     }
 }
-unset _f;
+unset -nocomplain _f;
 
 #
 # Configure
