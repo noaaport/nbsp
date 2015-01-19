@@ -3,7 +3,7 @@
  *
  * See LICENSE
  *
- * $Id: nbspradgis.c,v f4498a73fe59 2015/01/01 17:31:34 nieves $
+ * $Id: nbspradgis.c,v 720f4f945739 2015/01/18 04:14:56 nieves $
  */
 
 /*
@@ -33,7 +33,7 @@
  * The data is output in the following units
  *
  *  reflectivity: dbZ
- *  rel velocity: knots
+ *  rad and rel velocity: knots
  *  acumulated rain: hundredth of inch (nids_decode_nxp_codetolevel())
  */
 
@@ -458,6 +458,9 @@ static void nids_decode_data(struct nids_data_st *nd){
 	      (nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
       nd->polygon_map.level_min = NIDS_NXP_LEVEL_MIN_VAL;
       nd->polygon_map.level_max = NIDS_NXP_LEVEL_MAX_VAL;
+    } else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXS){
+      nd->polygon_map.level_min = NIDS_SRVEL_LEVEL_MIN_VAL;
+      nd->polygon_map.level_max = NIDS_SRVEL_LEVEL_MAX_VAL;
     } else
 	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
 		 nd->nids_header.pdb_code);

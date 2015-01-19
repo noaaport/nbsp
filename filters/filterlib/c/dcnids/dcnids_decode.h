@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2014 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
- * $Id: dcnids_decode.h,v f4498a73fe59 2015/01/01 17:31:34 nieves $
+ * $Id: dcnids_decode.h,v 720f4f945739 2015/01/18 04:14:56 nieves $
  */
 #ifndef DCNIDS_DECODE_H
 #define DCNIDS_DECODE_H
@@ -30,6 +30,7 @@
 #define NIDS_PDB_CODE_NXU		99
 #define NIDS_PDB_CODE_NXP		78	/* n1p, n3p */
 #define NIDS_PDB_CODE_NTP		80	/* ntp */
+#define NIDS_PDB_CODE_NXS		56	/* n1,2,3s */
 
 /* default filter min and max level values if the filtering option is set */
 #define NIDS_BREF_LEVEL_MIN_VAL	1
@@ -38,11 +39,14 @@
 #define NIDS_RVEL_LEVEL_MAX_VAL	64
 #define NIDS_NXP_LEVEL_MIN_VAL 5
 #define NIDS_NXP_LEVEL_MAX_VAL 800
-
+#define NIDS_SRVEL_LEVEL_MIN_VAL -50
+#define NIDS_SRVEL_LEVEL_MAX_VAL 50
 
 /* These are arbitrary values that we assign to the rvel codes 0 and 15 */
 #define NIDS_RVEL_LEVEL_ND_MIN	-65
 #define NIDS_RVEL_LEVEL_ND_MAX	65
+#define NIDS_SRVEL_LEVEL_ND_MIN	-65
+#define NIDS_SRVEL_LEVEL_ND_MAX	65
 
 /*
  * When decoding the data packets, we must go to the start of the

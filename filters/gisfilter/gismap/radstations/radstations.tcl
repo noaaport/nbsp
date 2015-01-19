@@ -462,18 +462,18 @@ proc nbsp::radstations::extent_bysite {site {shift 2}} {
     variable radstations;
 
     set data [split $radstations(site,$site) ","];
-    set lat [expr int([lindex $data 4])];
-    set lon [expr int([lindex $data 5])];
+    set lat [lindex $data 4];
+    set lon [lindex $data 5];
 
     set lat1 $lat;
     set lon1 $lon;
     set lat2 $lat;
     set lon2 $lon;
 
-    incr lon1 -$shift;
-    incr lat1 -$shift;
-    incr lon2 $shift;;
-    incr lat2 $shift;;
+    set lon1 [expr $lon1 - $shift];
+    set lat1 [expr $lat1 - $shift];
+    set lon2 [expr $lon2 + $shift];
+    set lat2 [expr $lat2 + $shift];
 
     return [list $lon1 $lat1 $lon2 $lat2];
 }
@@ -488,8 +488,8 @@ proc nbsp::radstations::extent_bysitelist {args} {
     variable radstations;
 
     set usage {nbsp::radstations::extent_bysitelist [-s <shift>] <lists>};
-    set optlist {{s.arg "2"}};
-    
+    set optlist {{s.arg 2}};
+
     array set option [::cmdline::getoptions args $optlist $usage];
     set argc [llength $args];
 
@@ -499,10 +499,14 @@ proc nbsp::radstations::extent_bysitelist {args} {
 	set sitelist [concat $sitelist [::textutil::split::splitx ${_a}]];
     }
 
-    if {[llength $sitelist] == 1} {
-	return [extent_bysite [lindex $sitelist 0]];
-    } elseif {[llength $sitelist] == 0} {
+    if {[llength $sitelist] == 0} {
 	return -code error "Empty site list";
+    }
+
+    set shift $option(s);
+
+    if {[llength $sitelist] == 1} {
+	return [extent_bysite [lindex $sitelist 0] $shift];
     }
 
     set lat1 1000;
@@ -512,8 +516,8 @@ proc nbsp::radstations::extent_bysitelist {args} {
 
     foreach site $sitelist {
 	set data [split $radstations(site,$site) ","];
-	set lat [expr int([lindex $data 4])];
-	set lon [expr int([lindex $data 5])];
+	set lat [lindex $data 4];
+	set lon [lindex $data 5];
 
 	if {$lat < $lat1} {
 	    set lat1 $lat;
@@ -532,10 +536,10 @@ proc nbsp::radstations::extent_bysitelist {args} {
 	}
     }
 
-    incr lon1 -$option(s);
-    incr lat1 -$option(s);
-    incr lon2 $option(s);
-    incr lat2 $option(s);
+    set lon1 [expr $lon1 - $shift];
+    set lat1 [expr $lat1 - $shift];
+    set lon2 [expr $lon2 + $shift];
+    set lat2 [expr $lat2 + $shift];
 
     return [list $lon1 $lat1 $lon2 $lat2];
 }

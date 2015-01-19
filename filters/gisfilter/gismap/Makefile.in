@@ -13,7 +13,8 @@ TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl \
 
 TMPLSOURCES =	gis-colors.def.in \
 		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def \
-		gis-colors-nxp.def
+		gis-colors-nxp.def gis-colors-srvel.def
+
 TMPLOBJECTS =	gis-colors.def
 
 TMPLFILES =	${TMPLOBJECTS} \
@@ -21,11 +22,17 @@ TMPLFILES =	${TMPLOBJECTS} \
 		map_rad_bref.tmpl \
 		map_rad_bref_1.tmpl map_rad_bref_3.tmpl map_rad_bref_5.tmpl \
 		map_rad_rvel.tmpl map_rad_rvel_1.tmpl \
-		map_rad_nxp.tmpl
+		map_rad_nxp.tmpl map_rad_srvel.tmpl
+
+LEGENDFILES =	legends/gis_rad_legend_bref.html \
+		legends/gis_rad_legend_rvel.html \
+		legends/gis_rad_legend_nxp.html \
+		legends/gis_rad_legend_srvel.html
 
 TMPLTARGET =    gismap-templates.tgz
 TMPLPDIR =      gis
-TMPLDIR =      ${TMPLPDIR}/map
+TMPLDIR =	${TMPLPDIR}/map
+LEGENDDIR =	${TMPLPDIR}/legends
 
 SHAREFILES =	geodata-share.tgz mapfonts-share.tgz
 LIBFILES =	gis.tcl radstations/radstations.tcl
@@ -65,15 +72,18 @@ gis-colors.def: gis-colors.def.in \
 	-e '/@gis-colors-rvel@/r gis-colors-rvel.def' \
 	-e '/@gis-colors-rvel@/d' \
 	-e '/@gis-colors-nxp@/r gis-colors-nxp.def' \
-	-e '/@gis-colors-nxp@/d' gis-colors.def.in > gis-colors.def 
+	-e '/@gis-colors-nxp@/d' \
+	-e '/@gis-colors-srvel@/r gis-colors-srvel.def' \
+	-e '/@gis-colors-srvel@/d' gis-colors.def.in > gis-colors.def 
 
 #geodata-share.tgz:
 #	tar -c @EXCLUDE@'*.svn*' -z -f geodata-share.tgz geodata
 
-${TMPLTARGET}: ${TMPLFILES}
+${TMPLTARGET}: ${TMPLFILES} ${LEGENDFILES}
 	rm -rf ${TMPLPDIR}
-	mkdir -p ${TMPLDIR}
+	mkdir -p ${TMPLDIR} ${LEGENDDIR}
 	cp ${TMPLFILES} ${TMPLDIR}
+	cp ${LEGENDFILES} ${LEGENDDIR}
 	tar -czf ${TMPLTARGET} ${TMPLPDIR}
 
 install: ${TARGET}
