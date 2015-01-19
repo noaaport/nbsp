@@ -1,0 +1,16 @@
+0, ND,    ND,              00 00 00, black
+1, -50,   v <= -50,        00 E0 FF, light blue
+2, -40,  -50 < v <= -40,   00 80 FF, medium blue
+3, -30,  -40 < v <= -30,   32 00 96, dark blue
+4, -22,  -30 < v <= -22,   00 FB 90, light green
+5, -10,  -22 < v <= -10,   00 BB 00, medium green
+6, -5,   -10 < v <= -5,    00 8F 00, dark green
+7, -1,   -5 < v < 0,       CD C0 9F, light gray
+8, 0,     0 <= v < 5,      76 76 76, dark gray
+9, 5,     5 <= v < 10,     F8 87 00, medium orange
+A, 10,   10 <= v < 22,     FF CF 00, medium yellow
+B, 22,   22 <= v < 30,     FF FF 00, yellow
+C, 30,   30 <= v < 40,     AE 00 00, dark red
+D, 40,   40 <= v < 50,     D0 70 00, medium brown
+E, 50,   50 <= v,          FF 00 00, bright red
+F, ND,   ND,               77 00 7D, dark purple

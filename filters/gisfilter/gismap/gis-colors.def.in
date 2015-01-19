@@ -56,4 +56,6 @@ namespace eval ::nbsp::gis {
     @gis-colors-bref@
     @gis-colors-rvel@
     @gis-colors-nxp@
+    @gis-colors-srvel@
+    
 }

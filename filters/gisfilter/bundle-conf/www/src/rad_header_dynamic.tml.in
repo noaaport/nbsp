@@ -72,5 +72,5 @@
 
 [::html::set _headtitle "[string toupper "$a $n"]"]
 [::html::set _title "$title($a)"]
-[::html::set _legendpath "include/$legend($a).html"]
+[::html::set _legendpath "gis/legends/$legend($a).html"]
 

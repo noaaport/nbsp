@@ -188,6 +188,8 @@ cd htdocs/pub
 [ -d "gis/maps/site" ] || \
     install -d -m 755 -o $user -g $user gis/maps/site
 [ -e "gis/data" ] || ln -s /var/noaaport/data/gis gis/data
+[ -e "gis/legends" ] || \
+    ln -s /usr/local/etc/nbsp/defaults/gis/legends gis/legends
 
 #
 # Display message

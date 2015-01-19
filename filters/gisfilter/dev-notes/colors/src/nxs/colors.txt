@@ -1,0 +1,16 @@
+00 00 00, black
+00 E0 FF, light blue
+00 80 FF, medium blue
+32 00 96, dark blue
+00 FB 90, light green
+00 BB 00, medium green
+00 8F 00, dark green
+CD C0 9F, light gray
+76 76 76, dark gray
+F8 87 00, medium orange
+FF CF 00, medium yellow
+FF FF 00, yellow
+AE 00 00, dark red
+D0 70 00, medium brown
+FF 00 00, bright red
+77 00 7D, dark purple
