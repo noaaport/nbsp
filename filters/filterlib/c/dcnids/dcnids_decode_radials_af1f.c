@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.uprrp.edu>
+ * Copyright (c) 2005-2014 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
- * $Id: dcnids_decode_radials_af1f.c,v f4498a73fe59 2015/01/01 17:31:34 nieves $
+ * $Id: dcnids_decode_radials_af1f.c,v 720f4f945739 2015/01/18 04:14:56 nieves $
  */
 #include <assert.h>
 #include <stdio.h>
@@ -35,6 +35,7 @@ static void nids_count_polygons_radials_af1f(struct nids_data_st *nd);
 static int nids_decode_bref_codetolevel(int pdb_mode, int run_code);
 static int nids_decode_rvel_codetolevel(int run_code);
 static int nids_decode_nxp_codetolevel(int run_code);
+static int nids_decode_srvel_codetolevel(int run_code);
 
 #if 0
 void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
@@ -148,8 +149,8 @@ void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
 
       /*
        * Translate the code to a "level". The level that corresponds to the
-       * code depends on the product type (pdb_code) and if it is a bref,
-       * then it depends code on the operational mode.
+       * code depends on the product type (pdb_code), and if it is a bref
+       * then it depends on the operational mode.
        */
       if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
 	 (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z)){
@@ -160,6 +161,9 @@ void nids_decode_radials_af1f_orig(struct nids_data_st *nd){
       } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXP) || 
 		(nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
 	  run_level = nids_decode_nxp_codetolevel(run_code);
+
+      } else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXS){
+	run_level = nids_decode_srvel_codetolevel(run_code);
       } else {
 	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
 		 nd->nids_header.pdb_code);
@@ -323,8 +327,8 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
 
       /*
        * Translate the code to a "level". The level that corresponds to the
-       * code depends on the product type (pdb_code) and if it is a bref,
-       * then it depends code on the operational mode.
+       * code depends on the product type (pdb_code), and if it is a bref
+       * then it depends on the operational mode.
        */
       if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXR) ||
 	 (nd->nids_header.pdb_code == NIDS_PDB_CODE_N0Z)){
@@ -335,6 +339,8 @@ static void nids_decode_radials_af1f_grided(struct nids_data_st *nd){
       } else if((nd->nids_header.pdb_code == NIDS_PDB_CODE_NXP) || 
 		(nd->nids_header.pdb_code == NIDS_PDB_CODE_NTP)){
 	  run_level = nids_decode_nxp_codetolevel(run_code);
+      }else if(nd->nids_header.pdb_code == NIDS_PDB_CODE_NXS){
+	run_level = nids_decode_srvel_codetolevel(run_code);
       } else {
 	log_errx(1, "Unsupported value [%d] of nd->nids_header.pdb_code.",
 		 nd->nids_header.pdb_code);
@@ -659,6 +665,67 @@ static int nids_decode_nxp_codetolevel(int run_code){
     break;
   case 15:
     run_level = 800;
+    break;
+  default:
+    log_errx(1, "Invalid value of run_code.");
+    break;
+  }
+
+  return(run_level);
+}
+
+static int nids_decode_srvel_codetolevel(int run_code){
+
+  int run_level = NIDS_SRVEL_LEVEL_ND_MIN;
+
+  switch(run_code){
+  case 0:
+    run_level = NIDS_SRVEL_LEVEL_ND_MIN;
+    break;
+  case 1:
+    run_level = -50;
+    break;
+  case 2:
+    run_level = -40;
+    break;
+  case 3:
+    run_level = -30;
+    break;
+  case 4:
+    run_level = -22;
+    break;
+  case 5:
+    run_level = -10;
+    break;
+  case 6:
+    run_level = -5;
+    break;
+  case 7:
+    run_level = -1;
+    break;
+  case 8:
+    run_level = 0;
+    break;
+  case 9:
+    run_level = 5;
+    break;
+  case 10:
+    run_level = 10;
+    break;
+  case 11:
+    run_level = 22;
+    break;
+  case 12:
+    run_level = 30;
+    break;
+  case 13:
+    run_level = 40;
+    break;
+  case 14:
+    run_level = 50;
+    break;
+  case 15:
+    run_level = NIDS_SRVEL_LEVEL_ND_MAX;
     break;
   default:
     log_errx(1, "Invalid value of run_code.");
