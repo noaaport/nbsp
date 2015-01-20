@@ -4,7 +4,7 @@
 
     set radcolor(rvel,background) [::nbsp::gis::x11color white];
 
-    set radcolor(rvel,-65) $radcolor(rvel,background);
+    set radcolor(rvel,-65) $radcolor(rvel,background); # SNR < TH
 
     set radcolor(rvel,-64) [::nbsp::gis::rgbcolor blue 1];
     set radcolor(rvel,-63) [::nbsp::gis::rgbcolor blue 9];
@@ -111,7 +111,6 @@
     set radcolor(rvel,34) [::nbsp::gis::rgbcolor orange 97];
     set radcolor(rvel,35) [::nbsp::gis::rgbcolor orange 101];
 
-
     set radcolor(rvel,36) [::nbsp::gis::rgbcolor red 140];
     set radcolor(rvel,37) [::nbsp::gis::rgbcolor red 144];
     set radcolor(rvel,38) [::nbsp::gis::rgbcolor red 148];
@@ -142,4 +141,4 @@
     set radcolor(rvel,63) [::nbsp::gis::rgbcolor red 248];
     set radcolor(rvel,64) [::nbsp::gis::rgbcolor red 252];
 
-    set radcolor(rvel,65) $radcolor(rvel,background);
+    set radcolor(rvel,65) [::nbsp::gis::rgbcolor red 256];   # RF

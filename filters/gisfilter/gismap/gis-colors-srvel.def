@@ -11,7 +11,7 @@
 
     set radcolor(srvel,background) [::nbsp::gis::x11color white];
 
-    set radcolor(srvel,-65) $radcolor(srvel,background);
+    set radcolor(srvel,-65) $radcolor(srvel,background);  # SNR < TH
 
     set radcolor(srvel,-64) [::nbsp::gis::rgbcolor blue 1];
     set radcolor(srvel,-63) [::nbsp::gis::rgbcolor blue 9];
@@ -118,7 +118,6 @@
     set radcolor(srvel,34) [::nbsp::gis::rgbcolor orange 97];
     set radcolor(srvel,35) [::nbsp::gis::rgbcolor orange 101];
 
-
     set radcolor(srvel,36) [::nbsp::gis::rgbcolor red 140];
     set radcolor(srvel,37) [::nbsp::gis::rgbcolor red 144];
     set radcolor(srvel,38) [::nbsp::gis::rgbcolor red 148];
@@ -149,13 +148,13 @@
     set radcolor(srvel,63) [::nbsp::gis::rgbcolor red 248];
     set radcolor(srvel,64) [::nbsp::gis::rgbcolor red 252];
 
-    set radcolor(srvel,65) $radcolor(srvel,background);
+    set radcolor(rvel,65) [::nbsp::gis::rgbcolor red 256];   # RF
 
-    # These are official values which override tha above. We will not use
-    # the official colors (black and dark purple) for the low
-    # and hi out-of-range values (respectively). 
+    # These are official values which override the above. We will not use
+    # the official color (black) for the low SNR < TH value.
 
-    #set radcolor(srvel,-65) {0 0 0};        # keep our value above
+    #set radcolor(srvel,-65) {0 0 0};      # keep our value (background) above
+
     set radcolor(srvel,-50) {0 224 255};
     set radcolor(srvel,-40) {0 128 255};
     set radcolor(srvel,-30) {50 0 150};
@@ -170,4 +169,5 @@
     set radcolor(srvel,30) {174 0 0};
     set radcolor(srvel,40) {208 112 0};
     set radcolor(srvel,50) {255 0 0};
-    #set radcolor(srvel,65) {119 0 125};         # keep our value above
+
+    set radcolor(srvel,65) {119 0 125};    # RF

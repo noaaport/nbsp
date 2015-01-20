@@ -1,0 +1,65 @@
+This is the table I would like to use. It is a modified version of the
+official one (table-orig.txt) in the entries for codes 7 and 8.
+That would require the modifications explained below. They would
+be more logical than the conventions that must bbe implemented
+to keep this version of the table (in particular level=0 in code=8)
+
+0, ND,    SNR < TH,        00 00 00, black
+1, -50,   v <= -50,        00 E0 FF, light blue
+2, -40,  -50 < v <= -40,   00 80 FF, medium blue
+3, -30,  -40 < v <= -30,   32 00 96, dark blue
+4, -22,  -30 < v <= -22,   00 FB 90, light green
+5, -10,  -22 < v <= -10,   00 BB 00, medium green
+6, -5,   -10 < v <= -5,    00 8F 00, dark green
+7, -1,   -5 < v <= -1,     CD C0 9F, light gray
+8, 1,     1 <= v < 5,      76 76 76, dark gray
+9, 5,     5 <= v < 10,     F8 87 00, medium orange
+A, 10,   10 <= v < 22,     FF CF 00, medium yellow
+B, 22,   22 <= v < 30,     FF FF 00, yellow
+C, 30,   30 <= v < 40,     AE 00 00, dark red
+D, 40,   40 <= v < 50,     D0 70 00, medium brown
+E, 50,   50 <= v,          FF 00 00, bright red
+F, RF,   RF,               77 00 7D, dark purple
+
+This would require a change in dcnids_decode_radials_af1f:
+
+  static int nids_decode_srvel_codetolevel(int run_code){
+
+    case 8:
+      run_level = 0;
+      break;
+
+to
+
+    case 8:
+      run_level = 1;
+      break;
+
+Then in the mapserver templates, the portion
+
+   CLASS
+     EXPRESSION (\[level\] >= 0 && \[level\] < 5)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 0]
+     END
+   END
+
+should be changed to
+
+   CLASS
+     EXPRESSION (\[level\] >= 1 && \[level\] < 5)
+     STYLE
+       COLOR [::nbsp::gis::radcolor $map(awips1) 1]
+     END
+   END
+
+and finally in gis-colors-srvel.def,
+
+  set radcolor(srvel,0) {118 118 118};
+
+should be replaced by
+
+  set radcolor(srvel,1) {118 118 118};
+
+Analogous changes should be made in the corresponding rvel files.
+
