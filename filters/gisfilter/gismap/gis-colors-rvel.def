@@ -141,4 +141,4 @@
     set radcolor(rvel,63) [::nbsp::gis::rgbcolor red 248];
     set radcolor(rvel,64) [::nbsp::gis::rgbcolor red 252];
 
-    set radcolor(rvel,65) [::nbsp::gis::rgbcolor red 256];   # RF
+    set radcolor(rvel,65) [::nbsp::gis::rgbcolor magenta 1];   # RF
