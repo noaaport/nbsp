@@ -526,7 +526,7 @@
  * SLAVE_MASTERSERVERS =  "1,noaaport1.uprrp.edu,2210|\
  *                         1,noaaport2.uprrp.edu|\
  *                         1,feed1.noaaport.net,,600,,,,120|\
- *                         1,feed2.noaaport.net,2212,600,x,x,x,180\"
+ *                         1,feed2.noaaport.net,2212,600,x,x,x,180"
  *
  * The separator(s) of the master specifications is anyone of '| \t\n'.
  * The fields of each entry can be ',:'. These are defined in slavet.h.
