@@ -35,11 +35,21 @@ set ldmfilter(verbose) 0;
 #
 set ldmfilter(ldmpq)	"/var/ldm/ldm.pq";
 #
-set ldmfilter(feeds,WMO) 15;
-set ldmfilter(feeds,HDS) 4;
-set ldmfilter(feeds,NEXRAD) 134217728;
-set ldmfilter(feeds,NIMAGE) 2097152;
-set ldmfilter(feeds,NGRID) 8388608;
+# (From "protocol/ldm.h" in the ldm distribution - see "feeds.txt")
+set ldmfilter(feeds,WMO) 15; # Public products + International products ...
+set ldmfilter(feeds,NIMAGE) 2097152; # NOAAport imagery
+set ldmfilter(feeds,NTEXT) 4194304; # NOAAport text
+set ldmfilter(feeds,NGRID) 8388608; # NOAAport grided products
+set ldmfilter(feeds,NPOINT) 16777216; # NOAAport point
+set ldmfilter(feeds,NBUFR) 16777216; # NOAAport BUFR
+set ldmfilter(feeds,NGRAPH) 33554432; # NOAAport graphics
+set ldmfilter(feeds,NOTHER) 67108864; # NOAAport other data
+set ldmfilter(feeds,NPORT) 130023424; # NTEXT, NGRID, NPOINT, NGRAPH, NOTHER
+set ldmfilter(feeds,NNEXRAD) 134217728; # NEXRAD Level-III
+set ldmfilter(feeds,NEXRAD) 134217728; # NEXRAD Level-III
+set ldmfilter(feeds,NEXRAD3) 134217728; # NEXRAD Level-III
+set ldmfilter(feeds,CRAFT) 268435456; # NEXRAD Level-II
+set ldmfilter(feeds,NEXRD2) 268435456; # NEXRAD Level-II
 #
 # Variables
 #
@@ -288,7 +298,7 @@ proc mk_ldm_sat_prodid {rc_name} {
     return $prodid;
 }
 
-# Open the nbsp2pdm pipe
+# Open the nbdp2ldm pipe
 set status [catch {
     set opts [list];
     if {$ldmfilter(useseqnumid) == 1} {
@@ -311,7 +321,7 @@ filterlib_init;		# open the cpool if enabled
 main $argc $argv;
 filterlib_end;		# close the cpool if enabled
 
-# Close the nbsp2pdm pipe
+# Close the nbdp2ldm pipe
 set status [catch {
     ::nbsp::ldm::close;
 } errmsg];
