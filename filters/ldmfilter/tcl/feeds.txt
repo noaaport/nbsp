@@ -4,7 +4,12 @@
 # From "protocol/ldm.h"  (ldm-6.12.3)
 # (Processed with the script below to produce the ldmfilter definitions)
 #
-WMO, 15, Public products + International products ...
+PPS, 1, Public Products Service
+DDS, 2, Domestic Data Service
+DDSPLUS, 3, PPS + DDS
+HDS, 4, High Res. Data Service
+IDS, 8, International products
+WMO, 15, Any of the above
 NIMAGE, 2097152, NOAAport imagery
 NTEXT, 4194304, NOAAport text
 NGRID, 8388608, NOAAport grided products
