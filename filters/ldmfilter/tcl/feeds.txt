@@ -1,0 +1,32 @@
+#
+# $Id$
+#
+# From "protocol/ldm.h"  (ldm-6.12.3)
+# (Processed with the script below to produce the ldmfilter definitions)
+#
+WMO, 15, Public products + International products ...
+NIMAGE, 2097152, NOAAport imagery
+NTEXT, 4194304, NOAAport text
+NGRID, 8388608, NOAAport grided products
+NPOINT, 16777216, NOAAport point
+NBUFR, 16777216, NOAAport BUFR
+NGRAPH, 33554432, NOAAport graphics
+NOTHER, 67108864, NOAAport other data
+NPORT, 130023424, NTEXT + NGRID + NPOINT + NGRAPH + NOTHER
+NNEXRAD, 134217728, NEXRAD Level-III
+NEXRAD, 134217728, NEXRAD Level-III
+NEXRAD3, 134217728, NEXRAD Level-III
+CRAFT, 268435456, NEXRAD Level-II
+NEXRD2, 268435456, NEXRAD Level-II
+
+#!/usr/bin/tclsh
+
+set body [split [exec cat "feeds.txt"] "\n"];
+
+foreach line $body {
+    set parts [split $line ","];
+    set feed_name [string trim [lindex $parts 0]];
+    set feed_number [string trim [lindex $parts 1]];
+    set feed_desc [string trim [lindex $parts 2]];
+    puts "set ldmfilter(feeds,$feed_name) $feed_number; # $feed_desc";
+}
