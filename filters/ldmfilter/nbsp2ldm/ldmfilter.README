@@ -57,10 +57,14 @@ Permissions -
     Nbspd runs as user "noaaport" while ldm runs as "ldm". In order for
     nbsp2ldm be able to write to the ldm queue, do one of the following:
     
-    1) Make ldm one of the supplementary groups of the noaaport user.
-       In the file ``etc/site/nbspd.conf'', add the line
+    1) Make ldm one of the supplementary groups of the noaaport user;
+       i.e., in the file ``etc/nbsp/site/nbspd.conf'', add the line
 
         set group "noaaport,ldm"
+
+	Make sure that the ldm queue is group writeable.
+
+	# chmod 0664 ldm.pq
 
     2) Make the ldm.pq file
 
@@ -76,7 +80,7 @@ Start ldm as usual and then nbsp.
 
 NOTE -
 ----
-The ldmd.conf file should _not_ contain the usual lines
+The ldmd.conf file should _not_ contain the usual lines like
 
 exec    "dvbs_multicast -m 224.0.1.1"
 exec    "readnoaaport -m 224.0.1.1 -n -u 3"
