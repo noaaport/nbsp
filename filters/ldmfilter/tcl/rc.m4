@@ -3,14 +3,17 @@ dnl $Id$
 dnl
 
 # First the specific ones.
-match_ldmfeed($rc(wmoid), ^sdus, NEXRAD,
+match_ldmfeed($rc(wmoid), ^sdus, NNEXRAD,
 $rc(WMOHEADER) " /p" $rc(AWIPS))
+
+match_ldmfeed($rc(wmoid), ^ti[^p], NIMAGE,
+[mk_ldm_sat_prodid rc])
+
+match_ldmfeed($rc(wmoid), ^tip, NOTHER,
+$rc(WMOHEADER))
 
 match_ldmfeed($rc(nawips), ^grib$, NGRID,
 $rc(WMOHEADER) " /m" $rc(gribmodelgridldm))
-
-match_ldmfeed($rc(wmoid), ^ti, NIMAGE,
-[mk_ldm_sat_prodid rc])
 
 # These catch the rest.
 match_ldmfeed_not($rc(awips), ^$, WMO, 
