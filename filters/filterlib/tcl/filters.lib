@@ -277,12 +277,14 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(gribmodelgridldm) "";
     set rc(gribreftime) "";
     set rc(gribymdh) "";
+    set rc(gribymd) "";
     set rc(gribforecasttimeu) "";  # time unit (h, m, ...)
     set rc(gribforecasttime1) "";
     set rc(gribforecasttime2) "";
     set rc(gribforecasttimeri) ""; # time range indicator
     set rc(gribforecasttime)   ""; # our encoded combination of the above
     set rc(gribforecasttimev)  ""; # the value without the unit
+    set rc(gribforecasttimehhh)  ""; # if unit is hour, the value as hhh.
     set rc(radlat) "";
     set rc(radlon) "";
     set rc(radheight) "";
@@ -535,7 +537,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 		set rc(gribsubcnum) [lindex $gribparams 6];
 		set rc(gribmodelnum) [lindex $gribparams 7];
 		set rc(gribymdh) [string range $rc(gribreftime) 0 9];
-	        append rc(gribmodelgridldm) $rc(gribmodelldm) "#" $rc(gribgrid)
+		set rc(gribymd) [string range $rc(gribreftime) 0 7];
+	        append rc(gribmodelgridldm) $rc(gribmodelldm) "/#" $rc(gribgrid)
 		# The forecast time parameters
     		set rc(gribforecasttimeu) [lindex $gribparams 8];
     		set rc(gribforecasttime1) [lindex $gribparams 9];
@@ -549,6 +552,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 		}
 		set rc(gribforecasttime) $rc(gribforecasttimev);
 		append rc(gribforecasttime) $rc(gribforecasttimeu);
+		if {$rc(gribforecasttimeu) eq "h"} {
+		    set rc(gribforecasttimehhh) \
+		        [format "%03d" $rc(gribforecasttimev)];
+		}
 	    } else {
 		set rc(gribstatus) 1;
 	    }
