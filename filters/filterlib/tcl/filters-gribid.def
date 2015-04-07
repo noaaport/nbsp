@@ -30,6 +30,7 @@
 #
 #  and
 # 	http://www.weather.gov/datamgmt/x_ref/xr07_Center_ID_List.html
+#       http://www.nco.ncep.noaa.gov/pmb/docs/grib2/
 #
 # See also:
 #	pqact.gempak
@@ -232,6 +233,13 @@ set filtersgribid(modelldm,7,215) "spc_mfp";
 set filtersgribid(modelldm,7,220) "ncep_opc";
 set filtersgribid(modelldm,54,36) "gem";
 set filtersgribid(modelldm,59,105) "ruc2";
+# Define the upper case counterpart (used in the awips2-ldm pqact.conf)
+foreach key [array names filtersgribid -glob modelldm,*] {
+    set K [string toupper $key];
+    set V [string toupper $filtersgribid($key)];
+    set filtersgribid($K) $V;
+}
+unset key K V;
 
 set filtersgribid(center,7) "ncep";
 set filtersgribid(center,8) "nwstg";
