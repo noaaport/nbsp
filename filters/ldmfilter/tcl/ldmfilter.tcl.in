@@ -342,13 +342,16 @@ proc mk_ldm_grib_prodid {rc_name} {
     }
 
     #
-    # This is the prodid for the awips2-ldm
+    # This is the prodid for the awips2-ldm. We put two slashes after !grib
+    # because the pqact.conf rule has a field after grib/ and before the
+    # model/#<grid> string. Since that field is not used in pqact.conf we
+    # leave it empty. But it must be there or the rule would never match.
     #
 
     if {$rc(gribedition) == 2} {
-	set gribeditionstr "!grib2/";
+	set gribeditionstr "!grib2//";
     } else {
-	set gribeditionstr "!grib/";
+	set gribeditionstr "!grib//";
     }
 
     append prodid $rc(WMOID) " " $rc(STATION) " " \
