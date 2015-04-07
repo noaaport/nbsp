@@ -31,8 +31,15 @@ proc get_grib_model_params {fpath station wmoid} {
 # grib/<center>/<model>/#<gridid>......
 #
 # But the pqact.conf rules are written like /mETA.*#225, and therefore
-# the simpler string we use (without the grid) is sufficient to catch the rule.
-
+# the simpler string we use (just the /m<model> without the grid)
+# is sufficient to catch the rule.
+#
+# NOTE:  April 2015 -
+#        The above comment applied to pre-awips2. In awips2-ldm the
+#        RE string in pqact.conf is much more complicated. The function
+#        mk_ldm_grib_prodid in ldmfilter was introduced to handle format
+#        the string (prodid) appropriately.
+#
     global filterslib;
     global filtersgribid;
 

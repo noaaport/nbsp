@@ -13,7 +13,7 @@ match_ldmfeed($rc(wmoid), ^tip, NOTHER,
 $rc(WMOHEADER))
 
 match_ldmfeed($rc(nawips), ^grib$, NGRID,
-$rc(WMOHEADER) " /m" $rc(gribmodelgridldm))
+[mk_ldm_grib_prodid rc])
 
 # These catch the rest.
 match_ldmfeed_not($rc(awips), ^$, WMO, 
