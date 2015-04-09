@@ -75,9 +75,9 @@ set netfilter(prerc)  [file join $common(confdir) "netfilterpre.rc"];
 set netfilter(postrc)  [file join $common(confdir) "netfilterpost.rc"];
 #
 set netfilter(dobody) 1;
-set netfilter(dogrib) 1;
-set netfilter(dorad) 1;
-set netfilter(dosat) 1;
+set netfilter(dogrib) 0;
+set netfilter(dorad) 0;
+set netfilter(dosat) 0;
 #
 set netfilter(allowdefault) 0;  # default for allow(0)
 #
