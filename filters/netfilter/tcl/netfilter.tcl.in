@@ -75,6 +75,9 @@ set netfilter(prerc)  [file join $common(confdir) "netfilterpre.rc"];
 set netfilter(postrc)  [file join $common(confdir) "netfilterpost.rc"];
 #
 set netfilter(dobody) 1;
+set netfilter(dogrib) 1;
+set netfilter(dorad) 1;
+set netfilter(dosat) 1;
 #
 set netfilter(allowdefault) 0;  # default for allow(0)
 #
@@ -134,10 +137,30 @@ proc process {finfo} {
     global allow;
     global serverinfo;
 
-    if {$netfilter(dobody) == 1} {
-        filterlib_get_rcvars rc $finfo;
-    } else {
+    if {$netfilter(dobody) == 0} {
         filterlib_get_rcvars rc $finfo -nobody;
+    } else {
+	set _cmd [list filterlib_get_rcvars rc $finfo];
+
+	# If grib is enable, extract the rc(gribxxx) parameters
+	if {([info exists netfilter(dogrib)] == 0) || \
+		($netfilter(dogrib) != 0)} {
+	    lappend _cmd "-dogrib";
+	}
+
+	# If rad is enable, extract the rc(radxxx) parameters
+	if {([info exists netfilter(dorad)] == 0) || \
+		($netfilter(dorad) != 0)} {
+	    lappend _cmd "-dorad";
+	}
+
+	# If sat is enable, extract the rc(satxxx) parameters
+	if {([info exists netfilter(dosat)] == 0) || \
+		($netfilter(dosat) != 0)} {
+	    lappend _cmd "-dosat";
+	}
+
+	eval ${_cmd};
     }
 
     set rc_status 1;
