@@ -158,13 +158,12 @@ set filtersprogs(innsm)		$common(innbindir)/sm;
 # For a Gempak installation under /home the settings would be
 #
 ## set gempak(homedir)	"/home/gempak/NAWIPS";
-## set gempak(bindir)	"/home/gempak/NAWIPS/os/%GPOSNAME%/bin";
 #
 # gempak(libdir) is not used but it is here for completeness.
 #
 set gempak(homedir)	"/usr/local/lib/gempak/NAWIPS";
-set gempak(bindir)	"/usr/local/lib/gempak/NAWIPS/os/%GPOSNAME%/bin";
-set gempak(libdir)	"/usr/local/lib/gempak/NAWIPS/os/%GPOSNAME%/lib";
+set gempak(bindir)	[file join $gempak(homedir) "os/%GPOSNAME%/bin"];
+set gempak(libdir)	[file join $gempak(homedir) "os/%GPOSNAME%/lib"];
 #
 # nbspradmap and nbspsatmap (of rstfilter) call gempak programs that must
 # run with the gempak env variables.
