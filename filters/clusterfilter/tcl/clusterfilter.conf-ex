@@ -11,7 +11,7 @@ set clusterfilter(nodes) [list "nodea" "nodeb"];
 # nodea
 #
 # The filters can be specified in the following form
-# or indidually as given in the next two lines
+# indidually as given in the next two lines
 #
 set clusterfilter(enable,nodea,gpfilter) 2;   # work-crew mode
 set clusterfilter(enable,nodea,gisfilter) 1;

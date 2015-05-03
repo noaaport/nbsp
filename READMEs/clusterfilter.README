@@ -27,7 +27,7 @@ Requirements:
 
      B) Each node exports the apropriate subdirectory of the data
      directory and the master mounts all of them. This is economical
-     and good in terms of performance because the nodea write tha processed
+     and good in terms of performance because the nodes write the processed
      data to their local disks, and the master pulls from them what
      it needs when it needs.
 
@@ -67,7 +67,7 @@ set clusterfilter(enable,caribe,gisfilter) 1;
 
 # Possible ssh options
 #
-# set clusterfilter(sshopts,caribe) "-p 2222";  # if ssh runs in another port
+# set clusterfilter(sshopts,caribe) "-p 2222";  # if ssh lsitens in another port
 
 # What to send to this filter (see more examples below). If nothing is set
 # then the default is equivalent to the first option (all)
