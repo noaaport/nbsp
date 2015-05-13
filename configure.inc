@@ -43,10 +43,12 @@ then
 elif [ -f /etc/debian_version ] 
 then
    flavor=debian
+   debian="0"
    ubuntu="0"
    if [ -f /etc/os-release ]
    then
 	. /etc/os-release
+	[ $ID = "debian" ] && debian=$VERSION_ID
         [ $ID = "ubuntu" ] && ubuntu=$VERSION_ID
    fi
 fi
@@ -100,12 +102,20 @@ case $os in
 	   DB_LIB="db-5.3"
 	elif [ $flavor = debian ]
 	then
- 	   TCL_INCDIR="-I /usr/include/tcl8.5"
+	   # debian 7
+	   TCL_INCDIR="-I /usr/include/tcl8.5"
 	   TCL_LIB="tcl8.5"
 	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
 	   DB_LIB="db-5.1"
-	   if [ $ubuntu = "14.04" ]
+	   if [ $debian = "8" ]
+	   then
+		TCL_INCDIR="-I /usr/include/tcl8.6"
+	   	TCL_LIB="tcl8.6"
+	   	TCLSH=/usr/bin/tclsh8.6
+	   	DB_INCDIR=
+	   	DB_LIB="db-5.3"
+	   elif [ $ubuntu = "14.04" ]
 	   then
  	   	TCL_INCDIR="-I /usr/include/tcl8.6"
 	   	TCL_LIB="tcl8.6"
