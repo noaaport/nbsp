@@ -1,13 +1,12 @@
 #!/bin/sh
 
-. ../../configure.inc
+# The defaults are for debian-7
+ID=debian
+VERSION_ID="7"
 
-# The defaults are for debian
-controlfile="control.debian"
-
-if [ $ubuntu = "14.04" ]
+if [ -f /etc/os-release ]
 then
-    controlfile="control.ubuntu"
+    . /etc/os-release
 fi
 
-cp $controlfile control
+cp control.${ID}-${VERSION_ID} control
