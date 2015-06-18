@@ -1,3 +1,9 @@
+nbsp (2.3.6r+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Updated version number for final 2.3.6 release
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 17 Jun 2015 21:12:57 -0400
+
 nbsp (2.3.6p1+ubuntu1204.1-1) oneiric; urgency=low
 
   * Added support for n{1,3,t}p in gisfilter and nbspgis tools
