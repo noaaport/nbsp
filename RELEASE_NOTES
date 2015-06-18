@@ -6,7 +6,7 @@
 
 What's new -
 
-This is the 4th release of the 2.2 branch of the
+This is the final release of the 2.3 branch of the
 
     Noaaport Broadcast System Processor (Nbsp).
 
@@ -17,9 +17,7 @@ Packages, sources and documentation are available from
 Packages for other operating systems or distributions not found there
 can be created upon request.
 
-Support for the 5th channel (polarsat) has been added in this update.
-
-Previous notes for the 2.2 version -
+Previous notes -
 
 The web server has been updated to support the "bytes ranges" http
 header and virtual hosts. The first is now required by the GR warnings
@@ -44,9 +42,8 @@ default configuration without any problem.
 The biggest new addition is the "clusterfilter" for running any of the
 filters in any of a set of nodes, as if they were local.
 
-Other updates:
-
-- In Linux , eliminated setting of udprcvsize (to enable autotuning) -
+- Support for the 5th channel (polarsat) has been added in this update.
+- In Linux, eliminated setting of udprcvsize (to enable autotuning) -
   The recommendation is to set `sysctl -w net.ipv4.ipfrag_max_dist=0`
 - In FreeBSD, revised the recommended value of udprcvsize (along with
   a note about the relevant sysctl setiing to make).
