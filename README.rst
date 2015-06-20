@@ -6,6 +6,11 @@ for receiving, processing and distributing the contents of the
 *NOAAPort* data stream. Nbsp comes with extensive and flexible
 facilities to enable product arrival notifications, database
 insertions, web site transfers and many other extensions.
+The core module of **Nbsp** is written in C and the post-processing
+facilities are based on a comprehensive set of
+`Tcl
+<http://wiki.tcl.tk/41439?redir=36636>`_
+libraries and scripts.
 
 **Nbsp** can run standalone, or in a master-slave mode combination. In
 a master-slave setup, the master instance of nbsp receives the
