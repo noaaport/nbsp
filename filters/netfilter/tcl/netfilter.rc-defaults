@@ -19,7 +19,8 @@ lappend action {
 
 # If you put your own rules below, you must comment those two statements.
 # If you put them in site/netfilter.rc you don't have to do anything here
-# because in that case this file is ignored.
+# because the rules in that file (site/netfilter.rc) are executed
+# after the rules here anyway.
 
 # Note that this filter does not control what computers are allowed
 # to connect to the nbsp process in your computer. It only controls

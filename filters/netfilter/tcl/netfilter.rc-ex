@@ -6,6 +6,10 @@
 # Example file -
 #
 
+#
+# See also "dist/netfilter.rc-defaults" and "netfilter.README"
+#
+
 # Suppose we are writing the netfilter.rc.
 # The best way to start is by setting this:
 
