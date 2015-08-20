@@ -411,7 +411,7 @@ set filtersgribid(gridid,lmyz,z) "0";
 #  Added 20aug2015
 #  From www.nws.noaa.gov/os/notification/tin14-54gfs_noaaport.txt)
 #
-set filtersgribid(gridid,yz,p) "003"; # 1.0 degree Global (grid 003)
+set filtersgribid(gridid,yz,p) "3"; # 1.0 degree Global (grid 003)
 set filtersgribid(gridid,yz,n) "215"; # 20km Conus Quad Res Lamb (grid 215)
 set filtersgribid(gridid,yz,b) "217"; # 20km Alaska Double Res Polar (grid 217)
 set filtersgribid(gridid,yz,e) "20km-pr"; # 20km PR 0.25 degree
