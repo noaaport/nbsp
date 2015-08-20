@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2007-2015 Jose F. Nieves <nieves@ltp.uprrp..edu>
+# Copyright (c) 2007-2015 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # $Id$
 #
@@ -27,6 +27,7 @@
 #
 # ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 08/13/2007)
 # ``Outline of WMO Bulletin Headers used with NCEP Grib'' (Revised 11/25/2014)
+# ``www.nws.noaa.gov/os/notification/tin14-54gfs_noaaport.txt'' (08/20/2015)
 #
 #  and
 # 	http://www.weather.gov/datamgmt/x_ref/xr07_Center_ID_List.html
@@ -38,6 +39,8 @@
 #	gempak/tables/grid/ncepsubcenters.tbl
 #	gempak/tables/grid/wmocenter.tbl
 #
+
+
 ##set filtersgribid(model,7,kwba) ""; # Reserved for Future Use
 ##set filtersgribid(model,7,kwbb) ""; # Reserved for Future Use
 ##                                    # KWD(A-Z) are reserved for future use.
@@ -270,7 +273,7 @@ set filtersgribid(center,161) "nssl";
 #
 # and try to use that first.
 #
-# (Taken from appendix A of ON388)
+# Taken from appendix A of ON388
 #
 set filtersgribid(gridid,h,a) "21";
 set filtersgribid(gridid,o,a) "228";
@@ -325,7 +328,7 @@ set filtersgribid(gridid,lmyz,j) "203";
 set filtersgribid(gridid,h,k) "39";
 set filtersgribid(gridid,o,k) "234";
 set filtersgribid(gridid,e,k) "2.5km";    # XXX
-                                          #2.5 km - Lambert Conformal Great Lake
+                                          #2.5km - Lambert Conformal Great Lake
                                           #Wave High Resolution grid
 set filtersgribid(gridid,lmyz,k) "204";
 
@@ -403,6 +406,17 @@ set filtersgribid(gridid,h,z) "0";
 set filtersgribid(gridid,o,z) "0";
 set filtersgribid(gridid,e,z) "0";
 set filtersgribid(gridid,lmyz,z) "0";
+
+#
+#  Added 20aug2015
+#  From www.nws.noaa.gov/os/notification/tin14-54gfs_noaaport.txt)
+#
+set filtersgribid(gridid,yz,p) "003"; # 1.0 degree Global (grid 003)
+set filtersgribid(gridid,yz,n) "215"; # 20km Conus Quad Res Lamb (grid 215)
+set filtersgribid(gridid,yz,b) "217"; # 20km Alaska Double Res Polar (grid 217)
+set filtersgribid(gridid,yz,e) "20km-pr"; # 20km PR 0.25 degree
+set filtersgribid(gridid,yz,f) "20km-pacific"; # 20km Pacific Mercator
+
 
 # Grids for ncep kwb?
 
