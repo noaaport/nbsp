@@ -34,11 +34,11 @@ set msgfilter(ugczones)  [file join $common(confdir) "msgfilter-ugczones.def"];
 #
 # Configuration variables
 #
-set msgfilter(smtp,originator) "nbsp@localhost";
+set msgfilter(smtp,originator) "noaaport@[info hostname]";
 set msgfilter(smtp,servers)    "localhost";
 set msgfilter(smtp,options) [list]; # for other options (if needed) such as
                                     # -username <u> -password <p> ...
-set msgfilter(http,server) "http://www.opennoaaport.net:8015";
+set msgfilter(http,server) "http://[info hostname]:8015";
 #
 set msgfilter(datadir)	[file join $common(datadir) "msg"];
 set msgfilter(wwwdir)	"msg";      # relative to the http root
