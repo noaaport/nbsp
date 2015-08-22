@@ -1,3 +1,10 @@
+nbsp (2.3.7r+ubuntu1204.1-1) oneiric; urgency=low
+
+  * Revisions/additions in filers-gribid.def
+  * Updated version number for final 2.3.7 release
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 22 Aug 2015 12:16:50 -0400
+
 nbsp (2.3.6r+ubuntu1204.1-1) oneiric; urgency=low
 
   * Updated version number for final 2.3.6 release
