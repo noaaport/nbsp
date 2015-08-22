@@ -267,6 +267,18 @@ set filtersgribid(center,161) "nssl";
 #
 # means <t1> = h and <a1> = g. In entries like filtersgribid(gridid,yz,g)
 # below, it means the value holds for any of <t1> = y,z.
+#
+# 22Aug2015 -
+#   According to
+#     http://www.nco.ncep.noaa.gov/pmb/docs/on388/appendixa.html
+#   the characters 'L' and 'M' are used no more for the AWIPS products
+#   starting in August, 2014.
+#   However I am still seeing, for example
+#     LRGA86 KWBC 220000
+#   and others with T1 = M as well. We will (re)use the same definition
+#   as before (that is, what is used for yz also use it for lm) in
+#   filters-gridid.lib.
+#
 # For ncep products (that start with kwb<c>), we define
 #
 # filtersgribid(gridid,kwb<c>,<t1>,<a1>)

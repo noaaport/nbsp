@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+# Copyright (c) 2007 Jose F. Nieves <nieves@ltp.uprrp.edu>
 #
 # See LICENSE
 #
@@ -143,10 +143,20 @@ proc get_grib_model_params {fpath station wmoid} {
 }
 
 proc get_gridid_from_wmoid {wmoid} {
+#
+# 22Aug2015 -
+#   According to
+#     http://www.nco.ncep.noaa.gov/pmb/docs/on388/appendixa.html
+#   the characters 'L' and 'M' are used no more for the AWIPS products
+#   starting in August, 2014.
+#   However I am still seeing, for example
+#     LRGA86 KWBC 220000
+#   and others with T1 = M as well. Here I will (re)use the same definition
+#   as before (that is, what is used for yz also use it for lm).
 
     global filtersgribid;
-
-    if {[regexp {([yz]).(.)...} $wmoid s s1 s2]} {
+    
+    if {[regexp {([lmyz]).(.)...} $wmoid s s1 s2]} {
 	if {[info exists filtersgribid(gridid,yz,$s2)]} {
 	    return $filtersgribid(gridid,yz,$s2);
 	}
@@ -160,14 +170,16 @@ proc get_gridid_from_wmoid {wmoid} {
 }
 
 proc get_gridid_from_ncep_kwbx {station wmoid} {
-
+#
+# See the above function for the comment about "lmyz"
+#
     global filtersgribid;
 
     if {[regexp {^kwb} $station] == 0} {
        return "0";
     }
 
-    if {[regexp {([yz]).(.)...} $wmoid s s1 s2]} {
+    if {[regexp {([lmyz]).(.)...} $wmoid s s1 s2]} {
 	if {[info exists filtersgribid(gridid,$station,yz,$s2)]} {
 	    return $filtersgribid(gridid,$station,yz,$s2);
 	}
