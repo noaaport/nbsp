@@ -157,21 +157,20 @@ proc filterlib_get_body {fpath seqnum bodypartsize} {
     return $body;
 }
 	    
-proc filterlib_get_txtflag {body ccbsaved ccbsize} {
+proc filterlib_get_txtflag {body bodytxtre ccbsaved ccbsize} {
 
     if {[string length $body] == 0} {
         return 0;
     }
 
-
     # If the files are being saved with the ccb, bypass the first $ccbsize
     # characters. 
 
     if {$ccbsaved == 1} {
-        set txtflag [regexp {^[[:graph:][:space:]]+$} \
+        set txtflag [regexp $bodytxtre [string range $body $ccbsize end]];
                 [string range $body $ccbsize end]];
     } else {
-        set txtflag [regexp {^[[:graph:][:space:]]+$} $body];
+        set txtflag [regexp $bodytxtre $body];
     }
 
     return $txtflag;
@@ -227,6 +226,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     # The ccb... variables can be overriden by the function arguments
     set bodypartsize $filterslib(bodypartsize);
+    set bodytxtre $filterslib(bodytxtre);
     set ccbsaved $filterslib(ccbsaved);
     set ccbsize $filterslib(ccbsize);
 
@@ -398,7 +398,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     if {($dobody == 1) && \
 		([regexp $filterslib(ignorebody) $rc(fname)] == 0)} { 
 	set rc(body) [filterlib_get_body $rc(fpath) $rc(seq) $bodypartsize];
-	set rc(txtflag) [filterlib_get_txtflag $rc(body) $ccbsaved $ccbsize];
+	set rc(txtflag) [filterlib_get_txtflag \
+	    $rc(body) $bodytxtre $ccbsaved $ccbsize];
     }
 
     # This is initialized to the default (extracted from the wmo header)
