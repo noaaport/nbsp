@@ -168,7 +168,6 @@ proc filterlib_get_txtflag {body bodytxtre ccbsaved ccbsize} {
 
     if {$ccbsaved == 1} {
         set txtflag [regexp $bodytxtre [string range $body $ccbsize end]];
-                [string range $body $ccbsize end]];
     } else {
         set txtflag [regexp $bodytxtre $body];
     }
