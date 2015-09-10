@@ -21,7 +21,7 @@ set template {
 #
 # $stringcheck
 #
-PRUNEPATHS="\$PRUNEPATHS /var/noaaport"
+PRUNEPATHS="/tmp /var"
 }
 
 proc main {file} {
