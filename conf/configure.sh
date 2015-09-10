@@ -9,5 +9,6 @@ sed -e "/@include@/ s||$INCLUDE|" \
     -e "/@SYSCTLDEFAULTS@/s||$SYSCTLDEFAULTS|" \
     -e "/@SYSCTLCONFLOCAL@/s||$SYSCTLCONFLOCAL|" \
     -e "/@UDPRECVSIZEDEFAULTS@/s||$UDPRECVSIZEDEFAULTS|" \
+    -e "/@NBSPCONFIGURE_UPDATEDB@/s||$NBSPCONFIGURE_UPDATEDB|" \
     -e "/@TCLSH@/ s||$TCLSH|" \
     Makefile.in > Makefile

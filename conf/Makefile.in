@@ -25,6 +25,7 @@ NBSPDDEFAULTS =	@NBSPDDEFAULTS@
 SYSCTLDEFAULTS = @SYSCTLDEFAULTS@
 SYSCTLCONFLOCAL= @SYSCTLCONFLOCAL@
 UDPRECVSIZEDEFAULTS = @UDPRECVSIZEDEFAULTS@
+NBSPCONFIGURE_UPDATEDB = @NBSPCONFIGURE_UPDATEDB@
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -73,8 +74,8 @@ nbspconfigure-dvbs2: nbspconfigure-dvbs2.tcl
 	-e /%SYSCTLCONFLOCAL%/s##${SYSCTLCONFLOCAL}# \
 	nbspconfigure-dvbs2.tcl > nbspconfigure-dvbs2
 
-nbspconfigure-updatedb: nbspconfigure-updatedb.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspconfigure-updatedb.tcl \
+nbspconfigure-updatedb: ${NBSPCONFIGURE_UPDATEDB}
+	sed -e /%TCLSH%/s##${TCLSH}# ${NBSPCONFIGURE_UPDATEDB} \
 	> nbspconfigure-updatedb
 
 install:

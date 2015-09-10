@@ -1,0 +1,54 @@
+#!%TCLSH%
+#
+# $Id$
+#
+
+# Configuration
+set file "/etc/locate.rc";
+
+# Override with command line argument if given
+if {$argc > 1} {
+    puts "Too many arguments.";
+    return 1;    
+} elseif {$argc == 1} {
+    set file [lindex $argv 0];
+}
+
+set progname [file tail $argv0];
+set stringcheck "Added by $progname";
+set template {
+
+#
+# $stringcheck
+#
+PRUNEPATHS="\$PRUNEPATHS /var/noaaport"
+}
+
+proc main {file} {
+
+    global progname stringcheck template;
+    
+    set body [exec cat $file];
+
+    if {[regexp $stringcheck $body]} {
+	return -code error "$file already edited by $progname";
+    }
+    
+    append body [subst $template];
+    file copy -force $file ${file}.bck;
+    exec echo $body > ${file};
+}
+
+#
+# main
+#
+set status [catch {
+    main $file;
+} errmsg];
+
+if {$status != 0} {
+    puts "Error processing $file.";
+    puts $errmsg;
+}
+
+return $status;
