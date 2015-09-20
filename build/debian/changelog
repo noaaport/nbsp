@@ -1,3 +1,12 @@
+nbsp (2.3.8r-1) oneiric; urgency=low
+
+  * Revised the regexp used in filters.lib to determine whether or not
+    a file is type txt.
+  * Revised the FreeBSD version of nbspconfigure-updatedb
+  * Updated version number for final 2.3.8 release
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 20 Sep 2015 11:59:53 -0400
+
 nbsp (2.3.7r-1) oneiric; urgency=low
 
   * New additions/revisions in filters-gribid.def
