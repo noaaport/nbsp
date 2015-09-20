@@ -1,17 +1,25 @@
-nbsp (2.3.7r+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.8r-1) oneiric; urgency=low
 
-  * Revisions/additions in filers-gribid.def
+  * Revised the regexp used in filters.lib to determine whether or not
+    a file is type txt.
+  * Updated version number for final 2.3.8 release
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sun, 20 Sep 2015 11:59:53 -0400
+
+nbsp (2.3.7r-1) oneiric; urgency=low
+
+  * New additions/revisions in filters-gribid.def
   * Updated version number for final 2.3.7 release
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 22 Aug 2015 12:16:50 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 22 Aug 2015 12:16:50 -0400 
 
-nbsp (2.3.6r+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.6r-1) oneiric; urgency=low
 
   * Updated version number for final 2.3.6 release
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 17 Jun 2015 21:12:57 -0400
 
-nbsp (2.3.6p1+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.6p1-1) oneiric; urgency=low
 
   * Added support for n{1,3,t}p in gisfilter and nbspgis tools
   * Added support for n{1,2,3}s in gisfilter and nbspgis tools
@@ -19,67 +27,60 @@ nbsp (2.3.6p1+ubuntu1204.1-1) oneiric; urgency=low
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 19 Jan 2015 13:01:15 -0400
 
-nbsp (2.3.5p1+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.5p1-1) oneiric; urgency=low
+
+  * Revised capfilter
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 31 May 2014 17:48:46 -0400
+
+nbsp (2.3.4r-1) oneiric; urgency=low
 
   * Added capfilter
-  
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 31 May 2014 17:52:17 -0400
-   
-nbsp (2.3.4r+ubuntu1204.1-1) oneiric; urgency=low
 
-  * Added capfilter
-  
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 17 Apr 2014 16:53:48 -0400
-   
-nbsp (2.3.3p7+ubuntu1204.1-1) oneiric; urgency=low
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 17 Apr 2014 16:55:47 -0400
+
+nbsp (2.3.3p7-1) oneiric; urgency=low
 
   * Revised the default value of the client_write_timoue_ms; from 1000ms
     to 5000 ms, which is better in linux (debian).
 
   * Revised the rstfilter(satmap_regex) to reject those files that
-      apparently do not yet have an entry in imgtyp.tbl.
+    apparently do not yet have an entry in imgtyp.tbl.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 07 Apr 2014 17:06:10 -0400
 
-nbsp (2.3.3p6+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p6-1) oneiric; urgency=low
 
   * Revised ldmfilter. It now uses tclldm, which in turn communicated with
     the new nbsp2ldm as a pipe.
-      
+
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 22 Nov 2013 21:06:15 -0400
-       
-nbsp (2.3.3p5+ubuntu1204.1-1) oneiric; urgency=low
+
+nbsp (2.3.3p5-1) oneiric; urgency=low
 
   * Added mobile version.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 07 Nov 2013 20:46:06 -0400
 
-nbsp (2.3.3p4+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p4-1) oneiric; urgency=low
 
-  * Revised the mk_sat_ldm function in the ldmfilter and added
-    the creating entity mapping in the gpfilter-sat.def
+  * Revised the mk_sat_ldm function in the ldmfilter; added
+    the "creating identity" mapping in the gpfilter-sat.def.
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 02 Nov 2013 20:09:00 -0400
 
-nbsp (2.3.3p3+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p3-1) oneiric; urgency=low
 
-  * Added ability to insert termination code in nbspfilter
+  * Added ability to insert termination code in the nbspfilter
 
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 30 Oct 2013 20:45:26 -0400
 
-nbsp (2.3.3p2+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.3p2-1) oneiric; urgency=low
 
-  * Corrected the determination of ymd and hm in the function
-    mk_ldm_sat_prodid in ldmfilter.
+  * Corrected ldmfilter (mk_ldm_sat_prodid); the ymd and hm variables
+    were not being calculated correctly from the output of nbspsatinfo.
 
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:54:25 -0400
-
-nbsp (2.3.3p1+ubuntu1204.1-1) oneiric; urgency=low
-
-  * Ubuntu-12.04 branch, which uses the gnuplot-4.4 syntax of the
-    plotfmtoptions in the metar and inventory filters.
-
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 23 Sep 2013 19:55:18 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Wed, 23 Oct 2013 22:48:09 -0400
 
 nbsp (2.3.3p1-1) oneiric; urgency=low
 
