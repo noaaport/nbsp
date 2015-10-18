@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>   /* gettimeofday */
 #include <errno.h>
 #include "qdb.h"
 
@@ -16,6 +17,8 @@
 static int qdb_stat(struct nbspq_st *nbspq);
 static int queue_soft_limit(int n, int softlimit);
 static int queue_hard_limit(int n, int hardlimit);
+static void queue_set_timeout(unsigned int timeout_ms,
+			      struct timespec *timeout);
 
 nbspqtable_t *nbspqt_open(u_int8_t num_queues, int softlimit, int hardlimit,
 			  struct qdb_param_st *qdbparam, int *dberror){
@@ -196,11 +199,14 @@ int nbspqt_rcv(nbspqtable_t *qtable, int type,
     return(-1);
   }
 
-  timeout.tv_sec = time(NULL) + (timeout_ms/1000);
-  timeout.tv_nsec = (timeout_ms % 1000)*1000000;
+  if(timeout_ms >= 0)
+    queue_set_timeout((unsigned int)timeout_ms, &timeout);
 
   while((nbspq->n == 0) && (status == 0)){
-    status = pthread_cond_timedwait(&nbspq->cond, &nbspq->mutex, &timeout);
+    if(timeout_ms >= 0)
+      status = pthread_cond_timedwait(&nbspq->cond, &nbspq->mutex, &timeout);
+    else
+      status = pthread_cond_wait(&nbspq->cond, &nbspq->mutex);
   }
 
   if(nbspq->n == 0){
@@ -530,4 +536,20 @@ int test_qdb_status_flag(struct nbspq_st *nqdb, int flag){
     return(1);
 
   return(0);
+}
+
+/*
+ * Utility function to set the default pthreads timeout
+ */
+static void queue_set_timeout(unsigned int timeout_ms,
+			      struct timespec *timeout){
+
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  timeout->tv_sec = tv.tv_sec;
+  timeout->tv_nsec = tv.tv_usec * 1000;
+
+  timeout->tv_sec += (timeout_ms/1000);
+  timeout->tv_nsec += (timeout_ms % 1000)*1000000;
 }
