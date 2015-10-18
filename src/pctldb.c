@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>   /* gettimeofday */
 #include <errno.h>
 #include "oscompat.h"
 #include "pctl.h"
@@ -18,6 +19,8 @@ static int pctldb_stat(struct pctldb_st *pctldb);
 static int pctlmfdb_stat(struct pctldb_st *pctldb, int *dberror);
 static int pctldb_soft_limit(struct pctldb_st *pctldb);
 static int pctldb_hard_limit(struct pctldb_st *pctldb, uint32_t mf_size);
+static void pctldb_set_timeout(unsigned int timeout_ms,
+			       struct timespec *timeout);
 
 int pctldb_open(struct pctldb_st **pctldb,
 		struct pctldb_param_st *param, int *dberror){
@@ -351,11 +354,14 @@ int pctldb_rcv_pce(struct pctldb_st *pctldb,
     return(-1);
   }
 
-  timeout.tv_sec = time(NULL) + (timeout_ms/1000);
-  timeout.tv_nsec = (timeout_ms % 1000)*1000000;
+  if(timeout_ms >= 0)
+    pctldb_set_timeout((unsigned int)timeout_ms, &timeout);
 
   while((pctldb->n == 0) && (status == 0)){
-    status = pthread_cond_timedwait(&pctldb->cond, &pctldb->mutex, &timeout);
+    if(timeout_ms >= 0)
+      status = pthread_cond_timedwait(&pctldb->cond, &pctldb->mutex, &timeout);
+    else
+      status = pthread_cond_wait(&pctldb->cond, &pctldb->mutex);
   }
 
   if(pctldb->n == 0){
@@ -444,4 +450,20 @@ static int pctldb_soft_limit(struct pctldb_st *pctldb){
   }
 
   return(status);
+}
+
+/*
+ * Utility function to set the default pthreads timeout
+ */
+static void pctldb_set_timeout(unsigned int timeout_ms,
+			       struct timespec *timeout){
+
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  timeout->tv_sec = tv.tv_sec;
+  timeout->tv_nsec = tv.tv_usec * 1000;
+
+  timeout->tv_sec += (timeout_ms/1000);
+  timeout->tv_nsec += (timeout_ms % 1000)*1000000;
 }
