@@ -16,7 +16,7 @@ set inventory(verbose) 0;  # notify to syslog each file processed
 # See metarfilter.init for explanations of the various gnuplot settings.
 #
 set inventory(plotfmt) "png";
-set inventory(plotfmtoptions) {small size 320,240 background "#e0e0e0"};
+set inventory(plotfmtoptions) {small size 320,240 #e0e0e0};
 set inventory(plotfname) "stat";
 set inventory(plotfdatname) "stat.dat";
 set inventory(plottemplatedirs) $common(localconfdirs);
