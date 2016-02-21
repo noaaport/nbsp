@@ -1,3 +1,10 @@
+nbsp (2.3.9p1-1) oneiric; urgency=low
+
+  * Revised dafilter and filterlib to handle the new goes-r files
+    tir and tis.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 20 Feb 2016 20:34:34 -0400
+
 nbsp (2.3.8r-1) oneiric; urgency=low
 
   * Revised the regexp used in filters.lib to determine whether or not

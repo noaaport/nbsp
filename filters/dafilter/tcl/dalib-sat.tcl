@@ -1,4 +1,4 @@
-proc filter_sat {seq fpath savedir savename {polarsatflag 0}} {
+proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 #
 # This function optionally uncompresses the file, and renames it according
 # to the way the image files are saved by the rst filter. This is done
@@ -36,7 +36,7 @@ proc filter_sat {seq fpath savedir savename {polarsatflag 0}} {
     set datafpath [file join $dafilter(datadir) $savedir $savename];
 
     set status [catch {
-	if {$polarsatflag == 0} {
+	if {$giniflag == 1} {
 	    if {$dafilter(satuncompress) == 0} {
 	        # Gini sat files do not have a ccb
 	        file copy -force $fpath $datafpath;
