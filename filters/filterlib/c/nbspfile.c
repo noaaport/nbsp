@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2016 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -33,13 +33,14 @@ struct {
   char *opt_output_fname;
   char *opt_output_dir;
   int opt_stdin;	/* [-i] */
-  int opt_noheader;	/* [-t] => don't add gempak header and footer. */
+  int opt_noheader;	/* [-t] don't add gempak header and footer. */
   unsigned int opt_seqnum;	
-  int opt_C;
+  int opt_C;            /* check and exit */
   int opt_verbose;
   int opt_background;
   int opt_append;
   int opt_noccb;	  /* [-n] file saved without ccb [24 byte] header */
+  int opt_ccbsize;        /* [-c] specify a different (ccb) size to cut */
   int opt_compress_level;
   int opt_pagesize;
   /* variables */
@@ -48,7 +49,7 @@ struct {
   char *page;
   int page_size;
   char *malloc_page_buffer;
-} g = {NULL, NULL, NULL, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0,
+} g = {NULL, NULL, NULL, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0, CCB_SIZE,
        COMPRESS_LEVEL, PAGE_SIZE, NULL, NULL,
        static_large_page_buffer, LARGE_PAGE_SIZE, NULL};
 
@@ -65,9 +66,11 @@ int main(int argc, char **argv){
   int c;
   uint16_t pagesize;
   uint16_t level;
-  char *optstr = "Chabd:ino:p:s:tvz:";
-  char *usage = "nbspfile [-a] [-b] [-d outputdir] [-i] [-n] [-o outfile]"
-    " [-p pagesize] [-s seqnum] [-t] [-v] [-z level] file [seqnum]";
+  uint16_t ccbsize;
+  char *optstr = "Chabc:d:ino:p:s:tvz:";
+  char *usage = "nbspfile [-a] [-b] [-c ccbsize] [-d outputdir] [-i] [-n]"
+    " [-o outfile] [-p pagesize] [-s seqnum] [-t] [-v] [-z level]"
+    " file [seqnum]";
 
   set_progname(basename(argv[0]));
 
@@ -78,6 +81,14 @@ int main(int argc, char **argv){
       break;
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'c':
+      status = strto_u16(optarg, &ccbsize);
+      if(status != 0)
+	log_errx(1, "Illegal value for [-c].");
+      else{
+	g.opt_ccbsize = ccbsize;
+      }
       break;
     case 'C':
       g.opt_C = 1;
@@ -114,7 +125,7 @@ int main(int argc, char **argv){
     case 'z':
       status = strto_u16(optarg, &level); 
       if((status != 0) || (level > 9))
-	log_errx(1, "Invalid value for [-c].");
+	log_errx(1, "Invalid value for [-z].");
       else{
 	g.opt_compress_level = level;
 	g.page = static_page_buffer;
@@ -210,7 +221,7 @@ static int write_header(FILE *fp, char *page, int page_size, int *offset){
   int status = 0;
   int count = 0;
   int n;
-  int ccb_size = CCB_SIZE;
+  int ccb_size = g.opt_ccbsize;
 
   if(g.opt_noccb == 1)
     ccb_size = 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2016 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -30,12 +30,13 @@ struct {
   int opt_append;	/* [-a] outputfile in append mode */
   int opt_noccb;	/* [-n] file saved without ccb [24 byte] header */
   int opt_header;	/* [-g] add gempak-like header and trailer */
+  int opt_ccbsize;      /* [-c] specify a different (ccb) size to cut */
   /* variables */
   FILE *input_fp;
   FILE *output_fp;
   char page[PAGE_SIZE];
   int page_size;
-} g = {NULL, NULL, NULL, 0, DUMMY_SEQNUM, 0, 0, 0, NULL, NULL,
+} g = {NULL, NULL, NULL, 0, DUMMY_SEQNUM, 0, 0, 0, CCB_SIZE, NULL, NULL,
        {0}, PAGE_SIZE};
 
 static int process_file(void);
@@ -46,9 +47,10 @@ int main(int argc, char **argv){
   int status = 0;
   int c;
   unsigned int seqnum;
-  char *optstr = "habd:gno:s:";
-  char *usage = "nbsppipe [-h] [-b] [-d directory] [-g] [-n] [-o output [-a]]"
-    " [-s N] file | < file";
+  uint16_t ccbsize;
+  char *optstr = "habc:d:gno:s:";
+  char *usage = "nbsppipe [-h] [-b] [-c ccbsize] [-d directory] [-g] [-n]"
+    " [-o output [-a]] [-s N] file | < file";
 
   set_progname(basename(argv[0]));
 
@@ -59,6 +61,14 @@ int main(int argc, char **argv){
       break;
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'c':
+      status = strto_u16(optarg, &ccbsize);
+      if(status != 0)
+	log_errx(1, "Illegal value for [-c].");
+      else{
+	g.opt_ccbsize = ccbsize;
+      }
       break;
     case 'd':
       g.opt_output_dir = optarg;
@@ -115,7 +125,7 @@ static void cleanup(void){
 
 static int process_file(void){
 
-  int ccb_size = CCB_SIZE;
+  int ccb_size = g.opt_ccbsize;
   int nread, nwrite;
   int status = 0;
   int data_start;

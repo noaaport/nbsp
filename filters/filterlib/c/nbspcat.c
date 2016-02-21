@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2006 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ * Copyright (c) 2005-2016 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
@@ -11,11 +11,11 @@
  * be able to "|open" it once, from a tcl script, and then write the
  * commands to the file descriptor. The program is invoked as
  *
- *   char *usage = "nbspcat [-h] [-b]";
+ *  char *usage = "nbspcat [-h] [-b]";
  *
  * and each command line must have the syntax
  *
- *   char *usage = "nbspcat [-g] [-n] [-o output [-a]] [-s N] file";
+ *  char *usage = "nbspcat [-c ccbsize] [-g] [-n] [-o output [-a]] [-s N] file";
  *
  * The options are similar to those in nbsppipe.
  */
@@ -46,13 +46,14 @@ struct {
   int opt_append;	/* [-a] outputfile in append mode */
   int opt_noccb;	/* [-n] file saved without ccb [24 byte] header */
   int opt_header;	/* [-g] add gempak-like header and trailer */
+  int opt_ccbsize;      /* [-c] specify a different (ccb) size to cut */
   /* variables */
   FILE *input_fp;
   FILE *output_fp;
   struct strsplit_st *strp;  
   char page[PAGE_SIZE];
   int page_size;
-} g = {0, NULL, NULL, DUMMY_SEQNUM, 0, 0, 0, NULL, NULL, NULL,
+} g = {0, NULL, NULL, DUMMY_SEQNUM, 0, 0, 0, CCB_SIZE, NULL, NULL, NULL,
        {0}, PAGE_SIZE};
 
 static void process_input(void);
@@ -124,8 +125,9 @@ static void process_cmd(int argc, char **argv){
   int status = 0;
   int c;
   unsigned int seqnum;
-  char *optstr = "abgno:s:";
-  char *usage = "nbspcat [-g] [-n] [-o output [-a]] [-s N] file";
+  uint16_t ccbsize;
+  char *optstr = "abc:gno:s:";
+  char *usage = "nbspcat [-c ccbsize] [-g] [-n] [-o output [-a]] [-s N] file";
 
   /* Reset defauts */
   g.opt_input_fname = NULL;
@@ -134,6 +136,7 @@ static void process_cmd(int argc, char **argv){
   g.opt_append = 0;
   g.opt_noccb = 0;
   g.opt_header = 0;
+  g.opt_ccbsize = CCB_SIZE;
 
   optind = 1;
 #ifdef HAVE_OPTRESET
@@ -144,6 +147,14 @@ static void process_cmd(int argc, char **argv){
     switch(c){
     case 'a':
       g.opt_append = 1;
+      break;
+    case 'c':
+      status = strto_u16(optarg, &ccbsize);
+      if(status != 0)
+	log_errx(1, "Illegal value for [-c].");
+      else{
+	g.opt_ccbsize = ccbsize;
+      }
       break;
     case 'g':
       g.opt_header = 1;		/* add header and trailer */
@@ -208,7 +219,7 @@ static void close_files(void){
 
 static void process_file(void){
 
-  int ccb_size = CCB_SIZE;
+  int ccb_size = g.opt_ccbsize;
   int nread, nwrite;
   int data_start;
 
