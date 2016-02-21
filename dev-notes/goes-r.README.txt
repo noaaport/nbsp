@@ -1,0 +1,11 @@
+1) Add option [-c] to nbspfile to specify a different count to strip
+   instead of the standard ccb_size (e.g., strip ccb and wmo header)
+
+2) tail -n +2 knes_tipb01.210106_118571 > knes.gz
+   gunzip knes.gz
+
+   or
+
+   tail -n +2 knes_tipb01.210106_118571 | gunzip > knes.tip.hdf
+   tail -n +2 knes_tisj16.210350_11710094 > knes.tis.hdf
+   tail -n +2 knes_tirs05.210345_11710236 > knes.tir.hdf
