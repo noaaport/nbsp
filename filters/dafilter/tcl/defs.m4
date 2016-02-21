@@ -136,7 +136,7 @@ lappend action {
   $7
 })
 
-define(match_sat,
+define(match_sat_gini,
 lappend cond {
   [regexp {$2} $1]
 }
@@ -146,13 +146,13 @@ lappend action {
   $5
 })
 
-define(match_psat,
+define(match_sat_ngini,
 lappend cond {
   [regexp {$2} $1]
 }
 lappend action {
   set rc_status 0;
-  filter_sat $rc(seq) $rc(fpath) "$3" "$4" 1;
+  filter_sat $rc(seq) $rc(fpath) "$3" "$4" 0;
   $5
 })
 

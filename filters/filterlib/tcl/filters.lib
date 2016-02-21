@@ -500,9 +500,10 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     #
     # 2012 - The 5th channel tipb products cannot be included here
+    # 2016 - The goes-r (ti[rs]) neither (pids 107 and 108)
     #        Only include the existing ones: ti(c|d|g|t)
     #
-    if {[regexp {^ti[^p]} $rc(wmoid)] && ($dosat == 1)} {
+    if {[regexp {^ti[cdgt]} $rc(wmoid)] && ($dosat == 1)} {
 	set satinfo_status [catch {
 	    set satinfo [split [exec nbspsatinfo -b $rc(fpath)]];
 	} errmsg];
