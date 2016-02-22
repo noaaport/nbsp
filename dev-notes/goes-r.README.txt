@@ -9,3 +9,5 @@
    tail -n +2 knes_tipb01.210106_118571 | gunzip > knes.tip.hdf
    tail -n +2 knes_tisj16.210350_11710094 > knes.tis.hdf
    tail -n +2 knes_tirs05.210345_11710236 > knes.tir.hdf
+
+3) Check the final file with ncdump
