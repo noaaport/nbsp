@@ -48,7 +48,7 @@ then
    if [ -f /etc/os-release ]
    then
 	. /etc/os-release
-	[ $ID = "debian" ] && debian=$VERSION_ID
+	[ $ID = "debian" -o $ID = "raspbian" ] && debian=$VERSION_ID
         [ $ID = "ubuntu" ] && ubuntu=$VERSION_ID
    fi
 fi

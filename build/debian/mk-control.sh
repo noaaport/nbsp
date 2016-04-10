@@ -9,4 +9,6 @@ then
     . /etc/os-release
 fi
 
+[ ${ID} = "raspbian" ] && ID="debian"
+
 cp control.${ID}-${VERSION_ID} control

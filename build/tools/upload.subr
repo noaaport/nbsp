@@ -89,7 +89,7 @@ upload_get_pkgparams () {
 		pkglocaldir="../rpm"
 		cd $savedir
 		;;
-	    debian|ubuntu)
+	    debian|ubuntu|raspbian)
 	        cd ../debian
 		pkgfilename=`ls ${name}_${version}*.deb`
 		pkglocaldir="../debian"
