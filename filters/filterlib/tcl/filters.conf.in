@@ -65,9 +65,12 @@ set filterslib(ccbsaved)	$common(ccbsaved);
 set filterslib(ccbsize)		$common(ccbsize);
 set filterslib(wmoawips_size)	$common(wmoawips_size);
 set filterslib(totalheadersize) $common(totalheadersize);
-# When checking if the body is pure text, include the possible RS 30 036 x1e
+# When checking if the body is pure text, include possible RS:30 036 x1e
+# ETB:23 027 x17 (ETB is sent at the end of the weatherwire files)
+# and the old \001, \003. This list should be kept in sync with the list
+# in filter_text() in filters.lib.
 set filterslib(bodypartsize)	512;
-set filterslib(bodytxtre) {^[[:graph:][:space:]\x1e]+$};
+set filterslib(bodytxtre) {^[[:graph:][:space:]\x01\x03\x1e\x17]+$};
 #
 set filterslib(gmpk_header_fmt) "\001\r\r\n%03d \r\r\n"; 
 set filterslib(gmpk_trailer_str) "\r\r\n\003";
