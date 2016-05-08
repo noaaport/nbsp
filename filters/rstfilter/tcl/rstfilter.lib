@@ -75,8 +75,14 @@ proc filter_text {fpath savedir {savename ""}} {
     # lappend cmd -d $savedir -o $savename $fpath;
     #
     # filter through `tr` to remove (at least some of) the control characters
-    # 
-    lappend cmd $fpath | tr -d {\r\001\003} > $fpathout;
+    # (\027 is contained in the weatherwire files; ending like "^WBRO-534385"
+    # where ^W is the \027 (ETB) character). An alternative is to eliminate
+    # all contrl characters except tab and \n. This list should be kept
+    # in sync with the list in the variable filterslib(bodytxtre) in
+    # filters.conf.
+    #
+    ## lappend cmd $fpath | tr -d {\001-\010\013-\037} > $fpathout;
+    lappend cmd $fpath | tr -d {\r\001\003\036\027} > $fpathout;
     set status [catch {
 	eval exec $cmd;
     } errmsg];
