@@ -420,42 +420,6 @@ proc nbsp_received {file} {
     return $result
 }
 
-proc nbsp_received-weatherwire {file} {
-
-    set fmt [proc_fmtrow 3]
-
-    set hhmm [file rootname [file tail $file]]
-
-    set result "<h3>Products received at $hhmm</h3>\n"
-    append result "<table border>\n"
-    append result [format $fmt "time" "size" "name"]
-
-    set f [open $file r]
-    while {[gets $f finfo] > 0} {
-	array set a [proc_stringtoarray $finfo]
-	set hms [proc_secstohms $a(1)]
-	#
-	# The path will be output with a link to the file in the /spool
-	# domain handler. a(8) is the fname. The proc nbsp_get_file_exists
-	# is defined in nbspget.tcl.
-	#
-	if {[nbsp_get_file_exists $a(8)]} {
-	    set fbasename $a(8);
-	    set station [string range $fbasename 0 3];
-	    append fbasename ".txt";
-	    set pathlink "<a href=\"/rst/txt/$station/$fbasename\">$a(8)</a>";
-	} else {
-	    set pathlink $a(8);
-	}
-	append result [format $fmt $hms $a(7) $pathlink]
-    }
-    close $f
-
-    append result "</table>\n"
-
-    return $result
-}
-
 proc nbsp_received_hour {received_minute_tml hh {mm 59}} {
 #
 # The mm argument, if given, determines the maximum minute to include. It is
@@ -521,11 +485,4 @@ proc nbsp_received_last_Nhours {received_minute_tml N} {
     }
 
     return $result;
-}
-
-if {[info exists Config(weatherwire)] &&
-    ($Config(weatherwire) == 1)} {
-
-    rename nbsp_received nbsp_received-orig;
-    rename nbsp_received-weatherwire nbsp_received;
 }
