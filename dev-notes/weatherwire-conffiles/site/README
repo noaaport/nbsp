@@ -1,0 +1,8 @@
+Copy the two files
+
+  nbspd.conf
+  features.conf
+
+to the directory
+
+  /usr/local/etc/nbsp/site

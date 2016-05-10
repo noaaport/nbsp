@@ -1,0 +1,5 @@
+1) leftmenu.html should be replaced in the source
+   and a targeted package created.
+
+2) functionsstatus.tcl
+   to support displaying the received rst/txt files rather than the spool files.
