@@ -1,4 +1,4 @@
-1) leftmenu.html should be replaced in the source
+1) header.html leftmenu.html and topmenu.html should be replaced in the source
    and a targeted package created.
 
 2) functionsstatus.tcl
