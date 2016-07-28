@@ -115,7 +115,7 @@ case $os in
 	   	TCLSH=/usr/bin/tclsh8.6
 	   	DB_INCDIR=
 	   	DB_LIB="db-5.3"
-	   elif [ $ubuntu = "14.04" ]
+	   elif [ $ubuntu = "14.04" -o $ubuntu = "16.04" ]
 	   then
  	   	TCL_INCDIR="-I /usr/include/tcl8.6"
 	   	TCL_LIB="tcl8.6"
