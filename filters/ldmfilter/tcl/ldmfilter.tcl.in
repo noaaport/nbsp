@@ -33,7 +33,7 @@ set ldmfilter(satdef)     [file join $common(confdir) "gpfilter-sat.def"];
 set ldmfilter(useseqnumid) 1;
 set ldmfilter(verbose) 0;
 #
-set ldmfilter(ldmpq)	"/var/ldm/ldm.pq";
+set ldmfilter(ldmpq)	"/var/ldm/queues/ldm.pq";
 set ldmfilter(awips2gribprodid) 0; # set to 1 if prodid is for awips2-ldm
 #
 # (From "protocol/ldm.h" in the ldm distribution - see "feeds.txt")
