@@ -29,8 +29,8 @@ CFLAGS +=	-c -Wall -I ${LDMINCLUDEDIR}
 #
 # Use this in FreeBSD
 #
-## LIBS = ${LDMLIBDIR}/libldm.a -lpthread -lm -lcrypto \
-##		-L /usr/local/lib -lxml2
+## LIBS =	${LDMLIBDIR}/libldm.a -lpthread -lm -lcrypto \
+##			-L /usr/local/lib -lxml2
 ## CFLAGS +=	-c -Wall -DFREEBSD -I ${LDMINCLUDEDIR}
 #
 
