@@ -17,6 +17,13 @@ directory of the ldm include and lib subdirectories), for example
 The complete installation and configuration instructions are
 in the file "ldmfilter.README".
 
+NOTE for FreeBSD
+================
+
+In FreeBSD we need to include -L /usr/local/lib for libxml2 in LIBS and
+-DFREEBSD in CFLAGS (to use optreset in nbsp2ldm.c). Look in the Makefile
+for the LIBS and CFLAGS variables and use the apropriate setting for FreeBSD.
+
 NOTE for ldm-6.10.1
 ===================
 

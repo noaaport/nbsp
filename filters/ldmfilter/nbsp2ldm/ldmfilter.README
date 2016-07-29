@@ -39,7 +39,7 @@ ldm side -
 	tar -xzf nbsp2ldm.tgz
 
    That will create the subdirectory "nbsp2ldm".
-   Then cd to the nbsp2ldm directory, and
+   Then cd to the nbsp2ldm/src directory, and
 
 	# make LDMHOME=/home/ldm
 	# make install
@@ -51,6 +51,14 @@ ldm side -
 	# make install
 
     The nbsp2ldm program is installed in /usr/local/bin.
+
+    NOTE for FreeBSD
+    ================
+
+    In FreeBSD we need to include -L /usr/local/lib for libxml2 in LIBS and
+    -DFREEBSD in CFLAGS (to use optreset in nbsp2ldm.c). Look in the Makefile
+    for the LIBS and CFLAGS variables and use the apropriate setting
+    for FreeBSD.
 
 Permissions -
 -----------

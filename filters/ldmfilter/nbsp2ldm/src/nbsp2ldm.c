@@ -35,7 +35,7 @@
 #include "strsplit.h"
 #include "err.h"
 
-#define DEFAULT_PQFNAME		"/var/ldm/ldm.pq"
+#define DEFAULT_PQFNAME		"/var/ldm/queues/ldm.pq"
 #define DEFAULT_PRODORIGIN	"nbsp"
 
 #define DEFAULT_SEQNUM          90000
@@ -252,8 +252,16 @@ OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \n\
   int status = 0;
   int c;
 
-  optind = 0;
-
+  /*
+   * If (optind != 1) it means we are re-entering this function. In
+   * FreeBSD optreset must be set to 1 before the second and each additional
+   * set of calls to getopt(), and the variable optind must be reinitialized.
+   */
+  if(optind != 1){
+    optreset = 1;
+    optind = 1;
+  }
+  
   while((c = getopt(argc, argv, optstr)) != -1) {
     switch(c){
     case 'b':
