@@ -252,7 +252,7 @@ OPTIONS = [-b] [-c ccbsize] [-f feedtype] [-g] [-m] [-n] \n\
   int status = 0;
   int c;
 
-  optind = 0;
+  optind = 1;
 
   while((c = getopt(argc, argv, optstr)) != -1) {
     switch(c){
