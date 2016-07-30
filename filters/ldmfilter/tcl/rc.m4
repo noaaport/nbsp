@@ -6,10 +6,10 @@ dnl
 match_ldmfeed($rc(wmoid), ^sdus, NNEXRAD,
 $rc(WMOHEADER) " /p" $rc(AWIPS))
 
-match_ldmfeed($rc(wmoid), ^ti[^p], NIMAGE,
+match_ldmfeed($rc(wmoid), ^ti[cdgt], NIMAGE,
 [mk_ldm_sat_prodid rc])
 
-match_ldmfeed($rc(wmoid), ^tip, NOTHER,
+match_ldmfeed($rc(wmoid), ^ti[prs], NOTHER,
 $rc(WMOHEADER))
 
 match_ldmfeed($rc(nawips), ^grib$, NGRID,
