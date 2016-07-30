@@ -1,8 +1,9 @@
-nbsp (2.3.9p1+ubuntu1204.1-1) oneiric; urgency=low
+nbsp (2.3.9p+ubuntu1204.1-1) oneiric; urgency=low
 
-  * Revised dafilter and filterlib to handle the new goes-r files tir and tis
+  * Revised dafilter, filterlib and ldmfilter to handle the 
+    new goes-r files tir and tis
  
- -- Jose F Nieves <nieves@ltp.uprrp.edu>  Sat, 20 Feb 2016 21:26:16 -0400
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 29 Jul 2016 20:37:13 -0400
 
 nbsp (2.3.8r+ubuntu1204.1-1) oneiric; urgency=low
 
