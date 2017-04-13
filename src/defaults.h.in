@@ -61,6 +61,11 @@
  * Channel 9 is not enabled in the default configuration, but it can be
  * enabled in the runtime configuration file.
  * The ip/port is: 224.1.1.1/1201.
+ *
+ * Reference: 
+ * http://www.nws.noaa.gov/noaaport/html/noaaport_expansion.shtml
+ * http://www.nws.noaa.gov/noaaport/document/\
+ *            Multicast%20Addresses%201.0.pdf
  */
 #define NPCAST_NUM_CHANNELS	9
 #define MULTICASTIP     "224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4" \
