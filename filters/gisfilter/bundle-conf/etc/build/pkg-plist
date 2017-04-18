@@ -1,5 +1,5 @@
-gisfilter-bundle.conf
-gismap-bundle.conf
+gis/gisfilter-bundle.conf
+gis/gismap-bundle.conf
 gis/bundle-plist.conf
 gis/gisfilter-bundle.d/dist
 gis/gisfilter-bundle.d/enable
