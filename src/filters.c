@@ -703,21 +703,30 @@ static int get_dev_filters(char *dir){
    * This function reads the directory and installs all the filters
    * (fifos and pipes) that it finds there.
    */
-  int status = 0;
   DIR *dirp;
-  struct dirent dentry;
-  struct dirent *der;
+  struct dirent *direntryp;
+  int status = 0;
+  /* struct dirent dentry; */
 
   dirp = opendir(dir);
   if(dirp == NULL)
     return(-1);
 
-  do{
+  /*
+  do {
     status = readdir_r(dirp, &dentry, &der);
     if((status == 0) && (der != NULL))
       status = process_dir_entry(dir, der->d_name);
 
-  }while((status == 0) && (der != NULL));
+  } while((status == 0) && (der != NULL));
+  */
+
+  do {
+    direntryp = readdir(dirp);
+    if(direntryp != NULL)
+      status = process_dir_entry(dir, direntryp->d_name);
+
+  } while((status == 0) && (direntryp != NULL));
 
   closedir(dirp);
 

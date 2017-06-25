@@ -341,11 +341,11 @@ static int process_file(void){
 	while(nread > 0){
 	  nwrite = write_cpage(g.output_fp, g.page, nread);
 
-	/*
-	 * write_cpage() handles the error already (exits the program)
-	 */
-	if(nwrite == -1)
-	  log_err(1, "%s", "write_cpage() error");
+	  /*
+	   * write_cpage() handles the error already (exits the program)
+	   */
+	  if(nwrite == -1)
+	    log_err(1, "%s", "write_cpage() error");
 
 	  nread = read_page(g.input_fp, g.page, g.page_size);
 	}
