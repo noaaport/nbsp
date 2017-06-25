@@ -7,8 +7,7 @@ Standards-Version: 3.7.2
 
 Package: nbsp
 Architecture: any
-Depends: ${shlibs:Depends}, sharutils, libncurses5,
- libwrap0, libdb5.3, tcl, tcllib,
+Depends: ${shlibs:Depends}, sharutils, libwrap0, libdb5.3, tcl, tcllib,
  libpng16-16, netpbm, bzip2, libbz2-dev, gnuplot-nox, gifsicle
 Description: Noaaport Broadcast System Processor
  The Noaaport Broadcast System Processor (Nbsp) receives the
