@@ -41,9 +41,22 @@ proc proc_fmtheader_chstats {n} {
     return $fmt
 }
 
-proc proc_stringtoarray {str} {
+proc proc_stringtoarray {str {start 0}} {
+
+    # If start is not 0, it gives the index of the list element where
+    # to start the list to array mapping; in other words, how many elements
+    # to skip from the list. This revision to the function was made
+    # (2017-08-08) when we decided to add the unixseconds field to the
+    # {hh}.stats file in the inventory filter; this facility is then used
+    # in the nbsp_chstats_hour() and related functions (below) to avoid
+    # rewriting the functions to renumber the fields of the records.
 
     set strlist [split $str]
+    set n [llength $strlist]
+    if {($start >= 0) && ($start < $n)} {
+	set strlist [lrange $strlist $start end]
+    }
+    
     set n [llength $strlist]
     set i 0
     while {$i < $n} {
@@ -165,7 +178,11 @@ proc nbsp_chstats_hour {file} {
     set fmt [proc_fmtrow 19]
     set fmtheader [proc_fmtheader_chstats 9]
 
-    set result "<h3>Current number of products and bytes received per channel per minute</h3>\n";
+    # Extract the date from the first field of the first record
+    set _seconds [lindex [split [exec head -n 1 $file]] 0];
+    set _yyyymmdd [clock format ${_seconds} -gmt true -format "%Y%m%d"];
+
+    set result "<h3>Number of products and bytes received per channel per minute ${_yyyymmdd}</h3>\n";
     append result "<table border>\n";
     append result [format $fmtheader "time" \
 		       "ch 1" "ch 2" "ch 3" "ch 4" "ch 5" \
@@ -173,7 +190,9 @@ proc nbsp_chstats_hour {file} {
 
     set f [open $file r]
     while {[gets $f finfo] > 0} {
-	array set a [proc_stringtoarray $finfo]
+	# Pass "1" to the next function to skip the first (unixseconds)
+	# entry from the data to store in the array
+	array set a [proc_stringtoarray $finfo 1]
 	append result [format $fmt $a(1) $a(2) $a(11) $a(3) $a(12) \
 			   $a(4) $a(13) $a(5) $a(14) $a(6) $a(15) \
                            $a(7) $a(16) $a(8) $a(17) $a(9) $a(18) \
@@ -214,7 +233,9 @@ proc nbsp_chstats_hour_summary {file} {
 
     set f [open $file "r"]
     while {[gets $f stats] > 0} {
-        array set a [proc_stringtoarray $stats];
+	# Pass "1" to skip the first entry in the record
+	# (the unixseconds) in the returned data
+        array set a [proc_stringtoarray $stats 1];
         incr files(0) $a(2);
         incr files(1) $a(3);
         incr files(2) $a(4);
@@ -254,7 +275,14 @@ proc nbsp_chstats_day {filelist} {
     set fmtheader [proc_fmtheader_chstats 9];
     array set statsfilelist $filelist;
 
-    set result "<h3>Number of products and bytes received per channel since midnight</h3>\n";
+    # Extract the date from the first field of the first record
+    # of the first file
+    set _first [lindex [lsort [array names statsfilelist]] 0];
+    set _file $statsfilelist(${_first});
+    set _seconds [lindex [split [exec head -n 1 ${_file}]] 0];
+    set _yyyymmdd [clock format ${_seconds} -gmt true -format "%Y%m%d"];
+
+    set result "<h3>Number of products and bytes received per channel since midnight ${_yyyymmdd}</h3>\n";
     append result "<table border>\n";
     append result [format $fmtheader "hour" \
 		       "ch 1" "ch 2" "ch 3" "ch 4" "ch 5" \

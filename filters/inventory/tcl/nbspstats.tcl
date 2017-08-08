@@ -64,6 +64,10 @@ proc proc_set_stats_awk_script {} {
 	  fmt = "%20s\t%.3e\t%.3e\t%d\n";
 	  fmt1 = "%20s\t%.3e\t%.3e\t%d (%d KB/s)\n";
 	  fmt2 = "%20s\t%f\n";
+
+	  os = "freebsd";
+          "uname" | getline os; close("uname");
+          os = tolower(os);
 	}
 
 	END {
@@ -92,9 +96,32 @@ proc proc_set_stats_awk_script {} {
 	  printf(fmt1, "bytes received", bytes_received, bytes_received/NR,
 		 last_bytes_received, last_bytes_received/(logperiod*1000));
 	  printf(fmt2, "fraction missing", prod_missed_fraction);
+
+	  # If awk has strftime this can be simplified
+	  if(os == "freebsd"){
+	      cmd = "date -r `cat output`";
+	      printf("\n%20s\t%s\t", "start_time", start_time);
+	      printf("%s", start_time) > "output"; close("output");
+	      cmd | getline; print $0; close(cmd);
+	      printf("%20s\t%s\t", "end_time", end_time);
+	      printf("%s", end_time) > "output"; close("output");
+	      cmd | getline; print $0; close(cmd);
+	      system("rm output");
+	  } else {
+	      cmd = "date -f - -Iminutes";
+	      printf("\n%20s\t%s\t", "start_time", start_time);
+	      printf("@%s\n", start_time) | cmd; close(cmd);
+	      printf("%20s\t%s\t", "end_time", end_time);
+	      printf("@%s\n", end_time) | cmd; close(cmd);
+	  }
 	}
 
 	{
+	  if(start_time == 0){
+	      start_time = $1;
+	  }
+	  end_time = $1;
+
 	  prod_total += $7;
 	  prod_received += $8;
 	  prod_missed += $9;

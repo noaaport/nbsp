@@ -2,14 +2,16 @@
 #
 # $Id$
 #
-# Usage: nbspstatcounters [-f <fmt>] [-q <qstatefile>] [-s <statusfile>]
+# Usage: nbspstatcounters [-f <fmt>] [-c <chstatsfile>]
+#                         [-q <qstatefile>] [-s <statusfile>]
 #
-# nbsp counters in the last minute (ending at "unix_seconds").
+# nbsp counters in the last minute (ending at "stats_time" (unix_seconds)).
 #
 # The default files are:
 #
-#     <statusfile> nbspd.status
-#     <qstatefile> nbspd.qstate
+#     <statusfile>  stats/nbspd.status
+#     <qstatefile>  stats/nbspd.qstate
+#     <chstatsfile> inv/<hh>.stats
 #
 # The <fmt> can be: std (default), yaml, xml, csv, csvk
 
@@ -18,8 +20,9 @@
 # by the _inbsp extension in the web interface).
 
 package require cmdline;
-set usage {nbspstatcounters [-f <fmt>] [-q <qstatefile>] [-s <statusfile>]};
-set optlist {{f.arg "std"} {q.arg ""} {s.arg ""}};
+set usage {nbspstatcounters [-f <fmt>] [-c <chstatsfile>]
+                            [-q <qstatefile>] [-s <statusfile>]};
+set optlist {{f.arg "std"} {c.arg ""} {q.arg ""} {s.arg ""}};
 
 ## The common defaults
 set _defaultsfile "/usr/local/etc/nbsp/filters.conf";
@@ -39,6 +42,15 @@ if {[file exists $nbspd_init_file] == 0} {
 source $nbspd_init_file;
 unset nbspd_init_file;
 
+# inventory.init is needed for the chstats file
+set inventory_init_file [file join $common(libdir) inventory.init];
+if {[file exists $inventory_init_file] == 0} {
+    puts "$inventory_init_file not found.";
+    return 1;
+}
+source $inventory_init_file;
+unset inventory_init_file;
+
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
@@ -47,16 +59,22 @@ set fmt $option(f);
 set pidfile $nbspd(pidfile);
 set qstatefile $nbspd(qstatelogfile);
 set statusfile $nbspd(statusfile);
+set chstatsfile [inventory_mk_chstats_fpath [clock seconds]];
+
 #
 set nbspstats_logperiod_secs $nbspd(nbspstats_logperiod_secs);
 set qstate_logperiod_secs $nbspd(qstate_logperiod_secs);
 #
 # not configurable
 #
-set data_format 2;
+set data_format 3;
 
 # Initialization
 set nbspd_start_time "";       # determined from the pid file
+
+if {$option(c) ne ""} {
+    set chstatsfile $option(c);
+}
 
 if {$option(q) ne ""} {
     set qstatefile $option(q);
@@ -84,7 +102,7 @@ set values [list \
 
 #
 # These are the fields of the nbspd.status file, followed by the 
-# nbspd.qstate file.
+# nbspd.qstate file, and then the chstats file.
 #
 lappend keywords \
     stats_time \
@@ -107,7 +125,27 @@ lappend keywords \
     qstate_time \
     queue_processor \
     queue_filter \
-    queue_server;
+    queue_server \
+    chstats_start_time \
+    chstats_hhmm \
+    chstats_files_1 \
+    chstats_files_2 \
+    chstats_files_3 \
+    chstats_files_4 \
+    chstats_files_5 \
+    chstats_files_6 \
+    chstats_files_7 \
+    chstats_files_8 \
+    chstats_files_9 \
+    chstats_bytes_1 \
+    chstats_bytes_2 \
+    chstats_bytes_3 \
+    chstats_bytes_4 \
+    chstats_bytes_5 \
+    chstats_bytes_6 \
+    chstats_bytes_7 \
+    chstats_bytes_8 \
+    chstats_bytes_9;
 
 if {[file exists $statusfile]} {
     set svalues [split [exec tail -n 1 $statusfile]];
@@ -117,12 +155,13 @@ if {[file exists $qstatefile]} {
     set qvalues [split [exec tail -n 1 $qstatefile]];
 }
 
-set values [concat $values $svalues $qvalues];
+if {[file exists $chstatsfile]} {
+    set chvalues [split [exec tail -n 1 $chstatsfile]];
+}
+
+set values [concat $values $svalues $qvalues $chvalues];
 
 if {$fmt eq "yaml" } {
-    puts {#
-# nbsp counters in the last period (ending at "unix_seconds").
-#};
     foreach k $keywords v $values {
 	puts "${k}:${v}";
     }

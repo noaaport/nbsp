@@ -35,7 +35,6 @@ set inventory(frootname)	"";
 #
 set inventory(chstats,frootname) "";
 set inventory(chstats,fpath) "";
-set inventory(chstats,fext) ".stats";
 # files and bytes counters
 set inventory(chstats,0,files) 0;
 set inventory(chstats,1,files) 0;
@@ -56,8 +55,9 @@ set inventory(chstats,6,bytes) 0;    # 7th goes-r west
 set inventory(chstats,7,bytes) 0;    # 8th goes-r east
 set inventory(chstats,8,bytes) 0;    # 9th weather wire
 #
+set inventory(chstats,seconds) [clock seconds];
 set inventory(chstats,hhmm) \
-    [clock format [clock seconds] -gmt true -format "%H%M"];
+    [clock format $inventory(chstats,seconds) -gmt true -format "%H%M"];
 
 proc main {argc argv} {
 
@@ -193,17 +193,20 @@ proc log_inv_file {finfo} {
     }
 }
 
-proc channel_stats_fileinit {hh} {
+proc channel_stats_fileinit {} {
 
     global inventory;
 
-    if {[string equal $inventory(chstats,frootname) $hh]} {
+    set _rootname [clock format $inventory(chstats,seconds) -gmt true \
+		       -format $inventory(chstats,fnameformat)];
+
+    if {[string equal $inventory(chstats,frootname) ${_rootname}]} {
 	return;
     }
 
-    set inventory(chstats,frootname) $hh;
-    set inventory(chstats,fpath) [file join $inventory(dir) $hh];
-    append inventory(chstats,fpath) $inventory(chstats,fext);
+    set inventory(chstats,frootname) ${_rootname};
+    set inventory(chstats,fpath) \
+	[inventory_mk_chstats_fpath $inventory(chstats,seconds)];
     file delete $inventory(chstats,fpath);
 }
 
@@ -211,14 +214,13 @@ proc channel_stats_log {} {
 
     global inventory;
 
-    set hh [string range $inventory(chstats,hhmm) 0 1];
-    channel_stats_fileinit $hh;
+    channel_stats_fileinit;
 
     set status [catch {
 	set fp [open $inventory(chstats,fpath) {WRONLY APPEND CREAT}];
 	puts $fp [format \
-	    "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" \
-	    $inventory(chstats,hhmm) \
+	    "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" \
+	    $inventory(chstats,seconds) $inventory(chstats,hhmm) \
 	    $inventory(chstats,0,files) $inventory(chstats,1,files) \
 	    $inventory(chstats,2,files) $inventory(chstats,3,files) \
 	    $inventory(chstats,4,files) \
@@ -257,8 +259,9 @@ proc channel_stats_log {} {
     set inventory(chstats,7,bytes) 0;
     set inventory(chstats,8,bytes) 0;
 
-    set hhmm [clock format [clock seconds] -gmt true -format "%H%M"];
-    set inventory(chstats,hhmm) $hhmm;
+    set inventory(chstats,seconds) [clock seconds];
+    set inventory(chstats,hhmm) \
+	[clock format [clock seconds] -gmt true -format "%H%M"];
 }
 
 filterlib_init;		# open the cpool if enabled

@@ -1,0 +1,102 @@
+#
+# This is the awk script (used by the script nbspstats.sh) that can be
+# used as
+#
+#   awk -f /var/noaaport/nbsp/stats/nbspd.status
+#
+# It is embedded in nbspstats.tcl here. This file is not used; it is
+# kept in this directory only for reference purposes.
+#
+BEGIN {
+
+  start_time = 0;
+  end_time = 0;
+  
+  prod_total = 0;
+  prod_received = 0;
+  prod_missed = 0;
+  prod_rtx = 0;
+  prod_rtx_c = 0;
+  prod_rtx_p = 0;
+  prod_rtx_i = 0;
+  prod_recovered = 0;
+  frames_jumps = 0;
+  frames_received = 0;
+  bytes_received = 0;
+
+  fmt = "%20s\t%.3e\t%.3e\t%d\n";
+  fmt1 = "%20s\t%.3e\t%.3e\t%d (%d KB/s)\n";
+  fmt2 = "%20s\t%f\n";
+
+  os = "freebsd";
+  "uname" | getline os; close("uname");
+  os = tolower(os);
+}
+
+END {
+    
+  prod_missed_fraction = prod_missed/prod_total;
+  prod_rtx_fraction = prod_rtx/prod_total;
+
+  printf("%29s\t\t%s\t%s\n", "total", "per minute", "last minute");
+  printf(fmt, "products trasmitted", prod_total, prod_total/NR, last_prod_transmitted);
+  printf(fmt, "products received", prod_received, prod_received/NR, last_prod_received);
+  printf(fmt, "products missed", prod_missed, prod_missed/NR, last_prod_missed);
+  printf(fmt, "products rtx", prod_rtx, prod_rtx/NR, last_prod_rtx);
+  printf(fmt, "products rtx comp", prod_rtx_c, prod_rtx_c/NR, last_prod_rtx_c);
+  printf(fmt, "products rtx proc", prod_rtx_p, prod_rtx_p/NR, last_prod_rtx_p);
+  printf(fmt, "products rtx ign", prod_rtx_i, prod_rtx_i/NR, last_prod_rtx_i);
+  printf(fmt, "frames received", frames_received, frames_received/NR, last_frames_received);
+  printf(fmt, "frames jumps", frames_jumps, frames_jumps/NR, last_frames_jumps);
+  printf(fmt1, "bytes received", bytes_received, bytes_received/NR, last_bytes_received, last_bytes_received/60000);
+  printf(fmt2, "fraction missing", prod_missed_fraction);
+
+  # If awk has strftime this can be simplified
+  if(os == "freebsd"){
+      cmd = "date -r `cat output`";
+      printf("\n%20s\t%s\t", "start_time", start_time);
+      printf("%s", start_time) > "output"; close("output");
+      cmd | getline; print $0; close(cmd);
+      printf("%20s\t%s\t", "end_time", end_time);
+      printf("%s", end_time) > "output"; close("output");
+      cmd | getline; print $0; close(cmd);
+      system("rm output");
+  } else {
+      cmd = "date -f - -Iminutes";
+      printf("\n%20s\t%s\t", "start_time", start_time);
+      printf("@%s\n", start_time) | cmd; close(cmd);
+      printf("%20s\t%s\t", "end_time", end_time);
+      printf("@%s\n", end_time) | cmd; close(cmd);
+  }
+}
+
+{
+  if(start_time == 0){
+      start_time = $1;
+  }
+  end_time = $1;
+  
+  prod_total += $7;
+  prod_received += $8;
+  prod_missed += $9;
+  prod_rtx += $10;
+  prod_rtx_c += $11;
+  prod_rtx_p += $12;
+  prod_rtx_i += $13;
+  prod_recovered += $14;
+  frames_received += $2;
+  frames_jumps += $4;
+  bytes_received += $6;
+
+  last_prod_transmitted = $7;
+  last_prod_received = $8;
+  last_prod_missed = $9;
+  last_prod_rtx = $10;
+  last_prod_rtx_c = $11;
+  last_prod_rtx_p = $12;
+  last_prod_rtx_i = $13;
+  last_prod_recovered = $14;
+  last_frames_received = $2;
+  last_frames_jumps = $4;
+  last_bytes_received = $6;
+}

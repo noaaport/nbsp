@@ -27,15 +27,23 @@ Quick description
 
 - nbspstatcounters 
 
-  Usage: nbspstatcounters [-f <fmt>] [-q <qstatefile>] [-s <statusfile>]
+  Usage: nbspstatcounters [-f <fmt>] [-c <chstatsfile> \
+                          [-q <qstatefile>] [-s <statusfile>]
 
-Output the nbsp counters in the last minute (ending at "unix_seconds").
+Output the nbsp counters in the last minute. The counters contain
+files and frames received, missing, errors and so on (statusfile),
+the state of the processor, filter and server queues (qstatefile),
+and the files and bytes received in each channel (chstatsfile).
 
 If no <statusfile> is given the default nbspd.status file is used.
 If no <qstatefile> is given the default nbspd.qstate file is used.
+If no <chstatsfile> is given the default is <hh>.stats for the current hour.
 The <fmt> can be: std (default), xml, csv, csvk
 The motivation for the existence of this tool is to use it for extracting
 and feeding the data to rrdtool or similar programs.
+
+The <chstatsfile> is a log file of the inventory filter (not an nbspd file)
+and includes received, for example, by external programs such as ldm or nntp.
 
 - nbspstats
 
@@ -47,6 +55,10 @@ processor, filter and server queues (qstate).
 
 If no command is given, "stats" is assumed. The -l option can be used
 to specify an awk script for the "stats" report.
+
+This script analyzes only the nbspd files (status and qstate) and
+therefore is useful for monitoring the health of a receiving
+noaaport system.
 
 - http://<host.domain>:8015/_inbsp/stats
 

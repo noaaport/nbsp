@@ -12,6 +12,9 @@ set inventory(fext)	".log";
 set inventory(fnameformat) "%H%M";
 set inventory(verbose) 0;  # notify to syslog each file processed
 #
+set inventory(chstats,fext) ".stats";
+set inventory(chstats,fnameformat) "%H";
+#
 # These settings are used to support the nbspstatplot tools.
 # See metarfilter.init for explanations of the various gnuplot settings.
 #
@@ -31,4 +34,24 @@ set inventory(plotframesjumpsrc) "framesjumps.g";
 # The optional configuration file
 if {[file exists $inventory(conf)] == 1} {
     source $inventory(conf);
+}
+
+#
+# functions
+#
+proc inventory_mk_chstats_fpath {seconds} {
+  #
+  # This proc is used in the nbspstatscounters script to get the
+  # current chstats (<hh>.stats) file name, according to the conventions
+  # and settings of the inventory filter.
+  #
+    global inventory;
+
+    set _rootname [clock format $seconds -gmt true \
+		       -format $inventory(chstats,fnameformat)];
+
+    set _fpath [file join $inventory(dir) ${_rootname}];
+    append _fpath $inventory(chstats,fext);
+
+    return ${_fpath};
 }
