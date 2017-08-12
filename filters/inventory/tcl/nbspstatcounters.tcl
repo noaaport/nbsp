@@ -126,7 +126,7 @@ lappend keywords \
     queue_processor \
     queue_filter \
     queue_server \
-    chstats_start_time \
+    chstats_time \
     chstats_hhmm \
     chstats_files_1 \
     chstats_files_2 \
@@ -146,6 +146,10 @@ lappend keywords \
     chstats_bytes_7 \
     chstats_bytes_8 \
     chstats_bytes_9;
+
+set svalues [list];
+set qvalues [list];
+set chvalues [list];
 
 if {[file exists $statusfile]} {
     set svalues [split [exec tail -n 1 $statusfile]];

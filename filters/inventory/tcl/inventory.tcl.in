@@ -216,11 +216,14 @@ proc channel_stats_log {} {
 
     channel_stats_fileinit;
 
+    # The logfile will contain (as usual) the time at which the data is logged
+    set seconds [clock seconds];
+
     set status [catch {
 	set fp [open $inventory(chstats,fpath) {WRONLY APPEND CREAT}];
 	puts $fp [format \
 	    "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" \
-	    $inventory(chstats,seconds) $inventory(chstats,hhmm) \
+	    $seconds $inventory(chstats,hhmm) \
 	    $inventory(chstats,0,files) $inventory(chstats,1,files) \
 	    $inventory(chstats,2,files) $inventory(chstats,3,files) \
 	    $inventory(chstats,4,files) \
