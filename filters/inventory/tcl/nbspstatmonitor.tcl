@@ -11,6 +11,7 @@
 # The output is formatted similarly to the output from nbspstatcounter,
 # but with the following variables:
 #
+# data_format  - a number defined in the function monitor()
 # monitor_code - 0 or an error code
 # poll_time    - time at which the script is called
 # stats_time   - time at which the server logged the stats
@@ -35,7 +36,8 @@ proc monitor {rawoutput} {
     #
     # rawoutput is meant to be the output of ``nbspstatcounters -f csvk''
     #
-    set keys [list monitor_code \
+    set keys [list data_format \
+		  monitor_code \
 		  poll_time \
 		  stats_time \
 		  chstats_time \
@@ -43,6 +45,8 @@ proc monitor {rawoutput} {
 		  chstats_timediff \
 		  total_files \
 		  total_bytes];
+    # data_format
+    set data_format 1;
 
     # error codes
     set err_stats_time 1;
@@ -76,6 +80,7 @@ proc monitor {rawoutput} {
 
     set seconds [clock seconds];
 
+    set v(data_format) $data_format;
     set v(monitor_code) 0;
     set v(poll_time) $seconds;
     set v(stats_time) $stats_time;
