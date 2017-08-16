@@ -14,12 +14,14 @@ In addition, the folowing scripts can be used from the command line
 
 	- nbspstatcounters
 	- nbspstats
+	- nbspstatmonitor
 
 and the last minute data can also be retrieved remotely by a url such as
 
 	http://<host.domain>:8015/_inbsp/stats
+	http://<host.domain>:8015/_inbsp/monitor
 
-The two scripts are useful for local monitoring, while the web
+The three scripts are useful for local monitoring, while the web
 interface can be used for remote monitoring.
 
 Quick description
@@ -56,9 +58,31 @@ processor, filter and server queues (qstate).
 If no command is given, "stats" is assumed. The -l option can be used
 to specify an awk script for the "stats" report.
 
+- nbspstatmonitor
+
+  Usage: nbspstatmonitor  [-f <fmt>]
+  
 This script analyzes only the nbspd files (status and qstate) and
 therefore is useful for monitoring the health of a receiving
-noaaport system.
+noaaport system. It retrieves the "stats" counters using the script
+nbspstatcounters and makes some tests to determine the health of the server.
+The output is formatted similarly to the output from nbspstatcounter,
+but with the following variables:
+
+monitor_code - 0 or an error code
+poll_time    - time at which the script is called
+stats_time   - time at which the server logged the stats
+chstats_time - time at which the inventory filter logged the last minute stats
+stats_timediff - difference between poll and stats times
+chstats_timediff - difference between poll and chstats times
+total_files  - total number of files received by the inventory filter
+total_bytes  - total number of bytes received by the inventory filter
+
+The code returned in monitor_code is 0 (no error) or
+
+err_stats_time 1   - if the difference between poll and stats times > 60
+err_chstats_time 2 - if the difference between poll and chstats times > 60
+err_chstats_data 3 - if total_files or total_bytes are zero
 
 - http://<host.domain>:8015/_inbsp/stats
 
@@ -66,7 +90,7 @@ For example
 
   curl -s -S http://<host.domain>:8015/_inbsp/stats
 
-will output the last minuta date in the same format as the
+will output the last minute data in the same format as the
 nbspstatcounters script. Similarly, 
 
     curl -s -S http://<host.domain>:8015/_inbsp/stats?format=xxx
@@ -74,3 +98,16 @@ nbspstatcounters script. Similarly,
 can be used to retrieve the data in the same formats as described
 above for nbspstatcounters (replacing xxx by the appropriate value,
 csv, xml, ...). The data can be used to feed rrdtool or similar programs.
+
+- http://<host.domain>:8015/_inbsp/monitor
+
+For example
+
+  curl -s -S http://<host.domain>:8015/_inbsp/smonitor
+
+will output a one-line record of the data summary, including in the first field
+an entry of the form "monitor_code=0", in the same form as the
+nbspmonitor script described above. If there are errors in the server
+(e.g., no data received) there will be a non-zero code following the
+equals sign. This facility is used by the "monit" sample conf file
+"monit.nbsp.conf-sample".

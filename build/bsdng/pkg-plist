@@ -51,6 +51,7 @@ bin/nbspstatplot1
 bin/nbspstatplotdata
 bin/nbspstatcounters
 bin/nbspstats
+bin/nbspstatmonitor
 bin/nbspbatch
 bin/nbspgribctl
 bin/nbspgribctlfiles

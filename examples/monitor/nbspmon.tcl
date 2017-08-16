@@ -5,7 +5,8 @@
 # The scripts nbspstats and nbspstatcounters installed with the package
 # are suitable for monitoring a local nbspd server.  This script
 # is an example of how to use the web interface for monitoring a remote
-# nbspd server.
+# nbspd server. The nbsp-stats and nbsp-mon repositories contain
+# more examples, including some sample monit configuration files.
 # 
 set nodeslist [list "1.nbsp.inoaaport.net" \
 		   "2.nbsp.inoaaport.net" \
@@ -34,7 +35,7 @@ foreach node $nodeslist {
 	    incr total_bytes $val;
 	}
 
-	if {[regexp {chstats_start_time} $entry]} {	             
+	if {[regexp {chstats_time} $entry]} {
 	    set chstats_time [lindex [split $entry "="] 1];
 	}
     }
