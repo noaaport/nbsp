@@ -60,7 +60,7 @@ proc _inbsp/stats {{format "std"}} {
     return $r;
 }
 
-proc _inbsp/monitor {{format "csv"}} {
+proc _inbsp/monitor {{format "std"}} {
 
     global inbsp;
 
