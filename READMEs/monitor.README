@@ -103,7 +103,7 @@ csv, xml, ...). The data can be used to feed rrdtool or similar programs.
 
 For example
 
-  curl -s -S http://<host.domain>:8015/_inbsp/smonitor
+  curl -s -S http://<host.domain>:8015/_inbsp/monitor
 
 will output a one-line record of the data summary, including in the first field
 an entry of the form "monitor_code=0", in the same form as the
