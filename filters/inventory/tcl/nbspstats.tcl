@@ -99,14 +99,14 @@ proc proc_set_stats_awk_script {} {
 
 	  # If awk has strftime this can be simplified
 	  if(os == "freebsd"){
-	      cmd = "date -r `cat output`";
+	      cmd = "date -r `cat /tmp/output`";
 	      printf("\n%20s\t%s\t", "start_time", start_time);
-	      printf("%s", start_time) > "output"; close("output");
+	      printf("%s", start_time) > "/tmp/output"; close("/tmp/output");
 	      cmd | getline; print $0; close(cmd);
 	      printf("%20s\t%s\t", "end_time", end_time);
-	      printf("%s", end_time) > "output"; close("output");
+	      printf("%s", end_time) > "/tmp/output"; close("/tmp/output");
 	      cmd | getline; print $0; close(cmd);
-	      system("rm output");
+	      system("rm /tmp/output");
 	  } else {
 	      cmd = "date -f - -Iminutes";
 	      printf("\n%20s\t%s\t", "start_time", start_time);
