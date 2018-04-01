@@ -1,0 +1,153 @@
+http://www.nws.noaa.gov/os/notification/scn17-111sbn_noaaport.htm
+
+
+NSWSH
+ 
+
+Service Change Notice 17-111
+
+National Weather Service Headquarters Silver Spring, MD
+
+710 AM EDT Mon Oct 23 2017
+
+ 
+
+To:        Subscribers:
+
+           -NOAA Weather Wire Service
+
+           -Emergency Managers Weather Information Network
+
+           -NOAAPORT
+
+           Other NWS Partners and NWS Employees
+
+ 
+
+From:      Ronla Henry
+
+           NWS AWIPS Program Manager
+
+ 
+
+Subject:   Change in Satellite Broadcast Network
+
+           Effective on or about January 16, 2018
+
+ 
+
+Effective on or about January 16, 2018, the SES-1 satellite will
+
+no longer provide data to the NWS Satellite Broadcast Network
+
+(SBN). Data will become available from the Galaxy 28 satellite
+
+(G-28) by early December, before discontinuing the broadcast
+
+from SES-1. In addition, the location of the Master Ground
+
+Station (MGS) will move to Holmdel, NJ; the Backup Master Ground
+
+Station (BMGS) will remain in Fairmont, WV. These changes are a
+
+result of the transition to Signal Mountain as the new NWS SBN
+
+communications support subcontractor under Raytheon, the Prime
+
+Contractor for the Advanced Weather Interactive Processing
+
+System (AWIPS). 
+
+ 
+
+The downlink antennas at all receiving site ground stations
+
+(SGS) will need to repoint to G-28 to accommodate this
+
+transition. Users should not need new equipment to continue
+
+receiving NOAAPORT data once the antenna has been adjusted.
+
+Important specifications are below:
+
+ 
+
+Galaxy 28 Satellite Location (new): 89 degrees West
+
+FEC Type: DVB-S2
+
+Polarity: Vertical/Right
+
+Band: High, C-Band
+
+ 
+
+The changeover from SES-1 to G-28 will occur in several phases
+
+to ensure a smooth transition that maximizes the amount of time
+
+with satellite backup coverage. The date of the initial
+
+broadcast from G-28 is still being finalized. Additional
+
+information and specific dates will be provided in the coming
+
+weeks in the form of subsequent Service Change Notices.
+
+ 
+
+If NOAAPORT users experience problems with service during the
+
+satellite transition period, please contact James Calkins and
+
+Kevin Conaty at NWS Headquarters.  
+
+ 
+
+Kevin Conaty
+
+     NOAA/NWS Office of Central Processing
+
+     Silver Spring, MD 20910
+
+     Email: Kevin.Conaty@noaa.gov
+
+ 
+
+ 
+
+James Calkins
+
+     NOAA/NWS Office of Central Processing
+
+     Silver Spring, MD 20910
+
+     Email: James.Calkins@noaa.gov
+
+ 
+
+NWS AWIPS sites experiencing service problems should contact the
+
+Network Control Facility.
+
+ 
+
+AWIPS Network Control Facility (NCF) Help Desk
+
+     NOAA/NWS Office of Central Processing
+
+     Silver Spring, MD 20910
+
+     Email: nws.ncf.supervisors@noaa.gov
+
+ 
+
+NWS National Service Change Notices are online at:
+
+ 
+
+  http://www.weather.gov/os/notif.htm
+
+ 
+
+NNNN
