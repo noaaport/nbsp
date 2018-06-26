@@ -36,6 +36,7 @@
 #        and "craftinsert.README".
 #
 package require cmdline;
+package require Tclx; # flock (see proc sendtof)
 
 set usage {
 nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath < file
@@ -153,21 +154,26 @@ proc delete_fpath {finfo} {
 
 proc sendtof {finfo nbspinfifo} {
 
-   set status [catch {
-       set FIFO [open $nbspinfifo {WRONLY NONBLOCK}]
-       fconfigure $FIFO -translation binary -encoding binary;
-       set finfo_size [string length $finfo];
-       puts -nonewline $FIFO [binary format "I" $finfo_size];
-       puts $FIFO $finfo;
-   } errmsg];
+    # flock and -buffering none was added (jun2018) to support the case
+    # in which several external programs are inserting files in nbsp, like
+    # ldm (craftinsert) and npemwin (nbspfilter).
 
-   if {[info exists FIFO]} {
+    set status [catch {
+	set FIFO [open $nbspinfifo {WRONLY}]
+	flock -write $FIFO;
+	fconfigure $FIFO -translation binary -encoding binary -buffering none;
+	set finfo_size [string length $finfo];
+	puts -nonewline $FIFO [binary format "I" $finfo_size];
+	puts $FIFO $finfo;
+    } errmsg];
+    
+    if {[info exists FIFO]} {
        catch {close $FIFO};
-   }
-
-   if {$status != 0} {
-       return -code error $errmsg;
-   }
+    }
+    
+    if {$status != 0} {
+	return -code error $errmsg;
+    }
 }
 
 proc process_finfo_list {nbspinfifo} {
