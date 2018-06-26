@@ -1,3 +1,11 @@
+nbsp (2.3.9p4-1) oneiric; urgency=low
+
+  * Revised "nbspinsert". In "proc sendtof" added "flock" and "-buffering none"
+    to support the case in which several external programs are inserting
+    files in nbsp, like ldm (craftinsert) and npemwin (nbspfilter).
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 25 Jun 2018 20:26:40 -0400
+
 nbsp (2.3.9p3-1) oneiric; urgency=low
 
   * Revised the inventory filter and the statistics reporting scripts
