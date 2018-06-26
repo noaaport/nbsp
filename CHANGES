@@ -193,3 +193,8 @@
 - Added support for n{1,3,t}p in gisfilter and nbspgis tools
 - Added support for n{1,2,3}s in gisfilter and nbspgis tools
 - Added support for various new grib models (e.g., rap, hrrr)
+
+2.3.9p4
+- Revised nbspinsert. In "proc sendtof" added "flock" and "-buffering none"
+  to support the case in which several external programs are inserting
+  files in nbsp, like ldm (craftinsert) and npemwin (nbspfilter).
