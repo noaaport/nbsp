@@ -87,8 +87,8 @@ int main(int argc, char ** argv){
       break;
     case 'm':
       g.opt_hasgpk = 1;		/* no ccb but gpk header */
-      break;
       ++opt_conflict_lmn;
+      break;
     case 'n':
       g.opt_noccb = 1;		/* the file has no ccb (and no gpk header) */
       ++opt_conflict_lmn;

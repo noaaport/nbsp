@@ -11,7 +11,7 @@
  *
  * The program reads from a file or stdin, but the data must start with the
  * wmo header (i.e., the ccb must have been removed). The [-c] amd [-C]
- * options work as in nbspradinfo. ee nbspradinfo.c.
+ * options work as in nbspradinfo (See nbspradinfo.c.)
  *
  * The output options are:
  *
@@ -189,6 +189,7 @@ int main(int argc, char **argv){
       if(sscanf(optarg, "%d", &g.level_min) != 1){
 	log_errx(1, "Invalid argument to -M option: %s", optarg);
       }
+      break;
     case 'N':
       g.opt_levelmax = optarg;
       if(sscanf(optarg, "%d", &g.level_max) != 1){
