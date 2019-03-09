@@ -1,3 +1,11 @@
+nbsp (2.3.9p5-1) oneiric; urgency=low
+
+  * Corrected errors:
+    nbspgrib2.c:91 (break was before the ++opt_conflict_lmn)
+    nbspradgis:189-192 (missing break)
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Mon, 08 Mar 2018 20:26:40 -0400
+
 nbsp (2.3.9p4-1) oneiric; urgency=low
 
   * Revised "nbspinsert". In "proc sendtof" added "flock" and "-buffering none"
