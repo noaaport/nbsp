@@ -5,5 +5,5 @@ deps: {
   png: {origin: "graphics/png", version: "1.5.18"},
   netpbm: {origin: "graphics/netpbm", version: "10.35.92"},
   gifsicle: {origin: "graphics/gifsicle", version: "1.83"},
-  gnuplot-nox: {origin: "math/gnuplot-nox", version: "4.6.5"}
+  gnuplot-nox: {origin: "math/gnuplot-nox", version: "4.6"}
 }
