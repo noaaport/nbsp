@@ -1,0 +1,5 @@
+craftinsert-orig.1  - usaba unix seconds pare el seqnum
+craftinsert-orig.2  - corregia el ".1" usando milliseconds (since midnight)
+craftinsert - corrige la funcion proc_nbsp{} a~nadiendo chequear error
+              en el caso mvtospool == 0.
+	      

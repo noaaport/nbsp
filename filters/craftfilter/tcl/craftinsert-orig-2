@@ -1,6 +1,6 @@
-#!%TCLSH%
+#!/usr/bin/tclsh8.6
 #
-# $Id$
+# $Id: 3d81b56ced756f22d919570f98671432726024b5 $
 #
 # For installation see "craftinsert.README"
 #
@@ -93,12 +93,10 @@ proc proc_nbsp {ppath} {
     umask $craftinsert(umask);
 
     if {$craftinsert(mvtospool) == 0} {
-	set status [catch {
-	    exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
-	    if {$craftinsert(delete) == 1} {
-		file delete $ppath;
-	    }
-	} errmsg];
+	exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
+	if {$craftinsert(delete) == 1} {
+	    file delete $ppath;
+	}
     } else {
         # The spooldir must exist
         if {[file isdirectory $spooldir] == 0} {
@@ -113,14 +111,11 @@ proc proc_nbsp {ppath} {
 
 	if {$status != 0} {
 	    file delete $fpath;
+	    return -code error $errmsg;
 	}
     }
 
     umask $oldmask;
-
-    if {$status != 0} {
-	return -code error $errmsg;
-    }
 }
 
 #
