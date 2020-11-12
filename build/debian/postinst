@@ -78,6 +78,7 @@ confdir=/usr/local/etc/nbsp
 sharedir=/usr/local/share/nbsp
 rcdir=/etc/init.d
 defaultdir=/etc/default
+systemddir=/usr/local/lib/systemd/system
 nexraddir=/var/noaaport/data/digatmos/nexrad
 logrotatedir=/etc/logrotate.d
 
@@ -116,6 +117,9 @@ elif [ -n "`which update-rc.d`" ]
 then
 	update-rc.d nbspd defaults 99
 fi
+
+install -m 0644 $docdir/nbsp.service-generic $rcdir/nbsp.service
+systemctl enable nbsp
 
 savedir=`pwd`
 cd $nexraddir

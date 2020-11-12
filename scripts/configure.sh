@@ -10,6 +10,7 @@ sed \
     -e "/@RCINIT@/s||$RCINIT|" \
     -e "/@RCFPATH@/s||$RCFPATH|" \
     -e "/@RCCONF@/s||$RCCONF|" \
+    -e "/@SYSTEMDCONF@/s||$SYSTEMDCONF|" \
     -e "/@CLEANUP@/s||$CLEANUP|" \
     -e "/@HOURLYCONF@/s||$HOURLYCONF|" \
     -e "/@STARTCLEANCONF@/s||$STARTCLEANCONF|" \

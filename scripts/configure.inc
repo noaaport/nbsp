@@ -11,6 +11,7 @@ CLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
 STARTSTOPRC=startstop.rc-freebsd
 POSTINSTALLSRC=../build/bsdng/pkg-postinstall.in
+SYSTEMDCONF=
 
 case $os in
     FreeBSD) 
@@ -31,6 +32,7 @@ case $os in
 	HOURLYCONF=hourly-cleanup.conf-generic
 	STARTCLEANCONF=start-cleanup.conf-generic
 	RCFPATH=/etc/init.d/nbspd
+	SYSTEMDCONF=nbsp.service-generic
 
 	[ $flavor = debian ] && STARTSTOPRC=startstop.rc-debian
 	[ $flavor = debian ] && RCCONF=nbspd.sh.conf-debian

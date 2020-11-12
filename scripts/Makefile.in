@@ -8,6 +8,7 @@ INSTALL =	@INSTALL@
 RCINIT =	@RCINIT@
 RCCONF =	@RCCONF@
 RCFPATH =	@RCFPATH@
+SYSTEMDCONF =	@SYSTEMDCONF@
 CLEANUP =	@CLEANUP@
 HOURLYCONF =	@HOURLYCONF@
 STARTCLEANCONF = @STARTCLEANCONF@
@@ -20,7 +21,7 @@ BINTOOLS =	nbspcleanup nbspversion nbsppanic nbspctl nbsppostinstall
 LIBTOOLS =	startstop
 LIBFILES =	nbspd-start.tcl nbspd-stop.tcl
 DOCS =		nbspd.sh-sample
-EXTRA_DOCS =	${RCCONF}
+EXTRA_DOCS =	${RCCONF} ${SYSTEMDCONF}
 TARGET = 	${SAMPLES} ${BINTOOLS} ${LIBTOOLS} ${DOCS}
 
 all: ${TARGET}
