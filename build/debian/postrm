@@ -5,7 +5,11 @@
 #
 rcdir=/etc/init.d
 defaultdir=/etc/default
+systemddir=/usr/local/lib/systemd/system
 logrotatedir=/etc/logrotate.d
+
+systemctl disable nbsp
+rm $systemddir/nbsp.service
 
 if [ -n "`which chkconfig`" ]
 then
@@ -16,7 +20,6 @@ then
 	# rm -f $defaultdir/nbspd
 fi
 
-
 cat <<__EOF__
 
 To deinstall completely this package, the noaaport user and the
@@ -25,6 +28,7 @@ following directories or files must be removed manually:
 /etc/default/nbspd
 /usr/local/etc/nbsp
 /usr/local/share/nbsp
+/usr/local/share/doc/nbsp
 /usr/local/libexec/nbsp
 /var/noaaport
 /var/log/noaaport
