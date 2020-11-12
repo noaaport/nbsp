@@ -118,7 +118,8 @@ then
 	update-rc.d nbspd defaults 99
 fi
 
-install -m 0644 $docdir/nbsp.service-generic $rcdir/nbsp.service
+[ -d $systemddir ] || mkdir -p $systemddir
+install -m 0644 $docdir/nbsp.service-generic $systemddir/nbsp.service
 systemctl enable nbsp
 
 savedir=`pwd`
