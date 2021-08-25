@@ -108,14 +108,14 @@ case $os in
 	   TCLSH=/usr/bin/tclsh8.5
 	   DB_INCDIR=
 	   DB_LIB="db-5.1"
-	   if [ $debian = "8" -o $debian = "9" -o $debian = "10" ]
+	   if [ $debian = "10" -o $debian = "11" ]
 	   then
 		TCL_INCDIR="-I /usr/include/tcl8.6"
 	   	TCL_LIB="tcl8.6"
 	   	TCLSH=/usr/bin/tclsh8.6
 	   	DB_INCDIR=
 	   	DB_LIB="db-5.3"
-	   elif [ $ubuntu = "16.04" -o $ubuntu = "18.04" ]
+	   elif [ $ubuntu = "18.04" -o $ubuntu = "20.04" ]
 	   then
  	   	TCL_INCDIR="-I /usr/include/tcl8.6"
 	   	TCL_LIB="tcl8.6"
