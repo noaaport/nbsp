@@ -31,6 +31,7 @@
 #include "server.h"
 #include "httpd.h"
 #include "exec.h"
+#define NBSP_GLOBALS_DEF
 #include "globals.h"
 #include "defaults.h"
 #include "conf.h"

@@ -218,7 +218,35 @@ struct nbsp_globals {
   int f_verbose;		/* mostly for debuging */
   int f_loadave_max;		/* flag set by calling getloadavg */
   int f_loadave_max_rtx;	/* flag set by calling getrtxindex and load */
-} g;
+};
 
+/*
+  June 2022 - Added this note (for debian 11) because gcc was complaining
+  about multiple defintions of "g".
+
+  [https://stackoverflow.com/questions/69908418/ \
+  multiple-definition-of-first-defined-here-on-gcc-10-2-1-but-not-gcc-8-3-0]
+
+  In C a definition of a global variable that does not initialise the variable
+  is considered "tentative". You can have multiple tentative definitions of a
+  variable in the same compilation unit. Multiple tentative defintions in
+  different compilation units are not allowed in standard C, but were
+  historically allowed by C compilers on unix systems.
+
+  Older versions of gcc would allow multiple tenative definitions (but not
+  multiple non-tentative definitions) of a global variable in different
+  compilation units by default. gcc-10 does not. You can restore the old
+  behavior with the command line option "-fcommon" but this is discouraged.
+*/
+
+/* 
+ * June 2022 - to solve the above problem added this
+ * (and defined NBSP_GLOBALS_DEF in main.c and nowehere else)
+ */
+#ifdef NBSP_GLOBALS_DEF
+struct nbsp_globals g;
+#else
+extern struct nbsp_globals g;
+#endif
 
 #endif
