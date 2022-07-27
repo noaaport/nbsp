@@ -79,7 +79,7 @@ upload_get_pkgparams () {
 	case $osname in
 	    freebsd)
 	        cd ../bsdng/pkg
-		pkgfilename=`ls ${name}-${version}*.txz`
+		pkgfilename=`ls ${name}-${version}*.pkg`
 		pkglocaldir="../bsdng/pkg"
 		cd $savedir
 		;;

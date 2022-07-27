@@ -213,10 +213,10 @@ static void nids_decode_digital_radials_16_grided(struct nids_data_st *nd){
   double r1, r2, theta1, theta2;
   double sin_theta1, cos_theta1, sin_theta2, cos_theta2;
   double dtheta;
-  /* double theta1p, sin_theta1p, cos_theta1p;  */
+  /* double theta1p, sin_theta1p, cos_theta1p; */
   double sin_theta1p, cos_theta1p;   /* theta1p not used in this function */
   double theta2p, sin_theta2p, cos_theta2p;
-  int numpoints = 0;
+  /* int numpoints = 0; XXX - only for debuging */
   int numpolygons = 0;
   int run_level = 0;
 
@@ -281,7 +281,9 @@ static void nids_decode_digital_radials_16_grided(struct nids_data_st *nd){
       run_bins = 1;
       ++b;      
 
+      /* XXX
       numpoints += run_bins;
+      */
 
       /* radius in km  - alspo update "total_bins */
       r1 = ((double)(total_bins * nd->radial_packet_header.scale))/1000.0;
