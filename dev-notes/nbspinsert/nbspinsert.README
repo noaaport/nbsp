@@ -1,0 +1,24 @@
+july2022
+
+I had added flock (from tclx) in the function sendtof in nbspinsert
+to avoid races when different processes (e.g., craftfilter and npemwin)
+were calling nbspinsert. The flock() was implementef in the infeed.fifo.
+The problem is that it works in linux but not in freebsd. The origin
+seemd to that the fcntl() syscall does not work iin a fifo in Freebsd.
+The scritps/programs in this folder illustrate it.
+
+For example, a.c works on a normal file (e.g., infeed.lock) but not
+on the infeed.fifo.
+
+A workaround is to use a lock file (infeed.lock) in conjuction
+to infeed.fifo. This what the scripts read.sh, and test?.tcl show.
+
+In three separate terminals, execute
+
+./read.sh
+./test1.tcl
+./test2.tcl
+
+Another revision had to do with the stage at which the fifo
+is opened and closed. See the note in the function sendtof() in the
+nbspinsert script.

@@ -1,0 +1,5 @@
+july2022
+
+The script nbspinsert was revised as explained in:
+- the note in the function sendtof() in the nbspinsert script
+- the "nbspinsert.README" file in "dev-notes/nbspinsert".

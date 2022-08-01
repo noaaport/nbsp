@@ -204,7 +204,7 @@ proc sendtof {finfo nbspinfifo} {
     # ldm (craftinsert) and npemwin (nbspfilter).
     #
     # This was revised (july2022) for two reasons: (1) In FreeBSD
-    # flock() does not work on a fifo (see the folder nbspfilter.README
+    # flock() does not work on a fifo (see the folder nbspinsert
     # in dev-notes for some notes on this; (2) it is more efficient
     # (when processing a list of finfo obtained from stdin) to open
     # the fifo once at the begining, and closing at the end,
