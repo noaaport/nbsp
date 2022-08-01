@@ -44,10 +44,19 @@ nbspinsert [-f nbspinfifo] seq type cat code npchidx fname fpath
 nbspinsert [-f nbspinfifo] < finfolist
 };
 
+#
+# global variables
+#
+set FIFO "";
+set nbspinfifo "";   # option(f) or configuration file
+#
 set optlist {i {f.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
+#
+# get configuration
+#
 if {$option(f) ne ""} {
     set nbspinfifo $option(f);
 } else {
@@ -87,6 +96,40 @@ proc err {s} {
     err_msg $s;
 
     exit 1;
+}
+
+proc open_fifo {nbspinfifo} {
+
+    global FIFO;
+
+    if {[file exists $nbspinfifo] == 0} {
+	err "$nbspinfifo not found.";
+    }
+
+    set status [catch {
+	set FIFO [open $nbspinfifo {WRONLY NONBLOCK}];
+	fconfigure $FIFO -translation binary -encoding binary -buffering none;
+    } errmsg];
+    
+    if {$status == 0} {
+	fconfigure $FIFO -translation binary -encoding binary;
+    } else {
+	err $errmsg;
+    }
+    
+    return $status;
+}
+
+proc close_fifo {} {
+
+    global FIFO;
+
+    set status [catch {close $FIFO} errmsg];
+    if {$status != 0} {
+        err_msg $errmsg;
+    }
+
+   return $status;
 }
 
 proc process {finfo nbspinfifo} {
@@ -154,22 +197,34 @@ proc delete_fpath {finfo} {
 
 proc sendtof {finfo nbspinfifo} {
 
+    global FIFO;
+    
     # flock and -buffering none was added (jun2018) to support the case
     # in which several external programs are inserting files in nbsp, like
     # ldm (craftinsert) and npemwin (nbspfilter).
+    #
+    # This was revised (july2022) for two reasons: (1) In FreeBSD
+    # flock() does not work on a fifo (see the folder nbspfilter.README
+    # in dev-notes for some notes on this; (2) it is more efficient
+    # (when processing a list of finfo obtained from stdin) to open
+    # the fifo once at the begining, and closing at the end,
+    # than opening and closing in every iteration. In the most
+    # common case, in which nbspinsert is called with just one argument
+    # it is the same thing, but in principle this is how it should be
+    # done.
 
     set status [catch {
-	set FIFO [open $nbspinfifo {WRONLY}]
-	flock -write $FIFO;
-	fconfigure $FIFO -translation binary -encoding binary -buffering none;
+	#set FIFO [open $nbspinfifo {WRONLY}]
+	#flock -write $FIFO;
+	#fconfigure $FIFO -translation binary -encoding binary -buffering none;
 	set finfo_size [string length $finfo];
 	puts -nonewline $FIFO [binary format "I" $finfo_size];
 	puts $FIFO $finfo;
     } errmsg];
     
-    if {[info exists FIFO]} {
-       catch {close $FIFO};
-    }
+    #if {[info exists FIFO]} {
+    #   catch {close $FIFO};
+    #}
     
     if {$status != 0} {
 	return -code error $errmsg;
@@ -192,19 +247,21 @@ proc process_finfo_list {nbspinfifo} {
 #
 # main
 #
-if {$argc == 0} {
-    set status [catch {
-	process_finfo_list $nbspinfifo;
-    } errmsg];
 
-    if {$status != 0} {
-	err $errmsg;
-    }
+set status [open_fifo $nbspinfifo];
+
+if {$status != 0} {
+    return 1;
 }
 
-set finfo [join $argv " "];
+if {$argc == 0} {
+    set status [catch {process_finfo_list $nbspinfifo} errmsg];   
+} else {
+    set finfo [join $argv " "];
+    set status [catch {process $finfo $nbspinfifo} errmsg];
+}
 
-set status [catch {process $finfo $nbspinfifo} errmsg];
+close_fifo;
 
 if {$status != 0} {
     err $errmsg;
