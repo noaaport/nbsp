@@ -108,12 +108,10 @@ proc open_fifo {nbspinfifo} {
 
     set status [catch {
 	set FIFO [open $nbspinfifo {WRONLY NONBLOCK}];
-	fconfigure $FIFO -translation binary -encoding binary -buffering none;
+	fconfigure $FIFO -translation binary -encoding binary;
     } errmsg];
     
-    if {$status == 0} {
-	fconfigure $FIFO -translation binary -encoding binary;
-    } else {
+    if {$status != 0} {
 	err $errmsg;
     }
     
