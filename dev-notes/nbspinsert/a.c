@@ -1,3 +1,9 @@
+/*
+ * Proof thet flock() does not work in freebsd on fifos
+ *
+ * ./read.sh
+ * ./a.out
+ */
 #include <fcntl.h>
 #include <err.h>
 #include <unistd.h>

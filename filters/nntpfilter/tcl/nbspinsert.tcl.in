@@ -3,9 +3,9 @@
 # $Id$
 #
 #
-# Usage: nbspinsert -i [-f nbspinfifo] finfo < file
-#	 nbspinsert [-f nbspinfifo] finfo
-#	 nbspinsert [-f nbspinfifo] < file_with_finfolist
+# Usage: nbspinsert -i [-f nbspinfifo] [-l lockfile] finfo < file
+#	 nbspinsert [-f nbspinfifo] [-l lockfile] finfo
+#	 nbspinsert [-f nbspinfifo] [-l lockfile] < file_with_finfolist
 # where
 #
 # finfo = seq type cat code npchidx fname fpath
@@ -48,7 +48,10 @@ nbspinsert [-f nbspinfifo] < finfolist
 # global variables
 #
 set FIFO "";
+set LOCK "";
 set nbspinfifo "";   # option(f) or configuration file
+set nbspinlock_ext ".lock";
+set nbspinlock "";   # set to ${nbspinfifo}${nbspinlock_ext}
 #
 set optlist {i {f.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
@@ -81,6 +84,8 @@ if {$option(f) ne ""} {
     set nbspinfifo $nbspd(infeedfifo);
 }
 
+append nbspinlock $nbspinfifo $nbspinlock_ext;
+
 proc err_msg {s} {
 
     global argv0;
@@ -98,9 +103,9 @@ proc err {s} {
     exit 1;
 }
 
-proc open_fifo {nbspinfifo} {
+proc open_fifo {} {
 
-    global FIFO;
+    global FIFO nbspinfifo;
 
     if {[file exists $nbspinfifo] == 0} {
 	err "$nbspinfifo not found.";
@@ -114,7 +119,16 @@ proc open_fifo {nbspinfifo} {
     if {$status != 0} {
 	err $errmsg;
     }
-    
+
+    set status [catch {
+	open_lock;
+    } errmsg];
+
+    if {$status != 0} {
+	close_fifo;
+	err $errmsg;
+    }
+
     return $status;
 }
 
@@ -127,12 +141,78 @@ proc close_fifo {} {
         err_msg $errmsg;
     }
 
+    set status [catch {close_lock} errmsg]
+    if {$status != 0} {
+        err_msg $errmsg;
+    }
+    
    return $status;
 }
 
-proc process {finfo nbspinfifo} {
+proc open_lock {} {
 
-    global option;
+    global LOCK nbspinlock;
+
+    set status [catch {
+	set LOCK [open $nbspinlock {WRONLY CREAT NONBLOCK}]
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error "Could not open $nbspinlock";
+    }
+
+    return $status;
+}
+
+proc close_lock {} {
+
+    global LOCK nbspinlock;
+
+    set status [catch {
+	close $LOCK;
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error "Could not close $nbspinlock";
+    }
+
+    return $status;
+}
+
+proc infeed_lock {} {
+
+    global LOCK nbspinlock;
+    
+    set status [catch {
+	flock -write $LOCK;
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error "Could not lock $nbspinlock";
+    }
+
+    return $status;
+}
+
+proc infeed_unlock {} {
+
+    global LOCK nbspinlock;
+    
+    set status [catch {
+	funlock $LOCK;
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error "Could not unlock $nbspinlock";
+    }
+
+    return $status;
+}
+
+
+proc process {finfo} {
+
+    global option nbspinfifo;
 
    if {[llength [split $finfo]] != 7} {
 	return -code error "Not enough arguments: $finfo.";
@@ -143,7 +223,7 @@ proc process {finfo nbspinfifo} {
     }
 
     set status [catch {
-	sendtof $finfo $nbspinfifo;
+	sendtof $finfo;
     } errmsg];
     
     if {($status != 0) && ($option(i) == 1)} {
@@ -193,9 +273,9 @@ proc delete_fpath {finfo} {
     file delete $fpath;
 }
 
-proc sendtof {finfo nbspinfifo} {
+proc sendtof {finfo} {
 
-    global FIFO;
+    global FIFO nbspinfifo;
     
     # flock and -buffering none was added (jun2018) to support the case
     # in which several external programs are inserting files in nbsp, like
@@ -216,8 +296,10 @@ proc sendtof {finfo nbspinfifo} {
 	#flock -write $FIFO;
 	#fconfigure $FIFO -translation binary -encoding binary -buffering none;
 	set finfo_size [string length $finfo];
+	infeed_lock;
 	puts -nonewline $FIFO [binary format "I" $finfo_size];
 	puts $FIFO $finfo;
+	infeed_unlock;
     } errmsg];
     
     #if {[info exists FIFO]} {
@@ -229,7 +311,9 @@ proc sendtof {finfo nbspinfifo} {
     }
 }
 
-proc process_finfo_list {nbspinfifo} {
+proc process_finfo_list {} {
+
+    global nbspinfifo;
 
     set status 0;
 
@@ -238,7 +322,7 @@ proc process_finfo_list {nbspinfifo} {
 	    continue;
         }
 
-	process $finfo $nbspinfifo;
+	process $finfo;
     }
 }
 
@@ -246,17 +330,17 @@ proc process_finfo_list {nbspinfifo} {
 # main
 #
 
-set status [open_fifo $nbspinfifo];
+set status [open_fifo];
 
 if {$status != 0} {
     return 1;
 }
 
 if {$argc == 0} {
-    set status [catch {process_finfo_list $nbspinfifo} errmsg];   
+    set status [catch {process_finfo_list} errmsg];   
 } else {
     set finfo [join $argv " "];
-    set status [catch {process $finfo $nbspinfifo} errmsg];
+    set status [catch {process $finfo} errmsg];
 }
 
 close_fifo;
