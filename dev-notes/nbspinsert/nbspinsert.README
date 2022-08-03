@@ -20,10 +20,12 @@ In three separate terminals, execute
 ./test2.tcl
 
 The implementation of this locking scheme is exemplified
-by the scripts in the folder "implementation".
+by the scripts in the folder "implementation". It consists
+of a separate (normal) file used for locking, with a name
+derived from the fifo file (with the extension "lock" appended).
+The lock file can be crated by invoking nbspinsert as
+``nbspinsert -l''.
 
 Another revision had to do with the stage at which the fifo
 is opened and closed. (See also the note in the function sendtof() in the
 nbspinsert script.)
-
-

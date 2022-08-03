@@ -3,9 +3,10 @@
 # $Id$
 #
 #
-# Usage: nbspinsert -i [-f nbspinfifo] [-l lockfile] finfo < file
-#	 nbspinsert [-f nbspinfifo] [-l lockfile] finfo
-#	 nbspinsert [-f nbspinfifo] [-l lockfile] < file_with_finfolist
+# Usage: nbspinsert -i [-f nbspinfifo] finfo < file
+#	 nbspinsert [-f nbspinfifo] finfo
+#	 nbspinsert [-f nbspinfifo] < file_with_finfolist
+#        nbspinsert -l [-f nbspinfifo]
 # where
 #
 # finfo = seq type cat code npchidx fname fpath
@@ -19,6 +20,10 @@
 #
 # If [-f] is not given to specify the location of the nbspd.infifo file,
 # then the nbsp configuration files are read.
+#
+# The last invocation is an aide to create the lock file in case
+# it is desired to use locking (see sendtof). The name is derived
+# from the fifo file.
 #
 # NOTE:  In this mode the Nbsp processor is not invoked and the files
 #        that are saved in the spool directory by the caller of this script,
@@ -42,6 +47,7 @@ set usage {
 nbspinsert -i [-f nbspinfifo] seq type cat code npchidx fname fpath < file
 nbspinsert [-f nbspinfifo] seq type cat code npchidx fname fpath
 nbspinsert [-f nbspinfifo] < finfolist
+nbspinsert -l [-f nbspinfifo]
 };
 
 #
@@ -49,11 +55,13 @@ nbspinsert [-f nbspinfifo] < finfolist
 #
 set FIFO "";
 set LOCK "";
+set FIFO_open 0;
+set LOCK_open 0;
 set nbspinfifo "";   # option(f) or configuration file
 set nbspinlock_ext ".lock";
 set nbspinlock "";   # set to ${nbspinfifo}${nbspinlock_ext}
 #
-set optlist {i {f.arg ""}};
+set optlist {i l {f.arg ""}};
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
 
@@ -105,7 +113,7 @@ proc err {s} {
 
 proc open_fifo {} {
 
-    global FIFO nbspinfifo;
+    global FIFO FIFO_open nbspinfifo;
 
     if {[file exists $nbspinfifo] == 0} {
 	err "$nbspinfifo not found.";
@@ -114,6 +122,7 @@ proc open_fifo {} {
     set status [catch {
 	set FIFO [open $nbspinfifo {WRONLY NONBLOCK}];
 	fconfigure $FIFO -translation binary -encoding binary;
+	set FIFO_open 1;
     } errmsg];
     
     if {$status != 0} {
@@ -134,30 +143,58 @@ proc open_fifo {} {
 
 proc close_fifo {} {
 
-    global FIFO;
+    global FIFO FIFO_open;
 
-    set status [catch {close $FIFO} errmsg];
-    if {$status != 0} {
-        err_msg $errmsg;
+    if {$FIFO_open == 1} {
+	set status [catch {close $FIFO} errmsg];
+	set FIFO_open 0;
+	if {$status != 0} {
+	    err_msg $errmsg;
+	}
     }
 
-    set status [catch {close_lock} errmsg]
+    set status [catch {close_lock} errmsg];
+
     if {$status != 0} {
-        err_msg $errmsg;
+	err_msg $errmsg;
     }
-    
+
    return $status;
+}
+
+proc create_lock {} {
+
+    global nbspinlock;
+    
+    set status [catch {
+	set f [open $nbspinlock {WRONLY CREAT NONBLOCK}];
+	close $f;
+	file attributes $nbspinlock -permissions "0664";
+    } errmsg];
+
+    if {$status != 0} {
+	err "Could not open $nbspinlock: $errmsg";
+    }
 }
 
 proc open_lock {} {
 
-    global LOCK nbspinlock;
+    global LOCK LOCK_open nbspinlock;
 
+    # This program uses the lock file if it exists
+    if {[file exists $nbspinlock] == 0} {
+	return 0;
+    }
+	
     set status [catch {
-	set LOCK [open $nbspinlock {WRONLY CREAT NONBLOCK}]
+	#set LOCK [open $nbspinlock {WRONLY CREAT NONBLOCK}];
+	#file attributes $nbspinlock -permissions "0664";
+	set LOCK [open $nbspinlock {WRONLY NONBLOCK}]
+	set LOCK_open 1;
     } errmsg];
 
     if {$status != 0} {
+	err_msg $errmsg
 	return -code error "Could not open $nbspinlock";
     }
 
@@ -166,11 +203,17 @@ proc open_lock {} {
 
 proc close_lock {} {
 
-    global LOCK nbspinlock;
+    global LOCK LOCK_open nbspinlock;
+
+    if {$LOCK_open == 0} {
+	return 0;
+    }
 
     set status [catch {
 	close $LOCK;
     } errmsg];
+
+    set LOCK_open 0;
 
     if {$status != 0} {
 	return -code error "Could not close $nbspinlock";
@@ -181,7 +224,11 @@ proc close_lock {} {
 
 proc infeed_lock {} {
 
-    global LOCK nbspinlock;
+    global LOCK LOCK_open nbspinlock;
+
+    if {$LOCK_open == 0} {
+	return 0;
+    }
     
     set status [catch {
 	flock -write $LOCK;
@@ -196,8 +243,12 @@ proc infeed_lock {} {
 
 proc infeed_unlock {} {
 
-    global LOCK nbspinlock;
-    
+    global LOCK LOCK_open nbspinlock;
+
+    if {$LOCK_open == 0} {
+	return 0;
+    }
+
     set status [catch {
 	funlock $LOCK;
     } errmsg];
@@ -208,7 +259,6 @@ proc infeed_unlock {} {
 
     return $status;
 }
-
 
 proc process {finfo} {
 
@@ -290,6 +340,10 @@ proc sendtof {finfo} {
     # common case, in which nbspinsert is called with just one argument
     # it is the same thing, but in principle this is how it should be
     # done.
+    #
+    # The locking mechanism is to use separate lock file. It can be cerated
+    # by invoking this same tool with the "-l" option as explained
+    # in the synopsis.
 
     set status [catch {
 	#set FIFO [open $nbspinfifo {WRONLY}]
@@ -329,6 +383,11 @@ proc process_finfo_list {} {
 #
 # main
 #
+
+if {$option(l) == 1} {
+    create_lock;
+    return 0;
+}
 
 set status [open_fifo];
 
