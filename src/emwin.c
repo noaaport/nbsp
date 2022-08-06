@@ -16,11 +16,9 @@
 #include <sys/stat.h>
 #include <libgen.h>
 #include <ctype.h>
-#include "const.h"
 #include "readn.h"
 #include "file.h"
 #include "util.h"
-#include "nbspre.h"
 #include "emwin.h"
 
 static off_t get_parts_total(off_t fsize);
