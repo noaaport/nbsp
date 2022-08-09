@@ -33,7 +33,6 @@
 #include "exec.h"
 #define NBSP_GLOBALS_DEF
 #include "globals.h"
-#include "defaults.h"
 #include "conf.h"
 
 static int parse_args(int argc, char **argv);
