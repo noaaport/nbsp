@@ -19,8 +19,8 @@ CFLAGS +=	-c ${CCWFLAGS} ${DEBUGFLAGS} ${INCDIRS}
 
 all: ${TARGET}
 
-.c.o: ${HEADERS}
-	${CC} ${CFLAGS} $<
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} -o $*.o $<
 
 install:
 
