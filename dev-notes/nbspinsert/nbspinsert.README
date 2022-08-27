@@ -1,3 +1,9 @@
+aug2022
+
+Following the strategy in npemwininsert, the infeed fifo is opened here
+in blocking mode for the write. This ensures that there will not be more
+writes than the pipe has space for and no insertions are lost.
+
 july2022
 
 I had added flock (from tclx) in the function sendtof in nbspinsert

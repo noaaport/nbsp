@@ -1,3 +1,10 @@
+aug2022
+
+The script was revised, following the strategy in npemwininsert.
+The infeed fifo is opened here in blocking mode for the write,
+to ensure that there will not be more writes than the pipe has
+space for and no insertions are lost.
+
 july2022
 
 The script nbspinsert was revised as explained in:

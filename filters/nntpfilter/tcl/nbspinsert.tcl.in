@@ -119,9 +119,10 @@ proc open_fifo {} {
 	err "$nbspinfifo not found.";
     }
 
+    # Open it in blocking mode for the reason explained in nbspinsert.README
     set status [catch {
-	set FIFO [open $nbspinfifo {WRONLY NONBLOCK}];
-	fconfigure $FIFO -translation binary -encoding binary;
+	set FIFO [open $nbspinfifo {WRONLY}];
+	fconfigure $FIFO -translation binary -encoding binary -buffering none;
 	set FIFO_open 1;
     } errmsg];
     
