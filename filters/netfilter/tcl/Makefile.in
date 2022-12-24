@@ -34,7 +34,7 @@ netfilter.rc-sample: netfilter.rc
 	cp netfilter.rc netfilter.rc-sample
 
 install: ${TARGET}
-	${INSTALL} -m 755 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
+	${INSTALL} -m 644 ${TCLTARGET} ${MYLIBEXECDIR}/${FILTERNAME}
 	${INSTALL} -m 644 ${SAMPLES} ${DEFAULTS} ${EXAMPLES} ${MYCONFDIR}
 
 clean:

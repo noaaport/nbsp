@@ -61,7 +61,7 @@ ${TXMLTARGET}: ${TXMLSOURCES}
 
 install: ${TARGET}
 	${INSTALL} -m 755 rssfilter.tcl ${MYLIBEXECDIR}/rssfilter
-	${INSTALL} -m 755 rssfilter.init ${MYLIBEXECDIR}
+	${INSTALL} -m 644 rssfilter.init ${MYLIBEXECDIR}
 	${INSTALL} -m 755 nbsprsscreate.tcl ${BINDIR}/nbsprsscreate
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 

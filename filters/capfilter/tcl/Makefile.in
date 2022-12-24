@@ -53,7 +53,7 @@ ${TXMLTARGET}: ${TXMLSOURCES}
 
 install: ${TARGET}
 	${INSTALL} -m 755 capfilter.tcl ${MYLIBEXECDIR}/capfilter
-	${INSTALL} -m 755 capfilter.init ${MYLIBEXECDIR}
+	${INSTALL} -m 644 capfilter.init ${MYLIBEXECDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${TXMLTARGET} ${MYCONFDIR}
 	${INSTALL} -m 755 nbspcapcleanup ${BINDIR}
 	${INSTALL} -m 755 nbspcapcatalog ${BINDIR}

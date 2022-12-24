@@ -8,7 +8,8 @@ include ../../VERSION
 #
 requires = $(shell grep -v "^\#" rpm-requires)
 rpmrelease = $(shell grep -v "^\#" rpm-release)
-rpmroot = ${HOME}/docs/devel/rpmbuild
+#rpmroot = ${HOME}/devel/rpmbuild
+rpmroot = ${HOME}/rpmbuild
 
 flavor = $(shell ./flavor.sh)
 arch =  $(shell uname -m)
