@@ -7,14 +7,21 @@
 # chkconfig: 35 99 99
 # description: noaaport server
 
+name=nbsp
 daemon=/usr/local/sbin/nbspd
 pidfile=/var/run/nbsp/nbspd.pid
+rundir=/var/run/$name
+owner=noaaport
+group=noaaport
 options=
 
 [ -x $daemon ] || exit 0
 
 case "$1" in
   start)
+    # If /var/run is a tmpfs, /var/run/<subdir> must be recreated
+    [ ! -d $rundir ] && install -d -m 755 -o $owner -g $group $rundir
+
     echo Starting `basename $daemon ...`
     $daemon $options
     ;;
