@@ -1,8 +1,8 @@
 /*
  * Proof thet flock() does not work in freebsd on fifos
  *
- * ./read.sh
- * ./a.out
+ * ./read.sh (in one terminal)
+ * ./a.out (in another terminal)
  */
 #include <fcntl.h>
 #include <err.h>
