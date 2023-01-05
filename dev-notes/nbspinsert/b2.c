@@ -1,32 +1,33 @@
 /*
- * Proof that fcntl() does not work in freebsd on fifos
+ * Proof thet flock() works in freebsd on fifos
  *
  * ./read.sh (in one terminal)
- * ./a.out (in another terminal)
+ * ./b1 (in another terminal)
+ * ./b2 (in another terminal)
  */
+#include <string.h>
 #include <fcntl.h>
 #include <err.h>
 #include <unistd.h>
+#include <sys/file.h>
 
 int main(void) {
 
   int fd = -1;
   int r;
-  struct flock flock;
-
-  flock.l_type = F_WRLCK;
-  flock.l_start = 0;
-  flock.l_whence = SEEK_SET;
-  flock.l_len = 0;
- 
+  char *s = "OK";
+  
   fd = open("infeed.fifo", O_WRONLY);
   if (fd == -1)
     err(1, "%s\n", "Open: ");
 
-  r = fcntl(fd, F_SETLKW, &flock);
+  r = flock(fd, LOCK_EX);
   
   if (r == -1)
-    err(1, "%s\n", "fcntl: ");
+    err(1, "%s\n", "flock: ");
+
+  sleep(10);
+  write(fd, s, strlen(s));
 
   (void)close(fd);
 

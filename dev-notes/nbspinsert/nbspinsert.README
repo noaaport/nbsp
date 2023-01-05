@@ -1,3 +1,10 @@
+jan2023
+
+Although locking by the function fcntl does not work on fifos in freebsd
+(as explained in the july2022 note) the flock function works. This is
+exemplified by b1.c and b2.c. With regard to nbspinsert, the problem is that
+the tclx flock function seems to be implemented by fcntl() and not by flock().
+
 aug2022
 
 Following the strategy in npemwininsert, the infeed fifo is opened here
@@ -8,14 +15,14 @@ july2022
 
 I had added flock (from tclx) in the function sendtof in nbspinsert
 to avoid races when different processes (e.g., craftfilter and npemwin)
-were calling nbspinsert. The flock() was implementef in the infeed.fifo.
+were calling nbspinsert. The flock() was implemented in the infeed.fifo.
 The problem is that it works in linux but not in freebsd. The origin
 seems to be that the fcntl() syscall does not work in a fifo in Freebsd.
 The program a.c and the script a.tcl illustrate that. Both work on a normal
 file (e.g., infeed.lock) but not on the infeed.fifo (in freebsd).
 
 A workaround is to use a lock file (infeed.lock) in conjuction
-to infeed.fifo. This what the scripts read.sh, and test?.tcl show.
+to infeed.fifo. This is what the scripts read.sh, and test?.tcl show.
 
 In three separate terminals, execute
 
@@ -27,8 +34,9 @@ The implementation of this locking scheme is exemplified
 by the scripts in the folder "implementation". It consists
 of a separate (normal) file used for locking, with a name
 derived from the fifo file (with the extension "lock" appended).
-The lock file can be crated by invoking nbspinsert once as
-``nbspinsert -l''.
+
+This is the scheme implemented in nbspinsert. The lock file can be created
+by invoking nbspinsert once as ``nbspinsert -l''.
 
 Another revision had to do with the stage at which the fifo
 is opened and closed. (See also the note in the function sendtof() in the
