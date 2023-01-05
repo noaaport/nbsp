@@ -332,17 +332,16 @@ proc sendtof {finfo} {
     # in which several external programs are inserting files in nbsp, like
     # ldm (craftinsert) and npemwin (nbspfilter).
     #
-    # This was revised (july2022) for two reasons: (1) In FreeBSD
-    # flock() does not work on a fifo (see the folder nbspinsert
+    # This was revised (july2022) for two reasons: (1) In FreeBSD the tclx
+    # flock does not work on a fifo (see the folder nbspinsert
     # in dev-notes for some notes on this; (2) it is more efficient
     # (when processing a list of finfo obtained from stdin) to open
     # the fifo once at the begining, and closing at the end,
     # than opening and closing in every iteration. In the most
     # common case, in which nbspinsert is called with just one argument
-    # it is the same thing, but in principle this is how it should be
-    # done.
+    # it is the same thing, but in principle this is how it should be done.
     #
-    # The locking mechanism is to use separate lock file. It can be cerated
+    # The locking mechanism is to use separate lock file. It can be created
     # by invoking this same tool with the "-l" option as explained
     # in the synopsis.
 
