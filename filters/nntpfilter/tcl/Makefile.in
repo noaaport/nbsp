@@ -51,7 +51,7 @@ install: ${TARGET}
 	${INSTALL} -m 755 nntpfilter.tcl ${MYLIBEXECDIR}/nntpfilter
 	${INSTALL} -m 755 nbspnntpsend.tcl ${BINDIR}/nbspnntpsend
 	${INSTALL} -m 755 nbspinnfeed.tcl ${MYLIBEXECDIR}/nbspinnfeed
-	${INSTALL} -m 755 nbspinsert.tcl ${BINDIR}/nbspinsert
+	# ${INSTALL} -m 755 nbspinsert.tcl ${BINDIR}/nbspinsert
 	${INSTALL} -m 644 ${SAMPLES} ${M4TARGET} ${MYCONFDIR}
 
 clean:

@@ -1,3 +1,10 @@
+jan2023
+
+The script was replaced by the C version "tools/nbspinsert" mainly
+to be able to use flock() on the infeed fifo and avoid the clumsy
+use of the tclx flock (which required the auxiliary lock file) as
+explained in the places mentioned below.
+
 aug2022
 
 The script was revised, following the strategy in npemwininsert.

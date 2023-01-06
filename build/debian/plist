@@ -26,7 +26,6 @@
 /usr/local/bin/nbspradmosl
 /usr/local/bin/nbsppngcvt
 /usr/local/bin/nbspnntpsend
-/usr/local/bin/nbspinsert
 /usr/local/bin/nbspmtrd
 /usr/local/bin/nbspmtrcsv
 /usr/local/bin/nbspmtrcsvd
@@ -66,6 +65,7 @@
 /usr/local/bin/nbspqstat
 /usr/local/bin/nbspinvrm
 /usr/local/bin/nbspexec
+/usr/local/bin/nbspinsert
 /usr/local/bin/nbsprsscreate
 /usr/local/bin/nbspcapcleanup
 /usr/local/bin/nbspcapcatalog

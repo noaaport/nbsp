@@ -2,8 +2,13 @@ jan2023
 
 Although locking by the function fcntl does not work on fifos in freebsd
 (as explained in the july2022 note) the flock function works. This is
-exemplified by b1.c and b2.c. With regard to nbspinsert, the problem is that
-the tclx flock function seems to be implemented by fcntl() and not by flock().
+exemplified by b1.c and b2.c. With regard to nbspinsert.tcl, the problem
+is that the tclx flock function seems to be implemented by fcntl() and
+not by flock().
+
+Motivated by this, we started the nbspinsert C program (tools/nbspinsert)
+which uses flock() on the fifo directly (motivated by the
+analogous npemwininsert program) to replace the nbspinsert.tcl script.
 
 aug2022
 

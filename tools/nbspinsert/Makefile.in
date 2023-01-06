@@ -1,0 +1,44 @@
+#
+# Copyright (c) 2005 Jose F. Nieves <nieves@ltp.uprrp.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+TARGET =	nbspinsert
+SOURCES =	nbspinsert.c fifo.c
+HEADERS =	fifo.h
+OBJECTS =	nbspinsert.o fifo.o
+AUXSOURCES =	err.c util.c
+AUXHEADERS =	err.h util.h config.h
+AUXOBJECTS =	err.o util.o
+ALLOBJECTS =	${OBJECTS} ${AUXOBJECTS}
+
+#INCDIRS =       @INCDIRS@
+#LIBDIRS =       @LIBDIRS@
+#LIBS =          @LIBS@
+INSTALL =       @INSTALL@
+CC =            @CC@
+CCWFLAGS =      @CCWFLAGS@
+
+#CFLAGS +=       ${DEBUGFLAGS} -c ${CCWFLAGS} ${INCDIRS}
+CFLAGS +=       ${DEBUGFLAGS} -c ${CCWFLAGS}
+DEBUGFLAGS =    -g
+#DEBUGFLAGS =   -DNDEBUG
+
+all: ${TARGET}
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+${TARGET}: ${ALLOBJECTS}
+	${CC} -o ${TARGET} ${ALLOBJECTS}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}
+
+clean:
+	rm -f *~ ${TARGET} ${OBJECTS} Makefile
+	rm -f ${AUXSOURCES} ${AUXHEADERS} ${AUXOBJECTS}

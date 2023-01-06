@@ -28,7 +28,6 @@ bin/nbspradmos
 bin/nbspradmosl
 bin/nbsppngcvt
 bin/nbspnntpsend
-bin/nbspinsert
 bin/nbspmtrd
 bin/nbspmtrcsv
 bin/nbspmtrcsvd
@@ -68,6 +67,7 @@ bin/nbspqdc
 bin/nbspqstat
 bin/nbspinvrm
 bin/nbspexec
+bin/nbspinsert
 bin/nbsprsscreate
 bin/nbspcapcleanup
 bin/nbspcapcatalog

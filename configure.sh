@@ -2,7 +2,7 @@
 
 . ./configure.inc
 
-config_dirs="conf src utils scripts doc filters \
+config_dirs="conf src utils scripts doc filters tools \
     tclhttpd \
     tclgempak \
     tclgrads \
