@@ -12,6 +12,9 @@
  *
  * finfo = seq type cat code npchidx fname fpath
  *
+ * (See the function validate_input() below for some explanation about
+ * the (numerical) first five parameters.)
+ *
  * NOTE: The following comments are borrowed from the original nbspinsert.tcl
  * script (in nntpfilter) with appropriate revisions.
  *
@@ -69,6 +72,7 @@ static struct {
 
 static void cleanup(void);
 static void check(void);
+static int validate_input(void);
 static int open_nbsp_infifo(void);
 static void close_nbsp_infifo(void);
 static int process_file(void);
@@ -108,7 +112,7 @@ int main(int argc, char **argv){
     set_usesyslog();
 
   if(optind != argc - 7)
-    log_errx(1, "%s\n", usage);
+    log_errx(1, "%s %s", "Not arguments.", usage);
 
   g.seq = argv[optind++];
   g.type = argv[optind++];
@@ -118,13 +122,22 @@ int main(int argc, char **argv){
   g.fname = argv[optind++];
   g.fpath = argv[optind++];
   g.fpath = argv[optind++];
-  
-  atexit(cleanup);
-  
+    
   if (g.opt_C == 1) {
     check();
     return(0);
   }
+
+  status = validate_input();
+  if(status != 0) {
+    /* 
+     * if status != 0 this is not reached because validate_input()
+     * exits the program.
+     */
+    return(status);
+  }
+
+  atexit(cleanup);
 
   status = open_nbsp_infifo();
   
@@ -148,6 +161,68 @@ static void check(void){
   fprintf(stdout, "opt_background: %d\n", g.opt_background);
 }
 
+static int validate_input(void) {
+  /*
+   *
+   * The first five parameters in the argument of this program are
+   * (see. e.g., src/{packfpc.h,packfp.h})
+   *
+   * uint32_t seq_number;
+   * int psh_product_type;
+   * int psh_product_category;
+   * int psh_product_code;
+   * int np_channel_index;
+   *
+   * The type, cat, code, index are actually uchar in the sense of their range.
+   */
+  int status = 0;
+  uint32_t u32;
+  uint u;
+
+  status = strto_u32(g.seq, &u32);
+  if (status != 0) {
+    log_errx(1, "%s: %s", "Invalid input: seq", g.seq);
+  }
+
+  status = strto_uint(g.type, &u);
+  if(status == 0) {
+    if(u > 255)
+      status = 1;
+  }
+  if (status != 0) {
+    log_errx(1, "%s: %s", "Invalid input: type", g.type);
+  }
+
+  status = strto_uint(g.cat, &u);
+  if(status == 0) {
+    if(u > 255)
+      status = 1;
+  }
+  if (status != 0) {
+    log_errx(1, "%s: %s", "Invalid input: cat", g.cat);
+  }
+
+  status = strto_uint(g.code, &u);
+  if(status == 0) {
+    if(u > 255)
+      status = 1;
+  }
+  if (status != 0) {
+    log_errx(1, "%s: %s", "Invalid input: code", g.code);
+  }
+
+  status = strto_uint(g.npchidx, &u);
+  if(status == 0) {
+    if(u > 255)
+      status = 1;
+  }
+  if (status != 0) {
+    log_errx(1, "%s: %s", "Invalid input: npchidx", g.npchidx);
+  }
+
+  return(status);
+}
+
 static int open_nbsp_infifo(void) {
 
   int fd = -1;
@@ -168,7 +243,7 @@ static int open_nbsp_infifo(void) {
   /*
    * Open it in blocking mode so that the write() is blocked until nbsp
    * has read enough from the pipe to make space for the write(). Otherwise
-   * we will get errors like "Resource tempoarily unvailable" 
+   * we will get errors like "Resource temporarily unavailable" 
    * and loss of packets when the pipe gets full.
    */
   fd = open(g.opt_nbsp_infifo_fpath, O_WRONLY);
@@ -213,6 +288,20 @@ static void close_nbsp_infifo(void) {
 static int process_file(void) {
 
   int status = 0;
+
+  status = send_to_fifo();
+  
+  return(status);
+}
+
+static int send_to_fifo(void) {
+  /*
+   * Join all the arguments in one string and write the result to
+   * the fifo.
+   */
+  int status = 0;
+
+  status = write(g.nbsp_infifo_fd, g.
 
   return(status);
 }

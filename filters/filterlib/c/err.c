@@ -100,7 +100,9 @@ void log_errx(int e, char *fmt, ...){
 
   va_end(ap);
 
-  exit(e);
+  
+  if(e != 0)
+    exit(e);
 }
 
 void log_err(int e, char *fmt, ...){
