@@ -307,6 +307,8 @@ static int process_file(void) {
 
   status = create_finfo();
 
+  sleep(7);
+
   if(status == 0)
     status = send_finfo();
 

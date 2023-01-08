@@ -9,5 +9,7 @@ in nbspinsert.tcl was to use a separate file as a lock file and not the fifo
 itself, which is what this program makes unnecesary.
 
 The files fifo.{h,c} are copies of those files from npemwinsert.
+The files "nutil.{h,c}" are copied from util.{h,c} in "src".
+
 Other files required for compilation are copied from the "filterlib/c"
 directory by the configure.sh script (err.{h,c}, utils.{h,c}, config.h).

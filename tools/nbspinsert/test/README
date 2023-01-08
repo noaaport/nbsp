@@ -1,0 +1,20 @@
+jan 2023
+
+nbspinsert-test.c differs from nbspinsert.c only in the addition
+of a sleep() call to test the locking mechanism of the fifo (for writing).
+
+To execute the test, first create the fifo
+
+mkfifo infeed.fifo
+
+Then in one terminal execute
+
+nbspinsert -f infeed.fifo 0 0 0 0 0 fname fpath
+
+in another terminal
+
+nbspinsert -f infeed.fifo 1 1 1 1 1 fname1 fpath1
+
+The reader also prints the data received as a consistency check.
+
+
