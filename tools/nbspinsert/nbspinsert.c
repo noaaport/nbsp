@@ -43,6 +43,7 @@
  *        For an example of how to use this script see the "craftinsert" script
  *        and "craftinsert.README".
  */
+#include <errno.h> /* used in delete_fpath() */
 #include <libgen.h> /* basename */
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,7 +64,9 @@
 /* defaults */
 #define NBSP_INFIFO_FPATH	"/var/run/nbsp/infeed.fifo"
 #define FINFO_BUFFER_SIZE 1024 /* see create_finfo() */
-
+#define FPATH_INPUT_BUFFER_SIZE 1024
+#define FPATH_MODE 0666 /* mode_t of fpath if we create it (save_fpath() */
+			  
 static struct {
   char *seq;
   char *type;
@@ -75,13 +78,14 @@ static struct {
   char *opt_nbsp_infifo_fpath; /* [-f] */
   int opt_C;            /* check and exit */
   int opt_background;
+  int opt_i;
   /* variables */
   int nbsp_infifo_fd;
   char finfo_buffer_s[FINFO_BUFFER_SIZE]; /* static store for the finfo data */
   char *finfo_buffer_d; /* dynamic if the static is not big enough */
   char *finfo_data; /* pointer to the finfo data */
   size_t finfo_data_size; /* finfo + the initial four bytes */
-} g = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0,
+} g = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0,
        -1, "", NULL, NULL, 0};
 
 static void cleanup(void);
@@ -93,12 +97,13 @@ static int process_file(void);
 static int create_finfo(void);
 static void delete_finfo(void);
 static int send_finfo(void);
-/* static int save_fpath(void); */
+static int save_fpath(void);
+static void delete_fpath(void);
 
 int main(int argc, char **argv){
 
-  char *optstr = "bCf:";
-  char *usage = "nbspinsert [-C] [-b] [-f <fifo>] <finfo>";
+  char *optstr = "bCf:i";
+  char *usage = "nbspinsert [-C] [-b] [-f <fifo>] [-i] <finfo> [< file]";
   int c;
   int status = 0;
   
@@ -118,6 +123,9 @@ int main(int argc, char **argv){
     case 'f':
       g.opt_nbsp_infifo_fpath = optarg;
       break;
+    case 'i':
+      g.opt_i = 1;
+      break;
     case 'h':
     default:
       status = 1;
@@ -130,7 +138,7 @@ int main(int argc, char **argv){
     set_usesyslog();
 
   if(optind != argc - 7)
-    log_errx(1, "%s %s", "Not arguments.", usage);
+    log_errx(1, "%s %s", "Not enugh arguments.", usage);
 
   g.seq = argv[optind++];
   g.type = argv[optind++];
@@ -306,12 +314,20 @@ static int process_file(void) {
 
   int status = 0;
 
+  if(g.opt_i == 1){
+    status = save_fpath();
+    if(status != 0)
+      return(1);
+  }
+
   status = create_finfo();
-
-  if(status == 0)
+  if(status == 0){
     status = send_finfo();
-
-  delete_finfo();
+    delete_finfo();
+  }
+  
+  if((status != 0) && (g.opt_i == 1))
+    delete_fpath();
   
   return(status);
 }
@@ -437,13 +453,57 @@ static int send_finfo(void) {
   return(status);
 }
 
-/*
- * static int save_fpath(void) {
- *
+static int save_fpath(void) {
+ /*
  * This function reads the data from stdin and writes it to the fpath.
- *
+ * Read from stdin until eof (nread == 0), and write to the fpath.
+ */
    int status = 0;
+   int fd = -1;
+   ssize_t nwrite;
+   ssize_t nread;
+   char input_buffer[FPATH_INPUT_BUFFER_SIZE];
+   size_t input_buffer_size = FPATH_INPUT_BUFFER_SIZE;
+     
+   fd = open(g.fpath, O_WRONLY | O_CREAT, FPATH_MODE);
+   if(fd == -1){
+     log_err(0, "%s %s", "Error opening", g.fpath);
 
+     return(1);
+   }
+
+   nread = read(STDIN_FILENO, input_buffer, input_buffer_size);
+   while((nread > 0) && (status == 0)){
+     nwrite = write(fd, input_buffer, nread);
+
+     /* we assume that fpath is a regular file */
+     if(nwrite != nread) {
+       log_err(0, "%s %s", "Error writing to fpath", g.fpath);
+       status = 1;
+     }
+
+     if(status == 0)
+       nread = read(STDIN_FILENO, input_buffer, input_buffer_size);
+   }
+
+   (void)close(fd);
+   
+   if(nread == -1){
+     log_err(0, "%s", "Error reading from stdin");
+     status = 1;
+   }
+   
+   if(status != 0)
+     delete_fpath();
+   
    return(status);
-* }
-*/   
+}
+
+static void delete_fpath(void) {
+
+  int status = 0;
+  
+  status = unlink(g.fpath);
+  if((status != 0) && (errno != ENOENT))
+    log_err(0, "%s %s", "Error removing fpath", g.fpath);
+}
