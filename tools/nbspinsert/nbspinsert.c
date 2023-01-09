@@ -93,6 +93,7 @@ static int process_file(void);
 static int create_finfo(void);
 static void delete_finfo(void);
 static int send_finfo(void);
+/* static int save_fpath(void); */
 
 int main(int argc, char **argv){
 
@@ -317,68 +318,92 @@ static int process_file(void) {
 
 static int create_finfo(void) {
   /*
-   * The data that is sent to the infeed fifo is the "finfo" string,
-   * preceeded by the (four bytes [big endian]) size of the finfo string.
-   * We call this the "finfo data".
+   * The format of the packet sent to the fifo is a file info (finfo)
+   * string with the format
+   *
+   * "%u %d %d %d %d %s %s\n" seq type cat code npchindex fname fpath
+   *
+   * and this preceeded by four bytes (in big endian order) indicating
+   * the size of that string, not including the final '\n'; i.e.,
+   * <bytes0-3><finfo>\n.
    *
    * This function joins all the arguments received by the program
-   * in one string (the finfo).
+   * in one string and builds up the finfo data.
    */
   int status = 0;
   int n;
   char *p = NULL;
   size_t p_size;
-  size_t finfo_size; /* size of the finfo string */
+  size_t finfo_str_size; /* size of the finfo string without the '\n' */
+  size_t finfo_size; /* size required to hold the <bytes0-3><finfo>\n */
 
-  finfo_size = strlen(g.seq) + strlen(g.fname) + strlen(g.fpath);
-  finfo_size += 3*4; /* maximum is three digits per variable - overestimate */
-  finfo_size += 6; /* spaces in between */
-  ++finfo_size; /* ending \n */
-  ++finfo_size; /* '\0' */
-  p_size = finfo_size + 4; /* the initial four bytes */
+  /* First try the static storage */
+  p = &g.finfo_buffer_s[4];
+  p_size = FINFO_BUFFER_SIZE - 4;  
 
-  if(p_size <= FINFO_BUFFER_SIZE) {
-    p = &g.finfo_buffer_s[0];
-  } else {
-    g.finfo_buffer_d = malloc(p_size);
-    p = g.finfo_buffer_d;
-    if(p == NULL) {
-      log_err(0, "%s", "Error concatenating input parameters.");
-      status = 1;
-    }
-  }
-    
-  if(status != 0)
-    return(status);
-
-  /* n gives the actual length of the finfo string */
-  n = snprintf(&p[4], finfo_size, "%s %s %s %s %s %s %s\n",
+  /* The terminating \0 will be replaced by the \n at the end */
+  n = snprintf(p, p_size, "%s %s %s %s %s %s %s",
 	       g.seq, g.type, g.cat, g.code, g.npchidx, g.fname, g.fpath);
 
   if(n < 0) {
     log_errx(0, "%s", "Error from snprintf.");
-    status = 1;
-  } else if((size_t)n >= finfo_size) {
-    log_errx(0, "%s", "Error (BUG) from snprintf.");
-    status = 1;
+    return(1);
   }
-  
-  if(status != 0)
-    goto End;
 
-  /* Set the finfo_size to the actual length (plus the ending '\0') */
-  finfo_size = (size_t)n + 1;
-    
-  if(finfo_size > UINT32_MAX) {
+  /* We now know */
+  finfo_str_size = n;
+  finfo_size = n + 1 + 4; /* size of the <bytes0-3><finfo>\n data */
+
+  if((size_t)n < p_size) {
+    /* We are done */
+    /* Replace the \0 by a cr */    
+    p[n] = '\n';
+
+    /* reset p to the start of the storage */
+    p = &g.finfo_buffer_s[0];
+  } else {
+    /* Use dynamic storage */
+    g.finfo_buffer_d = malloc(finfo_size);
+    if(g.finfo_buffer_d == NULL) {
+      log_err(0, "%s", "Error concatenating input parameters.");
+
+      return(1);
+    }
+
+    p = &g.finfo_buffer_d[4];
+    p_size = finfo_size - 4;
+
+    /* The terminating \0 will be replaced by the \n at the end */
+    n = snprintf(p, p_size, "%s %s %s %s %s %s %s",
+		 g.seq, g.type, g.cat, g.code, g.npchidx, g.fname, g.fpath);
+
+    if(n < 0) {
+      log_errx(0, "%s", "Error from snprintf.");
+      status = 1;
+    } else if((size_t)n >= p_size) {
+      /* This should not happen */
+      log_errx(0, "%s", "Error from snprintf - BUG in nbspinsert.");
+      status = 1;
+    }
+
+    if(status != 0)
+      goto End;
+
+    /* Replace the \0 by cr and reset p to the start of the storage */
+    p[n] = '\n';
+    p = &g.finfo_buffer_d[0];
+  }
+
+  if(finfo_str_size > UINT32_MAX) {
     log_errx(0, "%s", "finfo too large.");
     status = 1;
     goto End;
   } else {
-    pack_uint32(p, (uint32_t)finfo_size, 0);
+    pack_uint32(p, (uint32_t)finfo_str_size, 0);
   }
 
   g.finfo_data = p;
-  g.finfo_data_size = n + 4;
+  g.finfo_data_size = finfo_size;
 
  End:
 
@@ -411,3 +436,14 @@ static int send_finfo(void) {
 
   return(status);
 }
+
+/*
+ * static int save_fpath(void) {
+ *
+ * This function reads the data from stdin and writes it to the fpath.
+ *
+   int status = 0;
+
+   return(status);
+* }
+*/   

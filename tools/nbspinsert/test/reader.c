@@ -50,17 +50,23 @@ int main(void) {
     /* check */
     fprintf(stdout, "%u\n", finfo_size);
     
-    n = read(fd, finfo, finfo_size);
+    n = read(fd, finfo, finfo_size + 1);
     
     /* check */
     fprintf(stdout, "%zu\n", strlen(finfo));
-    
+
     /* check */
+    if(finfo[finfo_size] != '\n')
+      fprintf(stdout, "%s\n", "Last character is not cr");
+    else
+      finfo[finfo_size] = '\0';
+    
     fprintf(stdout, "%s", finfo);
+
+    fflush(stdout);
   }
   
   close(fd);
 
   return(0);
 }
-
