@@ -7,7 +7,7 @@
  *
  * Usage: nbspinsert -i [-f nbspinfifo] finfo < file
  *        nbspinsert [-f nbspinfifo] finfo
- *        nbspinsert [-f nbspinfifo] < file_with_finfolist
+ *        nbspinsert [-f nbspinfifo] < file_with_finfolist (not implemented)
  * where
  *
  * finfo = seq type cat code npchidx fname fpath
@@ -24,6 +24,7 @@
  * on stdin (like a filter does). In all cases, the fpath should be a
  * "spool file" path, that is, a path to a file in the spool directory with
  * the usual convention used by nbsp.
+ * (The third form is not implemented in this C version of the program.)
  *
  * If [-f] is not given to specify the location of the nbspd.infifo file,
  * then the default nbsp is used (as set in defaults.h.in).
@@ -65,7 +66,7 @@
 #define NBSP_INFIFO_FPATH	"/var/run/nbsp/infeed.fifo"
 #define FINFO_BUFFER_SIZE 1024 /* see create_finfo() */
 #define FPATH_INPUT_BUFFER_SIZE 1024
-#define FPATH_MODE 0666 /* mode_t of fpath if we create it (save_fpath() */
+#define FPATH_MODE 0666 /* mode_t of fpath if it is created (save_fpath() */
 			  
 static struct {
   char *seq;
@@ -89,7 +90,7 @@ static struct {
        -1, "", NULL, NULL, 0};
 
 static void cleanup(void);
-static void check(void);
+static void check_options(void);
 static int validate_input(void);
 static int open_nbsp_infifo(void);
 static void close_nbsp_infifo(void);
@@ -108,6 +109,7 @@ int main(int argc, char **argv){
   int status = 0;
   
   set_progname(basename(argv[0]));
+  atexit(cleanup);
 
   /* defaults */
   g.opt_nbsp_infifo_fpath = NBSP_INFIFO_FPATH;
@@ -134,11 +136,16 @@ int main(int argc, char **argv){
     }
   }
 
+  if (g.opt_C == 1) {
+    check_options();
+    return(0);
+  }
+
   if(g.opt_background == 1)
     set_usesyslog();
 
   if(optind != argc - 7)
-    log_errx(1, "%s %s", "Not enugh arguments.", usage);
+    log_errx(1, "%s %s", "Not enough arguments.", usage);
 
   g.seq = argv[optind++];
   g.type = argv[optind++];
@@ -147,11 +154,6 @@ int main(int argc, char **argv){
   g.npchidx = argv[optind++];
   g.fname = argv[optind++];
   g.fpath = argv[optind++];
-    
-  if (g.opt_C == 1) {
-    check();
-    return(0);
-  }
 
   status = validate_input();
   if(status != 0) {
@@ -161,8 +163,6 @@ int main(int argc, char **argv){
      */
     return(status);
   }
-
-  atexit(cleanup);
 
   status = open_nbsp_infifo();
   
@@ -180,11 +180,12 @@ static void cleanup(void) {
   delete_finfo();
 }
 
-static void check(void){
+static void check_options(void){
 
   fprintf(stdout, "opt_nbsp_infifo_fpath: %s\n", g.opt_nbsp_infifo_fpath);
   fprintf(stdout, "opt_C: %d\n", g.opt_C);
   fprintf(stdout, "opt_background: %d\n", g.opt_background);
+  fprintf(stdout, "opt_i: %d\n", g.opt_i);
 }
 
 static int validate_input(void) {
