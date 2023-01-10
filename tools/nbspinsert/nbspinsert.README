@@ -13,3 +13,18 @@ The files "nutil.{h,c}" are copied from util.{h,c} in "src".
 
 Other files required for compilation are copied from the "filterlib/c"
 directory by the configure.sh script (err.{h,c}, utils.{h,c}, config.h).
+
+The variant of the program using the [-i] option to read the
+finfo parameters from stdin (implemented in the tcl version) is
+not implemented in this C version. As noted in nbspinsert.c,
+this variation can be easily implemented by a script following
+this tcl snipet:
+
+while {[gets stdin finfo] >= 0} {
+   # check finfo if desired; e.g.
+   if {$finfo eq ""} {
+     continue;
+   }
+   eval exec ./nbspinsert <options> [split $finfo " "]
+}
+

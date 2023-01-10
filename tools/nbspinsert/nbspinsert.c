@@ -24,7 +24,16 @@
  * on stdin (like a filter does). In all cases, the fpath should be a
  * "spool file" path, that is, a path to a file in the spool directory with
  * the usual convention used by nbsp.
- * (The third form is not implemented in this C version of the program.)
+ * The third form is not implemented in this C version of the program.
+ * It can be easily implemented with a script following this snipet:
+ *
+ * while {[gets stdin finfo] >= 0} {
+ *   # check finfo if desired; e.g.
+ *   if {$finfo eq ""} {
+ *     continue;
+ *   }
+ *   eval exec ./nbspinsert <options> [split $finfo " "]
+ * }
  *
  * If [-f] is not given to specify the location of the nbspd.infifo file,
  * then the default nbsp is used (as set in defaults.h.in).
