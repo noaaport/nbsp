@@ -50,7 +50,30 @@ proc err {s} {
 }
 
 proc proc_nbsp {ppath} {
-
+    #
+    # This script executes "nbspinsert", which was originally a tcl script.
+    # The script was invoked as
+    #
+    # exec nbspinsert $finfo
+    #
+    # and therefore finfo was passed as a string and nbspinsert was
+    # responsible for splitting the string into the various elements.
+    # In jan2023 the nbspinsert program was replaced by a C program
+    # (to ease the implementation of locking the fifo) and that new
+    # nbspinsert expects the elements of finfo to be passed as
+    # separate arguments, not as one string; i.e.
+    #
+    # nbspinsert seq type cat code npchidx fname fpath
+    #
+    # Whence the invocation of this version of nbspinsert must be done
+    # now with eval if we insist on using a finfo string, or call it
+    # with separate arguments
+    #
+    # eval exec nbspinsert finfo
+    # exec nbspinsert seq type cat code npchidx fname fpath
+    #
+    # We use the latter.
+    #
     global craftinsert;
 
     set spooldir $craftinsert(nbspd_spooldir);
@@ -85,16 +108,23 @@ proc proc_nbsp {ppath} {
     
     append fname $station "_" $wmoid;
     append fbasename $fname "." $dhm "_" $seq;
-    
     set fpath [file join $spooldir $station $fbasename];
-    set finfo "$seq 0 0 0 0 $fname $fpath";
+
+    ##  finfo no longer used
+    # set finfo "$seq 0 0 0 0 $fname $fpath";
+    set type 0;
+    set cat 0;
+    set code 0;
+    set npchidx 0;
 
     set oldmask [umask];
     umask $craftinsert(umask);
 
     if {$craftinsert(mvtospool) == 0} {
 	set status [catch {
-	    exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
+	    # exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
+	    exec nbspinsert -i -f $craftinsert(nbspd_infifo) \
+		$seq $type $cat $code $npchidx $fname $fpath < $ppath;
 	    if {$craftinsert(delete) == 1} {
 		file delete $ppath;
 	    }
@@ -108,7 +138,9 @@ proc proc_nbsp {ppath} {
 
 	file rename -force $ppath $fpath;
 	set status [catch {
-	    exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+	    # exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
+	    exec nbspinsert -f $craftinsert(nbspd_infifo) \
+		$seq $type $cat $code $npchidx $fname $fpath < $ppath;
 	} errmsg];
 
 	if {$status != 0} {
