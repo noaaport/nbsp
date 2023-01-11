@@ -1,0 +1,14 @@
+Wed Jan 11 19:41:43 AST 2023
+This note is borrowed from npemwin, which applies to nbsp as well,
+with a change in port, 8015.
+
+Fri 23 Dec 2022 09:46:46 PM AST
+
+AlmaLinux (or redhat clones) comes with the firewall enabled,
+all ports closed (or close to all), in particular port 8016 which
+is used but the npemwin http.
+
+These commands open it:
+
+# firewall-cmd --zone=public --add-port 8016/tcp --permanent
+# firewall-cmd --reload
