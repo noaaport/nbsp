@@ -1,0 +1,10 @@
+#
+# $Id$
+#
+The tclx package is required by the scripts
+
+ craftinsert
+ nbspinsert
+
+The nbspinsert script has been substituted (jan2023) by a C program
+so tclx is required only if craftinsert is used.
