@@ -4,6 +4,7 @@ The script was replaced by the C version "tools/nbspinsert" mainly
 to be able to use flock() on the infeed fifo and avoid the clumsy
 use of the tclx flock (which required the auxiliary lock file) as
 explained in the places mentioned below.
+(NOTICE in particular, that the tclx library package is nort required.)
 
 aug2022
 
@@ -17,3 +18,7 @@ july2022
 The script nbspinsert was revised as explained in:
 - the note in the function sendtof() in the nbspinsert script
 - the "nbspinsert.README" file in "dev-notes/nbspinsert".
+NOTE: this revision to use locking requires the tclx libary package,
+which is not installed by the default nbsp package.
+
+

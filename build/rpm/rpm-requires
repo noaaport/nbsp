@@ -2,7 +2,6 @@
 # (required-pkgs.README)
 #
 # tk
-# tclx
 # mapserver
 #
 # However, in centos-7 rpm detects the scripts that use "wish" and refuses
