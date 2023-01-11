@@ -140,7 +140,7 @@ proc proc_nbsp {ppath} {
 	set status [catch {
 	    # exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
 	    exec nbspinsert -f $craftinsert(nbspd_infifo) \
-		$seq $type $cat $code $npchidx $fname $fpath < $ppath;
+		$seq $type $cat $code $npchidx $fname $fpath;
 	} errmsg];
 
 	if {$status != 0} {
