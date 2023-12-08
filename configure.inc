@@ -103,8 +103,8 @@ case $os in
 	   DB_LIB="db-5.3"
 	elif [ $flavor = debian ]
 	then
-	   # debian 10 or 11
-	   if [ $debian = "10" -o $debian = "11" ]
+	   # debian 11 or 12
+	   if [ $debian = "11" -o $debian = "12" ]
 	   then
 		TCL_INCDIR="-I /usr/include/tcl8.6"
 	   	TCL_LIB="tcl8.6"
