@@ -152,6 +152,17 @@ ssh::rexec_nopop {host script}
     	ssh::push $host $script;
     	ssh::send_exit $host;
 
+	Note: After calling this function, the caller should
+	call either pop_all, or the equivalent of what pop_all does, e.g.,
+
+	while {[::ssh::pop_line $slave line] >= 0} {
+	    puts $line;
+    	}
+
+	so that it can retrieve any possible errors from ssh (via tcl)
+	even in the case that we do not expect any data from
+	the remote (see e.g. ex-8a, ex-8b).
+
 ssh::get_filehandle {host}
 
 	Returns the filehandle of the connection to the remote host's tclsh.

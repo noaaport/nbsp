@@ -12,7 +12,7 @@ EXAMPLES = ex-1.tcl \
 	ex-5.tcl \
 	ex-6.tcl \
 	ex-7a.tcl ex-7b.tcl \
-	ex-8.tcl \
+	ex-8a.tcl ex-8b.tcl \
 	ex-9.tcl \
 	ex-10.tcl
 
