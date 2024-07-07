@@ -1,0 +1,15 @@
+# This is hot I had the pkg-deps file originally.
+# Statinng explicitly the version number is not
+# necessary (and not rquired by nbsp) and the
+# quotes are also unecessary. That led to the current
+# form of pkg-deps (jul2024).
+
+deps: {
+  tcl86: {origin: "lang/tcl86", version: "8.6.1"},
+  tcllib: {origin: "devel/tcllib", version: "1.16"},
+  db5: {origin: "databases/db5", version: "5.3.28"},
+  png: {origin: "graphics/png", version: "1.5.18"},
+  netpbm: {origin: "graphics/netpbm", version: "10.35.92"},
+  gifsicle: {origin: "graphics/gifsicle", version: "1.83"},
+  gnuplot: {origin: "math/gnuplot", version: "5.4"}
+}
