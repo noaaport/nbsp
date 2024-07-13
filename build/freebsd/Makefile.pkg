@@ -6,7 +6,7 @@
 .include "pkg-info.mk"
 
 # where this file is located
-pkgng_builddir = build/bsdng
+pkgng_builddir = build/freebsd
 
 # pkgng settings
 pkg_metadir = pkg

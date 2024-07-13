@@ -10,7 +10,7 @@ HOURLYCONF=hourly-cleanup.conf-freebsd
 CLEANUP=nbspcleanup.tcl
 STARTCLEANCONF=start-cleanup.conf-freebsd
 STARTSTOPRC=startstop.rc-freebsd
-POSTINSTALLSRC=../build/bsdng/pkg-postinstall.in
+POSTINSTALLSRC=../build/freebsd/pkg-postinstall.in
 SYSTEMDCONF=
 
 case $os in

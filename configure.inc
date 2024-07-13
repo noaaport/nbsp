@@ -59,14 +59,17 @@ case $os in
 	;;
     NetBSD)
 	CCWFLAGS="-Wall -Wno-char-subscripts -fno-strict-aliasing"
-	PREFIX=usr/pkg
+	# add the next ones to avoid spurious warnings about strlen
+	CCWFLAGS="${CCWFLAGS} -Wno-stringop-overflow -Wno-stringop-truncation"
+	#PREFIX=usr/pkg
         TCL_INCDIR="-I /usr/pkg/include"
-        TCL_LIB="tcl84"
+        TCL_LIB="tcl86"
         TCLSH=/usr/pkg/bin/tclsh
 	WISH=/usr/pkg/bin/wish
-        DB_INCDIR="-I /usr/pkg/include/db4"
-        DB_LIB="db4-4.4"
-	DB_BINDIR=/usr/pkg/bin/db44
+        DB_INCDIR="-I /usr/pkg/include/db5"
+        DB_LIB="db5"
+	# See the note in build/netbsd about this setting
+	DB_BINDIR=/usr/pkg/bin/db5
         LOCAL_LIBDIR="-L /usr/pkg/lib"
 	LOCAL_INCDIR="-I /usr/pkg/include"
         ;;
