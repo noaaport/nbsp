@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+.include "../../Makefile.inc"
+.include "../../VERSION"
+.include "pkginfo.mk"
+
+package_version = ${version}_${package_build} 
+package_origin = ${package_category}/${name}
+package_name = ${name}-${package_version}
+package_file = ${package_name}.${package_ext}
+
+option_files = -f pkg-plist \
+	-c pkg-comment \
+	-d pkg-desc \
+	-k pkg-deinstall \
+	-i pkg-postinstall \
+	-D ${package_display_file}
+
+default: build
+
+../../Makefile: ../../Makefile.in
+	cd ../..; ./configure.sh
+
+build: ../../Makefile
+	cd ../..; ${MAKE}
+
+install: build
+	rm -rf pkg
+	install -d pkg
+	cd pkg; install -d `cat ../pkg-dirlist`
+	cd ../..; ${MAKE} DESTDIR=`pwd`/build/bsd/pkg \
+		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
+
+package: install
+	./mk-pkg-buildinfo.sh > ${package_buildinfo_file}
+	pkg_create -U -I ${DESTDIR} -p `pwd`/pkg -B ${package_buildinfo_file} \
+	${option_files} ${package_file}
+
+clean:
+	rm -f *~
+	rm -f -r pkg
+	rm -f ${package_file} ${package_buildinfo_file}
+	cd ../..; ${MAKE} clean

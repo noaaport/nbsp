@@ -1,4 +1,4 @@
-# This is hot I had the pkg-deps file originally.
+# This is how I had the pkg-deps file originally.
 # Statinng explicitly the version number is not
 # necessary (and not rquired by nbsp) and the
 # quotes are also unecessary. That led to the current

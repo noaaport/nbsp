@@ -1,0 +1,199 @@
+#
+# nbsp user/group, directories owned by user, and directories owned by root.
+#
+user=noaaport
+home=/var/noaaport
+#
+userdirs="/var/run/nbsp
+/var/log/noaaport
+/var/log/nbsp
+/var/log/nbsp/www
+/var/noaaport
+/var/noaaport/nbsp
+/var/noaaport/nbsp/db
+/var/noaaport/nbsp/dev
+/var/noaaport/nbsp/spool
+/var/noaaport/nbsp/cspool
+/var/noaaport/nbsp/tmp
+/var/noaaport/nbsp/inv
+/var/noaaport/nbsp/rss
+/var/noaaport/nbsp/recover
+/var/noaaport/nbsp/stats
+/var/noaaport/data
+/var/noaaport/data/rst
+/var/noaaport/data/digatmos
+/var/noaaport/data/digatmos/nexrad/nids
+/var/noaaport/data/digatmos/nexrad/craft
+/var/noaaport/data/gempak
+/var/noaaport/data/gis
+/var/noaaport/data/metar
+/var/noaaport/data/msg
+/var/noaaport/data/cap
+/var/noaaport/data/upperair
+/var/noaaport/data/grib
+/var/noaaport/data/track
+/var/noaaport/data/weatherscope
+/var/noaaport/data/inv
+/var/noaaport/data/inv/rst
+/var/noaaport/data/inv/digatmos
+/var/noaaport/data/inv/gempak
+/var/noaaport/data/inv/gis
+/var/noaaport/data/inv/cap
+/var/noaaport/archive
+/var/noaaport/archive/data
+/var/noaaport/archive/data/digatmos
+/var/noaaport/archive/data/metar
+/var/noaaport/archive/data/spool
+/var/noaaport/archive/inv
+/var/noaaport/archive/inv/digatmos
+/var/noaaport/www"
+#
+rootdirs="/usr/local/etc/nbsp/defaults
+/usr/local/etc/nbsp/site
+/usr/local/etc/nbsp/defaults/nbspd.conf.d
+/usr/local/etc/nbsp/rc.d
+/usr/local/etc/nbsp/rc.d/rst
+/usr/local/etc/nbsp/rc.d/da
+/usr/local/etc/nbsp/rc.d/gp
+/usr/local/etc/nbsp/rc.d/nbsp
+/usr/local/etc/nbsp/rc.d/emwin
+/usr/local/etc/nbsp/rc.d/nntp
+/usr/local/etc/nbsp/rc.d/rstnntp
+/usr/local/etc/nbsp/rc.d/ldm
+/usr/local/etc/nbsp/rc.d/pan
+/usr/local/etc/nbsp/rc.d/cap
+/usr/local/etc/nbsp/rc.d/grib
+/usr/local/etc/nbsp/rc.d/net
+/usr/local/share/nbsp/defaults
+/usr/local/share/nbsp/site
+/usr/local/libexec/nbsp/site
+/usr/local/libexec/nbsp/tclhttpd/site"
+#
+# Directories for optional files
+#
+docdir=/usr/local/share/doc/nbsp
+confdir=/usr/local/etc/nbsp
+sharedir=/usr/local/share/nbsp
+rcdir=/usr/local/etc/rc.d
+nexraddir=/var/noaaport/data/digatmos/nexrad
+
+# user/group
+pw groupadd $user -q
+status=$?
+if [ $status -ne 65 -a $status -ne 0 ]
+then
+    echo "Could not create group: $user"
+    exit 1
+fi
+#
+pw useradd $user -q -g $user -d $home
+status=$?
+if [ $status -ne 65 -a $status -ne 0 ]
+then
+    echo "Could not create user: $user"
+    exit 1
+fi
+
+# See note at the end of the file for usage of [-e] instead of [!-e]
+for d in $userdirs
+do
+  [ -e $d ] || install -d -m 755 -o $user -g $user $d
+done
+
+for d in $rootdirs
+do
+  [ -e $d ] || install -d -m 755 $d
+done
+
+#
+# install optional files from doc directory
+#
+install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
+
+savedir=`pwd`
+cd $nexraddir
+install -m 0644 $docdir/leveld.cfg-sample config.cfg
+[ -e grlevel3.cfg ] || ln -s config.cfg grlevel3.cfg
+#
+cd $nexraddir/nids
+install -m 0644 $docdir/level3.cfg-sample config.cfg
+[ -e grlevel3.cfg ] || ln -s config.cfg grlevel3.cfg
+#
+cd $nexraddir/craft
+install -m 0644 $docdir/level2.cfg-sample config.cfg
+[ -e grlevel2.cfg ] || ln -s config.cfg grlevel2.cfg
+cd $savedir
+
+#
+# configure default
+#
+cd $confdir/dist
+for file in README CONFIGURING \
+    gempak.env-sample \
+    *.conf-sample \
+    *.rc-sample \
+    *.def-sample
+do
+  name=${file%%"-sample"}
+  cp $file ../$name
+done
+
+for file in *-defaults
+do
+  name=${file%%"-defaults"}
+  cp $file ../defaults/$name
+done
+
+for file in *-templates.tgz
+do
+  tar -C ../defaults -o -p -xzf $file
+done
+
+#
+# shared files
+#
+cd $sharedir/dist
+for file in *-share.tgz
+do
+  tar -C ../defaults -xzf $file
+done
+
+#
+# www and tclhttpd
+#
+cd /usr/local/share/doc/nbsp
+tar -C /var/noaaport/www -x -z -f www.tgz
+tar -C /var/noaaport/www/htdocs/pub -x -z -f gis-bundle-www-templates.tgz
+cd /var/noaaport/www
+chown -R $user:$user *
+cd htdocs/pub
+#
+# Note: If we reverse the test [ ! -e ...] && ....
+# the statement will return 1 if rst exists and pkg_add will
+# think that the script is returning an error.
+#
+[ -e "rst" ] || ln -s /var/noaaport/data/rst rst
+[ -e "digatmos" ] || ln -s /var/noaaport/data/digatmos digatmos
+[ -e "gempak" ] || ln -s /var/noaaport/data/gempak gempak
+[ -e "grib" ] || ln -s /var/noaaport/data/grib grib
+[ -e "msg" ] || ln -s /var/noaaport/data/msg msg
+[ -e "cap" ] || ln -s /var/noaaport/data/cap cap
+[ -e "track" ] || ln -s /var/noaaport/data/track track
+[ -d "metarplot" ] || install -d -m 755 -o $user -g $user metarplot
+[ -d "statplot" ] || install -d -m 755 -o $user -g $user statplot
+[ -d "radmap" ] || install -d -m 755 -o $user -g $user radmap
+[ -d "satmap" ] || install -d -m 755 -o $user -g $user satmap
+[ -d "npstats" ] || install -d -m 755 -o $user -g $user npstats
+[ -d "weatherscope/conf" ] || \
+    install -d -m 755 -o $user -g $user weatherscope/conf
+[ -d "weatherscope/client" ] || \
+    install -d -m 755 -o $user -g $user weatherscope/client
+[ -e "weatherscope/data" ] || \
+    ln -s /var/noaaport/data/weatherscope weatherscope/data
+[ -d "gis/maps/defaults" ] || \
+    install -d -m 755 -o $user -g $user gis/maps/defaults
+[ -d "gis/maps/site" ] || \
+    install -d -m 755 -o $user -g $user gis/maps/site
+[ -e "gis/data" ] || ln -s /var/noaaport/data/gis gis/data
+[ -e "gis/legends" ] || \
+    ln -s /usr/local/etc/nbsp/defaults/gis/legends gis/legends
