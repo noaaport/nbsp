@@ -3,19 +3,23 @@
 #
 .include "../../Makefile.inc"
 .include "../../VERSION"
-.include "pkginfo.mk"
 
+package_ext = tgz
+package_build != cat pkg-build
 package_version = ${version}_${package_build} 
-package_origin = ${package_category}/${name}
 package_name = ${name}-${package_version}
 package_file = ${package_name}.${package_ext}
+#
+# This file is produced by the mk-pkg-buildinfo script
+#
+package_buildinfo_file = pkg-buildinfo
 
 option_files = -f pkg-plist \
 	-c pkg-comment \
 	-d pkg-desc \
 	-k pkg-deinstall \
 	-i pkg-postinstall \
-	-D ${package_display_file}
+	-D pkg-display
 
 default: build
 
