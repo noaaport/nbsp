@@ -17,8 +17,9 @@ package_buildinfo_file = pkg-buildinfo
 option_files = -f pkg-plist \
 	-c pkg-comment \
 	-d pkg-desc \
-	-k pkg-deinstall \
+	-k pkg-postdeinstall \
 	-i pkg-postinstall \
+	-B ${package_buildinfo_file} \
 	-D pkg-display
 
 default: build
@@ -33,12 +34,12 @@ install: build
 	rm -rf pkg
 	install -d pkg
 	cd pkg; install -d `cat ../pkg-dirlist`
-	cd ../..; ${MAKE} DESTDIR=`pwd`/build/bsd/pkg \
+	cd ../..; ${MAKE} DESTDIR=`pwd`/build/netbsd/pkg \
 		PKGCONFDIR=/dist PKGSHAREDIR=/dist install
 
 package: install
 	./mk-pkg-buildinfo.sh > ${package_buildinfo_file}
-	pkg_create -U -I ${DESTDIR} -p `pwd`/pkg -B ${package_buildinfo_file} \
+	pkg_create -U -I ${DESTDIR} -p `pwd`/pkg \
 	${option_files} ${package_file}
 
 clean:
