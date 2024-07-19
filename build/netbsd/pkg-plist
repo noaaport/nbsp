@@ -1,6 +1,6 @@
 @owner root
 @group wheel
-@pkgdep tcl86
+@pkgdep tcl>=8.6
 @pkgdep tcllib
 @pkgdep db5
 @pkgdep png
