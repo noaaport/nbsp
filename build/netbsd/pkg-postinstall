@@ -77,22 +77,36 @@ sharedir=/usr/local/share/nbsp
 rcdir=/usr/local/etc/rc.d
 nexraddir=/var/noaaport/data/digatmos/nexrad
 
-# user/group
-pw groupadd $user -q
+# user/group (this part is different then freebsd)
+groupinfo -e $user
 status=$?
-if [ $status -ne 65 -a $status -ne 0 ]
+if [ $status -ne 0 ]
 then
-    echo "Could not create group: $user"
-    exit 1
+    groupadd $user > /dev/null 2>&1
+    status=$?
+    if [ $status -ne 0 ]
+    then
+	echo "Could not create group: $user"
+	exit 1
+    fi
 fi
 #
-pw useradd $user -q -g $user -d $home
+userinfo -e $user
 status=$?
-if [ $status -ne 65 -a $status -ne 0 ]
+if [ $status -ne 0 ]
 then
-    echo "Could not create user: $user"
-    exit 1
+    useradd -g $user $user > /dev/null 2>&1
+    status=$?
+    if [ $status -ne 0 ]
+    then
+	echo "Could not create user: $user"
+	exit 1
+    fi
 fi
+
+#
+# continue as in freebsd
+#
 
 # See note at the end of the file for usage of [-e] instead of [!-e]
 for d in $userdirs
