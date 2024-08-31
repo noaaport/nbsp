@@ -9,6 +9,9 @@ case $os in
     FreeBSD) 
         # use the defaults
 	;;
+    NetBSD) 
+        # use the defaults
+	;;
     OpenBSD) 
         # use the defaults
 	;;
