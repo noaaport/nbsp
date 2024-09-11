@@ -1,0 +1,18 @@
+Tue Sep 10 22:06:35 AST 2024
+
+Edited the tmpl files to change the lines with the TRANSPARENCY keyword
+to OPACITY.  The files revised are:
+
+map_rad_bref.tmpl
+map_rad_bref_1.tmpl
+map_rad_bref_3.tmpl
+map_rad_bref_5.tmpl
+map_rad_nxp.tmpl
+map_rad_rvel.tmpl
+map_rad_rvel_1.tmpl
+map_rad_srvel.tmpl
+map_sat.tmpl
+
+The directory "tmpl-old" contain the original files,
+as well as the scripts "ch.sh" and "ch.sed" that were used,
+kept there for reference purposes.

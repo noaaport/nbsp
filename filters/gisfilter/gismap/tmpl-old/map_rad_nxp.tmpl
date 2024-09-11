@@ -64,7 +64,7 @@ LAYER
   DATA $datafile	# shapefile
   TYPE POLYGON
   STATUS ON
-  OPACITY 0    # or TRANSPARENCY 100 (TRANSPARENCY is deprecated)
+  TRANSPARENCY 100	# or OPACITY 0 (TRANSPARENCY is deprecated)
   #
   # PROCESSING "SCALE=0,80"
   # PROCESSING "SCALE_BUCKETS=16"
@@ -193,7 +193,7 @@ LAYER
     TYPE POLYGON
     STATUS ON
     DATA "$map(geodata)/c_15jl09/c_15jl09.shp"
-    OPACITY 0    # or TRANSPARENCY 100 (TRANSPARENCY is deprecated)
+    TRANSPARENCY 100
     LABELITEM "countyname"
     CLASS
        NAME "counties"
