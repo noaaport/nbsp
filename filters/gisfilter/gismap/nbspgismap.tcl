@@ -198,8 +198,11 @@ proc exec_shp2img {} {
     # Delete any older version
     file delete $outputfile;
 
+    #
+    # shp2img was renamed map2img as of the MapServer 8.0 release
+    #
     set status [catch {
-	exec shp2img \
+	exec map2img \
 	    -m $nbspgismap(map_rcfile) \
 	    -o $outputlock;
     } errmsg];
