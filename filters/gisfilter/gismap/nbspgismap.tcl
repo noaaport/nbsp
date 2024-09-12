@@ -181,7 +181,7 @@ proc run_map_rcfile {} {
 
 proc exec_shp2img {} {
 
-    global nbspgismap;
+    global nbspgismap option;
 
     # The partial file names in the mapserver script are interpreted
     # relative to the location of the map script and the data
