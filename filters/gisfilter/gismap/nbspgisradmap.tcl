@@ -36,6 +36,8 @@
 #    nbspgisradmap -a n0r -A ok
 #
 #
+# -b => background mode
+# -k => keep the generated shp files
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
 # -p => the arguments are interpreted as subdirectories of the -I parent dir.
@@ -50,8 +52,6 @@
 #       (When this option is used, the assumption is that the directories
 #       that are given in the arguments, are the names of the sites, as in
 #       the default configuration of the dafilter).
-# -b => background mode
-# -k => keep the generated shp files (when the input are nids)
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs
 #       (in practice, extent=...,size=...
@@ -437,6 +437,10 @@ if {$option(b) == 1} {
     lappend cmd "-b";
 }
 
+if {$option(k) == 1} {
+    lappend cmd "-k";
+}
+
 if {$option(D) ne ""} {
     append option(D) "," "awips1=$awips1";
 } else {
@@ -451,9 +455,11 @@ foreach k [list d D o s t] {
 
 log_msg "Creating map ...";
 
-set F [open [join $cmd] "w"];
-puts $F [join $shpname_list "\n"];
-close $F;
+set status [catch {
+    set F [open [join $cmd] "w"];
+    puts $F [join $shpname_list "\n"];
+    close $F;
+} errmsg];
 
 if {$option(k) == 0} {
     foreach ext [list "shp" "shx" "dbf" "info"] {
@@ -462,4 +468,8 @@ if {$option(k) == 0} {
 	    file delete $f;
 	}
     }
+}
+
+if {$status != 0} {
+    log_err $errmsg;
 }

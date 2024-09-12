@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspgismap [-b] [-d <outputdir>] [-D <defines>]
+# Usage: nbspgismap [-b] [-k] [-d <outputdir>] [-D <defines>]
 #                  [-e <extent>] [-f <mapfonts_dir>] [-g <geodata_dir>]
 #                  [-i] [-I <inputdir>] -m <map_template> [-n <index>]
 #                  [-o <outputfile>] [-p <patt>] [-s <size>] [-t <imgtype>]
@@ -30,13 +30,14 @@
 #
 # This is cmdline tool with no configuration file.
 #
+# -b => background mode
+# -k => keep the map script
 # -I => Parent directory for the arguments to the program.
 # -i => Prepend common(datadir) to the argument given in -I.
 # -p => the arguments are interpreted as subdirectories of the -I parent dir.
 #       Then the list of files is constructed using the glob <patt>, sorted
 #       in decreasing order, and the -n <index> option is used to select
 #       the file. The default is the most recent file (index = 0).
-# -b => background mode
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs
 #       (in practice, extent=...,size=...
@@ -50,12 +51,12 @@
 # -s => size
 # -t => imgtype (png)
 
-set usage {nbspgismap [-b] [-d <outputdir>] [-D <defines>]
+set usage {nbspgismap [-b] [-k] [-d <outputdir>] [-D <defines>]
     [-e <extent>] [-f <mapfontsdir>] [-g <geodatadir>] [-I <inputdir>]
     [-m <map_template>] [-n <index>] [-o <outputfile>] [-p <patt>]
     [-s <size>] [-t <imgtype>] <file1> ... <filen>};
 
-set optlist {b i {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
+set optlist {b k i {d.arg ""} {D.arg ""} {e.arg ""} {f.arg ""} {g.arg ""}
     {I.arg ""} {m.arg ""} {n.arg 0} {o.arg ""} {p.arg ""} {s.arg ""}
     {t.arg ""}};
 
@@ -72,7 +73,7 @@ set map(imagetype) "png";
 #
 # map(extent) will be required below
 # map(geodata) will be required below
-# ma[(mapfonts) will be required below
+# map(mapfonts) will be required below
 # map(size) is optional (a default is set in the templates)
 #
 
@@ -207,7 +208,9 @@ proc exec_shp2img {} {
 	    -o $outputlock;
     } errmsg];
 
-    file delete $nbspgismap(map_rcfile);
+    if {$option(k) == 0} {
+	file delete $nbspgismap(map_rcfile);
+    }
 
     if {[file exists $outputlock]} {
 	file rename -force $outputlock $outputfile;

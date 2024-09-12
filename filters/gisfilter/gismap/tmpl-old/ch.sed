@@ -1,6 +1,8 @@
 /TRANSPARENCY 100/{i\
-    OPACITY 0    # or TRANSPARENCY 100 (TRANSPARENCY is deprecated)
-    d
+  #\
+  # TRANSPARENCY 100 # TRANSPARENCY was deprecated and the substitute is\
+  # OPACITY 100      # but seems this is deprecated also (in 8.2 - debian 12)
+  d
 }
 
     

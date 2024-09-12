@@ -64,7 +64,9 @@ LAYER
   DATA $datafile	# shapefile
   TYPE POLYGON
   STATUS ON
-  OPACITY 0    # or TRANSPARENCY 100 (TRANSPARENCY is deprecated)
+  #
+  # TRANSPARENCY 100 # TRANSPARENCY was deprecated and the substitute is
+  # OPACITY 100      # but seems this is deprecated also (in 8.2 - debian 12)
   #
   # PROCESSING "SCALE=0,80"
   # PROCESSING "SCALE_BUCKETS=16"
@@ -193,7 +195,10 @@ LAYER
     TYPE POLYGON
     STATUS ON
     DATA "$map(geodata)/c_15jl09/c_15jl09.shp"
-    OPACITY 0    # or TRANSPARENCY 100 (TRANSPARENCY is deprecated)
+    #
+    # TRANSPARENCY 100 # TRANSPARENCY was deprecated and the substitute is
+    # OPACITY 100      # but seems this is deprecated also (in 8.2 - debian 12)
+    #
     LABELITEM "countyname"
     CLASS
        NAME "counties"

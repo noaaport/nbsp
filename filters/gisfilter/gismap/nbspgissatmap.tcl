@@ -36,6 +36,8 @@
 #
 #    nbspgissatmap -a -q -r "0,0,5,0;5,0,0,0" tigw01 tige01
 #
+# -b => background mode
+# -k => keep the generated data files
 # -I => parent directory for the arguments to the program.
 # -i => prepend common(datadir) to the argument given in -I
 # -p => the arguments are interpreted as subdirectories of the -I parent dir.
@@ -44,8 +46,6 @@
 #       the file. The default is the most recent file (index = 0).
 # -a => is equivalent to set -i, -I digatmos/sat/gini/tig, and
 #       -p "*.gini" (it does not require an argument since there is no awips1).
-# -b => background mode
-# -k => keep the generated shp files (when the input are nids)
 # -d => output directory
 # -D => key=value,... comma separated list of map(key)=var pairs
 #       (in practice, extent=...,size=...
@@ -463,6 +463,10 @@ if {$option(b) == 1} {
     lappend cmd "-b";
 }
 
+if {$option(k) == 1} {
+    lappend cmd "-k";
+}
+
 foreach k [list d D o s t] {
     if {$option($k) ne ""} {
 	lappend cmd "-${k}" $option($k);
@@ -471,12 +475,18 @@ foreach k [list d D o s t] {
 
 log_msg "Creating map ...";
 
-set F [open [join $cmd] "w"];
-puts $F [join $ascfile_list "\n"];
-close $F;
+set status [catch {
+    set F [open [join $cmd] "w"];
+    puts $F [join $ascfile_list "\n"];
+    close $F;
+} errmsg];
 
 if {$option(k) == 0} {
     foreach f $ascfile_list {
 	file delete $f;
     }
+}
+
+if {$status != 0} {
+    log_err $errmsg;
 }
