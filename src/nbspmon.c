@@ -83,7 +83,6 @@ static int rmon_init(char *progname){
   }
 
   grmon.lasttime = time(NULL);
-  init_curses();
   
   return(status);
 }
