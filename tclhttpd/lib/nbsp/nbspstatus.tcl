@@ -247,27 +247,9 @@ proc nbsp/status/printconf {} {
     return $result;
 }
 
-proc nbsp/status/received_last_minute {} {
-#
-# List of received products in the last minute
-#
-    global Config
-
-    set now [clock seconds]
-    set last [clock format [expr $now - 65] -format "%H%M" -gmt true]
-    
-    set nbsp_received_file $Config(nbspinvdir)/${last}$Config(nbspinvfext)
-    
-    if {[file_hasdata $nbsp_received_file] == 0} {
-	return "$nbsp_received_file not found or empty."
-    }
-
-    return [nbsp_received $nbsp_received_file]
-}
-
 proc nbsp/status/received_minute {hhmm} {
 #
-# List of received products in a given minute.
+# List of products listed in a given inventory hhmm.log file
 #
     global Config
 
@@ -280,6 +262,34 @@ proc nbsp/status/received_minute {hhmm} {
     return [nbsp_received $nbsp_received_file]
 }
 
+proc nbsp/status/received_last_minute {} {
+#
+# List of products received in the current minute, with the
+# understanding that the file is still being updated. Be sure that the
+# file is from "today".
+#
+    global Config
+
+    set now [clock seconds]
+    #set last [clock format [expr $now - 65] -format "%H%M" -gmt true]
+    set last [clock format $now -format "%H%M" -gmt true]
+    set today [get_date_today $now]
+
+    set nbsp_received_file $Config(nbspinvdir)/${last}$Config(nbspinvfext)
+    
+    # if {[file_hasdata $nbsp_received_file] == 0} {
+    #	return "$nbsp_received_file not found or empty."
+    # }
+        
+    if {([file_isfrom_date $nbsp_received_file $today] == 0) || 
+       ([file_hasdata $nbsp_received_file] == 0)} {
+
+       return "$nbsp_received_file not found or empty."
+    }
+
+    return [nbsp_received $nbsp_received_file]
+}
+
 proc nbsp/status/received_past_hour {received_minute_tml} {
 #
 # List of products received in the past hour
@@ -287,19 +297,21 @@ proc nbsp/status/received_past_hour {received_minute_tml} {
     set now [clock seconds]
     set t [expr $now - 3600]
     set hh [clock format $t -format "%H" -gmt true]
-
-    return [nbsp_received_hour $received_minute_tml $hh]
+    set ddmmyyyy [get_date $t]
+    
+    return [nbsp_received_hour $received_minute_tml $ddmmyyyy $hh]
 }
 
 proc nbsp/status/received_last_hour {received_minute_tml} {
 #
-# List of products received within the last hour
+# List of products received within the last (current) hour
 #
     set now [clock seconds]
     set hh [clock format $now -format "%H" -gmt true]
     set mm [clock format $now -format "%M" -gmt true]
+    set ddmmyyyy [get_date $now]
 
-    return [nbsp_received_hour $received_minute_tml $hh $mm]
+    return [nbsp_received_hour $received_minute_tml $ddmmyyyy $hh $mm]
 }
 
 proc nbsp/status/received_last_24hours {received_minute_tml} {
@@ -307,22 +319,25 @@ proc nbsp/status/received_last_24hours {received_minute_tml} {
 # List of products received in the last 24 hours.
 #
     set now [clock seconds]
-    set hh_now [clock format $now -format "%H" -gmt true]
+    set hh_now [clock format $now -gmt true -format "%H"]
 
     # Current hour
     set hh [clock format $now -format "%H" -gmt true]
-    set mm [clock format $now -format "%M" -gmt true]	
-    set result [nbsp_received_hour $received_minute_tml $hh $mm]   
+    set mm [clock format $now -format "%M" -gmt true]
+    set ddmmyyyy [get_date $now]
+    set result [nbsp_received_hour $received_minute_tml $ddmmyyyy $hh $mm]   
 
     set t $now;
     set done 0;
     while {$done == 0} {
 	incr t -3600;
-	set hh [clock format $t -format "%H" -gmt true]; 
-	if {$hh == $hh_now} {
+	set hh [clock format $t -gmt true -format "%H"];
+	set ddmmyyyy [get_date $t];
+	if {$hh eq $hh_now} {
 	    set done 1;
 	} else {
-	    append result [nbsp_received_hour $received_minute_tml $hh]
+	    append result \
+		[nbsp_received_hour $received_minute_tml $ddmmyyyy $hh]
 	}
     }
 

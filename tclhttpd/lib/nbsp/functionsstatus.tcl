@@ -79,13 +79,44 @@ proc file_hasdata {file} {
 }
 
 proc file_isfrom_date {file date} {
-
-    set fdate [clock format [file mtime $file] -format "%D" -gmt true];
-    if {$fdate eq $date} {
-	return 1;
+    #
+    # date is in the format ddmmyyyy
+    #
+    if {[file exists $file]} {
+	set fdate [clock format [file mtime $file] -format "%d%m%Y" -gmt true];
+	if {$fdate eq $date} {
+	    return 1;
+	}
     }
 
     return 0;
+}
+
+proc get_date {seconds} {
+
+    set r [clock format $seconds -format "%d%m%Y" -gmt true]
+
+    return $r;
+}
+   
+proc get_date_today {now} {
+    #
+    # The format of the return value is ddmmyyyy
+    #
+    set today [get_date $now]
+
+    return $today;
+}
+
+proc get_date_yesterday {now} {
+    #
+    # The format of the return value is ddmmyyyy
+    #
+    incr now -86400
+
+    set yesterday [get_date $now]
+
+    return $yesterday;
 }
 
 proc nbsp_status {file logperiod_secs} {
@@ -458,30 +489,26 @@ proc nbsp_received {file} {
     return $result
 }
 
-proc nbsp_received_hour {received_minute_tml hh {mm 60}} {
+proc nbsp_received_hour {received_minute_tml ddmmyyyy hh {mm 60}} {
 #
+# Files received at the given hour on the given day.
 # The mm argument, if given, determines the maximum minute to include. It is
 # used when the function is called for the current hour. In that
 # case it is set to the current minute. We could exclude that file from
 # the list returned since that minute has not been completed,
 # or return the list as "it is" at the moment of call, understanding
 # that it is incomplete for the current minute.
-# Another issue is that if the program had not been running for
-# elapsed time, the inventory files of that elapsed time fo not
-# get renewed and actually belong to a previous day. Thus we check that
-# the file date correspnds to today's date.    
 #
     global Config;
 
     set fulllist [lsort [glob -tails -nocomplain \
 			     -directory $Config(nbspinvdir) \
 			     ${hh}*$Config(nbspinvfext)]];
-    set today [clock format [clock seconds] -format "%D" -gmt true];
-    
+
+       
     if {$mm == 60} {
 	set flist $fulllist;
     } else {
-	# incr mm -1;          # exclude the current minute
 	set flist [list];
 	set max_hhmm ${hh}${mm};
 	foreach file $fulllist {
@@ -492,13 +519,13 @@ proc nbsp_received_hour {received_minute_tml hh {mm 60}} {
 	    lappend flist $file;
 	}
     }
-    
-    # Include only the files from today
+
+    # Include only the files from the given day (ddmmyyyy)
     set fulllist $flist;
     set flist [list];
     foreach file $fulllist {
 	set fpath [file join $Config(nbspinvdir) $file];
-	if {[file_isfrom_date $fpath $today] == 1} {
+	if {[file_isfrom_date $fpath $ddmmyyyy] == 1} {
 	    lappend flist $file;
 	}
     }
@@ -530,14 +557,16 @@ proc nbsp_received_last_Nhours {received_minute_tml N} {
     # Current hour
     set hh [clock format $now -format "%H" -gmt true];
     set mm [clock format $now -format "%M" -gmt true];
-    set result [nbsp_received_hour $received_minute_tml $hh $mm];
+    set ddmmyyyy [get_date $now];
+    set result [nbsp_received_hour $received_minute_tml $ddmmyyyy $hh $mm];
 
     set t $now;
     set i 1;
     while {$i < $N} {
 	incr t -3600;
 	set hh [clock format $t -gmt true -format "%H"];
-	append result [nbsp_received_hour $received_minute_tml $hh];
+	set ddmmyyyy [get_date $t];
+	append result [nbsp_received_hour $received_minute_tml $ddmmyyyy $hh];
 
 	incr i;
     }
