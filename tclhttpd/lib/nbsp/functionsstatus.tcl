@@ -78,6 +78,16 @@ proc file_hasdata {file} {
     return 0;
 }
 
+proc file_isfrom_date {file date} {
+
+    set fdate [clock format [file mtime $file] -format "%D" -gmt true];
+    if {$fdate eq $date} {
+	return 1;
+    }
+
+    return 0;
+}
+
 proc nbsp_status {file logperiod_secs} {
 
     set fmt [proc_fmtrow 9]
@@ -455,13 +465,19 @@ proc nbsp_received_hour {received_minute_tml hh {mm 60}} {
 # case it is set to the current minute. We could exclude that file from
 # the list returned since that minute has not been completed,
 # or return the list as "it is" at the moment of call, understanding
-# that it is incomplete for the current minute.    
+# that it is incomplete for the current minute.
+# Another issue is that if the program had not been running for
+# elapsed time, the inventory files of that elapsed time fo not
+# get renewed and actually belong to a previous day. Thus we check that
+# the file date correspnds to today's date.    
 #
     global Config;
 
     set fulllist [lsort [glob -tails -nocomplain \
 			     -directory $Config(nbspinvdir) \
 			     ${hh}*$Config(nbspinvfext)]];
+    set today [clock format [clock seconds] -format "%D" -gmt true];
+    
     if {$mm == 60} {
 	set flist $fulllist;
     } else {
@@ -473,6 +489,16 @@ proc nbsp_received_hour {received_minute_tml hh {mm 60}} {
 	    if {$hhmm > $max_hhmm} {
 		break;
 	    }
+	    lappend flist $file;
+	}
+    }
+    
+    # Include only the files from today
+    set fulllist $flist;
+    set flist [list];
+    foreach file $fulllist {
+	set fpath [file join $Config(nbspinvdir) $file];
+	if {[file_isfrom_date $fpath $today] == 1} {
 	    lappend flist $file;
 	}
     }
