@@ -94,8 +94,8 @@ struct frame_level_header {
 
 struct product_def_header{
   int version;
-  int header_length32;		/* length in 32 bit words */
   int transfer_type;
+  int header_length32;		/* length in 32 bit words */
   int header_length;		/* length in bytes */
   int block_number;
   int data_block_offset;

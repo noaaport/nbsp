@@ -3,7 +3,7 @@
  *
  * See LICENSE
  *
- * $Id$
+ * $Id: mcast.c,v 1.20 2008/02/16 16:04:50 nieves Exp $
  */
 #include <unistd.h>
 #include <stdlib.h>
@@ -31,11 +31,13 @@ int mcast_rcv_default(char *host_name, char *service_port,
 		   sa_ptr, sa_len, gai_code));
 }
 
-int mcast_snd_default(char *host_name, char *service_port, int ttl,
+int mcast_snd_default(char *host_name, char *service_port,
                       void **sa_ptr, socklen_t *sa_len, int *gai_code){
-
-  return(mcast_snd(host_name, service_port, NULL, NULL,
-		   ttl, sa_ptr, sa_len, gai_code));
+  /*
+   * Use the default interface as well as the ttl and multicast_loop flag
+   */
+  return(mcast_snd(host_name, service_port, NULL, NULL, -1, -1,
+		   sa_ptr, sa_len, gai_code));
 }
 
 int mcast_rcv(char *host_name, char *service_port, char *ifname, char *ifip,
@@ -60,20 +62,31 @@ int mcast_rcv(char *host_name, char *service_port, char *ifname, char *ifip,
     status = setsockopt(sfd, SOL_SOCKET, SO_RCVBUF, &udprcvsize, sizeof(int));
 
   /*
+   * This was a comment (and code) in the original code (2006-2009).
+   * I have revised it when writing the nbspmcast program (2024).
+   *
    * In Linux (and others), there is no SO_REUSEPORT but SO_REUSEADDR is
    * promoted to do the same thing for multicast adresses. Using SO_REUSEPORT
    * will permite to use the same port for all the addresses. It is not
    * needed by nbsp to receive the noaaport stream, but it will be needed
    * for the mcast redistribution using the IANNA assgined global ip's
    * with _one_ port.
+   *
+   * if(status == 0){
+   * #if defined(SO_REUSEPORT)
+   *   status = setsockopt(sfd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on));
+   * #else
+   *   status = setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+   * #endif
+   * }
    */
-  if(status == 0){
-#if defined(SO_REUSEPORT)
+
+  /* Reuse both */
+  if(status == 0)
     status = setsockopt(sfd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on));
-#else
+
+  if(status == 0)
     status = setsockopt(sfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
-#endif
-  }
 
   if(status == 0)
     status = bind(sfd, *sa_ptr, *sa_len);
@@ -250,17 +263,35 @@ int udp_server(char *host, char *service, socklen_t *sa_len, int *gai_code){
 }
 
 int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
-	      int ttl, void **sa_ptr, socklen_t *sa_len, int *gai_code){
-
+	      int ttl, int mcast_loop_flag,
+	      void **sa_ptr, socklen_t *sa_len, int *gai_code){
+  /*
+   * If ttl is negative, then the default is left (see below),
+   * and similarly with the mcast_loop_flag.
+   *
+   * (This function, not used by nbsp, was written having in mind the
+   * possibility of the noaaport data stream multicast redistribution
+   * using the IANNA assgined global ip's.)
+   */
   int status = 0;
   int sfd = -1;
-  u_char off = 0;
+  /* u_char off = 1; not longer used because the flag is now an argument */
 
   sfd = udp_client(host_name, service_port, sa_ptr, sa_len, gai_code);
   if(sfd < 0)
     return(-1);
 
-  status = setsockopt(sfd, IPPROTO_IP, IP_MULTICAST_LOOP, &off, sizeof(off));
+  /*
+   * This was the original (2006-2009). We now (2024) put the flag
+   * as an argument of this funtion. If the argument is -1 we leave the
+   * default (which is 1).
+   *
+   * status = setsockopt(sfd, IPPROTO_IP, IP_MULTICAST_LOOP, &off, sizeof(off));
+   */
+
+  if(mcast_loop_flag >= 0)
+    status = mcast_snd_setloop(sfd, mcast_loop_flag);
+  
   /*
    * To specify an interface other than the default, we have to call setsockopt
    * again with IP_MULTICAST_IF (See, Stevens, Vol. 1, p. 497).
@@ -273,12 +304,11 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
    * If the TTL hop limit is not specified it defaults to 1, which restricts
    * the outgoing datagrams to the local subnet (p. 498).
    */
-  if(status == 0)
-    status = mcast_snd_setttl(sfd, ttl);
-
-  if(status == 0)
-    status = mcast_snd_setloop(sfd, 0);
-
+  if(status == 0) {
+    if(ttl > 1)
+      status = mcast_snd_setttl(sfd, ttl);
+  }
+  
   if(status == -1){
     close(sfd);
     sfd = -1;
