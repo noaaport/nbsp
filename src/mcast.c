@@ -266,8 +266,8 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
 	      int ttl, int mcast_loop_flag,
 	      void **sa_ptr, socklen_t *sa_len, int *gai_code){
   /*
-   * If ttl is negative, then the default is left (see below),
-   * and similarly with the mcast_loop_flag.
+   * If ttl <= 0, then the default is left (see below).
+   * The mcast_loop_flag is used if it 0 or 1; otherwise the default is left.
    *
    * (This function, not used by nbsp, was written having in mind the
    * possibility of the noaaport data stream multicast redistribution
@@ -283,13 +283,13 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
 
   /*
    * This was the original (2006-2009). We now (2024) put the flag
-   * as an argument of this funtion. If the argument is -1 we leave the
+   * as an argument of this funtion. If the argument is not 0 or 1 we leave the
    * default (which is 1).
    *
    * status = setsockopt(sfd, IPPROTO_IP, IP_MULTICAST_LOOP, &off, sizeof(off));
    */
 
-  if(mcast_loop_flag >= 0)
+  if((mcast_loop_flag == 0) || (mcast_loop_flag == 1))
     status = mcast_snd_setloop(sfd, mcast_loop_flag);
   
   /*
@@ -305,7 +305,7 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
    * the outgoing datagrams to the local subnet (p. 498).
    */
   if(status == 0) {
-    if(ttl > 1)
+    if(ttl >= 1)
       status = mcast_snd_setttl(sfd, ttl);
   }
   
