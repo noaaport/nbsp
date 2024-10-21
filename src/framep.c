@@ -426,7 +426,7 @@ static int e_update_activepce(struct sbn_frame *sbnf){
       log_errx("Missing frames for %s[%d]: %d -> %d of %d: [z=%d]",
 	       pce->fname,
 	       pce->np_channel_index,
-	       pce->recv_fragments - 1, sbnf->pdh.block_number,
+	       pce->recv_fragments, sbnf->pdh.block_number,
 	       pce->num_fragments, sbnf->f_frdata_compressed);
     }else    
       log_errx("Missing frames for %u.", sbnf->pdh.product_seq_number);

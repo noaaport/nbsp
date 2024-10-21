@@ -309,10 +309,10 @@ int copy_ctrlheader(char *ctrlheader, int *ctrlheader_size,
   /*
    * The "ctrlheader" is a copy of the CCB, WMO and AWIPS headers in the file.
    * Is is sent (sometimes it is not sent) as a block preceedeing the
-   * the product file. I have no use for it, but I am keeping 
+   * the product file. I have no use for it, but I am keeping it
    * in the pctl in case it is useful in the future.
    * When calling the function, ctrlheader_size should be initalized
-   * allocated size of the buffer.
+   * to the allocated size of the buffer.
    *
    * Returns:
    *   1 => no control header
