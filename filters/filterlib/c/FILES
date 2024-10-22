@@ -1,0 +1,9 @@
+The files "util.{c,h}" are copies of the files "stoi.{c,h}" in the
+src directory.
+
+The files "err.{c.h}" are adapted from the files "err.{c,h}" in the
+src directory.
+
+The files "strsplit.{c,h}" are copies of the files in src.
+
+

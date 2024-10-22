@@ -10,9 +10,11 @@ itself, which is what this program makes unnecesary.
 
 The files fifo.{h,c} are copies of those files from npemwinsert.
 The files "nutil.{h,c}" are copied from util.{h,c} in "src".
+(nutil.{c,h} have the pack_uintN functions.)
 
 Other files required for compilation are copied from the "filterlib/c"
-directory by the configure.sh script (err.{h,c}, utils.{h,c}, config.h).
+directory by the configure.sh script (err.{h,c}, util.{h,c}, config.h).
+(util.{c,h} are copies of the stoi.{c,h} in src).
 
 The variant of the program using the [-i] option to read the
 finfo parameters from stdin (implemented in the tcl version) is
