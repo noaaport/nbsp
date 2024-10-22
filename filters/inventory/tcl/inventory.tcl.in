@@ -15,6 +15,7 @@
 #     function close_invfile() write the list to the (real) log file.
 #
 # In the current version I implemented the solution (2).
+# (The original version is kept in the directory "../orig" for reference.)
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
