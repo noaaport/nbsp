@@ -1,0 +1,16 @@
+22 oct 2024 -
+
+The files
+
+mcast/mcast.{c,h}
+sbnpack/util.{c,h}
+
+are copies of the files in the main nbsp/src directory.
+
+The files
+
+err.{c,h}
+
+are copies of the files in the filterlib/c directory.
+
+They are copied here by the configure.sh script.

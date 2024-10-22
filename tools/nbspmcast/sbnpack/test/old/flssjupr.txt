@@ -1,0 +1,34 @@
+WGCA82 TJSJ 072120
+FLSSJU
+
+Flood Advisory
+National Weather Service San Juan PR
+520 PM AST Mon Oct 7 2024
+
+PRC017-054-091-101-145-072130-
+/O.CAN.TJSJ.FA.Y.0536.000000T0000Z-241007T2130Z/
+/00000.N.ER.000000T0000Z.000000T0000Z.000000T0000Z.OO/
+Barceloneta PR-Florida PR-Manati PR-Morovis PR-Vega Baja PR-
+520 PM AST Mon Oct 7 2024
+
+...FLOOD ADVISORY IS CANCELLED...
+
+The Flood Advisory is cancelled for a portion of Puerto Rico, 
+including the following areas, Barceloneta, Florida, Manati, Morovis 
+and Vega Baja.
+
+The heavy rain has ended. Urban and small stream flooding is no 
+longer expected to pose a threat. Please continue to heed remaining 
+road closures.
+
+&&
+
+LAT...LON 1849 6635 1840 6636 1837 6637 1834 6638
+      1834 6637 1829 6638 1826 6646 1830 6646
+      1833 6645 1835 6646 1837 6646 1834 6658
+      1844 6658 1847 6658 1850 6658
+
+
+$$
+
+DS

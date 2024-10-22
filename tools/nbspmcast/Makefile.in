@@ -1,0 +1,46 @@
+#
+# Copyright (c) 2024 Jose F. Nieves <nieves@ltp.uprrp.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+TARGET = nbspmcast
+SOURCES = nbspmcast.c err.c
+OBJECTS = nbspmcast.o err.o
+HEADERS = err.h
+AUXFILES = config.h err.c err.h
+
+INCDIRS = -I sbnpack -I mcast
+LIBDIRS = -L sbnpack -L mcast
+LIBS = -lsbnpack -lmcast
+CCWFLAGS = @CCWFLAGS@
+CFLAGS += -c ${CCWFLAGS} ${INCDIRS}
+
+all: ${TARGET}
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+lib:
+	cd sbnpack; make
+	cd mcast; make
+
+${TARGET}: ${OBJECTS} lib
+	${CC} -o ${TARGET} ${OBJECTS} ${LIBDIRS} ${LIBS}
+
+recv: recv.c
+	${CC} -o recv recv.c ${INCDIRS} ${LIBDIRS} ${LIBS}
+
+install: all
+	${INSTALL} -m 755 ${TARGET} ${BINDIR}
+
+clean:
+	rm -f *~
+	rm -f ${OBJECTS} ${TARGET} Makefile
+	rm -f recv recv.o
+	rm -f ${AUXFILES} 
+	cd sbnpack; ${MAKE} clean
+	cd mcast; ${MAKE} clean
