@@ -66,6 +66,7 @@
 /usr/local/bin/nbspinvrm
 /usr/local/bin/nbspexec
 /usr/local/bin/nbspinsert
+/usr/local/bin/nbspmcast
 /usr/local/bin/nbsprsscreate
 /usr/local/bin/nbspcapcleanup
 /usr/local/bin/nbspcapcatalog

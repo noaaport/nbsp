@@ -68,6 +68,7 @@ bin/nbspqstat
 bin/nbspinvrm
 bin/nbspexec
 bin/nbspinsert
+bin/nbspmcast
 bin/nbsprsscreate
 bin/nbspcapcleanup
 bin/nbspcapcatalog
