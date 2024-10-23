@@ -2,20 +2,6 @@
 #
 # $Id$
 #
-# NOTE: 03april2020
-# In the original version (the log file opened from the beginning) the
-# web server (or any other application) can see the latest log file but the file
-# may not be closed yet and in fact its data can be incomplete.
-# To solve the problem (which I found when using the emftp ingest method,
-# instead of opening the log file and writing each finfo as each
-# file is processed, it is beter to do it in one of the following ways:
-# (1) Use a temporary log file (e.g., hhmm.log.tmp) and in the
-#     function close_invfile () rename it to the real log file
-# (2) Insert each finfo in a list and keep it in memory, and then in the
-#     function close_invfile() write the list to the (real) log file.
-#
-# In the current version I implemented the solution (2).
-# (The original version is kept in the directory "../orig" for reference.)
 
 ## The common defaults
 set filters_init_file "/usr/local/libexec/nbsp/filters.init";
@@ -43,10 +29,8 @@ source $inv_init_file;
 unset inv_init_file;
 
 # variables
-#XX set inventory(FP)	"";
-#XX set inventory(FP_open) 0;
-set inventory(fpath)		"";
-set inventory(finfolist)	[list];
+set inventory(FP)	"";
+set inventory(FP_open) 0;
 set inventory(frootname)	"";
 #
 set inventory(chstats,frootname) "";
@@ -148,44 +132,28 @@ proc open_inv_file {invfrootname} {
 
     set inventory(frootname) $invfrootname;
     append fpath [file join $inventory(dir) $invfrootname] $inventory(fext);
-    set inventory(fpath) $fpath;
     
-    #XX set status [catch {
-    #XX    set inventory(FP) [open $fpath w 0644];
-    #XX } errmsg];
+    set status [catch {
+        set inventory(FP) [open $fpath w 0644];
+    } errmsg];
 
-    #XX if {$status == 0} {
-    #XX	set inventory(FP_open) 1;
-    #XX } else { 
-    #XX	log_msg $errmsg;
-    #XX }
+    if {$status == 0} {
+	set inventory(FP_open) 1;
+    } else { 
+	log_msg $errmsg;
+    }
 }
 
 proc close_inv_file {} {
 
     global inventory;
 
-    #XX if {$inventory(FP_open) == 0} {
-    #XX	return 0;
-    #XX }
-
-    #XX set status [catch {close $inventory(FP)} errmsg];
-    #XX set inventory(FP_open) 0;
-
-    if {$inventory(fpath) eq ""} {
+    if {$inventory(FP_open) == 0} {
 	return 0;
     }
 
-    set status [catch {
-	#
-	# filterlib_file_write $inventory(fpath) \
-	#		   $[join $inventory(finfolist) "\n"];
-	#
-	exec echo [join $inventory(finfolist) "\n"] > $inventory(fpath);
-    } errmsg];
-
-    set inventory(fpath) "";
-    set inventory(finfolist) [list];
+    set status [catch {close $inventory(FP)} errmsg];
+    set inventory(FP_open) 0;
 
     if {$status != 0} {
 	log_msg $errmsg;
@@ -214,17 +182,15 @@ proc log_inv_file {finfo} {
 
     global inventory;
 
-    #XX if {$inventory(FP_open) == 0} {
-    #XX	return;
-    #XX }
+    if {$inventory(FP_open) == 0} {
+	return;
+    }
 
-    #XX set status [catch {puts $inventory(FP) $finfo} errmsg];
+    set status [catch {puts $inventory(FP) $finfo} errmsg];
     
-    lappend inventory(finfolist) $finfo;
-    
-    #XX if {$status != 0} {
-    #XX	log_msg $errmsg;
-    #XX }
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
 }
 
 proc channel_stats_fileinit {} {

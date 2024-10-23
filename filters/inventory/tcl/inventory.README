@@ -1,0 +1,4 @@
+- Oct 2024
+  When I implemented the emftp version (around 2022), I changed the
+  inventory.tcl.in as explained in the file "inventory.tcl.in-emftp"
+  of that version. I decided to revert to the original version.
