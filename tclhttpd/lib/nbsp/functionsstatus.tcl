@@ -520,12 +520,16 @@ proc nbsp_received_hour {received_minute_tml ddmmyyyy hh {mm 60}} {
 	}
     }
 
-    # Include only the files from the given day (ddmmyyyy)
+    #
+    # Include only the files from the given day (ddmmyyyy), and only
+    # files that have data.
+    #
     set fulllist $flist;
     set flist [list];
     foreach file $fulllist {
 	set fpath [file join $Config(nbspinvdir) $file];
-	if {[file_isfrom_date $fpath $ddmmyyyy] == 1} {
+	if {([file_isfrom_date $fpath $ddmmyyyy] == 1) &&
+	    ([file_hasdata $fpath] == 1)} {
 	    lappend flist $file;
 	}
     }
