@@ -16,6 +16,10 @@ AUXFILES = config.h err.c err.h
 INCDIRS = -I sbnpack -I mcast
 LIBDIRS = -L sbnpack -L mcast
 LIBS = -lsbnpack -lmcast
+INSTALL =       @INSTALL@
+CC =            @CC@
+CCWFLAGS =      @CCWFLAGS@
+
 CCWFLAGS = @CCWFLAGS@
 CFLAGS += -c ${CCWFLAGS} ${INCDIRS}
 
