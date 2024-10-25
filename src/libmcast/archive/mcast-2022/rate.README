@@ -1,0 +1,24 @@
+If excuted without options
+
+./rate
+
+it will use the default network interface. To use the second interface,
+us either
+
+./rate -i eth1
+
+or
+
+./rate -p 192.168.10.76
+
+(For eth1 use the appropriate interface name (as reported by
+ifconfig for example).
+
+Without arguments it will try to read from the first noaaport channel
+
+224.0.1.1 1201
+
+To try to read from the other channels, put the ip and port in the arguments,
+e.g.,
+
+./rate -i eth1 224.0.1.2 1202

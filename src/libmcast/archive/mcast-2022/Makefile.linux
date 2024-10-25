@@ -1,0 +1,30 @@
+TARGET =	recv send rate faz
+SOURCES =	recv.c send.c rate.c faz mcast.c
+OBJECTS =	mcast.o
+HEADERS =	mcast.h
+
+CFLAGS +=	-c -Wall -g
+
+all: ${TARGET}
+
+recv: recv.o ${OBJECTS}
+	cc -o $@ recv.o ${OBJECTS}
+
+send: send.o ${OBJECTS}
+	cc -o $@ send.o ${OBJECTS}
+
+rate: rate.o ${OBJECTS}
+	cc -o $@ rate.o ${OBJECTS}
+
+faz: faz.o ${OBJECTS}
+	cc -o $@ faz.o ${OBJECTS}
+
+.c.o: ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+clean:
+	rm -f *~ *.o ${TARGET}
+
+cleanall: clean
+	rm -f Makefile mcast.c mcast.h
+

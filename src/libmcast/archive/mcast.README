@@ -1,0 +1,80 @@
+* The original mcast.{c,h} files are from 2005-2006, as well
+  as the sample applications; revised up to around 2007.
+  (mcast-oldest)
+
+* I revised (some of) them in 2009 when installing the
+  dish in the university.
+  (mcast-2009)
+  
+* I revised faz.c, rate.c, recv.c in 2016 for llvm
+  to get rid compilatio warnings related
+  to the use of the arguments in the err() functions.
+  (mcast-llvm)
+
+* Then I revised the send.c and recv.c sample files in january-2022
+  when supporting Radar Omega (Don).
+  (Only modified the data that is sent and received).
+  (mcast-2022)
+
+* mcast-current (started as a copy of mcast-llvm) is the "current" version.
+  In 2024, when writing the nbspmcast program, I revised the mcast_snd
+  (not used by nbsp) regarding the setting of the multicast_loop flag.
+  In the original code it was unconditionally set to off, but now
+  is optional; useful for debugging purposes in the same machine
+  (e.g., using recv and send).
+  The mcast_rcv function was revised (minor) to set both the
+  REUSEADDR and REUSEPORT; none are relevant for Nbsp but are
+  useful for debugging and also for the potential redistribution
+  of noaaport by the IANNA global ip's.
+
+  The new versions of mcast.{c,h} were also copied to the
+  nbsp and to the npmcast repos.
+
+cd mcast-oldest; ls -l (this is the original)
+=============================================
+rw-r--r--  1 nieves  nieves  3223 Jun 10  2007 mcast.c
+-rw-r--r--  1 nieves  nieves   413 Jun 10  2007 mcast.h
+drwxr-xr-x  2 nieves  nieves   512 Oct  4  2005 mcastcw
+-rwxr-xr-x  1 nieves  nieves  7243 Jun 10  2007 rate
+-rw-r--r--  1 nieves  nieves  1664 Jun 10  2007 rate.c
+-rwxr-xr-x  1 nieves  nieves  6991 Jun 10  2007 recv
+-rw-r--r--  1 nieves  nieves  1252 Jun 10  2007 recv.c
+-rw-r--r--  1 nieves  nieves  3268 Jun 10  2007 sap.c
+-rwxr-xr-x  1 nieves  nieves  7037 Jun 10  2007 send
+-rw-r--r--  1 nieves  nieves  1255 Jun 10  2007 send.c
+
+cd mcast; ls -l (this is the revision in 2008-2009)
+===================================================
+-rw-r--r--  1 nieves  nieves     441 Mar 26  2009 Makefile
+-rw-r--r--  1 nieves  nieves     368 Mar 26  2009 Makefile.linux
+-rw-r--r--  1 nieves  nieves    2699 Nov 14  2009 faz.c
+drwxr-xr-x  3 nieves  nieves     512 Nov 14  2009 mcast-examples
+-rw-r--r--  1 nieves  nieves    9134 Feb 28  2008 mcast.c
+-rw-r--r--  1 nieves  nieves    6645 Jun 10  2007 mcast.c.old
+-rw-r--r--  1 nieves  nieves    1004 Nov 27  2007 mcast.h
+drwxr-xr-x  2 nieves  nieves     512 Nov 14  2009 mcastcw
+-rw-r--r--  1 nieves  nieves   48077 Mar 10  2008 multicast-addresses
+-rw-r--r--  1 nieves  nieves    1064 May 31  2011 multicast-howto.c
+-rw-r--r--  1 nieves  nieves  749354 Mar 10  2008 port-numbers
+-rw-r--r--  1 nieves  nieves    2350 Nov 14  2009 rate.c
+-rw-r--r--  1 nieves  nieves    1874 Nov 14  2009 recv.c
+-rw-r--r--  1 nieves  nieves    3268 Jun 10  2007 sap.c
+-rw-r--r--  1 nieves  nieves    1469 Nov 14  2009 send.c
+
+cd mcast-llvml; ls -l (the revision for llvm in 2017)
+=====================================================
+-rw-r--r--  1 nieves  nieves     441 Mar 26  2009 Makefile
+-rw-r--r--  1 nieves  nieves     368 Mar 26  2009 Makefile.linux
+-rw-r--r--  1 nieves  nieves    2705 Jul 18  2016 faz.c
+drwxr-xr-x  3 nieves  nieves     512 Nov 14  2009 mcast-examples
+-rw-r--r--  1 nieves  nieves    9134 Feb 28  2008 mcast.c
+-rw-r--r--  1 nieves  nieves    6645 Jun 10  2007 mcast.c.old
+-rw-r--r--  1 nieves  nieves    1004 Nov 27  2007 mcast.h
+drwxr-xr-x  2 nieves  nieves     512 Nov 14  2009 mcastcw
+-rw-r--r--  1 nieves  nieves   48077 Mar 10  2008 multicast-addresses
+-rw-r--r--  1 nieves  nieves    1064 May 31  2011 multicast-howto.c
+-rw-r--r--  1 nieves  nieves  749354 Mar 10  2008 port-numbers
+-rw-r--r--  1 nieves  nieves    2356 Jul 18  2016 rate.c
+-rw-r--r--  1 nieves  nieves    1880 Jul 18  2016 recv.c
+-rw-r--r--  1 nieves  nieves    3268 Jun 10  2007 sap.c
+-rw-r--r--  1 nieves  nieves    1469 Nov 14  2009 send.c
