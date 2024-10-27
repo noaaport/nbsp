@@ -65,7 +65,8 @@ void fill_flh(struct sbnpack_frame_st *sbnpack_frame,
 	      uint32_t sbn_seq_number);
 void fill_pdh(struct sbnpack_frame_st *sbnpack_frame,
 	      uint32_t prod_seq_number);
-void fill_psh(struct sbnpack_frame_st *sbnpack_frame);
+void fill_psh(struct sbnpack_frame_st *sbnpack_frame,
+	      int psh_type_flag);
 
 
 #endif

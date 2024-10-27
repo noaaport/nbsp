@@ -32,11 +32,12 @@ void fill_headers(struct sbnpack_st *sbnpack){
   int i;
   uint32_t prod_seq_number = sbnpack->prod_seq_number;
   uint32_t sbn_seq_number = sbnpack->sbn_seq_number;
+  int psh_type_flag = sbnpack->psh_type_flag;
 
   /* First frame */
   fill_flh(&(sbnpack->sbnpack_frame[0]), sbn_seq_number);
   fill_pdh(&(sbnpack->sbnpack_frame[0]), prod_seq_number);
-  fill_psh(&(sbnpack->sbnpack_frame[0]));
+  fill_psh(&(sbnpack->sbnpack_frame[0]), psh_type_flag);
 
   /* The rest do not have a psh */
   for(i = 1; i < nframes; ++i){

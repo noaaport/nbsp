@@ -175,7 +175,8 @@ void free_sbnpack_frame_array(struct sbnpack_frame_st *sbnpack_frame){
 int init_sbnpack(struct sbnpack_st *sbnpack,
 		 char *fname,
 		 uint32_t prod_seq_number,
-		 uint32_t sbn_seq_number){
+		 uint32_t sbn_seq_number,
+		 int psh_type_flag){
   int nframes;
   int last_datablock_size;
   int status = 0;
@@ -185,7 +186,8 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
 
   sbnpack->prod_seq_number = prod_seq_number;
   sbnpack->sbn_seq_number = sbn_seq_number;
-  
+  sbnpack->psh_type_flag = psh_type_flag;
+    
   status = init_sbnpack_file(fname, &(sbnpack->sbnpack_file));
 
   if(status == 0)
@@ -231,7 +233,8 @@ void end_sbnpack(struct sbnpack_st *sbnpack){
 int create_sbnpack(char *fname,
 		   uint32_t prod_seq_number,
 		   uint32_t sbn_seq_number,
-		   struct sbnpack_st **sbnpack){
+		   int psh_type_flag,
+		   struct sbnpack_st **sbnpack) {
 
   struct sbnpack_st *sbnp;
   int status = 0;
@@ -243,7 +246,8 @@ int create_sbnpack(char *fname,
   sbnp->sbnpack_file.data = NULL;
   sbnp->sbnpack_frame = NULL;
 
-  status = init_sbnpack(sbnp, fname, prod_seq_number, sbn_seq_number);
+  status = init_sbnpack(sbnp, fname,
+			prod_seq_number, sbn_seq_number, psh_type_flag);
   if(status != 0){
     free(sbnp);
     

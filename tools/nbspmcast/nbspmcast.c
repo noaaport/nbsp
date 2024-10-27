@@ -3,10 +3,10 @@
  */
 
 /*
- * Usage: npmcast [-b] [-C] \
+ * Usage: npmcast [-b] [-C] [-r] \
  *                [-a mcast_addr] [-p mcast_port] \
  *                [-i ifname | -I ifip] \
- *                [-s prod_seq_num] [-f sbn_seq_num] \
+ *                [-s prod_seq_num] [-f sbn_seq_num] [-m] \
  *                <fpath>
  * (The "sbn_seq_num" is the start of the sequence number for each frame.)
  *
@@ -42,6 +42,7 @@
 struct {
   int opt_background;		/* -b */
   int opt_C;			/* -C => print configuration */
+  int opt_r;			/* -r => radar (nids) file; default is nwstg */
   char *opt_mcast_addr;		/* -a */ 
   char *opt_mcast_port;		/* -p */
   char *opt_ifname;		/* -i interface_name (e.g., eth1) */
@@ -56,7 +57,7 @@ struct {
   int sfd;			/* socket fd */
   void *sa;			/* struct sockaddr *sa; */
   socklen_t sa_len;
-} g = {0, 0, DEF_MCAST_IP, DEF_MCAST_PORT, NULL, NULL,
+} g = {0, 0, 0, DEF_MCAST_IP, DEF_MCAST_PORT, NULL, NULL,
        DEF_PROD_SEQ_NUM, DEF_SBN_SEQ_NUM, DEF_MCAST_TTL, DEF_MCAST_LOOP, NULL,
        NULL, -1, NULL, 0};
 
@@ -89,6 +90,8 @@ static void cleanup(void){
 static void print_conf(void){
 
   fprintf(stdout, "%s: %d\n", "opt_background", g.opt_background);
+  fprintf(stdout, "%s: %d\n", "opt_r", g.opt_r);
+  
   fprintf(stdout, "%s: %s\n", "opt_mcast_addr", g.opt_mcast_addr);
   fprintf(stdout, "%s: %s\n", "opt_mcast_port", g.opt_mcast_port);
   fprintf(stdout, "%s: %s\n", "opt_ifname", g.opt_ifname);
@@ -106,11 +109,11 @@ static void print_conf(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bCa:p:i:I:s:f:t:m";
+  char *optstr = "bCra:p:i:I:s:f:t:m";
   char *usage = "npmcast [-b] [-C] \
                  [-a mcast_addr] [-p mcast_port] \
                  [-i ifname | -I ifip] \
-                 [-s prod_seq_num] [-f sbn_seq_num] \
+                 [-s prod_seq_num] [-f sbn_seq_num] [-r] \
 		 [-t mcast_ttl] [-m] \
                  <fpath>";
   int status = 0;
@@ -126,6 +129,9 @@ int main(int argc, char **argv){
       break;
     case 'C':
       g.opt_C = 1;
+      break;
+    case 'r':
+      g.opt_r = 1;	/* file is radar (nids) */
       break;
     case 'a':
       g.opt_mcast_addr = optarg;
@@ -199,6 +205,7 @@ static int process_file(void){
   status = create_sbnpack(g.opt_fpath,
 			  g.opt_prod_seq_num,
 			  g.opt_sbn_seq_num,
+			  g.opt_r,
 			  &g.sbnpack);
   if(status == -1)
     log_err(1, "%s", "Error from create_sbnpack");
