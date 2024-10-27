@@ -33,14 +33,14 @@
  * The four original channels:
  * 1 ncep/nwstg, 2 goes/nesdis, 3 ncep/nwstg2, 4 oconus imagery/model
  */
-MCAST_ADDR_1 "224.0.1.1"
-MCAST_ADDR_2 "224.0.1.2"
-MCAST_ADDR_3 "224.0.1.3"
-MCAST_ADDR_4 "224.0.1.4"
-MCAST_PORT_1 "1201"
-MCAST_PORT_2 "1202"
-MCAST_PORT_3 "1203"
-MCAST_PORT_4 "1204"
+#define MCAST_ADDR_1 "224.0.1.1"
+#define MCAST_ADDR_2 "224.0.1.2"
+#define MCAST_ADDR_3 "224.0.1.3"
+#define MCAST_ADDR_4 "224.0.1.4"
+#define MCAST_PORT_1 "1201"
+#define MCAST_PORT_2 "1202"
+#define MCAST_PORT_3 "1203"
+#define MCAST_PORT_4 "1204"
 
 /* defaults */
 #define DEF_MCAST_ADDR MCAST_ADDR_1
@@ -70,7 +70,7 @@ struct {
   int sfd;			/* socket fd */
   void *sa;			/* struct sockaddr *sa; */
   socklen_t sa_len;
-} g = {0, 0, 0, DEF_MCAST_IP, DEF_MCAST_PORT, NULL, NULL,
+} g = {0, 0, 0, DEF_MCAST_ADDR, DEF_MCAST_PORT, NULL, NULL,
        DEF_PROD_SEQ_NUM, DEF_SBN_SEQ_NUM, DEF_MCAST_TTL, DEF_MCAST_LOOP, NULL,
        NULL, -1, NULL, 0};
 
@@ -146,7 +146,7 @@ int main(int argc, char **argv){
     case 'r':
       g.opt_r = 1;	/* file is radar (nids) */
       g.opt_mcast_addr = MCAST_ADDR_3;
-      g.opt_mcast_PORT = MCAST_PORT_3;
+      g.opt_mcast_port = MCAST_PORT_3;
       break;
     case 'a':
       g.opt_mcast_addr = optarg;
