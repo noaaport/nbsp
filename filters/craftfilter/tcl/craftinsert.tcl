@@ -15,10 +15,10 @@ set craftinsert(localconfdirs) [list \
 #
 # These are configurable in the configuration file(s)
 #
-set craftinsert(nbspd_enable) 0;
-set craftinsert(nbspd_spooldir) "/var/noaaport/nbsp/spool";
-set craftinsert(nbspd_infifo) "/var/run/nbsp/infeed.fifo";
-set craftinsert(nbspd_wmoid) "level2";
+set craftinsert(nbsp_enable) 1;
+set craftinsert(nbsp_spooldir) "/var/noaaport/nbsp/spool";
+set craftinsert(nbsp_infifo) "/var/run/nbsp/infeed.fifo";
+set craftinsert(nbsp_wmoid) "level2";
 set craftinsert(mvtospool) 0;  # move to spool or insert (default is insert)
 set craftinsert(delete) 0;     # delete after insert
 set craftinsert(deletenonop) 0; # delete also non-operational files
@@ -76,8 +76,8 @@ proc proc_nbsp {ppath} {
     #
     global craftinsert;
 
-    set spooldir $craftinsert(nbspd_spooldir);
-    set wmoid $craftinsert(nbspd_wmoid);
+    set spooldir $craftinsert(nbsp_spooldir);
+    set wmoid $craftinsert(nbsp_wmoid);
 
     # Extract info from input name
     set input_name [file tail $ppath];
@@ -120,26 +120,26 @@ proc proc_nbsp {ppath} {
     set oldmask [umask];
     umask $craftinsert(umask);
 
+    # The spooldir must exist - we create (if necessary) the parent subdir
+    if {[file isdirectory $spooldir] == 0} {
+       return -code error "Spool directory does not exist: $spooldir";
+    }
+    file mkdir [file dirname $fpath];
+
     if {$craftinsert(mvtospool) == 0} {
 	set status [catch {
-	    # exec nbspinsert -i -f $craftinsert(nbspd_infifo) $finfo < $ppath;
-	    exec nbspinsert -i -f $craftinsert(nbspd_infifo) \
+	    # exec nbspinsert -i -f $craftinsert(nbsp_infifo) $finfo < $ppath;
+	    exec nbspinsert -i -f $craftinsert(nbsp_infifo) \
 		$seq $type $cat $code $npchidx $fname $fpath < $ppath;
 	    if {$craftinsert(delete) == 1} {
 		file delete $ppath;
 	    }
 	} errmsg];
     } else {
-        # The spooldir must exist
-        if {[file isdirectory $spooldir] == 0} {
-	    return -code error "Spool directory does not exist: $spooldir";
-        }
-        file mkdir [file dirname $fpath];
-
 	file rename -force $ppath $fpath;
 	set status [catch {
-	    # exec nbspinsert -f $craftinsert(nbspd_infifo) $finfo;
-	    exec nbspinsert -f $craftinsert(nbspd_infifo) \
+	    # exec nbspinsert -f $craftinsert(nbsp_infifo) $finfo;
+	    exec nbspinsert -f $craftinsert(nbsp_infifo) \
 		$seq $type $cat $code $npchidx $fname $fpath;
 	} errmsg];
 
@@ -187,7 +187,7 @@ if {[file exists $tmppath]} {
     file rename -force $tmppath $ppath;
 }
 
-if {$craftinsert(nbspd_enable) == 1} {
+if {$craftinsert(nbsp_enable) == 1} {
     set status [catch {
 	proc_nbsp $ppath;
     } errmsg];
