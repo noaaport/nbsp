@@ -350,9 +350,7 @@ if {$status != 0} {
 }
 
 # main
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled
 
 # Close the nbsp2pdm pipe
 set status [catch {

@@ -1,0 +1,9 @@
+01 nov 2024
+
+This cli tool was meant to be used with the cspool framework
+but in the end we did not to implement the cspool.
+This cli tool is left here for testing purposes, but it is not
+installed.
+
+The filterslib cspoolbdb.{tcl,conf} used to call this cli tool but those
+files have been removed.

@@ -43,6 +43,8 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 #
     global dafilter;
 
+    set _pwd [pwd];
+
     cd $dafilter(datadir);
     file mkdir $savedir;
 
@@ -53,11 +55,11 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 
     set status [catch {
 	if {$f_append eq "-a"} {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-a";
 #	    filterlib_nbspfile $seq $fpath $savedir $savename "-a";
 #           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
 	} else {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename;
 #	    filterlib_nbspfile $seq $fpath $savedir $savename;
 #           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
  	}
@@ -66,4 +68,6 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
     if {$status != 0} {
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 }

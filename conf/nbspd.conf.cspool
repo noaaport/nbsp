@@ -5,6 +5,12 @@
 #
 
 #
+# This file exists only for documentation purposes because the cspool
+# has never been operational. The cspool section has been commented out here
+# but the working file actually does not contain that section
+#
+
+#
 # Sample configuration file for nbspd
 #
 

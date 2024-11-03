@@ -78,7 +78,6 @@ bin/nbspaloftcsv
 bin/nbsptrackdata
 bin/nbsptrackplot
 bin/nbspscheduler
-bin/nbspcspoolr
 bin/nbspreconfigure
 bin/nbspconfigure-dvbs2
 bin/nbspconfigure-updatedb
@@ -143,7 +142,6 @@ libexec/nbsp/filters-err.lib
 libexec/nbsp/filters-gribid.lib
 libexec/nbsp/archive.init
 libexec/nbsp/pkgIndex.tcl
-libexec/nbsp/cspoolbdb.tcl
 libexec/nbsp/errx.tcl
 libexec/nbsp/hscheduler.tcl
 libexec/nbsp/mscheduler.tcl
@@ -182,7 +180,6 @@ etc/nbsp/dist/nbspd-tier1.conf-ex
 etc/nbsp/dist/filters.conf-sample
 etc/nbsp/dist/filters-gribid.def-sample
 etc/nbsp/dist/archive.conf-sample
-etc/nbsp/dist/cspoolbdb.conf-sample
 etc/nbsp/dist/nbspfilter.conf-sample
 etc/nbsp/dist/nbspfilter.rc-sample
 etc/nbsp/dist/nbspfilter.rc-ex

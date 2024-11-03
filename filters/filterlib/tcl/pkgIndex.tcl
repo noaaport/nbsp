@@ -1,9 +1,6 @@
 #
 # $Id$
 #
-package ifneeded nbsp::cspoolbdb 1.0 \
-    [list source [file join $dir cspoolbdb.tcl]]
-
 package ifneeded nbsp::errx 1.0 \
     [list source [file join $dir errx.tcl]]
 

@@ -199,6 +199,4 @@ if {$option(s) == 1} {
     set dafilter(option_s) 1;
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

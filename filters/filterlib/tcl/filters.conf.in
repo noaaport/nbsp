@@ -176,21 +176,6 @@ set gempak(libdir)	[file join $gempak(homedir) "os/%GPOSNAME%/lib"];
 set gempak(envfile)	[file join $common(confdir) "gempak.env"];
 
 #
-# Fine-Tuning
-#
-
-# The configuration file of the spool cache (cspool).
-#
-set common(cspoolbdbconf) [file join $common(confdir) "cspoolbdb.conf"];
-
-# If this variable to 1 the filters (using the functions in filters.lib) will
-# try to fire up as many processes in parallel as they can when they are
-# processing data files. It is generally a good idea to set it in
-# multiprocessor machines.
-#
-set filterslib(background_processing) 0;
-
-#
 # Read the local overrides
 #
 if {[info exists source_filters_conf_defined]} {

@@ -131,6 +131,4 @@ proc accept_file {fname} {
     return $match_status;
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

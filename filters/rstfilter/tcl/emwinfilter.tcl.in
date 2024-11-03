@@ -616,7 +616,5 @@ if {[emwinfilter_fifo_open] != 0} {
     return 1;
 }
 
-filterlib_init;		# open the cpool if enabled
 main;
-filterlib_end;		# close the cpool if enabled
 emwinfilter_fifo_close;

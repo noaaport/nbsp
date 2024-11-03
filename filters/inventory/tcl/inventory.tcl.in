@@ -267,6 +267,4 @@ proc channel_stats_log {} {
 	[clock format [clock seconds] -gmt true -format "%H%M"];
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

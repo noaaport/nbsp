@@ -36,7 +36,7 @@ cspoolr: ${OBJECTS}
 	${CC} -g -o $@ ${OBJECTS} ${LIBS}
 
 install: all
-	${INSTALL} -m 0755 ${TARGET} ${BINDIR}/${CLINAME}
+	#${INSTALL} -m 0755 ${TARGET} ${BINDIR}/${CLINAME}
 
 clean:
 	rm -f *~ ${OBJECTS} ${TARGET} ${AUX_FILES} Makefile

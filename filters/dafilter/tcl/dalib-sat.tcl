@@ -44,20 +44,21 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	        exec nbspunz -o $datafpath $fpath;
 	    }
 	} else {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename;
 	}
     } errmsg];
 
     if {$status != 0} {
 	file delete $datafpath;
 	log_msg $errmsg;
-	return;
     }
 
-    filter_sat_insert_inventory $savedir $datafpath;
+    if {$status = 0} {
+	filter_sat_insert_inventory $savedir $datafpath;
 
-    # Create the link to the latest
-    make_sat_latest $savedir $savename;
-
+	# Create the link to the latest
+	make_sat_latest $savedir $savename;
+    }
+    
     cd $_pwd;
 }

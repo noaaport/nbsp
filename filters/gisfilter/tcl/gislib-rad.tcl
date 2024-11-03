@@ -36,14 +36,20 @@ proc filter_rad_create_nids {rc_varname} {
 
     set status [catch {
 	#
-	# The files are saved without the gempak header/footer (-t) and
-	# the -w flag is passed to wait for the nids file to be created
-	# before continuing to create the gis files.
+	# The files are saved without the gempak header/footer (-t).
+	# [NOTE (02 nov 2024): Before the removal of the cspool,
+	# the -w flag was passed to wait for the nids file to be created
+	# (i.e., not use background processing)
+	# before continuing to create the gis files. This flag is no longer
+	# needed because the default (which was always the case) is _not_ to
+	# use background processing.]
 	#
-	filterlib_cspool_nbspfile \
-	    $seq $fpath $data_savedir $data_savename -t -w;
-
+	filterlib_exec_nbspfile $seq $fpath $data_savedir $data_savename -t;
+	#
+	## filterlib_cspool_nbspfile \
+	##    $seq $fpath $data_savedir $data_savename -t -w;
 	## filterlib_nbspfile $seq $fpath $data_savedir $data_savename -t;
+	#
     } errmsg];
 
     if {$status != 0} {

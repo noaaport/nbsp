@@ -1,0 +1,107 @@
+02 Nov 2024
+
+** As stated in "conf/features.conf.cspool", the cspool in the nbsp server
+has never been operational. The "conf/nbspd.conf.cspool" file has the
+corresponding settings, but both are obsolete files kept only for documentation
+purposes.
+
+** The filters have some infrastructure setup for using the cspool,
+if/when that is properly implemented in the server. Since long ago
+I decided to not implement the cspool because tests showed that it
+was not efficient, and expressed the intention to remove that
+extra infrastructure in the filters and the filterlib.  So here I am
+listing the places where the revisions have to be made.
+
+DONE * Make a comment in "conf/nbspd.conf.cspool" similar to the one in
+"conf/features.conf.cspool"
+
+DONE * Remove the cspoolbdb files in filterslib/tcl
+DONE * Do not install the nbspcspoolr file (src/libcspool)
+
+  (We can leave the source files, as testing toold, but eliminate
+  the reference to the cspool application).
+
+DONE * The files listed in
+
+- query_enable.txt
+- filterlib_cspool_nbspfile.txt
+
+must be revised to eliminate the reference(s) to the cspool framework.
+
+DONE * The files listed in
+
+- background_processing.txt
+
+must be revised to determine if the background processing framework
+must be deleted.
+
+DONE * The files listed in
+
+- cspoolbdb.txt
+
+must be revised to eliminate the reference to the cpoolbdb files.
+
+DONE * The files in filterlib_cspool_nbspfile.txt
+  - dafilter
+  - gribfilter
+  - gisfilter
+
+DONE * All files listed in "filterlib_init.txt" were revised to delete the
+lines "filterlib_init" and "filterlib_end" sorrounding the call to main {}.
+
+DONE * Finally the files listed in
+
+- cspool.txt
+
+must checked to see if anyone of the skipped the previous checks.
+
+===========================================================================
+These are the files revised/checked:
+
+* filterslib:
+
+filters.conf
+filters.lib
+Makefile.in
+pkgIndex
+cspoolbdb.{tcl,conf} - deleted
+
+* src/spoolbdb/cli
+
+Makefile.in (edited - removed installation of nbspcspoolr)
+cspoolr.c (edited - removed comment about the cspoolrpipe.tcl tool)
+cspoolrpipe.tcl (deleted)
+tcl examles deleted in cli/examples
+
+* dafilter
+
+dalib-rad
+dalib-sat
+dalib-file
+
+* gisfilter
+
+gisfilter.tcl
+gislib-rad.tcl
+
+* gribfilter
+gribfilter.tc.in
+
+* gpfilter
+-- gpfilter.tcl.in
+
+* All files listed in "filterlib_init.txt" were revised to delete the
+lines "filterlib_init" and "filterlib_end" sorrounding the call to main {}.
+
+===========================================================================
+03 nov 2024 - This is the commit message
+
+cspool removal: Removed the remnants of the cspool in the filters
+The last revision of the version prior to the removal is
+
+commit: 852718d1a4d80833695d860faab3202d98a89fe7
+
+The sub-directory "cspool-removal" in the "dev-notes" directory contains
+the details (e.g., files revised) of what was done.
+
+============================================================================

@@ -174,6 +174,4 @@ proc save_file {seq fpath savedir savename} {
     return $status;
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

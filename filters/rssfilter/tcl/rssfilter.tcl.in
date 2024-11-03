@@ -244,6 +244,4 @@ proc make_xml {cat_body subchannel channeldesc rsstemplate} {
     }
 }
 
-filterlib_init;		# open the cpool if enabled
 main
-filterlib_end;		# close the cpool if enabled

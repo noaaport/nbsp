@@ -522,6 +522,4 @@ proc save_obdata_station_archive_hourly {cname wmotime obstation obdata} {
     }
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

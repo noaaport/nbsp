@@ -197,6 +197,4 @@ proc save_fm35_hourly {wmotime rawdata} {
     filterlib_file_append $arcvfile $rawdata;
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

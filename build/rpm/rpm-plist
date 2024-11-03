@@ -76,7 +76,6 @@
 /usr/local/bin/nbsptrackdata
 /usr/local/bin/nbsptrackplot
 /usr/local/bin/nbspscheduler
-/usr/local/bin/nbspcspoolr
 /usr/local/bin/nbspreconfigure
 /usr/local/bin/nbspconfigure-dvbs2
 /usr/local/bin/nbspconfigure-updatedb
@@ -141,7 +140,6 @@
 /usr/local/libexec/nbsp/filters-gribid.lib
 /usr/local/libexec/nbsp/archive.init
 /usr/local/libexec/nbsp/pkgIndex.tcl
-/usr/local/libexec/nbsp/cspoolbdb.tcl
 /usr/local/libexec/nbsp/errx.tcl
 /usr/local/libexec/nbsp/hscheduler.tcl
 /usr/local/libexec/nbsp/mscheduler.tcl
@@ -180,7 +178,6 @@
 /usr/local/etc/nbsp/dist/filters.conf-sample
 /usr/local/etc/nbsp/dist/filters-gribid.def-sample
 /usr/local/etc/nbsp/dist/archive.conf-sample
-/usr/local/etc/nbsp/dist/cspoolbdb.conf-sample
 /usr/local/etc/nbsp/dist/nbspfilter.conf-sample
 /usr/local/etc/nbsp/dist/nbspfilter.rc-sample
 /usr/local/etc/nbsp/dist/nbspfilter.rc-ex

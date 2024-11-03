@@ -507,6 +507,4 @@ if {[file isdirectory $msgfilter(datadir)]} {
     return 1;
 }
      
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

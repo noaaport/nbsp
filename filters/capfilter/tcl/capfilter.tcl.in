@@ -207,6 +207,4 @@ if {[file isdirectory $capfilter(datadir)]} {
 
 ::nbsp::periodic::register capfilter_cleanup_expired_files "daily";
 
-filterlib_init;		# open the cpool if enabled
 main
-filterlib_end;		# close the cpool if enabled

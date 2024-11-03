@@ -16,11 +16,8 @@
  * The [-m] option sets the f_mpool_nofile flag in the cspoolbdb_create()
  * to open a shared memory bdb. (Otherwise it is a normal file-backed bdb).
  *
- * Writes the contents of the file to stdout. The companion program
- * (tcl script) cspoolrpipe does the same thing but through
- * the ::cspoolr:: package (which in turn uses cspoolr).
- *
- * If no argument is given, it takes them from stdin, each line of the form
+ * Writes the contents of the file to stdout.
+  * If no argument is given, it takes them from stdin, each line of the form
  *
  * <key>,<size>
  *

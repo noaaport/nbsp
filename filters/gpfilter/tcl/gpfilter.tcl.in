@@ -159,6 +159,8 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 
     global gpfilter;
 
+    set _pwd [pwd];
+    
     cd $gpfilter(dec_datadir);
     file mkdir $savedir;
 
@@ -169,19 +171,21 @@ proc filter_file_normal {seq fpath savedir savename {f_append ""}} {
 
     set status [catch {
 	if {$f_append eq "-a"} {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
-#	    filterlib_nbspfile $seq $fpath $savedir $savename "-a";
-#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-a";
+	    # filterlib_nbspfile $seq $fpath $savedir $savename "-a";
+            # eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
 	} else {
-	    filterlib_cspool_nbspfile $seq $fpath $savedir $savename;
-#	    filterlib_nbspfile $seq $fpath $savedir $savename;
-#           eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename;
+	    # filterlib_nbspfile $seq $fpath $savedir $savename;
+            # eval exec nbspfile $opts -d $savedir -o $savename $fpath $seq;
 	}
     } errmsg];
 
     if {$status != 0} {
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 
     #
     # The filter_rad function needs to know this.
@@ -199,6 +203,8 @@ proc filter_file_compress {seq fpath savedir savename} {
 	return;
     }
 
+    set _pwd [pwd];
+
     cd $gpfilter(dec_datadir);
     file mkdir $savedir;
 
@@ -214,6 +220,8 @@ proc filter_file_compress {seq fpath savedir savename} {
     if {$status != 0} {
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 }
 
 proc filter_rad {seq fpath savedir savename} {
@@ -259,6 +267,7 @@ proc filter_pipe_old {seq fpath pipe_name cmd_options savename} {
 	return;
     }
 
+    set _pwd [pwd];    
     cd $gpfilter(dec_rootdir);
 
     if {$savename ne ""} {
@@ -295,6 +304,8 @@ proc filter_pipe_old {seq fpath pipe_name cmd_options savename} {
     if {$status != 0} {
         log_msg $errmsg;
     }
+
+    cd $_pwd;
 }
 
 proc filter_sat_unz {seq fpath} {
@@ -311,6 +322,8 @@ proc filter_sat_unz {seq fpath} {
     }
     set satdir $gpfilter(satdef,satdir);
     set sattmpdir $gpfilter(satdef,sattmpdir);
+
+    set _pwd [pwd];
 
     cd $gpfilter(dec_datadir);
     file mkdir $sattmpdir
@@ -349,23 +362,23 @@ proc filter_sat_unz {seq fpath} {
 
 	# The mechanism to enable/disable individual types
 	set savedir [file join $satdir $dir];
-	if {[is_sat_rule_enabled $savedir] == 0} {
-	    return;
+	if {[is_sat_rule_enabled $savedir] != 0} {
+	    set status [catch {
+		set pathout [file join $savedir $fname];
+		file mkdir $savedir;
+		file rename -force [file join $sattmpdir $tmpname] $pathout;
+		filter_sat_insert_inventory $dir \
+		    [file join $gpfilter(dec_datadir) $pathout];
+	    } errmsg];
 	}
-
-	set status [catch {
-	  set pathout [file join $savedir $fname];
-	  file mkdir $savedir;
-	  file rename -force [file join $sattmpdir $tmpname] $pathout;
-	  filter_sat_insert_inventory $dir \
-	      [file join $gpfilter(dec_datadir) $pathout];
-	} errmsg];
     }
 
     if {$status != 0} {
 	log_msg "Could not process $fpath.";
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 }
 
 proc filter_sat {seq fpath} {
@@ -381,6 +394,7 @@ proc filter_sat {seq fpath} {
     }
     set satdir $gpfilter(satdef,satdir);
 
+    set _pwd [pwd];
     cd $gpfilter(dec_datadir);
 
     # This command just extracts the information from the nesdis pdb
@@ -418,23 +432,23 @@ proc filter_sat {seq fpath} {
 
 	# The mechanism to enable/disable individual types
 	set savedir [file join $satdir $dir];
-	if {[is_sat_rule_enabled $savedir] == 0} {
-	    return;
+	if {[is_sat_rule_enabled $savedir] != 0} {
+	    set status [catch {
+		set pathout [file join $savedir $fname];
+		file mkdir $savedir;
+		file copy -force $fpath $pathout;
+		filter_sat_insert_inventory $dir \
+		    [file join $gpfilter(dec_datadir) $pathout];
+	    } errmsg];
 	}
-
-        set status [catch {
-	  set pathout [file join $savedir $fname];
-	  file mkdir $savedir;
-          file copy -force $fpath $pathout;
-	  filter_sat_insert_inventory $dir \
-	      [file join $gpfilter(dec_datadir) $pathout];
-        } errmsg];
     }
 
     if {$status != 0} {
 	log_msg "Could not process $fpath.";
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 }
 
 proc filter_psat {seq fpath} {
@@ -460,6 +474,7 @@ proc filter_pipe {seq fpath pipe_name cmd_options savename} {
 	return;
     }
 
+    set _pwd [pwd];
     cd $gpfilter(dec_rootdir);
 
     set cmd_name [file join $gpfilter(dec_bindir) $pipe_name];
@@ -488,6 +503,8 @@ proc filter_pipe {seq fpath pipe_name cmd_options savename} {
     if {$status != 0} {
 	log_msg "Error piping $fpath to $pipe_name: $errmsg"; 
     }
+
+    cd $_pwd;
 }
 
 #
@@ -694,9 +711,7 @@ if {$option(s) == 0} {
         gpfilter_run_scheduler $gpfilter(schedule_run_period);
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled
 
 # Close the decoders pipes
 foreach key [array names gpfilter "pipe_F,*"] {

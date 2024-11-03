@@ -156,12 +156,14 @@ proc filter_file {seq fpath savedir savename} {
 
     global gribfilter;
 
+    set _pwd [pwd];
+    
     cd $gribfilter(datadir);
     file mkdir $savedir;
 
     set status [catch {
-	filterlib_cspool_nbspfile $seq $fpath $savedir $savename "-a";
-#	filterlib_nbspfile $seq $fpath $savedir $savename "-a";
+	filterlib_exec_nbspfile $seq $fpath $savedir $savename "-a";
+	# filterlib_nbspfile $seq $fpath $savedir $savename "-a";
     } errmsg];
 
     if {$status != 0} {
@@ -172,6 +174,8 @@ proc filter_file {seq fpath savedir savename} {
 	    lappend gribfilter(dirtygrbfiles) $fpathout;
 	}
     }
+
+    cd $_pwd;
 }
 
 #
@@ -198,6 +202,8 @@ proc gribfilter_control_files_old {} {
     }
     set dirtygrbfiles $gribfilter(dirtygrbfiles);
     set gribfilter(dirtygrbfiles) [list];
+
+    set _pwd [pwd];
 
     cd $gribfilter(datadir);
     log_msg "Start creating control files.";
@@ -243,6 +249,8 @@ proc gribfilter_control_files_old {} {
     if {$status != 0} {
 	log_msg $errmsg;
     }
+
+    cd $_pwd;
 
     log_msg "Finished creating control files.";
 }
@@ -308,6 +316,4 @@ if {$option(s) == 0} {
         gribfilter_run_scheduler $gribfilter(schedule_run_period);
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled

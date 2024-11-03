@@ -8,43 +8,10 @@
 # when these functions are used. In addition, this file requires
 #
 # package require fileutil;	# tcllib
-# package require cmdline;      # tcllib (used by filterlib_cspool_nbspfile)
-# package require nbsp::cspoolbdb;    # spool cache lib
-# package require nbsp::util;     # nbsputil::date::clock_seconds
 #
 # This is done by the filters.init file.
 
 package provide nbsp::filterslib 1.0;
-
-proc filterlib_init {} {
-
-    if {[::nbsp::cspoolbdb::query_enable] == 0} {
-	return;
-    }
-
-    set status [catch {
-        ::nbsp::cspoolbdb::open;
-    } errmsg];
-
-    if {$status != 0} {
-	log_msg $errmsg;
-    }
-}
-
-proc filterlib_end {} {
-
-    if {[::nbsp::cspoolbdb::query_enable] == 0} {
-	return;
-    }
-
-    set status [catch {
-        ::nbsp::cspoolbdb::close;
-    } errmsg];
-
-    if {$status != 0} {
-	log_msg $errmsg;
-    }
-}
 
 proc filterlib_get_rcfiles {rcfname confdirs rcdir prercfile postrcfile} {
 
@@ -111,48 +78,9 @@ proc filterlib_get_body_fs {fpath bodypartsize} {
     return $body;
 }
 
-proc filterlib_get_body_cspool {seqnum bodypartsize} {
-
-    set body "";
-
-    set status [catch {
-        set result [::nbsp::cspoolbdb::read $seqnum $bodypartsize];
-    } errmsg];
-
-    if {$status != 0} {
-	if {[::nbsp::cspoolbdb::query_code_notfound]} {
-	    if {[::nbsp::cspoolbdb::query_verbose] >= 1} {
-		log_msg $errmsg;
-	    }
-	} elseif {[::nbsp::cspoolbdb::query_code_error]} {
-	    log_msg $errmsg;
-	}
-
-	return "";
-    }
-
-    if {[::nbsp::cspoolbdb::query_verbose] >= 2} {
-        log_msg "$seqnum found in cspool.";
-    }
-
-    set code [lindex $result 0];
-    set size [lindex $result 1];
-    set body [lindex $result 2];
-
-    return $body;
-}
-
 proc filterlib_get_body {fpath seqnum bodypartsize} {
 
-    set body "";
-
-    if {[::nbsp::cspoolbdb::query_enable] != 0} {
-        set body [filterlib_get_body_cspool $seqnum $bodypartsize];
-    }
-
-    if {$body eq "" } {
-	set body [filterlib_get_body_fs $fpath $bodypartsize];
-    }
+    set body [filterlib_get_body_fs $fpath $bodypartsize];
 
     return $body;
 }
@@ -842,18 +770,27 @@ proc filterlib_nbsppipe_F {seq inputfile fout args} {
 
 # The main functions here are:
 #
-# proc filterlib_cspool_nbspfile {seq fpath savedir savename args}
-# proc filterlib_cspool_nbsppipe {seq fpath savedir savename args}
+# proc filterlib_exec_nbspfile {seq fpath savedir savename args}
+# proc filterlib_exec_nbsppipe {seq fpath savedir savename args}
 #
-# They use the following helper function:
+# They end up calling nbspfile and nbsppipe, via the filterlib_exec function
 #
-# Usage: filterlib_cspool_execpipe [-e <exec_cmd>] [-p <pipe_cmd>] <key>
-#
-# Without the "-p" option, the function outputs the content of the file
-# to stdout, otherwise it pipes the contents to the command given as the
-# argument to "-p" using the tcl open function.
-# If the <key> is not found in the db, then it will exec the <exec_cmd>.
-#
+proc filterlib_exec {cmd} {
+
+    global filterslib;
+
+    set status [catch {
+	eval exec $cmd;
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg $errmsg;
+    }
+
+    return $status;
+}
+
+# A similar helper function, although not used in this lib
 proc filterlib_pipe {cmd body} {
 
     set status [catch {
@@ -879,141 +816,45 @@ proc filterlib_pipe {cmd body} {
     return $status;
 }
 
-proc filterlib_exec {cmd} {
-
-    global filterslib;
-
-    set status [catch {
-	eval exec $cmd;
-    } errmsg];
-
-    if {$status != 0} {
-	log_msg $errmsg;
-    }
-
-    return $status;
-}
-
-proc filterlib_cspool_execpipe {args} {
-
-    set usage {filterlib_cspool_execpipe [-e <cmd>] [-p <cmd>] <seq>};
-    set optlist {{e.arg ""} {p.arg ""}};
-    array set option [::cmdline::getoptions args $optlist $usage];
-    set argc [llength $args];
-
-    if {$argc == 0} {
-	log_msg $usage;
-	return 1;
-    }
-    set seq [lindex $args 0];
-
-    set status [catch {
-	set result [::nbsp::cspoolbdb::read $seq];
-    } errmsg];
-
-    if {[::nbsp::cspoolbdb::query_code_notfound]} {
-	set status 1;
-	if {[::nbsp::cspoolbdb::query_verbose] != 0} {
-	    log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
-	}
-	if {$option(e) ne ""} {
-	    set status [filterlib_exec $option(e)];
-	}
-	return $status;
-    } elseif {[::nbsp::cspoolbdb::query_code_error]} {
-	set status 1;
-	log_msg "filterlib_cspool_execpipe: key $seq: $errmsg";
-	if {$option(e) ne ""} {
-	    set status [filterlib_exec $option(e)];
-	}
-	return $status;
-    }
-    
-    set code [lindex $result 0];
-    set size [lindex $result 1];
-    set body [lindex $result 2];
-    
-    if {[::nbsp::cspoolbdb::query_verbose] >= 2} {
-	log_msg "filterlib_cspool_execpipe: $seq found in cspool.";
-    }
-    if {$option(p) eq ""} {
-	return $body;
-    } else {
-	filterlib_pipe $option(p) $body;
-    }
-}
 
 #
-# This function ends up calling the nbspfile program. Since nbdpfile locks
-# the output file, it is safe to execute in the background. This is done
-# if filterslib(background_processing) is set to 1.
+# This function ends up calling the nbspfile program.
 #
-proc filterlib_cspool_nbspfile {seq fpath savedir savename args} {
+proc filterlib_exec_nbspfile {seq fpath savedir savename args} {
     #
     # The args are flags for nbspfile:
     #
     # [-a] => append
     # [-t] => do not add gempak header and footer
-    # [-w] => wait for completion (ignoring filterslib(background_processing)) 
-
+    #
+    
     global filterslib;
 
     set opts $args;
-
-    # The -w flag, if given, overrides the setting of
-    # filterslib(background_processing), and that flag must be removed
-    # from the option string that is passed to nbspfile.
-
-    set f_background_processing $filterslib(background_processing);
-    set i [lsearch -exact $opts "-w"];
-    if {$i != -1} {
-	set f_background_processing 0;
-	set opts [lreplace $opts $i $i];
-    }
 
     if {$filterslib(ccbsaved) == 0} {
 	lappend opts "-n";
     }
     lappend opts "-d" $savedir "-o" $savename $fpath $seq;
 
-    set status 0;
-    if {[::nbsp::cspoolbdb::query_enable] == 1} {
-	set cmd [concat "|nbspfile" "-i" $opts];
-	set status [filterlib_cspool_execpipe -p $cmd $seq];
-    }
-
-    if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-	if {$f_background_processing == 1} {
-	    set cmd [concat "nbspexec" "nbspfile" $opts];
-	} else {
-            set cmd [concat "nbspfile" $opts];
-	}
-        filterlib_exec $cmd;
-    }
+    set cmd [concat "nbspfile" $opts];
+    filterlib_exec $cmd;
 }
 
 #
 # Similar to the above, but calling nbsppipe with a pipeline to
-# another program (e.g., a gempak decoder). Since the gempak decoders
-# do not lock the output file (or do they?), this function should be
-# invoked with the -w flag.
+# another program (e.g., a gempak decoder).
 #
-proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
+proc filterlib_exec_nbsppipe {seq fpath pipe_cmd args} {
     #
     # The args are flags for nbsppipe:
     #
     # [-g] => instructs nbsppipe to add gempak header/footer
-    # [-w] => wait for completion (ignoring filterslib(background_processing)) 
     #
     # pipe_cmd is the whole command line for the decoder program to which
-    # nbsppipe will pipe the data. So, when it has to read from the fs spool,
-    # we want to execute
+    # nbsppipe will pipe the data. So, we want to execute
     #
     # exec nbsppipe <options> < fpath | $pipe_cmd > /dev/null
-    #
-    # When the file is found in the cpool, we want to pipe the data to
-    #
-    # |nbsppipe <options> | $pipe_cmd > /dev/null
     #
     # As already mentioned, pipe_cmd will be a string of the form
     #
@@ -1024,31 +865,10 @@ proc filterlib_cspool_nbsppipe {seq fpath pipe_cmd args} {
     set opts $args;
 
     # Same as in the previous function
-    set f_background_processing $filterslib(background_processing);
-    set i [lsearch -exact $opts "-w"];
-    if {$i != -1} {
-	set f_background_processing 0;
-	set opts [lreplace $opts $i $i];
-    }
-
     if {$filterslib(ccbsaved) == 0} {
 	lappend opts "-n";
     }
 
-    set status 0;
-    if {[::nbsp::cspoolbdb::query_enable] == 1} {
-	set cmd [concat "|nbsppipe" $opts "-s" $seq "|" $pipe_cmd];
-	set status [filterlib_cspool_execpipe -p $cmd $seq];
-    }
-
-    if {([::nbsp::cspoolbdb::query_enable] == 0) || ($status != 0)} {
-	if {$f_background_processing == 1} {
-            set cmd [list "nbspexec" "nbsppipe"];
-	} else {
-	    set cmd [list "nbsppipe"];
-	}
-
-	set cmd [concat $cmd $opts "-s" $seq "<" $fpath "|" $pipe_cmd];
-	filterlib_exec $cmd;
-    }
+    set cmd [concat "nbsppipe" $cmd $opts "-s" $seq "<" $fpath "|" $pipe_cmd];
+    filterlib_exec $cmd;
 }

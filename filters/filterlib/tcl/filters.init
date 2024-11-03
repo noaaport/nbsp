@@ -13,9 +13,6 @@ source  "/usr/local/etc/nbsp/filters.conf";
 #
 # nbsp packages
 #
-package require nbsp::cspoolbdb;
-::nbsp::cspoolbdb::init $common(cspoolbdbconf) $common(localconfdirs);
-
 package require nbsp::util;       # nbsputil::date
 
 ## The filter error function library (in turn loads errx package)

@@ -276,6 +276,4 @@ proc nntp_post msg {
     }
 }
 
-filterlib_init;		# open the cpool if enabled
 main $argc $argv;
-filterlib_end;		# close the cpool if enabled
