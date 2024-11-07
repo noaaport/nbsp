@@ -290,7 +290,7 @@
 /usr/local/share/nbsp/dist/radmos-share.tgz
 /usr/local/share/nbsp/dist/geodata-share.tgz
 /usr/local/share/nbsp/dist/mapfonts-share.tgz
-/usr/local/man/man1/nbspd.1.gz
+/usr/local/share/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample
 /usr/local/share/doc/nbsp/nbsp.service-generic

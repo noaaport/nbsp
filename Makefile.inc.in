@@ -19,7 +19,7 @@ SBINDIR = ${DESTDIR}/sbin
 CONFDIR = ${DESTDIR}/etc
 SHAREDIR = ${DESTDIR}/share
 DOCDIR = ${DESTDIR}/share/doc
-MANDIR = ${DESTDIR}/man
+MANDIR = ${DESTDIR}/share/man
 LIBEXECDIR = ${DESTDIR}/libexec
 
 MANEXT = 1
