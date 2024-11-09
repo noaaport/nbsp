@@ -4,12 +4,14 @@
 . ../configure.inc
 
 COMMON_LIBDIRS="-L libconnth -L libqdb -L libspoolbdb"
-COMMON_LIBS="-lconn -lqdb -lspoolbdb -lwrap -lz"
+COMMON_LIBS="-lconn -lqdb -lspoolbdb"
 
 # defaults (FreeBSD)
 INCDIRS="$TCL_INCDIR $DB_INCDIR"
 LIBDIRS="$COMMON_LIBDIRS $LOCAL_LIBDIR"
-LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread"
+OSLIBS="-lz -lpthread -lwrap"
+
+LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB}"
 
 DEFINES="-DHAS_CLOCK_GETTIME"
 
@@ -20,17 +22,18 @@ case $os in
     NetBSD) 
         # use the defaults
 	;;
-    OpenBSD) 
-	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lm -lutil -lpthread"
+    OpenBSD)
+	OSLIBS="-lm -lutil -lpthread"
 	;;
     SunOS)
 	INCDIRS="-I /opt/sfw/include -I /usr/sfw/include"
 	LIBDIRS="$COMMON_LIBDIRS -L /opt/sfw/lib -L /usr/sfw/lib"
-	LIBS="$COMMON_LIBS -lpthread -lsocket -lnsl -lresolv"
+	OSLIBS="$-lz -lpthread -lsocket -lnsl -lresolv"
 	;;
     Linux)
-	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread -lrt"
-
+        [ $flavor = redhat ] && OSLIBS="-lz -lpthread -lrt"
+        [ $flavor = debian ] && OSLIBS="-lz -lpthread -lwrap"
+	#
 	# In Ubuntu-12.04-i386 the default db-5.1 library apparently
 	# cannot be used in a threaded application. We will use the
 	# locally (static) compiled version, for both amd and i386.
@@ -45,8 +48,9 @@ case $os in
     Darwin)
 	COMMON_LIBDIRS="-L./libconnth -L./libqdb -L./libspoolbdb"
 	LIBDIRS="$COMMON_LIBDIRS $LOCAL_LIBDIR"
-	LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} -lpthread"
-
+	OSLIBS="-lpthread"
 	DEFINES=
 	;;
 esac
+
+LIBS="$COMMON_LIBS -l${TCL_LIB} -l${DB_LIB} $OSLIBS"

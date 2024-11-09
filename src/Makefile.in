@@ -11,8 +11,9 @@ LIBSUBDIRS =	libtclconf libconnth libqdb libspoolbdb
 SRCSUBDIRS =	slavenbs slavefp slavein
 CLEANSUBDIRS =	${LIBSUBDIRS} ${SRCSUBDIRS}
 
+# config.h is created by the configure.sh script
 INSOURCES =	conf.c.in defaults.h.in
-INOBJECTS =	conf.c defaults.h
+INOBJECTS =	conf.c defaults.h config.h
 
 SOURCES =	main.c access.c appdata.c \
 		conf.c dbenv.c dbpanic.c dbstats.c \

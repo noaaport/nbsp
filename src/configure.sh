@@ -18,6 +18,12 @@ sed \
     -e "/@DEFINES@/ s||$DEFINES|" \
     Makefile.in > Makefile
 
+# copy the config.h file appropriate for the OS
+cd config.h.d
+./configure.sh
+cd ..
+
+# the libdirs and subdirs
 for d in $config_subdirs
 do
   cd $d

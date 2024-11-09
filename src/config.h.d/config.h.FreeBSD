@@ -1,0 +1,18 @@
+/*
+ * $Id$
+ */
+#ifndef CONFIG_H
+#define CONFIG_H
+
+/*
+ * defaults (FreeBSD and NetBSD)
+ */
+#define HAVE_DAEMON
+#define HAVE_LIBUTIL_H
+#undef  HAVE_UTIL_H
+#define HAVE_ERR
+#define HAVE_ATON
+#undef  HAVE_PTON
+#define HAVE_TCPWRAPPERS
+ 
+#endif

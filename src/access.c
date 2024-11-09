@@ -5,13 +5,19 @@
  *
  * $Id$
  */
+#include "config.h"
+
 #include <sys/types.h>
-#include <tcpd.h>
 #include <syslog.h>
 #include <stddef.h>
+#ifdef HAVE_TCPWRAPPERS
+#include <tcpd.h>
+#endif
 #include "defaults.h"
 #include "err.h"
 #include "access.h"
+
+#ifdef HAVE_TCPWRAPPERS
 
 #ifndef LIBWRAP_ALLOW_FACILITY
 # define LIBWRAP_ALLOW_FACILITY LOG_AUTH
@@ -66,3 +72,31 @@ int client_allow_nconn(int client_fd, char *ip, char *name){
 
   return(allow);
 }
+
+#else
+
+int client_allow_nconn(__attribute__((unused)) int client_fd,
+			char *ip, char *name){
+  /*
+   * This is the function that we pass to libconn library in place
+   * of the original one that was used with tcp_wrappers.
+   */
+  int allow = 1;
+  char *nameorip = NULL;
+
+  if(name != NULL)
+    nameorip = name;
+  else if(ip != NULL)
+    nameorip = ip;
+
+  if(nameorip != NULL){
+    if(allow == 0)
+      log_info("Connection from %s denied", nameorip);
+    else
+      log_info("Connection from %s.", nameorip);
+  }
+
+  return(allow);
+}
+
+#endif
