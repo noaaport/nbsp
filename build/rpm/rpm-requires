@@ -9,7 +9,6 @@
 # as "minimal", or "server", etc, we need to include tk here now.
 #
 sharutils
-tcp_wrappers-libs
 libdb
 libdb-utils
 tcl

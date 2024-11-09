@@ -11,36 +11,15 @@ upload_get_osparams () {
 	    osarch=`uname -m`
 	    ;;
 	Linux)
+	    # debian/ubuntu or almalinux
 	    osarch=`uname -m`
-	    if [ -f /etc/fedora-release ]
+	    . /etc/os-release
+	    osname=$ID
+	    osrelease=$VERSION_ID
+	    if [ -f /etc/debian_version ]
 	    then
-		osname=fedoracore
-		release=`cat /etc/fedora-release`
-		osrelease=`echo $release | cut -d ' ' -f 3`
-	    elif [ -f /etc/SuSE-release ]
-	    then
-		osname=opensuse
-		release=`cat /etc/SuSE-release`
-		osrelease=`echo $release | cut -d ' ' -f 3`
-	    elif [ -f /etc/redhat-release ]
-	    then
-		osname=almalinux
-		release=`cat /etc/redhat-release`		
-		osrelease=`echo $release | cut -d ' ' -f 3`	    
-	    elif [ -f /etc/debian_version ]
-	    then
-		osname=debian
-		osrelease=`cat /etc/debian_version`
-	    fi
-
-	    [ $osarch = "x86_64" ] && osarch="amd64"
-	    
-	    if [ -f /etc/os-release ]
-	    then
-	        . /etc/os-release
-		osname=$ID
-		osrelease=$VERSION_ID
-	    fi
+		[ $osarch = "x86_64" ] && osarch="amd64"
+	    fi	  
 	    ;;
 	SunOS)
 	    osname=solaris
@@ -64,18 +43,18 @@ upload_get_pkgparams () {
 	savedir=`pwd`
 	case $osname in
 	    freebsd)
-	        cd ../bsdng/pkg
+	        cd ../freebsd/pkg
 		pkgfilename=`ls ${name}-${version}*.pkg`
-		pkglocaldir="../bsdng/pkg"
+		pkglocaldir="../freebsd/pkg"
 		cd $savedir
 		;;
-	    fedoracore|opensuse|centos|almalinux)
+	    almalinux)
 	        cd ../rpm
 		pkgfilename=`ls ${name}-${version}*.rpm`
 		pkglocaldir="../rpm"
 		cd $savedir
 		;;
-	    debian|ubuntu|raspbian)
+	    debian|ubuntu)
 	        cd ../debian
 		pkgfilename=`ls ${name}_${version}*.deb`
 		pkglocaldir="../debian"
