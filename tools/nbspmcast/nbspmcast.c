@@ -27,6 +27,7 @@
 #include <netdb.h>      /* gai_sterror */
 #include "err.h"
 #include "sbnpack.h"
+#include "seqnum.h"
 #include "mcast.h"
 
 /*
@@ -47,7 +48,7 @@
 #define DEF_MCAST_PORT MCAST_PORT_1
 #define DEF_IFNAME NULL
 #define DEF_IFIP NULL
-#define DEF_PROD_SEQ_NUM (UINT32_MAX/4 - 2)
+#define DEF_PROD_SEQ_NUM 0   /* the default will be the msecs since midnight */
 #define DEF_SBN_SEQ_NUM (UINT32_MAX/4 - 2)
 #define DEF_MCAST_TTL	-1  /* use default: mcast only to the local network */
 #define DEF_MCAST_LOOP -1   /* use default; on */
@@ -192,6 +193,9 @@ int main(int argc, char **argv){
 
   if(opt_iI > 1)
     log_errx(1, "Invalid combination of options: i and I.");
+
+  if(g.opt_prod_seq_num == DEF_PROD_SEQ_NUM)
+    g.opt_prod_seq_num = get_seqnum_start();
 
   if(optind < argc - 1)
     log_errx(1, "Too many arguments.");
