@@ -22,5 +22,5 @@ uint32_t get_seqnum_start(void) {
   msecs =  (now_tm->tm_min * 60 + now_tm->tm_sec) * 1000;
   msecs += tv.tv_usec/1000;
 
-  return(usecs);
+  return(msecs);
 }
