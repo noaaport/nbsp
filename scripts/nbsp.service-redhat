@@ -1,0 +1,16 @@
+[Unit]
+Description=Noaaport server
+After=network.target
+
+[Service]
+Type=forking
+TimeoutSec=infinity
+PIDFile=/var/run/nbsp/nbspd.pid
+ExecStart=/etc/rc.d/init.d/nbspd start
+ExecStop=/etc/rc.d/init.d/nbspd stop
+
+[Install]
+WantedBy=multi-user.target
+# The alias prevents systemctl to generate a systemd script in
+# /var/run/systemd/generator.late based on /etc/init.d/nbspd
+Alias=nbspd.service
