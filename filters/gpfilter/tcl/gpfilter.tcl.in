@@ -544,7 +544,8 @@ proc filter_pipe_noclose {seq fpath pipe_name cmd_name fullsavename} {
 		catch {close $gpfilter(pipe_F,$pipe_name)};
 		unset gpfilter(pipe_F,$pipe_name);
 		if {$retry > 0} {
-		    log_msg "Could not write to $pipe_name. $errmsg. Retrying";
+		    #log_msg "Could not write to $pipe_name. $errmsg. Retrying";
+		    log_msg "Could not write to $pipe_name. Retrying";
 		}
 	    }
 	    # Take the opportunity to "wait" for any other decoder
