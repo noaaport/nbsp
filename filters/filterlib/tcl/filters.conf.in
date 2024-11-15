@@ -82,8 +82,10 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first.
 # (Some sites send nmd,net compressed and others send it uncompressed.
-# Some sites send dsp, dvl, eet, zlib compressed, but filters.lib
-# has a workaround to try to detect that and re-process them.)
+# Some sites send dsp, dvl, eet, zlib compressed. filters.lib
+# has a workaround to try to detect that and re-process them, if the
+# variable "filterslib(doradinfounzretry)" is set to 1. See below.)
+#
 # Included are (matched against awips1):
 #
 #  dpa
@@ -103,6 +105,7 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 set filterslib(doradinfowmoid) {sdus[23578]};  # used in filters.lib
 set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|st|tp|vl|vw)};
 set filterslib(doradinfoboth) {nmd|net};  # use {^$} for empty, {} for all
+set filterslib(doradinfounzretry) 1; 	  # see above for the meaning
 # This actually disables reading the header altogether
 set filterslib(noradinfo) {nmd};          # use {^$} for empty
 
@@ -174,6 +177,21 @@ set gempak(libdir)	[file join $gempak(homedir) "os/%GPOSNAME%/lib"];
 # nbspradmap and nbspsatmap (of rstfilter) call gempak programs that must
 # run with the gempak env variables.
 set gempak(envfile)	[file join $common(confdir) "gempak.env"];
+
+#
+# Fine-Tuning
+#
+
+# The configuration file of the spool cache (cspool).
+#
+set common(cspoolbdbconf) [file join $common(confdir) "cspoolbdb.conf"];
+
+# If this variable to 1 the filters (using the functions in filters.lib) will
+# try to fire up as many processes in parallel as they can when they are
+# processing data files. It is generally a good idea to set it in
+# multiprocessor machines.
+#
+set filterslib(background_processing) 0;
 
 #
 # Read the local overrides

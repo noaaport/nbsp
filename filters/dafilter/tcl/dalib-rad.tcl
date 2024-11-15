@@ -23,9 +23,9 @@ proc filter_rad {seq fpath savedir savename {level2flag 0}} {
 	    filterlib_exec_nbspfile $seq $fpath $savedir $savename;
 	    # filterlib_nbspfile $seq $fpath $savedir $savename;
 	} else {
-	    # level 2 files do not have a ccb, and since they do not pass,
-	    # and the gempak header is not inserted. It is simpler to
-	    # copy it directly rather than calling nbspfile with options,
+	    # level 2 files do not have a ccb, and the gempak header
+	    # will not be inserted. It is then simpler to
+	    # copy it directly rather than calling nbspfile with options.
 	    file copy -force $fpath $datafpath;
 	}
     } errmsg];
