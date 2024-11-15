@@ -99,10 +99,10 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 # daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (dual pol)
 # (the dual pol will be added between july 2010 and december 2012)
 #
-# The radar files have wmoid sdus[2-8]. The sdus[23578] are data,
-# while 4 and 6 are status messages.
+# The radar files have wmoid sdus[2-8]. The sdus[235678] are data,
+# while 4 are status messages.
 #
-set filterslib(doradinfowmoid) {sdus[23578]};  # used in filters.lib
+set filterslib(doradinfowmoid) {sdus[235678]};  # used in filters.lib
 set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|st|tp|vl|vw)};
 set filterslib(doradinfoboth) {nmd|net};  # use {^$} for empty, {} for all
 set filterslib(doradinfounzretry) 1; 	  # see above for the meaning
