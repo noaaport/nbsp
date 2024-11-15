@@ -199,3 +199,12 @@ match_pipe($rc(fname), kbou_iupt0[1-4],
 dcprof,
 m4DCOPTS(dcprof) -v 4 -s profiler_fsl.stn tableb tabled,
 profiler_bufr/YYYYMMDD_pro.gem)
+
+dnl
+dnl PIREPS 
+dnl Decoder for Pirep Observations
+match_pipe($rc(wmoid), ^u(b|acn(01|10)), 
+dcacft,
+m4DCOPTS(dcacft),
+pireps/YYYYMMDDHH_acf.gem)
+
