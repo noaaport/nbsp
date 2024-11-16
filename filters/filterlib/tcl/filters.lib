@@ -379,7 +379,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    if {($old_status == -2) && ($radinfo_status == 0)} {
 		log_msg "OK with uncompressed $rc(fbasename).";
 	    } elseif {($old_status == -1) && ($radinfo_status != 0) && \
-	    	    (filterslib(doradinfounzretry) == 1)} {
+	    	    ($filterslib(doradinfounzretry) == 1)} {
                 #
 	        # This catches the files that were not processed by nbspunz
                 # above (because they are supposed to be uncompressed) but
