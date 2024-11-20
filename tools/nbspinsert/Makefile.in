@@ -8,9 +8,9 @@
 @include@ @q@../../Makefile.inc@q@
 
 TARGET =	nbspinsert
-SOURCES =	nbspinsert.c fifo.c nutil.c
-HEADERS =	fifo.h nutil.h
-OBJECTS =	nbspinsert.o fifo.o nutil.o
+SOURCES =	nbspinsert.c fifo.c io.c nutil.c
+HEADERS =	fifo.h io.h nutil.h
+OBJECTS =	nbspinsert.o fifo.o io.o nutil.o
 AUXSOURCES =	err.c util.c
 AUXHEADERS =	err.h util.h config.h
 AUXOBJECTS =	err.o util.o

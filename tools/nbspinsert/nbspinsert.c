@@ -64,6 +64,7 @@
 #include "err.h"
 #include "util.h"
 #include "fifo.h"
+#include "io.h"
 #include "nutil.h"
 
 /*
@@ -261,6 +262,7 @@ static int validate_input(void) {
 static int open_nbsp_infifo(void) {
 
   int fd = -1;
+  int flags = 0;
   int status = 0;
 
   status = check_fifo(g.opt_nbsp_infifo_fpath);
@@ -276,12 +278,10 @@ static int open_nbsp_infifo(void) {
     return(status);
 
   /*
-   * Open it in blocking mode so that the write() is blocked until nbsp
-   * has read enough from the pipe to make space for the write(). Otherwise
-   * we will get errors like "Resource temporarily unavailable" 
-   * and loss of packets when the pipe gets full.
+   * We try to open nonblock, so that if it is _not_ opened for reading,
+   * we get an error instead of blocking.
    */
-  fd = open(g.opt_nbsp_infifo_fpath, O_WRONLY);
+  fd = open(g.opt_nbsp_infifo_fpath, O_WRONLY | O_NONBLOCK);
   if(fd == -1) {
     log_err(0, "Error from open: %s\n", g.opt_nbsp_infifo_fpath);
     return(-1);
@@ -296,7 +296,29 @@ static int open_nbsp_infifo(void) {
     
     return(-1);
   }
-  
+
+  /*
+   * Now we block it so that the write() is blocked until nbsp
+   * has read enough from the pipe to make space for the write(). Otherwise
+   * we will get errors like "Resource temporarily unvailable" 
+   * and loss of packets when the pipe gets full. If the other
+   * end is closed while this function is blocked we should a SIGPIPE
+   * and, if we are not catching signals, the program will exit (without
+   * calling cleanup(), but there is not much harm since this program
+   * does create any files).
+   */
+   flags = fcntl(fd, F_GETFL);
+   flags &= ~O_NONBLOCK;
+   status = fcntl(fd, F_SETFL, flags);
+   if(status == -1) {
+     log_err(0, "Error from fcntl: %s\n", g.opt_nbsp_infifo_fpath);
+     
+     if(close(fd) == -1)
+       log_err(0, "Error from close: %s\n", g.opt_nbsp_infifo_fpath);
+
+     return(-1);
+   }
+
   g.nbsp_infifo_fd = fd;
 
   return(0);
@@ -452,14 +474,17 @@ static void delete_finfo(void) {
 static int send_finfo(void) {
 
   int status = 0;
-  ssize_t nwrite;
+  ssize_t n;
 
-  nwrite = write(g.nbsp_infifo_fd, g.finfo_data, g.finfo_data_size);
-  if(nwrite == -1) {
+  n = writef(g.nbsp_infifo_fd, g.finfo_data, g.finfo_data_size);
+  if(n == -1) {
     log_err(0, "%s", "Error writing to infeed fifo.");
     status = 1;
+  } else if((size_t)n != g.finfo_data_size) {
+    log_err(0, "%s", "Incomplete write to infeed fifo.");
+    status = 1;
   }
-
+  
   return(status);
 }
 
