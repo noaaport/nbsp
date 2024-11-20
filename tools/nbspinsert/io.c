@@ -12,7 +12,7 @@
 
 ssize_t writef(int fd, void *buf, size_t size) {
   /*
-   * To be used when output is a (the npemwin) fifo
+   * To be used when output is a (the infeed) fifo
    */
   ssize_t n;		/* number of bytes in one write */
   size_t i = 0;		/* accumulated number of bytes writen */
