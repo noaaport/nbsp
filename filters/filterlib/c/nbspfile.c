@@ -33,7 +33,8 @@ struct {
   char *opt_output_fname;
   char *opt_output_dir;
   int opt_stdin;	/* [-i] */
-  int opt_noheader;	/* [-t] don't add gempak header and footer. */
+  int opt_nogpkheader;	/* [-t] don't add gempak header and footer. */
+  int opt_nowmoheader;	/* [-w] don't write the wmo header (implies -t) */
   unsigned int opt_seqnum;	
   int opt_C;            /* check and exit */
   int opt_verbose;
@@ -49,7 +50,7 @@ struct {
   char *page;
   int page_size;
   char *malloc_page_buffer;
-} g = {NULL, NULL, NULL, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0, CCB_SIZE,
+} g = {NULL, NULL, NULL, 0, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0, CCB_SIZE,
        COMPRESS_LEVEL, PAGE_SIZE, NULL, NULL,
        static_large_page_buffer, LARGE_PAGE_SIZE, NULL};
 
@@ -67,9 +68,9 @@ int main(int argc, char **argv){
   uint16_t pagesize;
   uint16_t level;
   uint16_t ccbsize;
-  char *optstr = "Chabc:d:ino:p:s:tvz:";
+  char *optstr = "Chabc:d:ino:p:s:tvwz:";
   char *usage = "nbspfile [-a] [-b] [-c ccbsize] [-d outputdir] [-i] [-n]"
-    " [-o outfile] [-p pagesize] [-s seqnum] [-t] [-v] [-z level]"
+    " [-o outfile] [-p pagesize] [-s seqnum] [-t] [-v] [-w] [-z level]"
     " file [seqnum]";
 
   set_progname(basename(argv[0]));
@@ -120,8 +121,12 @@ int main(int argc, char **argv){
 
       break;
     case 't':
-      g.opt_noheader = 1;    /* don't add gempak header and footer */
+      g.opt_nogpkheader = 1;    /* don't add gempak header and footer */
       break;
+    case 'w':
+      g.opt_nowmoheader = 1;    /* don't include the wmo header */
+      g.opt_nogpkheader = 1;	/* implies -t */
+      break;      
     case 'z':
       status = strto_u16(optarg, &level); 
       if((status != 0) || (level > 9))
@@ -213,7 +218,7 @@ static int write_header(FILE *fp, char *page, int page_size, int *offset){
    * When there is an awips line, the header consists of the first 
    * two lines of the file, but excluding the ccb that is contained in 
    * the first line. If there is no awips line (e.g., kwal_sepa40)
-   * the header is the remainder of the first line.
+   * the header is the remainder of the first line after the ccb.
    * "offset" is the starting position in page[] that remains to be written.
    */
   char *header;
@@ -255,8 +260,11 @@ static int write_header(FILE *fp, char *page, int page_size, int *offset){
   }
 
   *offset = header_size + ccb_size;
-  if((n = write_page(fp, header, header_size)) == -1)
-    status = -1;
+
+  if(g.opt_nowmoheader == 0){
+    if((n = write_page(fp, header, header_size)) == -1)
+      status = -1;
+  }
 
  end:
 
@@ -305,7 +313,7 @@ static int process_file(void){
     if(g.output_fp == NULL)
       log_err_open(g.opt_output_fname);
 
-    if(g.opt_noheader == 0)
+    if(g.opt_nogpkheader == 0)
       fprintf(g.output_fp, GMPK_HEADER_FMT, (int)(g.opt_seqnum % 1000));
 
     nread = fread(g.page, 1, g.page_size, g.input_fp);
@@ -364,7 +372,7 @@ static int process_file(void){
       }	  
     }
 
-    if(g.opt_noheader == 0)
+    if(g.opt_nogpkheader == 0)
       fprintf(g.output_fp, GMPK_TRAILER_STR);
 
     if((g.opt_verbose == 1) && (g.opt_output_fname != NULL)){
