@@ -362,8 +362,18 @@ int split_wmo_header(struct sbn_frame *sbnf,
    *
    *    NOTE: If there is no awips line, then upon return wmo_awips[0] 
    *    contains '\0'. Same with wmo_nawips[0].
+   *
+   *	nov2024 - Revised to read the "bbb" part of the (first line of the)
+   *	wmo header , such as "TIRP13 KNES 171740 PAD\r\r\n",
+   *	which the (new) goesr files have (and do not have the second
+   *	line). The noaaport goesr documentation calls this pice the "bbb".
+   *	Our strategy is: if the file has no second line in the wmo header
+   *	(no awips and no notawips) then we set the notawips to be the bbb
+   *	(if there is a bbb). We have in mind these files, but
+   *	there could be others.
    */
   char *wmo;
+  char wmobbb[WMO_BBB_SIZE + 1];	/* 6 + 1 */
   int i;
   int b;
   int n;
@@ -393,12 +403,13 @@ int split_wmo_header(struct sbn_frame *sbnf,
     data_size = sbnf->pdata_size;
   }
 
-  if(sscanf(wmo, "%6s %4s %6s", wmo_id, wmo_station, wmo_time) != 3)
-    return(1);
-
   /* In case we find nothing */
   wmo_awips[0] = '\0';
   wmo_notawips[0] = '\0';
+  wmobbb[0] = '\0';
+
+  if(sscanf(wmo, "%6s %4s %6s %6s", wmo_id, wmo_station, wmo_time, wmobbb) < 3)
+    return(1);
 
   /*
    * start of the awips line, if any
@@ -433,8 +444,17 @@ int split_wmo_header(struct sbn_frame *sbnf,
 
   if(isalpha(wmo[0]) == 0){
     /*
-     * There are no ascii characters.
+     * There are no ascii characters. Copy the wmobbb (if there is one)
+     * to the notawips.
      */
+    b = 0;
+    while((b < WMO_NOTAWIPS_SIZE) && (wmobbb[b] != '\0')){
+      wmo_notawips[b] = wmobbb[b];
+      ++b;
+    }
+
+    wmo_notawips[b] = '\0';
+    
     return(0);
   }
 
@@ -455,7 +475,15 @@ int split_wmo_header(struct sbn_frame *sbnf,
     wmo_notawips[b] = '\0';
   }
 
+  if((wmo_awips[0] == '\0') && (wmo_notawips[0] == '\0')){
+    /* copy the wmo bbb (if it exists) to the notawips */
+    b = 0;
+    while((b < WMO_NOTAWIPS_SIZE) && (wmobbb[b] != '\0')){
+      wmo_notawips[b] = wmobbb[b];
+      ++b;
+    }
+    wmo_notawips[b] = '\0';
+  }
+  
   return(0);
 }
-
-
