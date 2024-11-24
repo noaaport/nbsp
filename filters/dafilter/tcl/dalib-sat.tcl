@@ -38,7 +38,11 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
     set status [catch {
 	if {$giniflag == 1} {
 	    if {$dafilter(satuncompress) == 0} {
-	        # Gini sat files do not have a ccb
+	        #
+		# Gini sat files do not have a ccb and the gempak
+		# header will not be inserted. It is then simpler to
+		# copy it directly rather than calling nbspfile with options.
+		#
 	        file copy -force $fpath $datafpath;
 	    } else {
 	        exec nbspunz -o $datafpath $fpath;
