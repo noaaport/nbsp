@@ -48,7 +48,8 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	        exec nbspunz -o $datafpath $fpath;
 	    }
 	} else {
-	    filterlib_exec_nbspfile $seq $fpath $savedir $savename;
+	    # Remove the ccb but do not add the gempak header and footer
+	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
 	}
     } errmsg];
 
