@@ -1,0 +1,51 @@
+Sun 24 Nov 2024 07:03:41 PM AST
+===============================
+
+From CCF00762009_00001.jpg:
+
+The contents of the CCB is as follows:
+
+FF: A two-bit flag which specifies length and no checksum (for
+compliance with Green Book, FCM-1991, is used). Its value in the
+CCB is always 01.
+
+CCB length: A 14-bit binary integer specifying the number of byte pairs
+in the CCB. Bytes are transmitted low order bit first.
+
+=
+In my own experimentation (based on my ccb.c from 1999 or so)
+the accurate description is this. (use b1 = cbb[0] and b2 = cbb[1]).
+
+- the two higher order bits of b1 are 01 (i.e., 1 or 0x1).
+
+  /* This shifts bits 7 and 8 to the positions 1 and 0. */
+  flag = (b1 >> 6);
+  fprintf(stdout, "flag = %#x %d\n", flag, flag);
+
+  This outputs: 0x1
+
+- the number of bytes pairs of the ccb (which is 12) is encoded
+  in the remaining 14 bits of b1,b2 ass follows:
+  /*
+   * b2 is the low order byte, and bits 1-6 of b1 make the high order byte.
+   */
+  size = b2 + ((b1 & (0xff >> 2)) << 8);
+
+  This gives the output size = 12.
+
+- The statement
+
+  fprintf(stdout, "%c%c\n", b1, b2);
+
+  outputs the "@^L" that we see in the files, and
+  
+  fprintf(stdout, "%hhu %hhu\n", b1, b2);
+
+  outputs "64 12".
+
+  The program "ccb-2024.c" outputs
+
+  flag = 0x1
+  pairs of bytes = 12
+  "@^L"
+  64 12

@@ -1,0 +1,8 @@
+Sun Nov 24 20:09:31 AST 2024
+
+I took another look at the ccb when I was revising the dafilter
+to handle the goesr files, using nbspfile.
+
+The ccb-2024.c is an updated copy of the original ccb.c.
+
+The function in ccb-check.c is what I ended up using in nbspfile.

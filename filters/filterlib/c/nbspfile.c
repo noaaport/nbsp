@@ -1,9 +1,18 @@
 /*
- * Copyright (c) 2005-2016 Jose F. Nieves <nieves@ltp.uprrp.edu>
+ * Copyright (c) 2005-2024 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *
  * $Id$
+ */
+/*
+ * If the [-c] option is given, the program removes the ccb
+ * unconditionally. Without the options, the program
+ * removes the ccb if the first two bytes of the file are the two
+ * bytes that the ccb is supposed to have (see the dev-notes/ccb-2024,
+ * in particular the ccb-check.c).
+ * (The check is made in has_ccb() and is actually less rigorous than that,
+ * for compatibility with what is done in src/sbn.c.)
  */
 #include <unistd.h>
 #include <fcntl.h>
@@ -23,10 +32,13 @@
 
 #define COMPRESS_LEVEL		0
 #define DUMMY_SEQNUM		90000
-#define PAGE_SIZE		4000	/* default for [-z] flag */
-#define LARGE_PAGE_SIZE		65536	/* default */
-static char static_page_buffer[PAGE_SIZE];
-static char static_large_page_buffer[LARGE_PAGE_SIZE];
+#define ZPAGE_SIZE		4000	/* default for [-z] flag */
+#define MIN_PAGE_SIZE		4000	/* minimum for [-p] */
+#define STATIC_PAGE_SIZE	4*1024*1024 /* default */
+#define CCB0 64			/* value of byte[0] of the ccb */
+#define CCB1 12			/* value of byte[1] of the ccb */
+
+static char static_page_buffer[STATIC_PAGE_SIZE];
 
 struct {
   char *opt_input_fname;
@@ -43,29 +55,30 @@ struct {
   int opt_noccb;	  /* [-n] file saved without ccb [24 byte] header */
   int opt_ccbsize;        /* [-c] specify a different (ccb) size to cut */
   int opt_compress_level;
-  int opt_pagesize;
+  int opt_pagesize;	  /* [-p] used only if [-z] is not given */
   /* variables */
   FILE *input_fp;
   FILE *output_fp;
   char *page;
   int page_size;
   char *malloc_page_buffer;
-} g = {NULL, NULL, NULL, 0, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0, CCB_SIZE,
-       COMPRESS_LEVEL, PAGE_SIZE, NULL, NULL,
-       static_large_page_buffer, LARGE_PAGE_SIZE, NULL};
+} g = {NULL, NULL, NULL, 0, 0, 0, DUMMY_SEQNUM, 0, 0, 0, 0, 0, 0,
+       COMPRESS_LEVEL, 0, NULL, NULL,
+       static_page_buffer, STATIC_PAGE_SIZE, NULL};
 
 static void check(void);
 static int process_file(void);
 static int write_cpage(FILE *fp, char *page, int page_size);
 static int write_header(FILE *fp, char *page, int page_size, int *offset);
 static int has_awips_line(char *fname);
+static int has_ccb(char *data);
 static void cleanup(void);
 
 int main(int argc, char **argv){
 
   int status = 0;
   int c;
-  uint16_t pagesize;
+  uint32_t pagesize;
   uint16_t level;
   uint16_t ccbsize;
   char *optstr = "Chabc:d:ino:p:s:tvwz:";
@@ -85,7 +98,7 @@ int main(int argc, char **argv){
       break;
     case 'c':
       status = strto_u16(optarg, &ccbsize);
-      if(status != 0)
+      if((status != 0) || (ccbsize == 0))
 	log_errx(1, "Illegal value for [-c].");
       else{
 	g.opt_ccbsize = ccbsize;
@@ -107,8 +120,9 @@ int main(int argc, char **argv){
       g.opt_output_fname = optarg;
       break;
     case 'p':
-      status = strto_u16(optarg, &pagesize);
-      if(status != 0)
+      status = strto_u32(optarg, &pagesize);
+      /* Although not needed, do not accept pagesize less than 4000 */
+      if((status != 0) || (pagesize < MIN_PAGE_SIZE) || (pagesize > INT_MAX))
 	log_errx(1, "Illegal value for [-p].");
       else{
 	g.opt_pagesize = pagesize;
@@ -133,8 +147,7 @@ int main(int argc, char **argv){
 	log_errx(1, "Invalid value for [-z].");
       else{
 	g.opt_compress_level = level;
-	g.page = static_page_buffer;
-	g.page_size = PAGE_SIZE;	
+	g.page_size = ZPAGE_SIZE;
       }
       break;
     case 'v':
@@ -226,11 +239,25 @@ static int write_header(FILE *fp, char *page, int page_size, int *offset){
   int status = 0;
   int count = 0;
   int n;
-  int ccb_size = g.opt_ccbsize;
+  int ccb_size = CCB_SIZE;
 
   if(g.opt_noccb == 1)
     ccb_size = 0;
-
+  else {
+    /*
+     * By default (unless the opt_noccb is given) we remove the ccb
+     * (assuming that it exsists). For safety we make a minimal check
+     * regarding the presence of the ccb, unless the the [-c] option
+     * was given.
+     */ 
+    if(g.opt_ccbsize != 0)
+      ccb_size = g.opt_ccbsize;
+    else if(has_ccb(page) == 0) {
+      /* Treat as opt_noccb */
+      ccb_size = 0;
+    }
+  }
+  
   if(page_size <= ccb_size){
     status = 1;
     goto end;
@@ -280,15 +307,25 @@ static int process_file(void){
     int status = 0;
     int data_start = -1; /* just to be sure it is properly initalized later */
 
-    if(g.opt_pagesize != g.page_size){      
+    /*
+     * If the optional page_size was requested and if it is larger
+     * than the static page size, allocate a page of the requested size.
+     */
+    if(g.opt_pagesize > STATIC_PAGE_SIZE) {
       g.malloc_page_buffer = malloc(g.opt_pagesize);
       if(g.malloc_page_buffer == NULL){
 	log_err(1, "Cannot process %s", g.opt_input_fname);
       }
       g.page = g.malloc_page_buffer;
-      g.page_size = g.opt_pagesize;
     }
 
+    /*
+     * Reset the page_size (if requested).
+     */
+    if(g.opt_pagesize != 0) {
+      g.page_size = g.opt_pagesize;
+    }
+    
     if(g.opt_stdin == 0){
       g.input_fp = fopen_input(g.opt_input_fname);
       if(g.input_fp == NULL)
@@ -403,4 +440,28 @@ static int has_awips_line(char *fname){
     return(1);
 
   return(0);
+}
+
+static int has_ccb(char *data) {
+/*
+ * Formally the "correct" way would be to the check the first two bytes:
+ * 
+ * int r = 0;
+ * 
+ * if((data[0] == CCB0) && (data[1] == CCB1))
+ *    r = 1;
+ *
+ *  return(r);
+ *
+ * We will do it in a more heuristic way, as in src/sbn.c, by simply
+ * checking whether the first byte is an ascii character. If it is,
+ * we take as the indication that there is no ccb.
+ */
+
+  int r = 1;
+
+  if(isalpha(data[0]))
+    r = 0;
+
+  return(r);
 }
