@@ -453,6 +453,10 @@ static int has_ccb(char *data) {
  *
  *  return(r);
  *
+ * This is based on checking if the first two bytes of the file are the two
+ * bytes that the ccb is supposed to have (see the dev-notes/ccb-2024,
+ * in particular the ccb-check.c).
+ *
  * We will do it in a more heuristic way, as in src/sbn.c, by simply
  * checking whether the first byte is an ascii character. If it is,
  * we take as the indication that there is no ccb.
