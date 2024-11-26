@@ -48,7 +48,7 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	        exec nbspunz -o $datafpath $fpath;
 	    }
 	} else {
-	    # Remove the ccb but do not add the gempak header and footer
+	    # Remove the ccb and do not add the gempak header and footer
 	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
 	}
     } errmsg];
@@ -58,7 +58,7 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	log_msg $errmsg;
     }
 
-    if {$status = 0} {
+    if {$status == 0} {
 	filter_sat_insert_inventory $savedir $datafpath;
 
 	# Create the link to the latest
