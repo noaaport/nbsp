@@ -8,9 +8,11 @@
 
 /*
  * The "defines" here are copied from those used in the nbsp
- * src/sbn.h file.
+ * src/sbn.h file. (The next three from src/common.h.)
  */
 #define CCB_SIZE 24
+#define CCB0 64			/* value of byte[0] of the ccb */
+#define CCB1 12			/* value of byte[1] of the ccb */
 
 /* struct product_spec_header->product_types */
 #define PSH_TYPE_GOESE		1

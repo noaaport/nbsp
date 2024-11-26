@@ -35,8 +35,6 @@
 #define ZPAGE_SIZE		4000	/* default for [-z] flag */
 #define MIN_PAGE_SIZE		4000	/* minimum for [-p] */
 #define STATIC_PAGE_SIZE	4*1024*1024 /* default */
-#define CCB0 64			/* value of byte[0] of the ccb */
-#define CCB1 12			/* value of byte[1] of the ccb */
 
 static char static_page_buffer[STATIC_PAGE_SIZE];
 

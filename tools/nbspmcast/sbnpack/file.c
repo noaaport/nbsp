@@ -84,6 +84,8 @@ int load_file(char *fname, int fsize, char *datap){
     return(-1);
 
   memset(datap, '\0', CCB_SIZE);
+  datap[0] = CCB0;
+  datap[1] = CCB1;
   
   n = read(fd, &datap[CCB_SIZE], fsize - CCB_SIZE);
   close(fd);

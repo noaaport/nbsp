@@ -9,7 +9,7 @@
 #define COMMON_H
 
 /*
- * This file contains definitions of constants that use to be in
+ * This file contains definitions of constants that used to be in
  * various files (e.g., const.h) but which are also used by the
  * programs in filterlib/c. The relevant explanations of the
  * definitions still appear in the original files, but the definitions
@@ -25,5 +25,9 @@
 #define MAX_FRDATA_SIZE		5200	/* src/sbn.h */
 #define CCB_SIZE		24	/* src/sbn.h */
 #define CTRLHDR_WMO_SIZE	21	/* src/sbn.h */
+
+/* There are not used by nbspd and were added for nbspmcast, nbspfile (2024) */
+#define CCB0 64			/* value of byte[0] of the ccb */
+#define CCB1 12			/* value of byte[1] of the ccb */
 
 #endif
