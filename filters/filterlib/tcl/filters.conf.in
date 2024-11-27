@@ -82,9 +82,11 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 # Which nids for nbspradinfo must be piped through nbspunz first.
 # (Some sites send nmd,net compressed and others send it uncompressed.
+# filters.lib will try to detect that and re-process them, if the
+# variable "filterslib(doradinfounzretry)" is set to 1.
 # Some sites send dsp, dvl, eet, zlib compressed. filters.lib
-# has a workaround to try to detect that and re-process them, if the
-# variable "filterslib(doradinfounzretry)" is set to 1. See below.)
+# will try to detect that and re-process them, if the
+# variable "filterslib(doradinforetry)" is set to 1. See below.)
 #
 # Included are (matched against awips1):
 #
@@ -104,10 +106,10 @@ set filterslib(ignorebody)	{_(sdus|ti)|\+(grib|bufr)};
 #
 set filterslib(doradinfowmoid) {sdus[235678]};  # used in filters.lib
 set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|st|tp|vl|vw)};
-set filterslib(doradinfoboth) {nmd|net};  # use {^$} for empty, {} for all
-set filterslib(doradinfounzretry) 1; 	  # see above for the meaning
+set filterslib(doradinfounzretry) 1;  # retry the above withiout uncompresssing
+set filterslib(doradinforetry) 1; # retry the uncompressed with nbspunz
 # This actually disables reading the header altogether
-set filterslib(noradinfo) {nmd};          # use {^$} for empty
+set filterslib(noradinfo) {nmd};          # use {^$} for empty, {} for all
 
 # Whether to report all the (informational) messages that the library
 # may emit when processing some of the above files. A typical sequence is:

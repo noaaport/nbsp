@@ -341,22 +341,22 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	# -1 as a flag (instead of introducing another variable for the flag.)
 	#
 	set radinfo_status -1;
-	if {[regexp $filterslib(doradinfounz) $rc(awips1)] || \
-		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
+	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
 	    set radinfo_status [catch {
 	        set radinfo [split \
         	  [exec nbspunz -b -n 1 $rc(fpath) | nbspradinfo -b -C]];
 	    } errmsg];
 
 	    if {($radinfo_status != 0) && \
-		[regexp $filterslib(doradinfoboth) $rc(awips1)]} {
-		set radinfo_status -2;
-		log_msg "Retrying without uncompressing $rc(fbasename).";
+	       ($filterslib(doradinfounzretry) == 1)} {
+
+	       set radinfo_status -2;
+	       log_msg "Retrying without uncompressing $rc(fbasename).";
 	    }
         }
 
 	# Now try those that were not seen above, and those that were seen
-	# but gave an error and are set to retry without unzip (nmd,net).
+	# but gave an error and are set to retry without unzip (e.g., nmd,net).
 	# Here we call nbspradinfo with the q flag unless
 	# filterslib(radinfoverbose) is set.
 
@@ -373,13 +373,13 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    lappend _cmd $rc(fpath);
 
             set radinfo_status [catch {
-                    set radinfo [split [eval exec ${_cmd}]];
+                set radinfo [split [eval exec ${_cmd}]];
             } errmsg];
 
 	    if {($old_status == -2) && ($radinfo_status == 0)} {
-		log_msg "OK with uncompressed $rc(fbasename).";
+	       	log_msg "OK with uncompressed $rc(fbasename).";
 	    } elseif {($old_status == -1) && ($radinfo_status != 0) && \
-	    	    ($filterslib(doradinfounzretry) == 1)} {
+	    	($filterslib(doradinforetry) == 1)} {
                 #
 	        # This catches the files that were not processed by nbspunz
                 # above (because they are supposed to be uncompressed) but
