@@ -9,6 +9,16 @@ dnl non-gini -
 dnl tip = polarsat (5th channel) (2012)
 dnl tir, tis = goes-r west and east sbn pids 107 and 108 (2016)
 dnl
+dnl https://vlab.noaa.gov/web/towr-s/goes-scmi: (2024)
+dnl   WMO Header 	TI[RSU][A-VYZ][0|1][0-9] KNES
+dnl The goesr-noaaport-user-guide-v04.2023.pdf [p.34]
+dnl documents only ti[rs], but pqact.conf from
+dnl "https://github.com/Unidata/awips2/blob/unidata_20.3.2/rpms/awips2.upc/\
+dnl  Installer.ldm/patch/etc/pqact.goesr"
+dnl also has tiu.
+dnl
+dnl ixt = derived products
+dnl
 match_sat_gini($rc(wmoid), ^ti[cdgt],
 sat/gini/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt)])
 
@@ -23,11 +33,19 @@ match_sat_archive($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_tip)])
 
-match_sat_ngini($rc(wmoid), ^ti[rs],
+match_sat_ngini($rc(wmoid), ^ti[rsu],
 sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
 
-match_sat_archive($rc(wmoid), ^ti[rs],
+match_sat_archive($rc(wmoid), ^ti[rsu],
+sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
+[subst $dafilter(archive_sat_namefmt_goesr)])
+
+match_sat_ngini($rc(wmoid), ^ixt,
+sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
+
+match_sat_archive($rc(wmoid), ^ixt,
 sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_goesr)])
 
 match_stop($rc(wmoid), ^ti)
+match_stop($rc(wmoid), ^ixt)
