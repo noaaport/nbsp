@@ -33,6 +33,10 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 
     cd $dafilter(datadir);
     file mkdir $savedir;
+
+    # We could use a partial path: data_path [file join $savedir $savename]
+    # but the inventory uses the full path, so we use datafpath for everything.
+    
     set datafpath [file join $dafilter(datadir) $savedir $savename];
 
     set status [catch {
@@ -48,7 +52,15 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	        exec nbspunz -o $datafpath $fpath;
 	    }
 	} else {
-	    # Remove the ccb and do not add the gempak header and footer
+	    #
+	    # Remove the ccb and do not add the gempak header and footer.
+	    # Note: If we want to remove also the wmo header (that is,
+	    # remove the entire first line and leave only the data
+	    # (e.g., the nc files starting with the \211HDF)
+	    # this is the simplest way:
+	    #
+	    #   exec tail -n +2 $fpath > $datafpath
+	    #
 	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
 	}
     } errmsg];

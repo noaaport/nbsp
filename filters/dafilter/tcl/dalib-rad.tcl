@@ -15,8 +15,13 @@ proc filter_rad {seq fpath savedir savename {level2flag 0}} {
 
     cd $dafilter(datadir);
     file mkdir $savedir;
-    set data_path [file join $savedir $savename];
-    set datafpath [file join $dafilter(datadir) $data_path];
+
+    # We could use a partial path: data_path [file join $savedir $savename]
+    # but the inventory uses the full path, so we use datafpath for everything.
+    # set data_path [file join $savedir $savename];
+    # set datafpath [file join $dafilter(datadir) $data_path];
+    
+    set datafpath [file join $dafilter(datadir) $savedir $savename];
 
     set status [catch {
 	if {$level2flag == 0} {
@@ -32,7 +37,7 @@ proc filter_rad {seq fpath savedir savename {level2flag 0}} {
 
     if {$status != 0} {
 	# In case the file was created
-	file delete $data_path;
+	file delete $datafpath;
 	log_msg $errmsg;	
     }
 
