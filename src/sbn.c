@@ -22,6 +22,11 @@ static void unpack_pd_header(struct product_def_header *pdh,
 static void unpack_ps_header(struct product_spec_header *psh, 
 			      unsigned char *data);
 
+/* Functions to validate the wmo header */
+static int count_char(char *s, int n, unsigned char c);
+static int validate_wmo(char *wmo_id, char *wmo_station, char *wmo_time,
+			char *wmo_bbb);
+
 static int unpack_fl_header(struct frame_level_header *flh, 
 			    unsigned char *data){
   /*
@@ -371,9 +376,12 @@ int split_wmo_header(struct sbn_frame *sbnf,
    *	(no awips and no notawips) then we set the notawips to be the bbb
    *	(if there is a bbb). We have in mind these files, but
    *	there could be others.
+   *
+   *    dec2024 - Added the functions to validate the wmo header
    */
   char *wmo;
   char wmobbb[WMO_BBB_SIZE + 1];	/* 6 + 1 */
+  int count_blanks;
   int i;
   int b;
   int n;
@@ -404,13 +412,29 @@ int split_wmo_header(struct sbn_frame *sbnf,
   }
 
   /* In case we find nothing */
-  wmo_awips[0] = '\0';
-  wmo_notawips[0] = '\0';
-  wmobbb[0] = '\0';
+  memset(wmo_id, '\0', WMO_ID_SIZE);
+  memset(wmo_station, '\0', WMO_STATION_SIZE + 1);
+  memset(wmo_time, '\0', WMO_TIME_SIZE + 1);
+  memset(wmobbb, '\0', WMO_BBB_SIZE + 1);
+  memset(wmo_awips, '\0', WMO_AWIPS_SIZE + 1);
+  memset(wmo_notawips, '\0', WMO_NOTAWIPS_SIZE + 1);
 
-  if(sscanf(wmo, "%6s %4s %6s %6s", wmo_id, wmo_station, wmo_time, wmobbb) < 3)
+  /* Count how many parts the wmo header has */
+  count_blanks = count_char(wmo, data_size, ' ');
+  if(count_blanks == 3) {
+    if(sscanf(wmo, "%6s %4s %6s %6s",
+	      wmo_id, wmo_station, wmo_time, wmobbb) < 4)
+      return(1);
+  } else if(count_blanks == 2) {
+    if(sscanf(wmo, "%6s %4s %6s",
+	      wmo_id, wmo_station, wmo_time) < 3)
+      return(1);
+  } else
+    return 1;
+
+  if(validate_wmo(wmo_id, wmo_station, wmo_time, wmobbb) != 0)
     return(1);
-
+  
   /*
    * start of the awips line, if any
    */
@@ -485,5 +509,94 @@ int split_wmo_header(struct sbn_frame *sbnf,
     wmo_notawips[b] = '\0';
   }
   
+  return(0);
+}
+
+/*
+ * Dec 2024 - The next two functions were added to "validate"
+ * the wmo header extracted from the file transmitted.
+ * We used to "trust" the transmission, but in principle
+ * we should check.
+ */
+static int count_char(char *s, int n, unsigned char c) {
+  /*
+   * Dec 2024 - This function was introduced to count the "words" in
+   * the first line of the wmo header to determine whether
+   * to read the "bbb" or now. It was added when the function
+   * split_wmo_header was revised to read the "bbb" when it exists.
+   *
+   * n = maximum of charaters of "s" to check.
+   */
+  int i = 0;
+  int count = 0;
+
+  while((i < n) && (s[i] != '\n') && (s[i] != '\0')) {
+    
+    if(s[i] == c)
+      ++count;
+
+    ++i;
+  }
+  
+  return(count);
+}
+
+static int validate_wmo(char *wmo_id, char *wmo_station, char *wmo_time,
+			char *wmo_bbb) {
+  /*
+   * Returns:
+   * 0 => valid header
+   * 1 => invalid
+   */
+  char *p;
+
+  /* check the length */
+  if(strlen(wmo_id) != WMO_ID_SIZE)
+    return(1);
+
+  if(strlen(wmo_station) != WMO_STATION_SIZE)
+    return(1);
+  
+  if(strlen(wmo_time) != WMO_TIME_SIZE)
+    return(1);
+
+  /* this can be blank
+   * if(strlen(wmo_bbb) != WMO_BBB_SIZE)
+   *   return(1);
+   */
+  
+  /*check the content */
+  p = wmo_id;
+  while(*p != '\0'){
+    if(isalnum(*p) == 0)
+      return(1);
+
+    ++p;
+  }
+
+  p = wmo_station;
+  while(*p != '\0'){
+    if(isalpha(*p) == 0)
+      return(1);
+
+    ++p;
+  }
+
+  p = wmo_time;
+  while(*p != '\0'){
+    if(isdigit(*p) == 0)
+      return(1);
+
+    ++p;
+  }
+
+  p = wmo_bbb;
+  while(*p != '\0'){
+    if(isalnum(*p) == 0)
+      return(1);
+
+    ++p;
+  }
+
   return(0);
 }

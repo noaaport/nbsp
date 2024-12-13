@@ -38,7 +38,7 @@
 #define WMO_TIME_SIZE		6	/* ddhhmm */
 /* #define WMO_AWIPS_SIZE	6	   xxxxxx (common.h) */
 #define WMO_NOTAWIPS_SIZE	6	/* maximum */
-#define WMO_BBB_SIZE		6	/* maximum (2024 - for the goesr */
+#define WMO_BBB_SIZE		6	/* maximum (2024 - for the goesr) */
 #define FSEQNUM_SIZE		10	/* seqnum & ffffffff */
 #define FSEQKEY_SIZE		17	/* ddhhmm_seqnum[10] */
 #define FBASENAME_SIZE		36	/* fname[18].fseqkey[17] */
