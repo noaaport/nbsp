@@ -1,0 +1,11 @@
+Dec-2024
+
+The files in "sample" were selected from the kwbc directory to test
+the validate_wmo() function (as explained in the validate_wmo.c file).
+The file "kwbc_ubca90...." is an example of the kind of error
+that we introduced when adding the option to include the "bbb".
+(The error was in the use of the sscanf() function in src/sbn.c
+without checking if the first line of the wmo header actually
+contains the bbb; i.e., whether the line has four or three elements.)
+
+The revision (and the new functions) are in the file "src/sbn.c".
