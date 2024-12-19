@@ -77,8 +77,9 @@ struct {
 
 /* general functions */
 static int process_file(void);
-static void cleanup(void);
 static void print_conf(void);
+static void init(void);
+static void cleanup(void);
 
 /* mcast sento functions */
 static int sendto_sbnpack(int sfd, struct sbnpack_st *sbnpack,
@@ -86,6 +87,23 @@ static int sendto_sbnpack(int sfd, struct sbnpack_st *sbnpack,
 static int sendto_sbnpack_frame(int fd,
 				struct sbnpack_st *sbnpack, int findex,
 				struct sockaddr *sa, socklen_t sa_len);
+
+static void init(void) {
+
+  int gai_code;
+
+  g.sfd = mcast_snd(g.opt_mcast_addr, g.opt_mcast_port,
+		    g.opt_ifname, g.opt_ifip,
+		    g.opt_mcast_ttl, g.opt_mcast_loop_off,
+		    &g.sa, &g.sa_len, &gai_code);
+
+  if(g.sfd < 0){
+    if(gai_code == 0)
+      log_err(1, "%s", "Error from mcast_snd()");
+    else
+      log_errx(1, "%s: %s", "Error from mcast_snd", gai_strerror(gai_code));
+  }
+}
 
 static void cleanup(void){
 
@@ -118,7 +136,8 @@ static void print_conf(void){
   fprintf(stdout, "%s: %" PRIu8 "\n", "opt_mcast_loop_off",
 	  g.opt_mcast_loop_off);
 
-  fprintf(stdout, "%s: %s\n", "fpath", g.opt_fpath);
+  if(g.opt_fpath != NULL)
+    fprintf(stdout, "%s: %s\n", "fpath", g.opt_fpath);
 }
 
 int main(int argc, char **argv){
@@ -205,6 +224,7 @@ int main(int argc, char **argv){
   g.opt_fpath = argv[optind++];
 
   atexit(cleanup);
+  init();
 
   if(g.opt_C == 1){
     print_conf();
@@ -212,13 +232,15 @@ int main(int argc, char **argv){
   }
 
   status = process_file();
+
+  if(status != 0)
+    log_errx(0, "%s", "Error processing", g.opt_fpath);
   
   return(status != 0 ? 1 : 0);
 }
 
 static int process_file(void){
 
-  int gai_code;
   int status = 0;
 
   status = create_sbnpack(g.opt_fpath,
@@ -227,26 +249,17 @@ static int process_file(void){
 			  g.opt_r,
 			  &g.sbnpack);
   if(status == -1)
-    log_err(1, "%s", "Error from create_sbnpack");
+    log_err(0, "%s", "Error from create_sbnpack");
   else if(status == 1)
-    log_errx(1, "%s", "File too large");
+    log_errx(0, "%s", "File too large");
 
-  g.sfd = mcast_snd(g.opt_mcast_addr, g.opt_mcast_port,
-		    g.opt_ifname, g.opt_ifip,
-		    g.opt_mcast_ttl, g.opt_mcast_loop_off,
-		    &g.sa, &g.sa_len, &gai_code);
-
-  if(g.sfd < 0){
-    if(gai_code == 0)
-      log_err(1, "%s", "Error from mcast_snd()");
-    else
-      log_errx(1, "%s: %s", "Error from mcast_snd", gai_strerror(gai_code));
+  if(status == 0) {
+    status = sendto_sbnpack(g.sfd, g.sbnpack, g.sa, g.sa_len);
+    if(status != 0) {
+      log_err(0, "%s", "Error from sendto_sbnpack");
+    }
   }
-
-  status = sendto_sbnpack(g.sfd, g.sbnpack, g.sa, g.sa_len);
-  if(status != 0)
-    log_err(1, "%s", "Error from sendto_sbnpack");
-
+  
   return(status);
 }
 

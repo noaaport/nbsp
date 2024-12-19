@@ -44,6 +44,8 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
    * Load the file data into  the sbnpack_file_st.
    * The pointer to the data (in the sbnpack_file_st) is reused
    * if the allocated space is larger than the file size.
+   * We are not using this function yet, until we implement reading
+   * more then one file either from the cmd line or from stdin.
    */
   char *p = NULL;
   int fsize;
@@ -54,23 +56,32 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
     return(status);
 
   if(sbnpack_file->allocated_size < fsize){
-    free(sbnpack_file->data);  
     p = malloc(fsize);
     if(p == NULL)
       return(-1);
-
-    sbnpack_file->data = p;  
-    sbnpack_file->allocated_size = fsize;
+  }
+  
+  if(p == NULL){
+    /* the old sbnpack_file is good enough */
+    status = load_file(fname, fsize, sbnpack_file->data);
+    if(status == 0) {
+      sbnpack_file->data_size = fsize;
+      sbnpack_file->readp = sbnpack_file->data;
+    }
+  } else {
+    status = load_file(fname, fsize, p);
+    if(status != 0)
+      free(p);
+    else {
+      free(sbnpack_file->data);
+      sbnpack_file->data = p;  
+      sbnpack_file->allocated_size = fsize;
+      sbnpack_file->data_size = fsize;
+      sbnpack_file->readp = sbnpack_file->data;
+    }
   }
 
-  status = load_file(fname, fsize, sbnpack_file->data);
-  if(status != 0)
-    return(status);
-  
-  sbnpack_file->data_size = fsize;
-  sbnpack_file->readp = sbnpack_file->data;
-  
-  return(0);
+  return(status);
 }
 
 void end_sbnpack_file(struct sbnpack_file_st *sbnpack_file){
