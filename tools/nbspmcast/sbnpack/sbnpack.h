@@ -68,12 +68,6 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
 		 uint32_t prod_seq_number,
 		 uint32_t sbn_seq_number,
 		 int psh_type_flag);
-void end_sbnpack(struct sbnpack_st *sbnpack);
-int create_sbnpack(char *fname,
-		   uint32_t prod_seq_number,
-		   uint32_t sbn_seq_number,
-		   int psh_type_flag,
-		   struct sbnpack_st **sbnpack);
 void free_sbnpack(struct sbnpack_st *sbnpack);
 
 

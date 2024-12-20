@@ -84,7 +84,7 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
   return(status);
 }
 
-void end_sbnpack_file(struct sbnpack_file_st *sbnpack_file){
+void free_sbnpack_file(struct sbnpack_file_st *sbnpack_file){
 
   if(sbnpack_file->data == NULL)
     return;
@@ -174,7 +174,7 @@ struct sbnpack_frame_st *create_sbnpack_frame_array(int nframes,
   return(sbnpack_frame_array);
 }
 
-void free_sbnpack_frame_array(struct sbnpack_frame_st *sbnpack_frame){
+void destroy_sbnpack_frame_array(struct sbnpack_frame_st *sbnpack_frame){
 
   if(sbnpack_frame == NULL)
     return;
@@ -226,57 +226,24 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
   if(status == 0){
     fill_blockdata(sbnpack);
     fill_headers(sbnpack);
-  } else
-    end_sbnpack(sbnpack);
+  } else {
+    destroy_sbnpack_frame_array(sbnpack->sbnpack_frame);
+    free_sbnpack_file(&(sbnpack->sbnpack_file));
+  }
 
   return(status);
 }
 
-void end_sbnpack(struct sbnpack_st *sbnpack){
-
-  free_sbnpack_frame_array(sbnpack->sbnpack_frame);
-  end_sbnpack_file(&(sbnpack->sbnpack_file));
-
-  sbnpack->sbnpack_file.data = NULL;
-  sbnpack->sbnpack_frame = NULL;
-}
-
-int create_sbnpack(char *fname,
-		   uint32_t prod_seq_number,
-		   uint32_t sbn_seq_number,
-		   int psh_type_flag,
-		   struct sbnpack_st **sbnpack) {
-
-  struct sbnpack_st *sbnp;
-  int status = 0;
-
-  sbnp = malloc(sizeof(struct sbnpack_st));
-  if(sbnp == NULL)
-    return(-1);
-
-  sbnp->sbnpack_file.data = NULL;
-  sbnp->sbnpack_frame = NULL;
-
-  status = init_sbnpack(sbnp, fname,
-			prod_seq_number, sbn_seq_number, psh_type_flag);
-  if(status != 0){
-    free(sbnp);
-    
-    return(status);
-  }
-	   
-  *sbnpack = sbnp;
-
-  return(0);
-}
-
 void free_sbnpack(struct sbnpack_st *sbnpack){
-
+  /*
+   * This function does not free the sbnpack pointer itself. It must be
+   * done by the caller.
+   */
   if(sbnpack == NULL)
     return;
 
-  end_sbnpack(sbnpack);
-  free(sbnpack);
+  destroy_sbnpack_frame_array(sbnpack->sbnpack_frame);
+  free_sbnpack_file(&(sbnpack->sbnpack_file));
 }
 
 int write_sbnpack_frame(int fd, struct sbnpack_st *sbnpack, int findex){

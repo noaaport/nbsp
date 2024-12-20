@@ -92,6 +92,9 @@ static void init(void) {
 
   int gai_code;
 
+  /*
+   * Open the file descriptor for sending multicast messages
+   */
   g.sfd = mcast_snd(g.opt_mcast_addr, g.opt_mcast_port,
 		    g.opt_ifname, g.opt_ifip,
 		    g.opt_mcast_ttl, g.opt_mcast_loop_off,
@@ -103,13 +106,29 @@ static void init(void) {
     else
       log_errx(1, "%s: %s", "Error from mcast_snd", gai_strerror(gai_code));
   }
+
+  /*
+   * Create the (empty) sbnpack struct. It is to be filled (initialized)
+   * for each file that will be processed.
+   */
+  g.sbnpack = malloc(sizeof(struct sbnpack_st));
+  if(g.sbnpack == NULL)
+    log_err(1, "%s", "Cannot create the sbnpack.");
+
+  g.sbnpack->sbnpack_file.data = NULL;
+  g.sbnpack->sbnpack_file.allocated_size = 0;	/* allocated size */
+  g.sbnpack->sbnpack_frame = NULL;
 }
 
 static void cleanup(void){
 
-  if(g.sbnpack != NULL)
+  /* free the contents of the sbnpack; and the sbnpack itself */
+  if(g.sbnpack != NULL) {
     free_sbnpack(g.sbnpack);
+    free(g.sbnpack);
+  }
 
+  /* the multicast descriptor */
   if(g.sfd != -1)
     close(g.sfd);
 
@@ -243,11 +262,11 @@ static int process_file(void){
 
   int status = 0;
 
-  status = create_sbnpack(g.opt_fpath,
-			  g.opt_prod_seq_num,
-			  g.opt_sbn_seq_num,
-			  g.opt_r,
-			  &g.sbnpack);
+  status = init_sbnpack(g.sbnpack,
+			g.opt_fpath,
+			g.opt_prod_seq_num,
+			g.opt_sbn_seq_num,
+			g.opt_r);
   if(status == -1)
     log_err(0, "%s", "Error from create_sbnpack");
   else if(status == 1)
