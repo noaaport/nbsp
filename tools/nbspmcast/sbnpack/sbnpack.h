@@ -40,8 +40,8 @@ struct sbnpack_frame_st {
   char *datablock; /* pointer to data block in this frame[] */
   int datablock_size;	/* size of the data block in this frame */
   int header_size;	/* size of header in this frame (header length) */
-  int nframes;
-  int frame_index; /* index of this frame */
+  int frame_index;	/* index of this frame */
+  int nframes;		/* number of frames - each frame needs to know this */
 };
 
 /*
@@ -57,12 +57,14 @@ struct sbnpack_file_st {
 struct sbnpack_st {
   struct sbnpack_file_st sbnpack_file;
   struct sbnpack_frame_st *sbnpack_frame;	/* array of sbn frames */
-  int nframes;					/* # elements of the array */
+  int allocated_frames;		/* # elements allocated in the array */
+  int nframes;			/* # actual number of elements */
   uint32_t prod_seq_number;
   uint32_t sbn_seq_number;
   int psh_type_flag;
 };
 
+struct sbnpack_st *create_sbnpack(void);
 int init_sbnpack(struct sbnpack_st *sbnpack,
 		 char *fname,
 		 uint32_t prod_seq_number,

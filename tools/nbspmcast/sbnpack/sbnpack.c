@@ -10,43 +10,12 @@
 
 int init_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
   /*
-   * Load the file data into sbnpack_file_st.
-   * The pointer to the data (in the sbnpack_file_st) is created.
-   */
-  char *p = NULL;
-  int fsize;
-  int status = 0;
-
-  status = get_file_size(fname, &fsize);
-  if(status != 0)
-    return(status);
-
-  p = malloc(fsize);
-  if(p == NULL)
-    return(-1);
-
-  status = load_file(fname, fsize, p);
-  if(status != 0){
-    free(p);
-    return(status);
-  }
-  
-  sbnpack_file->data = p;  
-  sbnpack_file->allocated_size = fsize;
-  sbnpack_file->data_size = fsize;
-  sbnpack_file->readp = sbnpack_file->data;
-  
-  return(0);
-}
-
-int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
-  /*
-   * Load the file data into  the sbnpack_file_st.
+   * Load the file data into the sbnpack_file_st.
    * The pointer to the data (in the sbnpack_file_st) is reused
    * if the allocated space is larger than the file size.
    * Otherwise a new storage is allocated, in particular if the
    * allocated size is zero in which case the function behaves as
-   * init_sbnpack_file() above.
+   * the original init_sbnpack_file() above.
    * (We are not using this function yet, until we implement reading
    * more then one file either from the cmd line or from stdin.
    * Eventually this should be renamed init_sbnpack_file() and substitute
@@ -67,7 +36,7 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
   }
   
   if(p == NULL){
-    /* the old sbnpack_file is good enough */
+    /* => the old sbnpack_file is good enough */
     status = load_file(fname, fsize, sbnpack_file->data);
     if(status == 0) {
       sbnpack_file->data_size = fsize;
@@ -98,16 +67,18 @@ void free_sbnpack_file(struct sbnpack_file_st *sbnpack_file){
 
   free(sbnpack_file->data);
   sbnpack_file->data = NULL;
+  sbnpack_file->allocated_size = 0;
 }
 
-struct sbnpack_frame_st *create_sbnpack_frame_array(int nframes,
-						    int last_datablock_size){
+int init_sbnpack_frame_array(struct sbnpack_st *sbnpack,
+			     int nframes,
+			     int last_datablock_size){
   /*
    * Create the array of frames, with the header pointers pointing
    * to the correct spot in each frame, but does not load any
    * data.
    */
-  struct sbnpack_frame_st *sbnpack_frame_array;
+  struct sbnpack_frame_st *sbnpack_frame_array = NULL;
   int i;
   int offset;
 
@@ -116,10 +87,23 @@ struct sbnpack_frame_st *create_sbnpack_frame_array(int nframes,
 	  nframes, last_datablock_size);
   */
   
-  sbnpack_frame_array = malloc(nframes * sizeof(struct sbnpack_frame_st));
-  if(sbnpack_frame_array == NULL)
-    return(NULL);
+  if(sbnpack->allocated_frames < nframes) {
+    sbnpack_frame_array = malloc(nframes * sizeof(struct sbnpack_frame_st));
+    if(sbnpack_frame_array == NULL)
+      return(-1);
 
+    if(sbnpack->sbnpack_frame != NULL)
+      free(sbnpack->sbnpack_frame);
+    
+    sbnpack->sbnpack_frame = sbnpack_frame_array;
+    sbnpack->allocated_frames = nframes;
+    sbnpack->nframes = nframes;
+  } else {
+    sbnpack_frame_array = sbnpack->sbnpack_frame;
+    sbnpack->nframes = nframes;
+  }
+
+  /* This is common for all frames */
   for(i = 0; i < nframes; ++i){
     sbnpack_frame_array[i].frame_index = i;
     sbnpack_frame_array[i].nframes = nframes;
@@ -142,8 +126,6 @@ struct sbnpack_frame_st *create_sbnpack_frame_array(int nframes,
 
   sbnpack_frame_array[0].datablock_size = DATA_BLOCK_SIZE;
   sbnpack_frame_array[0].header_size = HEADER_SIZE_0;
-  sbnpack_frame_array[0].frame_index = 0;
-  sbnpack_frame_array[0].nframes = nframes;
 
   for(i = 1; i < nframes; ++i) {
     offset = 0;
@@ -165,29 +147,50 @@ struct sbnpack_frame_st *create_sbnpack_frame_array(int nframes,
     
     sbnpack_frame_array[i].datablock_size = DATA_BLOCK_SIZE;
     sbnpack_frame_array[i].header_size = HEADER_SIZE;
-    sbnpack_frame_array[i].frame_index = i;
-    sbnpack_frame_array[i].nframes = nframes;
   }
 
   /* The last frame */
   sbnpack_frame_array[nframes - 1].datablock_size = last_datablock_size;
 
   /*
-  fprintf(stdout, "B: nframes=%d, last_datablock_size=%d\n",
-	  sbnpack_frame_array[nframes - 1].nframes,
+  fprintf(stdout, "B: last_datablock_size=%d\n",
 	  sbnpack_frame_array[nframes - 1].datablock_size);
   */
   
-  return(sbnpack_frame_array);
+  return(0);
 }
 
-void destroy_sbnpack_frame_array(struct sbnpack_frame_st *sbnpack_frame){
+void free_sbnpack_frame_array(struct sbnpack_st *sbnpack) {
 
-  if(sbnpack_frame == NULL)
+  if(sbnpack == NULL)
     return;
   
-  free(sbnpack_frame);
-  sbnpack_frame = NULL;
+  if(sbnpack->sbnpack_frame == NULL)
+    return;
+  
+  free(sbnpack->sbnpack_frame);
+  sbnpack->sbnpack_frame = NULL;
+  sbnpack->allocated_frames = 0;
+}
+
+struct sbnpack_st *create_sbnpack(void) {
+  /*
+   * Create the (empty) sbnpack struct. It is to be filled (initialized)
+   * for each file that will be processed, with init_sbnpack().
+   */
+  struct sbnpack_st *sbnp = NULL;
+  
+  sbnp = malloc(sizeof(struct sbnpack_st));
+  if(sbnp == NULL)
+    return(NULL);
+  
+  /* Initialize the relevant elements */
+  sbnp->sbnpack_file.data = NULL;
+  sbnp->sbnpack_file.allocated_size = 0;	/* allocated size */  
+  sbnp->sbnpack_frame = NULL;
+  sbnp->allocated_frames = 0;
+
+  return(sbnp);
 }
 
 int init_sbnpack(struct sbnpack_st *sbnpack,
@@ -198,9 +201,6 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
   int nframes;
   int last_datablock_size;
   int status = 0;
-
-  sbnpack->sbnpack_file.data = NULL;
-  sbnpack->sbnpack_frame = NULL;
 
   sbnpack->prod_seq_number = prod_seq_number;
   sbnpack->sbn_seq_number = sbn_seq_number;
@@ -213,29 +213,24 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
 				   sbnpack->sbnpack_file.data_size,
 				   &nframes, &last_datablock_size);
 
-  if(status == 0)
-    sbnpack->nframes = nframes;
-
   /*
   if(status == 0)
     fprintf(stdout, "C: nframes=%d, last_datablock_size=%d\n",
 	    nframes, last_datablock_size);
   */
   
-  if(status == 0){
-    sbnpack->sbnpack_frame =
-      create_sbnpack_frame_array(nframes, last_datablock_size);
-    
-    if(sbnpack->sbnpack_frame == NULL)
-      status = -1;
-  }
+  if(status == 0)
+    status = init_sbnpack_frame_array(sbnpack, nframes, last_datablock_size);
   
   if(status == 0){
     fill_blockdata(sbnpack);
     fill_headers(sbnpack);
   } else {
-    destroy_sbnpack_frame_array(sbnpack->sbnpack_frame);
+    /* free the pointer and reinitialize the file-related elements */
     free_sbnpack_file(&(sbnpack->sbnpack_file));
+
+    /* same for the frames array */
+    free_sbnpack_frame_array(sbnpack);
   }
 
   return(status);
@@ -243,14 +238,15 @@ int init_sbnpack(struct sbnpack_st *sbnpack,
 
 void free_sbnpack(struct sbnpack_st *sbnpack){
   /*
-   * This function does not free the sbnpack pointer itself. It must be
-   * done by the caller.
+   * This function frees the contents of the structure and frees
+   * the pointer itself.
    */
   if(sbnpack == NULL)
     return;
 
-  destroy_sbnpack_frame_array(sbnpack->sbnpack_frame);
   free_sbnpack_file(&(sbnpack->sbnpack_file));
+  free_sbnpack_frame_array(sbnpack);
+  free(sbnpack);
 }
 
 int write_sbnpack_frame(int fd, struct sbnpack_st *sbnpack, int findex){

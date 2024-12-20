@@ -107,17 +107,9 @@ static void init(void) {
       log_errx(1, "%s: %s", "Error from mcast_snd", gai_strerror(gai_code));
   }
 
-  /*
-   * Create the (empty) sbnpack struct. It is to be filled (initialized)
-   * for each file that will be processed.
-   */
-  g.sbnpack = malloc(sizeof(struct sbnpack_st));
+  g.sbnpack = create_sbnpack();
   if(g.sbnpack == NULL)
-    log_err(1, "%s", "Cannot create the sbnpack.");
-
-  g.sbnpack->sbnpack_file.data = NULL;
-  g.sbnpack->sbnpack_file.allocated_size = 0;	/* allocated size */
-  g.sbnpack->sbnpack_frame = NULL;
+    log_err(1, "%s", "Error from create_sbnpack");
 }
 
 static void cleanup(void){
