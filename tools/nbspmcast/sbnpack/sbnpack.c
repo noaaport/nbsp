@@ -44,8 +44,13 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
    * Load the file data into  the sbnpack_file_st.
    * The pointer to the data (in the sbnpack_file_st) is reused
    * if the allocated space is larger than the file size.
-   * We are not using this function yet, until we implement reading
+   * Otherwise a new storage is allocated, in particular if the
+   * allocated size is zero in which case the function behaves as
+   * init_sbnpack_file() above.
+   * (We are not using this function yet, until we implement reading
    * more then one file either from the cmd line or from stdin.
+   * Eventually this should be renamed init_sbnpack_file() and substitute
+   * the one above.
    */
   char *p = NULL;
   int fsize;
@@ -73,7 +78,9 @@ int reinit_sbnpack_file(char *fname, struct sbnpack_file_st *sbnpack_file){
     if(status != 0)
       free(p);
     else {
-      free(sbnpack_file->data);
+      if(sbnpack_file->data != NULL)
+	free(sbnpack_file->data);
+
       sbnpack_file->data = p;  
       sbnpack_file->allocated_size = fsize;
       sbnpack_file->data_size = fsize;
