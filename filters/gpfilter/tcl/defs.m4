@@ -111,23 +111,33 @@ lappend action {
   break;
 })
 
-define(match_sat,
+define(match_sat_gini,
 lappend cond {
   [regexp {$2} $1]
 }
 lappend action {
   set rc_status 0;
-  filter_sat $rc(seq) $rc(fpath);
+  filter_sat_gini $rc(seq) $rc(fpath);
   break;
 })
 
-define(match_psat,
+define(match_sat_polar,
 lappend cond {
   [regexp {$2} $1]
 }
 lappend action {
   set rc_status 0;
-  filter_psat $rc(seq) $rc(fpath);
+  filter_sat_polar $rc(seq) $rc(fpath);
+  break;
+})
+
+define(match_sat_goesr,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_sat_goesr $rc(seq) $rc(fpath);
   break;
 })
 

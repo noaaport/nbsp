@@ -1,11 +1,15 @@
 dnl
 dnl $Id$
 dnl
+dnl gini
 dnl tig = goes
 dnl tic = composite (goes + meteosat)
 dnl tid, tit = microwave
-dnl tip = polarsat
+dnl non-gini
+dnl tip = polarsat (5th channel - 2012)
+dnl tir, tis = goes-r west and east sbn pids 107 and 108 (2016) (also tiu later)
+dnl ixt = derived products (2024)
 dnl
-match_sat($rc(wmoid), ^ti[^p])
-
-match_psat($rc(wmoid), ^tip)
+match_sat_gini($rc(wmoid), ^ti[cdgt])
+match_sat_polar($rc(wmoid), ^tip)
+match_sat_goesr($rc(wmoid), ^ti[rsu])

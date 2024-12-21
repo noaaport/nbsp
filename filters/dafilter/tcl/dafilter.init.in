@@ -36,7 +36,7 @@ set dafilter(sat_latestname)	"latest";
 set dafilter(satuncompress)	0;
 set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 set dafilter(sat_namefmt_tip)	{$rc(wmoid)_${ymd_hm}.viirs};
-set dafilter(sat_namefmt_goesr) {$rc(wmoid)_${ymd_hm}.goesr};
+set dafilter(sat_namefmt_goesr) {$rc(wmoid)_${ymd_hm}.nc};
 set dafilter(sat_dirfmt)	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 #
 set dafilter(rad_enable)	1;

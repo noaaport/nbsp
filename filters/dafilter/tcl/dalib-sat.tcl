@@ -53,15 +53,26 @@ proc filter_sat {seq fpath savedir savename {giniflag 1}} {
 	    }
 	} else {
 	    #
-	    # Remove the ccb and do not add the gempak header and footer.
-	    # Note: If we want to remove also the wmo header (that is,
+	    # If we want to remove the ccb and do not add the gempak header
+	    # and footer,
+	    #
+	    #   filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
+	    #
+	    # If we want to remove also the wmo header (that is,
 	    # remove the entire first line and leave only the data
 	    # (e.g., the nc files starting with the \211HDF)
 	    # this is the simplest way:
 	    #
 	    #   exec tail -n +2 $fpath > $datafpath
 	    #
-	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
+	    # We will proceed on the basis of the extension of the
+	    # destination file.
+	    #
+	    if {[file extension $savename] eq ".nc"} {
+		exec tail -n +2 $fpath > $datafpath;
+	    } else {
+		filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
+	    }
 	}
     } errmsg];
 
