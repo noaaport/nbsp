@@ -1,0 +1,28 @@
+Fri Dec 20 20:45:56 AST 2024
+
+These are the files used to test nbspmcast processing various files
+from the argument list and from stdin.  The output of the test
+fprintf statements is this (as it should be)
+
+[nieves@tp11 test]$ ls * | ../nbspmcast
+B: 1.nsh
+X
+A: 2.omr
+Y
+B: 3.cwf
+C: 3.cwf
+X
+A: 4.tid
+Y
+
+[nieves@tp11 test]$ ../nbspmcast 
+[nieves@tp11 test]$ ../nbspmcast 1.nsh 2.omr 3.cwf 4.tid
+B: 1.nsh
+X
+A: 2.omr
+Y
+B: 3.cwf
+C: 3.cwf
+X
+A: 4.tid
+Y

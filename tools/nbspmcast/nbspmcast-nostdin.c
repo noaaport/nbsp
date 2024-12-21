@@ -67,17 +67,15 @@ struct {
   int  opt_mcast_loop_off;	/* -m => setsockopt mcast loop flag off */
   char *opt_fpath;
   /* variables */
-  char *stdin_fpath;
   struct sbnpack_st *sbnpack;
   int sfd;			/* socket fd */
   void *sa;			/* struct sockaddr *sa; */
   socklen_t sa_len;
 } g = {0, 0, 0, DEF_MCAST_ADDR, DEF_MCAST_PORT, NULL, NULL,
        DEF_PROD_SEQ_NUM, DEF_SBN_SEQ_NUM, DEF_MCAST_TTL, DEF_MCAST_LOOP, NULL,
-       NULL, NULL, -1, NULL, 0};
+       NULL, -1, NULL, 0};
 
 /* general functions */
-static int process_stdin(void);
 static int process_file(void);
 static void print_conf(void);
 static void init(void);
@@ -116,9 +114,6 @@ static void init(void) {
 
 static void cleanup(void){
 
-  if(g.stdin_fpath != NULL)
-    free(g.stdin_fpath);
-  
   /* free the contents of the sbnpack; and the sbnpack itself */
   if(g.sbnpack != NULL) {
     free_sbnpack(g.sbnpack);
@@ -232,67 +227,27 @@ int main(int argc, char **argv){
   if(g.opt_prod_seq_num == DEF_PROD_SEQ_NUM)
     g.opt_prod_seq_num = get_seqnum_start();
 
+  if(optind < argc - 1)
+    log_errx(1, "Too many arguments.");
+  else if(optind > argc - 1)
+    log_errx(1, "Requires one file.");
+  
+  g.opt_fpath = argv[optind++];
+
+  atexit(cleanup);
+  init();
+
   if(g.opt_C == 1){
     print_conf();
     exit(0);
   }
 
-  atexit(cleanup);
-  init();
+  status = process_file();
 
-  if(optind > argc - 1) {
-    status = process_stdin();
-  } else {
-    while(optind <= argc - 1) {
-      g.opt_fpath = argv[optind++];
-      ++g.opt_prod_seq_num;
-      if(process_file() != 0) {
-	status = 1;
-	log_errx(0, "%s", "Error processing", g.opt_fpath);
-      }
-    }
-  }
+  if(status != 0)
+    log_errx(0, "%s", "Error processing", g.opt_fpath);
   
   return(status != 0 ? 1 : 0);
-}
-
-static int process_stdin(void)  {
-  
-  size_t fpath_size = 0;
-  ssize_t fpath_len;
-  int status = 0;
-
-  while(1) {
-    fpath_len = getline(&g.stdin_fpath, &fpath_size, stdin);
-    
-    if(fpath_len == -1) {
-      break;
-    }
-    
-    if(g.stdin_fpath[fpath_len - 1] == '\n'){
-      g.stdin_fpath[fpath_len - 1] = '\0';
-      --fpath_len;
-    }
-
-    /* blank lines */
-    if(fpath_len == 0)
-      continue;
-
-    g.opt_fpath = g.stdin_fpath;
-    ++g.opt_prod_seq_num;
-
-    if(process_file() != 0) {
-      status = 1;
-      log_err(0, "%s: %s", "Error processing", g.opt_fpath);
-    }
-  }
-
-  if(fpath_len == -1) {
-    if(ferror(stdin) != 0)
-      log_err(1, "%s", "Error from getline");
-  }
-  
-  return(status);
 }
 
 static int process_file(void){

@@ -6,7 +6,8 @@
 
 Usage -
 
-  npmcast [options] fpath
+  npmcast [options] fpath1 fpath2 ...
+  npmcast [options] < filelist
 
 The options are
 
