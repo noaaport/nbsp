@@ -381,7 +381,7 @@ proc filter_sat_unz {seq fpath} {
     cd $_pwd;
 }
 
-proc filter_sat {seq fpath} {
+proc filter_sat_gini {seq fpath} {
 
 # This function assumes that the input file (fpath) has been saved in
 # compressed form. It is to be used if the nbsp processor is configured
@@ -451,7 +451,22 @@ proc filter_sat {seq fpath} {
     cd $_pwd;
 }
 
-proc filter_psat {seq fpath} {
+proc filter_sat_polar {seq fpath} {
+
+    global gpfilter;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+
+    # Until we learn how to extract the information from these files
+    # (e.g., what nbspsat does) to decide where to save them in the gempak
+    # datadir we ignore them.
+
+    return;
+}
+
+proc filter_sat_goesr {seq fpath} {
 
     global gpfilter;
 
