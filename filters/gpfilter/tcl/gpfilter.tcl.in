@@ -451,32 +451,55 @@ proc filter_sat_gini {seq fpath} {
     cd $_pwd;
 }
 
-proc filter_sat_polar {seq fpath} {
-
+proc filter_sat_ngini {seq fpath savesubdir savename} {
+    #
+    # "savesubdir" is the subdirectory under "images/sat"
+    #
     global gpfilter;
 
     if {$gpfilter(satdef_sourced) == 0} {
 	return;
     }
 
-    # Until we learn how to extract the information from these files
-    # (e.g., what nbspsat does) to decide where to save them in the gempak
-    # datadir we ignore them.
+    # The mechanism to enable/disable individual types
+    if {[is_sat_rule_enabled $savesubdir] == 0} {
+	return;
+    }
+
+    set _pwd [pwd];
+    cd $gpfilter(dec_datadir);
+    
+    set satdir $gpfilter(satdef,satdir);	# default is "images/sat"
+    set savedir [file join $satdir $savesubdir];
+    set pathout [file join $savedir $savename];
+    
+    set status [catch {
+	file mkdir $savedir;
+	filterlib_exec_nbspfile $seq $fpath $savedir $savename;
+	filter_sat_insert_inventory $savedir \
+	    [file join $gpfilter(dec_datadir) $pathout];
+    } errmsg];
+
+    if {$status != 0} {
+	log_msg "Could not process $fpath.";
+	log_msg $errmsg;
+    }
+
+    cd $_pwd;
 
     return;
 }
 
-proc filter_sat_goesr {seq fpath} {
+proc filter_sat_polar {seq fpath savesubdir savename} {
 
-    global gpfilter;
+    filter_sat_ngini $seq $fpath $savesubdir $savename;
 
-    if {$gpfilter(satdef_sourced) == 0} {
-	return;
-    }
+    return;
+}
 
-    # Until we learn how to extract the information from these files
-    # (e.g., what nbspsat does) to decide where to save them in the gempak
-    # datadir we ignore them.
+proc filter_sat_goesr {seq fpath savesubdir savename} {
+
+    filter_sat_ngini $seq $fpath $savesubdir $savename;
 
     return;
 }
@@ -608,7 +631,7 @@ proc filter_insert_inventory {invsubdir savedir fpathout} {
 
     # The inventory files are saved in hourly subdirs within
     # gempak/<invsubdir>. E.g.,
-    # gempak/nextad/nids/<yyyymmddhh>/<inf_fname>
+    # gempak/nexrad/nids/<yyyymmddhh>/<inf_fname>
     #
     set parentdir [file join $gpfilter(invdir) $invsubdir \
 	[clock format [clock seconds] -format $gpfilter(invformat) -gmt true]];

@@ -127,7 +127,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_sat_polar $rc(seq) $rc(fpath);
+  filter_sat_polar $rc(seq) $rc(fpath) "$3" "$4";
   break;
 })
 
@@ -137,7 +137,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_sat_goesr $rc(seq) $rc(fpath);
+  filter_sat_goesr $rc(seq) $rc(fpath) "$3" "$4";
   break;
 })
 
