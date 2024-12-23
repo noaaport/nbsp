@@ -30,21 +30,16 @@ proc filter_sat {seq fpath savedir savename} {
 	#
 	#   filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
 	#
-	# If we want to remove also the wmo header (that is,
-	# remove the entire first line and leave only the data
-	# (e.g., the nc files starting with the \211HDF)
-	# this is the simplest way:
+	# If we want to remove also the wmo header (that is, leave only
+	# the data (e.g. the nc files starting with the \211HDF) we could use
+	# (-w implies -t)
 	#
-	#   exec tail -n +2 $fpath > $datafpath
+	#   filterlib_exec_nbspfile $seq $fpath $savedir $savename "-w";
 	#
-	# We will proceed on the basis of the extension of the
-	# destination file.
+	# But since these files do not have the awips line, only the first
+	# ccb+wmoheader, this is the simplest way:
 	#
-	if {[file extension $savename] eq ".nc"} {
-	    exec tail -n +2 $fpath > $datafpath;
-	} else {
-	    filterlib_exec_nbspfile $seq $fpath $savedir $savename "-t";
-	}
+	exec tail -n +2 $fpath > $datafpath
     } errmsg];
     
     if {$status != 0} {
