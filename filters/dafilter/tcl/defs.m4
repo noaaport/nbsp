@@ -142,7 +142,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_sat $rc(seq) $rc(fpath) "$3" "$4";
+  filter_sat_old_unused $rc(seq) $rc(fpath) "$3" "$4";
   $5
 })
 
@@ -152,7 +152,7 @@ lappend cond {
 }
 lappend action {
   set rc_status 0;
-  filter_sat $rc(seq) $rc(fpath) "$3" "$4" 0;
+  filter_sat $rc(seq) $rc(fpath) "$3" "$4";
   $5
 })
 
