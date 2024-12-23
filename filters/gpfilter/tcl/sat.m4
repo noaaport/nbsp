@@ -13,10 +13,10 @@ dnl
 match_sat_gini($rc(wmoid), ^ti[cdgt])
 
 match_sat_polar($rc(wmoid), ^tip,
-viirs/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
+images/sat/viirs/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
 match_sat_goesr($rc(wmoid), ^ti[rsu],
-goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
+images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
 match_sat_goesr($rc(wmoid), ^ixt,
-goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
+images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})

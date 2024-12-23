@@ -451,9 +451,10 @@ proc filter_sat_gini {seq fpath} {
     cd $_pwd;
 }
 
-proc filter_sat_ngini {seq fpath savesubdir savename} {
+proc filter_sat_ngini {seq fpath savedir savename} {
     #
-    # "savesubdir" is the subdirectory under "images/sat"
+    # "savedir" is the subdirectory under the gempak data dir, by default
+    # "/var/noaaport/data/gempak"
     #
     global gpfilter;
 
@@ -462,15 +463,13 @@ proc filter_sat_ngini {seq fpath savesubdir savename} {
     }
 
     # The mechanism to enable/disable individual types
-    if {[is_sat_rule_enabled $savesubdir] == 0} {
+    if {[is_sat_rule_enabled $savedir] == 0} {
 	return;
     }
 
     set _pwd [pwd];
     cd $gpfilter(dec_datadir);
     
-    set satdir $gpfilter(satdef,satdir);	# default is "images/sat"
-    set savedir [file join $satdir $savesubdir];
     set pathout [file join $savedir $savename];
     
     set status [catch {
@@ -490,16 +489,16 @@ proc filter_sat_ngini {seq fpath savesubdir savename} {
     return;
 }
 
-proc filter_sat_polar {seq fpath savesubdir savename} {
+proc filter_sat_polar {seq fpath savedir savename} {
 
-    filter_sat_ngini $seq $fpath $savesubdir $savename;
+    filter_sat_ngini $seq $fpath $savedir $savename;
 
     return;
 }
 
-proc filter_sat_goesr {seq fpath savesubdir savename} {
+proc filter_sat_goesr {seq fpath savedir savename} {
 
-    filter_sat_ngini $seq $fpath $savesubdir $savename;
+    filter_sat_ngini $seq $fpath $savedir $savename;
 
     return;
 }
