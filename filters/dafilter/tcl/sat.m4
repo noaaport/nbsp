@@ -36,7 +36,9 @@ dnl match_sat_archive($rc(wmoid), ^ti[cdgt],
 dnl sat/gini/[subst $dafilter(archive_sat_dirfmt)],
 dnl [subst $dafilter(archive_sat_namefmt)])
 
+dnl
 dnl what used to be the gini files
+dnl
 match_sat_ngini($rc(wmoid), ^ti[cdgt],
 sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
 
@@ -44,7 +46,9 @@ match_sat_archive($rc(wmoid), ^ti[cdgt],
 sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_goesr)])
 
+dnl
 dnl polar
+dnl
 match_sat_ngini($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_tip)])
 
@@ -52,7 +56,9 @@ match_sat_archive($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_tip)])
 
+dnl
 dnl goesr - glm
+dnl
 match_sat_ngini($rc(wmoid), ^tir[st]00,
 sat/glm/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
 
@@ -61,7 +67,9 @@ sat/glm/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_goesr)],
 break;)
 
-goesr - the rest
+dnl
+dnl goesr - the rest
+dnl
 match_sat_ngini($rc(wmoid), ^ti[rsu],
 sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
 

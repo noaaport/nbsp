@@ -26,19 +26,27 @@ dnl
 dnl old config
 dnl match_sat_gini($rc(wmoid), ^ti[cdgt])
 
+dnl
 dnl what used to be the gini files
+dnl
 match_sat_goesr($rc(wmoid), ^ti[cdgt],
 images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
+dnl
 dnl polar
+dnl
 match_sat_polar($rc(wmoid), ^tip,
 images/sat/viirs/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
-goesr - glm
+dnl
+dnl goesr - glm
+dnl
 match_sat_goesr($rc(wmoid), ^tir[st]00,
 images/sat/glm/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
-goesr - the rest
+dnl
+dnl goesr - the rest
+dnl
 match_sat_goesr($rc(wmoid), ^ti[rsu],
 images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
 
