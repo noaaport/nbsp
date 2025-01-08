@@ -7,6 +7,7 @@
 /usr/local/bin/nbspsat
 /usr/local/bin/nbspsatinfo
 /usr/local/bin/nbspsatgis
+/usr/local/bin/nbspgoesrcsv
 /usr/local/bin/nbspradinfo
 /usr/local/bin/nbsprad2info
 /usr/local/bin/nbspradgis

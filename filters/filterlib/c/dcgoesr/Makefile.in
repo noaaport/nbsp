@@ -1,0 +1,55 @@
+#
+# Copyright (c) 2024 Jose F. Nieves <nieves@ltp.uprrp.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+TARGET = nbspgoesrcsv
+TARGET_OBJECTS = nbspgoesrcsv.o
+
+GOESRCSV_OBJECTS = nbspgoesrcsv.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+GOESRCSV_LIBS = -lm -L /usr/local/lib -lnetcdf
+
+DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c
+DC_HEADERS = dcgoesr_nc.h dcgoesr_xy2lonlat.h
+DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o
+
+COMMON_DIR = ..
+COMMON_SOURCES = err.c
+COMMON_OBJECTS = err.o
+COMMON_HEADERS = ${COMMON_DIR}/err.h
+
+HEADERS = ${DC_HEADERS} ${COMMON_HEADERS}
+
+ALL_OBJECTS = ${TARGET_OBJECTS} ${DC_OBJECTS} ${COMMON_OBJECTS}
+
+INCDIRS =       @INCDIRS@
+LIBDIRS =       @LIBDIRS@
+INSTALL =       @INSTALL@
+CC =		@CC@
+CCWFLAGS =	@CCWFLAGS@
+
+INCDIRS +=	-iquote ..
+
+CFLAGS +=	${DEBUGFLAGS} -c ${CCWFLAGS} ${INCDIRS}
+DEBUGFLAGS =	-g
+#DEBUGFLAGS =	-DNDEBUG
+LDFLAGS +=	${LIBDIRS} ${LIBS}
+
+all: ${TARGET}
+
+@SUFFIXRULES@ ${HEADERS}
+	${CC} ${CFLAGS} $<
+
+${COMMON_DIR}/common.h:
+	cd ${COMMON_DIR}; ${MAKE} common.h
+
+err.c: ${COMMON_DIR}/err.c
+	cp ${COMMON_DIR}/err.c .
+
+nbspgoesrcsv: ${GOESRCSV_OBJECTS}
+	cc -o nbspgoesrcsv ${GOESRCSV_OBJECTS} ${LDFLAGS} ${GOESRCSV_LIBS}
+
+clean:
+	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}

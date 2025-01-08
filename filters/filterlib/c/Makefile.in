@@ -25,10 +25,11 @@ HEADERS = err.h util.h unz.h mfile.h io.h misc.h \
 
 TARGET_DCNIDS = nbspradinfo nbspradgis
 TARGET_DCGINI = nbspsat nbspsatinfo nbspsatgis
+TARGET_DCGOESR = nbspgoesrcsv
 TARGET = nbspfile nbspcat nbsppipe nbspunz nbspz \
 	nbspgrib nbspgrib2 \
 	nbsprad2info \
-	${TARGET_DCNIDS} ${TARGET_DCGINI}
+	${TARGET_DCNIDS} ${TARGET_DCGINI} ${TARGET_DCGOESR}
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -91,11 +92,16 @@ ${TARGET_DCNIDS}:
 	mv dcnids/nbspradinfo .
 	mv dcnids/nbspradgis .
 
+${TARGET_DCGOESR}:
+	cd dcgoesr; ${MAKE}
+	mv dcgoesr/nbspgoesrcsv .
+
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}
 
 clean:
 	cd dcnids; ${MAKE} clean
 	cd dcgini; ${MAKE} clean
+	cd dcgoesr; ${MAKE} clean
 	rm -f *~ Makefile ${TARGET} ${ALLOBJECTS} \
 	${SHAREDHEADERS} ${SHAREDSOURCES}

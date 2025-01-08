@@ -9,6 +9,7 @@ bin/nbsppostinstall
 bin/nbspsat
 bin/nbspsatinfo
 bin/nbspsatgis
+bin/nbspgoesrcsv
 bin/nbspradinfo
 bin/nbsprad2info
 bin/nbspradgis

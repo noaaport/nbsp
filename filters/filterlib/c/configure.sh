@@ -24,3 +24,5 @@ configure_default () {
   configure_default Makefile
   configure_default dcnids/Makefile
   configure_default dcgini/Makefile
+  configure_default dcgoesr/Makefile
+  
