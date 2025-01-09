@@ -1,0 +1,41 @@
+Thu Jan  9 18:52:20 AST 2025
+
+When working on the goesrcsv program I discovered an issue in netcdf.
+In freebsd (and linux) I can use in the main program
+
+atexit(cleanup)
+fd = open()
+
+and put the close() in cleanup(). This is illustrated in "ux.c".
+
+The analogous calls in netcdf
+
+atexit(cleanup)
+ncid = nc_open()
+
+and nc_close() in cleanup() does not work (this is illustrated in "nc-bad.c").
+
+The way it works in netcdf is to use the calls in the sequence
+
+ncid = nc_open()
+atexit(cleanup)
+
+and possibly further calls like
+
+nc_close()
+nc_open()
+
+But the point is that netcdf apparently must be initialized somehow
+before atexit().
+
+By pure guess, I found the function nc_initialized(),and the sequence
+
+nc_initialize()
+atexit()
+ncid = nc_open()
+
+does work in netcdf. This illustrated in "nc-bad.c", if the
+nc_initialize call line is uncommented.
+
+In summary, my preferred way to use it is as shown in "nc.c".
+

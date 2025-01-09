@@ -29,6 +29,7 @@ struct {
 } g = {0, NULL, NULL, NULL, NULL};
 
 /* static functions */
+static void init(void);
 static void cleanup(void);
 static void load(void);
 static void output(void);
@@ -73,6 +74,7 @@ int main(int argc, char ** argv) {
   else
     log_errx(1, "%s", "Needs inputfile as argument.");
 
+  init();
   atexit(cleanup);
   
   load();		/* load the data from the nc file */
@@ -89,8 +91,24 @@ static void log_errx_nc(int e, char *msg, int status) {
   log_errx(e, "%s: %s", msg, nc_strerror(status));
 }
 
+static void init(void) {
+  /*
+   * This is not required, but it is the correct thing to do. Otherwise
+   * atexit(cleanup) may not work correctly if we decide to open
+   * and nc file and leave it open for sometime, with a call
+   * to the nc_close in cleanup() for taking care of more complicated
+   * input/output and error handling. (See the Note in dev-notes/netcdf).
+   */
+  nc_initialize();
+}
+
 static void cleanup(void) {
 
+  /*
+   * free the internal netcdf memory - not absolutely required but cleaner.
+   */
+  nc_finalize();	
+   
   if(g.goesr != NULL)
     goesr_free(g.goesr);
 
