@@ -31,7 +31,8 @@ struct {
 /* static functions */
 static void cleanup(void);
 static void load(void);
-static void output_csv(void);
+static void output(void);
+static int output_csv(void);
 static void log_errx_nc(int e, char *msg, int status);
 
 /*
@@ -39,7 +40,7 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bh";
+  char *optstr = "bho:";
   char *usage = "nbspgoesrcsv [-h] [-b] [-o outputfile] <inputfile>";
   int c;
   int status = 0;
@@ -73,8 +74,9 @@ int main(int argc, char ** argv) {
     log_errx(1, "%s", "Needs inputfile as argument.");
 
   atexit(cleanup);
+  
   load();		/* load the data from the nc file */
-  output_csv();		/* do whatever with the data */
+  output();		/* do whatever with the data */
 
   return(0);
 }
@@ -92,11 +94,7 @@ static void cleanup(void) {
   if(g.goesr != NULL)
     goesr_free(g.goesr);
 
-  if((g.fp != stdout) && (g.fp != NULL))
-    (void)fclose(g.fp);
-
   g.goesr = NULL;
-  g.fp = NULL;
 }
 
 static void load(void) {
@@ -127,16 +125,39 @@ static void load(void) {
 
   if((status != 0) || (status_close != 0))
     log_errx(1, "%s", "Aborting");
+}
 
+static void output(void) {
+
+  int status = 0;
+  int status_close = 0;
+  
   if(g.opt_outputfile != NULL) {
     g.fp = fopen(g.opt_outputfile, "w");
     if(g.fp == NULL)
       log_err(1, "Error opening %s", g.opt_outputfile);
   } else
     g.fp = stdout;
-}
 
-static void output_csv(void) {
+  status = output_csv();
+  if((g.fp != stdout) && (g.fp != NULL)) {
+    status_close = fclose(g.fp);
+    g.fp = NULL;
+  }
+
+  if(status != 0)
+    log_err(0, "%s %s", "Error writing to", g.opt_outputfile);
+
+  if(status_close != 0)
+    log_err(0, "%s %s", "Error closing", g.opt_outputfile);
+
+  if((status != 0) || (status_close != 0)) {
+    (void)unlink(g.opt_outputfile);
+    log_errx(1, "%s", "Aborting");
+  }
+}  
+
+static int output_csv(void) {
 
   int i, j;		/* loop indexes x[i], y[j] */
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
@@ -156,6 +177,5 @@ static void output_csv(void) {
 
  theEnd:
 
-  if(status == -1)
-    log_err(1, "%s", "Error from fprintf");
+  return(status);
 }
