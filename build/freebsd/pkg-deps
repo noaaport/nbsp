@@ -5,5 +5,5 @@ deps: {
   png: {origin: graphics/png},
   netpbm: {origin: graphics/netpbm},
   gifsicle: {origin: graphics/gifsicle},
-  gnuplot: {origin: math/gnuplot}
+  gnuplot: {origin: math/gnuplot},
 }
