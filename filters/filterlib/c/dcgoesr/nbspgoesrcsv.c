@@ -18,6 +18,7 @@
 #include <netcdf.h>
 #include "err.h"
 #include "dcgoesr_nc.h"
+#include "dcgoesr_png.h"
 
 struct {
   int opt_background;
@@ -158,6 +159,8 @@ static void output(void) {
     g.fp = stdout;
 
   status = output_csv();
+  status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
+  
   if((g.fp != stdout) && (g.fp != NULL)) {
     status_close = fclose(g.fp);
     g.fp = NULL;
@@ -180,6 +183,8 @@ static int output_csv(void) {
   int i, j;		/* loop indexes x[i], y[j] */
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   int status = 0;
+
+  return(0);
   
   /* print in the order x,y, with x varying faster */
   for (j = 0; j < g.goesr->ny; ++j) {
@@ -188,12 +193,12 @@ static int output_csv(void) {
       if(fprintf(g.fp, "%f,%f,%f\n",
 		 g.goesr->lon[k], g.goesr->lat[k], g.goesr->cmi[k]) < 0) {
 	status = -1;
-	goto theEnd;
+	goto end;
       }
     }
   }
 
- theEnd:
+ end:
 
   return(status);
 }

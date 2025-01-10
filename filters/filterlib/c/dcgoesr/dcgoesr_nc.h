@@ -6,8 +6,8 @@
  * $Id$
  */
 
-#ifndef GOESRNC_H
-#define GOESRNC_H
+#ifndef DCGOESRNC_H
+#define DCGOESRNC_H
 
 /*
  * All the data is stored in "data". x,y,cmi, lon, lat are pointers to data.

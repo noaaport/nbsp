@@ -9,11 +9,11 @@ TARGET = nbspgoesrcsv
 TARGET_OBJECTS = nbspgoesrcsv.o
 
 GOESRCSV_OBJECTS = nbspgoesrcsv.o ${COMMON_OBJECTS} ${DC_OBJECTS}
-GOESRCSV_LIBS = -lm -L /usr/local/lib -lnetcdf
+GOESRCSV_LIBS = -lm -lnetcdf -lpng
 
-DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c
-DC_HEADERS = dcgoesr_nc.h dcgoesr_xy2lonlat.h
-DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o
+DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c
+DC_HEADERS = dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h
+DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o
 
 COMMON_DIR = ..
 COMMON_SOURCES = err.c
