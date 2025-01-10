@@ -6,9 +6,9 @@
  * $Id$
  */
 #include <stdlib.h>
-#include <png.h>
 #include <inttypes.h>
 #include <float.h>
+#include <png.h>
 #include "dcgoesr_png.h"
 
 static uint8_t *calc_ucmi(double *cmi, int nx, int ny);

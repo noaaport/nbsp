@@ -6,7 +6,11 @@
  * $Id$
  */
 /*
- * Usage: goesrcsv [-b] [-o outputfile] <ncfile>
+ * Usage: goesrcsv [-b] [-n] [-o outputfile] <ncfile>
+ *
+ * -b => bakground
+ * -n => output png - default is csv
+ * -o => name output file - default is stdout
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -22,12 +26,13 @@
 
 struct {
   int opt_background;
+  int opt_png;
   char *opt_inputfile;
   char *opt_outputfile;
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, NULL, NULL, NULL, NULL};
+} g = {0, 0, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -42,8 +47,8 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bho:";
-  char *usage = "nbspgoesrcsv [-h] [-b] [-o outputfile] <inputfile>";
+  char *optstr = "bhno:";
+  char *usage = "nbspgoesrcsv [-h] [-b] [-n] [-o outputfile] <inputfile>";
   int c;
   int status = 0;
 
@@ -53,6 +58,9 @@ int main(int argc, char ** argv) {
     switch(c){
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'n':
+      g.opt_png = 1;
       break;
     case 'o':
       g.opt_outputfile = optarg;
@@ -158,8 +166,11 @@ static void output(void) {
   } else
     g.fp = stdout;
 
-  status = output_csv();
-  status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
+  /* The default is csv if the png option is not set */
+  if(g.opt_png == 1)
+    status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
+  else
+    status = output_csv();
   
   if((g.fp != stdout) && (g.fp != NULL)) {
     status_close = fclose(g.fp);
@@ -184,8 +195,6 @@ static int output_csv(void) {
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   int status = 0;
 
-  return(0);
-  
   /* print in the order x,y, with x varying faster */
   for (j = 0; j < g.goesr->ny; ++j) {
     for (i = 0; i < g.goesr->nx; ++i) {

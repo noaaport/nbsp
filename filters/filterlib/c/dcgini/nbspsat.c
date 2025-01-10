@@ -288,8 +288,11 @@ static int process_file(void){
     fclose(fp);
   }
 
-  if(g.opt_gempak_output){
-    fname[strlen(fname) - 4] = '\0';
+  if(g.opt_gempak_output == 1){
+    /* If fname is the default (png name), remove the extension */
+    if(g.opt_output_fname == NULL){
+      fname[strlen(fname) - 4] = '\0';
+    }
     gempak_fd = open(fname, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     if(gempak_fd == -1)
       log_err(1, "Could not open %s", fname);
