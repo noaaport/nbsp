@@ -6,9 +6,10 @@
  * $Id$
  */
 /*
- * Usage: goesrcsv [-b] [-n] [-o outputfile] <ncfile>
+ * Usage: goesrcsv [-b] [-n] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
+ * -d => directory for output file
  * -n => output png - default is csv
  * -o => name output file - default is stdout
  */
@@ -25,14 +26,15 @@
 #include "dcgoesr_png.h"
 
 struct {
-  int opt_background;
-  int opt_png;
+  int opt_background;		/* -b */
+  int opt_png;			/* -n */
   char *opt_inputfile;
-  char *opt_outputfile;
+  char *opt_outputfile;		/* -o */
+  char *opt_outputdir;		/* -d */
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, 0, NULL, NULL, NULL, NULL};
+} g = {0, 0, NULL, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -47,8 +49,9 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bhno:";
-  char *usage = "nbspgoesrcsv [-h] [-b] [-n] [-o outputfile] <inputfile>";
+  char *optstr = "bhd:no:";
+  char *usage = "nbspgoesrcsv [-h] [-b] [-n] [-d outputdir]"
+    " [-o outputfile] <inputfile>";
   int c;
   int status = 0;
 
@@ -61,6 +64,9 @@ int main(int argc, char ** argv) {
       break;
     case 'n':
       g.opt_png = 1;
+      break;
+    case 'd':
+      g.opt_outputdir = optarg;
       break;
     case 'o':
       g.opt_outputfile = optarg;
@@ -158,7 +164,13 @@ static void output(void) {
 
   int status = 0;
   int status_close = 0;
-  
+
+  if(g.opt_outputdir != NULL){
+    status = chdir(g.opt_outputdir);
+    if(status != 0)
+      log_err(1, "Cannot chdir to %s", g.opt_outputdir);
+  }
+
   if(g.opt_outputfile != NULL) {
     g.fp = fopen(g.opt_outputfile, "w");
     if(g.fp == NULL)

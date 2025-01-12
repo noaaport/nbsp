@@ -379,6 +379,89 @@ proc filter_satmap {wmoid fpath savedir savename} {
     return $output;
 }
 
+#
+# 2024 - Added to deal with the goesr files, separately from the (old)
+# gini files (which are disabled and eventually the code removed).
+#
+proc filter_sat_goesr {wmoid fpath imgsavedir datasavedir imgsavename} {
+    #
+    # The "datasavename" is constructed from the imgsavename. The data (nc)
+    # file is not kept.
+    #
+    # The default names are;
+    #
+    # knes_tire13.112346_1414381 (raw spool file)
+    # tire13_20250111_2346.gif
+    # tire13_20250111_2346.nc
+    #
+    # The nc file is created for processing but it is removed afterwards.
+    #
+    global rstfilter;
+
+    #
+    # Assume that imgsavename contains the img file extension (png by default)
+    #
+    set datafbasename [file rootname $imgsavename];
+    append datafbasename $rstfilter(sat_goesr_datext);
+    set datafpath [file join $rstfilter(datadir) $datasavedir $datafbasename];
+
+    set status [catch {
+	cd $rstfilter(datadir);
+	file mkdir $datasavedir;
+	#
+	# Similar to the dafilter, remove the first line and leave the
+	# pure nc file.
+	#
+	exec tail -n +2 $fpath > $datafpath;
+    } errmsg];
+    
+    if {$status != 0} {
+	# In case the file was created
+	file delete $datafpath;
+	set output [list 1 ""];
+	log_msg $errmsg;
+	
+	return $output;
+    }
+
+    # Create the image
+    cd $rstfilter(datadir);
+    file mkdir $imgsavedir;
+
+    set status [catch {
+	exec nbspgoesr -n -d $imgsavedir -o $imgsavename $datafpath;	
+    } errmsg];
+
+    # The nc file is kept only if the flag is set and there are no errors.
+    if {($status != 0) || ($rstfilter(sat_goesr_keepnc) == 0)} {
+       file delete $datafpath;
+    }
+    
+    if {$status != 0} {
+	#
+	# nbspgoesr deletes the image file in case of an error.
+	#
+	set output [list 1 ""];
+	log_msg $errmsg;
+	
+	return $output;
+    }
+
+    set fpathout "";
+    append fpathout $rstfilter(datadir) $imgsavedir $imgsavename;
+    set output [list 0 $fpathout];
+
+    # Insert both img and data files in sat inventory
+    #filter_sat_insert_inventory $datasavedir $datafpath;
+    filter_sat_img_insert_inventory $imgsavedir $fpathout;
+
+    # Create the link to the latest
+    #make_sat_latest $datasavedir [file tail $datafpath];
+    make_sat_latest $imgsavedir [file tail $fpathout];
+
+    return $output;
+}
+
 proc filter_rad {awips fpath savedir savename} {
 #
 # The awips is passed to nbspradmap (as a define) for the template use.
