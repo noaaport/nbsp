@@ -6,11 +6,11 @@
  * $Id$
  */
 /*
- * Usage: goesrcsv [-b] [-n] [-d outputdir] [-o outputfile] <ncfile>
+ * Usage: nbspgoesrc [-b] [-v] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
  * -d => directory for output file
- * -n => output png - default is csv
+ * -v => output csv - default is png
  * -o => name output file - default is stdout
  */
 #include <stdlib.h>
@@ -27,7 +27,7 @@
 
 struct {
   int opt_background;		/* -b */
-  int opt_png;			/* -n */
+  int opt_csv;			/* -v */
   char *opt_inputfile;
   char *opt_outputfile;		/* -o */
   char *opt_outputdir;		/* -d */
@@ -49,8 +49,8 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bhd:no:";
-  char *usage = "nbspgoesrcsv [-h] [-b] [-n] [-d outputdir]"
+  char *optstr = "bhvd:o:";
+  char *usage = "nbspgoesr [-h] [-b] [-v] [-d outputdir]"
     " [-o outputfile] <inputfile>";
   int c;
   int status = 0;
@@ -62,8 +62,8 @@ int main(int argc, char ** argv) {
     case 'b':
       g.opt_background = 1;
       break;
-    case 'n':
-      g.opt_png = 1;
+    case 'v':
+      g.opt_csv = 1;
       break;
     case 'd':
       g.opt_outputdir = optarg;
@@ -178,11 +178,11 @@ static void output(void) {
   } else
     g.fp = stdout;
 
-  /* The default is csv if the png option is not set */
-  if(g.opt_png == 1)
-    status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
-  else
+  /* The default is png if the csv option is not set */
+  if(g.opt_csv == 1)
     status = output_csv();
+  else
+    status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
   
   if((g.fp != stdout) && (g.fp != NULL)) {
     status_close = fclose(g.fp);

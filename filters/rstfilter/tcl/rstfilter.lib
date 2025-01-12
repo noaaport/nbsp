@@ -429,7 +429,7 @@ proc filter_sat_goesr {wmoid fpath imgsavedir datasavedir imgsavename} {
     file mkdir $imgsavedir;
 
     set status [catch {
-	exec nbspgoesr -n -d $imgsavedir -o $imgsavename $datafpath;	
+	exec nbspgoesr -d $imgsavedir -o $imgsavename $datafpath;	
     } errmsg];
 
     # The nc file is kept only if the flag is set and there are no errors.
