@@ -25,6 +25,13 @@ struct goesr_st {
   double *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   double *lon;	/* for each cmi[k] as above, there is a lon[k] */
   double *lat;	/* for each cmi[k] as above, there is a lat[k] */
+  /* global "attributes - info */
+  double tclon;	/* tile center longitude */
+  double tclat; /* tile center latitude */
+  double lon1;	/* lower left lon */
+  double lat1;	/* lower left lat */
+  double lon2;	/* upper right lon */
+  double lat2;	/* upper right lat */
 };
 
 /* public functions */

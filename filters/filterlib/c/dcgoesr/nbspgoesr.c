@@ -6,13 +6,29 @@
  * $Id$
  */
 /*
- * Usage: nbspgoesrc [-b] [-v] [-d outputdir] [-o outputfile] <ncfile>
+ * Usage: nbspgoesr [-b] [-c] [-i] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
  * -d => directory for output file
- * -v => output csv - default is png
- * -o => name output file - default is stdout
+ * -c => output csv - default is png
+ * -i => output info - default is png
+ * -o => name of output file (for png or csv) - default is stdout
+ *
+ * If the [-i] option is set, the following info is printed to stdout:
+ *
+ *   nx, ny, center_lon, center_lat, lon1, lat1, lon2, lat2
+ *
+ * all in one line separated by a space. (lon1,lat1) and
+ * (lon2,lat2) are the coordinates of the lower-left and upper-right
+ * points, respectively.
+ *
+ * If the [-c] option is set, the output is the data in csv format,
+ * (either to stdout, or the file set by [-o] if given).
+ *
+ * If [-c] is not set, then the png is output provided [-i] is not
+ * set or the [-o] is set.
  */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,14 +43,15 @@
 
 struct {
   int opt_background;		/* -b */
-  int opt_csv;			/* -v */
+  int opt_csv;			/* -c */
+  int opt_info;			/* -i */
   char *opt_inputfile;
   char *opt_outputfile;		/* -o */
   char *opt_outputdir;		/* -d */
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, 0, NULL, NULL, NULL, NULL, NULL};
+} g = {0, 0, 0, NULL, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -42,6 +59,7 @@ static void cleanup(void);
 static void load(void);
 static void output(void);
 static int output_csv(void);
+static int output_info(void);
 static void log_errx_nc(int e, char *msg, int status);
 
 /*
@@ -49,8 +67,8 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bhvd:o:";
-  char *usage = "nbspgoesr [-h] [-b] [-v] [-d outputdir]"
+  char *optstr = "bhcid:o:";
+  char *usage = "nbspgoesr [-h] [-b] [-c] [-i] [-d outputdir]"
     " [-o outputfile] <inputfile>";
   int c;
   int status = 0;
@@ -62,8 +80,11 @@ int main(int argc, char ** argv) {
     case 'b':
       g.opt_background = 1;
       break;
-    case 'v':
+    case 'c':
       g.opt_csv = 1;
+      break;
+    case 'i':
+      g.opt_info = 1;
       break;
     case 'd':
       g.opt_outputdir = optarg;
@@ -178,12 +199,27 @@ static void output(void) {
   } else
     g.fp = stdout;
 
-  /* The default is png if the csv option is not set */
+  /* If the info option is set, output the info to stdout */
+  if(g.opt_info == 1)
+    status = output_info();
+
+  /*
+   * If the csv option is set, output the csv. This can be to stdout
+   * or whatever output file is set by the options.
+   */
   if(g.opt_csv == 1)
     status = output_csv();
-  else
-    status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
-  
+
+  /*
+   * The default is png if:
+   *   - neither the csv option or info are set
+   *   - csv is not set and info is, but the output is set to a file.
+   */
+  if(g.opt_csv == 0) {
+    if((g.opt_info == 0) || (g.opt_outputfile != NULL))
+      status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
+  }
+
   if((g.fp != stdout) && (g.fp != NULL)) {
     status_close = fclose(g.fp);
     g.fp = NULL;
@@ -223,3 +259,25 @@ static int output_csv(void) {
 
   return(status);
 }
+
+static int output_info(void) {
+  /*
+   * The info is output to stdout.
+   */
+  int status = 0;
+
+  if(fprintf(stdout, "%d %d %f %f %f %f %f %f\n",
+	     g.goesr->nx,
+	     g.goesr->ny,
+	     g.goesr->tclon,
+	     g.goesr->tclat,
+	     g.goesr->lon1,
+	     g.goesr->lat1,
+	     g.goesr->lon2,
+	     g.goesr->lat2) < 0) {
+    status = -1;
+  }
+
+  return(status);
+}
+

@@ -12,11 +12,16 @@ static int get_offset_scale(int ncid, int varid, double *offset, double *scale);
 static int get_xy(int ncid, int varid, double *v, int nv);
 static int get_cmi(int ncid, int varid, double *cmip, int nx, int ny);
 static int get_lonorigin(int ncid, double *lorigin);
+static int get_tclonlat(int ncid, double *lon, double *lat);
 
-/* constants */
+/* variable names */
 #define XNAME "x"
 #define YNAME "y"
 #define CMINAME "Sectorized_CMI"
+
+/* the global "attributes */
+#define TC_LONGITUDE "tile_center_longitude"
+#define TC_LATITUDE "tile_center_latitude"
 
 static int get_offset_scale(int ncid, int varid,
 			    double *offset, double *scale) {
@@ -96,6 +101,20 @@ static int get_lonorigin(int ncid, double *lorigin) {
     status = nc_get_att_double(ncid, varid, "longitude_of_projection_origin",
 			     lorigin);
   }
+
+  return(status);
+}
+
+static int get_tclonlat(int ncid, double *lon, double *lat) {
+  /*
+   * Get the "tile_center_longitude" and latitude
+   */
+  int status = 0;
+
+  status = nc_get_att_double(ncid, NC_GLOBAL, TC_LONGITUDE, lon);
+
+  if(status == 0)
+    status = nc_get_att_double(ncid, NC_GLOBAL, TC_LATITUDE, lat);
 
   return(status);
 }
@@ -195,6 +214,21 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
       gp->lat[k] = lat;
     }
   }
+
+  /*
+   * Now all the "global" nc attributes, and our global parameters
+   * (lower-left and upper-right coordinates)
+   */
+  status = get_tclonlat(ncid, &gp->tclon, &gp->tclat);
+  if(status != 0) {
+    goesr_free(gp);
+    return(status);
+  }
+
+  gp->lon1 = gp->lon[0];
+  gp->lat1 = gp->lat[0];
+  gp->lon2 = gp->lon[nx*ny - 1];
+  gp->lat2 = gp->lat[nx*ny - 1];
 
   *goesr = gp;
   
