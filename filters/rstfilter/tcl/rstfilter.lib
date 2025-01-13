@@ -447,17 +447,20 @@ proc filter_sat_goesr {wmoid fpath imgsavedir datasavedir imgsavename} {
 	return $output;
     }
 
-    set fpathout "";
-    append fpathout $rstfilter(datadir) $imgsavedir $imgsavename;
+    set fpathout [file join $rstfilter(datadir) $imgsavedir $imgsavename];
     set output [list 0 $fpathout];
 
     # Insert both img and data files in sat inventory
-    #filter_sat_insert_inventory $datasavedir $datafpath;
     filter_sat_img_insert_inventory $imgsavedir $fpathout;
+    if {$rstfilter(sat_goesr_keepnc) == 1} {
+        filter_sat_insert_inventory $datasavedir $datafpath;
+    }
 
     # Create the link to the latest
-    #make_sat_latest $datasavedir [file tail $datafpath];
     make_sat_latest $imgsavedir [file tail $fpathout];
+    if {$rstfilter(sat_goesr_keepnc) == 1} {
+        make_sat_latest $datasavedir [file tail $datafpath];
+    }
 
     return $output;
 }
