@@ -5,11 +5,14 @@
 #
 # $Id$
 #
-TARGET = nbspgoesr
-TARGET_OBJECTS = nbspgoesr.o
+TARGET = nbspgoesr nbspgoesrinfo
+TARGET_OBJECTS = nbspgoesr.o nbspgoesrinfo.o
 
 GOESR_OBJECTS = nbspgoesr.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+GOESRINFO_OBJECTS = nbspgoesrinfo.o ${COMMON_OBJECTS}
+
 GOESR_LIBS = -lm -lnetcdf -lpng
+GOESRINFO_LIBS = -lnetcdf
 
 DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c
 DC_HEADERS = dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h
@@ -50,6 +53,9 @@ err.c: ${COMMON_DIR}/err.c
 
 nbspgoesr: ${GOESR_OBJECTS}
 	cc -o nbspgoesr ${GOESR_OBJECTS} ${LDFLAGS} ${GOESR_LIBS}
+
+nbspgoesrinfo: ${GOESRINFO_OBJECTS}
+	cc -o nbspgoesrinfo ${GOESRINFO_OBJECTS} ${LDFLAGS} ${GOESRINFO_LIBS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}

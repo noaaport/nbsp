@@ -28,10 +28,8 @@
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
  */
-
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h> /* getopt */
 #include <libgen.h> /* basename */
 #include <err.h>

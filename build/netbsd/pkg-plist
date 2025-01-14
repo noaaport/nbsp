@@ -18,6 +18,7 @@ bin/nbspsat
 bin/nbspsatinfo
 bin/nbspsatgis
 bin/nbspgoesr
+bin/nbspgoesrinfo
 bin/nbspradinfo
 bin/nbsprad2info
 bin/nbspradgis
