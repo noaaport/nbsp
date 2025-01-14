@@ -1,0 +1,65 @@
+
+proc goesr_info {ncfile} {
+    #
+    # NOTE: For illustration, we show at the end how to add
+    #       non-global variables, for example "Sectorized_CMI:standard_name"
+    #
+    # This function emits the values of the following data, in the stated
+    # order, as a list.
+    #
+    # product_name \
+    # start_date_time \
+    # source_scene \
+    # satellite_id \
+    # abi_mode \
+    # channel_id
+    #
+    # 
+    # Example - On a "tire13" file,
+    #           econus-020-b12-m6c13 2025011180117 conus goes-16 6 13
+    #
+    # The output can then be used in the filters.lib like this:
+    #
+    # set goesrinfo [goesr_info $ncfile]
+    #
+    # set rc(goesr_product_name) [lindex $goesrinfo 0];
+    # set rc(goesr_start_date_time) [lindex $goesrinfo 1];
+    # set rc(goesr_source_scene) [lindex $goesrinfo 2];
+    # set rc(goesr_satellite_id) [lindex $goesrinfo 3];
+    # set rc(goesr_abi_mode) [lindex $goesrinfo 4];
+    # set rc(goesr_channel_id) [lindex $goesrinfo 5];
+    #
+    set status 0;
+    
+    set keywords [list Sectorized_CMI:standard_name \
+    		 product_name start_date_time \
+		 source_scene satellite_id abi_mode channel_id];
+
+    array set val {};
+
+    set status [catch {
+	set data [exec ncdump -h $ncfile];
+    } errmsg];
+
+    if {$status != 0} {
+	return -code error $errmsg;
+    }
+    
+    foreach line [split $data "\n"] {
+	foreach k $keywords {
+	    if {[regexp "$k = \"(.+)\" ;" $line math v]} {
+		set val($k) $v;
+	    } elseif {[regexp "$k = (.+) ;" $line math v]} {
+		set val($k) $v
+	    }
+	}
+    }
+
+    set output [list];
+    
+    foreach k $keywords {
+	lappend output [string tolower $val($k)];
+    }
+
+    return $output;
+}

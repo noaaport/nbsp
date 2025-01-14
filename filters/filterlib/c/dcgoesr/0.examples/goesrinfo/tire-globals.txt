@@ -1,0 +1,185 @@
+ixte89.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ixte99.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ixtj89.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ixtj99.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ixtu89.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ixtu99.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ticf02.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ticf08.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ticf14.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+ticx70.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+tira01.nc: akregi-010-b12-m6c01 2025001213021 fulldisk goes-18 6 1
+tira02.nc: akregi-005-b12-m6c02 2025001213021 fulldisk goes-18 6 2
+tira03.nc: akregi-010-b12-m6c03 2025001213021 fulldisk goes-18 6 3
+tira04.nc: akregi-020-b12-m6c04 2025001213021 fulldisk goes-18 6 4
+tira05.nc: akregi-010-b12-m6c05 2025001213021 fulldisk goes-18 6 5
+tira06.nc: akregi-020-b12-m6c06 2025001213021 fulldisk goes-18 6 6
+tira07.nc: akregi-020-b14-m6c07 2025001213021 fulldisk goes-18 6 7
+tira08.nc: akregi-020-b12-m6c08 2025001213021 fulldisk goes-18 6 8
+tira09.nc: akregi-020-b12-m6c09 2025001213021 fulldisk goes-18 6 9
+tira10.nc: akregi-020-b12-m6c10 2025001213021 fulldisk goes-18 6 10
+tira11.nc: akregi-020-b12-m6c11 2025001213021 fulldisk goes-18 6 11
+tira12.nc: akregi-020-b12-m6c12 2025001213021 fulldisk goes-18 6 12
+tira13.nc: akregi-020-b12-m6c13 2025001213021 fulldisk goes-18 6 13
+tira14.nc: akregi-020-b12-m6c14 2025001213021 fulldisk goes-18 6 14
+tira15.nc: akregi-020-b12-m6c15 2025001213021 fulldisk goes-18 6 15
+tira16.nc: akregi-020-b12-m6c16 2025001213021 fulldisk goes-18 6 16
+tire01.nc: econus-010-b12-m6c01 2025001213617 conus goes-16 6 1
+tire02.nc: econus-005-b12-m6c02 2025001213617 conus goes-16 6 2
+tire03.nc: econus-010-b12-m6c03 2025001213617 conus goes-16 6 3
+tire04.nc: econus-020-b12-m6c04 2025001213617 conus goes-16 6 4
+tire05.nc: econus-010-b12-m6c05 2025001213617 conus goes-16 6 5
+tire06.nc: econus-020-b12-m6c06 2025001213617 conus goes-16 6 6
+tire07.nc: econus-020-b14-m6c07 2025001213617 conus goes-16 6 7
+tire08.nc: econus-020-b12-m6c08 2025001213617 conus goes-16 6 8
+tire09.nc: econus-020-b12-m6c09 2025001213617 conus goes-16 6 9
+tire10.nc: econus-020-b12-m6c10 2025001213617 conus goes-16 6 10
+tire11.nc: econus-020-b12-m6c11 2025001213617 conus goes-16 6 11
+tire12.nc: econus-020-b12-m6c12 2025001213617 conus goes-16 6 12
+tire13.nc: econus-020-b12-m6c13 2025001213617 conus goes-16 6 13
+tire14.nc: econus-020-b12-m6c14 2025001213617 conus goes-16 6 14
+tire15.nc: econus-020-b12-m6c15 2025001213617 conus goes-16 6 15
+tire16.nc: econus-020-b12-m6c16 2025001213617 conus goes-16 6 16
+tirp01.nc: prregi-010-b12-m6c01 2025001213020 fulldisk goes-16 6 1
+tirp02.nc: prregi-005-b12-m6c02 2025001213020 fulldisk goes-16 6 2
+tirp03.nc: prregi-010-b12-m6c03 2025001213020 fulldisk goes-16 6 3
+tirp04.nc: prregi-020-b12-m6c04 2025001213020 fulldisk goes-16 6 4
+tirp05.nc: prregi-010-b12-m6c05 2025001213020 fulldisk goes-16 6 5
+tirp06.nc: prregi-020-b12-m6c06 2025001213020 fulldisk goes-16 6 6
+tirp07.nc: prregi-020-b14-m6c07 2025001213020 fulldisk goes-16 6 7
+tirp08.nc: prregi-020-b12-m6c08 2025001213020 fulldisk goes-16 6 8
+tirp09.nc: prregi-020-b12-m6c09 2025001213020 fulldisk goes-16 6 9
+tirp10.nc: prregi-020-b12-m6c10 2025001213020 fulldisk goes-16 6 10
+tirp13.nc: prregi-020-b12-m6c13 2025001213020 fulldisk goes-16 6 13
+tirp15.nc: prregi-020-b12-m6c15 2025001213020 fulldisk goes-16 6 15
+tirs00.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+tirs01.nc: efd-060-b12-m6c01 2025001213020 fulldisk goes-16 6 1
+tirs02.nc: efd-060-b12-m6c02 2025001213020 fulldisk goes-16 6 2
+tirs03.nc: efd-060-b12-m6c03 2025001213020 fulldisk goes-16 6 3
+tirs04.nc: efd-060-b12-m6c04 2025001213020 fulldisk goes-16 6 4
+tirs05.nc: efd-060-b12-m6c05 2025001213020 fulldisk goes-16 6 5
+tirs06.nc: efd-060-b12-m6c06 2025001213020 fulldisk goes-16 6 6
+tirs07.nc: efd-060-b14-m6c07 2025001213020 fulldisk goes-16 6 7
+tirs08.nc: efd-060-b12-m6c08 2025001213020 fulldisk goes-16 6 8
+tirs09.nc: efd-060-b12-m6c09 2025001213020 fulldisk goes-16 6 9
+tirs10.nc: efd-060-b12-m6c10 2025001213020 fulldisk goes-16 6 10
+tirs11.nc: efd-060-b12-m6c11 2025001213020 fulldisk goes-16 6 11
+tirs12.nc: efd-060-b12-m6c12 2025001213020 fulldisk goes-16 6 12
+tirs13.nc: efd-020-b12-m6c13 2025001213020 fulldisk goes-16 6 13
+tirs14.nc: efd-060-b12-m6c14 2025001213020 fulldisk goes-16 6 14
+tirs15.nc: efd-060-b12-m6c15 2025001213020 fulldisk goes-16 6 15
+tirs16.nc: efd-060-b12-m6c16 2025001213020 fulldisk goes-16 6 16
+tirt00.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+tirt01.nc: wfd-060-b12-m6c01 2025001213021 fulldisk goes-18 6 1
+tirt02.nc: wfd-060-b12-m6c02 2025001213021 fulldisk goes-18 6 2
+tirt03.nc: wfd-060-b12-m6c03 2025001213021 fulldisk goes-18 6 3
+tirt04.nc: wfd-060-b12-m6c04 2025001213021 fulldisk goes-18 6 4
+tirt05.nc: wfd-060-b12-m6c05 2025001213021 fulldisk goes-18 6 5
+tirt06.nc: wfd-060-b12-m6c06 2025001213021 fulldisk goes-18 6 6
+tirt07.nc: wfd-060-b14-m6c07 2025001213021 fulldisk goes-18 6 7
+tirt08.nc: wfd-060-b12-m6c08 2025001213021 fulldisk goes-18 6 8
+tirt09.nc: wfd-060-b12-m6c09 2025001213021 fulldisk goes-18 6 9
+tirt10.nc: wfd-060-b12-m6c10 2025001213021 fulldisk goes-18 6 10
+tirt11.nc: wfd-060-b12-m6c11 2025001213021 fulldisk goes-18 6 11
+tirt12.nc: wfd-060-b12-m6c12 2025001213021 fulldisk goes-18 6 12
+tirt13.nc: wfd-020-b12-m6c13 2025001213021 fulldisk goes-18 6 13
+tirt14.nc: wfd-060-b12-m6c14 2025001213021 fulldisk goes-18 6 14
+tirt15.nc: wfd-060-b12-m6c15 2025001213021 fulldisk goes-18 6 15
+tirt16.nc: wfd-060-b12-m6c16 2025001213021 fulldisk goes-18 6 16
+tirw01.nc: wconus-010-b12-m6c01 2025001213618 conus goes-18 6 1
+tirw02.nc: wconus-005-b12-m6c02 2025001213618 conus goes-18 6 2
+tirw03.nc: wconus-010-b12-m6c03 2025001213618 conus goes-18 6 3
+tirw04.nc: wconus-020-b12-m6c04 2025001213618 conus goes-18 6 4
+tirw05.nc: wconus-010-b12-m6c05 2025001213618 conus goes-18 6 5
+tirw06.nc: wconus-020-b12-m6c06 2025001213618 conus goes-18 6 6
+tirw07.nc: wconus-020-b14-m6c07 2025001213618 conus goes-18 6 7
+tirw08.nc: wconus-020-b12-m6c08 2025001213618 conus goes-18 6 8
+tirw09.nc: wconus-020-b12-m6c09 2025001213618 conus goes-18 6 9
+tirw10.nc: wconus-020-b12-m6c10 2025001213618 conus goes-18 6 10
+tirw11.nc: wconus-020-b12-m6c11 2025001213618 conus goes-18 6 11
+tirw12.nc: wconus-020-b12-m6c12 2025001213618 conus goes-18 6 12
+tirw13.nc: wconus-020-b12-m6c13 2025001213618 conus goes-18 6 13
+tirw14.nc: wconus-020-b12-m6c14 2025001213618 conus goes-18 6 14
+tirw15.nc: wconus-020-b12-m6c15 2025001213618 conus goes-18 6 15
+tirw16.nc: wconus-020-b12-m6c16 2025001213618 conus goes-18 6 16
+tirz13.nc: asregi-020-b12-m6c13 2025001213021 fulldisk goes-18 6 13
+tish01.nc: emeso-010-b12-m6c01 2025001055955 mesoscale-2 goes-16 6 1
+tish02.nc: emeso-005-b12-m6c02 2025001055955 mesoscale-2 goes-16 6 2
+tish03.nc: emeso-010-b12-m6c03 2025001055955 mesoscale-2 goes-16 6 3
+tish04.nc: emeso-020-b12-m6c04 2025001055955 mesoscale-2 goes-16 6 4
+tish05.nc: emeso-010-b12-m6c05 2025001055955 mesoscale-2 goes-16 6 5
+tish06.nc: emeso-020-b12-m6c06 2025001055955 mesoscale-2 goes-16 6 6
+tish07.nc: emeso-020-b14-m6c07 2025001055955 mesoscale-2 goes-16 6 7
+tish08.nc: emeso-020-b12-m6c08 2025001055955 mesoscale-2 goes-16 6 8
+tish09.nc: emeso-020-b12-m6c09 2025001055955 mesoscale-2 goes-16 6 9
+tish10.nc: emeso-020-b12-m6c10 2025001055955 mesoscale-2 goes-16 6 10
+tish11.nc: emeso-020-b12-m6c11 2025001055955 mesoscale-2 goes-16 6 11
+tish12.nc: emeso-020-b12-m6c12 2025001055955 mesoscale-2 goes-16 6 12
+tish13.nc: emeso-020-b12-m6c13 2025001055955 mesoscale-2 goes-16 6 13
+tish14.nc: emeso-020-b12-m6c14 2025001055955 mesoscale-2 goes-16 6 14
+tish15.nc: emeso-020-b12-m6c15 2025001055955 mesoscale-2 goes-16 6 15
+tish16.nc: emeso-020-b12-m6c16 2025001055955 mesoscale-2 goes-16 6 16
+tisi01.nc: emeso-010-b12-m6c01 2025001213955 mesoscale-2 goes-16 6 1
+tisi02.nc: emeso-005-b12-m6c02 2025001213925 mesoscale-1 goes-16 6 2
+tisi03.nc: emeso-010-b12-m6c03 2025001213955 mesoscale-2 goes-16 6 3
+tisi04.nc: emeso-020-b12-m6c04 2025001213955 mesoscale-2 goes-16 6 4
+tisi05.nc: emeso-010-b12-m6c05 2025001213955 mesoscale-2 goes-16 6 5
+tisi06.nc: emeso-020-b12-m6c06 2025001213955 mesoscale-2 goes-16 6 6
+tisi07.nc: emeso-020-b14-m6c07 2025001213955 mesoscale-2 goes-16 6 7
+tisi08.nc: emeso-020-b12-m6c08 2025001213955 mesoscale-2 goes-16 6 8
+tisi09.nc: emeso-020-b12-m6c09 2025001213955 mesoscale-2 goes-16 6 9
+tisi10.nc: emeso-020-b12-m6c10 2025001213955 mesoscale-2 goes-16 6 10
+tisi11.nc: emeso-020-b12-m6c11 2025001213955 mesoscale-2 goes-16 6 11
+tisi12.nc: emeso-020-b12-m6c12 2025001213955 mesoscale-2 goes-16 6 12
+tisi13.nc: emeso-020-b12-m6c13 2025001213955 mesoscale-2 goes-16 6 13
+tisi14.nc: emeso-020-b12-m6c14 2025001213955 mesoscale-2 goes-16 6 14
+tisi15.nc: emeso-020-b12-m6c15 2025001213955 mesoscale-2 goes-16 6 15
+tisi16.nc: emeso-020-b12-m6c16 2025001213955 mesoscale-2 goes-16 6 16
+titx38.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+titx39.nc: nbspgoesrinfo: NC error.: NetCDF: Attribute not found
+nbspgoesrinfo: Aborting
+tiug01.nc: wmeso-010-b12-m6c01 2025001213926 mesoscale-1 goes-18 6 1
+tiug02.nc: wmeso-005-b12-m6c02 2025001213926 mesoscale-1 goes-18 6 2
+tiug03.nc: wmeso-010-b12-m6c03 2025001213926 mesoscale-1 goes-18 6 3
+tiug04.nc: wmeso-020-b12-m6c04 2025001213926 mesoscale-1 goes-18 6 4
+tiug05.nc: wmeso-010-b12-m6c05 2025001213926 mesoscale-1 goes-18 6 5
+tiug06.nc: wmeso-020-b12-m6c06 2025001213926 mesoscale-1 goes-18 6 6
+tiug07.nc: wmeso-020-b14-m6c07 2025001213926 mesoscale-1 goes-18 6 7
+tiug08.nc: wmeso-020-b12-m6c08 2025001213926 mesoscale-1 goes-18 6 8
+tiug09.nc: wmeso-020-b12-m6c09 2025001213926 mesoscale-1 goes-18 6 9
+tiug10.nc: wmeso-020-b12-m6c10 2025001213926 mesoscale-1 goes-18 6 10
+tiug11.nc: wmeso-020-b12-m6c11 2025001213926 mesoscale-1 goes-18 6 11
+tiug12.nc: wmeso-020-b12-m6c12 2025001213926 mesoscale-1 goes-18 6 12
+tiug13.nc: wmeso-020-b12-m6c13 2025001213926 mesoscale-1 goes-18 6 13
+tiug14.nc: wmeso-020-b12-m6c14 2025001213926 mesoscale-1 goes-18 6 14
+tiug15.nc: wmeso-020-b12-m6c15 2025001213926 mesoscale-1 goes-18 6 15
+tiug16.nc: wmeso-020-b12-m6c16 2025001213926 mesoscale-1 goes-18 6 16
+tiur01.nc: wmeso-010-b12-m6c01 2025001213956 mesoscale-2 goes-18 6 1
+tiur02.nc: wmeso-005-b12-m6c02 2025001213956 mesoscale-2 goes-18 6 2
+tiur03.nc: wmeso-010-b12-m6c03 2025001213956 mesoscale-2 goes-18 6 3
+tiur04.nc: wmeso-020-b12-m6c04 2025001213956 mesoscale-2 goes-18 6 4
+tiur05.nc: wmeso-010-b12-m6c05 2025001213956 mesoscale-2 goes-18 6 5
+tiur06.nc: wmeso-020-b12-m6c06 2025001213956 mesoscale-2 goes-18 6 6
+tiur07.nc: wmeso-020-b14-m6c07 2025001213956 mesoscale-2 goes-18 6 7
+tiur08.nc: wmeso-020-b12-m6c08 2025001213956 mesoscale-2 goes-18 6 8
+tiur09.nc: wmeso-020-b12-m6c09 2025001213956 mesoscale-2 goes-18 6 9
+tiur10.nc: wmeso-020-b12-m6c10 2025001213956 mesoscale-2 goes-18 6 10
+tiur11.nc: wmeso-020-b12-m6c11 2025001213956 mesoscale-2 goes-18 6 11
+tiur12.nc: wmeso-020-b12-m6c12 2025001213956 mesoscale-2 goes-18 6 12
+tiur13.nc: wmeso-020-b12-m6c13 2025001213956 mesoscale-2 goes-18 6 13
+tiur14.nc: wmeso-020-b12-m6c14 2025001213956 mesoscale-2 goes-18 6 14
+tiur15.nc: wmeso-020-b12-m6c15 2025001213956 mesoscale-2 goes-18 6 15
+tiur16.nc: wmeso-020-b12-m6c16 2025001213956 mesoscale-2 goes-18 6 16

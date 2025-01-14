@@ -1,0 +1,7 @@
+Mon Jan 13 20:49:24 AST 2025
+
+Example script in tcl to extract the global information. The "official"
+alernative is the "nbspgoesrinfo" C program, but this 
+script shows an example for extracting other information
+that is not global, but particular attr of a variable, in this example
+the "Sectorized_CMI:standard_name".
