@@ -7,70 +7,23 @@
  */
 #include <stdlib.h>
 #include <inttypes.h>
-#include <float.h>
 #include <png.h>
 #include "dcgoesr_png.h"
 
-static uint8_t *calc_ucmi(double *cmi, int nx, int ny);
 static int write_data_png(FILE *fp, unsigned char *data,
 			  int linesize, int numlines);
 
 /* public function */
-int output_png(FILE *fp, double *cmi, int nx, int ny) {
+int output_png(FILE *fp, uint8_t *level, int nx, int ny) {
 
-  uint8_t *data = NULL;
   int status = 0;
   
-  /* get the normalized data */
-  data = calc_ucmi(cmi, nx, ny);
-
-  if(data != NULL){
-    status = write_data_png(fp, data, nx, ny);
-    free(data);
-  } else
-    status = -1;
+  status = write_data_png(fp, level, nx, ny);
 
   return(status);
 }  
 
 /* private functions */
-static uint8_t *calc_ucmi(double *cmi, int nx, int ny) {
-  /*
-   * This function calculates (and returns) the "normalized" cmi.
-   */
-  int k;
-  int Ndim;
-  double cmi_max, cmi_min, norm, cmi_normalized;
-  uint8_t *ucmi;
-
-  Ndim = nx*ny;
-
-  ucmi = malloc(sizeof(uint8_t) * Ndim);
-  if(ucmi == NULL)
-    return(NULL);
-
-  /* determine the max and min */
-  cmi_max = 0.0;
-  cmi_min = FLT_MAX;
-    
-  for(k = 0; k < Ndim; ++k) {
-    if(cmi[k] > cmi_max)
-      cmi_max = cmi[k];
-
-    if(cmi[k] < cmi_min)
-      cmi_min = cmi[k];
-  }
-
-  /* determine the normalized values */
-  norm = 255.0/(cmi_max - cmi_min);
-  
-  for(k = 0; k < Ndim; ++k) {
-    cmi_normalized = (cmi[k] - cmi_min) * norm;
-    ucmi[k] = (uint8_t)cmi_normalized;
-  }
-  
-  return(ucmi);
-}
 
 static int write_data_png(FILE *fp, unsigned char *data,
 			  int linesize, int numlines){

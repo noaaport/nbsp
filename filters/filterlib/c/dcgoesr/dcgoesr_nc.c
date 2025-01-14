@@ -6,11 +6,12 @@
 #include <netcdf.h>
 #include "dcgoesr_nc.h"
 #include "dcgoesr_xy2lonlat.h"
+#include "dcgoesr_cmilevel.h"
 
 /* private functions */
 static int get_offset_scale(int ncid, int varid, double *offset, double *scale);
 static int get_xy(int ncid, int varid, double *v, int nv);
-static int get_cmi(int ncid, int varid, double *cmip, int nx, int ny);
+static int get_cmi(int ncid, int varid, double *cmip, int Npoints);
 static int get_lonorigin(int ncid, double *lorigin);
 static int get_tclonlat(int ncid, double *lon, double *lat);
 
@@ -63,16 +64,13 @@ static int get_xy(int ncid, int varid, double *v, int nv) {
   return(status);
 }
 
-static int get_cmi(int ncid, int varid, double *cmip, int nx, int ny) {
+static int get_cmi(int ncid, int varid, double *cmip, int Npoints) {
   /*
    * This function is intended to be used for the cmi
    */
   double offset, scale;
   int k;
   int status = 0;
-  int Ndim;
-
-  Ndim = nx*ny;
 
   status = get_offset_scale(ncid, varid, &offset, &scale);
   if(status != 0)
@@ -84,7 +82,7 @@ static int get_cmi(int ncid, int varid, double *cmip, int nx, int ny) {
     return(status);
 
   /* calculate the real data */
-  for(k = 0; k < Ndim; ++k) {
+  for(k = 0; k < Npoints; ++k) {
     cmip[k] = cmip[k]*scale + offset;
   }
 
@@ -124,7 +122,9 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
 
   struct goesr_st *gp;
   int xid, yid, cmiid, xdimid, ydimid;
-  int nx, ny, ndata;	/* size of x and y */
+  int nx, ny;		/* size of x and y */
+  int Npoints;		/* nx*ny */
+  int data_size;	/* total size of the data */
   size_t ndim;		/* for getting nx, ny from nc functions */ 
   int i, j;		/* loop indexes x[i], y[j] */
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
@@ -174,8 +174,10 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   if(gp == NULL)
     return(-1);
 
-  ndata = nx + ny + 3*nx*ny;
-  gp->data = malloc(sizeof(double) * ndata);
+  /* See dcgoesr_nc.h for data_size */
+  Npoints = nx*ny;	
+  data_size = sizeof(double)*(nx + ny + 3*Npoints) + sizeof(uint8_t)*Npoints;
+  gp->data = malloc(data_size);
   if(gp->data == NULL) {
     free(gp);
     return(-1);
@@ -184,21 +186,23 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   /* Make the various pointers point to the correct place */
   gp->nx = nx;
   gp->ny = ny;
-  gp->ndata = ndata;
+  gp->Npoints = Npoints;
+  gp->data_size = data_size;
   gp->lorigin = lorigin;
   /* gp->data is already set */
   gp->x = &gp->data[0];
   gp->y = &gp->x[nx];
   gp->cmi = &gp->y[ny];
-  gp->lon = &gp->cmi[nx*ny];
-  gp->lat = &gp->lon[nx*ny];  
+  gp->lon = &gp->cmi[Npoints];
+  gp->lat = &gp->lon[Npoints];
+  gp->level = (uint8_t*)&gp->lat[Npoints];
   
   status = get_xy(ncid, xid, gp->x, nx);
   if(status == 0)
     status = get_xy(ncid, yid, gp->y, ny);
   
   if(status == 0)
-    status = get_cmi(ncid, cmiid, gp->cmi, nx, ny);
+    status = get_cmi(ncid, cmiid, gp->cmi, Npoints);
 
   if(status != 0) {
     goesr_free(gp);
@@ -215,6 +219,9 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
     }
   }
 
+  /* calculate the normalized "level" values */
+  cmilevel(gp->cmi, gp->level, Npoints);
+  
   /*
    * Now all the "global" nc attributes, and our global parameters
    * (lower-left and upper-right coordinates)
@@ -227,8 +234,8 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
 
   gp->lon1 = gp->lon[0];
   gp->lat1 = gp->lat[0];
-  gp->lon2 = gp->lon[nx*ny - 1];
-  gp->lat2 = gp->lat[nx*ny - 1];
+  gp->lon2 = gp->lon[Npoints - 1];
+  gp->lat2 = gp->lat[Npoints - 1];
 
   *goesr = gp;
   

@@ -14,9 +14,9 @@ GOESRINFO_OBJECTS = nbspgoesrinfo.o ${COMMON_OBJECTS}
 GOESR_LIBS = -lm -lnetcdf -lpng
 GOESRINFO_LIBS = -lnetcdf
 
-DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c
-DC_HEADERS = dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h
-DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o
+DC_SOURCES = dcgoesr_nc.c dcgoesr_cmilevel.c dcgoesr_xy2lonlat.c dcgoesr_png.c
+DC_HEADERS = dcgoesr_nc.h dcgoesr_cmilevel.h dcgoesr_xy2lonlat.h dcgoesr_png.h
+DC_OBJECTS = dcgoesr_nc.o dcgoesr_cmilevel.o dcgoesr_xy2lonlat.o dcgoesr_png.o
 
 COMMON_DIR = ..
 COMMON_SOURCES = err.c

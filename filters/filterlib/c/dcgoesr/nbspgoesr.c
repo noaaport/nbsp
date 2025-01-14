@@ -215,7 +215,7 @@ static void output(void) {
    */
   if(g.opt_csv == 0) {
     if((g.opt_info == 0) || (g.opt_outputfile != NULL))
-      status = output_png(g.fp, g.goesr->cmi, g.goesr->nx, g.goesr->ny);
+      status = output_png(g.fp, g.goesr->level, g.goesr->nx, g.goesr->ny);
   }
 
   if((g.fp != stdout) && (g.fp != NULL)) {

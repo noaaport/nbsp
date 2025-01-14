@@ -10,6 +10,6 @@
 
 #include <stdio.h>
 
-int output_png(FILE *fp, double *cmi, int nx, int ny);
+int output_png(FILE *fp, uint8_t *level, int nx, int ny);
 
 #endif
