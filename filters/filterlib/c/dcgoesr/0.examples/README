@@ -6,4 +6,5 @@ tcl/goesrinfo - similar to the above, and also illustrative examples
                 for using nbspgoesr and nbspgoesrinfo
 goesrcsv - the standalone preliminary C version, also useful for reference
            and testing purposes.
-	   
+
+gif-loops - example script to create gif loops from some tire files.
