@@ -1,0 +1,43 @@
+/*
+ * Usage:
+ *
+ *  nbspsat [-C | -g | -i | -n] [options] [file | < file]
+ *
+ * -C => check pdb header and exit
+ * -i => print info and exit
+ * -g => gempak output (compress file)
+ * -n => png image output (default)
+ *
+ * The program can read from a file or from stdin, but it assumes that
+ * the input is the uncompressed gini data file. Only when it is
+ * invoked with [-i] to just extract the relevant info,
+ * it can take either the compressed or uncompresed file as input.
+ * It prints to stdout
+ *
+ *	npdb->source, 
+ *	npdb->creating_entity, 
+ *	npdb->sector, 
+ *	npdb->channel,
+ *	npdb->res,
+ *	time, (date-time string)
+ *	fname
+ *
+ * With the [-e] option it prints the following additional values after those:
+ *
+ *	map_projection (map projection indicator)
+ *	proj_center_flag (octet 37)
+ *	scan_mode	 (octet 38)
+ *	lat1  (lat of first grid point) int x 10000
+ *	lon1  (lon of first grid point) int x 10000
+ *      lov   (orientation of grid)     int x 10000
+ *      dx    (x-direction increment)
+ *      dy    (y-direction increment)
+ *	nx    (number of points in x direction)
+ *	ny    (number of points in y direction)
+ *	res   (same thing as npdb->res; duplicated for convenience)
+ *      latin (Earth tangent)           int x 10000
+ *	lat2  (lat of last grid point) int x 10000
+ *	lon2  (lon of last grid point) int x 10000
+ *      lat_ur  (upper right-hand corner lat) int x 10000
+ *      lon_ur  (upper right-hand corner lon) int x 10000
+ */

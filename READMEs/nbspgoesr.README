@@ -1,0 +1,23 @@
+/*
+ * Usage: nbspgoesr [-b] [-c] [-i] [-d outputdir] [-o outputfile] <ncfile>
+ *
+ * -b => bakground
+ * -d => directory for output file
+ * -c => output csv - default is png
+ * -i => output info - default is png
+ * -o => name of output file (for png or csv) - default is stdout
+ *
+ * If the [-i] option is set, the following info is printed to stdout:
+ *
+ *   nx, ny, center_lon, center_lat, lon1, lat1, lon2, lat2
+ *
+ * all in one line separated by a space. (lon1,lat1) and
+ * (lon2,lat2) are the coordinates of the lower-left and upper-right
+ * points, respectively.
+ *
+ * If the [-c] option is set, the output is the data in csv format,
+ * (either to stdout, or the file set by [-o] if given).
+ *
+ * If [-c] is not set, then the png is output provided [-i] is not
+ * set or the [-o] is set.
+ */

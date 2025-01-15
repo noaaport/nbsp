@@ -1,0 +1,31 @@
+/*
+ * Usage: nbspgoesrinfo [-b] <ncfile>
+ *
+ * -b => bakground
+ *
+ * The program emits the values of the following data
+ *
+ * product_name
+ * start_date_time
+ * source_scene
+ * satellite_id
+ * abi_mode
+ * channel_id
+ *
+ * all in one line, separated by a space.
+ * 
+ * Example - On a "tire13" file,
+ *
+ *       econus-020-b12-m6c13 2025011180117 conus goes-16 6 13
+ *
+ * The output can then be used in the filters.lib like this:
+ *
+ * set goesrinfo [exec nbspgoesrinfo $ncfile]
+ *
+ * set rc(goesr_product_name) [lindex $goesrinfo 0];
+ * set rc(goesr_start_date_time) [lindex $goesrinfo 1];
+ * set rc(goesr_source_scene) [lindex $goesrinfo 2];
+ * set rc(goesr_satellite_id) [lindex $goesrinfo 3];
+ * set rc(goesr_abi_mode) [lindex $goesrinfo 4];
+ * set rc(goesr_channel_id) [lindex $goesrinfo 5];
+ */
