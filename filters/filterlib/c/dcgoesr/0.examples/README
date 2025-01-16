@@ -8,3 +8,5 @@ goesrcsv - the standalone preliminary C version, also useful for reference
            and testing purposes.
 
 gif-loops - example script to create gif loops from some tire files.
+
+mkpng - example scripts and files illutsrtaing uses of the nbspgoesr programs
