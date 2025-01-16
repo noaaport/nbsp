@@ -61,6 +61,12 @@ set rstfilter(satmap_rcdirs)	$rstfilter(localconfdirs);
 set rstfilter(satmap_rcsubdir)  [file join "gpmap" "sat"];
 set rstfilter(satmap_rcfile)	"satmap.rc";
 set rstfilter(satmap_rcfile_fpath) ""; # initialized dynamically if not set
+#
+# The outputsize is specified as, e.g, "1024;768"
+# If it is "" then the original image size is used.
+# If nothing is specified, the default (800;600) is used.
+# Note that if "satmap_nopng" is set above, then emwin clients will get the gif
+# instead of the jpg.
 
 #
 # sat goesr (2024)
@@ -76,11 +82,7 @@ set rstfilter(sat_goesr_namefmt)	{$rc(wmoid)_$rc(ymd_hm).png};
 set rstfilter(sat_goesr_dirfmt)	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
 
 #
-# The outputsize is specified as, e.g, "1024;768"
-# If it is "" then the original image size is used.
-# If nothing is specified, the default (800;600) is used.
-# Note that if "satmap_nopng" is set above, then emwin clients will get the gif
-# instead of the jpg.
+# radar
 #
 set rstfilter(rad_enable)	0;
 set rstfilter(rad_regex)	{^n(0|1|2|3)(p|q|r|s|u|v|z)};

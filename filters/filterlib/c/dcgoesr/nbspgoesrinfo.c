@@ -26,7 +26,8 @@
  * 
  * Example - On a "tire13" file,
  *
- *       econus-020-b12-m6c13 2025011180117 conus goes-16 6 13
+ *    econus-020-b12-m6c13 2025011180117 conus goes-16 6 13 \
+ *                         1736982077 20250115 2301
  *
  * The output can then be used in the filters.lib like this:
  *
@@ -39,6 +40,8 @@
  * set rc(goesr_abi_mode) [lindex $goesrinfo 4];
  * set rc(goesr_channel_id) [lindex $goesrinfo 5];
  * set rc(goesr_useconds) [lindex $goesrinfo 6];
+ * set rc(goesr_ymd) [lindex $goesrinfo 7];
+ * set rc(goesr_hm) [lindex $goesrinfo 8];
  */
 #include <stdlib.h>
 #include <stdio.h>
