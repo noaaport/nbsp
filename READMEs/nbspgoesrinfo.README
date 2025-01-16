@@ -11,8 +11,12 @@
  * satellite_id
  * abi_mode
  * channel_id
+ * unix_seconds
+ * ymd
+ * hm
  *
- * all in one line, separated by a space.
+ * all in one line, separated by a space. The first 6 are contained in the
+ * nc file The ymd and hm are the date conversion of the julian start_date_time.
  * 
  * Example - On a "tire13" file,
  *
@@ -28,4 +32,5 @@
  * set rc(goesr_satellite_id) [lindex $goesrinfo 3];
  * set rc(goesr_abi_mode) [lindex $goesrinfo 4];
  * set rc(goesr_channel_id) [lindex $goesrinfo 5];
+ * set rc(goesr_useconds) [lindex $goesrinfo 6];
  */

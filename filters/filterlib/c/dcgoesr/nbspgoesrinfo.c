@@ -17,8 +17,12 @@
  * satellite_id
  * abi_mode
  * channel_id
+ * unix_seconds
+ * ymd
+ * hm
  *
- * all in one line, separated by a space.
+ * all in one line, separated by a space. The first 6 are contained in the
+ * nc file The ymd and hm are the date conversion of the julian start_date_time.
  * 
  * Example - On a "tire13" file,
  *
@@ -34,6 +38,7 @@
  * set rc(goesr_satellite_id) [lindex $goesrinfo 3];
  * set rc(goesr_abi_mode) [lindex $goesrinfo 4];
  * set rc(goesr_channel_id) [lindex $goesrinfo 5];
+ * set rc(goesr_useconds) [lindex $goesrinfo 6];
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -41,10 +46,12 @@
 #include <libgen.h> /* basename */
 #include <string.h> /* memset */
 #include <ctype.h>  /* tolower */
+#include <time.h>    /* tm - in the date-time conversion */
 #include <err.h>
 #include <netcdf.h>
 #include "err.h"
- 
+
+/* Parameters obtained directly from the nc file */
 #define NPARAMS		  4	/* four text parameters */
 
 struct goesr_global_info_st {
@@ -54,6 +61,18 @@ struct goesr_global_info_st {
   int abi_mode;
   int channel_id;
 } ginfo;
+
+/* for the "derived" parameters */
+#define YYYYDDMM_LENTGH	  8
+#define HHMM_LENTGH 4
+
+struct goesr_derived_info_st {
+  time_t seconds;	/* date converted to unix seconds */
+  char ymd[YYYYDDMM_LENTGH + 1];
+  char hm[HHMM_LENTGH + 1];
+  int ymd_size;
+  int hm_size;
+} gdinfo = {0, {'\0'}, {'\0'}, YYYYDDMM_LENTGH + 1, HHMM_LENTGH + 1};
 
 struct {
   int opt_background;		/* -b */
@@ -68,6 +87,9 @@ static void cleanup(void);
 static int init_text_params(int ncid);
 static int get_text_params(int ncid);
 static void tolower_text(char *s);
+/* convert the julian date */
+static int get_ymd_hm(char *start_date_time, time_t *seconds,
+		      char *ymd, char *hm, int ymd_size, int hm_size);
 
 int main(int argc, char **argv) {
 
@@ -140,11 +162,22 @@ int main(int argc, char **argv) {
   if((status != 0) || (status_close != 0))
     log_errx(1, "%s", "Aborting");
 
+  /* Get the derived parameters - the index of start_date_time is 1 */ 
+  status = get_ymd_hm(ginfo.param[1], &gdinfo.seconds,
+		      gdinfo.ymd, gdinfo.hm, 
+		      gdinfo.ymd_size, gdinfo.hm_size);
+  if(status != 0)
+    log_errx(1, "%s", "Error converting the date and time.");
+
   for(i = 0; i < NPARAMS; ++i)
     fprintf(stdout, "%s ", ginfo.param[i]);
   
   fprintf(stdout, "%d ", ginfo.abi_mode);
-  fprintf(stdout, "%d\n", ginfo.channel_id);
+  fprintf(stdout, "%d ", ginfo.channel_id);
+
+  fprintf(stdout, "%lu ", gdinfo.seconds);
+  fprintf(stdout, "%s ", gdinfo.ymd);
+  fprintf(stdout, "%s\n", gdinfo.hm);
 
   return(0);
 }
@@ -250,4 +283,56 @@ static void tolower_text(char* s) {
 
   for(p=s; *p; ++p)
     *p=tolower(*p);
+}
+
+/* The derived parameters */
+static int get_ymd_hm(char *start_date_time, time_t *seconds,
+		      char *ymd, char *hm, int ymd_size, int hm_size) {
+  /*
+   * Return the yyyymmdd and hhmm portion from a string like
+   * 2025045213617. It is assumed that the caller has
+   * allocated storage for the results of size at least
+   * 8 + 1 and 4 + 1, respectively. The "seconds" parameter
+   * will contain the seconds since the epoch.
+   *
+   * Returns:
+   * 0 => no error
+   * 1 => error
+   */
+  struct tm tm;
+  int n;	/* for the return value of sscanf */
+  int year;
+  int mday;
+  int h, m, s;
+
+  if(ymd_size < YYYYDDMM_LENTGH + 1)
+    return(1);
+
+  if(hm_size < HHMM_LENTGH + 1)
+    return(1);
+
+  n = sscanf(start_date_time, "%4d%3d%2d%2d%2d", &year, &mday, &h, &m, &s);
+  if(n < 5)
+    return(1);
+
+  /* memset(&tm, 0, sizeof(tm)); */
+  tm.tm_year = year - 1900;
+  tm.tm_mon = 0;
+  tm.tm_mday = mday;
+  tm.tm_hour = h;
+  tm.tm_min = m;
+  tm.tm_sec = s;
+  tm.tm_isdst = 0;	/* do not apply any (summer) time effect */
+
+  /*
+   * Let mktime do the conversions to the correct mon, mday.
+   * Use timegm to interpret the input in UTC.
+   */
+  *seconds = timegm(&tm);
+
+  n = strftime(ymd, YYYYDDMM_LENTGH + 1, "%Y%m%d", &tm);
+  if(n != 0)
+    n = strftime(hm, HHMM_LENTGH + 1, "%k%M", &tm);
+
+  return(n != 0? 0 : 1);
 }
