@@ -1,7 +1,16 @@
+nbsp (2.3.9r-1) oneiric; urgency=low
+
+  * Finish the goesr programs (nbspgoesr and nbspgoesrinfo) to
+    process the goesr files, and revised/updated the filters (da,rst,gp)
+    correspondingly.
+
+ -- Jose F Nieves <nieves@ltp.uprrp.edu>  Thu, 16 Jan 2025 17:59:10 -0400
+
 nbsp (2.3.9p6-1) oneiric; urgency=low
 
   * Pulled revisions to craftinsert as used in noaaport.uprrp.edu (used
     together with npemwin. Revised inventory filer.
+
  -- Jose F Nieves <nieves@ltp.uprrp.edu>  Fri, 03 Apr 2020 18:15:44 -0400
 
 nbsp (2.3.9p5-1) oneiric; urgency=low
