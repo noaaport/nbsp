@@ -44,11 +44,13 @@ What's New
 Thu Jan 16 20:20:52 AST 2025
 ----------------------------
 
-After some time of no major upgrades, we are making an effort to
-update **nbsp**. We have started with the processing of the Goes-R files.
+The processing of the satellite files has been updated,
+in particular the processing of the Goes-R files.
 The current version (**nbsp-2.3.9r**) produces images directly
-(and "automatically" from the data files, by means of new programs
+(and "automatically") from the data files, by means of new programs
 **nbspgoesr** and **nbspgoesrinfo** (and corresponding libraries),
 with the appropriate updates to the relevant filters
 (e.g., **rstfilter, dafilter**). No external applications (e.g., Gempak or such)
-are required.
+are required. Links to some sample images (and example scripts)
+will be posted here soon.
+
