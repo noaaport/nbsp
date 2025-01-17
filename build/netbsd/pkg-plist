@@ -6,8 +6,9 @@
 @pkgdep png
 @pkgdep ncurses
 @pkgdep netpbm
-@pkgdep gifsicle
 @pkgdep gnuplot
+@pkgdep gifsicle
+@pkgdep netcdf
 sbin/nbspd
 bin/nbspcleanup
 bin/nbspversion

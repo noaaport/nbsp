@@ -37,3 +37,18 @@ and by RSS feeds accessible from the built-in web server. **Nbsp** has
 a web interface for monitoring its activities. The built-in web
 server supplies information about the files received, and can report
 various statistics that nbsp keeps about its internal state.
+
+What's New
+==========
+
+Thu Jan 16 20:20:52 AST 2025
+----------------------------
+
+After some time of no major upgrades, we are making an effort to
+update **nbsp**. We have started with the processing of the Goes-R files.
+The current version (**nbsp-2.3.9r**) produces images directly
+(and "automatically" from the data files, by means of new programs
+**nbspgoesr** and **nbspgoesrinfo** (and corresponding libraries),
+with the appropriate updates to the relevant filters
+(e.g., **rstfilter, dafilter**). No external applications (e.g., Gempak or such)
+are required.

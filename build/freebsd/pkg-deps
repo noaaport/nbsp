@@ -4,6 +4,7 @@ deps: {
   db5: {origin: databases/db5},
   png: {origin: graphics/png},
   netpbm: {origin: graphics/netpbm},
-  gifsicle: {origin: graphics/gifsicle},
   gnuplot: {origin: math/gnuplot},
+  gifsicle: {origin: graphics/gifsicle},
+  netcdf: {origin: science/netcdf}
 }
