@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Jose F. Nieves <nieves@ltp.uprrp.edu>
+ *
+ * See LICENSE
+ *
+ * $Id$
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,15 +21,40 @@ static int get_xy(int ncid, int varid, double *v, int nv);
 static int get_cmi(int ncid, int varid, double *cmip, int Npoints);
 static int get_lonorigin(int ncid, double *lorigin);
 static int get_tclonlat(int ncid, double *lon, double *lat);
+static void calc_boundingbox(double *lon, double *lat, int Npoints,
+			     double *lon1, double *lat1,
+			     double *lon2, double *lat2);
 
 /* variable names */
 #define XNAME "x"
 #define YNAME "y"
-#define CMINAME "Sectorized_CMI"
+#define CMI_NAME "Sectorized_CMI"
+#define CMI_PROJECTION_NAME "fixedgrid_projection"
+#define CMI_LONORIGIN_NAME "longitude_of_projection_origin"
+#define RAD_NAME "Rad"
+#define RAD_PROJECTION_NAME "goes_imager_projection"
+#define RAD_LONORIGIN_NAME "longitude_of_projection_origin"
 
 /* the global "attributes */
-#define TC_LONGITUDE "tile_center_longitude"
-#define TC_LATITUDE "tile_center_latitude"
+#define CMI_TC_LONGITUDE "tile_center_longitude"
+#define CMI_TC_LATITUDE "tile_center_latitude"
+#define RAD_TC_LONGITUDE NULL
+#define RAD_TC_LATITUDE NULL
+
+/* the factor to convert the x,y (lon,lat) data to radians */
+#define CMI_XY_RADIANS_UNITS_FACTOR 0.000001
+#define RAD_XY_RADIANS_UNITS_FACTOR 1.0
+
+/* store the parameters in a static variable and initialize */
+static struct {
+  char *var_name;
+  char *proj_name;
+  char *proj_lonorigin_name;
+  char *tc_longitude;
+  char *tc_latitude;
+  double xy_radians_units_factor;
+} gdcgoesr = {CMI_NAME, CMI_PROJECTION_NAME, CMI_LONORIGIN_NAME,
+	      CMI_TC_LONGITUDE, CMI_TC_LATITUDE, CMI_XY_RADIANS_UNITS_FACTOR};
 
 static int get_offset_scale(int ncid, int varid,
 			    double *offset, double *scale) {
@@ -58,7 +90,10 @@ static int get_xy(int ncid, int varid, double *v, int nv) {
 
   /* calculate the real values of x or y */
   for(i = 0; i < nv; ++i) {
-    v[i] = (v[i]*scale + offset)*0.000001;
+    v[i] = (v[i]*scale + offset);
+    /* convert to radians */
+    if(gdcgoesr.xy_radians_units_factor != 1.0)
+      v[i] *= gdcgoesr.xy_radians_units_factor;
   }
 
   return(status);
@@ -94,9 +129,9 @@ static int get_lonorigin(int ncid, double *lorigin) {
   int varid;
   int status;
 
-  status = nc_inq_varid(ncid, "fixedgrid_projection", &varid);
+  status = nc_inq_varid(ncid, gdcgoesr.proj_name, &varid);
   if(status == 0) {
-    status = nc_get_att_double(ncid, varid, "longitude_of_projection_origin",
+    status = nc_get_att_double(ncid, varid, gdcgoesr.proj_lonorigin_name,
 			     lorigin);
   }
 
@@ -109,22 +144,85 @@ static int get_tclonlat(int ncid, double *lon, double *lat) {
    */
   int status = 0;
 
-  status = nc_get_att_double(ncid, NC_GLOBAL, TC_LONGITUDE, lon);
-
+  if((gdcgoesr.tc_longitude == NULL) || (gdcgoesr.tc_latitude == NULL))
+    return(0);
+     
+  status = nc_get_att_double(ncid, NC_GLOBAL, gdcgoesr.tc_longitude, lon);
+     
   if(status == 0)
-    status = nc_get_att_double(ncid, NC_GLOBAL, TC_LATITUDE, lat);
+    status = nc_get_att_double(ncid, NC_GLOBAL, gdcgoesr.tc_latitude, lat);
 
   return(status);
 }
 
+static void calc_boundingbox(double *lon, double *lat, int Npoints,
+			     double *lon1, double *lat1,
+			     double *lon2, double *lat2) {
+  /*
+   * Some of the lon,lat points can be Nan (e.g., in goes-16),
+   * when the satellite is pointing to space and not to Earth.
+   * Use isnan() to exclude them.
+   */  
+  int i;
+  
+  double lon_max, lon_min, lat_min, lat_max;
+
+  lon_max = -2.0*M_PI;
+  lon_min = 2.0*M_PI;
+  lat_max = -2.0*M_PI;
+  lat_min = 2.0*M_PI;
+
+  for(i = 0; i < Npoints; ++i) {
+    if(isnan(lon[i]))
+      continue;
+
+    if(lon[i] > lon_max)
+      lon_max = lon[i];
+    
+    if(lon[i] < lon_min)
+      lon_min = lon[i];
+  }
+  
+  for(i = 0; i < Npoints; ++i) {
+    if(isnan(lat[i]))
+      continue;
+
+    if(lat[i] > lat_max)
+      lat_max = lat[i];
+
+    if(lat[i] < lat_min)
+      lat_min = lat[i];
+  }
+
+  *lon1 = lon_min;
+  *lat1 = lat_min;
+  *lon2 = lon_max;
+  *lat2 = lat_max;
+}
+
 /* public functions */
+void goesr_config(int c) {
+  /*
+   * Choose noaaport type (c = 0) or OR (c = 1) type file
+   */
+  if(c == 0)
+    return;
+
+  gdcgoesr.var_name = RAD_NAME;
+  gdcgoesr.proj_name = RAD_PROJECTION_NAME;
+  gdcgoesr.proj_lonorigin_name = RAD_LONORIGIN_NAME;
+  gdcgoesr.tc_longitude = RAD_TC_LONGITUDE;
+  gdcgoesr.tc_latitude = RAD_TC_LATITUDE;
+  gdcgoesr.xy_radians_units_factor = RAD_XY_RADIANS_UNITS_FACTOR;
+}
+
 int goesr_create(int ncid, struct goesr_st **goesr) {
 
   struct goesr_st *gp;
   int xid, yid, cmiid, xdimid, ydimid;
   int nx, ny;		/* size of x and y */
   int Npoints;		/* nx*ny */
-  int data_size;	/* total size of the data */
+  size_t data_size;	/* total size of the data */
   size_t ndim;		/* for getting nx, ny from nc functions */ 
   int i, j;		/* loop indexes x[i], y[j] */
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
@@ -160,12 +258,12 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
     status = nc_inq_varid(ncid, YNAME, &yid);
 
   if(status == 0)
-    status = nc_inq_varid(ncid, CMINAME, &cmiid);
+    status = nc_inq_varid(ncid, gdcgoesr.var_name, &cmiid);
 
   /* for the x,y to lon,lat conversion */
   if(status == 0)
     status = get_lonorigin(ncid, &lorigin);
-  
+
   if(status != 0)
     return(status);
 
@@ -196,6 +294,16 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->lon = &gp->cmi[Npoints];
   gp->lat = &gp->lon[Npoints];
   gp->level = (uint8_t*)&gp->lat[Npoints];
+
+  /* Initialize the global (info) parameters */
+  gp->tclon = 0.0;
+  gp->tclat = 0.0;
+  gp->lon1 = 0.0;
+  gp->lat1 = 0.0;
+  gp->lon2 = 0.0;
+  gp->lat2 = 0.0;
+
+  /* Extract the data variables */
   
   status = get_xy(ncid, xid, gp->x, nx);
   if(status == 0)
@@ -232,10 +340,11 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
     return(status);
   }
 
-  gp->lon1 = gp->lon[0];
-  gp->lat1 = gp->lat[0];
-  gp->lon2 = gp->lon[Npoints - 1];
-  gp->lat2 = gp->lat[Npoints - 1];
+  /*
+   * Determine the "boundig box"
+   */
+  calc_boundingbox(gp->lon, gp->lat, gp->Npoints,
+		   &gp->lon1, &gp->lat1, &gp->lon2, &gp->lat2);
 
   *goesr = gp;
   

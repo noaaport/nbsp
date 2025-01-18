@@ -10,6 +10,7 @@
 #define DCGOESRNC_H
 
 #include <inttypes.h>	/* uint8_t */
+#include <stddef.h>	/* size_t */
 
 /*
  * All the data is stored in "data". x,y,cmi,lon,lat,level are pointers to data.
@@ -27,7 +28,7 @@ struct goesr_st {
   int nx;	/* size of x */
   int ny;	/* size of y */
   int Npoints;	/* nx*ny */
-  int data_size; /* total size of the data */
+  size_t data_size; /* total size of the data */
   double lorigin; /* for the x,y -> lon,lat conversion */
   double *data;	/* data storage */
   double *x;	/* x[i] - radians */
@@ -46,6 +47,7 @@ struct goesr_st {
 };
 
 /* public functions */
+void goesr_config(int c);	/* choose noaaport type or OR type file */
 int goesr_create(int ncid, struct goesr_st **goesr);
 void goesr_free(struct goesr_st *goesr);
 

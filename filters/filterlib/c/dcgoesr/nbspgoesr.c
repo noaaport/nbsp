@@ -6,12 +6,13 @@
  * $Id$
  */
 /*
- * Usage: nbspgoesr [-b] [-c] [-i] [-d outputdir] [-o outputfile] <ncfile>
+ * Usage: nbspgoesr [-b] [-c] [-i] [-r] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
  * -d => directory for output file
  * -c => output csv - default is png
  * -i => output info - default is png
+ * -r => input is a OR_ABI type file
  * -o => name of output file (for png or csv) - default is stdout
  *
  * If the [-i] option is set, the following info is printed to stdout:
@@ -27,6 +28,10 @@
  *
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
+ *
+ * The program assumes that the input file is a noaaport file. With the [-r]
+ * option the program assumes that the input is a "OR_ABI-L1b-RadF-M6C01_G16"
+ * type file.
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -43,13 +48,14 @@ struct {
   int opt_background;		/* -b */
   int opt_csv;			/* -c */
   int opt_info;			/* -i */
+  int opt_orfile;		/* -r */
   char *opt_inputfile;
   char *opt_outputfile;		/* -o */
   char *opt_outputdir;		/* -d */
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, 0, 0, NULL, NULL, NULL, NULL, NULL};
+} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -65,8 +71,8 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bhcid:o:";
-  char *usage = "nbspgoesr [-h] [-b] [-c] [-i] [-d outputdir]"
+  char *optstr = "bhcird:o:";
+  char *usage = "nbspgoesr [-h] [-b] [-c] [-i] [-r] [-d outputdir]"
     " [-o outputfile] <inputfile>";
   int c;
   int status = 0;
@@ -83,6 +89,9 @@ int main(int argc, char ** argv) {
       break;
     case 'i':
       g.opt_info = 1;
+      break;
+    case 'r':
+      g.opt_orfile = 1;
       break;
     case 'd':
       g.opt_outputdir = optarg;
@@ -134,6 +143,9 @@ static void init(void) {
    * input/output and error handling. (See the Note in dev-notes/netcdf).
    */
   nc_initialize();
+
+  /* Let the decoder functions know the type of input file */
+  goesr_config(g.opt_orfile);
 }
 
 static void cleanup(void) {
