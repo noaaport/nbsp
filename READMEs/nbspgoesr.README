@@ -1,10 +1,11 @@
 /*
- * Usage: nbspgoesr [-b] [-c] [-i] [-d outputdir] [-o outputfile] <ncfile>
+ * Usage: nbspgoesr [-bci] [-g|-r] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
- * -d => directory for output file
  * -c => output csv - default is png
  * -i => output info - default is png
+ * -g|-r => input is a glm (tirs00) or an OR_ABI type file
+ * -d => directory for output file
  * -o => name of output file (for png or csv) - default is stdout
  *
  * If the [-i] option is set, the following info is printed to stdout:
@@ -20,4 +21,9 @@
  *
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
+ *
+ * The program assumes that the input file is a noaaport file.
+ * With the [-g] option the program assumes that the input is a noaaport
+ * "tirs00" type file. The [-r] option indicates the input is an
+ * "OR_ABI-L1b-RadF-M6C01_G16" type file.
  */

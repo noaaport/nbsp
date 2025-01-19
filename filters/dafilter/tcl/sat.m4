@@ -60,11 +60,11 @@ dnl
 dnl goesr - glm
 dnl
 match_sat_ngini($rc(wmoid), ^tir[st]00,
-sat/glm/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
+sat/glm/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_glm)])
 
 match_sat_archive($rc(wmoid), ^tir[st]00,
 sat/glm/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_goesr)],
+[subst $dafilter(archive_sat_namefmt_glm)],
 break;)
 
 dnl

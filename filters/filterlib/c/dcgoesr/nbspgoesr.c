@@ -6,13 +6,13 @@
  * $Id$
  */
 /*
- * Usage: nbspgoesr [-b] [-c] [-i] [-r] [-d outputdir] [-o outputfile] <ncfile>
+ * Usage: nbspgoesr [-bci] [-g|-r] [-d outputdir] [-o outputfile] <ncfile>
  *
  * -b => bakground
- * -d => directory for output file
  * -c => output csv - default is png
  * -i => output info - default is png
- * -r => input is a OR_ABI type file
+ * -g|-r => input is a glm (tirs00) or an OR_ABI type file
+ * -d => directory for output file
  * -o => name of output file (for png or csv) - default is stdout
  *
  * If the [-i] option is set, the following info is printed to stdout:
@@ -29,9 +29,10 @@
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
  *
- * The program assumes that the input file is a noaaport file. With the [-r]
- * option the program assumes that the input is a "OR_ABI-L1b-RadF-M6C01_G16"
- * type file.
+ * The program assumes that the input file is a noaaport file.
+ * With the [-g] option the program assumes that the input is a noaaport
+ * "tirs00" type file. The [-r] option indicates the input is an
+ * "OR_ABI-L1b-RadF-M6C01_G16" type file.
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,14 +49,15 @@ struct {
   int opt_background;		/* -b */
   int opt_csv;			/* -c */
   int opt_info;			/* -i */
-  int opt_orfile;		/* -r */
+  int opt_glm_file;		/* -g */
+  int opt_or_file;		/* -r */
   char *opt_inputfile;
   char *opt_outputfile;		/* -o */
   char *opt_outputdir;		/* -d */
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL};
+} g = {0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -71,8 +73,8 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "bhcird:o:";
-  char *usage = "nbspgoesr [-h] [-b] [-c] [-i] [-r] [-d outputdir]"
+  char *optstr = "hbcigrd:o:";
+  char *usage = "nbspgoesr [-h] [-bci] [-g|-r] [-d outputdir]"
     " [-o outputfile] <inputfile>";
   int c;
   int status = 0;
@@ -90,8 +92,11 @@ int main(int argc, char ** argv) {
     case 'i':
       g.opt_info = 1;
       break;
+    case 'g':
+      g.opt_glm_file = 1;
+      break;
     case 'r':
-      g.opt_orfile = 1;
+      g.opt_or_file = 1;
       break;
     case 'd':
       g.opt_outputdir = optarg;
@@ -109,6 +114,9 @@ int main(int argc, char ** argv) {
 
   if(g.opt_background == 1)
     set_usesyslog();
+
+  if((g.opt_glm_file == 1) && (g.opt_or_file == 1))
+    log_errx(1, "%s", "Conflicting g,r options.");
 
   if(optind < argc - 1)
     log_errx(1, "%s", "Too many arguments.");
@@ -145,7 +153,10 @@ static void init(void) {
   nc_initialize();
 
   /* Let the decoder functions know the type of input file */
-  goesr_config(g.opt_orfile);
+  if(g.opt_glm_file == 1)
+    goesr_config(1);
+  else if(g.opt_or_file == 1)
+    goesr_config(2);
 }
 
 static void cleanup(void) {

@@ -34,16 +34,23 @@ static void calc_boundingbox(double *lon, double *lat, int Npoints,
 #define RAD_NAME "Rad"
 #define RAD_PROJECTION_NAME "goes_imager_projection"
 #define RAD_LONORIGIN_NAME "longitude_of_projection_origin"
+/* The glm "Flash_extent_density" is not unused; not a physical variable */
+#define GLM_NAME "Total_Optical_energy"
+#define GLM_PROJECTION_NAME "goes_imager_projection"
+#define GLM_LONORIGIN_NAME "longitude_of_projection_origin"
 
 /* the global "attributes */
 #define CMI_TC_LONGITUDE "tile_center_longitude"
 #define CMI_TC_LATITUDE "tile_center_latitude"
 #define RAD_TC_LONGITUDE NULL
 #define RAD_TC_LATITUDE NULL
+#define GLM_TC_LONGITUDE NULL
+#define GLM_TC_LATITUDE NULL
 
 /* the factor to convert the x,y (lon,lat) data to radians */
 #define CMI_XY_RADIANS_UNITS_FACTOR 0.000001
 #define RAD_XY_RADIANS_UNITS_FACTOR 1.0
+#define GLM_XY_RADIANS_UNITS_FACTOR 1.0
 
 /* store the parameters in a static variable and initialize */
 static struct {
@@ -59,7 +66,7 @@ static struct {
 static int get_offset_scale(int ncid, int varid,
 			    double *offset, double *scale) {
   /*
-   * get the "offset" and "scale" parameters of the variable identified
+   * Get the "offset" and "scale" parameters of the variable identified
    * by the varid from the nc file.
    */
   int status;
@@ -67,6 +74,17 @@ static int get_offset_scale(int ncid, int varid,
   status = nc_get_att_double(ncid, varid, "add_offset", offset);
   if(status == 0)
     status = nc_get_att_double(ncid, varid, "scale_factor", scale);
+
+  /*
+   * Not all variables have these two attributes. For example,
+   * the glm "Flash_extent_density" in the tirs00 files.
+   */
+
+  if(status == NC_ENOTATT){
+    *offset = 1.0;
+    *scale = 0.0;
+    status = 0;
+  }
 
   return(status);
 }
@@ -101,7 +119,7 @@ static int get_xy(int ncid, int varid, double *v, int nv) {
 
 static int get_cmi(int ncid, int varid, double *cmip, int Npoints) {
   /*
-   * This function is intended to be used for the cmi
+   * This function is intended to be used for the cmi.
    */
   double offset, scale;
   int k;
@@ -203,17 +221,28 @@ static void calc_boundingbox(double *lon, double *lat, int Npoints,
 /* public functions */
 void goesr_config(int c) {
   /*
-   * Choose noaaport type (c = 0) or OR (c = 1) type file
+   * Choose std noaaport type (c = 0), glm (c = 1), OR (c = 2) type file
    */
   if(c == 0)
     return;
 
-  gdcgoesr.var_name = RAD_NAME;
-  gdcgoesr.proj_name = RAD_PROJECTION_NAME;
-  gdcgoesr.proj_lonorigin_name = RAD_LONORIGIN_NAME;
-  gdcgoesr.tc_longitude = RAD_TC_LONGITUDE;
-  gdcgoesr.tc_latitude = RAD_TC_LATITUDE;
-  gdcgoesr.xy_radians_units_factor = RAD_XY_RADIANS_UNITS_FACTOR;
+  if(c == 1) {
+    gdcgoesr.var_name = GLM_NAME;
+    gdcgoesr.proj_name = GLM_PROJECTION_NAME;
+    gdcgoesr.proj_lonorigin_name = GLM_LONORIGIN_NAME;
+    gdcgoesr.tc_longitude = GLM_TC_LONGITUDE;
+    gdcgoesr.tc_latitude = GLM_TC_LATITUDE;
+    gdcgoesr.xy_radians_units_factor = GLM_XY_RADIANS_UNITS_FACTOR;
+  }
+
+  if(c == 2) {
+    gdcgoesr.var_name = RAD_NAME;
+    gdcgoesr.proj_name = RAD_PROJECTION_NAME;
+    gdcgoesr.proj_lonorigin_name = RAD_LONORIGIN_NAME;
+    gdcgoesr.tc_longitude = RAD_TC_LONGITUDE;
+    gdcgoesr.tc_latitude = RAD_TC_LATITUDE;
+    gdcgoesr.xy_radians_units_factor = RAD_XY_RADIANS_UNITS_FACTOR;
+  }
 }
 
 int goesr_create(int ncid, struct goesr_st **goesr) {
