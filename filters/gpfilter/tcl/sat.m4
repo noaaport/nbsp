@@ -42,7 +42,8 @@ dnl
 dnl goesr - glm
 dnl
 match_sat_goesr($rc(wmoid), ^tir[st]00,
-images/sat/glm/[string range $rc(WMOID) 0 2]/$rc(WMOID), $rc(WMOID)_${ymd_hm})
+images/sat/glm/[string range $rc(WMOID) 0 2]/$rc(WMOID),
+$rc(WMOID)+$rc(NAWIPS)_${ymd_hm})
 
 dnl
 dnl goesr - the rest
