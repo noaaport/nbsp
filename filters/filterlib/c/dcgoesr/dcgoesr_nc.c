@@ -40,8 +40,8 @@ static void calc_boundingbox(double *lon, double *lat, int Npoints,
 #define GLM_LONORIGIN_NAME "longitude_of_projection_origin"
 
 /* the global "attributes */
-#define CMI_TC_LONGITUDE "tile_center_longitude"
-#define CMI_TC_LATITUDE "tile_center_latitude"
+#define CMI_TC_LONGITUDE "tile_center_longitude"   /* not in all files */
+#define CMI_TC_LATITUDE "tile_center_latitude"	   /* not in all files */
 #define RAD_TC_LONGITUDE NULL
 #define RAD_TC_LATITUDE NULL
 #define GLM_TC_LONGITUDE NULL
@@ -158,7 +158,9 @@ static int get_lonorigin(int ncid, double *lorigin) {
 
 static int get_tclonlat(int ncid, double *lon, double *lat) {
   /*
-   * Get the "tile_center_longitude" and latitude
+   * Get the "tile_center_longitude" and latitude. Apart from those files
+   * that we have already configured (OR_ABI and glm) some of the goesr
+   * files do not have it (e.g., tirs)
    */
   int status = 0;
 
@@ -169,6 +171,13 @@ static int get_tclonlat(int ncid, double *lon, double *lat) {
      
   if(status == 0)
     status = nc_get_att_double(ncid, NC_GLOBAL, gdcgoesr.tc_latitude, lat);
+
+  /* Not all files have these attributes */
+  if(status == NC_ENOTATT) {
+    *lon = 0.0;
+    *lat = 0.0;
+    status = 0;
+  }
 
   return(status);
 }

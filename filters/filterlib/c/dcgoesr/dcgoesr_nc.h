@@ -38,8 +38,8 @@ struct goesr_st {
   double *lat;	/* for each cmi[k] as above, there is a lat[k] */
   uint8_t *level; /* normalized cmi to 0-255 */
   /* global "attributes - info */
-  double tclon;	/* tile center longitude */
-  double tclat; /* tile center latitude */
+  double tclon;	/* tile center longitude - not in all file (e.g., tirs) */
+  double tclat; /* tile center latitude - not in all files (e.g., tirs) */
   double lon1;	/* lower left lon */
   double lat1;	/* lower left lat */
   double lon2;	/* upper right lon */
