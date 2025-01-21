@@ -4,13 +4,14 @@
  * -b => bakground
  * -c => output csv - default is png
  * -i => output info - default is png
+ * -e => output angles in degrees (default is radians)
  * -g|-r => input is a glm (tirs00) or an OR_ABI type file
  * -d => directory for output file
  * -o => name of output file (for png or csv) - default is stdout
  *
  * If the [-i] option is set, the following info is printed to stdout:
  *
- *   nx, ny, center_lon, center_lat, lon1, lat1, lon2, lat2
+ *   nx, ny, tile_center_lon, tile_center_lat ,lon1, lat1, lon2, lat2
  *
  * all in one line separated by a space. (lon1,lat1) and
  * (lon2,lat2) are the coordinates of the lower-left and upper-right
@@ -18,6 +19,9 @@
  *
  * If the [-c] option is set, the output is the data in csv format,
  * (either to stdout, or the file set by [-o] if given).
+ *
+ * By default, all angles are output in radians. If [-e] is set they
+ * are output in degrees.
  *
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.

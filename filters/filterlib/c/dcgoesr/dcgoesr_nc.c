@@ -341,6 +341,13 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->lon2 = 0.0;
   gp->lat2 = 0.0;
 
+  gp->tclon_rad = 0.0;
+  gp->tclat_rad = 0.0;
+  gp->lon1_deg = 0.0;
+  gp->lat1_deg = 0.0;
+  gp->lon2_deg = 0.0;
+  gp->lat2_deg = 0.0;
+
   /* Extract the data variables */
   
   status = get_xy(ncid, xid, gp->x, nx);
@@ -383,6 +390,17 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
    */
   calc_boundingbox(gp->lon, gp->lat, gp->Npoints,
 		   &gp->lon1, &gp->lat1, &gp->lon2, &gp->lat2);
+
+  /*
+   * Convert the global params (for convenience when requested in the output).
+   */
+
+  gp->tclon_rad = (gp->tclon/180.0) * M_PI;
+  gp->tclat_rad = (gp->tclat/180.0) * M_PI;
+  gp->lon1_deg = (gp->lon1/M_PI) * 180.0;
+  gp->lat1_deg = (gp->lat1/M_PI) * 180.0;
+  gp->lon2_deg = (gp->lon2/M_PI) * 180.0;
+  gp->lat2_deg = (gp->lat2/M_PI) * 180.0;
 
   *goesr = gp;
   
