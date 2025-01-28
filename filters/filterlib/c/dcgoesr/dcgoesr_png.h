@@ -9,7 +9,8 @@
 #define DCGOESR_PNG_H
 
 #include <stdio.h>
+#include "dcgoesr_nc.h"
 
-int output_png(FILE *fp, uint8_t *level, int nx, int ny);
+int output_png(FILE *fp, struct goesr_st *gp);
 
 #endif

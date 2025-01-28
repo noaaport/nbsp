@@ -10,12 +10,14 @@
 #include <float.h>
 #include "dcgoesr_cmilevel.h"
 
-void cmilevel(double *cmi, uint8_t *ucmi, int Npoints) {
+void cmilevel(struct goesr_st *gp) {
   /*
    * This function calculates the "normalized" cmi.
    */
   int k;
   double cmi_max, cmi_min, norm, cmi_normalized;
+  double *cmi = gp->cmi;
+  int Npoints = gp->Npoints;
 
   /* determine the max and min */
   cmi_max = 0.0;
@@ -34,6 +36,6 @@ void cmilevel(double *cmi, uint8_t *ucmi, int Npoints) {
   
   for(k = 0; k < Npoints; ++k) {
     cmi_normalized = (cmi[k] - cmi_min) * norm;
-    ucmi[k] = (uint8_t)cmi_normalized;
+    gp->pmap.points[k].level = (uint8_t)cmi_normalized;
   }
 }

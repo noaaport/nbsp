@@ -9,11 +9,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
-#include <math.h>
+#include <math.h>	/* M_PI */
+#include <float.h>	/* FLT_MAX */
 #include <netcdf.h>
 #include "dcgoesr_nc.h"
 #include "dcgoesr_xy2lonlat.h"
-#include "dcgoesr_cmilevel.h"
 
 /* private functions */
 static int get_offset_scale(int ncid, int varid, double *offset, double *scale);
@@ -21,9 +21,8 @@ static int get_xy(int ncid, int varid, double *v, int nv);
 static int get_cmi(int ncid, int varid, double *cmip, int Npoints);
 static int get_lonorigin(int ncid, double *lorigin);
 static int get_tclonlat(int ncid, double *lon, double *lat);
-static void calc_boundingbox(double *lon, double *lat, int Npoints,
-			     double *lon1, double *lat1,
-			     double *lon2, double *lat2);
+static void cmilevel(struct goesr_st *gp);
+static void calc_boundingbox(struct goesr_st *gp);
 
 /* variable names */
 #define XNAME "x"
@@ -182,49 +181,77 @@ static int get_tclonlat(int ncid, double *lon, double *lat) {
   return(status);
 }
 
-static void calc_boundingbox(double *lon, double *lat, int Npoints,
-			     double *lon1, double *lat1,
-			     double *lon2, double *lat2) {
+static void cmilevel(struct goesr_st *gp) {
+  /*
+   * This function calculates the "normalized" cmi.
+   */
+  int k;
+  double cmi_max, cmi_min, norm, cmi_normalized;
+  double *cmi = gp->cmi;
+  int Npoints = gp->Npoints;
+
+  /* determine the max and min */
+  cmi_max = 0.0;
+  cmi_min = FLT_MAX;
+    
+  for(k = 0; k < Npoints; ++k) {
+    if(cmi[k] > cmi_max)
+      cmi_max = cmi[k];
+
+    if(cmi[k] < cmi_min)
+      cmi_min = cmi[k];
+  }
+
+  /* determine the normalized values */
+  norm = 255.0/(cmi_max - cmi_min);
+  
+  for(k = 0; k < Npoints; ++k) {
+    cmi_normalized = (cmi[k] - cmi_min) * norm;
+    gp->pmap.points[k].level = (uint8_t)cmi_normalized;
+  }
+}
+
+static void calc_boundingbox(struct goesr_st *gp) {
   /*
    * Some of the lon,lat points can be Nan (e.g., in goes-16),
    * when the satellite is pointing to space and not to Earth.
    * Use isnan() to exclude them.
    */  
   int i;
-  
+  int Npoints = gp->Npoints;
   double lon_max, lon_min, lat_min, lat_max;
-
-  lon_max = -2.0*M_PI;
-  lon_min = 2.0*M_PI;
-  lat_max = -2.0*M_PI;
-  lat_min = 2.0*M_PI;
-
+  
+  lon_max = -180.0;
+    lon_min = 180.0;
+  lat_max = -180.0;
+  lat_min = 180.0;
+    
   for(i = 0; i < Npoints; ++i) {
-    if(isnan(lon[i]))
+    if(isnan(gp->pmap.points[i].lon))
       continue;
 
-    if(lon[i] > lon_max)
-      lon_max = lon[i];
+    if(gp->pmap.points[i].lon > lon_max)
+      lon_max = gp->pmap.points[i].lon;
     
-    if(lon[i] < lon_min)
-      lon_min = lon[i];
+    if(gp->pmap.points[i].lon < lon_min)
+      lon_min = gp->pmap.points[i].lon;
   }
   
   for(i = 0; i < Npoints; ++i) {
-    if(isnan(lat[i]))
+    if(isnan(gp->pmap.points[i].lat))
       continue;
 
-    if(lat[i] > lat_max)
-      lat_max = lat[i];
+    if(gp->pmap.points[i].lat > lat_max)
+      lat_max = gp->pmap.points[i].lat;
 
-    if(lat[i] < lat_min)
-      lat_min = lat[i];
+    if(gp->pmap.points[i].lat < lat_min)
+      lat_min = gp->pmap.points[i].lat;
   }
 
-  *lon1 = lon_min;
-  *lat1 = lat_min;
-  *lon2 = lon_max;
-  *lat2 = lat_max;
+  gp->pmap.lon1 = lon_min;
+  gp->pmap.lat1 = lat_min;
+  gp->pmap.lon2 = lon_max;
+  gp->pmap.lat2 = lat_max;
 }
 
 /* public functions */
@@ -312,9 +339,17 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
 
   /* See dcgoesr_nc.h for data_size */
   Npoints = nx*ny;	
-  data_size = sizeof(double)*(nx + ny + 3*Npoints) + sizeof(uint8_t)*Npoints;
+  data_size = sizeof(double)*(nx + ny + Npoints);
   gp->data = malloc(data_size);
   if(gp->data == NULL) {
+    free(gp);
+    return(-1);
+  }
+
+  /* The transformed data */
+  gp->pmap.points = malloc(sizeof(struct dcgoesr_point_st) * Npoints);
+  if(gp->pmap.points == NULL) {
+    free(gp->data);
     free(gp);
     return(-1);
   }
@@ -329,24 +364,17 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->x = &gp->data[0];
   gp->y = &gp->x[nx];
   gp->cmi = &gp->y[ny];
-  gp->lon = &gp->cmi[Npoints];
-  gp->lat = &gp->lon[Npoints];
-  gp->level = (uint8_t*)&gp->lat[Npoints];
+
 
   /* Initialize the global (info) parameters */
   gp->tclon = 0.0;
   gp->tclat = 0.0;
-  gp->lon1 = 0.0;
-  gp->lat1 = 0.0;
-  gp->lon2 = 0.0;
-  gp->lat2 = 0.0;
 
-  gp->tclon_rad = 0.0;
-  gp->tclat_rad = 0.0;
-  gp->lon1_deg = 0.0;
-  gp->lat1_deg = 0.0;
-  gp->lon2_deg = 0.0;
-  gp->lat2_deg = 0.0;
+  gp->pmap.numpoints = Npoints;
+  gp->pmap.lon1 = 0.0;
+  gp->pmap.lat1 = 0.0;
+  gp->pmap.lon2 = 0.0;
+  gp->pmap.lat2 = 0.0;
 
   /* Extract the data variables */
   
@@ -362,22 +390,8 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
     return(status);
   }
 
-  /* calculate lon, lat */
-  for (j = 0; j < ny; ++j) {
-    for (i = 0; i < nx; ++i) {
-      k = j*gp->nx + i;  /* this is the index of the corresponding cmi[k] */
-      xy2lonlat(gp->x[i], gp->y[j], &lon, &lat, lorigin);
-      gp->lon[k] = lon;
-      gp->lat[k] = lat;
-    }
-  }
-
-  /* calculate the normalized "level" values */
-  cmilevel(gp->cmi, gp->level, Npoints);
-  
   /*
-   * Now all the "global" nc attributes, and our global parameters
-   * (lower-left and upper-right coordinates)
+   * Now all the "global" nc attributes,
    */
   status = get_tclonlat(ncid, &gp->tclon, &gp->tclat);
   if(status != 0) {
@@ -386,21 +400,27 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   }
 
   /*
-   * Determine the "boundig box"
+   * Our conversions and global parameters
    */
-  calc_boundingbox(gp->lon, gp->lat, gp->Npoints,
-		   &gp->lon1, &gp->lat1, &gp->lon2, &gp->lat2);
+
+  /* calculate lon, lat */
+  for (j = 0; j < ny; ++j) {
+    for (i = 0; i < nx; ++i) {
+      k = j*gp->nx + i;  /* this is the index of the corresponding cmi[k] */
+      xy2lonlat(gp->x[i], gp->y[j], &lon, &lat, lorigin);
+      gp->pmap.points[k].lon = (lon/M_PI)*180.0;
+      gp->pmap.points[k].lat = (lat/M_PI)*180.0;
+    }
+  }
+
+  /* calculate the normalized "level" values */
+  cmilevel(gp);
 
   /*
-   * Convert the global params (for convenience when requested in the output).
+   * Determine the "bounding box"
+   * (lower-left and upper-right coordinates)
    */
-
-  gp->tclon_rad = (gp->tclon/180.0) * M_PI;
-  gp->tclat_rad = (gp->tclat/180.0) * M_PI;
-  gp->lon1_deg = (gp->lon1/M_PI) * 180.0;
-  gp->lat1_deg = (gp->lat1/M_PI) * 180.0;
-  gp->lon2_deg = (gp->lon2/M_PI) * 180.0;
-  gp->lat2_deg = (gp->lat2/M_PI) * 180.0;
+  calc_boundingbox(gp);
 
   *goesr = gp;
   

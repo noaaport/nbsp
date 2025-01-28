@@ -9,8 +9,8 @@
 #ifndef CMILEVEL_H
 #define CMILEVEL_H
 
-#include <inttypes.h>
+#include "dcgoesr_nc.h"
 
-void cmilevel(double *cmip, uint8_t *levelp, int Npoints);
+void cmilevel(struct goesr_st *gp);
 
 #endif

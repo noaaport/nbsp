@@ -12,20 +12,42 @@
 #include <inttypes.h>	/* uint8_t */
 #include <stddef.h>	/* size_t */
 
+/* The projection-transformed data to lon/lat */
+struct dcgoesr_point_st {
+  double lon;	/* in degrees */
+  double lat;	/* in degrees */
+  uint8_t level; /* cmi normalized to 0-255 */
+};
+
+struct dcgoesr_point_map_st {
+  struct dcgoesr_point_st *points;
+  size_t numpoints;
+  /*
+   * The "maximum enclosing rectangle" (bounding box)
+   */ 
+  double lon1;
+  double lat1;
+  double lon2;
+  double lat2;
+};
+
 /*
- * All the data is stored in "data". x,y,cmi,lon,lat,level are pointers to data.
- * For each x,y pair there is a lon, lat that must be calculated for each
- * pair.
+ * The data extracted from the nc file.
+ *
+ * All the data is stored in "data". x,y,cmi are pointers to the proper
+ * place in data. For each x,y pair there is a lon, lat that must
+ *  be calculated for each pair. They are stored in the point_map st.
  *
  * data_size is the total size of the data:
  *
- *   sizeof(double)*(nx + ny + 3*Npoints) + sizeof(uint8_t)*Npoints
+ *   sizeof(double)*(nx + ny + Npoints)    (Npoints = nx * ny)
  *
- * x(i),y(j),(cmi,lon,lat)(i,j) (doubles)
- * level(i,j) (unit8_t)
+ * x(i),y(j),cmi(i,j) (doubles)
  *
- * All lon,lat angles are given in the file in radians, except the
- * global tile_center_{lon,lat} which are in degrees.
+ * x,y are given in the file in radians while the
+ * global tile_center_{lon,lat} are in degrees.
+ *
+ * All our calculated lon,lat variables are in degrees.
  */
 struct goesr_st {
   int nx;	/* size of x */
@@ -37,23 +59,11 @@ struct goesr_st {
   double *x;	/* x[i] - radians */
   double *y;	/* y[j] - radians */
   double *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
-  double *lon;	/* for each cmi[k] as above, there is a lon[k] */
-  double *lat;	/* for each cmi[k] as above, there is a lat[k] */
-  uint8_t *level; /* normalized cmi to 0-255 */
   /* global "attributes - info */
   double tclon;	/* tile center longitude - not in all files (e.g., tirs) */
   double tclat; /* tile center latitude - not in all files (e.g., tirs) */
-  double lon1;	/* lower left lon */
-  double lat1;	/* lower left lat */
-  double lon2;	/* upper right lon */
-  double lat2;	/* upper right lat */
-  /* same as above in converted units */
-  double tclon_rad;
-  double tclat_rad;
-  double lon1_deg;
-  double lat1_deg;
-  double lon2_deg;
-  double lat2_deg;
+  /* transformed data */
+  struct dcgoesr_point_map_st pmap;
 };
 
 /* public functions */

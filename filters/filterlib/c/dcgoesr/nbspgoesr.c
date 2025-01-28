@@ -11,7 +11,6 @@
  * -b => bakground
  * -c => output csv - default is png
  * -i => output info - default is png
- * -e => output angles in degrees (default is radians)
  * -g|-r => input is a glm (tirs00) or an OR_ABI type file
  * -d => directory for output file
  * -o => name of output file (for png or csv) - default is stdout
@@ -27,8 +26,7 @@
  * If the [-c] option is set, the output is the data in csv format,
  * (either to stdout, or the file set by [-o] if given).
  *
- * By default, all angles are output in radians. If [-e] is set they
- * are output in degrees.
+ * All angles are output degrees.
  *
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
@@ -53,7 +51,6 @@ struct {
   int opt_background;		/* -b */
   int opt_csv;			/* -c */
   int opt_info;			/* -i */
-  int opt_degrees;		/* -e */
   int opt_glm_file;		/* -g */
   int opt_or_file;		/* -r */
   char *opt_inputfile;
@@ -62,7 +59,7 @@ struct {
   /* variables */
   struct goesr_st *goesr;
   FILE *fp;			/* output file */
-} g = {0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL};
+} g = {0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL};
 
 /* static functions */
 static void init(void);
@@ -78,7 +75,7 @@ static void log_errx_nc(int e, char *msg, int status);
  */
 int main(int argc, char ** argv) {
   
-  char *optstr = "hbceigrd:o:";
+  char *optstr = "hbcigrd:o:";
   char *usage = "nbspgoesr [-h] [-bcei] [-g|-r] [-d outputdir]"
     " [-o outputfile] <inputfile>";
   int c;
@@ -93,9 +90,6 @@ int main(int argc, char ** argv) {
       break;
     case 'c':
       g.opt_csv = 1;
-      break;
-    case 'e':
-      g.opt_degrees = 1;
       break;
     case 'i':
       g.opt_info = 1;
@@ -246,7 +240,7 @@ static void output(void) {
    */
   if(g.opt_csv == 0) {
     if((g.opt_info == 0) || (g.opt_outputfile != NULL))
-      status = output_png(g.fp, g.goesr->level, g.goesr->nx, g.goesr->ny);
+      status = output_png(g.fp, g.goesr);
   }
 
   if((g.fp != stdout) && (g.fp != NULL)) {
@@ -271,22 +265,18 @@ static int output_csv(void) {
   int i, j;		/* loop indexes x[i], y[j] */
   int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   int status = 0;
-  double lon, lat;
+  double lon, lat, cmi;
 
   /* print in the order x,y, with x varying faster */
   for (j = 0; j < g.goesr->ny; ++j) {
     for (i = 0; i < g.goesr->nx; ++i) {
       k = j*g.goesr->nx + i;	/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
       
-      lon = g.goesr->lon[k];
-      lat = g.goesr->lat[k];
+      lon = g.goesr->pmap.points[k].lon;
+      lat = g.goesr->pmap.points[k].lat;
+      cmi = g.goesr->cmi[k];
 
-      if(g.opt_degrees == 1) {
-	lon *= (180.0/M_PI);
-	lat *= (180.0/M_PI);
-      }
-      
-      if(fprintf(g.fp, "%f,%f,%f\n", lon, lat, g.goesr->cmi[k]) < 0) {
+      if(fprintf(g.fp, "%f,%f,%f\n", lon, lat, cmi) < 0) {
 	status = -1;
 	goto end;
       }
@@ -300,27 +290,17 @@ static int output_csv(void) {
 
 static int output_info(void) {
   /*
-   * The info is output to stdout. The default is to emit the angles in
-   * radians. 
+   * The info is output to stdout.
    */
   int status = 0;
   double tclon, tclat, lon1, lat1, lon2, lat2;
 
-  tclon = g.goesr->tclon_rad;
-  tclat = g.goesr->tclat_rad;
-  lon1 = g.goesr->lon1;
-  lat1 = g.goesr->lat1;
-  lon2 = g.goesr->lon2;
-  lat2 =g.goesr->lat2;
-
-  if(g.opt_degrees == 1) {
-    tclon = g.goesr->tclon;
-    tclat = g.goesr->tclat;
-    lon1 = g.goesr->lon1_deg;
-    lat1 = g.goesr->lat1_deg;
-    lon2 = g.goesr->lon2_deg;
-    lat2 =g.goesr->lat2_deg;
-  }
+  tclon = g.goesr->tclon;
+  tclat = g.goesr->tclat;
+  lon1 = g.goesr->pmap.lon1;
+  lat1 = g.goesr->pmap.lat1;
+  lon2 = g.goesr->pmap.lon2;
+  lat2 =g.goesr->pmap.lat2;
 
   if(fprintf(stdout, "%d %d %f %f %f %f %f %f\n",
 	     g.goesr->nx, g.goesr->ny,
@@ -330,4 +310,3 @@ static int output_info(void) {
 
   return(status);
 }
-
