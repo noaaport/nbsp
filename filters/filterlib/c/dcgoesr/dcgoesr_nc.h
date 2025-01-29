@@ -16,7 +16,7 @@
 struct dcgoesr_point_st {
   double lon;	/* in degrees */
   double lat;	/* in degrees */
-  uint8_t level; /* cmi normalized to 0-255 */
+  uint8_t level; /* a copy of the cmi normalized to 0-255 */
 };
 
 struct dcgoesr_point_map_st {
@@ -32,17 +32,24 @@ struct dcgoesr_point_map_st {
 };
 
 /*
- * The data extracted from the nc file.
+ * The x,y,cmi data is extracted from the nc file.
+ * From the cmi we determine the "level" which is the cmi normalized to 0-255.
  *
- * All the data is stored in "data". x,y,cmi are pointers to the proper
+ * All the data is stored in "data". x,y,cmi,level are pointers to the proper
  * place in data. For each x,y pair there is a lon, lat that must
- *  be calculated for each pair. They are stored in the point_map st.
+ * be calculated for each pair. They are stored in the point_map st.
+ *
  *
  * data_size is the total size of the data:
  *
- *   sizeof(double)*(nx + ny + Npoints)    (Npoints = nx * ny)
+ *   sizeof(double)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints
+ *
+ * where
+ *
+ *   Npoints = nx*ny.
  *
  * x(i),y(j),cmi(i,j) (doubles)
+ * level(i,j) (uint8_t)
  *
  * x,y are given in the file in radians while the
  * global tile_center_{lon,lat} are in degrees.
@@ -59,6 +66,7 @@ struct goesr_st {
   double *x;	/* x[i] - radians */
   double *y;	/* y[j] - radians */
   double *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
+  uint8_t *level; /* cmi normalized to 0-255 */
   /* global "attributes - info */
   double tclon;	/* tile center longitude - not in all files (e.g., tirs) */
   double tclat; /* tile center latitude - not in all files (e.g., tirs) */

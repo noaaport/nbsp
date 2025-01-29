@@ -68,6 +68,7 @@ static void load(void);
 static void output(void);
 static int output_csv(void);
 static int output_info(void);
+static int output_png(void);
 static void log_errx_nc(int e, char *msg, int status);
 
 /*
@@ -240,7 +241,7 @@ static void output(void) {
    */
   if(g.opt_csv == 0) {
     if((g.opt_info == 0) || (g.opt_outputfile != NULL))
-      status = output_png(g.fp, g.goesr);
+      status = output_png();
   }
 
   if((g.fp != stdout) && (g.fp != NULL)) {
@@ -307,6 +308,15 @@ static int output_info(void) {
 	     tclon, tclat, lon1, lat1, lon2, lat2) < 0) {
     status = -1;
   }
+
+  return(status);
+}
+
+static int output_png(void) {
+
+  int status = 0;
+
+  status = write_data_png(g.fp, g.goesr->level, g.goesr->nx, g.goesr->ny);
 
   return(status);
 }

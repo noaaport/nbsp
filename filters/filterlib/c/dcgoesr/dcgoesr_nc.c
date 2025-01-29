@@ -207,7 +207,8 @@ static void cmilevel(struct goesr_st *gp) {
   
   for(k = 0; k < Npoints; ++k) {
     cmi_normalized = (cmi[k] - cmi_min) * norm;
-    gp->pmap.points[k].level = (uint8_t)cmi_normalized;
+    gp->level[k] = (uint8_t)cmi_normalized;
+    gp->pmap.points[k].level = (uint8_t)cmi_normalized; /* a copy */
   }
 }
 
@@ -222,7 +223,7 @@ static void calc_boundingbox(struct goesr_st *gp) {
   double lon_max, lon_min, lat_min, lat_max;
   
   lon_max = -180.0;
-    lon_min = 180.0;
+  lon_min = 180.0;
   lat_max = -180.0;
   lat_min = 180.0;
     
@@ -339,7 +340,7 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
 
   /* See dcgoesr_nc.h for data_size */
   Npoints = nx*ny;	
-  data_size = sizeof(double)*(nx + ny + Npoints);
+  data_size = sizeof(double)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints;
   gp->data = malloc(data_size);
   if(gp->data == NULL) {
     free(gp);
@@ -364,7 +365,7 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->x = &gp->data[0];
   gp->y = &gp->x[nx];
   gp->cmi = &gp->y[ny];
-
+  gp->level = (uint8_t*)&gp->cmi[Npoints];
 
   /* Initialize the global (info) parameters */
   gp->tclon = 0.0;

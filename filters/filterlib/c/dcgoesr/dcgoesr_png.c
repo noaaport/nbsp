@@ -10,39 +10,9 @@
 #include <png.h>
 #include "dcgoesr_png.h"
 
-static int write_data_png(FILE *fp, unsigned char *data,
-			  int linesize, int numlines);
-
 /* public function */
-int output_png(FILE *fp, struct goesr_st *gp) {
-
-  int status = 0;
-  uint8_t *level;
-  int nx, ny;
-  size_t i;
-
-  nx = gp->nx;
-  ny = gp->ny;
-  
-  level = malloc(sizeof(uint8_t)*gp->pmap.numpoints);
-  if(level == NULL)
-    return(-1);
-  
-  for(i = 0; i < gp->pmap.numpoints; ++i) {
-    level[i] = gp->pmap.points[i].level;
-  }
-
-  status = write_data_png(fp, level, nx, ny);
-
-  free(level);
-
-  return(status);
-}  
-
-/* private functions */
-
-static int write_data_png(FILE *fp, unsigned char *data,
-			  int linesize, int numlines){
+int write_data_png(FILE *fp, unsigned char *data,
+		   int linesize, int numlines){
   
   png_structp png_ptr = NULL;
   png_infop info_ptr = NULL;
