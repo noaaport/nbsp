@@ -11,25 +11,7 @@
 
 #include <inttypes.h>	/* uint8_t */
 #include <stddef.h>	/* size_t */
-
-/* The projection-transformed data to lon/lat */
-struct dcgoesr_point_st {
-  double lon;	/* in degrees */
-  double lat;	/* in degrees */
-  uint8_t level; /* a copy of the cmi normalized to 0-255 */
-};
-
-struct dcgoesr_point_map_st {
-  struct dcgoesr_point_st *points;
-  size_t numpoints;
-  /*
-   * The "maximum enclosing rectangle" (bounding box)
-   */ 
-  double lon1;
-  double lat1;
-  double lon2;
-  double lat2;
-};
+#include "dcgoesr.h"	/* definitions of the pointmap st */
 
 /*
  * The x,y,cmi data is extracted from the nc file.
@@ -66,12 +48,12 @@ struct goesr_st {
   double *x;	/* x[i] - radians */
   double *y;	/* y[j] - radians */
   double *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
-  uint8_t *level; /* cmi normalized to 0-255 */
   /* global "attributes - info */
   double tclon;	/* tile center longitude - not in all files (e.g., tirs) */
   double tclat; /* tile center latitude - not in all files (e.g., tirs) */
   /* transformed data */
-  struct dcgoesr_point_map_st pmap;
+  uint8_t *level; /* cmi normalized to 0-255 - also stored in "data" */
+  struct dcgoesr_point_map_st pmap;	/* contains a copy of the "levels" */
 };
 
 /* public functions */
