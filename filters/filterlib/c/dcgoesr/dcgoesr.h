@@ -5,14 +5,11 @@
  *
  * $Id$
  */
-
 #ifndef DCGOESR_H
 #define DCGOESR_H
 
 #include <inttypes.h>	/* uint8_t */
 #include <stddef.h>	/* size_t */
-
-/* Defs of structures used by the various modules */
 
 /* The projection-transformed data to lon/lat */
 struct dcgoesr_point_st {
@@ -27,10 +24,14 @@ struct dcgoesr_point_map_st {
   /*
    * The "maximum enclosing rectangle" (bounding box)
    */ 
-  double lon1;
-  double lat1;
-  double lon2;
-  double lat2;
+  double lon_min;
+  double lat_min;
+  double lon_max;
+  double lat_max;
 };
+
+/* dcgoesr_shp.c */
+int dcgoesr_shp_write(char *shpfile, char *shxfile,
+		      struct dcgoesr_point_map_st *pm);
 
 #endif

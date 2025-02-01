@@ -6,8 +6,8 @@
  * $Id$
  */
 
-#ifndef XY2LONLAT_H
-#define XY2LONLAT_H
+#ifndef DCGOESR_XY2LONLAT_H
+#define DCGOESR_XY2LONLAT_H
 
 /*
  * These definitions are here only for reference purposes.

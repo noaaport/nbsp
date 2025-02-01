@@ -5,18 +5,23 @@
 #
 # $Id$
 #
-TARGET = nbspgoesr nbspgoesrinfo
-TARGET_OBJECTS = nbspgoesr.o nbspgoesrinfo.o
+TARGET = nbspgoesr nbspgoesrinfo nbspgoesrgis
+TARGET_OBJECTS = nbspgoesr.o nbspgoesrinfo.o nbspgoesrgis.o
 
-GOESR_OBJECTS = nbspgoesr.o ${COMMON_OBJECTS} ${DC_OBJECTS}
+GOESR_OBJECTS = nbspgoesr.o ${COMMON_OBJECTS} \
+	dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o
 GOESRINFO_OBJECTS = nbspgoesrinfo.o ${COMMON_OBJECTS}
+GOESRGIS_OBJECTS = nbspgoesrgis.o ${COMMON_OBJECTS} \
+	dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_shp.o
 
 GOESR_LIBS = -lm -lnetcdf -lpng
 GOESRINFO_LIBS = -lnetcdf
+GOESRGIS_LIBS = -lm -lnetcdf
 
-DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c
-DC_HEADERS = dcgoesr.h dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h
-DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o
+DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c dcgoesr_shp.c
+DC_HEADERS = dcgoesr.h \
+	dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h dcgoesr_shp.h
+DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o dcgoesr_shp.o
 
 COMMON_DIR = ..
 COMMON_SOURCES = err.c
@@ -25,7 +30,7 @@ COMMON_HEADERS = ${COMMON_DIR}/err.h
 
 HEADERS = ${DC_HEADERS} ${COMMON_HEADERS}
 
-ALL_OBJECTS = ${TARGET_OBJECTS} ${DC_OBJECTS} ${COMMON_OBJECTS}
+ALL_OBJECTS = ${TARGET_OBJECTS} ${COMMON_OBJECTS} ${DC_OBJECTS}
 
 INCDIRS =       @INCDIRS@
 LIBDIRS =       @LIBDIRS@
@@ -56,6 +61,9 @@ nbspgoesr: ${GOESR_OBJECTS}
 
 nbspgoesrinfo: ${GOESRINFO_OBJECTS}
 	cc -o nbspgoesrinfo ${GOESRINFO_OBJECTS} ${LDFLAGS} ${GOESRINFO_LIBS}
+
+nbspgoesrgis: ${GOESRGIS_OBJECTS}
+	cc -o nbspgoesrgis ${GOESRGIS_OBJECTS} ${LDFLAGS} ${GOESRGIS_LIBS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}

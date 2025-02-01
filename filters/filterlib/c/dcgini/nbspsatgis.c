@@ -31,7 +31,7 @@
  * The default action is the same as specifying "-FOPX" (excluding csv, asc).
  *
  * When -A is specified (asc format) the [-r] can be used to specify the
- * coordinates of the bounding box to use. The default is the "smallest
+ * coordinates of the bounding box to use. The default is the "largest
  * enclosing rectangle" The argument to the "-r" option is a string of
  * the form "lon1,lat1,lon2,lat2". For example,
  *

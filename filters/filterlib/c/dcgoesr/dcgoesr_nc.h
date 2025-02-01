@@ -6,8 +6,8 @@
  * $Id$
  */
 
-#ifndef DCGOESRNC_H
-#define DCGOESRNC_H
+#ifndef DCGOESR_NC_H
+#define DCGOESR_NC_H
 
 #include <inttypes.h>	/* uint8_t */
 #include <stddef.h>	/* size_t */

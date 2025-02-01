@@ -17,10 +17,10 @@
  *
  * If the [-i] option is set, the following info is printed to stdout:
  *
- *   nx, ny, tile_center_lon, tile_center_lat ,lon1, lat1, lon2, lat2
+ * nx, ny, tile_center_lon, tile_center_lat ,lon_min, lat_min, lon_max, lat_max
  *
- * all in one line separated by a space. (lon1,lat1) and
- * (lon2,lat2) are the coordinates of the lower-left and upper-right
+ * all in one line separated by a space. (lon_min,lat_min) and
+ * (lon_max,lat_max) are the coordinates of the lower-left and upper-right
  * points, respectively.
  *
  * If the [-c] option is set, the output is the data in csv format,
@@ -294,18 +294,18 @@ static int output_info(void) {
    * The info is output to stdout.
    */
   int status = 0;
-  double tclon, tclat, lon1, lat1, lon2, lat2;
+  double tclon, tclat, lon_min, lat_min, lon_max, lat_max;
 
   tclon = g.goesr->tclon;
   tclat = g.goesr->tclat;
-  lon1 = g.goesr->pmap.lon1;
-  lat1 = g.goesr->pmap.lat1;
-  lon2 = g.goesr->pmap.lon2;
-  lat2 =g.goesr->pmap.lat2;
+  lon_min = g.goesr->pmap.lon_min;
+  lat_min = g.goesr->pmap.lat_min;
+  lon_max = g.goesr->pmap.lon_max;
+  lat_max =g.goesr->pmap.lat_max;
 
   if(fprintf(stdout, "%d %d %f %f %f %f %f %f\n",
 	     g.goesr->nx, g.goesr->ny,
-	     tclon, tclat, lon1, lat1, lon2, lat2) < 0) {
+	     tclon, tclat, lon_min, lat_min, lon_max, lat_max) < 0) {
     status = -1;
   }
 

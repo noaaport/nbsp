@@ -6,8 +6,8 @@
  * $Id$
  */
 
-#ifndef CMILEVEL_H
-#define CMILEVEL_H
+#ifndef DCGOESR_CMILEVEL_H
+#define DCGOESR_CMILEVEL_H
 
 #include "dcgoesr_nc.h"
 

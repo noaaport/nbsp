@@ -30,7 +30,7 @@ void dcgini_shx_insert_content(unsigned char *p,
                                struct dcgini_point_map_st *pm);
 
 struct dcgini_shp_st *dcgini_shp_create(struct dcgini_point_map_st *pm);
-void dcgini_shp_destroy(  struct dcgini_shp_st *dcgini_shp);
+void dcgini_shp_destroy(struct dcgini_shp_st *dcgini_shp);
 
 int dcgini_shp_write_data(int shp_fd, int shx_fd,
 			  struct dcgini_point_map_st *pm);

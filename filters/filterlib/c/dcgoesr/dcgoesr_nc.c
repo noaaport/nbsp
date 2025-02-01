@@ -249,10 +249,10 @@ static void calc_boundingbox(struct goesr_st *gp) {
       lat_min = gp->pmap.points[i].lat;
   }
 
-  gp->pmap.lon1 = lon_min;
-  gp->pmap.lat1 = lat_min;
-  gp->pmap.lon2 = lon_max;
-  gp->pmap.lat2 = lat_max;
+  gp->pmap.lon_min = lon_min;
+  gp->pmap.lat_min = lat_min;
+  gp->pmap.lon_max = lon_max;
+  gp->pmap.lat_max = lat_max;
 }
 
 /* public functions */
@@ -372,10 +372,10 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->tclat = 0.0;
 
   gp->pmap.numpoints = Npoints;
-  gp->pmap.lon1 = 0.0;
-  gp->pmap.lat1 = 0.0;
-  gp->pmap.lon2 = 0.0;
-  gp->pmap.lat2 = 0.0;
+  gp->pmap.lon_min = 0.0;
+  gp->pmap.lat_min = 0.0;
+  gp->pmap.lon_max = 0.0;
+  gp->pmap.lat_max = 0.0;
 
   /* Extract the data variables */
   
