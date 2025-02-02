@@ -214,45 +214,67 @@ static void cmilevel(struct goesr_st *gp) {
 
 static void calc_boundingbox(struct goesr_st *gp) {
   /*
+   * This function determines the "bounding box" (smallest rectangle
+   * that encloses the raw data) and the "maximum enclosing rectangle"
+   * (excludes background points (level 0) in the determination
+   * of the limits).
    * Some of the lon,lat points can be Nan (e.g., in goes-16),
    * when the satellite is pointing to space and not to Earth.
    * Use isnan() to exclude them.
-   */  
-  int i;
-  int Npoints = gp->Npoints;
-  double lon_max, lon_min, lat_min, lat_max;
-  
-  lon_max = -180.0;
-  lon_min = 180.0;
-  lat_max = -180.0;
-  lat_min = 180.0;
-    
-  for(i = 0; i < Npoints; ++i) {
-    if(isnan(gp->pmap.points[i].lon))
+   */
+  struct dcgoesr_point_map_st *pm = &gp->pmap;
+  size_t i;
+
+  pm->lon_min = 180.0;
+  pm->lon_max = -180.0;
+  pm->lat_min = 180.0;
+  pm->lon_max = -180.0;
+
+  pm->lon_ll = pm->lon_min;
+  pm->lat_ll = pm->lat_min;
+  pm->lon_ur = pm->lon_max;
+  pm->lat_ur = pm->lat_max;
+
+  for(i = 0; i < pm->numpoints; ++i){
+    if(isnan(pm->points[i].lon) || isnan(pm->points[i].lat))
       continue;
 
-    if(gp->pmap.points[i].lon > lon_max)
-      lon_max = gp->pmap.points[i].lon;
-    
-    if(gp->pmap.points[i].lon < lon_min)
-      lon_min = gp->pmap.points[i].lon;
-  }
-  
-  for(i = 0; i < Npoints; ++i) {
-    if(isnan(gp->pmap.points[i].lat))
+    if(pm->points[i].lon < pm->lon_min)
+      pm->lon_min = pm->points[i].lon;
+
+    if(pm->points[i].lon > pm->lon_max)
+      pm->lon_max = pm->points[i].lon;
+
+    if(pm->points[i].lat < pm->lat_min)
+      pm->lat_min = pm->points[i].lat;
+
+    if(pm->points[i].lat > pm->lat_max)
+      pm->lat_max = pm->points[i].lat;
+
+    /* exclude background points in the determination of the limits */
+    if(pm->points[i].level == 0)
       continue;
 
-    if(gp->pmap.points[i].lat > lat_max)
-      lat_max = gp->pmap.points[i].lat;
+    if(pm->points[i].lon < pm->lon_ll)
+      pm->lon_ll = pm->points[i].lon;
 
-    if(gp->pmap.points[i].lat < lat_min)
-      lat_min = gp->pmap.points[i].lat;
+    if(pm->points[i].lon > pm->lon_ur)
+      pm->lon_ur = pm->points[i].lon;
+
+    if(pm->points[i].lat < pm->lat_ll)
+      pm->lat_ll = pm->points[i].lat;
+
+    if(pm->points[i].lat > pm->lat_ur)
+      pm->lat_ur = pm->points[i].lat;
   }
 
-  gp->pmap.lon_min = lon_min;
-  gp->pmap.lat_min = lat_min;
-  gp->pmap.lon_max = lon_max;
-  gp->pmap.lat_max = lat_max;
+  /* XXX
+  fprintf(stdout, "%f %f %f %f\n", pm->lon_min, pm->lat_min,
+	  pm->lon_max, pm->lat_max);
+
+  fprintf(stdout, "%f %f %f %f\n", pm->lon_ll, pm->lat_ll,
+	  pm->lon_ur, pm->lat_ur);
+  ***/
 }
 
 /* public functions */

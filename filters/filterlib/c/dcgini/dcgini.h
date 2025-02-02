@@ -30,12 +30,16 @@ struct dcgini_point_st {
 struct dcgini_point_map_st {
   struct dcgini_point_st *points;
   size_t numpoints;
+  /*
+   * "bounding box" (smallest rectangle that encloses the raw data)
+   */
   double lon_min;
   double lat_min;
   double lon_max;
   double lat_max;
   /*
-   * The "maximum enclosing rectangle"
+   * "maximum enclosing rectangle" (largest rectangle excluding background
+   * points (level 0) in the determination of the limits).
    */ 
   double lon_ll;
   double lat_ll;

@@ -17,23 +17,27 @@
  *
  * If the [-i] option is set, the following info is printed to stdout:
  *
- * nx, ny, tile_center_lon, tile_center_lat ,lon_min, lat_min, lon_max, lat_max
+ * nx, ny, tile_center_lon, tile_center_lat,
+ *    lon_min, lat_min, lon_max, lat_max,
+ *    lon_ll, lat_ll, lon_ur, lat_ur
  *
  * all in one line separated by a space. (lon_min,lat_min) and
  * (lon_max,lat_max) are the coordinates of the lower-left and upper-right
- * points, respectively.
+ * points, respectively (bounding box). The ll and ur points are similar but
+ * exclude background (level 0) points in the determination of the limits
+ * (the "maximum enclosing rectangle").
  *
  * If the [-c] option is set, the output is the data in csv format,
  * (either to stdout, or the file set by [-o] if given).
  *
- * All angles are output degrees.
+ * All angles are output in degrees.
  *
  * If [-c] is not set, then the png is output provided [-i] is not
  * set or the [-o] is set.
  *
  * The program assumes that the input file is a noaaport file.
  * With the [-g] option the program assumes that the input is a noaaport
- * "tirs00" type file. The [-r] option indicates the input is an
+ * "tirs00" type file (glm). The [-r] option indicates the input is an
  * "OR_ABI-L1b-RadF-M6C01_G16" type file.
  */
 #include <stdlib.h>
@@ -277,7 +281,7 @@ static int output_csv(void) {
       lat = g.goesr->pmap.points[k].lat;
       cmi = g.goesr->cmi[k];
 
-      if(fprintf(g.fp, "%f,%f,%f\n", lon, lat, cmi) < 0) {
+      if(fprintf(g.fp, "%.3f,%.3f,%.3f\n", lon, lat, cmi) < 0) {
 	status = -1;
 	goto end;
       }
@@ -294,18 +298,28 @@ static int output_info(void) {
    * The info is output to stdout.
    */
   int status = 0;
-  double tclon, tclat, lon_min, lat_min, lon_max, lat_max;
+  double tclon, tclat;
+  double lon_min, lat_min, lon_max, lat_max,
+    lon_ll, lat_ll, lon_ur, lat_ur;
 
   tclon = g.goesr->tclon;
   tclat = g.goesr->tclat;
+  
   lon_min = g.goesr->pmap.lon_min;
   lat_min = g.goesr->pmap.lat_min;
   lon_max = g.goesr->pmap.lon_max;
-  lat_max =g.goesr->pmap.lat_max;
+  lat_max = g.goesr->pmap.lat_max;
 
-  if(fprintf(stdout, "%d %d %f %f %f %f %f %f\n",
+  lon_ll = g.goesr->pmap.lon_ll;
+  lat_ll = g.goesr->pmap.lat_ll;
+  lon_ur = g.goesr->pmap.lon_ur;
+  lat_ur = g.goesr->pmap.lat_ur;
+
+  if(fprintf(stdout, "%d %d %f %f %f %f %f %f %f %f %f %f\n",
 	     g.goesr->nx, g.goesr->ny,
-	     tclon, tclat, lon_min, lat_min, lon_max, lat_max) < 0) {
+	     tclon, tclat,
+	     lon_min, lat_min, lon_max, lat_max,
+	     lon_ll, lat_ll, lon_ur, lat_ur) < 0) {
     status = -1;
   }
 

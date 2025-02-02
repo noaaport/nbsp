@@ -44,7 +44,7 @@ int dcgini_info_write(char *file, struct dcgini_st *dcg){
     n = fprintf(f, "ny: %d\n", dcg->pdb.ny);
 
   /*
-   * This is the smallest enclosing rectangle.
+   * This is the "maximum enclosing rectangle"
    */
   if(n > 0)
     n = fprintf(f, "llur: %f %f %f %f\n",

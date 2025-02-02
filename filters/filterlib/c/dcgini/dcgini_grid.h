@@ -40,7 +40,7 @@
  *
  * and similarly for the other projections.
  *
- * Then we store in level[l * nlon + k], the value of datap[j * ny + i] if
+ * Then we store in level[l * nlon + k], the value of datap[j * nx + i] if
  * the computed (i, j) fall within the original (nx, ny) bounds, or
  * DCGINI_GRID_MAP_NODATA otherwise.
  */

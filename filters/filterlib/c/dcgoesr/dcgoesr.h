@@ -22,16 +22,31 @@ struct dcgoesr_point_map_st {
   struct dcgoesr_point_st *points;
   size_t numpoints;
   /*
-   * The "maximum enclosing rectangle" (bounding box)
-   */ 
+   * "bounding box" (smallest rectangle that encloses the raw data)
+   */
   double lon_min;
   double lat_min;
   double lon_max;
   double lat_max;
+  /*
+   * "maximum enclosing rectangle" (largest rectangle excluding background
+   * points (level 0) in the determination of the limits).
+   */ 
+  double lon_ll;
+  double lat_ll;
+  double lon_ur;
+  double lat_ur;
 };
 
 /* dcgoesr_shp.c */
 int dcgoesr_shp_write(char *shpfile, char *shxfile,
 		      struct dcgoesr_point_map_st *pm);
+
+/* dcgoesr_dbf.c */
+int dcgoesr_dbf_write(char *file,
+		      struct dcgoesr_point_map_st *pm);
+
+/* dcgoesr_csv.c */
+int dcgoesr_csv_write(char *file, struct dcgoesr_point_map_st *pm);
 
 #endif

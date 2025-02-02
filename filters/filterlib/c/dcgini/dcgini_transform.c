@@ -120,9 +120,10 @@ int dcgini_transform_data(struct dcgini_st *dcg){
 
 static void dcgini_pointmap_bb(struct dcgini_point_map_st *pm){
   /*
-   * This function determines the boundinx box that limits the raw data,
-   * as well as the smallest rectangle that encloses
-   * all data points, i.e., points for which the level is not zero.
+   * This function determines the bounding box (smallest rectangle 
+   * that encloses the raw data), as well as the largest rectangle that
+   * encloses all data points, i.e., exclude points for which the level
+   * is zero in the determination of the limits (maximum enclosing rectangle).
    */
   size_t i;
 
@@ -350,7 +351,7 @@ int dcgini_regrid_data_asc(struct dcgini_st *dcg,
 
   /*
    * Store the values in the order defined by the ArcInfo ASCII Grid format:
-   * the origin of the grid is the upper left and terminus at the lower right.
+   * the origin of the grid is the upper left and terminates at the lower right.
    * (http://docs.codehaus.org/display/GEOTOOLS/ArcInfo+ASCII+Grid+format)
    *
    * Since l is unsigned, we replace the for(...; l >= 0; ...) by
