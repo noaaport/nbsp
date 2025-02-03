@@ -394,6 +394,8 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->tclat = 0.0;
 
   gp->pmap.numpoints = Npoints;
+  gp->pmap.nx = nx;
+  gp->pmap.ny = ny;
   gp->pmap.lon_min = 0.0;
   gp->pmap.lat_min = 0.0;
   gp->pmap.lon_max = 0.0;

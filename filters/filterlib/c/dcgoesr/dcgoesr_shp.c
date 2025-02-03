@@ -7,7 +7,7 @@
  * $Id$
  */
 /*
- * The code is a copy of the dcgini_shp.c
+ * The code is a (revised/refined) copy of the dcgini_shp.c
  */
 #include <assert.h>
 #include <stdlib.h>
@@ -30,21 +30,23 @@ int dcgoesr_shp_write(char *shpfile, char *shxfile,
   int status = 0;
   int shp_fd = -1, shx_fd = -1;
 
+  /* If shpfile == NULL it means that it was not requested */
   if(shpfile != NULL){
     shp_fd = open(shpfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
     if(shp_fd == -1){
-      log_err(1, "Cannot open %s", shpfile);
+      log_err(0, "Cannot open %s", shpfile);
       return(-1);
     }
   }
 
+  /* If shxfile == NULL it means that it was not requested */
   if(shxfile != NULL){
     shx_fd = open(shxfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
     if(shx_fd == -1){
       if(shp_fd != -1)
 	close(shp_fd);
 
-      log_err(1, "Cannot open %", shxfile);
+      log_err(0, "Cannot open %", shxfile);
       return(-1);
     }
   }
@@ -58,7 +60,7 @@ int dcgoesr_shp_write(char *shpfile, char *shxfile,
     (void)close(shx_fd);
 
   if(status != 0)
-    log_err(1, "Could not write shp data");
+    log_err(0, "Could not write shp data");
 
   return(status);
 }
@@ -349,7 +351,7 @@ int dcgoesr_shp_write_data(int shp_fd, int shx_fd,
     return(-1);
 
   b = dcgoesr_shp->b;
-
+  
   if(shp_fd != -1){
     if(write(shp_fd, b, dcgoesr_shp->shpsize) == -1){
       status = -1;
@@ -358,7 +360,7 @@ int dcgoesr_shp_write_data(int shp_fd, int shx_fd,
   }
 
   b += dcgoesr_shp->shpsize;
-
+  
   if(shx_fd != -1){
     if(write(shx_fd, b, dcgoesr_shp->shxsize) == -1){
       status = -1;

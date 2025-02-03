@@ -36,6 +36,12 @@ struct dcgoesr_point_map_st {
   double lat_ll;
   double lon_ur;
   double lat_ur;
+  /*
+   * Some of the parameters extracted from the nc file are copied here
+   * so that public functions only need the pmap structure (not the nc data st)
+   */
+  int nx;
+  int ny;
 };
 
 /* dcgoesr_shp.c */
@@ -43,8 +49,10 @@ int dcgoesr_shp_write(char *shpfile, char *shxfile,
 		      struct dcgoesr_point_map_st *pm);
 
 /* dcgoesr_dbf.c */
-int dcgoesr_dbf_write(char *file,
-		      struct dcgoesr_point_map_st *pm);
+int dcgoesr_dbf_write(char *file, struct dcgoesr_point_map_st *pm);
+
+/* dcgoesr_info.c */
+int dcgoesr_info_write(char *file, struct dcgoesr_point_map_st *pm);
 
 /* dcgoesr_csv.c */
 int dcgoesr_csv_write(char *file, struct dcgoesr_point_map_st *pm);

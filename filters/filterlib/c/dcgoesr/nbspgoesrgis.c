@@ -20,7 +20,7 @@
  *  -a <asc file>
  *  -d <output dir>
  *  -f <dbf file>
- *  -n <base name> => default base name for files
+ *  -n <base name> => default base name for output files not specified
  *  -o <info file>
  *  -p <shp file>
  *  -v <csv file>
@@ -58,16 +58,9 @@
 #include <math.h>
 #include <netcdf.h>
 #include "err.h"
-#include "dcgoesr_util.h"
+#include "dcgoesr_name.h"
 #include "dcgoesr_shp.h"
 #include "dcgoesr_nc.h"	/* includes dcgoesr.h */
-
-#define DCGOESR_SHPEXT   ".shp"
-#define DCGOESR_SHXEXT   ".shx"
-#define DCGOESR_DBFEXT   ".dbf"
-#define DCGOESR_INFOEXT  ".info"
-#define DCGOESR_CSVEXT   ".csv"
-#define DCGOESR_ASCEXT   ".asc"
 
 struct {
   int opt_background;		/* -b */
@@ -107,13 +100,11 @@ static void cleanup(void);
 static void load(void);
 static void output(void);
 
-/*
 static void output_shp(void);
 static void output_dbf(void);
 static void output_info(void);
 static void output_csv(void);
 static void output_asc(void);
-*/
 
 int main(int argc, char **argv){
 
@@ -315,12 +306,163 @@ static void load(void) {
 }
 
 static void output(void) {
-  /* Output the data */
-
   /*
+   * Output the data
+   */
   int status = 0;
-  int status_close = 0;
-  */
-  
-  ;
+
+  if(g.opt_output_dir != NULL){
+    status = chdir(g.opt_output_dir);
+    if(status != 0)
+      log_err(1, "Cannot chdir to %s", g.opt_output_dir);
+  }
+
+  if((g.opt_shp != 0) || (g.opt_shx != 0))
+    output_shp();
+
+  if(g.opt_dbf != 0)
+    output_dbf();
+
+  if(g.opt_info != 0)
+    output_info();
+
+  if(g.opt_csv != 0)
+    output_csv();
+
+  if(g.opt_asc != 0)
+    output_asc();
 }
+
+static void output_shp(void) {
+
+  int status = 0;
+  char *shpfile = NULL;
+  char *shxfile = NULL;
+  int f_free_shp = 0;
+  int f_free_shx = 0;
+
+  if(g.opt_shpfile != NULL)
+    shpfile = g.opt_shpfile;
+  else if(g.opt_shp != 0) {
+    if(g.opt_basename != NULL)
+      shpfile = dcgoesr_name(g.opt_basename, DCGOESR_SHPEXT);
+      
+    if(shpfile == NULL)
+      log_err(1, "shp output file could not be set or not specified");
+    else
+      f_free_shp = 1;
+  }
+  
+  if(g.opt_shxfile != NULL)
+    shxfile = g.opt_shxfile;
+  else if(g.opt_shx != 0) {
+    if(g.opt_basename != NULL)
+      shxfile = dcgoesr_name(g.opt_basename, DCGOESR_SHXEXT);
+
+    if(shxfile == NULL) {
+      if(f_free_shp == 1)
+	free(shpfile);
+
+      log_err(1, "shx output file could not be set or not specified");
+    } else
+      f_free_shx = 1;
+  }
+  
+  status = dcgoesr_shp_write(shpfile, shxfile, &g.goesr->pmap);
+
+  if(f_free_shp)
+    free(shpfile);
+
+  if(f_free_shx)
+    free(shxfile);
+
+  if(status != 0)
+    log_errx(1, "Error in dcgoesr_shp_write()");
+}
+
+static void output_dbf(void) {
+
+  int status = 0;
+  char *dbffile = NULL;
+  int f_free_dbf = 0;
+  
+  if(g.opt_dbffile != NULL)
+    dbffile = g.opt_dbffile;
+  else{
+    if(g.opt_basename != NULL)
+      dbffile = dcgoesr_name(g.opt_basename, DCGOESR_DBFEXT);
+
+    if(dbffile == NULL)
+      log_err(1, "dbf output file could not be set or not specified");
+    else
+      f_free_dbf = 1;
+  }
+
+  status = dcgoesr_dbf_write(dbffile, &g.goesr->pmap);
+
+  if(f_free_dbf)
+    free(dbffile);
+
+  if(status != 0)
+    log_errx(1, "Error in dcgoesr_dbf_write()");
+}
+
+static void output_info(void) {
+  
+  int status = 0;
+  char *infofile = NULL;
+  int f_free_info = 0;
+  
+  if(g.opt_infofile != NULL)
+    infofile = g.opt_infofile;
+  else{
+    if(g.opt_basename != NULL)
+      infofile = dcgoesr_name(g.opt_basename, DCGOESR_INFOEXT);
+
+    if(infofile == NULL)
+      log_err(1, "info output file could not be set or not specified");
+    else
+      f_free_info = 1;
+  }
+
+  status = dcgoesr_info_write(infofile, &g.goesr->pmap);
+
+  if(f_free_info)
+    free(infofile);
+
+  if(status != 0)
+    log_errx(1, "Error in dcgoesr_info_write()");
+}
+
+static void output_csv(void) {
+
+  int status = 0;
+  char *csvfile = NULL;
+  int f_free_csv = 0;
+  
+  if(g.opt_csvfile != NULL)
+    csvfile = g.opt_csvfile;
+  else{
+    if(g.opt_basename != NULL)
+      csvfile = dcgoesr_name(g.opt_basename, DCGOESR_CSVEXT);
+
+    if(csvfile == NULL)
+      log_err(1, "csv output file could not be set or not specified");
+    else
+      f_free_csv = 1;
+  }
+
+  status = dcgoesr_csv_write(csvfile, &g.goesr->pmap);
+
+  if(f_free_csv)
+    free(csvfile);
+
+  if(status != 0)
+    log_errx(1, "Error in dcgoesr_csv_write()");
+}
+
+static void output_asc(void) {
+
+  log_info("%s", "Not implemented.");
+}
+
