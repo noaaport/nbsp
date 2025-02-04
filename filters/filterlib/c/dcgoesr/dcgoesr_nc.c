@@ -364,16 +364,18 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   Npoints = nx*ny;	
   data_size = sizeof(double)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints;
   gp->data = malloc(data_size);
-  if(gp->data == NULL) {
-    free(gp);
-    return(-1);
-  }
 
   /* The transformed data */
   gp->pmap.points = malloc(sizeof(struct dcgoesr_point_st) * Npoints);
-  if(gp->pmap.points == NULL) {
-    free(gp->data);
-    free(gp);
+
+  /* The regdridded levels */
+  gp->pmap.rglevel = malloc(sizeof(double) * Npoints);
+
+  if((gp->data == NULL) ||
+     (gp->pmap.points == NULL) ||
+     (gp->pmap.rglevel == NULL)) {
+    
+    goesr_free(gp);
     return(-1);
   }
 
@@ -456,6 +458,13 @@ void goesr_free(struct goesr_st *goesr) {
   
   if(goesr == NULL)
     return;
+
+  if(goesr->pmap.rglevel != NULL)
+    free(goesr->pmap.rglevel);
+
+  
+  if(goesr->pmap.points != NULL)
+    free(goesr->pmap.points);
 
   if(goesr->data != NULL)
     free(goesr->data);

@@ -42,6 +42,13 @@ struct dcgoesr_point_map_st {
    */
   int nx;
   int ny;
+  /*
+   * For the asc regrid
+   */
+  int n;		/* the minimum of nx, ny */
+  double dlon;
+  double dlat;
+  double *rglevel;	/* regrided level */
 };
 
 /* dcgoesr_shp.c */
@@ -56,5 +63,8 @@ int dcgoesr_info_write(char *file, struct dcgoesr_point_map_st *pm);
 
 /* dcgoesr_csv.c */
 int dcgoesr_csv_write(char *file, struct dcgoesr_point_map_st *pm);
+
+/* dcoesr_asc.c */
+int dcgoesr_asc_write(char *file, struct dcgoesr_point_map_st *pm);
 
 #endif
