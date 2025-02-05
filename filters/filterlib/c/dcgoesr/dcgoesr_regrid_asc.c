@@ -61,8 +61,8 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
   size_t numpoints;
   int *datap;
   size_t i, j, k;
-  size_t x, y;
-  double ii, jj, lon, lat;
+  size_t ii, jj;
+  double x, y, lon, lat;
   double cellsize;	/* asc format requires square cell size */
   double dlon, dlat;
   double rlon_min, rlat_min, rlon_max, rlat_max;
@@ -160,17 +160,17 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
       lon = gmap->lon_min + cellsize * i;
       lat = gmap->lat_max - cellsize * j;
       
-      ii = (1/dlon) * (lon - pmap->lon_min);
-      jj = (1/dlat) * (pmap->lat_max - lat);
+      x = (1/dlon) * (lon - pmap->lon_min);
+      y = (1/dlat) * (pmap->lat_max - lat);
 
-      if((ii < 0.0) || (ii > (double)pmap->nx - 1.0))
+      if((x < 0.0) || (x > (double)pmap->nx - 1.0))
 	*datap = DCGOESR_GRID_MAP_NODATA;
-      else if((jj < 0.0) || (jj > (double)pmap->ny - 1))
+      else if((y < 0.0) || (y > (double)pmap->ny - 1))
 	*datap = DCGOESR_GRID_MAP_NODATA; 
       else{
-	x = LROUND_SIZE_T(ii);
-	y = LROUND_SIZE_T(jj);
-	*datap = (int)pmap->points[y * pmap->nx + x].level;
+	ii = LROUND_SIZE_T(x);
+	jj = LROUND_SIZE_T(y);
+	*datap = (int)pmap->points[jj * pmap->nx + ii].level;
       }
       ++datap;
     }
