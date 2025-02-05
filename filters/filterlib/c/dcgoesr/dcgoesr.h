@@ -51,10 +51,10 @@ struct dcgoesr_grid_map_st {
   size_t numpoints;	/* nlon * nlat */
   size_t nlon;
   size_t nlat;
-  double lon1;
-  double lat1;
-  double lon2;
-  double lat2;
+  double lon_min;
+  double lat_min;
+  double lon_max;
+  double lat_max;
   double dlon;
   double dlat;
   double cellsize;	/* for square "asc" cell grids */

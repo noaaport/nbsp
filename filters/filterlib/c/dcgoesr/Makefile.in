@@ -13,7 +13,8 @@ GOESR_OBJECTS = nbspgoesr.o ${COMMON_OBJECTS} \
 GOESRINFO_OBJECTS = nbspgoesrinfo.o ${COMMON_OBJECTS}
 GOESRGIS_OBJECTS = nbspgoesrgis.o ${COMMON_OBJECTS} \
 	dcgoesr_nc.o dcgoesr_xy2lonlat.o \
-	dcgoesr_shp.o dcgoesr_dbf.o dcgoesr_csv.o dcgoesr_asc.o \
+	dcgoesr_shp.o dcgoesr_dbf.o dcgoesr_csv.o \
+	dcgoesr_asc.o dcgoesr_regrid_asc.o \
 	dcgoesr_info.o dcgoesr_name.o
 
 GOESR_LIBS = -lm -lnetcdf -lpng
@@ -21,13 +22,15 @@ GOESRINFO_LIBS = -lnetcdf
 GOESRGIS_LIBS = -lm -lnetcdf
 
 DC_SOURCES = dcgoesr_nc.c dcgoesr_xy2lonlat.c dcgoesr_png.c \
-	dcgoesr_shp.c dcgoesr_dbf.c dcgoesr_csv.c dcgoesr_asc.c \
+	dcgoesr_shp.c dcgoesr_dbf.c dcgoesr_csv.c \
+	dcgoesr_asc.c dcgoesr_regrid_asc.c \
 	dcgoesr_info.c dcgoesr_name.c
 DC_HEADERS = dcgoesr.h \
 	dcgoesr_nc.h dcgoesr_xy2lonlat.h dcgoesr_png.h \
-	dcgoesr_shp.h dcgoesr_name.h
+	dcgoesr_shp.h dcgoesr_regrid_asc.h dcgoesr_name.h
 DC_OBJECTS = dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o \
-	dcgoesr_shp.o dcgoesr_dbf.o dcgoesr_csv.o dcgoesr_asc.o \
+	dcgoesr_shp.o dcgoesr_dbf.o dcgoesr_csv.o \
+	dcgoesr_asc.o dcgoesr_regrid_asc.o \
 	dcgoesr_info.o dcgoesr_name.o
 
 COMMON_DIR = ..

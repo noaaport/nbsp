@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "err.h"
-#include "dcgoesr.h"
+#include "dcgoesr_regrid_asc.h"
 
 static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_grid_map_st *gm);
 
@@ -63,10 +63,10 @@ static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_grid_map_st *gm) {
     n = fprintf(fp, "nrows %zu\n", gm->nlat);
 
   if(n > 0)
-    n = fprintf(fp, "xllcorner %f\n", gm->lon1);
+    n = fprintf(fp, "xllcorner %f\n", gm->lon_min);
 
   if(n > 0)
-    n = fprintf(fp, "yllcorner %f\n", gm->lat1);
+    n = fprintf(fp, "yllcorner %f\n", gm->lat_min);
 
   if(n > 0)
     n = fprintf(fp, "cellsize %f\n", gm->cellsize);

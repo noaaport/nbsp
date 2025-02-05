@@ -7,37 +7,49 @@
  * $Id$
  */
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h>	/* only for debuging */
 #include <string.h>
 #include "err.h"
 #include "dcgoesr_regrid_asc.h"		/* includes dcgoesr.h */
 
 /*
- * The assumption is that in the nc data, the indices
- * i,j of a point level(j,i) and the corresponding (lon,lat)
- * can be related by
+ * The convention in the pointmap is that
  *
- *  lon = lon1 + dlon * i
- *  lat = lat1 + dlat * j
+ *   level[k] = level(j,i)   (k = nx * j + i)
  *
- * where
+ * and the corresponding point is (lon[k],lat[k]).
  *
- *  dlon = (lon2 - lon1)/(nx - 1)
- *  dlat = (lat2 - lat1)/(ny - 1)
+ * The assumption now is that the (lon,lat) can be related to (i,j) by
  *
- * Inverting,
+ *  lon = lon_min + dlon * i
+ *  lat = lat_max - dlat * j	(top to bottom)
  *
- *  i = (1/dlon) * (lon - lon1)
- *  j = (1/dlon) * (lat - lat1)
+ * Then
+ *
+ *  dlon = (lon_max - lon_min)/(nx - 1)
+ *  dlat = (lat_max - lat_min)/(ny - 1)
+ *
+ * and inverting,
+ *
+ *  i = (1/dlon) * (lon - lon_min)
+ *  j = (1/dlat) * (lat_max - lat)
  *
  * The anzatz is to assume that this is how we can assign a level(j,i)
- * to any (lon,lat) (i.e., a linear fit).
+ * to any (lon,lat).
  */
+
+/*
+ * We could use lround(), but in linux it seems to be a pain
+ * to include it (define -fno-bultiin, or -std=c99, etc). It is
+ * assumed that the argument x has already been checked to be positive
+ * and within bounds.
+ */
+#define LROUND_SIZE_T(x) (size_t)(x + 0.5)
 
 int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
 			    char *llur_str,
 			    int f_llur_str_diff,
-			    struct dcgoesr_point_map_st *gmap) {
+			    struct dcgoesr_grid_map_st *gmap) {
   /*
    * The distinctive feature in this function is that here we define
    * the cellsize (dlon, dlat) such that it is a square cell, as 
@@ -48,14 +60,16 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
    */
   size_t numpoints;
   int *datap;
-  size_t i, j, k, l;
-  double ii, jj, lon_deg, lat_deg;
+  size_t i, j, k;
+  size_t x, y;
+  double ii, jj, lon, lat;
   double cellsize;	/* asc format requires square cell size */
   double dlon, dlat;
-  double rlon1, rlat1, rlon2, rlat2;
+  double rlon_min, rlat_min, rlon_max, rlat_max;
 
   dlon = (pmap->lon_max - pmap->lon_min)/(pmap->nx - 1);
   dlat = (pmap->lat_max - pmap->lat_min)/(pmap->ny - 1);
+
   if(dlat < dlon)
     cellsize = dlat;
   else
@@ -66,30 +80,30 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
   gmap->cellsize = cellsize;
 
   /* the default limits */
-  gmap->lon1 = pmap->lon_ll;
-  gmap->lat1 = pmap->lat_ll;
-  gmap->lon2 = pmap->lon_ur;
-  gmap->lat2 = pmap->lat_ur;
+  gmap->lon_min = pmap->lon_ll;
+  gmap->lat_min = pmap->lat_ll;
+  gmap->lon_max = pmap->lon_ur;
+  gmap->lat_max = pmap->lat_ur;
 
   /* optional limits */
   if(llur_str != NULL){
     if(sscanf(llur_str, "%lf,%lf,%lf,%lf",
-	      &rlon1, &rlat1, &rlon2, &rlat2) != 4){
+	      &rlon_min, &rlat_min, &rlon_max, &rlat_max) != 4){
       log_errx(0, "Invalid value of enclosing rectangle limits");
       return(1);
     }
 
     if(f_llur_str_diff != 0){
       /* shrink the rectangle by the specified amouns */
-      gmap->lon1 += rlon1;
-      gmap->lat1 += rlat1;
-      gmap->lon2 -= rlon2;
-      gmap->lat2 -= rlat2;
+      gmap->lon_min += rlon_min;
+      gmap->lat_min += rlat_min;
+      gmap->lon_max -= rlon_max;
+      gmap->lat_max -= rlat_max;
     }else{
-      gmap->lon1 = rlon1;
-      gmap->lat1 = rlat1;
-      gmap->lon2 = rlon2;
-      gmap->lat2 = rlat2;
+      gmap->lon_min = rlon_min;
+      gmap->lat_min = rlat_min;
+      gmap->lon_max = rlon_max;
+      gmap->lat_max = rlat_max;
     }
   }
 
@@ -97,16 +111,16 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
    * Since we ((may) have redefined the limits, and redefined the cellsize
    * we have to redetermine the number of points.
    */
-  gmap->nlon = (gmap->lon2 - gmap->lon1)/cellsize + 1.0;
-  gmap->nlat = (gmap->lat2 - gmap->lat1)/cellsize + 1.0;
+  gmap->nlon = (gmap->lon_max - gmap->lon_min)/cellsize + 1.0;
+  gmap->nlat = (gmap->lat_max - gmap->lat_min)/cellsize + 1.0;
 
-  /* XXX
-  fprintf(stdout, "%f %f", dcg->gridmap.lat2_deg, dcg->gridmap.lat1_deg);
-  fprintf(stdout, "%u %u\n", dcg->gridmap.nlon, dcg->gridmap.nlat);
+  /*
+  fprintf(stdout, "%f %f\n", gmap->lon_min, gmap->lat_min);
+  fprintf(stdout, "%zu %zu\n", gmap->nlon, gmap->nlat);
   */
-
+  
   /* Allocate storage for the levels array */
-  numpoints = gpam->nlon * gmapnlat;
+  numpoints = gmap->nlon * gmap->nlat;
   gmap->level = calloc(numpoints, sizeof(gmap->level));
   if(gmap->level == NULL){
     log_err(0, "Cannot allocate memory for the regrid map");
@@ -115,7 +129,7 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
 
   if(DCGOESR_GRID_MAP_NODATA != 0){
     for(k = 0; k < numpoints; ++k){
-      gmaplevel[k] = DCGOESR_GRID_MAP_NODATA;
+      gmap->level[k] = DCGOESR_GRID_MAP_NODATA;
     }
   }
 
@@ -127,48 +141,36 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
    * with k = j*nlon + i. For each i,j we can calculate the
    * the corresponding (lon,lat) of the square grid
    *
-   *   gm_lon(k) = gm_lon1 + cellsize * i
-   *   gm_lat(k) = gm_lat1 + cellsize * j
+   *   gm_lon(k) = gm_lon_min + cellsize * i
+   *   gm_lat(k) = gm_lat_max - cellsize * j
    *
    * Then for that (gm_lon(k),gm_lat(k)) we calculate the (ii,jj) in the
    * original grid
    *
-   *  ii = (1/pm_dlon) * (gm_lon(k) - lon_min)
-   *  jj = (1/pm_dlat) * (gm_lat(k) - lat_min)
+   *  ii = (1/pm_dlon) * (pm_lon(k) - pm_lon_min)
+   *  jj = (1/pm_dlat) * (pm_lat_max - pm_lat(k))
    *
    * and set
    *
-   * gm->level[kk] = pm->point[k].
+   * gm->level[kk] = pm->point.level[k]  (kk = jj* nlat + i)
    */
    
-  /*
-   * Store the values in the order defined by the ArcInfo ASCII Grid format:
-   * the origin of the grid is the upper left and terminates at the lower right.
-   * (http://docs.codehaus.org/display/GEOTOOLS/ArcInfo+ASCII+Grid+format)
-   *
-   * Since l is unsigned, we replace the for(...; l >= 0; ...) by
-   * what appears below.
-   */ 
-  for(l = dcg->gridmap.nlat - 1; l < SIZE_T_MAX; --l){
-    for(k = 0; k < dcg->gridmap.nlon; ++k){
-      lon_deg = dcg->gridmap.lon1_deg + (double)k * dcg->gridmap.dlon_deg;
-      lat_deg = dcg->gridmap.lat1_deg + (double)l * dcg->gridmap.dlat_deg;
+  for(j = 0; j < gmap->nlat; ++j){
+    for(i = 0; i < gmap->nlon; ++i){
+      lon = gmap->lon_min + cellsize * i;
+      lat = gmap->lat_max - cellsize * j;
+      
+      ii = (1/dlon) * (lon - pmap->lon_min);
+      jj = (1/dlat) * (pmap->lat_max - lat);
 
-      if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_STR)
-	nesdis_proj_str_lonlat_ij(&dcg->pstr, lon_deg, lat_deg, &ii, &jj);
-      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_LLC)
-	nesdis_proj_llc_lonlat_ij(&dcg->pllc, lon_deg, lat_deg, &ii, &jj);
-      else if(dcg->pdb.map_projection == NESDIS_MAP_PROJ_MER)
-	nesdis_proj_mer_lonlat_ij(&dcg->pmer, lon_deg, lat_deg, &ii, &jj);
-
-      if((ii < 0.0) || (ii > (double)dcg->pdb.nx - 1))
-	*datap = DCGINI_GRID_MAP_NODATA;
-      else if((jj < 0.0) || (jj > (double)dcg->pdb.ny - 1))
-	*datap = DCGINI_GRID_MAP_NODATA;
+      if((ii < 0.0) || (ii > (double)pmap->nx - 1.0))
+	*datap = DCGOESR_GRID_MAP_NODATA;
+      else if((jj < 0.0) || (jj > (double)pmap->ny - 1))
+	*datap = DCGOESR_GRID_MAP_NODATA; 
       else{
-	i = LROUND_SIZE_T(ii);
-	j = dcg->pdb.ny - 1 - LROUND_SIZE_T(jj);    /* from top to bottom */
-	*datap = (int)dcg->ginidata.data[j * dcg->pdb.nx + i];
+	x = LROUND_SIZE_T(ii);
+	y = LROUND_SIZE_T(jj);
+	*datap = (int)pmap->points[y * pmap->nx + x].level;
       }
       ++datap;
     }

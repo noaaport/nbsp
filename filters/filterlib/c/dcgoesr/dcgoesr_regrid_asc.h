@@ -19,5 +19,5 @@
 int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
 			    char *llur_str,
 			    int f_llur_str_diff,
-			    struct dcgoesr_point_map_st **gmap);
+			    struct dcgoesr_grid_map_st *gmap);
 #endif

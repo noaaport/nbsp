@@ -61,6 +61,7 @@
 #include "dcgoesr_name.h"
 #include "dcgoesr_shp.h"
 #include "dcgoesr_nc.h"	/* includes dcgoesr.h */
+#include "dcgoesr_regrid_asc.h"
 
 struct {
   int opt_background;		/* -b */
@@ -303,6 +304,14 @@ static void load(void) {
 
   if((status != 0) || (status_close != 0))
     log_errx(1, "%s", "Aborting");
+
+  if(g.opt_asc != 0)
+    status = dcgoesr_regrid_data_asc(&g.goesr->pmap,
+				     g.opt_llur_str,
+				     g.opt_llur_str_diff,
+				     &g.goesr->gmap);
+  if(status != 0)
+    log_err(1, "Error regriding data");
 }
 
 static void output(void) {
@@ -463,6 +472,28 @@ static void output_csv(void) {
 
 static void output_asc(void) {
 
-  log_info("%s", "Not implemented.");
+  int status = 0;
+  char *ascfile = NULL;
+  int f_free_asc = 0;
+  
+  if(g.opt_ascfile != NULL)
+    ascfile = g.opt_ascfile;
+  else{
+    if(g.opt_basename != NULL)
+      ascfile = dcgoesr_name(g.opt_basename, DCGOESR_ASCEXT);
+
+    if(ascfile == NULL)
+      log_err(1, "asc output file could not be set or not specified");
+    else
+      f_free_asc = 1;
+  }
+
+  status = dcgoesr_asc_write(ascfile, &g.goesr->gmap);
+
+  if(f_free_asc)
+    free(ascfile);
+
+  if(status != 0)
+    log_errx(1, "Error in dcgoesr_asc_write()");
 }
 
