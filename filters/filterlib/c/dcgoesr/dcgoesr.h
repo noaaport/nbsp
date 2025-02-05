@@ -42,14 +42,25 @@ struct dcgoesr_point_map_st {
    */
   int nx;
   int ny;
-  /*
-   * For the asc regrid
-   */
-  int n;		/* the minimum of nx, ny */
+};
+
+/* The regridded data */
+
+struct dcgoesr_grid_map_st {
+  int *level;		/* declared int so that NODATA can be used */
+  size_t numpoints;	/* nlon * nlat */
+  size_t nlon;
+  size_t nlat;
+  double lon1;
+  double lat1;
+  double lon2;
+  double lat2;
   double dlon;
   double dlat;
-  double *rglevel;	/* regrided level */
+  double cellsize;	/* for square "asc" cell grids */
 };
+
+/* public functions */
 
 /* dcgoesr_shp.c */
 int dcgoesr_shp_write(char *shpfile, char *shxfile,
@@ -64,7 +75,7 @@ int dcgoesr_info_write(char *file, struct dcgoesr_point_map_st *pm);
 /* dcgoesr_csv.c */
 int dcgoesr_csv_write(char *file, struct dcgoesr_point_map_st *pm);
 
-/* dcoesr_asc.c */
-int dcgoesr_asc_write(char *file, struct dcgoesr_point_map_st *pm);
+/* dcgoesr_asc.c */
+int dcgoesr_asc_write(char *file, struct dcgoesr_grid_map_st *gm);
 
 #endif

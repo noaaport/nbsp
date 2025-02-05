@@ -368,13 +368,10 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   /* The transformed data */
   gp->pmap.points = malloc(sizeof(struct dcgoesr_point_st) * Npoints);
 
-  /* The regdridded levels */
-  gp->pmap.rglevel = malloc(sizeof(double) * Npoints);
+  /* Initialize, but at this point we don't know yet how many grid points */
+  gp->gmap.level = NULL;
 
-  if((gp->data == NULL) ||
-     (gp->pmap.points == NULL) ||
-     (gp->pmap.rglevel == NULL)) {
-    
+  if((gp->data == NULL) || (gp->pmap.points == NULL)) {
     goesr_free(gp);
     return(-1);
   }
@@ -444,8 +441,7 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   cmilevel(gp);
 
   /*
-   * Determine the "bounding box"
-   * (lower-left and upper-right coordinates)
+   * Determine the "bounding box" and "maximum enclosing rectangle"
    */
   calc_boundingbox(gp);
 
@@ -459,10 +455,9 @@ void goesr_free(struct goesr_st *goesr) {
   if(goesr == NULL)
     return;
 
-  if(goesr->pmap.rglevel != NULL)
-    free(goesr->pmap.rglevel);
+  if(goesr->gmap.level != NULL)
+    free(goesr->gmap.level);  
 
-  
   if(goesr->pmap.points != NULL)
     free(goesr->pmap.points);
 

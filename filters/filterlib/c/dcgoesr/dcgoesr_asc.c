@@ -12,9 +12,9 @@
 #include "err.h"
 #include "dcgoesr.h"
 
-static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_point_map_st *pm);
+static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_grid_map_st *gm);
 
-int dcgoesr_asc_write(char *file, struct dcgoesr_point_map_st *pm) {
+int dcgoesr_asc_write(char *file, struct dcgoesr_grid_map_st *gm) {
 
   FILE *fp;
   int status;
@@ -38,7 +38,7 @@ int dcgoesr_asc_write(char *file, struct dcgoesr_point_map_st *pm) {
   return(0);
 }
 
-static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_point_map_st *pm) {
+static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_grid_map_st *gm) {
   /*
    * Output the data in asc format.
    *
@@ -53,7 +53,7 @@ static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_point_map_st *pm) {
    * 103 98 94 89 83 78 72 67 61 56 51 46 41 37 32 29 25 22 19
    * etc...
    */
-  int *datap = pm->grlevel;
+  int *datap = gm->level;
   size_t i, j;
   int n;
   int c;
@@ -63,22 +63,22 @@ static int dcgoesr_asc_write_data(FILE *fp, struct dcgoesr_point_map_st *pm) {
     n = fprintf(fp, "nrows %zu\n", gm->nlat);
 
   if(n > 0)
-    n = fprintf(fp, "xllcorner %f\n", gm->lon1_deg);
+    n = fprintf(fp, "xllcorner %f\n", gm->lon1);
 
   if(n > 0)
-    n = fprintf(fp, "yllcorner %f\n", gm->lat1_deg);
+    n = fprintf(fp, "yllcorner %f\n", gm->lat1);
 
   if(n > 0)
-    n = fprintf(fp, "cellsize %f\n", gm->cellsize_deg);
+    n = fprintf(fp, "cellsize %f\n", gm->cellsize);
 
   if(n > 0)
-    n = fprintf(fp, "nodata_value %d\n", DCGINI_GRID_MAP_NODATA);
+    n = fprintf(fp, "nodata_value %d\n", DCGOESR_GRID_MAP_NODATA);
 
   if(n < 0)
     return(-1);
 
   /*
-   * Here we assume that the data has been saved in the pm->grlevel array
+   * Here we assume that the data has been saved in the gm->level array
    * in the "asc" format order.
    */
   for(j = 0; j < gm->nlat; ++j){

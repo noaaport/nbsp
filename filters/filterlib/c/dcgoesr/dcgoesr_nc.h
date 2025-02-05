@@ -54,6 +54,7 @@ struct goesr_st {
   /* transformed data */
   uint8_t *level; /* cmi normalized to 0-255 - also stored in "data" */
   struct dcgoesr_point_map_st pmap;	/* contains a copy of the "levels" */
+  struct dcgoesr_grid_map_st gmap;	/* regrid for asc format */
 };
 
 /* public functions */
