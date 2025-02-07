@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
-#include <math.h>	/* M_PI */
+#include <math.h>	/* isnan */
 #include <float.h>	/* FLT_MAX */
 #include <netcdf.h>
 #include "dcgoesr_nc.h"
@@ -368,7 +368,11 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   /* The transformed data */
   gp->pmap.points = malloc(sizeof(struct dcgoesr_point_st) * Npoints);
 
-  /* Initialize, but at this point we don't know yet how many grid points */
+  /*
+   * Initialize, but at this point we don't know yet how many grid points.
+   * This is done in "dcgoesr_regrid_data_asc()" (if the asc regrid is
+   * requested).
+   */
   gp->gmap.level = NULL;
 
   if((gp->data == NULL) || (gp->pmap.points == NULL)) {
@@ -392,13 +396,25 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->tclon = 0.0;
   gp->tclat = 0.0;
 
+  /* all min,max are determined by calc_boundingbox() below */
   gp->pmap.numpoints = Npoints;
-  gp->pmap.nx = nx;
-  gp->pmap.ny = ny;
   gp->pmap.lon_min = 0.0;
   gp->pmap.lat_min = 0.0;
   gp->pmap.lon_max = 0.0;
   gp->pmap.lat_max = 0.0;
+  gp->pmap.lon_ll = gp->pmap.lon_min;
+  gp->pmap.lat_ll = gp->pmap.lat_min;
+  gp->pmap.lon_ur = gp->pmap.lon_max;
+  gp->pmap.lat_ur = gp->pmap.lat_max;
+  gp->pmap.nx = nx;
+  gp->pmap.ny = ny;
+  gp->pmap.lorigin = gp->lorigin;
+  /* These are set below
+  gp->pmap.x_min
+  gp->pmap.x_max
+  gp->pmap.y_min
+  gp->pmap.y_max
+  */
 
   /* Extract the data variables */
   
@@ -431,11 +447,19 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   for (j = 0; j < ny; ++j) {
     for (i = 0; i < nx; ++i) {
       k = j*gp->nx + i;  /* this is the index of the corresponding cmi[k] */
-      xy2lonlat(gp->x[i], gp->y[j], &lon, &lat, lorigin);
-      gp->pmap.points[k].lon = (lon/M_PI)*180.0;
-      gp->pmap.points[k].lat = (lat/M_PI)*180.0;
+      xy2lonlat(gp->x[i], gp->y[j], &lon, &lat, lorigin); /* lon,lat in rads */
+      gp->pmap.points[k].lon = lon*DEG_PER_RAD;
+      gp->pmap.points[k].lat = lat*DEG_PER_RAD;
     }
   }
+
+  /* (these are used in the regrid asc) */
+  gp->pmap.x_min = gp->x[0];
+  gp->pmap.x_max = gp->x[nx - 1];
+  gp->pmap.y_min = gp->y[ny - 1];	/* top to bottom */
+  gp->pmap.y_max = gp->y[0];
+  gp->pmap.dx = (gp->pmap.x_max - gp->pmap.x_min)/((double)gp->pmap.nx - 1.0);
+  gp->pmap.dy = (gp->pmap.y_max - gp->pmap.y_min)/((double)gp->pmap.ny - 1.0);
 
   /* calculate the normalized "level" values */
   cmilevel(gp);
@@ -444,6 +468,9 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
    * Determine the "bounding box" and "maximum enclosing rectangle"
    */
   calc_boundingbox(gp);
+
+
+
 
   *goesr = gp;
   

@@ -10,6 +10,7 @@
 #include <stdio.h>	/* only for debuging */
 #include <string.h>
 #include "err.h"
+#include "dcgoesr_xy2lonlat.h"		/* lonlat2xy */
 #include "dcgoesr_regrid_asc.h"		/* includes dcgoesr.h */
 
 /*
@@ -19,23 +20,26 @@
  *
  * and the corresponding point is (lon[k],lat[k]).
  *
- * The assumption now is that the (lon,lat) can be related to (i,j) by
+ * The assumption now is that the corresponding (x,y) [not the (lon,lat)!]
+ * can be related to (i,j) by
  *
- *  lon = lon_min + dlon * i
- *  lat = lat_max - dlat * j	(top to bottom)
+ *  x = x_min + dx * i
+ *  y = y_max - dy * j	(top to bottom)
  *
  * Then
  *
- *  dlon = (lon_max - lon_min)/(nx - 1)
- *  dlat = (lat_max - lat_min)/(ny - 1)
+ *  dx = (x_max - x_min)/(nx - 1)
+ *  dy = (y_max - y_min)/(ny - 1)
  *
  * and inverting,
  *
- *  i = (1/dlon) * (lon - lon_min)
- *  j = (1/dlat) * (lat_max - lat)
+ *  i = (1/dx) * (x - x_min)
+ *  j = (1/dy) * (y_max - y)
  *
  * The anzatz is to assume that this is how we can assign a level(j,i)
- * to any (lon,lat).
+ * to any (lon,lat): from the given (lon,lat) we determine the (x,y)
+ * by the function "lonlat2xy". Then from the above we determine the
+ * (i,j), and with that the associated level level(j,i) = level[j*nx + i].
  */
 
 /*
@@ -62,6 +66,7 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
   int *datap;
   size_t i, j, k;
   size_t ii, jj;
+  double ix, jy;	/* indices i,j as doubles */
   double x, y, lon, lat;
   double cellsize;	/* asc format requires square cell size */
   double dlon, dlat;
@@ -108,7 +113,7 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
   }
 
   /*
-   * Since we ((may) have redefined the limits, and redefined the cellsize
+   * Since we (may) have redefined the limits, and redefined the cellsize
    * we have to redetermine the number of points.
    */
   gmap->nlon = (gmap->lon_max - gmap->lon_min)/cellsize + 1.0;
@@ -144,32 +149,41 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
    *   gm_lon(k) = gm_lon_min + cellsize * i
    *   gm_lat(k) = gm_lat_max - cellsize * j
    *
-   * Then for that (gm_lon(k),gm_lat(k)) we calculate the (ii,jj) in the
-   * original grid
+   * Then for that (gm_lon(k),gm_lat(k)) we calculate the x, y
+   * using lonlat2xy(), and then determine the (ii,jj) in the
+   * original grid by
    *
-   *  ii = (1/pm_dlon) * (pm_lon(k) - pm_lon_min)
-   *  jj = (1/pm_dlat) * (pm_lat_max - pm_lat(k))
+   *  ii = (1/dx) * (x - x_min)
+   *  jj = (1/dy) * (y_max - y)
    *
    * and set
    *
-   * gm->level[kk] = pm->point.level[k]  (kk = jj* nlat + i)
+   * gm->level[k] = pm->point.level[kk]  (kk = jj* nx + i)
    */
    
   for(j = 0; j < gmap->nlat; ++j){
     for(i = 0; i < gmap->nlon; ++i){
       lon = gmap->lon_min + cellsize * i;
       lat = gmap->lat_max - cellsize * j;
-      
-      x = (1/dlon) * (lon - pmap->lon_min);
-      y = (1/dlat) * (pmap->lat_max - lat);
 
-      if((x < 0.0) || (x > (double)pmap->nx - 1.0))
+      /* convert to radians */
+      lon *= RAD_PER_DEG;
+      lat *= RAD_PER_DEG;
+      lonlat2xy(lon, lat, &x, &y, pmap->lorigin);
+
+      /*
+       * Calculate the indices corresponding to these values x,y, as double
+       */
+      ix = (1.0/pmap->dx) * (x - pmap->x_min);
+      jy = (1.0/pmap->dy) * (pmap->y_max - y);
+
+      if((ix < 0.0) || (ix > (double)pmap->nx - 1.0))
 	*datap = DCGOESR_GRID_MAP_NODATA;
-      else if((y < 0.0) || (y > (double)pmap->ny - 1))
-	*datap = DCGOESR_GRID_MAP_NODATA; 
+      else if((jy < 0.0) || (jy > (double)pmap->ny - 1.0))
+	*datap = DCGOESR_GRID_MAP_NODATA;      
       else{
-	ii = LROUND_SIZE_T(x);
-	jj = LROUND_SIZE_T(y);
+	ii = LROUND_SIZE_T(ix);
+	jj = LROUND_SIZE_T(jy);
 	*datap = (int)pmap->points[jj * pmap->nx + ii].level;
       }
       ++datap;

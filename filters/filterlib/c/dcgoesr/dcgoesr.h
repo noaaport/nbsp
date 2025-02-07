@@ -11,6 +11,10 @@
 #include <inttypes.h>	/* uint8_t */
 #include <stddef.h>	/* size_t */
 
+/* convenience constants */
+#define RAD_PER_DEG     0.017453		/* pi/180 */
+#define DEG_PER_RAD	57.295780		/* 180/pi */
+
 /* The projection-transformed data to lon/lat */
 struct dcgoesr_point_st {
   double lon;	/* in degrees */
@@ -37,11 +41,19 @@ struct dcgoesr_point_map_st {
   double lon_ur;
   double lat_ur;
   /*
-   * Some of the parameters extracted from the nc file are copied here
+   * Some of the parameters extracted from the nc file are stored/copied here
    * so that public functions only need the pmap structure (not the nc data st)
+   * There are used, e.g., in the regrid asc function(s).
    */
   int nx;
   int ny;
+  double lorigin; /* for the x,y -> lon,lat conversion */
+  double x_min;
+  double y_min;
+  double x_max;
+  double y_max;
+  double dx;
+  double dy;
 };
 
 /* The regridded data */

@@ -19,4 +19,7 @@
 
 void xy2lonlat(double x, double y, double *lon, double *lat,
 	       double lorigin);
+
+void lonlat2xy(double lon, double lat, double *x, double *y, 
+	       double lorigin);
 #endif
