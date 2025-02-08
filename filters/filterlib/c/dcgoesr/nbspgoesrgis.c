@@ -5,7 +5,6 @@
  *
  * $Id$
  */
-
 /*
  * Usage: nbspgoesrgis [output_options] [options] <file>
  *
@@ -110,7 +109,7 @@ static void output_asc(void);
 int main(int argc, char **argv){
 
   char *optstr = "bgrtAFOPVXa:d:f:n:o:p:s:v:x:";
-  char *usage = "nbspsatgis [-bgrt] [-AFOPVX] [-d outputdir]"
+  char *usage = "nbspgoesrgis [-bgrt] [-AFOPVX] [-d outputdir]"
     " [-a <ascfile>] [-f <dbfname>] [-n <basename>] [-o <infofile>] "
     " [-p <shpname>] [-s <llurstr>] [-v <csvname>] [-x <shxmname>] [<file>]";
   int status = 0;
