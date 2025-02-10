@@ -1,0 +1,43 @@
+/*
+ * Usage: nbspgoesrgis [output_options] [options] <file>
+ *
+ * The output_options are:
+ *
+ *  -A => do asc
+ *  -F => do dbf
+ *  -O => do info
+ *  -P => do shp
+ *  -V => do csv
+ *  -X => do shx
+ *  -a <asc file>
+ *  -d <output dir>
+ *  -f <dbf file>
+ *  -n <base name> => default base name for output files not specified
+ *  -o <info file>
+ *  -p <shp file>
+ *  -v <csv file>
+ *  -x <shx file>
+ *
+ * The default action is the same as specifying "-FOPX" (excluding csv, asc).
+ *
+ * When -A is specified (asc format) the [-s] can be used to specify the
+ * coordinates of the bounding box to use. The default is the "maximum
+ * enclosing rectangle" The argument to the "-r" option is a string of
+ * the form "lon1,lat1,lon2,lat2". For example,
+ *
+ *   nbspgoesrgis -A -s "-75,16,-64,24" tire05.nc
+ *
+ * specifies the rectangle
+ *
+ *	lon1,lat1 = (-75,16)
+ *	lon2,lat2 = (-64,24)
+ *
+ * If, in addition, the [-t] option is specified, then the values 
+ * are interpreted as the amount by which to shrink the default
+ * rectangle. For example, to shrink the left hand side of a tire file
+ * by 5 degrees
+ *
+ *    nbspgoesgis -A -t -s "5,0,0,0" tire05.nc
+ *
+ * Negative values will have the net effect of expanding the rectangle.
+ */

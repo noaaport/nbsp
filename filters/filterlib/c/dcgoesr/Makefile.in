@@ -67,13 +67,13 @@ err.c: ${COMMON_DIR}/err.c
 	cp ${COMMON_DIR}/err.c .
 
 nbspgoesr: ${GOESR_OBJECTS}
-	cc -o nbspgoesr ${GOESR_OBJECTS} ${LDFLAGS} ${GOESR_LIBS}
+	${CC} -o nbspgoesr ${GOESR_OBJECTS} ${LDFLAGS} ${GOESR_LIBS}
 
 nbspgoesrinfo: ${GOESRINFO_OBJECTS}
-	cc -o nbspgoesrinfo ${GOESRINFO_OBJECTS} ${LDFLAGS} ${GOESRINFO_LIBS}
+	${CC} -o nbspgoesrinfo ${GOESRINFO_OBJECTS} ${LDFLAGS} ${GOESRINFO_LIBS}
 
 nbspgoesrgis: ${GOESRGIS_OBJECTS}
-	cc -o nbspgoesrgis ${GOESRGIS_OBJECTS} ${LDFLAGS} ${GOESRGIS_LIBS}
+	${CC} -o nbspgoesrgis ${GOESRGIS_OBJECTS} ${LDFLAGS} ${GOESRGIS_LIBS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}

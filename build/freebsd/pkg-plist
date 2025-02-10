@@ -48,6 +48,7 @@ bin/nbspgismap
 bin/nbspgisbundlemap
 bin/nbspgisradmap
 bin/nbspgissatmap
+bin/nbspgoesrmap
 bin/nbspstatplot
 bin/nbspstatplot1
 bin/nbspstatplotdata

@@ -10,6 +10,9 @@
 TCLTARGET =	nbspgismap nbspgisbundlemap nbspgisradmap nbspgissatmap
 TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl \
 		nbspgisradmap.tcl nbspgissatmap.tcl
+SHTARGET =	nbspgoesrmap
+SHSOURCES =	nbspgoesrmap.sh
+
 
 TMPLSOURCES =	gis-colors.def.in \
 		gis-colors-rgb.def gis-colors-bref.def gis-colors-rvel.def \
@@ -40,7 +43,7 @@ LIBFILES =	gis.tcl radstations/radstations.tcl
 SAMPLES =	gismap-bundle.conf-sample
 DEFAULTS =	gismap-bundle.conf-defaults
 
-TARGET =	${TCLTARGET} ${TMPLTARGET} ${SAMPLES}
+TARGET =	${TCLTARGET} ${SHTARGET} ${TMPLTARGET} ${SAMPLES}
 
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
@@ -58,6 +61,9 @@ nbspgisradmap: nbspgisradmap.tcl
 
 nbspgissatmap: nbspgissatmap.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# nbspgissatmap.tcl > nbspgissatmap
+
+nbspgoesrmap: nbspgoesrmap.sh
+	sed -e /%SHELL%/s##${SHELL}# nbspgoesrmap.sh > nbspgoesrmap
 
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
@@ -88,6 +94,7 @@ ${TMPLTARGET}: ${TMPLFILES} ${LEGENDFILES}
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+	${INSTALL} -m 755 ${SHTARGET} ${BINDIR}
 	${INSTALL} -m 644 ${SAMPLES} ${TMPLTARGET} ${DEFAULTS} ${MYCONFDIR}
 	${INSTALL} -m 644 ${SHAREFILES} ${MYSHAREDIR}
 	${INSTALL} -m 644 ${LIBFILES} ${MYLIBEXECDIR}
