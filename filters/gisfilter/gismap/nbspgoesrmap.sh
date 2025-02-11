@@ -6,11 +6,16 @@
 # 
 # $Id$
 #
+# [ NOTE: A version of this script is also included in the nbspgislibmap
+# package under the name "nbspglgoesrmap" with the only difference been
+# in the defnition of the location of the "geodata" and "mapfonts" directories.]
+#
+#
 # Usage: nbspgoesrmap [-baCDk] [-f mapfontsdir] [-g geodatadir]
 #                     [-m user_map_template] [-o output_file] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
-# is the netcdf file (e.g., tire05_20250116_1256.goesr)
+# is the netcdf file (e.g., tire05_20250116_1256.goesr).
 #
 # -b => background
 # -a => the inputfile is the asc file instead of the netcdf file
