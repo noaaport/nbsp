@@ -30,6 +30,7 @@ static void calc_boundingbox(struct goesr_st *gp);
 #define CMI_NAME "Sectorized_CMI"
 #define CMI_PROJECTION_NAME "fixedgrid_projection"
 #define CMI_LONORIGIN_NAME "longitude_of_projection_origin"
+/* OR_ABI variables */
 #define RAD_NAME "Rad"
 #define RAD_PROJECTION_NAME "goes_imager_projection"
 #define RAD_LONORIGIN_NAME "longitude_of_projection_origin"

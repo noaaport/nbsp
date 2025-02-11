@@ -6,7 +6,16 @@
  * $Id$
  */
 /*
- * Usage: nbspgoesrgis [output_options] [options] <file>
+ * Usage: nbspgoesrgis [-bgrt] [-AFOPVX] [-d outputdir]
+ *        [-a <ascfile>] [-f <dbfname>] [-n <basename>] [-o <infofile>]
+ *        [-p <shpname>] [-s <llurstr>] [-v <csvname>]
+ *        [-x <shxmname>] [<file>]
+ *
+ * -b => background
+ * -g => input is a glm file
+ * -r => input is a OR_ABI file
+ * -s => specify the bounding box
+ * -t => interpret -s as as the amount by which to shrink the default
  *
  * The output_options are:
  *
@@ -29,7 +38,7 @@
  *
  * When -A is specified (asc format) the [-s] can be used to specify the
  * coordinates of the bounding box to use. The default is the "maximum
- * enclosing rectangle" The argument to the "-r" option is a string of
+ * enclosing rectangle" The argument to the "-s" option is a string of
  * the form "lon1,lat1,lon2,lat2". For example,
  *
  *   nbspgoesrgis -A -s "-75,16,-64,24" tire05.nc
