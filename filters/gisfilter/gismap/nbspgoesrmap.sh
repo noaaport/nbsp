@@ -156,7 +156,9 @@ MAP
 	DATA "${ggeodatadir}/world/world.shp"
 	CLASS
 	    NAME "world-outline"
-	    OUTLINECOLOR 255 255 255
+	    STYLE
+	      OUTLINECOLOR 255 255 255
+	    END
 	END
     END
 
@@ -167,7 +169,9 @@ MAP
 	DATA "${ggeodatadir}/s_01au07/s_01au07.shp"
 	CLASS
 	    NAME "states-outline"
-	    OUTLINECOLOR 255 255 255
+	    STYLE
+	      OUTLINECOLOR 255 255 255
+	    END
 	END
     END
 END
