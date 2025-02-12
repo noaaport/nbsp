@@ -10,56 +10,51 @@
 # package under the name "nbspglgoesrmap" with the only difference been
 # in the defnition of the location of the "geodata" and "mapfonts" directories.]
 #
-#
-# Usage: nbspgoesrmap [-baCDk] [-f mapfontsdir] [-g geodatadir]
+# Usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]
 #                     [-m user_map_template] [-o output_file] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
-# is the netcdf file (e.g., tire05_20250116_1256.goesr).
+# is the netcdf file (e.g., tire05_20250116_1256.goesr)
 #
 # -b => background
 # -a => the inputfile is the asc file instead of the netcdf file
 # -C => writeout the map template and exit (can be edited and submitted with -m)
 # -D => writeout the map and exit (can be edited and submitted to map2img)
 # -k => keep all tmp files generated (asc, map and map template)
-# -f => mapfonts dir (default is /usr/local/share/nbsp/defaults/mapfonts)
-# -g => geodata dir (default is /usr/local/share/nbsp/defaults/geodata)
+# -r => the inputfile is an OR_ABI rather than a tixx noaaport file.
+# -f => mapfonts dir (default is /usr/local/share/nbspgislib/defaults/mapfonts)
+# -g => geodata dir (default is /usr/local/share/nbspgislib/defaults/geodata)
 # -m => specify a map template to use (it is not deleted even if -k is not set)
 # -o => output (png) file
 #
 # In the simplest use,
 #
-#   nbspgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
+#   nbspglgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
 #
 # will produce the png file through the following steps:
 #
 # 1) Write out the default map template (goesr.map.in)
 #
-# 2) Determine the extent and size to be used in the "map2img" map file
-#    by executing
-#
-#    nbspgoesr -i <ncfile>
-#
-#    and extracting the relevant parameters from the output. If [-a]
-#    is given the parameters are extracted from the asc file.
-#
-# 3) Converts the map template to the map file (goesr.map)
-#    using "sed" to substitute the various parameters by the
-#    values extracted in (2), and the name of the ascfile (determined
-#    from the name of the input file).
-#
-# 4) Execute
+# 2) Execute
 #
 #    nbspgoesrgis -a <ascfile> <ncfile>
 #
 #    to create the asc file that will be used in the map2img map file.
 #    If [-a] is given this step is omitted.
+
+# 3) Determine the extent and size to be used in the "map2img" map file
+#    from the asc file.
+#
+# 4) Converts the map template to the map file (goesr.map)
+#    using "sed" to substitute the various parameters by the
+#    values extracted in (3), and the name of the ascfile (determined
+#    from the name of the input file).
 #
 # 5) Execute
 #
 #    map2img -m <mapfile> -o <outputfile>
 #
-#    using the mapfile created in (3).
+#    using the mapfile created in (4).
 #
 # The options modify the default behaviour. In particular, the -C option
 # can be used to write out the default map template used, which can then
@@ -200,10 +195,8 @@ make_map () {
 }
 
 # default location of data files (geodata and mapfonts)
-_bindir=`dirname $0`
-_prefix=`dirname ${_bindir}`
-ggeodatadir="${_prefix}/share/nbsp/defaults/geodata"
-gmapfontsdir="${_prefix}/share/nbsp/defaults/mapfonts"
+ggeodatadir="%MYSHAREDIR%/defaults/geodata"
+gmapfontsdir="%MYSHAREDIR%/defaults/mapfonts"
 
 # default name of map files
 gmapfile="goesr.map"
@@ -230,17 +223,18 @@ f_keep_map_in=0
 #
 # main
 #
-usage="usage: nbspgoesrmap [-baCDk] [-f mapfontsdir] [-g geodatadir]\
+usage="usage: nbspglgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]\
  [-m user_map_template] [-o output_file] <ncfile>"
 
 option_a=0
 option_C=0
 option_D=0
 option_k=0
+option_r=0
 option_m=0
 option_o=0
 
-while getopts ":hbaCDkf:g:m:o:" option
+while getopts ":hbaCDkrf:g:m:o:" option
 do
     case $option in
         h) echo "$usage"; exit 0;;
@@ -253,6 +247,7 @@ do
 	f) gmapfontsdir=$OPTARG;;
 	g) ggeodatadir=$OPTARG;;
         k) option_k=1;;
+	r) option_r=1;;		# the inputfile is an OR_ABI nc file
         m) gmapfile_in=$OPTARG; option_m=1;;
 	o) goutputfile=$OPTARG; option_o=1;;
         \?) echo "Unsupported option $OPTARG"; exit 1;;
@@ -273,6 +268,9 @@ ginputfile=$1
 name=${ginputfile%.*}	# drop the suffix
 name=`basename $name`
 
+# -a and -r conflict
+[ $option_a -eq 1 -a $option_r -eq 1 ] && { echo "-r,-a conflict"; exit 1; }  
+
 # If [-a] was set then the input file is the asc file
 if [ $option_a -eq 0 ]
 then
@@ -291,29 +289,38 @@ trap cleanup HUP INT QUIT ABRT KILL ALRM TERM EXIT
 
 # process
 
-# If the input is the nc file extract the parameters from nbspgoesr -i,
-# otherwise from the asc file
+# If -a is not set (the inputfile is the nc file), it is best to create
+# the asc file first, and extract the rc_xxx parameters from it. The
+# alternative of using something like
+#
+# set `nbspgoesr -i $ginputfile`
+#
+# rc_nx=$1
+# rc_ny=$2
+# rc_lon1=$5
+# rc_lat1=$6
+# rc_lon2=$7
+#rc_lat2=$8
+#
+# is simpler but would invove reading the nc file twice (here and then
+# to create the asc file) and for large files it would be costly.
+
+# Create the asc file if the inputfile is the nc file
 if [ $option_a -eq 0 ]
 then
-    set `nbspgoesr -i $ginputfile`
-    #
-    rc_nx=$1
-    rc_ny=$2
-    #
-    rc_lon1=$5
-    rc_lat1=$6
-    rc_lon2=$7
-    rc_lat2=$8
-else
-    set `awk 'NR == 1 {print; exit}' $rc_ascfile`; rc_nx=$2
-    set `awk 'NR == 2 {print; exit}' $rc_ascfile`; rc_ny=$2
-    set `awk 'NR == 3 {print; exit}' $rc_ascfile`; rc_lon1=$2
-    set `awk 'NR == 4 {print; exit}' $rc_ascfile`; rc_lat1=$2
-    set `awk 'NR == 5 {print; exit}' $rc_ascfile`; _cellsize=$2
-    #
-    rc_lon2=`echo $rc_lon1 + $rc_nx \* ${_cellsize} | bc`
-    rc_lat2=`echo $rc_lat1 + $rc_ny \* ${_cellsize} | bc`
+    [ $option_r -eq 0 ] && nbspgoesrgis -a $rc_ascfile $ginputfile
+    [ $option_r -eq 1 ] && nbspgoesrgis -r -a $rc_ascfile $ginputfile
 fi
+
+# Extract the parameters from the asc file
+set `awk 'NR == 1 {print; exit}' $rc_ascfile`; rc_nx=$2
+set `awk 'NR == 2 {print; exit}' $rc_ascfile`; rc_ny=$2
+set `awk 'NR == 3 {print; exit}' $rc_ascfile`; rc_lon1=$2
+set `awk 'NR == 4 {print; exit}' $rc_ascfile`; rc_lat1=$2
+set `awk 'NR == 5 {print; exit}' $rc_ascfile`; _cellsize=$2
+#
+rc_lon2=`echo $rc_lon1 + $rc_nx \* ${_cellsize} | bc`
+rc_lat2=`echo $rc_lat1 + $rc_ny \* ${_cellsize} | bc`
 
 # Write out the (default) map template if one was not specified in the cmd line
 [ $option_m -eq 0 ] && { make_map_in; }
@@ -323,9 +330,6 @@ make_map
 
 # Exit if -D was set
 [ $option_D -eq 1 ] && { exit 0; }
-
-# Create the asc file if the inputfile is the nc file
-[ $option_a -eq 0 ] && nbspgoesrgis -a $rc_ascfile $ginputfile
 
 # Create the png
 map2img -m $gmapfile -o $goutputfile
