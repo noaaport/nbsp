@@ -28,7 +28,7 @@
 #
 # In the simplest use,
 #
-#   nbspglgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
+#   nbspgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
 #
 # will produce the png file through the following steps:
 #

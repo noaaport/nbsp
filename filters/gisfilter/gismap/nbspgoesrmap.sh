@@ -29,7 +29,7 @@
 #
 # In the simplest use,
 #
-#   nbspglgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
+#   nbspgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
 #
 # will produce the png file through the following steps:
 #
@@ -223,7 +223,7 @@ f_keep_map_in=0
 #
 # main
 #
-usage="usage: nbspglgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]\
+usage="usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]\
  [-m user_map_template] [-o output_file] <ncfile>"
 
 option_a=0
