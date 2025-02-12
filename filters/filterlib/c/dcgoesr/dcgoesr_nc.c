@@ -470,9 +470,6 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
    */
   calc_boundingbox(gp);
 
-
-
-
   *goesr = gp;
   
   return(status);
