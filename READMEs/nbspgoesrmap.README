@@ -10,7 +10,7 @@
 # in the defnition of the location of the "geodata" and "mapfonts" directories.]
 #
 # Usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]
-#                     [-m user_map_template] [-o output_file] <ncfile>
+#        [-m user_map_template] [-o output_file] [-s size] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
 # is the netcdf file (e.g., tire05_20250116_1256.goesr)
@@ -21,10 +21,11 @@
 # -D => writeout the map and exit (can be edited and submitted to map2img)
 # -k => keep all tmp files generated (asc, map and map template)
 # -r => the inputfile is an OR_ABI rather than a tixx noaaport file.
-# -f => mapfonts dir (default is /usr/local/share/nbsp/defaults/mapfonts)
-# -g => geodata dir (default is /usr/local/share/nbsp/defaults/geodata)
+# -f => mapfonts dir (default is /usr/local/share/nbspgislib/mapfonts)
+# -g => geodata dir (default is /usr/local/share/nbspgislib/geodata)
 # -m => specify a map template to use (it is not deleted even if -k is not set)
 # -o => output (png) file
+# -s => set the max value of the greater between height and width in the map
 #
 # In the simplest use,
 #

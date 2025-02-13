@@ -11,7 +11,7 @@
 # in the defnition of the location of the "geodata" and "mapfonts" directories.]
 #
 # Usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]
-#                     [-m user_map_template] [-o output_file] <ncfile>
+#        [-m user_map_template] [-o output_file] [-s size] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
 # is the netcdf file (e.g., tire05_20250116_1256.goesr)
@@ -22,10 +22,11 @@
 # -D => writeout the map and exit (can be edited and submitted to map2img)
 # -k => keep all tmp files generated (asc, map and map template)
 # -r => the inputfile is an OR_ABI rather than a tixx noaaport file.
-# -f => mapfonts dir (default is /usr/local/share/nbspgislib/defaults/mapfonts)
-# -g => geodata dir (default is /usr/local/share/nbspgislib/defaults/geodata)
+# -f => mapfonts dir (default is /usr/local/share/nbspgislib/mapfonts)
+# -g => geodata dir (default is /usr/local/share/nbspgislib/geodata)
 # -m => specify a map template to use (it is not deleted even if -k is not set)
 # -o => output (png) file
+# -s => set the max value of the greater between height and width in the map
 #
 # In the simplest use,
 #
@@ -70,7 +71,7 @@ log_msg(){
 
     if [ $gbackground -eq 1 ]
     then
-        logger -t emftp "$1"
+        logger -t nbspgoesrmap "$1"
     else
         echo "$1"
     fi
@@ -130,7 +131,7 @@ make_map_in () {
 MAP 
     UNITS  DD
     EXTENT rc_lon1 rc_lat1 rc_lon2 rc_lat2
-    SIZE rc_nx rc_ny
+    SIZE rc_sx rc_sy
     IMAGETYPE png
     IMAGECOLOR 0 0 0
     # FONTSET "${gmapfontsdir}/fonts.list"
@@ -190,6 +191,8 @@ make_map () {
 	-e "/rc_lat2/ s||$rc_lat2|" \
 	-e "/rc_nx/ s||$rc_nx|" \
 	-e "/rc_ny/ s||$rc_ny|" \
+	-e "/rc_sx/ s||$rc_sx|" \
+	-e "/rc_sy/ s||$rc_sy|" \
 	-e "/rc_ascfile/ s||$rc_ascfile|" \
 	$gmapfile_in > $gmapfile
 }
@@ -202,6 +205,9 @@ gmapfontsdir="%MYSHAREDIR%/defaults/mapfonts"
 gmapfile="goesr.map"
 gmapfile_in="goesr.map.in"	# can be overriden in cmd line
 
+# default value of map2img MAXSIZE
+MAP2IMG_MAXSIZE=4096
+
 # options
 gbackground=0
 
@@ -213,6 +219,8 @@ rc_lat2=
 rc_nx=
 rc_ny=
 rc_ascfile=
+rc_sx=
+rc_sy=
 #
 ginputfile=
 goutputfile=
@@ -224,7 +232,7 @@ f_keep_map_in=0
 # main
 #
 usage="usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]\
- [-m user_map_template] [-o output_file] <ncfile>"
+ [-m user_map_template] [-o output_file] [-s size] <ncfile>"
 
 option_a=0
 option_C=0
@@ -233,8 +241,9 @@ option_k=0
 option_r=0
 option_m=0
 option_o=0
+option_s=$MAP2IMG_MAXSIZE
 
-while getopts ":hbaCDkrf:g:m:o:" option
+while getopts ":hbaCDkrf:g:m:o:s:" option
 do
     case $option in
         h) echo "$usage"; exit 0;;
@@ -250,6 +259,9 @@ do
 	r) option_r=1;;		# the inputfile is an OR_ABI nc file
         m) gmapfile_in=$OPTARG; option_m=1;;
 	o) goutputfile=$OPTARG; option_o=1;;
+	s) option_s=$OPTARG
+	   [ $option_s -gt $MAP2IMG_MAXSIZE ] &&
+	       { log_err_quit "max val of -s is $MAP2IMG_MAXSIZE"; };;
         \?) echo "Unsupported option $OPTARG"; exit 1;;
         :) echo "Missing value option $OPTARG"; exit 1;;
     esac
@@ -300,9 +312,9 @@ trap cleanup HUP INT QUIT ABRT KILL ALRM TERM EXIT
 # rc_lon1=$5
 # rc_lat1=$6
 # rc_lon2=$7
-#rc_lat2=$8
+# rc_lat2=$8
 #
-# is simpler but would invove reading the nc file twice (here and then
+# is simpler but would involve reading the nc file twice (here and then
 # to create the asc file) and for large files it would be costly.
 
 # Create the asc file if the inputfile is the nc file
@@ -310,6 +322,7 @@ if [ $option_a -eq 0 ]
 then
     [ $option_r -eq 0 ] && nbspgoesrgis -a $rc_ascfile $ginputfile
     [ $option_r -eq 1 ] && nbspgoesrgis -r -a $rc_ascfile $ginputfile
+    [ $? -ne 0 ] && exit 1
 fi
 
 # Extract the parameters from the asc file
@@ -319,14 +332,33 @@ set `awk 'NR == 3 {print; exit}' $rc_ascfile`; rc_lon1=$2
 set `awk 'NR == 4 {print; exit}' $rc_ascfile`; rc_lat1=$2
 set `awk 'NR == 5 {print; exit}' $rc_ascfile`; _cellsize=$2
 #
-rc_lon2=`echo $rc_lon1 + $rc_nx \* ${_cellsize} | bc`
-rc_lat2=`echo $rc_lat1 + $rc_ny \* ${_cellsize} | bc`
+rc_lon2=`echo "$rc_lon1 + $rc_nx * ${_cellsize}" | bc`
+rc_lat2=`echo "$rc_lat1 + $rc_ny * ${_cellsize}" | bc`
+#
+# The (default) SIZE parameter in the map.
+#
+rc_sx=$rc_nx
+rc_sy=$rc_ny
+#
+# If the larger of width and height is greater than the maximum, renormalize.
+# The maximum is given in option_s, which is what was set with [-s] or
+# the map2img default.
+#
+_sg=$rc_sy
+[ $rc_sx -gt $rc_sy ] && { _sg=$rc_sx; } # _sg is the larger of width and height
+
+if [ ${_sg} -gt $option_s ]
+then
+    rc_sx=`echo "$rc_sx * $option_s/${_sg}"  | bc`
+    rc_sy=`echo "$rc_sy * $option_s/${_sg}"  | bc`
+fi
 
 # Write out the (default) map template if one was not specified in the cmd line
 [ $option_m -eq 0 ] && { make_map_in; }
 
 # Create the map
 make_map
+[ $? -ne 0 ] && exit 1
 
 # Exit if -D was set
 [ $option_D -eq 1 ] && { exit 0; }
