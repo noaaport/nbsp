@@ -320,9 +320,13 @@ trap cleanup HUP INT QUIT ABRT KILL ALRM TERM EXIT
 # Create the asc file if the inputfile is the nc file
 if [ $option_a -eq 0 ]
 then
-    [ $option_r -eq 0 ] && nbspgoesrgis -a $rc_ascfile $ginputfile
-    [ $option_r -eq 1 ] && nbspgoesrgis -r -a $rc_ascfile $ginputfile
-    [ $? -ne 0 ] && exit 1
+    _status=0
+    [ $option_r -eq 0 ] && { nbspgoesrgis -a $rc_ascfile $ginputfile;
+			     _status=$?; }
+    [ $option_r -eq 1 ] && { nbspgoesrgis -r -a $rc_ascfile $ginputfile;
+			     _status=$?; }
+
+    [ ${_status} -eq 1 ] && { exit 1; }
 fi
 
 # Extract the parameters from the asc file
