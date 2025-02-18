@@ -199,8 +199,14 @@
   to support the case in which several external programs are inserting
   files in nbsp, like ldm (craftinsert) and npemwin (nbspfilter).
 
-2.3.p6
+2.3.9p6
 - Revised inventory filter (as explained in the inventory.tcl script itself)
   to keep the finfo list of the files received in memory and writing
   it to the inventory (log) file at once, rather than keeping the file
   opened and writing the finfo as each file is processed.
+
+2.3.9r2
+- Added the goesr decoders
+  - nbspgoesr, nbspgoesrgis (in the filterslib) to produce png or gis
+    files, respectively
+  - nbspgoesrmap (in gisfilter) to add map outlines (via map2img)

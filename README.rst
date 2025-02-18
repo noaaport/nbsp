@@ -29,7 +29,7 @@ notification system when particular files are received, or to fit
 specific customized storage, backup and retrieval schemes.
 
 Nbsp can distribute the files through the network in various formats,
-including standad http and ftp channels, or the QBT (Quick Block
+including standad http and ftp channels, or the (old) QBT (Quick Block
 Transfer *byte blaster*) format used by emwin (pure text bulletins
 as well as jpg satellite images and gif radar images). It has the
 capability to distribute the files by nntp, via an inn news gateway,
