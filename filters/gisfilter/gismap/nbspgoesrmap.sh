@@ -42,7 +42,7 @@
 #
 #    to create the asc file that will be used in the map2img map file.
 #    If [-a] is given this step is omitted.
-
+#
 # 3) Determine the extent and size to be used in the "map2img" map file
 #    from the asc file.
 #
@@ -96,15 +96,17 @@ log_err_quit(){
 
 cleanup(){
 
-    # if -k was set then don't delete anything
+    # The map template is removed unless the flag is set (via -D)
+    [ $f_keep_map_in -eq 0 ] && { rm -f $gmapfile_in; }
+    
+    # If -k was set then don't delete anything else
     [ $option_k -eq 1 ] && { return; }
 
     # The asc file is removed if it was created
     [ $option_a -eq 0 ] && rm -f $rc_ascfile
 
-    # The map and template are not removed if the flag is set
+    # The map is removed unless the flag is set (via -C)
     [ $f_keep_map -eq 0 ] && { rm -f $gmapfile; }
-    [ $f_keep_map_in -eq 0 ] && { rm -f $gmapfile_in; }
 }
 
 sanity_check() {
@@ -201,9 +203,10 @@ make_map () {
 ggeodatadir="%MYSHAREDIR%/defaults/geodata"
 gmapfontsdir="%MYSHAREDIR%/defaults/mapfonts"
 
-# default name of map files
-gmapfile="goesr.map"
+# default name of map files (the map file name is derived from the inputfile)
 gmapfile_in="goesr.map.in"	# can be overriden in cmd line
+gmapfile_ext="map"
+gmapfile=			
 
 # default value of map2img MAXSIZE
 MAP2IMG_MAXSIZE=4096
@@ -282,6 +285,9 @@ name=`basename $name`
 
 # -a and -r conflict
 [ $option_a -eq 1 -a $option_r -eq 1 ] && { echo "-r,-a conflict"; exit 1; }  
+
+# the mapfile name is derived from the input file name
+gmapfile="${name}.${gmapfile_ext}"
 
 # If [-a] was set then the input file is the asc file
 if [ $option_a -eq 0 ]
