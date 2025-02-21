@@ -58,6 +58,6 @@ and
 with the appropriate updates to the relevant filters
 (e.g., **rstfilter, dafilter**). No external applications (e.g., Gempak or such)
 are required. Some usage guidelines and easily reproducible
-examples are in the <em>nbspgislibmap</em>
+examples are in the *nbspgislibmap*
 `wiki
 <https://bitbucket.org/noaaport/nbspgislibmap/wiki>`_.
