@@ -48,9 +48,16 @@ The processing of the satellite files has been updated,
 in particular the processing of the Goes-R files.
 The current version (**nbsp-2.3.9r**) produces images directly
 (and "automatically") from the data files, by means of new programs
-**nbspgoesr** and **nbspgoesrinfo** (and corresponding libraries),
+**nbspgoesr** and **nbspgoesrinfo** (and corresponding libraries
+`nbspgislib
+<https://bitbucket.org/noaaport/nbspgislib>`_
+and
+`nbspgislibmap
+<https://bitbucket.org/noaaport/nbspgislibmap>`_
+)
 with the appropriate updates to the relevant filters
 (e.g., **rstfilter, dafilter**). No external applications (e.g., Gempak or such)
-are required. Links to some sample images (and example scripts)
-will be posted here soon.
-
+are required. Some usage guidelines and easily reproducible
+examples are in the <em>nbspgislibmap</em>
+`wiki
+<https://bitbucket.org/noaaport/nbspgislibmap/wiki>`_.
