@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>	/* isnan */
 #include "err.h"
 #include "dcgoesr.h"
 
@@ -24,10 +25,12 @@ static int dcgoesr_csv_write_data(FILE *fp, struct dcgoesr_point_map_st *pm){
   struct dcgoesr_point_st *point = pm->points;
   size_t i;
 
+  /* exclude points that point to space */
   for(i = 0; i < pm->numpoints; ++i){
-    if(fprintf(fp, "%.3f,%.3f,%d\n", point->lon, point->lat, point->level) < 0)
-      return(-1);
-    
+    if((isnan(point->lon) == 0) && (isnan(point->lat) == 0))
+      if(fprintf(fp, "%f,%f,%d\n", point->lon, point->lat, point->level) < 0)
+	return(-1);
+
     ++point;
   }
 

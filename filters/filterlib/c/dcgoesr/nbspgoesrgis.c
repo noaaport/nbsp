@@ -114,6 +114,7 @@ static void output_dbf(void);
 static void output_info(void);
 static void output_csv(void);
 static void output_asc(void);
+static void check_optional_output_files(void);
 
 int main(int argc, char **argv){
 
@@ -220,7 +221,7 @@ int main(int argc, char **argv){
       /* g.opt_csv = 1; */
       /* g.opt_asc = 1; */
   }
-
+  
   if(g.opt_background == 1)
     set_usesyslog();
 
@@ -230,6 +231,8 @@ int main(int argc, char **argv){
     log_errx(1, "Requires one argument.");
   
   g.opt_inputfile = argv[optind++];
+
+  check_optional_output_files();
 
   init();
   atexit(cleanup);
@@ -358,35 +361,43 @@ static void output_shp(void) {
   int f_free_shp = 0;
   int f_free_shx = 0;
 
-  if(g.opt_shpfile != NULL)
-    shpfile = g.opt_shpfile;
-  else if(g.opt_shp != 0) {
-    if(g.opt_basename != NULL)
-      shpfile = dcgoesr_name(g.opt_basename, DCGOESR_SHPEXT);
-      
-    if(shpfile == NULL)
-      log_err(1, "shp output file could not be set or not specified");
-    else
-      f_free_shp = 1;
-  }
+  if((g.opt_shp != 0) && (g.opt_shpfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "shp output file not specified.");
+
+  if((g.opt_shx != 0) && (g.opt_shxfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "shx output file not specified.");
   
-  if(g.opt_shxfile != NULL)
-    shxfile = g.opt_shxfile;
-  else if(g.opt_shx != 0) {
-    if(g.opt_basename != NULL)
+  if(g.opt_shp != 0) {
+    if(g.opt_shpfile != NULL) {
+      shpfile = g.opt_shpfile;
+    } else {
+      shpfile = dcgoesr_name(g.opt_basename, DCGOESR_SHPEXT);      
+      if(shpfile == NULL)
+	log_err(1, "shp output file could not be set.");
+      else
+	f_free_shp = 1;
+    }
+  }
+
+  if(g.opt_shx != 0) {
+    if(g.opt_shxfile != NULL) {
+      shxfile = g.opt_shxfile;
+    } else {
       shxfile = dcgoesr_name(g.opt_basename, DCGOESR_SHXEXT);
+      if(shxfile == NULL) {
+	status = 1;
+	log_err(0, "shx output file could not be set.");
+      } else
+	f_free_shx = 1;
+    }
+  }
 
-    if(shxfile == NULL) {
-      if(f_free_shp == 1)
-	free(shpfile);
-
-      log_err(1, "shx output file could not be set or not specified");
-    } else
-      f_free_shx = 1;
+  if(status == 0) {
+    status = dcgoesr_shp_write(shpfile, shxfile, &g.goesr->pmap);
+    if(status != 0)
+      log_errx(0, "Error in dcgoesr_shp_write()");
   }
   
-  status = dcgoesr_shp_write(shpfile, shxfile, &g.goesr->pmap);
-
   if(f_free_shp)
     free(shpfile);
 
@@ -394,7 +405,7 @@ static void output_shp(void) {
     free(shxfile);
 
   if(status != 0)
-    log_errx(1, "Error in dcgoesr_shp_write()");
+    log_errx(1, "Aborting.");
 }
 
 static void output_dbf(void) {
@@ -402,15 +413,16 @@ static void output_dbf(void) {
   int status = 0;
   char *dbffile = NULL;
   int f_free_dbf = 0;
-  
+
+  if((g.opt_dbffile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "dbf output file not specified.");
+
   if(g.opt_dbffile != NULL)
     dbffile = g.opt_dbffile;
   else{
-    if(g.opt_basename != NULL)
-      dbffile = dcgoesr_name(g.opt_basename, DCGOESR_DBFEXT);
-
+    dbffile = dcgoesr_name(g.opt_basename, DCGOESR_DBFEXT);
     if(dbffile == NULL)
-      log_err(1, "dbf output file could not be set or not specified");
+      log_err(1, "dbf output file could not be set.");
     else
       f_free_dbf = 1;
   }
@@ -429,15 +441,16 @@ static void output_info(void) {
   int status = 0;
   char *infofile = NULL;
   int f_free_info = 0;
-  
-  if(g.opt_infofile != NULL)
-    infofile = g.opt_infofile;
-  else{
-    if(g.opt_basename != NULL)
-      infofile = dcgoesr_name(g.opt_basename, DCGOESR_INFOEXT);
 
+  if((g.opt_infofile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "info output file not specified.");
+
+  if(g.opt_infofile != NULL)
+    infofile = g.opt_ascfile;
+  else{
+    infofile = dcgoesr_name(g.opt_basename, DCGOESR_INFOEXT);
     if(infofile == NULL)
-      log_err(1, "info output file could not be set or not specified");
+      log_err(1, "info output file could not be set.");
     else
       f_free_info = 1;
   }
@@ -456,15 +469,16 @@ static void output_csv(void) {
   int status = 0;
   char *csvfile = NULL;
   int f_free_csv = 0;
-  
-  if(g.opt_csvfile != NULL)
-    csvfile = g.opt_csvfile;
-  else{
-    if(g.opt_basename != NULL)
-      csvfile = dcgoesr_name(g.opt_basename, DCGOESR_CSVEXT);
 
+  if((g.opt_csvfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "csv output file not specified.");
+
+  if(g.opt_csvfile != NULL)
+     csvfile = g.opt_csvfile;
+  else{
+    csvfile = dcgoesr_name(g.opt_basename, DCGOESR_CSVEXT);
     if(csvfile == NULL)
-      log_err(1, "csv output file could not be set or not specified");
+      log_err(1, "csv output file could not be set.");
     else
       f_free_csv = 1;
   }
@@ -483,15 +497,16 @@ static void output_asc(void) {
   int status = 0;
   char *ascfile = NULL;
   int f_free_asc = 0;
-  
+
+  if((g.opt_ascfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "asc output file not specified.");
+
   if(g.opt_ascfile != NULL)
     ascfile = g.opt_ascfile;
   else{
-    if(g.opt_basename != NULL)
-      ascfile = dcgoesr_name(g.opt_basename, DCGOESR_ASCEXT);
-
+    ascfile = dcgoesr_name(g.opt_basename, DCGOESR_ASCEXT);
     if(ascfile == NULL)
-      log_err(1, "asc output file could not be set or not specified");
+      log_err(1, "asc output file could not be set.");
     else
       f_free_asc = 1;
   }
@@ -505,3 +520,25 @@ static void output_asc(void) {
     log_errx(1, "Error in dcgoesr_asc_write()");
 }
 
+static void check_optional_output_files(void) {
+  
+  /* Check output options */
+
+  if((g.opt_shp != 0) && (g.opt_shpfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "shp output file not specified.");
+
+  if((g.opt_shx != 0) && (g.opt_shxfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "shx output file not specified.");
+  
+  if((g.opt_dbf != 0) && (g.opt_dbffile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "dbf output file not specified.");
+
+  if((g.opt_info != 0) && (g.opt_infofile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "No info file specified");
+
+  if((g.opt_asc != 0) && (g.opt_ascfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "No asc file specified");
+
+  if((g.opt_csv != 0) && (g.opt_csvfile == NULL) && (g.opt_basename == NULL))
+    log_errx(1, "No csv file specified");
+}

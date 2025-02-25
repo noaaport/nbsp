@@ -240,6 +240,10 @@ static void calc_boundingbox(struct goesr_st *gp) {
     if(isnan(pm->points[i].lon) || isnan(pm->points[i].lat))
       continue;
 
+    /* XXX
+    fprintf(stdout, "%f,%f\n", gp->pmap.points[i].lon, pm->points[i].lat);
+    */
+
     if(pm->points[i].lon < pm->lon_min)
       pm->lon_min = pm->points[i].lon;
 
@@ -310,11 +314,11 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   struct goesr_st *gp;
   int xid, yid, cmiid, xdimid, ydimid;
   int nx, ny;		/* size of x and y */
-  int Npoints;		/* nx*ny */
+  size_t Npoints;	/* nx*ny */
   size_t data_size;	/* total size of the data */
   size_t ndim;		/* for getting nx, ny from nc functions */ 
   int i, j;		/* loop indexes x[i], y[j] */
-  int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
+  size_t k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   double lon, lat, lorigin;	/* for the conversion x,y -> lon,lat */
   int status;
 
@@ -451,6 +455,13 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
       xy2lonlat(gp->x[i], gp->y[j], &lon, &lat, lorigin); /* lon,lat in rads */
       gp->pmap.points[k].lon = lon*DEG_PER_RAD;
       gp->pmap.points[k].lat = lat*DEG_PER_RAD;
+      /* XXX
+      if((isnan(gp->pmap.points[k].lon) == 0) &&
+	 (isnan(gp->pmap.points[k].lat) == 0)) {
+	fprintf(stdout, "%f,%f\n",
+		gp->pmap.points[k].lon, gp->pmap.points[k].lat);
+      }
+      */
     }
   }
 

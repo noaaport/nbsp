@@ -268,7 +268,7 @@ static void output(void) {
 static int output_csv(void) {
 
   int i, j;		/* loop indexes x[i], y[j] */
-  int k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
+  size_t k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   int status = 0;
   double lon, lat, cmi;
 
@@ -281,9 +281,11 @@ static int output_csv(void) {
       lat = g.goesr->pmap.points[k].lat;
       cmi = g.goesr->cmi[k];
 
-      if(fprintf(g.fp, "%.3f,%.3f,%.3f\n", lon, lat, cmi) < 0) {
-	status = -1;
-	goto end;
+      if((isnan(lon) == 0) && (isnan(lat) == 0)) {
+	if(fprintf(g.fp, "%f,%f,%f\n", lon, lat, cmi) < 0) {
+	  status = -1;
+	  goto end;
+	}
       }
     }
   }

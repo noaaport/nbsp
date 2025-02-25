@@ -41,7 +41,7 @@
 struct goesr_st {
   int nx;	/* size of x */
   int ny;	/* size of y */
-  int Npoints;	/* nx*ny */
+  size_t Npoints;	/* nx*ny */
   size_t data_size; /* total size of the data */
   double lorigin; /* for the x,y -> lon,lat conversion */
   double *data;	/* data storage */
