@@ -105,10 +105,21 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
       gmap->lon_max -= rlon_max;
       gmap->lat_max -= rlat_max;
     }else{
-      gmap->lon_min = rlon_min;
-      gmap->lat_min = rlat_min;
-      gmap->lon_max = rlon_max;
-      gmap->lat_max = rlat_max;
+      /* 
+       * Set them to the ones specified, but only if they reduce
+       * the default rectangle set above.
+       */
+      if(rlon_min > gmap->lon_min)
+	gmap->lon_min = rlon_min;
+
+      if(rlat_min > gmap->lat_min)
+	gmap->lat_min = rlat_min;
+
+      if(rlon_max < gmap->lon_max)
+	gmap->lon_max = rlon_max;
+
+      if(rlat_max < gmap->lat_max)
+	gmap->lat_max = rlat_max;
     }
   }
 
