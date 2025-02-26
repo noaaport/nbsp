@@ -20,12 +20,12 @@
  *
  * The default action is the same as specifying "-FOPX" (excluding csv, asc).
  *
- * When -A is specified (asc format) the [-s] can be used to specify the
+ * When -A or -a is specified (asc format) the [-s] can be used to specify the
  * coordinates of the bounding box to use. The default is the "maximum
  * enclosing rectangle" The argument to the "-r" option is a string of
  * the form "lon1,lat1,lon2,lat2". For example,
  *
- *   nbspgoesrgis -A -s "-75,16,-64,24" tire05.nc
+ *   nbspgoesrgis -a tire05.asc -s "-75,16,-64,24" tire05.nc
  *
  * specifies the rectangle
  *
@@ -37,7 +37,7 @@
  * rectangle. For example, to shrink the left hand side of a tire file
  * by 5 degrees
  *
- *    nbspgoesgis -A -t -s "5,0,0,0" tire05.nc
+ *    nbspgoesgis -a tire05.asc -t -s "5,0,0,0" tire05.nc
  *
  * Negative values will have the net effect of expanding the rectangle.
  */

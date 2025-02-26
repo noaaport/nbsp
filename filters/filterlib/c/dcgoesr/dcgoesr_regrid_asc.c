@@ -99,7 +99,7 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
     }
 
     if(f_llur_str_diff != 0){
-      /* shrink the rectangle by the specified amouns */
+      /* shrink the rectangle by the specified amounts */
       gmap->lon_min += rlon_min;
       gmap->lat_min += rlat_min;
       gmap->lon_max -= rlon_max;
