@@ -7,5 +7,5 @@
 #
 
 lappend _npstats(devices) {
-     mydomain.mynovra novra_s75.tml
+     mydomain.mynovra novra_s300.tml
 }
