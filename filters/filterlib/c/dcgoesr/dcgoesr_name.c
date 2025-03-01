@@ -15,28 +15,28 @@
 char *dcgoesr_name(char *base, char *suffix){
 
   char *fname;
-  int fname_size;
+  int fname_length;
   int n;
 
   assert(base != NULL);
   if(base == NULL)
     return(NULL);
 
-  fname_size = strlen(base);
+  fname_length = strlen(base);
 
   if(suffix != NULL)
-    fname_size += strlen(suffix);
+    fname_length += strlen(suffix);
 
-  fname = malloc(fname_size + 1);	/* include the '\0' */
+  fname = malloc(fname_length + 1);	/* include the '\0' */
   if(fname == NULL)
     return(NULL);
 
   if(suffix != NULL)
-    n = snprintf(fname, fname_size + 1, "%s%s", base, suffix);
+    n = snprintf(fname, fname_length + 1, "%s%s", base, suffix);
   else
-    n = snprintf(fname, fname_size + 1, "%s", base);
+    n = snprintf(fname, fname_length + 1, "%s", base);
 
-  assert(n == fname_size);
+  assert(n == fname_length);
 
   return(fname);
 }
