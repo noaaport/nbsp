@@ -25,7 +25,7 @@ HEADERS = err.h util.h unz.h mfile.h io.h misc.h \
 
 TARGET_DCNIDS = nbspradinfo nbspradgis
 TARGET_DCGINI = nbspsat nbspsatinfo nbspsatgis
-TARGET_DCGOESR = nbspgoesr nbspgoesrinfo nbspgoesrgis
+TARGET_DCGOESR = nbspgoesr nbspgoesrinfo nbspgoesrgis nbspgoesrasc
 TARGET = nbspfile nbspcat nbsppipe nbspunz nbspz \
 	nbspgrib nbspgrib2 \
 	nbsprad2info \
@@ -97,6 +97,7 @@ ${TARGET_DCGOESR}:
 	mv dcgoesr/nbspgoesr .
 	mv dcgoesr/nbspgoesrinfo .
 	mv dcgoesr/nbspgoesrgis .
+	mv dcgoesr/nbspgoesrasc .
 
 install:
 	${INSTALL} -m 755 ${TARGET} ${BINDIR}

@@ -12,6 +12,7 @@ bin/nbspsatgis
 bin/nbspgoesr
 bin/nbspgoesrinfo
 bin/nbspgoesrgis
+bin/nbspgoesrasc
 bin/nbspradinfo
 bin/nbsprad2info
 bin/nbspradgis

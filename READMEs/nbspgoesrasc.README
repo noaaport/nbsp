@@ -1,0 +1,35 @@
+/*
+ * $Id$
+ *
+ * Usage:
+ * nbspgoesrasc [-b] [-e <inputstr>] [-f <inputfile>] [-n <basename>] <ascfile>
+ *
+ * -b => background
+ * -e => input string, for example "-70,14,-60,24,1" (conflicts with -f)
+ * -f => input strings read from the file (conflicts with -e)
+ * -n => basename for the output files (default is "output")
+ *
+ * Example:
+ *
+ * Given a file like
+ *
+ * OR_ABI-L1b-RadF-M6C01_G16_s20243411710207_e20243411719515_c20243411719563.nc
+ *
+ * (call it <file>.nc) then first create the asc file
+ *
+ *   nbspgoesrgis -a <file<.asc -r <file>.nc
+ *
+ * The -r option tells nbspgoesrgis that the nc file is an OR_ABI file
+ * rather than a noaaport tixxnn file. Then to "cut" the asc file
+ *
+ *   nbspgoesrasc -e "-70,12,-60,22,1" <file>.asc
+ *
+ * will produce the file "output001.asc" with the coordinates limited
+ * by the rectangle "-70,12,-60,22". The "1" at the end defines the
+ * the index of the output file name. In addition the [-n] can be
+ * used to set the basename of the output; for example
+ *
+ *   nbspgoesrasc -e "-70,12,-60,22,9" -n zone <file>.asc
+ *
+ * will produce the file with the same contents, but named "zone009.asc".
+ */

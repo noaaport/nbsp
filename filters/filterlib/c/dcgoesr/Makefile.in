@@ -5,8 +5,8 @@
 #
 # $Id$
 #
-TARGET = nbspgoesr nbspgoesrinfo nbspgoesrgis
-TARGET_OBJECTS = nbspgoesr.o nbspgoesrinfo.o nbspgoesrgis.o
+TARGET = nbspgoesr nbspgoesrinfo nbspgoesrgis nbspgoesrasc
+TARGET_OBJECTS = nbspgoesr.o nbspgoesrinfo.o nbspgoesrgis.o nbspgoesrasc.o
 
 GOESR_OBJECTS = nbspgoesr.o ${COMMON_OBJECTS} \
 	dcgoesr_nc.o dcgoesr_xy2lonlat.o dcgoesr_png.o
@@ -16,6 +16,7 @@ GOESRGIS_OBJECTS = nbspgoesrgis.o ${COMMON_OBJECTS} \
 	dcgoesr_shp.o dcgoesr_dbf.o dcgoesr_csv.o \
 	dcgoesr_asc.o dcgoesr_regrid_asc.o \
 	dcgoesr_info.o dcgoesr_name.o
+GOESRASC_OBJECTS = nbspgoesrasc.o ${COMMON_OBJECTS}
 
 GOESR_LIBS = -lm -lnetcdf -lpng
 GOESRINFO_LIBS = -lnetcdf
@@ -74,6 +75,9 @@ nbspgoesrinfo: ${GOESRINFO_OBJECTS}
 
 nbspgoesrgis: ${GOESRGIS_OBJECTS}
 	${CC} -o nbspgoesrgis ${GOESRGIS_OBJECTS} ${LDFLAGS} ${GOESRGIS_LIBS}
+
+nbspgoesrasc: ${GOESRASC_OBJECTS}
+	${CC} -o nbspgoesrasc ${GOESRASC_OBJECTS}
 
 clean:
 	rm -f *~ Makefile ${TARGET} ${ALL_OBJECTS} ${COMMON_SOURCES}
