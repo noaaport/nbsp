@@ -19,4 +19,4 @@ libexec/nbsp/tclupperair
 share/nbsp
 share/nbsp/dist
 share/doc/nbsp
-man/man1
+share/man/man1

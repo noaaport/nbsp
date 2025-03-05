@@ -304,7 +304,7 @@ etc/nbsp/dist/start-cleanup.conf-sample
 share/nbsp/dist/radmos-share.tgz
 share/nbsp/dist/geodata-share.tgz
 share/nbsp/dist/mapfonts-share.tgz
-man/man1/nbspd.1.gz
+share/man/man1/nbspd.1.gz
 share/doc/nbsp/LICENSE
 share/doc/nbsp/nbspd.sh-sample
 share/doc/nbsp/macosx-launchd.plist-sample
