@@ -1,14 +1,19 @@
 /*
+ * Copyright (c) 2025 Jose F. Nieves <nieves@ltp.uprrp.edu>
+ *
+ * See LICENSE
+ *
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-f <inputfile>] [-n <basename>] <ascfile>
+ * nbspgoesrasc [-b] [-e <inputstr>] [-n <basename>] ascfile
+ * nbspgoesrasc [-b] [-n <basename>] ascfile  < inputstr_list
  *
  * -b => background
  * -e => input string, for example "-70,14,-60,24,1" (conflicts with -f)
- * -f => input strings read from the file (conflicts with -e)
  * -n => basename for the output files (default is "output")
- *
+ * If -e is not given the program reads the input strings from stdin.
+ * 
  * Example:
  *
  * Given a file like
@@ -17,7 +22,7 @@
  *
  * (call it <file>.nc) then first create the asc file
  *
- *   nbspgoesrgis -a <file<.asc -r <file>.nc
+ *   nbspgoesrgis -a <file>.asc -r <file>.nc
  *
  * The -r option tells nbspgoesrgis that the nc file is an OR_ABI file
  * rather than a noaaport tixxnn file. Then to "cut" the asc file

@@ -6,13 +6,14 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-f <inputfile>] [-n <basename>] <ascfile>
+ * nbspgoesrasc [-b] [-e <inputstr>] [-n <basename>] ascfile
+ * nbspgoesrasc [-b] [-n <basename>] ascfile  < inputstr_list
  *
  * -b => background
  * -e => input string, for example "-70,14,-60,24,1" (conflicts with -f)
- * -f => input strings read from the file (conflicts with -e)
  * -n => basename for the output files (default is "output")
- *
+ * If -e is not given the program reads the input strings from stdin.
+ * 
  * Example:
  *
  * Given a file like
@@ -21,7 +22,7 @@
  *
  * (call it <file>.nc) then first create the asc file
  *
- *   nbspgoesrgis -a <file<.asc -r <file>.nc
+ *   nbspgoesrgis -a <file>.asc -r <file>.nc
  *
  * The -r option tells nbspgoesrgis that the nc file is an OR_ABI file
  * rather than a noaaport tixxnn file. Then to "cut" the asc file
@@ -63,9 +64,11 @@
 #include "err.h"
 
 /* If FNAMEFMT is changed, check fname_length in the function init() */
+/* MAXINDEX is 99 if the format is %02d */
 #define DCGOESR_GRID_MAP_NODATA -1
 #define DCGOESRASC_OUTPUT_BASENAME "output"
 #define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d%s"
+#define DCGOESRASC_MAXINDEX	99
 #define DCGOESRASC_OUTPUT_SUFFIX ".asc"
 
 struct cutasc_st {
@@ -91,7 +94,6 @@ struct cutasc_st {
 struct {
   int opt_background;		/* -b */
   char *opt_inputstr;		/* -e */
-  char *opt_inputfile;		/* -f */
   char *opt_basename;           /* -n */
   char *opt_ascfile;		/* the input asc data file */
   /* variables */
@@ -99,16 +101,15 @@ struct {
   int outfname_length;		/* length of the output file name */
   struct cutasc_st *ca;
   int *data;
-  FILE *infp;			/* fp of input file (-f option) */
-} g = {0, NULL, NULL, DCGOESRASC_OUTPUT_BASENAME, NULL,
-       NULL, 0, NULL, NULL, NULL};
+} g = {0, NULL, DCGOESRASC_OUTPUT_BASENAME, NULL,
+       NULL, 0, NULL, NULL};
 
 static void init(void);
 static void cleanup(void);
 static void load_data(void);
 static int cutasc_write_data(FILE *fp);
 static int process_str(char *str);
-static int process_file(char *file);
+static int process_stdin(void);
 static int process_input(int index);
 
 static void init(void) {
@@ -116,7 +117,6 @@ static void init(void) {
   int fname_length;
   
   g.data = NULL;
-  g.infp = NULL;
 
   g.ca = malloc(sizeof(struct cutasc_st));
   if(g.ca == NULL)
@@ -136,9 +136,6 @@ static void cleanup(void) {
   if(g.data != NULL)
     free(g.data);
 
-  if(g.infp != NULL)
-    fclose(g.infp);
-
   if(g.ca != NULL)
     free(g.ca);
 
@@ -148,8 +145,8 @@ static void cleanup(void) {
 
 int main(int argc, char **argv){
 
-  char *optstr = "be:f:n:";
-  char *usage = "nbspgoesrasc [-b] [-e <inputstr>] [-f <inputfile>]"
+  char *optstr = "be:n:";
+  char *usage = "nbspgoesrasc [-b] [-e <inputstr>]"
     " [-n <basename>] <ascfile>";
   int status = 0;
   int c;
@@ -164,9 +161,6 @@ int main(int argc, char **argv){
     case 'e':
       g.opt_inputstr = optarg;
       break;
-    case 'f':
-      g.opt_inputfile = optarg;
-      break;
     case 'n':
       g.opt_basename = optarg;
       break;      
@@ -180,11 +174,6 @@ int main(int argc, char **argv){
   if(g.opt_background == 1)
     set_usesyslog();
 
-  if((g.opt_inputstr != NULL) && (g.opt_inputfile != NULL))
-    log_errx(1, "%s", "Options -e and -f conflict.");
-  else if((g.opt_inputstr == NULL) && (g.opt_inputfile == NULL))
-    log_errx(1, "%s", "One of -e and -f must be given.");
-  
   if(optind < argc - 1)
     log_errx(1, "Too many arguments.");
   else if(optind > argc -1)
@@ -200,7 +189,7 @@ int main(int argc, char **argv){
   if(g.opt_inputstr != NULL)
     status = process_str(g.opt_inputstr);
   else {
-    status = process_file(g.opt_inputfile);
+    status = process_stdin();
   }
 
   return(status != 0 ? 1 : 0);
@@ -322,10 +311,11 @@ static int process_str(char *str) {
 
   if(sscanf(str, "%lf,%lf,%lf,%lf,%d",
 	   &g.ca->xmin, &g.ca->ymin, &g.ca->xmax, &g.ca->ymax, &index) != 5) {
-    log_errx(1, "Incomplete input string: %s", str);
+    log_errx(0, "Incomplete input string: %s", str);
   }
 
-  status = process_input(index);
+  if(status == 0)
+    status = process_input(index);
 
   return(status);
 }
@@ -345,8 +335,14 @@ static int process_input(int index) {
      (g.ca->ymin < g.ca->yll) ||
      (g.ca->xmax > xur) ||
      (g.ca->ymax > yur)) {
-    log_errx(1, "Box exceeds original: %f,%f,%f,%f",
+    log_errx(0, "Box exceeds original: %f,%f,%f,%f",
 	     g.ca->xmin, g.ca->ymin, g.ca->xmax, g.ca->ymax);
+    return(1);
+  }
+
+  if(index > DCGOESRASC_MAXINDEX) {
+    log_errx(0, "The zone index %d exceeds %d",  index, DCGOESRASC_MAXINDEX);
+    return(1);
   }
   
   /*
@@ -368,9 +364,11 @@ static int process_input(int index) {
   assert(n == g.outfname_length);
 
   fp = fopen(g.outputfile, "w");
-  if(fp == NULL)
-    log_err(1, "Cannot open %s", g.outputfile);
-
+  if(fp == NULL) {
+    log_err(0, "Cannot open %s", g.outputfile);
+    return(-1);
+  }
+  
   status = cutasc_write_data(fp);
   if(status != 0) {
     log_err(0, "Error writing to %s", g.outputfile);
@@ -381,33 +379,44 @@ static int process_input(int index) {
   return(status);
 }
 
+static int process_stdin(void) {
 
-static int process_file(char *file) {
-
-  int index;
-  int n;
+  char *line = NULL;
+  size_t line_size = 0;
+  ssize_t line_len;
   int status = 0;
 
-  fprintf(stdout, "%s\n", file);
+  while(status == 0) {
+    line_len = getline(&line, &line_size, stdin);
+    
+    if(line_len == -1) {
+      status = -1;
+      break;
+    }
+    
+    if(line[line_len - 1] == '\n'){
+      line[line_len - 1] = '\0';
+      --line_len;
+    }
 
-  g.infp = fopen(file, "r");
-  if(g.infp == NULL)
-    log_err(1, "Cannot open %s", file);
+    /* blank lines */
+    if(line_len == 0)
+      continue;
 
-  do {
-    n = fscanf(g.infp, "%lf,%lf,%lf,%lf,%d ",
-	       &g.ca->xmin, &g.ca->ymin, &g.ca->xmax, &g.ca->ymax, &index);
-    if(n == 5)
-      status = process_input(index);
-    else
-      status = 1;
+    /* comment lines */
+    if(line[0] == '#')
+      continue;
 
-  } while(status == 0);
+    status = process_str(line);
+  }
+  
+  if(status != 0) {
+    if(ferror(stdin) != 0)
+      log_err(0, "%s", "Error from getline");
+  } else
+    log_errx(0, "Error procsssing %s", line);
 
-  fclose(g.infp);
-
-  if((status != 0) && (n != EOF))
-    log_errx(1, "Incomplete input string");
+  free(line);
   
   return(status);
 }
