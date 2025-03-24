@@ -28,7 +28,7 @@
   of noaaport by the IANNA global ip's.
 
   The new versions of mcast.{c,h} were also copied to the
-  nbsp and to the npmcast repos.
+  nbsp/src and to the tools/nbspmcast directories.
 
 cd mcast-oldest; ls -l (this is the original)
 =============================================
