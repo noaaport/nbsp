@@ -254,13 +254,17 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
 
   int status = 0;
   int sfd = -1;
-  u_char off = 0;
+  /* u_char off = 0; */
 
   sfd = udp_client(host_name, service_port, sa_ptr, sa_len, gai_code);
   if(sfd < 0)
     return(-1);
 
-  status = setsockopt(sfd, IPPROTO_IP, IP_MULTICAST_LOOP, &off, sizeof(off));
+  /*
+   * (see mcast_snd_setloop() below
+   * status = setsockopt(sfd, IPPROTO_IP, IP_MULTICAST_LOOP, &off, sizeof(off));
+   */
+
   /*
    * To specify an interface other than the default, we have to call setsockopt
    * again with IP_MULTICAST_IF (See, Stevens, Vol. 1, p. 497).
@@ -276,6 +280,10 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
   if(status == 0)
     status = mcast_snd_setttl(sfd, ttl);
 
+  /*
+   * If we want to send and receive in the same machine (e.g., using the
+   * send and recv test programs) we have to set this to 1.
+   */
   if(status == 0)
     status = mcast_snd_setloop(sfd, 0);
 

@@ -1,0 +1,4 @@
+The same instructions for "recv" apply. However, "send" and "recv"
+must be executed in different machines (in the version of mcast_snd)
+used here by default (with multicast loop set to off). See the comment
+in mcast_snd() in mcast.c

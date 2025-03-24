@@ -62,8 +62,8 @@ static int loop(int s, struct sockaddr *sa, socklen_t sa_len){
   if(uname(&name) != 0)
     err(1, "uname()");
   
-  snprintf(buf, MAXLINE + 1, "%s: %d\n", name.nodename, getpid());
-  fprintf(stdout, "%s", buf);
+  snprintf(buf, MAXLINE + 1, "%s: %d", name.nodename, getpid());
+  fprintf(stdout, "%s\n", buf);
   n = sendto(s, buf, MAXLINE, 0, sa, sa_len);
   if(n == -1)
     err(1, "sendto");
@@ -72,6 +72,3 @@ static int loop(int s, struct sockaddr *sa, socklen_t sa_len){
 
   return(status);
 }
-
-
-

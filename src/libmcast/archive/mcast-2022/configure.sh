@@ -9,8 +9,3 @@ template="Makefile.freebsd"
 
 cp $template Makefile
 
-for f in mcast.c mcast.h
-do
-    cp ../mcast-llvm/${f} .
-done
-
