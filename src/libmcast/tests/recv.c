@@ -94,7 +94,8 @@ static int loop(int s, socklen_t sa_len){
   if(n == -1)
     err(1, "recvfrom");
 
-  fprintf(stdout, "From %s\n %d\n", sock_ntop(sa), (int)n);
+  buf[n] = '\0';
+  fprintf(stdout, "From %s: %s %d\n", sock_ntop(sa), buf, (int)n);
 
   return(status);
 }
