@@ -1,0 +1,11 @@
+Given nx, ny, the nbspgoesr tools require a memory at leat of order
+
+sizeof(double) * nx * ny
+
+So, for example, for an OR_ABI file with
+
+  nx = ny = 10848
+
+this implies at least ~ 1GB.
+
+
