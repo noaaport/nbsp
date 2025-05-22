@@ -10,14 +10,26 @@ sat_bundle_clear;
 rad_bundle_clear;
 
 #
-# sat - example
+# sat gini - example (Thu May 22 12:02:39 AST 2025 - no longer used)
 #
-# sat_bundle_add {tig(a|e|h|i|w|p|q)0[1-5],!tiga05};
-# sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "csv";
-# sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "shp,shx,dbf,info,csv";
+## sat_bundle_add {tig(a|e|h|i|w|p|q)0[1-5],!tiga05};
+## sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "csv";
+## sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "shp,shx,dbf,info,csv";
+#
+
+#
+# sat goesr - examples
+#
+# sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
+# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
+# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "asc";
+#
 
 #
 # rad - examples
+#
+# rad_bundle_add {n0r} "csv";
+# rad_bundle_add {n[0-3](r|s)jua};
 #
 # This will create n0r shapefiles for a bunch of stations in tx
 #
@@ -58,4 +70,4 @@ if {[file exists $_f]} {
     source $_f;
 }
 
-unset _f;
+unset -nocomplain _f;

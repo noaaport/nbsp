@@ -19,7 +19,7 @@ SAMPLES =	gisfilter.conf-sample \
 
 DEFAULTS =	gisfilter-bundle.conf-defaults
 
-FILTERLIBFILES = gislib-sat.tcl \
+FILTERLIBFILES = gislib-sat-goesr.tcl \
 		gislib-rad.tcl \
 		gislib-rad2.tcl \
 		gislib-latest.tcl \

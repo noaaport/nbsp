@@ -6,34 +6,40 @@ proc filter_sat {rc_varname} {
     global gisfilter;
     upvar $rc_varname rc;
 
-    filter_sat_create_gini rc;
+    # only work with goesr files
+    set _goesr_regex  {ti(r|s|u),!tir(s|t)00}; # exclude glm
+    if {[filterlib_uwildmat ${_goesr_regex} $rc(wmoid)] == 0} {
+	return;
+    }
+
+    filter_sat_create_goesr rc;
 
     foreach bundle $gisfilter(sat_bundlelist) {
 	set regex $gisfilter(sat_bundle,$bundle,regex);
 	if {[filterlib_uwildmat $regex $rc(wmoid)] == 0} {
 	    continue;
 	}
-	filter_sat_convert_gini rc $bundle;
+	filter_sat_convert_goesr rc $bundle;
     }
 }
 
-proc filter_sat_create_gini {rc_varname} {
+proc filter_sat_create_goesr {rc_varname} {
     #
-    # Write the gini file
+    # Write a copy of the data (goesr)  file
     #
     global gisfilter;
     upvar $rc_varname rc;
 
-    set data_savedir [subst $gisfilter(sat_outputfile_dirfmt,gini)];
-    set data_savename [subst $gisfilter(sat_outputfile_namefmt,gini)];
+    set data_savedir [subst $gisfilter(sat_outputfile_dirfmt,goesr)];
+    set data_savename [subst $gisfilter(sat_outputfile_namefmt,goesr)];
 
     file mkdir $data_savedir;
     set data_path [file join $data_savedir $data_savename];
     set datafpath [file join $gisfilter(datadir) $data_path];
 
     set status [catch {
-        # Sat files do not have a ccb
-	file copy -force $rc(fpath) $data_path;
+	# See comment in filter_sat{} in dalib-sat.tcl
+	exec tail -n +2 $rc(fpath) > $data_path
     } errmsg];
 
     if {$status != 0} {
@@ -45,19 +51,19 @@ proc filter_sat_create_gini {rc_varname} {
     filter_sat_insert_inventory $data_savedir $datafpath;
     make_sat_latest $data_savedir $data_savename;
 
-    # Reuse the rc(fpath) variable to point to the newly created gini file.
+    # Reuse the rc(fpath) variable to point to the newly created goesr file.
     set rc(fpath) $datafpath;
 }
 
-proc filter_sat_convert_gini {rc_varname bundle} {
+proc filter_sat_convert_goesr {rc_varname bundle} {
 
     global gisfilter;
     upvar $rc_varname rc;
 
     set fmtlist $gisfilter(sat_bundle,$bundle,fmt);
-    set ginifpath $rc(fpath);
+    set goesrfpath $rc(fpath);
 
-    # nbspsatgis command line options
+    # nbspgoesrgis command line options
     set option(asc) "-a";
     set option(dbf) "-f";
     set option(info) "-o";
@@ -80,7 +86,7 @@ proc filter_sat_convert_gini {rc_varname bundle} {
 	}
     }
 
-    set cmd [concat [list nbspunz $ginifpath | nbspsatgis -b] $cmd_options];
+    set cmd [concat [list nbspgoesrgis -b] $cmd_options $goesrfpath];
 
     set status [catch {
 	eval exec $cmd;

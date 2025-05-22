@@ -3,9 +3,8 @@
 #
 
 # These functions are need in the filter in order to create the latest
-# file for the data (gini) file. The nbspwct program has its own copy
-# of the function in order to create the link for the data files produced
-# by WCT.
+# file for the data file. The nbspwct program has its own copy of the function
+# in order to create the link for the data files produced by WCT.
 
 proc make_rad_latest {savedir savename {level2flag 0}} {
 
