@@ -236,10 +236,11 @@ proc rad_bundle_clear {} {
 # If fmt is not specified, then defaults to "shp,shx,dbf,info"
 #
 # Thu May 22 12:07:49 AST 2025 (these tig entries are no longer used)
-#
 ### sat_bundle_add {tig(e|w)};
 ### sat_bundle_add {tig(e|w)} "shp,shx,dbf,info,csv";
 ### sat_bundle_add {tig(e|w)} "asc";
+#
+# sat goesr examples
 #
 # sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
 # sat_bundle_add {ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";

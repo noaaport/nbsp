@@ -446,7 +446,7 @@ static void output_info(void) {
     log_errx(1, "info output file not specified.");
 
   if(g.opt_infofile != NULL)
-    infofile = g.opt_ascfile;
+    infofile = g.opt_infofile;
   else{
     infofile = dcgoesr_name(g.opt_basename, DCGOESR_INFOEXT);
     if(infofile == NULL)

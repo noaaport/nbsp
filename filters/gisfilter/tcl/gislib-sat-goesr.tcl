@@ -6,12 +6,6 @@ proc filter_sat {rc_varname} {
     global gisfilter;
     upvar $rc_varname rc;
 
-    # only work with goesr files
-    set _goesr_regex  {ti(r|s|u),!tir(s|t)00}; # exclude glm
-    if {[filterlib_uwildmat ${_goesr_regex} $rc(wmoid)] == 0} {
-	return;
-    }
-
     filter_sat_create_goesr rc;
 
     foreach bundle $gisfilter(sat_bundlelist) {
