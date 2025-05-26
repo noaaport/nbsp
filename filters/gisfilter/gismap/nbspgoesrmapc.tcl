@@ -18,7 +18,7 @@
 #       So this program is effective only for creating the "latest" image.
 #
 # Examples: nbspgoesrcmapc tire05 (no map included)
-#           nbspgoesrcmapc -l end-3,end tire05  (the last three)
+#           nbspgoesrcmapc -l end-3,end tire05  (the last four)
 #           nbspgoesrcmapc -g tire05 (produces gif)
 #           nbspgoesrcmapc -m tire05 (includes the map)
 # 

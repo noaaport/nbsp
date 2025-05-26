@@ -69,7 +69,7 @@ nbspgoesrmap: nbspgoesrmap.sh
 	-e /%MYSHAREDIR%/s##${MYSHAREDIR}# nbspgoesrmap.sh > nbspgoesrmap
 
 nbspgoesrmapc: nbspgoesrmapc.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspgissatmap.tcl > nbspgissatmap
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgoesrmapc.tcl > nbspgoesrmapc
 
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample
