@@ -1,0 +1,30 @@
+- Mon May 26 12:00:09 AST 2025
+
+The tools for goesr, analogous to the tools nbspsatmap and nbspsatmapc
+in "rstfilter/satmap" (which use gempak), are nbspgoesrmap and nbspgoesrmapc.
+To be more specific:
+
+- filterslib/c
+  nbspsat => png from gini         
+  nbspsatgis => gis files from gini
+
+  nbspgoesr => png from nc
+  nbspgoesrgis => gis files from nc
+
+- gisfilter/gismap
+  * nbspgismap => png maps from shp (data setup under "digatmos/sat/...")
+                (general, does not know what map templates to use.)
+  nbspgissatmap => png maps from gini (same data setup; built-in templates)
+      * nbspgismap <required options> tige01
+      nbspgissatmap <options> tige01
+     
+  nbspgoesrmap => png maps from nc files or asc files
+  nbspgoesrmapc <wmoid> => (uses the last or some with -n).
+    calls nbspgoesr or nbspgoesrmap depending on cmdline switch [-m]
+    creates images and/or loops
+    (Includes the functionality of nbspgissatmap)
+
+- rstfilter/satmap (uses gempak)
+  nbspsatmap => gif/png/loops maps from gini file
+  nbspsatmapc => gif/png/loops maps from wmoid (data setup "digatmos/sat/...")
+  (The equivalent functionality is included in nbspgoesrmap and nbspgoesrmapc)

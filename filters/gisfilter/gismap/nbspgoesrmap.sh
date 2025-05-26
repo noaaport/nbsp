@@ -10,17 +10,24 @@
 # package under the name "nbspglgoesrmap" with the only difference been
 # in the defnition of the location of the "geodata" and "mapfonts" directories.]
 #
-# Usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]
+# Usage: nbspgoesrmap [-baCDknr] [-f mapfontsdir] [-g geodatadir]
 #        [-m user_map_template] [-o output_file] [-s size] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
 # is the netcdf file (e.g., tire05_20250116_1256.goesr)
+#
+# In the simple case:
+#   nbspgoesrmap tire05_20250116_1256.goesr (outout to stdout)
+#   nbspgoesrmap -n tire05_20250116_1256.goesr
+#     (outout to tire05_20250116_1256.png
+#   nbspgoesrmap -o t.png  tire05_20250116_1256.goesr (output to t.png)
 #
 # -b => background
 # -a => the inputfile is the asc file instead of the netcdf file
 # -C => writeout the map template and exit (can be edited and submitted with -m)
 # -D => writeout the map and exit (can be edited and submitted to map2img)
 # -k => keep all tmp files generated (asc, map and map template)
+# -n => write to a file (rootname plus .png extension, or name given with [-o])
 # -r => the inputfile is an OR_ABI rather than a tixx noaaport file.
 # -f => mapfonts dir (default is /usr/local/share/nbspgislib/mapfonts)
 # -g => geodata dir (default is /usr/local/share/nbspgislib/geodata)
@@ -234,19 +241,20 @@ f_keep_map_in=0
 #
 # main
 #
-usage="usage: nbspgoesrmap [-baCDkr] [-f mapfontsdir] [-g geodatadir]\
+usage="usage: nbspgoesrmap [-baCDknr] [-f mapfontsdir] [-g geodatadir]\
  [-m user_map_template] [-o output_file] [-s size] <ncfile>"
 
 option_a=0
 option_C=0
 option_D=0
 option_k=0
+option_n=0
 option_r=0
 option_m=0
 option_o=0
 option_s=$MAP2IMG_MAXSIZE
 
-while getopts ":hbaCDkrf:g:m:o:s:" option
+while getopts ":hbaCDknrf:g:m:o:s:" option
 do
     case $option in
         h) echo "$usage"; exit 0;;
@@ -259,9 +267,10 @@ do
 	f) gmapfontsdir=$OPTARG;;
 	g) ggeodatadir=$OPTARG;;
         k) option_k=1;;
+	n) option_n=1;;
 	r) option_r=1;;		# the inputfile is an OR_ABI nc file
         m) gmapfile_in=$OPTARG; option_m=1;;
-	o) goutputfile=$OPTARG; option_o=1;;
+	o) goutputfile=$OPTARG; option_o=1; option_n=1;;
 	s) option_s=$OPTARG
 	   [ $option_s -gt $MAP2IMG_MAXSIZE ] &&
 	       { log_err_quit "max val of -s is $MAP2IMG_MAXSIZE"; };;
@@ -297,12 +306,11 @@ else
     rc_ascfile=$ginputfile
 fi
 
-# Originally the default output file name was derived from the
-# input file. The default now is stdout, unless set with -o.
-# In this way this program script can be used as a filter (e.g.,
-# to feed the output to netpbm).
-## set the default outputfile if it was not set in the command line
-## [ $option_o -eq 0 ] && goutputfile="${name}.png"
+# outputfile
+# The default is stdout. If [-n] is given then the output is written
+# to the file name derived from the input file (rootname.png),
+# or to the file given with [-o]. Giving [-o] implies [-n].
+[ $option_n -eq 1 -a $option_o -eq 0 ] && goutputfile="${name}.png"
 
 # checks
 sanity_check
