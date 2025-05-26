@@ -7,9 +7,11 @@
 #
 @include@ @q@../../../Makefile.inc@q@
 
-TCLTARGET =	nbspgismap nbspgisbundlemap nbspgisradmap nbspgissatmap
+TCLTARGET =	nbspgismap nbspgisbundlemap nbspgisradmap nbspgissatmap \
+		nbspgoesrmapc
 TCLSOURCES =	nbspgismap.tcl nbspgisbundlemap.tcl \
-		nbspgisradmap.tcl nbspgissatmap.tcl
+		nbspgisradmap.tcl nbspgissatmap.tcl \
+		nbspgoesrmapc.tcl
 SHTARGET =	nbspgoesrmap
 SHSOURCES =	nbspgoesrmap.sh
 
@@ -65,6 +67,9 @@ nbspgissatmap: nbspgissatmap.tcl
 nbspgoesrmap: nbspgoesrmap.sh
 	sed -e /%SHELL%/s##${SHELL}# \
 	-e /%MYSHAREDIR%/s##${MYSHAREDIR}# nbspgoesrmap.sh > nbspgoesrmap
+
+nbspgoesrmapc: nbspgoesrmapc.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspgissatmap.tcl > nbspgissatmap
 
 gismap-bundle.conf-sample: gismap-bundle.conf
 	cp gismap-bundle.conf gismap-bundle.conf-sample

@@ -48,6 +48,7 @@
 /usr/local/bin/nbspgisradmap
 /usr/local/bin/nbspgissatmap
 /usr/local/bin/nbspgoesrmap
+/usr/local/bin/nbspgoesrmapc
 /usr/local/bin/nbspstatplot
 /usr/local/bin/nbspstatplot1
 /usr/local/bin/nbspstatplotdata

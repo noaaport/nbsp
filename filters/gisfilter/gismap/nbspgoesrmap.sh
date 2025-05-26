@@ -25,7 +25,7 @@
 # -f => mapfonts dir (default is /usr/local/share/nbspgislib/mapfonts)
 # -g => geodata dir (default is /usr/local/share/nbspgislib/geodata)
 # -m => specify a map template to use (it is not deleted even if -k is not set)
-# -o => output (png) file
+# -o => output (png) file; the default is stdout.
 # -s => set the max value of the greater between height and width in the map
 #
 # In the simplest use,
@@ -297,8 +297,12 @@ else
     rc_ascfile=$ginputfile
 fi
 
-# set the default outputfile if it was not set in the command line
-[ $option_o -eq 0 ] && goutputfile="${name}.png"
+# Originally the default output file name was derived from the
+# input file. The default now is stdout, unless set with -o.
+# In this way this program script can be used as a filter (e.g.,
+# to feed the output to netpbm).
+## set the default outputfile if it was not set in the command line
+## [ $option_o -eq 0 ] && goutputfile="${name}.png"
 
 # checks
 sanity_check
@@ -374,4 +378,9 @@ make_map
 [ $option_D -eq 1 ] && { exit 0; }
 
 # Create the png
-map2img -m $gmapfile -o $goutputfile
+if [ "$goutputfile" != "" ]
+then
+    map2img -m $gmapfile -o $goutputfile
+else
+    map2img -m $gmapfile
+fi
