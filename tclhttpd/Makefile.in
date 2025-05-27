@@ -131,4 +131,6 @@ lib/nbsp/nbsprss.tcl \
 lib/nbsp/functionsrss.tcl \
 lib/nbsp/nbspget.tcl \
 lib/nbsp/nbsprad.tcl \
-lib/nbsp/nbspsat.tcl
+lib/nbsp/nbspsat.tcl \
+lib/nbsp/nbspgoesr.tcl
+

@@ -25,17 +25,22 @@
 # This tool can create individual images and/or a loop from them.
 # [-l] The [-l] argument specifies a range of files to process from the list
 #      that are in the specified directory. When -L is not given, the default
-#      is "-l end,end". When -L is given, the default is "-l 0,end".
-#      If the value of -l is a single number n, then it is interpreted as
-#      end-n,end.
+#      is "-l end,end" (the "latest"). When -L is given, the default is
+#      "-l 0,end". If the value of -l is a single number n, then it is
+#      interpreted as end-n,end.
 # [-I] specifies the data directory; the default, for tire05 as example,
 #      is "sat/goesr/tir/tire05". If [-i] is given in addition to [-I],
 #      then the [-I] <goesr_subdir> argument is assumed to be relative to the
 #      dafilter data directory (/var/noaaport/data/digamos). If [-I] is not
 #      given, the program behaves as if [-i] is given.
 # [-o] The name of each output image is the basename of the data file, with the
-#      "png" extension. If -L is given then -o gives the name of the loop
-#       image file; the default is ${wmoid}.gif.
+#      "png" extension. The [-o] gives the name of the loop
+#      image file (the default is ${wmoid}.gif) when [-L] is given,
+#      or the name of the image file when generating the "latest"
+#      (neither -L nor -l is given).
+#      
+# [-d] Directory to put the output file (the default is the current directory.
+#
 # -g => gif format (-L => -g)
 # -L => create a loop from those images.
 # -K => if -L is specified, keep (do not delete) the individual images
@@ -57,6 +62,7 @@ set option(imgext) ".png";
 set option(loopext) ".gif";
 # example: sat/goesr/tir/tire05
 set option(default_I) [file join "sat" "goesr" {$g(wmoid02)} {$g(wmoid)}];
+set option(latest) 0; # set below depending on -L and -l
 
 proc log_warn s {
 
@@ -140,6 +146,7 @@ unset f;
 
 # variables
 set g(loopfile) "";
+set g(latestfile) "";
 set g(nbspgoesrimgprog) "nbspgoesr"; # or nbspgoesrmap if [-m] is given
 
 #
@@ -186,13 +193,18 @@ if {$option(l) eq ""} {
 	set option(l) "end-$rstfilter(satloop_count),end";
     } else {
 	set option(l) $option(range,$option(L));
+	if {$option(l) eq "end,end"} {
+	    set option(latest) 1;
+	}
     }
 }
 
-# default output file for the loop file
+# default output file for the loop
 append g(loopfile) $g(wmoid) $option(loopext);
+
 if {$option(o) ne ""} {
     set g(loopfile) $option(o);
+    set g(latestfile) $option(o);
 }
 
 # Get the data file extension
@@ -220,6 +232,11 @@ foreach f $flist {
 
     set goesrbasename [file rootname [file tail $goesrpath]];
     set outputpath [string cat ${goesrbasename} $option(imgext)];
+
+    if {($option(latest) == 1) && ($g(latestfile) ne "")} {
+	set outputpath $g(latestfile);
+    }
+
     if {$option(d) ne "" } {
 	set outputpath [file join $option(d) $outputpath];
     }

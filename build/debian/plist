@@ -387,6 +387,7 @@
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbspget.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbsprad.tcl
 /usr/local/libexec/nbsp/tclhttpd/nbsp/nbspsat.tcl
+/usr/local/libexec/nbsp/tclhttpd/nbsp/nbspgoesr.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/export.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope.tcl
 /usr/local/libexec/nbsp/tclhttpd/extensions/weatherscope/metar.tcl
