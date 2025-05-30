@@ -15,7 +15,6 @@ userdirs="/var/run/nbsp
 /var/noaaport/nbsp/db
 /var/noaaport/nbsp/dev
 /var/noaaport/nbsp/spool
-/var/noaaport/nbsp/cspool
 /var/noaaport/nbsp/tmp
 /var/noaaport/nbsp/inv
 /var/noaaport/nbsp/rss
