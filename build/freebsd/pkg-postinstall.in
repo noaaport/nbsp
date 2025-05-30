@@ -15,11 +15,11 @@ userdirs="/var/run/nbsp
 /var/noaaport/nbsp/spool
 /var/noaaport/nbsp/tmp
 /var/noaaport/nbsp/inv
-/var/noaaport/nbsp/rss
 /var/noaaport/nbsp/recover
 /var/noaaport/nbsp/stats
 /var/noaaport/data
 /var/noaaport/data/rst
+/var/noaaport/data/rss
 /var/noaaport/data/digatmos
 /var/noaaport/data/digatmos/nexrad/nids
 /var/noaaport/data/digatmos/nexrad/craft

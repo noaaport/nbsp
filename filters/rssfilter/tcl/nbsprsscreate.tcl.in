@@ -114,10 +114,13 @@ foreach p $cat_plist {
 	append rss(item,desc) " " $rss(item,STATION);
     } else {
         set rss(item,desc) $rssdef(prod,desc,unknown);
-#
-#	exec echo "$rss(item,title) $rss(item,station)" >> \
-#		"/var/noaaport/nbsp/rss/unknown.log";
-#
+	#
+	# This is an old comment - the rss directory now
+	# (Fri May 30 18:01:53 AST 2025) is "/var/noaaport/data/rss"
+	#
+	# exec echo "$rss(item,title) $rss(item,station)" >> \
+	#		"/var/noaaport/nbsp/rss/unknown.log";
+	#
     }
 
     append xml_body [subst $rss(txml,item)];

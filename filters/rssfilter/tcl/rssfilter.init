@@ -8,7 +8,7 @@ set rssfilter(prerc)    "";
 set rssfilter(postrc)   "";
 set rssfilter(localconfdirs) $common(localconfdirs);
 set rssfilter(rcdir)	[file join $common(rcdir) "rss"];
-set rssfilter(datadir)  [file join $common(nbspdir) "rss"];
+set rssfilter(datadir)  [file join $common(datadir) "rss"];
 #
 set rssfilter(hostport) "[info hostname]:8015";
 #
