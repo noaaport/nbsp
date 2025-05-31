@@ -148,7 +148,7 @@ MAP
  
     LAYER
 	NAME sat-1
-	DATA rc_ascfile		# asc file
+	DATA "rc_ascfile"		# asc file
 	TYPE RASTER
 	STATUS ON
 	#TRANSPARENCY 100
