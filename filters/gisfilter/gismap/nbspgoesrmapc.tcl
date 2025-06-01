@@ -3,7 +3,7 @@
 # $Id$
 #
 # Usage: nbspgoesrmapc [-v] [-b] [-K] [-L] [-g] [-d <outputdir>]
-#       [-i] [-I <goesrsubdir>] [-l <first,last>] [-m] [-o <outputfile>] <wmoid>
+#	[-i] [-I] [-l <first,last>] [-m] [-o <outputfile>] <inputdir>
 #
 # This is the analog of nbspsatmapc (in rstfilter/gismap), but with
 # some differences. By default, it calls nbspgoesr, and therefore it does not
@@ -17,10 +17,10 @@
 #       a given wmoid do not correspond to the same "tile".
 #       So this program is effective only for creating the "latest" image.
 #
-# Examples: nbspgoesrcmapc tire05 (no map included)
-#           nbspgoesrcmapc -l end-3,end tire05  (the last four)
-#           nbspgoesrcmapc -g tire05 (produces gif)
-#           nbspgoesrcmapc -m tire05 (includes the map)
+# Examples: nbspgoesrcmapc tire05/pao (no map included)
+#           nbspgoesrcmapc -l end-3,end tire05/pao  (the last four)
+#           nbspgoesrcmapc -g tire05/pao (produces gif)
+#           nbspgoesrcmapc -m tire05/pao (includes the map)
 # 
 # This tool can create individual images and/or a loop from them.
 # [-l] The [-l] argument specifies a range of files to process from the list
@@ -28,14 +28,20 @@
 #      is "-l end,end" (the "latest"). When -L is given, the default is
 #      "-l 0,end". If the value of -l is a single number n, then it is
 #      interpreted as end-n,end.
-# [-I] specifies the data directory; the default, for tire05 as example,
-#      is "sat/goesr/tir/tire05". If [-i] is given in addition to [-I],
-#      then the [-I] <goesr_subdir> argument is assumed to be relative to the
-#      dafilter data directory (/var/noaaport/data/digamos). If [-I] is not
-#      given, the program behaves as if [-i] is given.
+# [-iI] In the default configuration, the program expects the command line
+#      argument to be of the form <wmoid/bbb>, e.g., "tire05/pao". Then
+#      the program constructs the input in two steps:
+#      (i) a data sub directory (for this example) as
+#      "sat/goesr/tir/tire05/pao".
+#      (ii) this subdirectory is assumed to be under the dafilter data
+#      directory "/var/noaaport/data/digamos".
+#      If [-I] is given, the command line argument <inputdir> is taken "as is".
+#      If the [-i] argument is given, then the
+#      "/var/noaaport/data/digamos" is prepended to the given <inputdir>
+#      
 # [-o] The name of each output image is the basename of the data file, with the
 #      "png" extension. The [-o] gives the name of the loop
-#      image file (the default is ${wmoid}.gif) when [-L] is given,
+#      image file (the default is ${wmoid}+${bbb}.gif) when [-L] is given,
 #      or the name of the image file when generating the "latest"
 #      (neither -L nor -l is given).
 #      
@@ -46,10 +52,10 @@
 # -K => if -L is specified, keep (do not delete) the individual images
 # -m => includes the map (uses map2img via nbspgoesrmap)
 
-set usage {nbspgoesrmapc [-b] [-v] [-K] [-L] [-g] [-m] [-d <outputdir>]
-    [-i] [-I <goesrsubdir>] [-l <first,last>] [-o <outputfile>] <wmoid>};
+set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-g] [-m] [-d <outputdir>]
+    [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
 
-set optlist {b v K L g i m {d.arg ""} {l.arg ""} {I.arg ""} {o.arg ""}};
+set optlist {b v I K L g i m {d.arg ""} {l.arg ""} {o.arg ""}};
 
 package require cmdline;
 
@@ -60,8 +66,9 @@ set option(range,0) "end,end";     # if option(L) == 0
 set option(range,1) "0,end";       # if option(L) == 1
 set option(imgext) ".png";
 set option(loopext) ".gif";
-# example: sat/goesr/tir/tire05
-set option(default_I) [file join "sat" "goesr" {$g(wmoid02)} {$g(wmoid)}];
+# example: sat/goesr/tir/tire05/pao for inputdir = "tire05/pao"
+set option(goesrsubdir_default) \
+    [file join "sat" "goesr" {$g(wmoid02)} {$g(inputdir)}];
 set option(latest) 0; # set below depending on -L and -l
 
 proc log_warn s {
@@ -145,8 +152,8 @@ foreach f [list "rstfilter.init" "dafilter.init"] {
 unset f;
 
 # variables
-set g(loopfile) "";
-set g(latestfile) "";
+set g(loopfile) "";	# determined dynamically below
+set g(latestfile) "";	# determined dynamically below
 set g(nbspgoesrimgprog) "nbspgoesr"; # or nbspgoesrmap if [-m] is given
 
 #
@@ -158,8 +165,9 @@ if {$argc < 1} {
     log_err $usage;
 }
 
-set g(wmoid) [lindex $argv 0];			# e.g., tire05
-set g(wmoid02) [string range $g(wmoid) 0 2];	# e.g., tir
+set g(inputdir) [lindex $argv 0];    # default is e.g., tire05/pao
+append g(loopfile) \
+    [string map {"/" "+"} $g(inputdir)] $option(loopext); # e.g., tire05+pao
 
 # [-L] requires that the output files be gif
 if {$option(L) == 1} {
@@ -174,12 +182,14 @@ if {$option(m) == 1} {
     set g(nbspgoesrimgprog) "nbspgoesrmap";
 }
 
-if {$option(I) eq ""} {
-    # use the default
-    eval set g(goesrsubdir) $option(default_I);
+if {$option(I) eq 0} {
+    # use the default, e.g., tire05/pao
+    set g(wmoid02) [string range $g(inputdir) 0 2];	# e.g., tir
+    eval set g(goesrsubdir) $option(goesrsubdir_default);
     set option(i) 1;
 } else {
-    set g(goesrsubdir) $option(I);
+    # use it as is
+    set g(goesrsubdir) $g(inputdir);
 }
 
 if {$option(i) != 0} {
@@ -198,9 +208,6 @@ if {$option(l) eq ""} {
 	}
     }
 }
-
-# default output file for the loop
-append g(loopfile) $g(wmoid) $option(loopext);
 
 if {$option(o) ne ""} {
     set g(loopfile) $option(o);
@@ -272,7 +279,7 @@ if {$option(L) == 0} {
     return;
 }
 
-set loopfile g(loopfile);
+set loopfile $g(loopfile);
 set loopdir $option(d);
 
 make_loop $output_flist $loopdir $loopfile;

@@ -26,10 +26,10 @@ set rstfilter(sat_inv_enable) 1;
 set rstfilter(sat_inv_image_types) {{"png" 0} {"gif" 0} {"jpg" 1}};
 #
 set rstfilter(txt_enable)	1;
-set rstfilter(txt_regex)	{.*};      # matched against subdirectory name
+set rstfilter(txt_regex)	{.*}; # matched against subdirectory name
 set rstfilter(txt_fext)		".txt";
 set rstfilter(txt_dirfmt)	{$rc(station)};
-set rstfilter(txt_namefmt)	{};        # blank => use the default
+set rstfilter(txt_namefmt)	{};   # blank => use the default (spool name)
 ## set rstfilter(txt_namefmt)	{$rc(wmoid)_$rc(awips)_$rc(wmotime).txt};
 set rstfilter(txt_urgent_enable) 1;
 set rstfilter(txt_eas_enable)	1;
@@ -78,8 +78,9 @@ set rstfilter(sat_goesr_datext)	".nc";
 set rstfilter(sat_goesr_keepnc)	0;	# 1 => keep the nc file
 set rstfilter(sat_goesr_latest_enable)	1; # make link to lattest img
 set rstfilter(sat_goesr_latestname)	"latest";
-set rstfilter(sat_goesr_namefmt)	{$rc(wmoid)_$rc(ymd_hm).png};
-set rstfilter(sat_goesr_dirfmt)	{[string range $rc(wmoid) 0 2]/$rc(wmoid)};
+set rstfilter(sat_goesr_namefmt) {$rc(wmoid)+$rc(nawips)_$rc(ymd_hm).png};
+set rstfilter(sat_goesr_dirfmt)	\
+    	{[string range $rc(wmoid) 0 2]/$rc(wmoid)/$rc(nawips)};
 
 #
 # radar

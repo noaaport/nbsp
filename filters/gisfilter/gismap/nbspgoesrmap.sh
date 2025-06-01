@@ -14,13 +14,13 @@
 #        [-m user_map_template] [-o output_file] [-s size] <ncfile>
 #
 # This is a (shell) script with no configuration file. The input <ncfile>
-# is the netcdf file (e.g., tire05_20250116_1256.goesr)
+# is the netcdf file (e.g., tire05+paf_20250116_1256.goesr)
 #
 # In the simple case:
-#   nbspgoesrmap tire05_20250116_1256.goesr (outout to stdout)
-#   nbspgoesrmap -n tire05_20250116_1256.goesr
-#     (outout to tire05_20250116_1256.png
-#   nbspgoesrmap -o t.png  tire05_20250116_1256.goesr (output to t.png)
+#   nbspgoesrmap tire05+paf_20250116_1256.goesr (output to stdout)
+#   nbspgoesrmap -n tire05+paf_20250116_1256.goesr
+#     (outout to tire05+paf_20250116_1256.png
+#   nbspgoesrmap -o t.png  tire05+paf_20250116_1256.goesr (output to t.png)
 #
 # -b => background
 # -a => the inputfile is the asc file instead of the netcdf file
@@ -37,7 +37,7 @@
 #
 # In the simplest use,
 #
-#   nbspgoesrmap <ncfile>  (e.g. tire05_20250116_1256.goesr)
+#   nbspgoesrmap <ncfile>  (e.g. tire05+paf_20250116_1256.goesr)
 #
 # will produce the png file through the following steps:
 #
