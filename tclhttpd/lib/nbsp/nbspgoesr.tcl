@@ -19,28 +19,51 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
     append result "<h1>Latest sat maps</h1>\n";
 
     # get the tix subdirs (exclude ixt), and for each get the tixxnn subdirs.
+    # tixlist will contain: tir tis tiz
     set tixlist [lsort [glob -directory $goesrdir -nocomplain -tails "ti*"]];
-    
+
     foreach tix $tixlist {
+
+	# tixxnnlist will be: tire01 tire02 ...
 	set tixxnnlist [lsort [glob -directory [file join $goesrdir $tix] \
 				  -nocomplain -tails "*"]];
 	foreach wmoid $tixxnnlist {
+	    set bbblist \
+		[lsort [glob -directory [file join $goesrdir $tix $wmoid] \
+				-nocomplain -tails "*"]];
+
 	    set wmoid [string trim $wmoid];
-	    set type [string range $wmoid 0 3]; # tire, tiur ...
-	    set code [string range $wmoid 4 5]; # the numeric code: 01, 02, ...
-	    lappend wmoidlist($type) $code;
+	    set type [string range $wmoid 0 3]; # type: tire, tirw, ...
+	    set code [string range $wmoid 4 5]; # code: 01, 02, ...
+	    
+	    lappend code_array_list($type) $code;
+	
+	    foreach bbb $bbblist {
+		lappend bbb_array_list($type,$code) $bbb;
+	    }
 	}
     }
-    
-    foreach type [array names wmoidlist] {
+
+    foreach type [lsort [array names code_array_list]] {
 	append result "<h3>[string toupper $type]</h3>\n";
-	foreach code $wmoidlist($type) {
-	    set code [string trim $code];
-	    set wmoid ${type}${code};
-	    set wmoid02 [string range $wmoid 0 2];
-	    if {[file isdirectory [file join $goesrdir $wmoid02 $wmoid]]} {
-		append result "<a href=display_goesrmap?wmoid=$wmoid&imgdir=$imgdir&outputname=$outputname&maxage=$maxage&loopflag=$loopflag>$code</a>\n";
+	foreach code $code_array_list($type) {
+	    append result "$code ";
+	    foreach bbb $bbb_array_list($type,$code) {
+		set wmoid ${type}${code};
+		
+		# the input dir to nbspgoesrmapc
+		set inputdir [file join $wmoid $bbb];
+
+		# its name relative to docroot
+		# prepend "digatmos/sat/goesr/$wmoid02"
+		set wmoid02 [string range $wmoid 0 2];
+		set subdir [file join $goesrdir $wmoid02 $inputdir];
+     
+		if {[file isdirectory $subdir]} {
+		    append result "<a href=display_goesrmap?wmoid=$wmoid&bbb=$bbb&imgdir=$imgdir&outputname=$outputname&maxage=$maxage&loopflag=$loopflag>$bbb</a>\n";
+		}
 	    }
+	    append result "<br>\n";
 	}
 	append result "<br>\n";
     }
@@ -51,10 +74,14 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
     return $result;
 }
 
-proc nbspgoesr/display_goesrmap {wmoid imgdir outputname maxage {loopflag 0}} {
+proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
+				     {loopflag 0}} {
 
     global Config;
 
+    set wmoidbbb ${wmoid}${bbb};
+    set inputdir [file join $wmoid $bbb];
+    
     ::html::init;
     append result [::html::head "Latest sat map"] "\n";
     append result [::html::bodyTag] "\n";
@@ -69,7 +96,7 @@ proc nbspgoesr/display_goesrmap {wmoid imgdir outputname maxage {loopflag 0}} {
 	return $result;
     }
 
-    set outputdir [file join $imgdir $wmoid];
+    set outputdir [file join $imgdir $wmoidbbb];
     file mkdir $outputdir;
 
     # Output is in $outputname in $outputdir
@@ -98,9 +125,9 @@ proc nbspgoesr/display_goesrmap {wmoid imgdir outputname maxage {loopflag 0}} {
     if {$recreate == 1} {
 	set status [catch {
 	    if {$loopflag == 0} {
-		exec nbspgoesrmapc -m -d $outputdir -o $outputname $wmoid;
+		exec nbspgoesrmapc -m -d $outputdir -o $outputname $inputdir;
 	    } else {
-		exec nbspgoesrmapc -L -m -d $outputdir -o $outputname $wmoid;
+		exec nbspgoesrmapc -L -m -d $outputdir -o $outputname $inputdir;
 	    }
 	} errmsg];
     }
@@ -108,10 +135,10 @@ proc nbspgoesr/display_goesrmap {wmoid imgdir outputname maxage {loopflag 0}} {
     _nbspgoesr_close_lockfile $fpathlock $lockF;    
 
     if {[file exists $fpathout] == 0} {
-	append result "Could not generate $wmoid map.";
+	append result "Could not generate $wmoidbbb map.";
     } else {
 	set fpathout_url [file join "/" $fpathout]; 
-	append result [::html::h1 "Latest $wmoid map"];
+	append result [::html::h1 "Latest $wmoidbbb map"];
 	append result "<img src=$fpathout_url>\n";
     }
     append result [::html::end];
