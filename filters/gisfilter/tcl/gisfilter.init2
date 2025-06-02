@@ -37,9 +37,9 @@ set gisfilter(sat_regex)  {ti(r|s|u),!tir(s|t)00}; # exclude glm
 set gisfilter(sat_latest_enable)        1; # make link to latest
 set gisfilter(sat_latestname)   "latest";   # without the extension
 set gisfilter(sat_namefmt) \
-    {$rc(wmoid)+$rc(nawips)_$rc(ymd_hm)}; # without the ext
+    {$rc(wmoid)$rc(nawips)_$rc(ymd_hm)}; # without the ext
 set gisfilter(sat_subdirfmt) \
-    {[string range $rc(wmoid) 0 2]/$rc(wmoid)/$rc(nawips)};
+    {[file join [string range $rc(wmoid) 0 2] $rc(wmoid) $rc(nawips)]};
 #
 set gisfilter(sat_outputfile_namefmt,goesr) "$gisfilter(sat_namefmt).goesr";
 set gisfilter(sat_outputfile_dirfmt,goesr) \
