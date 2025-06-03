@@ -38,55 +38,69 @@ dnl sat/gini/[subst $dafilter(archive_sat_dirfmt)],
 dnl [subst $dafilter(archive_sat_namefmt)])
 
 dnl
-dnl what used to be the gini files
-dnl Mon Jun  2 19:45:09 AST 2025 - as far as I can tell only the ti[ct]
-dnl files are used (and they do not have the same structure as the
-dnl the goesr files [e.g., nc variables, and header (no ppp)]).
+dnl First the specific ones
 dnl
-match_sat_ngini($rc(wmoid), ^ti[cdgt],
-sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_cdgt)])
-
-match_sat_archive($rc(wmoid), ^ti[cdgt],
-sat/other/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_cdgt)])
 
 dnl
 dnl polar
 dnl
 match_sat_ngini($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_tip)])
-
+#
 match_sat_archive($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_tip)])
+[subst $dafilter(archive_sat_namefmt_tip)],
+break;)
+
+dnl
+dnl ixt
+dnl
+match_sat_ngini($rc(wmoid), ^ixt,
+sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_ixt)])
+#
+match_sat_archive($rc(wmoid), ^ixt,
+sat/other/[subst $dafilter(archive_sat_dirfmt)],
+[subst $dafilter(archive_sat_namefmt_ixt)],
+break;)
 
 dnl
 dnl goesr - glm
 dnl
 match_sat_ngini($rc(wmoid), ^tir[st]00,
 sat/glm/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_glm)])
-
+#
 match_sat_archive($rc(wmoid), ^tir[st]00,
 sat/glm/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_glm)],
 break;)
 
 dnl
-dnl goesr - the rest
+dnl goesr - no need to exclude the glm because they been already catched
 dnl
 match_sat_ngini($rc(wmoid), ^ti[rsu],
 sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
-
+#
 match_sat_archive($rc(wmoid), ^ti[rsu],
 sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_goesr)])
+[subst $dafilter(archive_sat_namefmt_goesr)],
+break;)
 
-match_sat_ngini($rc(wmoid), ^ixt,
-sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_ixt)])
-
-match_sat_archive($rc(wmoid), ^ixt,
+dnl
+dnl the rest (what used to be the gini files (ti[cdgt]))
+dnl
+dnl Mon Jun  2 19:45:09 AST 2025
+dnl As far as I can tell only the ti[ct] files are used
+dnl (and they do not have the same structure as the
+dnl the goesr files [e.g., nc variables, and header (no ppp)]).
+dnl Instead of using ^ti[cdgt] we put simply ^ti to catch anything else that
+dnl has not been catched above.
+dnl
+match_sat_ngini($rc(wmoid), ^ti,
+sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_cdgt)])
+#
+match_sat_archive($rc(wmoid), ^ti,
 sat/other/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_ixt)])
+[subst $dafilter(archive_sat_namefmt_cdgt)])
 
-match_stop($rc(wmoid), ^ti)
-match_stop($rc(wmoid), ^ixt)
+match_stop($rc(wmoid), ^(ti|ixt))
+dnl match_stop($rc(wmoid), ^ixt)
