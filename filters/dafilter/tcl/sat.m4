@@ -17,6 +17,7 @@ dnl documents only ti[rs], but pqact.conf from
 dnl   "https://github.com/Unidata/awips2/blob/unidata_20.3.2/rpms/awips2.upc/\
 dnl    Installer.ldm/patch/etc/pqact.goesr"
 dnl also has tiu.
+dnl
 dnl glm - https://vlab.noaa.gov/web/towr-s/glm
 dnl That document (see "towr-s.pdf") states that the wmo header is
 dnl East: tirs00 knes ddhhmm pxx
@@ -38,13 +39,16 @@ dnl [subst $dafilter(archive_sat_namefmt)])
 
 dnl
 dnl what used to be the gini files
+dnl Mon Jun  2 19:45:09 AST 2025 - as far as I can tell only the ti[ct]
+dnl files are used (and they do not have the same structure as the
+dnl the goesr files [e.g., nc variables, and header (no ppp)]).
 dnl
 match_sat_ngini($rc(wmoid), ^ti[cdgt],
-sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
+sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_cdgt)])
 
 match_sat_archive($rc(wmoid), ^ti[cdgt],
-sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_goesr)])
+sat/other/[subst $dafilter(archive_sat_dirfmt)],
+[subst $dafilter(archive_sat_namefmt_cdgt)])
 
 dnl
 dnl polar
@@ -78,11 +82,11 @@ sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_goesr)])
 
 match_sat_ngini($rc(wmoid), ^ixt,
-sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
+sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_ixt)])
 
 match_sat_archive($rc(wmoid), ^ixt,
-sat/goesr/[subst $dafilter(archive_sat_dirfmt)],
-[subst $dafilter(archive_sat_namefmt_goesr)])
+sat/other/[subst $dafilter(archive_sat_dirfmt)],
+[subst $dafilter(archive_sat_namefmt_ixt)])
 
 match_stop($rc(wmoid), ^ti)
 match_stop($rc(wmoid), ^ixt)

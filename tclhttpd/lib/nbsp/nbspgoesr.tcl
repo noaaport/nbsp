@@ -18,9 +18,11 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
 
     append result "<h1>Latest sat maps</h1>\n";
 
-    # get the tix subdirs (exclude ixt), and for each get the tixxnn subdirs.
-    # tixlist will contain: tir tis tiz
-    set tixlist [lsort [glob -directory $goesrdir -nocomplain -tails "ti*"]];
+    # get the tix subdirs (exclude ixt or anything else), and for each get
+    # the tixxnn subdirs.
+    # tixlist will contain at most: tir tis tiu
+    set tixlist \
+	[lsort [glob -directory $goesrdir -nocomplain -tails ti{r,s,u}]];
 
     foreach tix $tixlist {
 

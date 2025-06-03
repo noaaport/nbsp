@@ -36,18 +36,22 @@ set dafilter(sat_latestname)	"latest";
 set dafilter(satuncompress)	0;
 set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 #
-# goesr abd glm usually have the bbb; but not all (e.g. some titx, ticf). For
-# that reason we do not use a separator as in "wmoid+bbb" but simply
+# ti[rsu] are supposed to have the bbb; (at least) some of the others
+# e.g. some titx, ticf, don't.
+# For that reason we do not use a separator as in "wmoid+bbb" but simply
 # wmoidbbb to avoid having either names like "titx38+_" or having to
 # use a function detect the absence of the bbb and not include the "+".
-# The viirs (tip) do not have the bbb, but just in case we include it.
 #
 set dafilter(sat_namefmt_tip) \
     {$rc(wmoid)$rc(nawips)_${ymd_hm}.viirs};  # or .nc.gz
 set dafilter(sat_namefmt_glm)	\
     {$rc(wmoid)$rc(nawips)_${ymd_hm}.glm}; # or .nc
 set dafilter(sat_namefmt_goesr) \
-    {$rc(wmoid)$rc(nawips)_${ymd_hm}.goesr}; # or .nc 
+    {$rc(wmoid)$rc(nawips)_${ymd_hm}.goesr}; # or .nc
+set dafilter(sat_namefmt_cdgt) \
+    {$rc(wmoid)$rc(nawips)_${ymd_hm}}; # no extension, or .nc 
+set dafilter(sat_namefmt_ixt) \
+    {$rc(wmoid)$rc(nawips)_${ymd_hm}}; # no extension, or .nc
 set dafilter(sat_dirfmt) \
     {[file join [string range $rc(wmoid) 0 2] $rc(wmoid) $rc(nawips)]};
 
