@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# Usage: nbspgoesrmapc [-v] [-b] [-K] [-L] [-g] [-d <outputdir>]
+# Usage: nbspgoesrmapc [-v] [-b] [-K] [-L] [-c] [-g] [-d <outputdir>]
 #	[-i] [-I] [-l <first,last>] [-m] [-o <outputfile>] <inputdir>
 #
 # This is the analog of nbspsatmapc (in rstfilter/gismap), but with
@@ -11,11 +11,6 @@
 # the map (via map2img).
 #
 # Requires "gifsicle" for the loops
-#
-# NOTE: Fri May 23 21:22:44 AST 2025
-#       The -L option should not be used because the files under
-#       a given wmoid do not correspond to the same "tile".
-#       So this program is effective only for creating the "latest" image.
 #
 # Examples: nbspgoesrcmapc tire05/pao (no map included)
 #           nbspgoesrcmapc -l end-3,end tire05/pao  (the last four)
@@ -47,15 +42,17 @@
 #      
 # [-d] Directory to put the output file (the default is the current directory.
 #
+# [-c] When creating a loop, if one file gives an error, ignore that file
+#      and continue with the others.
 # -g => gif format (-L => -g)
 # -L => create a loop from those images.
 # -K => if -L is specified, keep (do not delete) the individual images
 # -m => includes the map (uses map2img via nbspgoesrmap)
 
-set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-g] [-m] [-d <outputdir>]
-    [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
+set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-c] [-g] [-m]
+    [-d <outputdir>] [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
 
-set optlist {b v I K L g i m {d.arg ""} {l.arg ""} {o.arg ""}};
+set optlist {b v I K L c g i m {d.arg ""} {l.arg ""} {o.arg ""}};
 
 package require cmdline;
 
@@ -112,6 +109,7 @@ proc make_loop {flist loopdir loopfile} {
     global rstfilter;
 
     if {[llength $flist] == 0} {
+	log_msg "Empty image files list";
 	return;
     }
 
@@ -262,16 +260,29 @@ foreach f $flist {
 	} else {
 	    exec $g(nbspgoesrimgprog) $goesrpath \
 		| pngtopam 2> /dev/null | pamtogif > $outputpath 2> /dev/null;
-	}
-	    
-	lappend output_flist $outputpath;
+	}	   
     } errmsg];
 
-    if {$status != 0} {
-	log_err $errmsg;
-    } elseif {$option(v) == 1} {
-	puts "OK";
+    if {$status == 0} {	    
+	lappend output_flist $outputpath;
+	 if {$option(v) == 1} {
+	     puts "OK";
+	 }
+    } else {
+	file delete $outputpath;
+	if {$option(c) == 0} {
+	    break;
+	} elseif {$option(L) == 1} {
+	    set status 0;
+	}
     }
+}
+
+if {$status != 0}  {
+    foreach outputfile $output_flist {
+	file delete $outputfile;
+    }
+    log_err $errmsg;
 }
 
 # Make a loop if requested

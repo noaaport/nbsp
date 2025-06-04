@@ -6,7 +6,11 @@ Direct_Url /nbspgoesr nbspgoesr
 package require html
 
 proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
-
+    #
+    # The loopflag, if positive, is interpreted as the number of images
+    # to icnlude in the loop. If it is zero then the latest image
+    # is generated.
+    #
     global Config;
 
     set savedir [pwd];
@@ -62,7 +66,14 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
 		set subdir [file join $goesrdir $wmoid02 $inputdir];
      
 		if {[file isdirectory $subdir]} {
-		    append result "<a href=display_goesrmap?wmoid=$wmoid&bbb=$bbb&imgdir=$imgdir&outputname=$outputname&maxage=$maxage&loopflag=$loopflag>$bbb</a>\n";
+		    append result "<a href=display_goesrmap"\
+			"?wmoid=$wmoid"\
+			"&bbb=$bbb"\
+			"&imgdir=$imgdir"\
+			"&outputname=$outputname"\
+			"&maxage=$maxage"\
+			"&loopflag=$loopflag>"\
+			"$bbb</a>\n";
 		}
 	    }
 	    append result "<br>\n";
@@ -78,7 +89,9 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
 
 proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
 				     {loopflag 0}} {
-
+    #
+    # See the function above for the meaning of the loop flag
+    #
     global Config;
 
     set wmoidbbb ${wmoid}${bbb};
@@ -126,10 +139,11 @@ proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
 
     if {$recreate == 1} {
 	set status [catch {
-	    if {$loopflag == 0} {
+	    if {$loopflag <= 0} {
 		exec nbspgoesrmapc -m -d $outputdir -o $outputname $inputdir;
 	    } else {
-		exec nbspgoesrmapc -L -m -d $outputdir -o $outputname $inputdir;
+		exec nbspgoesrmapc -L -l $loopflag -c -m \
+		    -d $outputdir -o $outputname $inputdir;
 	    }
 	} errmsg];
     }
