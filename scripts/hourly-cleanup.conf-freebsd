@@ -87,16 +87,16 @@
 # allows seven days of daily and hourly archives.
 
 H/5:/var/noaaport/data/inv/rst/txt: -i -mtime +2
-H/2:/var/noaaport/data/inv/rst/rad: -i -mmin +240
-H:/var/noaaport/data/inv/rst/sat: -i -mmin +240
+H/2:/var/noaaport/data/inv/rst/rad: -i -mtime +4h
+H:/var/noaaport/data/inv/rst/sat: -i -mtime +4h
 #
 H/6:/var/noaaport/data/digatmos:nexrad|sat|hurricane|enso: -mtime +2
-H/2:/var/noaaport/data/inv/digatmos/nexrad: -i -mmin +240
-H/2:/var/noaaport/data/inv/digatmos/sat: -i -mmin +720
+H/2:/var/noaaport/data/inv/digatmos/nexrad: -i -mtime +4h
+H/6:/var/noaaport/data/inv/digatmos/sat: -i -mtime +12h
 #
 H/5:/var/noaaport/data/gempak:nexrad|images: -mtime +1
-H/2:/var/noaaport/data/inv/gempak/nexrad: -i -mmin +240
-H:/var/noaaport/data/inv/gempak/images/sat: -i -mmin +240
+H/2:/var/noaaport/data/inv/gempak/nexrad: -i -mtime +4h
+H:/var/noaaport/data/inv/gempak/images/sat: -i -mtime +4h
 #
 H/6:/var/noaaport/data/grib: -mtime +1
 #
@@ -104,10 +104,10 @@ H=02:/var/noaaport/data/metar/weatherscope: -c 7 -d
 H=02:/var/noaaport/data/upperair: -c 7 -d
 H=02:/var/noaaport/data/weatherscope: -c 7 -d
 #
-H:/var/noaaport/data/gis/img/rad: -mmin +120
-H:/var/noaaport/data/inv/gis/rad: -i -mmin +120
-H/6:/var/noaaport/data/gis/img/sat: -mmin +360
-H/6:/var/noaaport/data/inv/gis/sat: -i -mmin +360
+H:/var/noaaport/data/gis/img/rad: -mtime +2h
+H:/var/noaaport/data/inv/gis/rad: -i -mtime +2h
+H/6:/var/noaaport/data/gis/img/sat: -mtime +6h
+H/6:/var/noaaport/data/inv/gis/sat: -i -mtime +6h
 
 # Keep a week of the old www logfiles
 H=01:/var/log/nbsp/www: -mtime +7
@@ -128,5 +128,5 @@ H=23:/var/noaaport/nbsp/spool: -mtime +1
 # or something similar could be used, or a completely independent scheme
 # should be implemented.
 #
-### H:/var/noaaport/nbsp/spool: -mmin +720
-### H:/var/noaaport/nbsp/spool: -mmin +240 -name *sdus*
+### H:/var/noaaport/nbsp/spool: -mtime +12h
+### H:/var/noaaport/nbsp/spool: -mtime +4h -name *sdus*
