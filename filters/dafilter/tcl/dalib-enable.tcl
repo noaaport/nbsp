@@ -16,7 +16,8 @@ proc is_rad_rule_enabled {key} {
 
 proc is_sat_rule_enabled {key} {
 #
-# For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+##R For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+# The key is the sat subdirectory name (e.g., sat/goesr/tir/tire05).
 #
     global dafilter;
 
@@ -65,7 +66,8 @@ proc is_archive_rad_rule_enabled {key} {
 
 proc is_archive_sat_rule_enabled {key} {
 #
-# For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+##R For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+# The key is the sat subdirectory name (e.g., sat/goesr/tir/tire05).
 #
     global dafilter;
 
@@ -100,7 +102,8 @@ proc is_type_enabled {enable regex key} {
 # The key is the subdirectory name:
 #
 # For file the key is like "nwx/spc/<subdir>" (e.g., nwx/spc/stahry)
-# For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+##R For sat the key is "sat/gini/<subdir>" (e.g., sat/gini/tigp01).
+# For sat the key is the sat subdirectory name (e.g., sat/goesr/tir/tire05).
 # For radar the key is the subdirectory name, e.g., nexrad/nids/jua/n0r.
 #
     set r 0;

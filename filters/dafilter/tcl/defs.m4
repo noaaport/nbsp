@@ -136,6 +136,7 @@ lappend action {
   $7
 })
 
+dnl ##R
 define(match_sat_gini,
 lappend cond {
   [regexp {$2} $1]
@@ -146,7 +147,7 @@ lappend action {
   $5
 })
 
-define(match_sat_ngini,
+define(match_sat,
 lappend cond {
   [regexp {$2} $1]
 }

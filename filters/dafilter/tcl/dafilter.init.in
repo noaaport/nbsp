@@ -33,8 +33,8 @@ set dafilter(sat_enable)	1;
 set dafilter(sat_regex)		{.*};
 set dafilter(sat_latest_enable)	1;
 set dafilter(sat_latestname)	"latest";
-set dafilter(satuncompress)	0;
-set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
+##R set dafilter(satuncompress)	0;
+##R set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 #
 # ti[rsu] are supposed to have the bbb; (at least) some of the others
 # e.g. some titx, ticf, don't.
@@ -56,7 +56,7 @@ set dafilter(sat_dirfmt) \
     {[file join [string range $rc(wmoid) 0 2] $rc(wmoid) $rc(nawips)]};
 
 #
-# Radar: see coments in dafilter.init.in
+# Radar: see comments in dafilter.conf
 #
 set dafilter(rad_enable)	1;
 set dafilter(rad_regex)		{.*};

@@ -44,7 +44,7 @@ dnl
 dnl
 dnl polar
 dnl
-match_sat_ngini($rc(wmoid), ^tip,
+match_sat($rc(wmoid), ^tip,
 sat/viirs/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_tip)])
 #
 match_sat_archive($rc(wmoid), ^tip,
@@ -55,7 +55,7 @@ break;)
 dnl
 dnl ixt
 dnl
-match_sat_ngini($rc(wmoid), ^ixt,
+match_sat($rc(wmoid), ^ixt,
 sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_ixt)])
 #
 match_sat_archive($rc(wmoid), ^ixt,
@@ -66,7 +66,7 @@ break;)
 dnl
 dnl goesr - glm
 dnl
-match_sat_ngini($rc(wmoid), ^tir[st]00,
+match_sat($rc(wmoid), ^tir[st]00,
 sat/glm/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_glm)])
 #
 match_sat_archive($rc(wmoid), ^tir[st]00,
@@ -77,7 +77,7 @@ break;)
 dnl
 dnl goesr - no need to exclude the glm because they been already catched
 dnl
-match_sat_ngini($rc(wmoid), ^ti[rsu],
+match_sat($rc(wmoid), ^ti[rsu],
 sat/goesr/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_goesr)])
 #
 match_sat_archive($rc(wmoid), ^ti[rsu],
@@ -95,7 +95,7 @@ dnl the goesr files [e.g., nc variables, and header (no ppp)]).
 dnl Instead of using ^ti[cdgt] we put simply ^ti to catch anything else that
 dnl has not been catched above.
 dnl
-match_sat_ngini($rc(wmoid), ^ti,
+match_sat($rc(wmoid), ^ti,
 sat/other/[subst $dafilter(sat_dirfmt)], [subst $dafilter(sat_namefmt_cdgt)])
 #
 match_sat_archive($rc(wmoid), ^ti,

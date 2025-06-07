@@ -1,8 +1,8 @@
 proc filter_sat {seq fpath savedir savename} {
     #
     # This is the new function (dec 2024) eliminating all the code
-    # related to the gini files. The old function is retained below,
-    # for documentation purposes.
+    # related to the gini files.
+    ##R The old function is retained below, for documentation purposes.
     #
     global dafilter;
 
@@ -75,6 +75,7 @@ proc filter_sat {seq fpath savedir savename} {
     cd $_pwd;
 }
 
+##R
 proc filter_sat_old_unused {seq fpath savedir savename {giniflag 1}} {
 #
 # This function optionally uncompresses the file, and renames it according

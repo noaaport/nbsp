@@ -44,18 +44,16 @@
 ## set dafilter(hourlyfilefmt)     "%Y%m%d%H";
 
 # Whether or not the satellite data files will be processed.
-# This is normally done by the rstfilter, but if
-# that is disabled, that functionality can be enabled here.
 # The regex variable is a uwildregex that is matched against
-# the directory name (e.g. "sat/gini/tigp01") to
+# the directory name (e.g. "sat/goesr/tire05") to
 # specify which files to process.
 #
 ## set dafilter(sat_enable)	1;
 ## set dafilter(sat_regex)		{.*};
 ## set dafilter(sat_latest_enable)	1;
 ## set dafilter(sat_latestname)	"latest";
-## set dafilter(satuncompress)	0;
-## set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
+##R set dafilter(satuncompress)	0;
+##R set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 #
 # ti[rsu] are supposed to have the bbb; (at least) some of the others
 # e.g. some titx, ticf, don't. (We call them the cdgt for ti[cdgt]).
@@ -177,7 +175,8 @@
 #
 # nwx/spc/stahry
 # nexrad/nids/jua/n0r
-# sat/gini/tige01
+##R sat/gini/tige01
+# sat/goesr/tir/tire05
 #
 # For example,
 #
@@ -191,11 +190,12 @@
 #
 # set dafilter(file_regex) {nwx/};
 # set dafilter(rad_regex) {nids/jua};
-# set dafilter(sat_regex) {gini/tigp};
+##R set dafilter(sat_regex) {gini/tigp};
+# set dafilter(sat_regex) {goesr/tir/tire05};
 # set dafilter(grib_enable) 0;
 #
 # will process only the data saved under the nwx subdirectory, the radar
-# data from jua and the satellite data tigp01, ..., (PR-REGIONAL, ...).
+# data from jua and the satellite data tire05, ..., (PR-REGIONAL, ...).
 
 # Work-crew configuration for dafilter-master
 #

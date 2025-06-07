@@ -22,7 +22,7 @@ set archive(invdir)  $common(archiveinvdir);
 set archive(da,datadir) [file join $archive(datadir) "digatmos"];
 set archive(da,subdirfmt) "%Y%m%d";
 set archive(da,file_namefext) ".tar";
-set archive(da,sat_namefmt) {$rc(wmoid)_${ymd_hm}.gini.tar};
+##R set archive(da,sat_namefmt) {$rc(wmoid)_${ymd_hm}.gini.tar};
 set archive(da,sat_namefmt_tip) {$rc(wmoid)$rc(nawips)_${ymd_hm}.viirs.tar};
 set archive(da,sat_namefmt_glm) {$rc(wmoid)$rc(nawips)_${ymd_hm}.glm.tar};
 set archive(da,sat_namefmt_goesr) {$rc(wmoid)$rc(nawips)_${ymd_hm}.goesr.tar};
