@@ -383,16 +383,16 @@ proc filter_satmap {wmoid fpath savedir savename} {
 # 2024 - Added to deal with the goesr files, separately from the (old)
 # gini files (which are disabled and eventually the code removed).
 #
-proc filter_sat_goesr {wmoid fpath imgsavedir datasavedir imgsavename} {
+proc filter_sat_goesr {fpath imgsavedir datasavedir imgsavename} {
     #
     # The "datasavename" is constructed from the imgsavename. The data (nc)
     # file is not kept.
     #
     # The default names are;
     #
-    # knes_tire13.112346_1414381 (raw spool file)
-    # tire13_20250111_2346.gif
-    # tire13_20250111_2346.nc
+    # knes_tire05+pao.112346_1414381 (raw spool file)
+    # tire13pao_20250111_2346.gif
+    # tire13pao_20250111_2346.nc
     #
     # The nc file is created for processing but it is removed afterwards.
     #

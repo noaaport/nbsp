@@ -110,7 +110,7 @@ if {$rstfilter(sat_goesr_enable) == 1} {
   }
   lappend action {
     set rc_status 0;
-    set rc_output [filter_sat_goesr $rc(wmoid) $rc(fpath) $3 $4 $5];
+    set rc_output [filter_sat_goesr $rc(fpath) $3 $4 $5];
   }
 })
 

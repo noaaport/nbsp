@@ -51,4 +51,4 @@ The variables for the satellite images have an analogous meaning.
 
 Note that the radar images require that gempak be installed since
 they are generated sing the gpmap_gif program. The satellite images
-do not require gempak, unless the map outlines are desired.
+do not require gempak.
