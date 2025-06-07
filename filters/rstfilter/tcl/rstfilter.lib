@@ -405,14 +405,19 @@ proc filter_sat_goesr {fpath imgsavedir datasavedir imgsavename} {
     append datafbasename $rstfilter(sat_goesr_datext);
     set datafpath [file join $rstfilter(datadir) $datasavedir $datafbasename];
 
+    set _pwd [pwd];
+
     set status [catch {
 	cd $rstfilter(datadir);
 	file mkdir $datasavedir;
 	#
 	# Similar to the dafilter, remove the first line and leave the
-	# pure nc file.
+	# pure nc file (see the dalib-sat.tcl). The first argument to
+	# filterlib_exec_nbspfile is "seq", which would be used
+	# by filterlib_exec_nbspfile when adding the gempak header.
+	# In our case it will not be used, so we pass that argument as "0".
 	#
-	exec tail -n +2 $fpath > $datafpath;
+	filterlib_exec_nbspfile 0 $fpath $datasavedir $datafbasename "-w";
     } errmsg];
     
     if {$status != 0} {
@@ -461,6 +466,8 @@ proc filter_sat_goesr {fpath imgsavedir datasavedir imgsavename} {
     if {$rstfilter(sat_goesr_keepnc) == 1} {
         make_sat_latest $datasavedir [file tail $datafpath];
     }
+
+    cd $_pwd;
 
     return $output;
 }

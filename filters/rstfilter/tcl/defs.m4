@@ -89,7 +89,7 @@ if {$rstfilter(sat_enable) == 1} {
   }
   lappend action {
     set rc_status 0;
-    set rc_output [filter_sat $rc(wmoid) $rc(fpath) $3 $4 $5];
+    set rc_output [filter_sat $rc(fpath) $3 $4 $5];
   }
 })
 

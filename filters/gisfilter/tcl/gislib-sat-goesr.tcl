@@ -19,7 +19,7 @@ proc filter_sat {rc_varname} {
 
 proc filter_sat_create_goesr {rc_varname} {
     #
-    # Write a copy of the data (goesr)  file
+    # Write a copy of the data (goesr) file
     #
     global gisfilter;
     upvar $rc_varname rc;
@@ -33,7 +33,8 @@ proc filter_sat_create_goesr {rc_varname} {
 
     set status [catch {
 	# See comment in filter_sat{} in dalib-sat.tcl
-	exec tail -n +2 $rc(fpath) > $data_path
+	# exec tail -n +2 $rc(fpath) > $data_path
+	filterlib_exec_nbspfile 0 $rc(fpath) $data_savedir $data_savename "-w";
     } errmsg];
 
     if {$status != 0} {
