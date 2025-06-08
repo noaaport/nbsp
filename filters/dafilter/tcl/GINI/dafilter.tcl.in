@@ -137,12 +137,10 @@ proc process {finfo} {
     }
 
     # If sat is enable, extract the rc(satxxx) parameters
-    # 2025 - Not implemented with the nc format. See the note in filters.lib
-    #
-    # if {([info exists dafilter(sat_enable)] == 0) || \
-    #	($dafilter(sat_enable) != 0)} {
-    #	lappend _cmd "-dosat";
-    # }
+    if {([info exists dafilter(sat_enable)] == 0) || \
+	($dafilter(sat_enable) != 0)} {
+	lappend _cmd "-dosat";
+    }
 
     eval ${_cmd};
 

@@ -52,6 +52,8 @@
 ## set dafilter(sat_regex)		{.*};
 ## set dafilter(sat_latest_enable)	1;
 ## set dafilter(sat_latestname)	"latest";
+##R set dafilter(satuncompress)	0;
+##R set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 #
 # ti[rsu] are supposed to have the bbb; (at least) some of the others
 # e.g. some titx, ticf, don't. (We call them the cdgt for ti[cdgt]).
@@ -173,6 +175,7 @@
 #
 # nwx/spc/stahry
 # nexrad/nids/jua/n0r
+##R sat/gini/tige01
 # sat/goesr/tir/tire05
 #
 # For example,
@@ -187,6 +190,7 @@
 #
 # set dafilter(file_regex) {nwx/};
 # set dafilter(rad_regex) {nids/jua};
+##R set dafilter(sat_regex) {gini/tigp};
 # set dafilter(sat_regex) {goesr/tir/tire05};
 # set dafilter(grib_enable) 0;
 #

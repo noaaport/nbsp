@@ -391,8 +391,8 @@ proc filter_sat_goesr {fpath imgsavedir datasavedir imgsavename} {
     # The default names are;
     #
     # knes_tire05+pao.112346_1414381 (raw spool file)
-    # tire13pao_20250111_2346.gif
-    # tire13pao_20250111_2346.nc
+    # tire05pao_20250111_2346.gif
+    # tire05pao_20250111_2346.nc
     #
     # The nc file is created for processing but it is removed afterwards.
     #

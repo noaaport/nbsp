@@ -136,6 +136,17 @@ lappend action {
   $7
 })
 
+dnl ##R
+define(match_sat_gini,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_sat_old_unused $rc(seq) $rc(fpath) "$3" "$4";
+  $5
+})
+
 define(match_sat,
 lappend cond {
   [regexp {$2} $1]

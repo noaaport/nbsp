@@ -10,6 +10,14 @@ sat_bundle_clear;
 rad_bundle_clear;
 
 #
+##R sat gini - example (Thu May 22 12:02:39 AST 2025 - no longer used)
+#
+## sat_bundle_add {tig(a|e|h|i|w|p|q)0[1-5],!tiga05};
+## sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "csv";
+## sat_bundle_add {tig(a|b|e|h|i|w|p|q)0[1-5]} "shp,shx,dbf,info,csv";
+#
+
+#
 # sat goesr - examples
 #
 # sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"

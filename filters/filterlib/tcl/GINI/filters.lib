@@ -112,7 +112,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # -nobody  =>  do not extract the body of the file and the associated variables
 # -dogrib  =>  extract the rc(grib...) variables
 # -dorad   =>  extract the radar info variables
-# -dosat   =>  extract the sat info variables (not implemented for the nc files)
+# -dosat   =>  extract the sat info variables
 # -noccb   =>  ignore the ccb global settings and assume the file nas no ccb
 #
 # Undetermined variables are returned as "".
@@ -124,8 +124,7 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 # with -dogrib.
 #
 # The radar info variables are extracted using nbspradinfo.
-# The sat info variables were extracted with nbspsatinfo. For the nc files
-# it is not implemented (Sun Jun  8 15:32:56 AST 2025)
+##R The sat info variables are extracted using nbspsatinfo.
 #
 # The -nobody flag can be used, for example, by the rstnntpfilter, which
 # receives the already processed files (instead of the raw data files)
@@ -428,21 +427,28 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	}
     }
 
+    ##R
     # 2012 - The 5th channel tipb products cannot be included here
     # 2016 - The goes-r (ti[rs]) neither (pids 107 and 108)
     #        Only include the existing ones: ti(c|d|g|t)
-    # 2025 - Not implemented with the nc format. We could do as suggested
-    #        in nbspgoesrinfo source, with care to apply it to the
-    #        appropriate files (ti[urs]) and excluding glm; but we are
-    #        not using those rc variables so we are not implementing that
-    #        option either.
     #
-    # if {[regexp {^ti[cdgt]} $rc(wmoid)] && ($dosat == 1)} {
-    # 	 set satinfo_status [catch {
-    #      set satinfo [split [exec nbspsatinfo -b $rc(fpath)]];
-    #    } errmsg];
-    #    etc
-    # }
+    if {[regexp {^ti[cdgt]} $rc(wmoid)] && ($dosat == 1)} {
+	set satinfo_status [catch {
+	    set satinfo [split [exec nbspsatinfo -b $rc(fpath)]];
+	} errmsg];
+	
+	if {$satinfo_status == 0} {
+	    set rc(satsource) [lindex $satinfo 0];
+	    set rc(satcreatingentity) [lindex $satinfo 1];
+	    set rc(satsector) [lindex $satinfo 2];
+	    set rc(satchannel) [lindex $satinfo 3];
+	    set rc(satres) [lindex $satinfo 4];
+	    set rc(satseconds) [lindex $satinfo 5];
+	    set rc(seconds) $rc(satseconds);
+	} else {
+	    log_msg $errmsg;
+	}
+    }
 
     # If it is a grib file, get the model name.
     if {($rc(nawips) eq "grib") && ($dogrib == 1)} {

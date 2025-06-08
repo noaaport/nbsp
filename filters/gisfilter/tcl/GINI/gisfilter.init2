@@ -13,6 +13,23 @@ set gisfilter(rad_inv_enable) 1;
 set gisfilter(sat_inv_enable) 1;
 
 #
+##R sat gini configuration
+# - Thu May 22 10:41:14 AST 2025
+#   This was the original gini config (now unused)
+#
+### set gisfilter(sat_enable) 1;  # whether to process the tig files
+### set gisfilter(sat_regex)  {tig(a|b|e|w|g|h|p|q)0[1-5]};   # wmoid
+### set gisfilter(sat_latest_enable)        1; # make link to latest
+### set gisfilter(sat_latestname)   "latest";   # without the extension
+### set gisfilter(sat_namefmt) {$rc(wmoid)_$rc(ymd_hm)}; # without the ext.
+### set gisfilter(sat_subdirfmt) {[string range $rc(wmoid) 0 2]/$rc(wmoid)};
+#
+### set gisfilter(sat_outputfile_namefmt,gini) "$gisfilter(sat_namefmt).gini";
+### set gisfilter(sat_outputfile_dirfmt,gini) \
+###	"sat/gini/$gisfilter(sat_subdirfmt)";
+#
+
+#
 # sat goesr configuration
 #
 set gisfilter(sat_enable) 1;  # whether to process the ti(r|s|u) files
@@ -58,15 +75,10 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 
 # Bundles are of the form
 #
-## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
+##R set gisfilter(sat_bundle,<tag>,regex) {tig(e|w)};  # matched against wmoid
 ## set gisfilter(sat_bundle,<tag>,fmt) [list shp shx dbf info ...];
 #
 # which should be constructed with the bundle functions.
-#
-# One example
-#
-## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
-## set gisfilter(sat_bundle,<tag>,fmt) "asc";
 
 #
 # rad configuration
@@ -225,7 +237,10 @@ proc rad_bundle_clear {} {
 #
 # If fmt is not specified, then defaults to "shp,shx,dbf,info"
 #
-
+# Thu May 22 12:07:49 AST 2025 (these tig entries are no longer used)
+### sat_bundle_add {tig(e|w)};
+### sat_bundle_add {tig(e|w)} "shp,shx,dbf,info,csv";
+### sat_bundle_add {tig(e|w)} "asc";
 #
 # sat goesr examples
 #
@@ -236,8 +251,8 @@ proc rad_bundle_clear {} {
 #
 # rad examples
 #
-# rad_bundle_add {n0q} "csv";
-# rad_bundle_add {n[0-3](q|s)jua};
+# rad_bundle_add {n0r} "csv";
+# rad_bundle_add {n[0-3](r|s)jua};
 
 #
 # Dynamic initialization

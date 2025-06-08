@@ -33,6 +33,8 @@ set dafilter(sat_enable)	1;
 set dafilter(sat_regex)		{.*};
 set dafilter(sat_latest_enable)	1;
 set dafilter(sat_latestname)	"latest";
+##R set dafilter(satuncompress)	0;
+##R set dafilter(sat_namefmt)	{$rc(wmoid)_${ymd_hm}.gini};
 #
 # ti[rsu] are supposed to have the bbb; (at least) some of the others
 # e.g. some titx, ticf, don't.

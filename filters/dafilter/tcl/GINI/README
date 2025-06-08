@@ -1,0 +1,14 @@
+Sun Jun  8 18:16:26 AST 2025
+
+Removed all references to the old gini files in
+
+  - dafilter
+  - gisfilter
+  - filterslib
+
+The original files, as they were before this revision, are saved in the GINI
+subdir in each filter directory. The last commit with the original files is
+
+commit b1f92c24f36bb0c50f3437213fee6901477fb36a
+Author: nieves <nieves@volkron.net>
+Date:   Sat Jun 7 18:25:15 2025 -0400
