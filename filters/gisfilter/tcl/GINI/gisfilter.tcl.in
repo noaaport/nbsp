@@ -91,8 +91,7 @@ proc process {finfo} {
 	([filterlib_uwildmat $gisfilter(sat_regex) $rc(wmoid)] == 1)} {
 	filter_sat rc;
     } elseif {($gisfilter(rad_enable) != 0) && \
-	([filterlib_uwildmat $gisfilter(rad_wmoid_regex) $rc(wmoid)] == 1) && \
-	([filterlib_uwildmat $gisfilter(rad_awips1_regex) $rc(awips1)] == 1)} {
+	([filterlib_uwildmat $gisfilter(rad_regex) $rc(wmoid)] == 1)} {
 	filter_rad rc;
     } elseif {($gisfilter(rad2_enable) != 0) && \
 	([filterlib_uwildmat $gisfilter(rad2_regex) $rc(wmoid)] == 1)} {

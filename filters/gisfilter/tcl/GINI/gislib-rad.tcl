@@ -96,7 +96,6 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     }
 
     #
-    ##R
     # The ccb header must be removed for nbsnidsshp (use -C).
     # The -F option instructs nbspradgis to apply the built-in filtering
     # options of the data (e.g., ignoring polygons with level values
