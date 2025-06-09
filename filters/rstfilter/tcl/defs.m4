@@ -72,6 +72,7 @@ if {$rstfilter(rad_enable) == 1} {
   }
 })
 
+dnl ##R
 define(match_radloop,
 if {$rstfilter(radloop_enable) == 1} {
   lappend cond {
@@ -82,6 +83,7 @@ if {$rstfilter(radloop_enable) == 1} {
   }
 })
 
+dnl ##R
 define(match_sat,
 if {$rstfilter(sat_enable) == 1} {
   lappend cond {
@@ -93,6 +95,7 @@ if {$rstfilter(sat_enable) == 1} {
   }
 })
 
+dnl ##R
 define(match_satloop,
 if {$rstfilter(satloop_enable) == 1} {
   lappend cond {
