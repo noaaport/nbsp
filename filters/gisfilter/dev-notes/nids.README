@@ -1,0 +1,179 @@
+##
+Mon Jun  9 13:38:36 AST 2025
+
+The information below is copied from the file "gisfilter-nids/README.txt",
+which exlains we how we arrived at the settings of
+"gisfilter(rad_regex_awips1)" used in the "gisfilter.init2" file.
+##
+
+# List of files in "jua" (downloaded with the download script)
+daajua_20250608_2314.nids
+dhrjua_20250608_2312.nids
+dodjua_20250311_1229.nids
+dpajua_20250416_1814.nids
+dprjua_20250608_2314.nids
+dsdjua_20250311_1229.nids
+dspjua_20250311_1231.nids
+dtajua_20250608_2314.nids
+du3jua_20250608_2314.nids
+du6jua_20250608_1216.nids
+dvljua_20250608_2310.nids
+eetjua_20250608_2310.nids
+hhcjua_20250608_2314.nids
+n0cjua_20250608_2311.nids
+n0hjua_20250608_2311.nids
+n0kjua_20250608_2311.nids
+n0mjua_20250608_2311.nids
+n0qjua_20250608_2310.nids
+n0sjua_20250608_2311.nids
+n0ujua_20250608_2311.nids
+n0xjua_20250608_2311.nids
+n1cjua_20250608_2312.nids
+n1hjua_20250608_2312.nids
+n1kjua_20250608_2312.nids
+n1mjua_20250608_2312.nids
+n1pjua_20250311_1231.nids
+n1qjua_20250608_2312.nids
+n1sjua_20250608_2312.nids
+n1ujua_20250608_2312.nids
+n1xjua_20250608_2312.nids
+n2cjua_20250608_2313.nids
+n2hjua_20250608_2313.nids
+n2kjua_20250608_2313.nids
+n2mjua_20250608_2313.nids
+n2qjua_20250608_2313.nids
+n2sjua_20250608_2313.nids
+n2ujua_20250608_2313.nids
+n2xjua_20250608_2313.nids
+n3cjua_20250608_2313.nids
+n3hjua_20250608_2313.nids
+n3kjua_20250608_2313.nids
+n3mjua_20250608_2313.nids
+n3pjua_20250311_1215.nids
+n3qjua_20250608_2313.nids
+n3sjua_20250608_2313.nids
+n3ujua_20250608_2313.nids
+n3xjua_20250608_2313.nids
+nacjua_20250608_2312.nids
+nahjua_20250608_2312.nids
+nakjua_20250608_2312.nids
+namjua_20250608_2312.nids
+naqjua_20250608_2311.nids
+naujua_20250608_2312.nids
+naxjua_20250608_2312.nids
+nbcjua_20250608_2313.nids
+nbhjua_20250608_2313.nids
+nbkjua_20250608_2313.nids
+nbmjua_20250608_2313.nids
+nbqjua_20250608_2313.nids
+nbujua_20250608_2313.nids
+nbxjua_20250608_2313.nids
+ncrjua_20250608_2310.nids
+nczjua_20250608_2310.nids
+netjua_20250608_2310.nids
+nhijua_20250608_2310.nids
+nhljua_20250608_2310.nids
+nlajua_20250608_2310.nids
+nmdjua_20250608_2310.nids
+nmljua_20250608_2310.nids
+nssjua_20250608_2310.nids
+nstjua_20250608_2310.nids
+nswjua_20250608_2311.nids
+ntpjua_20250311_1231.nids
+ntvjua_20250608_2310.nids
+nvljua_20250608_2310.nids
+nvwjua_20250608_2310.nids
+ohajua_20250608_2314.nids
+rcmjua_20250311_1223.nids
+rsljua_20250608_2106.nids
+spdjua_20250311_1231.nids
+
+# List of the files for which "nbspradgis -v ..." worked without errors.
+# (extacted with the "radgis.sh" script)
+n0qjua_20250608_2310.nids.csv
+n0sjua_20250608_2311.nids.csv
+n0ujua_20250608_2311.nids.csv
+n1pjua_20250311_1231.nids.csv
+n1qjua_20250608_2312.nids.csv
+n1sjua_20250608_2312.nids.csv
+n1ujua_20250608_2312.nids.csv
+n2qjua_20250608_2313.nids.csv
+n2sjua_20250608_2313.nids.csv
+n2ujua_20250608_2313.nids.csv
+n3qjua_20250608_2313.nids.csv
+n3sjua_20250608_2313.nids.csv
+n3ujua_20250608_2313.nids.csv
+naqjua_20250608_2311.nids.csv
+naujua_20250608_2312.nids.csv
+nbqjua_20250608_2313.nids.csv
+nbujua_20250608_2313.nids.csv
+ntpjua_20250311_1231.nids.csv
+
+# List of awips that are "valid" for radgis
+# (extracted from the above list with "awips.awk")
+n0qjua
+n0sjua
+n0ujua
+n1pjua
+n1qjua
+n1sjua
+n1ujua
+n2qjua
+n2sjua
+n2ujua
+n3qjua
+n3sjua
+n3ujua
+naqjua
+naujua
+nbqjua
+nbujua
+ntpjua
+
+These awips can be summarized as follows:
+
+n0(q|s|u)
+n1(p|q|s|u)
+n2(q|s|u)
+n3(q|s|u)
+na(q|u)
+nb(q|u)
+ntp
+
+
+# Confirmation that "nbspradinfo" works on those awips
+# (checked with the script "radinfo")
+n0qjua_20250608_2310.nids: 18.116 -66.078 2958 1749424253 2 94
+n0sjua_20250608_2311.nids: 18.116 -66.078 2958 1749424278 2 56
+n0ujua_20250608_2311.nids: 18.116 -66.078 2958 1749424279 2 99
+n1pjua_20250311_1231.nids: 18.116 -66.078 2958 1741696291 2 78
+n1qjua_20250608_2312.nids: 18.116 -66.078 2958 1749424349 2 94
+n1sjua_20250608_2312.nids: 18.116 -66.078 2958 1749424372 2 56
+n1ujua_20250608_2312.nids: 18.116 -66.078 2958 1749424372 2 99
+n2qjua_20250608_2313.nids: 18.116 -66.078 2958 1749424411 2 94
+n2sjua_20250608_2313.nids: 18.116 -66.078 2958 1749424411 2 56
+n2ujua_20250608_2313.nids: 18.116 -66.078 2958 1749424411 2 99
+n3qjua_20250608_2313.nids: 18.116 -66.078 2958 1749424429 2 94
+n3sjua_20250608_2313.nids: 18.116 -66.078 2958 1749424429 2 56
+n3ujua_20250608_2313.nids: 18.116 -66.078 2958 1749424429 2 99
+naqjua_20250608_2311.nids: 18.116 -66.078 2958 1749424304 2 94
+naujua_20250608_2312.nids: 18.116 -66.078 2958 1749424329 2 99
+nbqjua_20250608_2313.nids: 18.116 -66.078 2958 1749424393 2 94
+nbujua_20250608_2313.nids: 18.116 -66.078 2958 1749424393 2 99
+ntpjua_20250311_1231.nids: 18.116 -66.078 2958 1741696291 2 80
+
+# Conclusion
+The "valid" awips for nbspradgis are the ones given in the list above.
+The corresponding regex can be written thus,
+
+n0(q|s|u)
+n1(p|q|s|u)
+n2(q|s|u)
+n3(q|s|u)
+na(q|u)
+nb(q|u)
+ntp
+
+set gisfilter(rad_regex_wmoid) {sdus[235678]};
+set gisfilter(rad_regex_awips1) \
+    {n0(q|s|u)|n1(p|q|s|u)|n2(q|s|u)|n3(q|s|u)|na(q|u)|nb(q|u)|ntp};

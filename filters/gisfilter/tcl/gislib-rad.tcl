@@ -37,14 +37,15 @@ proc filter_rad_create_nids {rc_varname} {
     set status [catch {
 	#
 	# The files are saved without the gempak header/footer (-t).
-	# [NOTE (02 nov 2024): Before the removal of the cspool,
-	# the -w flag was passed to wait for the nids file to be created
-	# (i.e., not use background processing)
-	# before continuing to create the gis files. This flag is no longer
-	# needed because the default (which was always the case) is _not_ to
-	# use background processing.]
 	#
 	filterlib_exec_nbspfile $seq $fpath $data_savedir $data_savename -t;
+	#
+	# [NOTE (02 nov 2024): Before the removal of the cspool,
+	# the -w flag was passed to "filterlib_cspool_nbspfile" to wait for
+	# the nids file to be created (i.e., not use background processing)
+	# before continuing to create the gis files. This flag is no longer
+	# an issue because the default (which was always the case) is _not_ to
+	# use background processing.]
 	#
 	## filterlib_cspool_nbspfile \
 	##    $seq $fpath $data_savedir $data_savename -t -w;
@@ -95,24 +96,10 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
 	}
     }
 
+    # If the nids were saved with the gempak header then we would have to use
+    # -c $filterslib(gmpk_header_size)
     #
-    ##R
-    # The ccb header must be removed for nbsnidsshp (use -C).
-    # The -F option instructs nbspradgis to apply the built-in filtering
-    # options of the data (e.g., ignoring polygons with level values
-    # less than 1.
-    #
-    ##R
-    if {[regexp $gisfilter(rad_unz) $rc(awips1)]} {
-	set cmd [concat [list nbspunz -C $nidsfpath | nbspradgis -b -D] \
-		     $cmd_options];
-    } else {
-	#
-	# If the nids are saved with the gempak header then we have to use
-	# -c $filterslib(gmpk_header_size)
-	#
-	set cmd [concat [list nbspradgis -b -D] $cmd_options $nidsfpath];
-    }
+    set cmd [concat [list nbspradgis -b -D] $cmd_options $nidsfpath];
 
     set status [catch {
 	eval exec $cmd;

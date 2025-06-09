@@ -72,15 +72,16 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 # rad configuration
 #
 
-##R set gisfilter(rad_unz) $filterslib(doradinfounz);
 #
-##R Eliminate rad_regex and use
-## set gisfilter(rad_wmoid_regex)  {sdus[235678]};
-## set gisfilter(rad_awips1_regex) \
-##    {n0(q|s|u)|n1(p|q|s|u)|n2(q|s|u)|n3(q|s|u)|na(q|u)|nb(q|u)|ntp};
-##R
+
+# The setting of "rad_awips1_regex" below ensures that only the files
+# that nbspradgis can process are accepted by this filter.
+# (See the notes in the gisfilter/dev-notes directory).
+#
 set gisfilter(rad_enable) 1;
-set gisfilter(rad_regex)  {sdus[23578]};  ##R wmoid 
+set gisfilter(rad_wmoid_regex)  {sdus[235678]};
+set gisfilter(rad_awips1_regex) \
+    {n0(q|s|u)|n1(p|q|s|u)|n2(q|s|u)|n3(q|s|u)|na(q|u)|nb(q|u)|ntp};
 set gisfilter(rad_latest_enable) 1; # make link to latest
 set gisfilter(rad_latestname)    "latest";
 set gisfilter(rad_namefmt)       {$rc(awips)_$rc(ymd_hm)}; # without extension
