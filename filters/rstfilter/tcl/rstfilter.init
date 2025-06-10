@@ -52,20 +52,18 @@ set rstfilter(txt_any_enable)	1;
 #
 # would match only the files with wmoid = tire05 and ppp = pao.
 #
-# "sat_enable" must be set if any "sat_xxx_enable" is set, currently
-# only "sat_goesr_enable"
+# To create the sat images, "sat_enable" must be set, and then
+# any of the others "sat_xxx_enable", currently only "sat_goesr_enable".
 #
-set rstfilter(sat_enable)	 0; # must be set if any sat_xxx_enable is set
+set rstfilter(sat_enable)	 0;
 set rstfilter(sat_latest_enable) 1; # make link to lattest img
 set rstfilter(sat_latestname)	 "latest";
 #
-set rstfilter(sat_goesr_enable)	$rstfilter(sat_enable);
+set rstfilter(sat_goesr_enable)	 1; # operational if "sat_enable" is set
 set rstfilter(sat_goesr_regex) {^ti[rsu],!^tir[st]00}; # see dafilter/sat.m4
 ## example: set rstfilter(sat_goesr_regex) {^tire05pao};
 set rstfilter(sat_goesr_datext)	".nc";
 set rstfilter(sat_goesr_keepnc)	0;	# 1 => keep the nc file
-set rstfilter(sat_goesr_latest_enable)	$rstfilter(sat_latest_enable);
-set rstfilter(sat_goesr_latestname)	$rstfilter(sat_latestname);
 set rstfilter(sat_goesr_namefmt) {$rc(wmoid)$rc(nawips)_$rc(ymd_hm).png};
 set rstfilter(sat_goesr_dirfmt)	\
     	{[file join [string range $rc(wmoid) 0 2] $rc(wmoid) $rc(nawips)]};

@@ -73,7 +73,7 @@ if {$rstfilter(rad_enable) == 1} {
 })
 
 define(match_sat_goesr,
-if {$rstfilter(sat_goesr_enable) == 1} {
+if {($rstfilter(sat_enable) == 1) && ($rstfilter(sat_goesr_enable) == 1)} {
   lappend cond {
     [regexp {^ti} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
   }
