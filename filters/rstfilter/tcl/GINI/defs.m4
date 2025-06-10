@@ -72,6 +72,40 @@ if {$rstfilter(rad_enable) == 1} {
   }
 })
 
+dnl ##R
+define(match_radloop,
+if {$rstfilter(radloop_enable) == 1} {
+  lappend cond {
+    [regexp {^sdus[23578]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+  }
+  lappend action {
+    filter_radloop $3 $4 $5 $6;
+  }
+})
+
+dnl ##R
+define(match_sat,
+if {$rstfilter(sat_enable) == 1} {
+  lappend cond {
+    [regexp {^ti} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+  }
+  lappend action {
+    set rc_status 0;
+    set rc_output [filter_sat $rc(fpath) $3 $4 $5];
+  }
+})
+
+dnl ##R
+define(match_satloop,
+if {$rstfilter(satloop_enable) == 1} {
+  lappend cond {
+    [regexp {^ti} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+  }
+  lappend action {
+    filter_satloop $3 $4 $5 $6;
+  }
+})
+
 define(match_sat_goesr,
 if {$rstfilter(sat_goesr_enable) == 1} {
   lappend cond {
