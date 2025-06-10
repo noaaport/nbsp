@@ -293,10 +293,9 @@ int process_file(void){
 
   if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0) {
     if(g.opt_inputfile != NULL)
-      log_errx(1, "Invalid wmo header:  %s",
-	       g.opt_inputfile);
+      log_errx(1, "Invalid wmo header:  %s", g.opt_inputfile);
     else 
-      log_errx(1, "Invalid emo header.");
+      log_errx(1, "Invalid wmo header.");
   }
 
   if(dcnids_decode_header(&nids_data.nids_header) != 0) {
