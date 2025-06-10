@@ -39,7 +39,7 @@ proc filter_rad_create_nids {rc_varname} {
 	# The files are saved without the gempak header/footer (-t).
 	#
 	filterlib_exec_nbspfile $seq $fpath $data_savedir $data_savename -t;
-	#
+
 	# [NOTE (02 nov 2024): Before the removal of the cspool,
 	# the -w flag was passed to "filterlib_cspool_nbspfile" to wait for
 	# the nids file to be created (i.e., not use background processing)
@@ -97,13 +97,26 @@ proc filter_rad_convert_nids_shp {rc_varname bundle} {
     }
 
     # If the nids were saved with the gempak header then we would have to use
-    # -c $filterslib(gmpk_header_size)
+    # -c $filterslib(gmpk_header_size).
+    # NOTE: We do not pass the [-b] flag because we want to catch
+    # the error and retry.
+    #   set cmd [concat [list nbspradgis -b -D] $cmd_options $nidsfpath];
     #
-    set cmd [concat [list nbspradgis -b -D] $cmd_options $nidsfpath];
-
+    set cmd [concat [list nbspradgis -D] $cmd_options $nidsfpath];
     set status [catch {
 	eval exec $cmd;
     } errmsg];
+
+    # In case of error try with nbspunz
+    # (See note in "gisfilter/dev-notes/nids.README")
+    #
+    if {$status != 0} {
+	set cmd [concat [list nbspunz -C $nidsfpath | nbspradgis -D] \
+		     $cmd_options];
+	set status [catch {
+	    eval exec $cmd;
+	} errmsg];
+    }
 
     # Append the wmo header data to the info file (if "info" is in fmtlist)
     if {([lsearch $fmtlist info] != -1) && ($status == 0)} {

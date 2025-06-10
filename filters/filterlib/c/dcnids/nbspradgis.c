@@ -291,12 +291,22 @@ int process_file(void){
       log_errx(1, "Error reading file. Short file.");
   }
 
-  if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0)
-    log_errx(1, "Invalid wmo header.");
+  if(dcnids_verify_wmoawips_header(nids_data.nids_header.buffer) != 0) {
+    if(g.opt_inputfile != NULL)
+      log_errx(1, "Invalid wmo header:  %s",
+	       g.opt_inputfile);
+    else 
+      log_errx(1, "Invalid emo header.");
+  }
 
-  if(dcnids_decode_header(&nids_data.nids_header) != 0)
-    log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
-
+  if(dcnids_decode_header(&nids_data.nids_header) != 0) {
+    if(g.opt_inputfile != NULL)
+      log_errx(1, "Invalid pdb header; maybe a zlib compressed header: %s",
+	       g.opt_inputfile);
+    else 
+      log_errx(1, "Invalid pdb header; maybe a zlib compressed header.");
+  }
+  
   /*
    * Decode the polygon data.
    */
