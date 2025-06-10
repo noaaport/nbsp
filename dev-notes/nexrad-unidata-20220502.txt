@@ -1,0 +1,104 @@
+
+This is a reminder of the upcoming removal of a number of NEXRAD Level
+III products from the NOAAPort SBN and the IDD.  (Recall that all NEXRAD
+Level III products relayed in the IDD come from NOAAPort.)
+
+NOAA Service Change Notice (SCN) 96 listed a number of NEXRAD Level
+III products that were to be removed from NOAAPort around the end of
+February, 2022.  Instead of these products actually being removed,
+the TTAAII portion of their WMO IDs (which are included in the LDM/IDD
+Product IDs) were changed to SDUS6i, and they continued to be distributed
+in NOAAPort and in the IDD NEXRAD3 feed.
+
+NOAA Service Change Notice 22-36, dated April 7, 2022:
+
+announced that the SDUS6i products previously slated for removal from the
+NOAAPort SBN will be removed on or about May 10, 2022 (one week from
+tomorrow).
+
+Here is the list of products currently being distributed in NOAAPort with
+WMO ID SDUS6i that are slated for removal:
+
+WMO HEADING PRODUCT DESCRIPTION
+TTAAII NNN PRODUCT NAME, RESOLUTION, NEXRAD ID, AND ELEVATION ANGLE
+------ --- --------------------------------------------------------
+SDUS6i NSW Base Spectrum Width .54nm X 1deg 8LVL 124nm 30/SW 0.5DEG
+SDUS6i NCZ Composite Reflectivity 2.2nm X 2.2nm 16LVL 38/CR
+SDUS6i NHI Hail Index 59/HI
+SDUS6i NTV Tornado Vortex Signature 61/TVS
+SDUS6i NSS Storm Structure 62/SS
+SDUS6i NLA Low Layer Composite Reflectivity - AP Removed 67/APR
+SDUS6i NML Middle Layer Composite Reflectivity 66/LRM
+SDUS6i NHL High Layer Composite Reflectivity 90/LRM
+SDUS6i N3P Three Hour Precipitation Accumulation 79/THP
+SDUS6i SPD Supplemental Precipitation Data 82/SPD
+SDUS6i NXF Power Removed Control .13nm 13LVL 113/PRC -0.2DEG
+SDUS6i NYF Power Removed Control .13nm 13LVL 113/PRC 0.0-0.2DEG
+SDUS6i NZF Power Removed Control .13nm 13LVL 113/PRC 0.3-0.4DEG
+SDUS6i N0F Power Removed Control .13nm 13LVL 113/PRC 0.5DEG
+SDUS6i NAF Power Removed Control .13nm 13LVL 113/PRC 0.9DEG
+SDUS6i N1F Power Removed Control .13nm 13LVL 113/PRC 1.3-1.5DEG
+SDUS6i NBF Power Removed Control .13nm 13LVL 113/PRC 1.8DEG
+SDUS6i N2F Power Removed Control .13nm 13LVL 113/PRC 2.4-2.5DEG
+SDUS6i N3F Power Removed Control .13nm 13LVL 113/PRC 3.1-3.5DEG
+SDUS6i NET Echo Tops 4km X 4km 41/ET
+SDUS6i N1S Storm Relative Velocity .54nm X 1deg 16LVL 56/SRM 1.3-1.5DEG
+SDUS6i N2S Storm Relative Velocity .54nm X 1deg 16LVL 56/SRM 2.4-2.5DEG
+SDUS6i N3S Storm Relative Velocity .54nm X 1deg 16LVL 56/SRM 3.1-3.5DEG
+SDUS6i RCM Radar Coded Message 74/RCM
+SDUS6i RSL Archive III Status Product 152/ASP
+SDUS6i DOD Dig. One Hour Difference Accumulation 174/DOD
+SDUS6i DSD Dig. Storm Total Difference Accumulation 175/DSD
+SDUS6i NXQ Base Reflectivity .54nm X 1deg 256LVL 94/DR -0.2DEG
+SDUS6i NYQ Base Reflectivity .54nm X 1deg 256LVL 94/DR 0.0-0.2DEG
+SDUS6i NZQ Base Reflectivity .54nm X 1deg 256LVL 94/DR 0.3-0.4DEG
+SDUS6i N0Q Base Reflectivity .54nm X 1deg 256LVL 94/DR 0.5DEG
+SDUS6i NAQ Base Reflectivity .54nm X 1deg 256LVL 94/DR 0.9DEG
+SDUS6i N1Q Base Reflectivity .54nm X 1deg 256LVL 94/DR 1.3-1.5DEG
+SDUS6i NBQ Base Reflectivity .54nm X 1deg 256LVL 94/DR 1.8DEG
+SDUS6i N2Q Base Reflectivity .54nm X 1deg 256LVL 94/DR 2.4-2.5DEG
+SDUS6i N3Q Base Reflectivity .54nm X 1deg 256LVL 94/DR 3.1-3.5DEG
+SDUS6i NXU Base Velocity .13nm X 1deg 256LVL 99/DV -0.2DEG
+SDUS6i NYU Base Velocity .13nm X 1deg 256LVL 99/DV 0.0-0.2DEG
+SDUS6i NZU Base Velocity .13nm X 1deg 256LVL 99/DV 0.3-0.4DEG
+SDUS6i N0U Base Velocity .13nm X 1deg 256LVL 99/DV 0.5DEG
+SDUS6i NAU Base Velocity .13nm X 1deg 256LVL 99/DV 0.9DEG
+SDUS6i N1U Base Velocity .13nm X 1deg 256LVL 99/DV 1.3-1.5DEG
+
+NB:
+
+- removal of the N0Q product from NOAAPort will mean that the N0Q national 
+  composite product that is distributed in the IDD FNEXRAD feed will
+  stop being generated as NOAAPort is (currently) the only source of
+  NEXRAD Level 3 products that are being distributed in the IDD
+
+- Unidata has registered a request to get an LDM feed of all NEXRAD
+  Level 3 products from the RPCCDS, this request has been approved by
+  NOAA, but that feed source is not likely to become active for 2-3 months
+
+  When this new source of level 3 products is up and running, we will
+  resume creating the N0Q composite and distribute it in the IDD
+  FNEXRAD feed.
+
+- we are now creating a 1 km national composite from the N0B level 3
+  product (so called Super Res Base Reflectivity) that was recently
+  added to NOAAPort
+
+  The IDD distribution of the N0B composite product will be activated
+  at about 0 UTC on May 3 (NB: that is tonight at 6 pm MDT).
+
+Please send any/all questions/comments to:
+
+support-datastream@xxxxxxxxxxxxxxxx
+
+Best regards,
+
+Unidata User Support
+--
+********************************************************************** &lt;
+Unidata User Support                              UCAR Unidata Program &lt;
+(303)497-8643                                            P.O. Box 3000 &lt;
+support@xxxxxxxxxxxxxxxx                             Boulder, CO 80307 &lt;
+---------------------------------------------------------------------- &lt;
+Unidata Web Support               <a rel="nofollow" href="http://www.unidata.ucar.edu/support">http://www.unidata.ucar.edu/support</a>  &lt;
+********************************************************************** &lt;

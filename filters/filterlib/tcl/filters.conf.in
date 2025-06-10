@@ -101,10 +101,17 @@ set filterslib(ignorebody)	{_(sdus|ti|ixt)|\+(grib|bufr)};
 # daa dod dpr dsd dta du3 du6 hhc oha pta n[0-3ab][chkmx] (dual pol)
 # (the dual pol will be added between july 2010 and december 2012)
 #
-# The radar files have wmoid sdus[2-8]. The sdus[235678] are data,
-# while 4 are status messages.
+# The radar files have wmoid sdus[2-8]. The sdus[23578] are data.
+# sdus4 are status messages and sdus6 have been used for different things.
+# So we will use the pqact.conf convention of gempak.
 #
-set filterslib(doradinfowmoid) {sdus[235678]};  # used in filters.lib
+# NOTE: Tue Jun 10 18:26:08 AST 2025 - many of the products have been removed.
+# Some not even produced (like the n?r) and some newer ones including
+# n0q removed from noaaport (see the file "nexrad-unidata-20220502.txt"
+# in the "dev-notes" directory). We keep the original configuration,
+# in case the noaaport removed products are available from another source.
+#
+set filterslib(doradinfowmoid) {sdus[23578]};  # used in filters.lib
 set filterslib(doradinfounz) {dpa|tr[0-2]|n[0-3][prsvz]|n(cr|st|tp|vl|vw)};
 set filterslib(doradinfounzretry) 1;  # retry the above withiout uncompresssing
 set filterslib(doradinforetry) 1; # retry the uncompressed with nbspunz

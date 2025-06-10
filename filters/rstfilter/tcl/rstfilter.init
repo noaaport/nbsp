@@ -130,7 +130,7 @@ set rstfilter(rss)		[file join $common(libdir) "rssfilter"];
 set rstfilter(slave) [file join $common(libdir) "rstfilter"];
 set rstfilter(slave,types) [list "rad" "sat" "default"];
 set rstfilter(slave,rad,ure) {_sdus[23578]};
-set rstfilter(slave,sat,ure) {_tig};
+set rstfilter(slave,sat,ure) {_ti};
 set rstfilter(slave,default,ure) {.*};
 
 ## The configuration file that override the defaults, if it exists.

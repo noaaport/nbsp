@@ -197,8 +197,8 @@
 #
 ## set dafilter(slave) [file join $common(libdir) "dafilter"];
 ## set dafilter(slave,types) [list "rad" "sat" "grib" "default"];
-## set dafilter(slave,rad,ure) {_sdus[2-8]} ;
-## set dafilter(slave,sat,ure) {_tig};
+## set dafilter(slave,rad,ure) {_sdus[23578]} ;
+## set dafilter(slave,sat,ure) {_ti};
 ## set dafilter(slave,grib,ure) {\+grib};
 ## set dafilter(slave,default,ure) {.*};
 
