@@ -472,9 +472,9 @@ proc filter_sat_img_insert_inventory {savedir fpathout} {
 	return;
     }
 
-    # At the time this function is called, either filter_satplain or
-    # filter_satmap will have run, and anyone could have created
-    # a png and/or gif file, depending on configuration options. Instead
+    # At the time this function is called, filter_sat_goesr
+    # will have run, and it could have created a png and/or gif file,
+    # depending on configuration options. Instead
     # of keeping track of all the possible combinations in all possible
     # places, here we could try to detect the presence of both images
     # and insert them in the inventory if they are found. In addition,
@@ -498,9 +498,8 @@ proc filter_sat_img_insert_inventory {savedir fpathout} {
 	set type [lindex $typelist 0];
 	set flag [lindex $typelist 1];
 	append fpath $fpathout_rootname "." $type;
-	if {$flag != 0} { 
-	    filter_insert_inventory $rstfilter(satinvsubdir) $savedir $fpath;
-	} elseif {[file exists $fpath]} {
+	
+	if {($flag != 0) || ([file exists $fpath] == 1)} { 
 	    filter_insert_inventory $rstfilter(satinvsubdir) $savedir $fpath;
 	}
     }

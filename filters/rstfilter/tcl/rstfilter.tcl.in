@@ -28,11 +28,10 @@ if {[file exists $initfile] == 0} {
 }
 source $initfile;
 
-# If (rad_enable) or (satmap_enable), or both, are set, the gempak environment
-# must exist for the nbspradmap and nbspsat tools.
-if {($rstfilter(rad_enable) == 1) || ($rstfilter(satmap_enable) == 1)} {
+# If (rad_enable) is set, the gempak environment must exist for nbspradmap.
+if {$rstfilter(rad_enable) == 1} {
     if {[file exists $rstfilter(gpenvfile)] == 0} {
-        log_msg "$rstfilter(gpenvfile) is needed for rad images and sat maps.";
+        log_msg "$rstfilter(gpenvfile) is needed for rad images.";
 	return 1;
     }
     source $rstfilter(gpenvfile);
@@ -125,14 +124,12 @@ proc process {finfo} {
     set _cmd [list filterlib_get_rcvars rc $finfo];
 
     # If rad is enable, extract the rc(radxxx) parameters
-    if {([info exists rstfilter(rad_enable)] == 0) || \
-	($rstfilter(rad_enable) == 1)} {
+    if {$rstfilter(rad_enable) == 1} {
 	lappend _cmd "-dorad";
     }
 
     # If sat is enable, extract the rc(satxxx) parameters
-    if {([info exists rstfilter(sat_enable)] == 0) || \
-	($rstfilter(sat_enable) == 1)} {
+    if {$rstfilter(sat_enable) == 1} {
 	lappend _cmd "-dosat";
     }
 
@@ -213,12 +210,6 @@ proc process {finfo} {
 #
 # Dynamic initialization
 #
-if {$rstfilter(satmap_rcfile_fpath) eq ""} {
-    set rstfilter(satmap_rcfile_fpath) \
-	[filterlib_find_conf $rstfilter(satmap_rcfile) \
-	$rstfilter(satmap_rcdirs) $rstfilter(satmap_rcsubdir)];
-}
-
 if {$rstfilter(radmap_rcfile_fpath) eq ""} {
     set rstfilter(radmap_rcfile_fpath) \
 	[filterlib_find_conf $rstfilter(radmap_rcfile) \
