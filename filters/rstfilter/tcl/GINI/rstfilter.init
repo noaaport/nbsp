@@ -130,7 +130,7 @@ set rstfilter(satloop_program)	"gifsicle";
 set rstfilter(satloop_program_preoptions)  {-l};         # or {} for defaults
 set rstfilter(satloop_program_postoptions) {-d 200 #-1}; # or {} for defaults
 ##R set rstfilter(satloop_count)	0;  # 0 means to include all images
-$$R set rstfilter(satloop_regex)	{^tig(e02|e04|q02)};
+##R set rstfilter(satloop_regex)	{^tig(e02|e04|q02)};
 #
 ##R set rstfilter(radloop_enable)	0;
 ##R set rstfilter(radloop_program)	"gifsicle";
