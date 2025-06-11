@@ -61,17 +61,17 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 ## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
 ## set gisfilter(sat_bundle,<tag>,fmt) [list shp shx dbf info ...];
 #
-# which should be constructed with the bundle functions.
-#
 # One example
 #
 ## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
 ## set gisfilter(sat_bundle,<tag>,fmt) "asc";
+#
+# They should be defined via the "bundle" functions
+# (see the file "defaults/gisfilter-bundle.conf")
+#
 
 #
 # rad configuration
-#
-
 #
 
 # The setting of "rad_awips1_regex" below ensures that only the files
@@ -117,6 +117,9 @@ set gisfilter(rad_outputfile_dirfmt,wkt) "rad/wkt/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_bundlelist) [list];
 set gisfilter(rad_bundlelist_seqnum) 0;
+#
+# Comments similar to those of the sat bundles above apply here.
+#
 
 #
 # rad2
@@ -243,7 +246,7 @@ proc rad_bundle_clear {} {
 # rad examples
 #
 # rad_bundle_add {n0q} "csv";
-# rad_bundle_add {n[0-3](q|s)jua};
+# rad_bundle_add {n[0-3](q|s|u)jua}; # "shp,shx,dbf,info,csv";
 
 #
 # Dynamic initialization

@@ -10,28 +10,38 @@ sat_bundle_clear;
 rad_bundle_clear;
 
 #
+# This is the default. Produce asc files for all goesr that this filter
+# handles (goesr excluding glm) and all radar types (that nbspradgis can do)
+# for all stations.
+# (The rest of the file contains examples, all commented out.)
+#
+sat_bundle_add {.*} "asc";
+rad_bundle_add {.*};
+
+#
 # sat goesr - examples
 #
 # sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
 # sat_bundle_add {ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "asc";
+# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "asc"; # asc for all goesr (no glm)
 #
 
 #
 # rad - examples
 #
-# rad_bundle_add {n0r} "csv";
-# rad_bundle_add {n[0-3](r|s)jua};
+# rad_bundle_add {n0q} "csv";
+# rad_bundle_add {n[0-3](q|s|u)jua};
 #
-# This will create n0r shapefiles for a bunch of stations in tx
+# This will create n0q shapefiles for a bunch of stations in tx
 #
-## rad_bundle_add "n0r(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add "n0q(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add {*}; # create shp files for all (stations and types)
 #
 # Similar, but more types
 #
-## rad_bundle_add "n0(r|s|v)(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
-## rad_bundle_add "n(0|1|2)r(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
-## rad_bundle_add "n(0|1|2)(r|s|v)(ama|bro|crp|dfx|dyx);
+## rad_bundle_add "n0(q|s)(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add "n(0|1|2)q(ama|bro|crp|dfx|dyx|ewx|fws|grk|hgx|lbb|maf|sjt)";
+## rad_bundle_add "n(0|1|2)(q|s)(ama|bro|crp|dfx|dyx);
 #
 # A shorthand for specifying all the sites in a given state is to use
 # the function
@@ -49,17 +59,24 @@ rad_bundle_clear;
 #
 # and, for example,
 #
-## rad_bundle_add "n0r([join [nbsp::radstations::bystate ar la nm ok tx] |])"
+## rad_bundle_add "n0q([join [nbsp::radstations::bystate ar la nm ok tx] |])"
 #
 
 #
-# Load "gis/gisfilter-bundle.conf"
+# If no (default) bundle lists have been defined up to this point,
+# load any defaults that may have been set in "gis/gisfilter-bundle.conf"
 #
-set _f [file join [file dirname [info script]] \
+if {([llength $gisfilter(sat_bundlelist)] == 0) ||
+   ([llength $gisfilter(rad_bundlelist)] == 0)} {
+   #
+   # Load "gis/gisfilter-bundle.conf"
+   #
+   set _f [file join [file dirname [info script]] \
 	"gis" [file tail [info script]]];
 
-if {[file exists $_f]} {
-    source $_f;
-}
+    if {[file exists $_f]} {
+       source $_f;
+    }
 
-unset -nocomplain _f;
+    unset -nocomplain _f;
+}
