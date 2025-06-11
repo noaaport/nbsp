@@ -2,19 +2,13 @@
 # $Id$
 #
 
-The rstfilter can produce loop sequences of the radar
-and satellite images. The relevant settings are commented out
-in the ``rstfilter.conf'' file.
+The scripts "nbspradmapc" (in rstfilter/radmap) and
+"nbspgoesrmapc" (in gisfilter/gismap) can produce loop sequences of the radar
+and satellite images. The relevant settings that those programs use by default
+are commented out in the ``rstfilter.conf'' file. They can be edited, or
+better put them in the "nbsp/site/rstfilter.conf" file for customization.
 
-(For generating radar image loop image files using the command line scripts
-see nbspradmapc.README).
-
-The functionality is enabled by setting the variables
-
-	set rstfilter(radloop_enable) 1
-	set rstfilter(satloop_enable) 1
-
-in that file. The default program used is gifsicle,
+The default program used is gifsicle,
 but others can be used. The program is called with a cmd line
 equivalent of
 
@@ -42,13 +36,6 @@ To make a loop that repeats the sequence only three times
 In any case, adding the "-O2" option (capital letter 'O') in the postoptions
 can be useful to optimize the animations.
 
-The variable "rstfilter(radloop_regex)" determines for which
-sites and type combinations the loops are generated. Its format is similar to
-the variable "rstfilter(rad_regex)". The latter determined which images
-are generated, and the former the loops.
-
-The variables for the satellite images have an analogous meaning.
-
 Note that the radar images require that gempak be installed since
-they are generated sing the gpmap_gif program. The satellite images
-do not require gempak.
+they are generated sing the "gpmap_gif" program. The satellite images
+require "map2img" from the mapserver package.
