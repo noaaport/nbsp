@@ -99,17 +99,18 @@ done
 #
 # install optional files from doc directory
 #
-install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
-if [ -n "`which chkconfig`" ]
-then
-	chkconfig --add nbspd
-elif [ -n "`which update-rc.d`" ]
-then
-	update-rc.d nbspd defaults 99
-fi
+#install -m 0755 $docdir/nbspd.sh-sample $rcdir/nbspd
+
+#if [ -n "`which chkconfig`" ]
+#then
+#	chkconfig --add nbspd
+#elif [ -n "`which update-rc.d`" ]
+#then
+#	update-rc.d nbspd defaults 99
+#fi
 
 [ -d $systemddir ] || mkdir -p $systemddir
-install -m 0644 $docdir/nbsp.service-generic $systemddir/nbsp.service
+install -m 0644 $docdir/nbsp.service-redhat $systemddir/nbsp.service
 systemctl enable nbsp
 
 savedir=`pwd`

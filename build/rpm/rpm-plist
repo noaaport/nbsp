@@ -299,7 +299,7 @@
 /usr/local/share/man/man1/nbspd.1.gz
 /usr/local/share/doc/nbsp/LICENSE
 /usr/local/share/doc/nbsp/nbspd.sh-sample
-/usr/local/share/doc/nbsp/nbsp.service-generic
+/usr/local/share/doc/nbsp/nbsp.service-redhat
 /usr/local/share/doc/nbsp/macosx-launchd.plist-sample
 /usr/local/share/doc/nbsp/level3.cfg-sample
 /usr/local/share/doc/nbsp/level2.cfg-sample
