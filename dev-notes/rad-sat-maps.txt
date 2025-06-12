@@ -1,0 +1,18 @@
+Wed Jun 11 11:10:24 AST 2025
+
+gpfilter -
+  radmos - Designed to do radar mosaics, using native gempak tools
+           for that purpose, without much intervention from us.
+           We ended up not using it (but it is there!).
+
+gisfilter -
+  gismsap [nbspgis(rad,sat,goesr)map]
+   - Designed to do maps using mapserver. In practice we ended using it
+     only for sat, and now for goesr.
+
+rstfilter - radmap, satmap
+     Designed to do sat and rad images, with maps, using gempak/gpmap_gif.
+     In practice we ended up using it only for rad. 
+           
+Summary: radmos is not being used, while the gisfilter/gismap tools
+are used for goesr, and the rstfilter/radmap  is used for rad.
