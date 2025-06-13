@@ -1,3 +1,9 @@
+#
+# NOTE: This is a copy of the file "nids.README" that is in the
+# "nids-june2025" directory of the "nbsp-devnotes" repo. Ths support (data)
+# files to which it refers are in the "nbsp-devnotes" repo.
+#
+
 ##
 Mon Jun  9 13:38:36 AST 2025
 
@@ -193,10 +199,11 @@ nbspunz, as in
   nbspunz -C n0sjua_20250608_2311.nids | nbspradgis
   nbspunz -C n0sjua_20250608_2311.nids | nbspradinfo
 
+I have not made a thorough test of which must be passed to nbspunz
+first. This n0s is one example that I have confirmed.
 In short, some of the "nbspradgis valid" files received by noaaport can be
 used "as is" with nbspradgis, while others must be passed through nbspunz
-first. I have not made a thorough test of which must be passed to nbspunz
-first. This n0s is one example that I have confirmed.
+first. 
 
 Therefore our strategy is firt try to use them as is, and in case of error
 retry with nbspunz. This is what we do in gislib-rad.tcl.
