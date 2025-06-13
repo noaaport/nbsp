@@ -6,7 +6,8 @@
 #        [-K] [-L <logfile>] [-o <outputname>] [-p] [-s <outputsize>]
 #        [-t <tmpdir>] [-v] [-D <defs>] <inputfile> [<rcfile>]
 #
-# -D => key=value,... comma separated list of gpmap(key)=var pairs
+# -D => key=value,... comma separated list of key=var pairs to define
+#                     gpmap(key) = val.
 # -b => background mode
 # -g => the name (or full path of the program)
 # -d => output directory
@@ -31,8 +32,8 @@
 # rstfilter to search for the default and use that (in this case the program
 # uses the filterlib file, and also the rstfilter configuration file).
 #
-# If the variable "awips" is defined in the command line by using the -D
-# option (e.g., -D awips=n0qjua) then this script executed nbspradinfo
+# If the variable gpmap(awips) is defined in the command line by using the -D
+# option (e.g., -D awips=n0qjua) then this script executes nbspradinfo
 # on the file and defines the following variables for the use of the rc
 # script:
 #
