@@ -1,0 +1,6 @@
+Fri Jun 13 08:47:02 AST 2025
+
+See the file "filters/gisfilter/dev-notes/nids.README", regarding
+the configuration/strategy to handle the nids files in the gisfilter
+(and in filterslib to extract the radinfo with nbspradinfo).
+

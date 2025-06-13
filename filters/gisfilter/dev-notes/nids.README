@@ -1,7 +1,7 @@
 ##
 Mon Jun  9 13:38:36 AST 2025
 
-The information below is copied from the file "gisfilter-nids/README.txt",
+The information below is copied from the file "nids/README.txt",
 which exlains we how we arrived at the settings of
 "gisfilter(rad_regex_awips1)" used in the "gisfilter.init2" file.
 
@@ -184,10 +184,10 @@ set gisfilter(rad_regex_awips1) \
 
 
 NOTE: The files that we have used to make the checks outlined here are those
-downloaded with the radftp.sh script from the official site.  However,
-it seems that those same files, as received via noaaport, may have
+downloaded with the radftp.sh script from the tgftp site.  However,
+it appears that some of those same files, as received via noaaport, have
 the header compressed with zlib.  In other words, nbspradgis
-cannot process those as they are received, they must be passed through
+cannot process those as they are received, and they must be passed through
 nbspunz, as in
 
   nbspunz -C n0sjua_20250608_2311.nids | nbspradgis
@@ -196,7 +196,7 @@ nbspunz, as in
 In short, some of the "nbspradgis valid" files received by noaaport can be
 used "as is" with nbspradgis, while others must be passed through nbspunz
 first. I have not made a thorough test of which must be passed to nbspunz
-first.
+first. This n0s is one example that I have confirmed.
 
 Therefore our strategy is firt try to use them as is, and in case of error
 retry with nbspunz. This is what we do in gislib-rad.tcl.
