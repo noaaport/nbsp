@@ -330,78 +330,48 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 	    $rc(body) $bodytxtre $ccbsaved $ccbsize];
     }
 
+    #
     # This is initialized to the default (extracted from the wmo header)
     # but it is overriden below when the data files contain a true time.
+    #
     set rc(seconds) [::nbsp::util::date::clock_seconds $rc(wmotime)];
 
     if {[regexp $filterslib(doradinfowmoid) $rc(wmoid)] && ($dorad == 1) && \
-	([regexp $filterslib(noradinfo) $rc(awips1)] == 0)} {
+	([regexp $filterslib(noradinfoawips1) $rc(awips1)] == 0)} {
 	#
-	# Try first those that are transmitted compressed.
-	# Since the result from catch is 0 or a positive number, we use
-	# -1 as a flag (instead of introducing another variable for the flag.)
+	# Try first assuming they have an uncompressed header
 	#
-	set radinfo_status -1;
-	if {[regexp $filterslib(doradinfounz) $rc(awips1)]} {
-	    set radinfo_status [catch {
-	        set radinfo [split \
-        	  [exec nbspunz -b -n 1 $rc(fpath) | nbspradinfo -b -C]];
-	    } errmsg];
+	set cmd_options [list];
 
-	    if {($radinfo_status != 0) && \
-	       ($filterslib(doradinfounzretry) == 1)} {
+	if {$ccbsaved == 1} {
+	   lappend cmd_options "-C";
+	}
 
-	       set radinfo_status -2;
-	       log_msg "Retrying without uncompressing $rc(fbasename).";
-	    }
+	set cmd [concat nbspradinfo $cmd_options $rc(fpath)];
+
+	set radinfo_status [catch {
+	    set radinfo [split [eval exec ${cmd}]];
+        } errmsg];
+
+	if {$radinfo_status != 0} {
+	   #
+	   # Try uncompressing the header
+	   #
+	   log_radinfo_msg "nbspradinfo error on $rc(fbasename): $errmsg";
+	   log_radinfo_msg "Retrying uncompressing $rc(fbasename).";
+	   
+	   set cmd [concat [list nbspunz -n 1 $rc(fpath) | nbspradinfo] \
+		     $cmd_options];
+
+	   set radinfo_status [catch {
+	       set radinfo [split [eval exec $cmd]];
+	   } errmsg];
+
+	   if {$radinfo_status == 0} {
+	       	log_radinfo_msg "OK uncompressing header of $rc(fbasename).";
+	   }
         }
-
-	# Now try those that were not seen above, and those that were seen
-	# but gave an error and are set to retry without unzip (e.g., nmd,net).
-	# Here we call nbspradinfo with the q flag unless
-	# filterslib(radinfoverbose) is set.
-
-	if {$radinfo_status < 0} {
-	    set old_status $radinfo_status;
-
-	    set _cmd [list nbspradinfo -b];
-	    if {$filterslib(radinfoverbose) == 0} {
-	        lappend _cmd "-q";
-	    }
-	    if {$ccbsaved == 1} {
-	        lappend _cmd "-C";
-	    }
-	    lappend _cmd $rc(fpath);
-
-            set radinfo_status [catch {
-                set radinfo [split [eval exec ${_cmd}]];
-            } errmsg];
-
-	    if {($old_status == -2) && ($radinfo_status == 0)} {
-	       	log_radinfo_msg "OK with uncompressed $rc(fbasename).";
-	    } elseif {($old_status == -1) && ($radinfo_status != 0) && \
-	    	($filterslib(doradinforetry) == 1)} {
-                #
-	        # This catches the files that were not processed by nbspunz
-                # above (because they are supposed to be uncompressed) but
-                # nbspradinfo has returned an error, and we try to see if it
-                # is the case of a site that is transmiting it zlib compressed.
-                # This is happening (Wed Jan 12 17:30:38 AST 2011) with
-                # some dsp, dvl, eet files (and maybe others).
-                #
-                log_radinfo_msg \
-			"Retrying with zlib compressed $rc(fbasename).";
-	        set radinfo_status [catch {
-	            set radinfo [split [exec nbspunz -b -n 1 $rc(fpath) | \
-		    	nbspradinfo -b -C]];
-	        } errmsg];
-                if {$radinfo_status == 0} {
-		    ## exec echo $rc(fname) >> /var/noaaport/radinfo.log
-                    log_radinfo_msg "OK with zlib compressed $rc(fbasename).";
-                }
-            }
-        }
-
+	   
 	if {$radinfo_status == 0} {
 	    set rc(radlat) [lindex $radinfo 0];
 	    set rc(radlon) [lindex $radinfo 1];

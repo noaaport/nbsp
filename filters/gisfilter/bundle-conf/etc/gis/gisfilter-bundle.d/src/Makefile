@@ -7,9 +7,9 @@
 # includes all conus sites, and "us" includes conus plus ak, hi and pr).
 #
 #RADENABLE = rad_conus.conf rad_ak.conf rad_gu.conf rad_hi.conf rad_pr.conf
+#SATENABLE =
 RADENABLE = rad_us.conf
 SATENABLE = sat.conf
-# SATENABLE =
 
 ENABLE = ${RADENABLE} ${SATENABLE}
 

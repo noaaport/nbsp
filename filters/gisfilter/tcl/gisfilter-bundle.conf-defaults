@@ -66,17 +66,13 @@ rad_bundle_add {.*};
 # If no (default) bundle lists have been defined up to this point,
 # load any defaults that may have been set in "gis/gisfilter-bundle.conf"
 #
-if {([llength $gisfilter(sat_bundlelist)] == 0) ||
+if {([llength $gisfilter(sat_bundlelist)] == 0) &&
    ([llength $gisfilter(rad_bundlelist)] == 0)} {
-   #
-   # Load "gis/gisfilter-bundle.conf"
-   #
+
    set _f [file join [file dirname [info script]] \
-	"gis" [file tail [info script]]];
+    "gis" [file tail [info script]]];
 
-    if {[file exists $_f]} {
-       source $_f;
-    }
-
-    unset -nocomplain _f;
+   if {[file exists ${_f}]} {
+      source ${_f};
+   }
 }
