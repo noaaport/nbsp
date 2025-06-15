@@ -21,9 +21,9 @@ rad_bundle_add {.*};
 #
 # sat goesr - examples
 #
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "asc"; # asc for all goesr (no glm)
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00} "asc"; # asc for all goesr (no glm)
 #
 
 #

@@ -16,7 +16,8 @@ set gisfilter(sat_inv_enable) 1;
 # sat goesr configuration
 #
 set gisfilter(sat_enable) 1;  # whether to process the ti(r|s|u) files
-set gisfilter(sat_regex)  {ti(r|s|u),!tir(s|t)00}; # exclude glm
+set gisfilter(sat_regex)  {^ti(r|s|u),!^tir(s|t)00}; # exclude glm
+## same as set gisfilter(sat_regex)  {^ti[rsu],!^tir[st]00};
 set gisfilter(sat_latest_enable)        1; # make link to latest
 set gisfilter(sat_latestname)   "latest";   # without the extension
 set gisfilter(sat_namefmt) \
@@ -238,9 +239,9 @@ proc rad_bundle_clear {} {
 #
 # sat goesr examples
 #
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
-# sat_bundle_add {ti(r|s|u),!tir(s|t)00} "asc";
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00}; # defaults to "shp,shx,dbf,info"
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00} "shp,shx,dbf,info,csv,asc";
+# sat_bundle_add {^ti(r|s|u),!tir(s|t)00} "asc";
 
 #
 # rad examples
