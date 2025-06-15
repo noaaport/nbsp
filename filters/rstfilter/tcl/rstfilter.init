@@ -46,23 +46,26 @@ set rstfilter(txt_any_enable)	1;
 # The images are generated without maps, so no external programs are required.
 # (See the dafilter.init for comments regarding the namefmt).
 #
-# NOTE: The rstfilter(sat_goesr_regex) is matched against $rc(wmoid)$rc(nawips)
-# that is against the wmoidppp (e.g., tire05pao). So for example, setting
+# NOTE: The filter can handle only the files with wmoid (see dafilter/sat.m4)
+#       {^ti[rsu],!^tir[st]00}
+# This is configured in the match_sat_goesr in "defs.m4".
+# The rstfilter(sat_goesr_regex) is matched against $rc(wmoid)$rc(nawips)
+# that is against the wmoidppp (e.g., tire05pao), and specifies what subset
+# of those files we want to enable. So for example, setting
 #
 #   set rstfilter(sat_goesr_regex) {^tire05pao};
 #
-# would match only the files with wmoid = tire05 and ppp = pao.
+# would process only the files with wmoid = tire05 and ppp = pao.
 #
 # To create the sat images, "sat_enable" must be set, and then
 # any of the others "sat_xxx_enable", currently only "sat_goesr_enable".
-# If 
 #
 set rstfilter(sat_enable)	 1;
 set rstfilter(sat_latest_enable) 1; # make link to lattest img
 set rstfilter(sat_latestname)	 "latest";
 #
-set rstfilter(sat_goesr_enable)	 1; # operational if "sat_enable" is set
-set rstfilter(sat_goesr_regex) {^ti[rsu],!^tir[st]00}; # see dafilter/sat.m4
+set rstfilter(sat_goesr_enable)	 1;  # operational if "sat_enable" is set
+set rstfilter(sat_goesr_regex) {.*}; # enable all the the default ones
 ## example: set rstfilter(sat_goesr_regex) {^tire05pao};
 set rstfilter(sat_goesr_datext)	".nc";
 set rstfilter(sat_goesr_keepnc)	0;	# 1 => keep the nc file

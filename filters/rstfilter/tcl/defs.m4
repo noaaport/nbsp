@@ -72,10 +72,14 @@ if {$rstfilter(rad_enable) == 1} {
   }
 })
 
+dnl
+dnl excludes glm
+dnl
 define(match_sat_goesr,
 if {($rstfilter(sat_enable) == 1) && ($rstfilter(sat_goesr_enable) == 1)} {
   lappend cond {
-    [regexp {^ti} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+    [filterlib_uwildmat `{^ti[rsu],!^tir[st]00}' $rc(wmoid)] && \
+      [filterlib_uwildmat $2 $1]
   }
   lappend action {
     set rc_status 0;

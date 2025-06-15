@@ -28,9 +28,11 @@ set dafilter(nntp_from)		"nbspfeed@noaaport.net";
 set dafilter(nntp_groupprefix)	"noaaport.data";
 set dafilter(hourlyfilefmt)     "%Y%m%d%H";
 
-##
+#
+# Sat: see comments in dafilter.conf
+#
 set dafilter(sat_enable)	1;
-set dafilter(sat_regex)		{.*};
+set dafilter(sat_regex)		{.*};  # which ones to enable
 set dafilter(sat_latest_enable)	1;
 set dafilter(sat_latestname)	"latest";
 #

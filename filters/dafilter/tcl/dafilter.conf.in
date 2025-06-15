@@ -45,11 +45,11 @@
 
 # Whether or not the satellite data files will be processed.
 # The regex variable is a uwildregex that is matched against
-# the directory name (e.g. "sat/goesr/tire05") to
+# the directory name (e.g. "sat/goesr/tire05/pao") to
 # specify which files to process.
 #
 ## set dafilter(sat_enable)	1;
-## set dafilter(sat_regex)		{.*};
+## set dafilter(sat_regex)	{.*};  # which ones to enable
 ## set dafilter(sat_latest_enable)	1;
 ## set dafilter(sat_latestname)	"latest";
 #

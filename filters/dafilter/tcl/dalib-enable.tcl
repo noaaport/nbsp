@@ -16,7 +16,7 @@ proc is_rad_rule_enabled {key} {
 
 proc is_sat_rule_enabled {key} {
 #
-# The key is the sat subdirectory name (e.g., sat/goesr/tir/tire05).
+# The key is the sat subdirectory name (e.g., sat/goesr/tir/tire05/pao).
 #
     global dafilter;
 
