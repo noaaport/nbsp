@@ -2,7 +2,7 @@
 #
 # $Id$
 # 
-# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmap_gif] \
+# Usage: nbspradmap [-b] [-d <outputdir>] [-g gpmapbin] \
 #        [-K] [-L <logfile>] [-o <outputname>] [-p] [-s <outputsize>]
 #        [-t <tmpdir>] [-v] [-D <defs>] <inputfile> [<rcfile>]
 #
@@ -23,19 +23,16 @@
 # -v => puts to stdout the name of the outputfile (this is used by
 #       nbspradmapc when asked to build a loop from the outputfile list.
 #
-# The input file can be the one with the compressed or uncompressed frames,
-# but without the CCB, and it can have the gempak header. This is what
-# gpmap_gif expects. If it does not have the gempak header, then [-h]
-# must be given so that nbspradinfo is called with the correct [-c] option
-# when the input file is of the uncompressed type (e.g., n0q and family). 
+# The input file must be without the CCB. It can start with or without
+# the gempak header. It can be the one with the compressed or uncompressed
+# pdb header (e.g., n0s or n0b, respectively).
+# 
 # If the <rcfile> is not specified, the program uses the same logic as the
 # rstfilter to search for the default and use that (in this case the program
 # uses the filterlib file, and also the rstfilter configuration file).
 #
-# If the variable gpmap(awips) is defined in the command line by using the -D
-# option (e.g., -D awips=n0qjua) then this script executes nbspradinfo
-# on the file and defines the following variables for the use of the rc
-# script:
+# The script executes nbspradinfo on the file and defines the following
+# variables for the use of the rc script:
 #
 # gpmap(radinfo,lat)
 # gpmap(radinfo,lon)
@@ -46,10 +43,10 @@
 #
 package require cmdline;
 
-set usage {nbspradmap [-b] [-d outputdir] [-g gpmap_gif] [-K] [-L logfile]
+set usage {nbspradmap [-b] [-d outputdir] [-g gpmapbin] [-K] [-L logfile]
     [-o outputname] [-p] [-s outputsize] [-t <tmpdir>] [-v] [-D <defs>]
     <inputfile> [<rcfile>]};
-set optlist {b p v K {d.arg ""} {g.arg "gpmap_gif"} {L.arg ""} {o.arg ""}
+set optlist {b p v K {d.arg ""} {g.arg "gpmap"} {L.arg ""} {o.arg ""}
     {s.arg "800;600"} {t.arg ""} {D.arg ""}};
 
 proc log_warn s {
@@ -104,7 +101,7 @@ proc source_template_unused {rcfile} {
     interp delete slave;
 }
 
-proc fill_gpmap_radinfo {doradinfounz_regexp} {
+proc fill_gpmap_radinfo {} {
 
     global option;
     global gpmap;
@@ -121,16 +118,25 @@ proc fill_gpmap_radinfo {doradinfounz_regexp} {
 	return;
     }
 
-    # This is copied from the filters.lib file, with the modifications needed
-    # for the uncompressed files (e.g., n0q, ...) which do not
-    # have the ccb header (since this script is assumed to operate on the
-    # files without the ccb).
+    #
+    # This is copied from the filters.lib file,
+    #
+    set radinfo_status [catch {
+ 	set radinfo [split [exec nbspradinfo $gpmap(inputfile)]];
+    } errmsg];
 
-    if {[regexp $doradinfounz_regexp $gpmap(rad,awips)]} {
-	set radinfo [split \
-	    [exec nbspunz -C -n 1 $gpmap(inputfile) | nbspradinfo]];
-    } else {
-	set radinfo [split [exec nbspradinfo $gpmap(inputfile)]];
+    if {$radinfo_status != 0} {
+	#
+	# Try uncompressing the header
+	#
+	set radinfo_status [catch {
+	    set radinfo [split \
+	        [exec nbspunz -C -n 1 $gpmap(inputfile) | nbspradinfo]];
+	} errmsg];
+    }
+
+    if {$radinfo_status != 0} {
+	log_err "Cannot get pdb header: $errmsg";
     }
 
     set gpmap(radinfo,lat) [lindex $radinfo 0];
@@ -197,13 +203,11 @@ if {$option(D) ne ""} {
 }
 
 # Fill the gpmap(radinfo,...) variables
-# (requires -D awips=... and the gpmap(inputfile) defined).
-#
-fill_gpmap_radinfo $filterslib(doradinfounz);
+fill_gpmap_radinfo
 
 set gpmapbin $option(g);
 
-# gpmap_gif only outputs gif, even if "png" is set in the DEVICE in the rcfile.
+# gpmapbin only outputs gif
 set gpmap(fmt) "gif";
 
 if {$option(s) eq ";"} {
@@ -277,6 +281,10 @@ if {[info exists fout]} {
     catch {close $fout};
 }
 
+if {$gpmapbin eq "gpmap"} {
+    exec gpend;
+}
+
 file delete "gemglb.nts" "last.nts";
 if {$option(K) == 0} {
     file delete $logfile;
@@ -294,9 +302,9 @@ if {$status != 0} {
     log_err $errmsg;
 }
 
-# It is possible that gpmap_gif did not produce the image.
+# It is possible that gpmap did not produce the image.
 if {[file exists $gpmap(outputfile)] == 0} {
-    log_err "gpmap_gif did not produce $gpmap(outputfile)";
+    log_err "$gpmapbin did not produce $gpmap(outputfile)";
 } else {
     file rename -force $gpmap(outputfile) $outputfile;
     set gpmap(outputfile) $outputfile;
