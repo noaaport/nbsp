@@ -23,6 +23,7 @@
 #      is "-l end,end" (the "latest"). When -L is given, the default is
 #      "-l 0,end". If the value of -l is a single number n, then it is
 #      interpreted as end-n,end.
+#
 # [-iI] In the default configuration, the program expects the command line
 #      argument to be of the form <wmoid/bbb>, e.g., "tire05/pao". Then
 #      the program constructs the input in two steps:
@@ -32,8 +33,7 @@
 #      directory "/var/noaaport/data/digamos".
 #      If [-I] is given, the command line argument <inputdir> is taken "as is".
 #      If the [-i] argument is given, then the
-#      "/var/noaaport/data/digamos" is prepended to the given <inputdir>
-#      
+#      "/var/noaaport/data/digamos" is prepended to the given <inputdir><#      
 # [-o] The name of each output image is the basename of the data file, with the
 #      "png" extension. The [-o] gives the name of the loop
 #      image file (the default is ${wmoid}+${bbb}.gif) when [-L] is given,
@@ -48,13 +48,17 @@
 # -L => create a loop from those images.
 # -K => if -L is specified, keep (do not delete) the individual images
 # -m => includes the map (uses map2img via nbspgoesrmap)
+# -b => background
+# -v => verbose
+#
+# Requires gifsicle
+
+package require cmdline;
 
 set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-c] [-g] [-m]
     [-d <outputdir>] [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
 
 set optlist {b v I K L c g i m {d.arg ""} {l.arg ""} {o.arg ""}};
-
-package require cmdline;
 
 #
 # defaults
@@ -197,13 +201,9 @@ if {$option(i) != 0} {
 }
 
 if {$option(l) eq ""} {
-    if {($option(L) == 1) && ($rstfilter(satloop_count) > 0)} {
-	set option(l) "end-$rstfilter(satloop_count),end";
-    } else {
-	set option(l) $option(range,$option(L));
-	if {$option(l) eq "end,end"} {
-	    set option(latest) 1;
-	}
+    set option(l) $option(range,$option(L));
+    if {$option(l) eq "end,end"} {
+	set option(latest) 1;
     }
 }
 
@@ -236,7 +236,7 @@ foreach f $flist {
     set goesrpath [file join $g(goesrdir) $f];
 
     set goesrbasename [file rootname [file tail $goesrpath]];
-    set outputpath [string cat ${goesrbasename} $option(imgext)];
+    set outputpath [string cat $goesrbasename $option(imgext)];
 
     if {($option(latest) == 1) && ($g(latestfile) ne "")} {
 	set outputpath $g(latestfile);
@@ -247,7 +247,7 @@ foreach f $flist {
     }
     
     if {$option(v) == 1} {
-	puts -nonewline "$f ... ";
+    	puts -nonewline "$f ... ";
     }
 
     set status [catch {
@@ -265,9 +265,9 @@ foreach f $flist {
 
     if {$status == 0} {	    
 	lappend output_flist $outputpath;
-	 if {$option(v) == 1} {
-	     puts "OK";
-	 }
+	if {$option(v) == 1} {
+	    puts "OK";
+	}
     } else {
 	file delete $outputpath;
 	if {$option(c) == 0} {
