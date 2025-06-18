@@ -44,7 +44,11 @@ proc make_latest {savedir savename latestname} {
 #
 # Create a link to the newest file.
 #
-    append linkpath $latestname [file extension $savename];
+    #
+    # Wed 18 Jun 2025 07:24:30 PM AST - don't add the extension
+    # append linkpath $latestname [file extension $savename];
+    #
+    set linkpath $latestname;
     set latest $savename;
 
     set currentdir [pwd];
