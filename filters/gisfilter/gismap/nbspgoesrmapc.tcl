@@ -23,7 +23,6 @@
 #      is "-l end,end" (the "latest"). When -L is given, the default is
 #      "-l 0,end". If the value of -l is a single number n, then it is
 #      interpreted as end-n,end.
-#
 # [-iI] In the default configuration, the program expects the command line
 #      argument to be of the form <wmoid/bbb>, e.g., "tire05/pao". Then
 #      the program constructs the input in two steps:
@@ -33,10 +32,11 @@
 #      directory "/var/noaaport/data/digamos".
 #      If [-I] is given, the command line argument <inputdir> is taken "as is".
 #      If the [-i] argument is given, then the
-#      "/var/noaaport/data/digamos" is prepended to the given <inputdir><#      
+#      "/var/noaaport/data/digamos" is prepended to the given <inputdir>
+#      
 # [-o] The name of each output image is the basename of the data file, with the
 #      "png" extension. The [-o] gives the name of the loop
-#      image file (the default is ${wmoid}+${bbb}.gif) when [-L] is given,
+#      image file (the default is ${wmoid}.${bbb}.gif) when [-L] is given,
 #      or the name of the image file when generating the "latest"
 #      (neither -L nor -l is given).
 #      
@@ -48,17 +48,13 @@
 # -L => create a loop from those images.
 # -K => if -L is specified, keep (do not delete) the individual images
 # -m => includes the map (uses map2img via nbspgoesrmap)
-# -b => background
-# -v => verbose
-#
-# Requires gifsicle
-
-package require cmdline;
 
 set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-c] [-g] [-m]
     [-d <outputdir>] [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
 
 set optlist {b v I K L c g i m {d.arg ""} {l.arg ""} {o.arg ""}};
+
+package require cmdline;
 
 #
 # defaults
@@ -169,7 +165,7 @@ if {$argc < 1} {
 
 set g(inputdir) [lindex $argv 0];    # default is e.g., tire05/pao
 append g(loopfile) \
-    [string map {"/" "+"} $g(inputdir)] $option(loopext); # e.g., tire05+pao
+    [string map {"/" "."} $g(inputdir)] $option(loopext); # e.g., tire05.pao.gif
 
 # [-L] requires that the output files be gif
 if {$option(L) == 1} {
@@ -184,13 +180,13 @@ if {$option(m) == 1} {
     set g(nbspgoesrimgprog) "nbspgoesrmap";
 }
 
-if {$option(I) eq 0} {
+if {$option(I) == 0} {
     # use the default, e.g., tire05/pao
     set g(wmoid02) [string range $g(inputdir) 0 2];	# e.g., tir
     eval set g(goesrsubdir) $option(goesrsubdir_default);
     set option(i) 1;
 } else {
-    # use it as is
+    # use it as given
     set g(goesrsubdir) $g(inputdir);
 }
 
@@ -236,7 +232,7 @@ foreach f $flist {
     set goesrpath [file join $g(goesrdir) $f];
 
     set goesrbasename [file rootname [file tail $goesrpath]];
-    set outputpath [string cat $goesrbasename $option(imgext)];
+    set outputpath [string cat ${goesrbasename} $option(imgext)];
 
     if {($option(latest) == 1) && ($g(latestfile) ne "")} {
 	set outputpath $g(latestfile);
@@ -247,7 +243,7 @@ foreach f $flist {
     }
     
     if {$option(v) == 1} {
-    	puts -nonewline "$f ... ";
+	puts -nonewline "$f ... ";
     }
 
     set status [catch {
@@ -265,9 +261,9 @@ foreach f $flist {
 
     if {$status == 0} {	    
 	lappend output_flist $outputpath;
-	if {$option(v) == 1} {
-	    puts "OK";
-	}
+	 if {$option(v) == 1} {
+	     puts "OK";
+	 }
     } else {
 	file delete $outputpath;
 	if {$option(c) == 0} {

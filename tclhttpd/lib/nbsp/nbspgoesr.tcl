@@ -57,13 +57,13 @@ proc nbspgoesr/latest {goesrdir imgdir outputname maxage {loopflag 0}} {
 	    foreach bbb $bbb_array_list($type,$code) {
 		set wmoid ${type}${code};
 		
-		# the input dir to nbspgoesrmapc
-		set inputdir [file join $wmoid $bbb];
-
-		# its name relative to docroot
-		# prepend "digatmos/sat/goesr/$wmoid02"
+		# the input directory relative to "digatmos/sat/goesr"
 		set wmoid02 [string range $wmoid 0 2];
-		set subdir [file join $goesrdir $wmoid02 $inputdir];
+		set inputdir [file join $wmoid02 $wmoid $bbb];
+
+		# input directory relative to docroot
+		# prepend "digatmos/sat/goesr"		
+		set subdir [file join $goesrdir $inputdir];
      
 		if {[file isdirectory $subdir]} {
 		    append result "<a href=display_goesrmap"\
@@ -95,7 +95,6 @@ proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
     global Config;
 
     set wmoidbbb ${wmoid}${bbb};
-    set inputdir [file join $wmoid $bbb];
     
     ::html::init;
     append result [::html::head "Latest sat map"] "\n";
@@ -140,10 +139,11 @@ proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
     if {$recreate == 1} {
 	set status [catch {
 	    if {$loopflag <= 0} {
-		exec nbspgoesrmapc -m -d $outputdir -o $outputname $inputdir;
+		exec nbspgoesrmapc -m -d $outputdir -o $outputname \
+		    $wmoid $bbb;
 	    } else {
 		exec nbspgoesrmapc -L -l $loopflag -c -m \
-		    -d $outputdir -o $outputname $inputdir;
+		    -d $outputdir -o $outputname $wmoid $bbb;
 	    }
 	} errmsg];
     }

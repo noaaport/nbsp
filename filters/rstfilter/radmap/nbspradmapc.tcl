@@ -3,9 +3,8 @@
 # $Id$
 #
 # Usage: nbspradmapc [-b] [-c] [-v] [-K] [-L] [-d <output_subdir>]
-#                    [-i] [-I inputdir] [-l <first,last>]
-#		     [-o <outputfile>] [-r <rcfile>] [-R <rcfile_path>]
-#                    <site> <type>
+#                    [-i] [-I] [-l <first,last>] [-o <outputfile>]
+#                    [-r <rcfile>] [-R <rcfile_path>] <inputdir>
 #
 # Examples: nbspradmapc jua/n0q
 #           nbspradmapc -l end-3,end jua/n0q
@@ -19,21 +18,20 @@
 #      interpreted as end-n,end.
 #
 # [-iI] In the default configuration, the program expects the command line
-#      argument to be of the form <site> <type>, e.g., "jua n0q". Then
+#      argument to be of the form <site>/<type>, e.g., "jua/n0q". Then
 #      the program constructs the input in two steps:
 #      (i) a data sub directory (for this example) as
 #      "nexrad/nids/jua/n0q".
 #      (ii) this subdirectory is assumed to be under the dafilter data
 #      directory "/var/noaaport/data/digamos".
-#      If [-I] is given, the data directory is taken to be <inputdir>.
-#      If the [-i] argument is given, then the
-#      "/var/noaaport/data/digamos" is prepended to the given to the
-#      data directory.
+#      If [-I] is given, the data directory is taken to be <inputdir>
+#      and it is used "as is".
+#      If the [-i] argument is given, then "/var/noaaport/data/digamos"
+#      is prepended to the given to the data directory.
 # [-o] The name of each output image is the basename of the data file, with the
 #      "gif" extension. The [-o] gives the name of the loop
 #      image file (the default is ${type}${site}.gif) when [-L] is given,
-#      or the name of the image file when generating the "latest"
-#      (neither -L nor -l is given).
+#      or of the latest file (neither -L nor -l given).
 #
 # [-d] Directory to put the output file (the default is the current directory.
 # [-c] When creating a loop, if one file gives an error, ignore that file
@@ -47,11 +45,11 @@
 
 package require cmdline;
 
-set usage {nbspradmapc [-b] [-c] [-v] [-K] [-L] [-d <output_subdir>]
-    [-i] [-I inputdir] [-l <first,last>] [-o <outputfile>]
-    [-r <rcfile>] [-R <rcfile_path>] <site> <type>};
+set usage {nbspradmapc [-b] [-c] [-v] [-I] [-K] [-L] [-d <output_subdir>]
+    [-i] [-l <first,last>] [-o <outputfile>]
+    [-r <rcfile>] [-R <rcfile_path>] <inputdir>};
 
-set optlist {b c v K L i {d.arg ""} {I.arg ""} {l.arg ""}  {o.arg ""}
+set optlist {b c v I K L i {d.arg ""} {l.arg ""}  {o.arg ""}
     {r.arg ""} {R.arg ""}};
 
 #
@@ -61,8 +59,7 @@ set option(range,0) "end,end";     # if option(L) == 0
 set option(range,1) "0,end";       # if option(L) == 1
 set option(imgext) ".gif";
 set option(loopext) ".gif";
-set option(nidssubdir_default) \
-    [file join "nexrad" "nids" {$g(site)} {$g(type)}];
+set option(nidssubdir_default) [file join "nexrad" "nids" {$g(inputdir)}];
 set option(latest) 0; # set below depending on -L and -l
 
 proc log_warn s {
@@ -112,7 +109,7 @@ proc make_loop {flist loopdir loopfile} {
     file mkdir [file dirname $loopfile];
     set looppath [file join $loopdir $loopfile];
     set looplock ${looppath}.lock.[pid];
-    
+
     set status [catch {
       eval exec $rstfilter(radloop_program) \
 	$rstfilter(radloop_program_preoptions) $flist \
@@ -154,20 +151,21 @@ set g(latestfile) "";	# determined dynamically below
 #
 array set option [::cmdline::getoptions argv $optlist $usage];
 set argc [llength $argv];
-if {$argc < 2} {
+if {$argc < 1} {
     log_err $usage;
 }
 
-set g(site) [lindex $argv 0];
-set g(type) [lindex $argv 1];
+set g(inputdir) [lindex $argv 0]; # default is, e.g., jua/n0q
+append g(loopfile) \
+    [string map {"/" "."} $g(inputdir)] $option(loopext); # e.g., jua.n0q.gif
 
-append g(loopfile) $g(type) $g(site) $option(loopext);
-
-if {$option(I) eq ""} {
+if {$option(I) == 0} {
+    # use the default
     eval set g(nidssubdir) $option(nidssubdir_default);
     set option(i) 1;
 } else {
-    set g(nidssubdir) $option(I);
+    # use it as given
+    set g(nidssubdir) $g(inputdir);
 }
 
 if {$option(i) != 0} {
@@ -218,7 +216,12 @@ if {[llength $flist] == 0} {
     log_err "Empty file list.";
 }
 
-set opts [list "-D" "awips=${g(type)}${g(site)}"];
+#
+# If we find the need to use this, we should add an option to the
+# script "-a <awips>"
+# set opts [list "-D" "awips=${g(type)}${g(site)}"];
+#
+set opts {};
 if {$option(d) ne ""} {
     #lappend opts "-d" $option(d) "-t" $option(d);
     lappend opts "-t" $option(d);
@@ -235,6 +238,7 @@ foreach f $flist {
 	set outputpath $g(latestfile);
     }
 
+    # do it explicitly instead of using the [-d] option 
     if {$option(d) ne "" } {
 	set outputpath [file join $option(d) $outputpath];
     }
@@ -253,8 +257,7 @@ foreach f $flist {
 	#lappend output_flist \
 	#   [eval exec nbspradmap -v $opts $nidspath $rcfile];
 	#
-	puts "exec nbspradmap $opts $nidspath $rcfile;"
-	exit 
+	eval exec nbspradmap $opts -o $outputpath $nidspath $rcfile;
     } errmsg];
 
     if {$status == 0} {	    
