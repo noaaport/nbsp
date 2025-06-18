@@ -66,7 +66,14 @@ proc nbsprad/latest {nidsdir imgdir outputname maxage {loopflag 0}} {
 		continue;
 	    }
 	    if {[file isdirectory [file join $nidsdir $s $t]]} {
-		append result "<a href=display_radmap?site=$s&type=$t&imgdir=$imgdir&outputname=$outputname&maxage=$maxage&loopflag=$loopflag>$t</a>\n";
+		append result "<a href=display_radmap"\
+		    "?site=$s"\
+		    "&type=$t"\
+		    "&imgdir=$imgdir"\
+		    "&outputname=$outputname"\
+		    "&maxage=$maxage"\
+		    "&loopflag=$loopflag>"\
+		    "$t</a>\n";
 	    }
 	}
 	append result "<br>\n";
@@ -122,10 +129,10 @@ proc nbsprad/display_radmap {site type imgdir outputname maxage {loopflag 0}} {
 
     if {$recreate == 1} {
 	set status [catch {
-	    if {$loopflag == 0} {
-		exec nbspradmapc -d $outputdir -o $outputname $site $type;
+	    if {$loopflag <= 0} {
+		exec nbspradmapc -d $outputdir -o $outputname $site/$type;
 	    } else {
-		exec nbspradmapc -L -d $outputdir -o $outputname $site $type;
+		exec nbspradmapc -L -d $outputdir -o $outputname $site/$type;
 	    }
 	} errmsg];
     }

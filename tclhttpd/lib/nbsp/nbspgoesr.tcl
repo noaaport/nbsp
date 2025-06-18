@@ -140,10 +140,10 @@ proc nbspgoesr/display_goesrmap {wmoid bbb imgdir outputname maxage \
 	set status [catch {
 	    if {$loopflag <= 0} {
 		exec nbspgoesrmapc -m -d $outputdir -o $outputname \
-		    $wmoid $bbb;
+		    $wmoid/$bbb;
 	    } else {
 		exec nbspgoesrmapc -L -l $loopflag -c -m \
-		    -d $outputdir -o $outputname $wmoid $bbb;
+		    -d $outputdir -o $outputname $wmoid/$bbb;
 	    }
 	} errmsg];
     }
