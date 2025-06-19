@@ -87,9 +87,11 @@ set gisfilter(rad_latest_enable) 1; # make link to latest
 set gisfilter(rad_latestname)    "latest";
 set gisfilter(rad_namefmt)       {$rc(awips)_$rc(ymd_hm)}; # without extension
 set gisfilter(rad_subdirfmt)     {$rc(awips2)/$rc(awips1)};
-#
-set gisfilter(rad_outputfile_namefmt,nids) \
-    {$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};  # for WCT
+##
+# set gisfilter(rad_outputfile_namefmt,nids) \
+#     {$rc(STATION)_$rc(WMOID)_$rc(AWIPS)_$rc(ymdhm)};  # for WCT
+##
+set gisfilter(rad_outputfile_namefmt,nids) "$gisfilter(rad_namefmt).nids";
 set gisfilter(rad_outputfile_dirfmt,nids) "rad/nids/$gisfilter(rad_subdirfmt)";
 #
 set gisfilter(rad_outputfile_namefmt,shp) "$gisfilter(rad_namefmt).shp";
