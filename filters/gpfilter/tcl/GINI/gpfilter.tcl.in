@@ -308,7 +308,150 @@ proc filter_pipe_old {seq fpath pipe_name cmd_options savename} {
     cd $_pwd;
 }
 
-proc filter_sat {seq fpath savedir savename} {
+proc filter_sat_unz_unused {seq fpath} {
+
+# This function assumes that the input file (fpath) has been saved in
+# uncompressed form. It is to be used if the nbsp processor is configured
+# to uncompress the file frames on the fly and save it in uncompresed
+# form.
+
+    global gpfilter;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+    set satdir $gpfilter(satdef,satdir);
+    set sattmpdir $gpfilter(satdef,sattmpdir);
+
+    set _pwd [pwd];
+
+    cd $gpfilter(dec_datadir);
+    file mkdir $sattmpdir
+
+    set status [catch {
+        set params [exec nbspsat -g -d $sattmpdir $fpath]
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2];
+	set channel [lindex $params 3];
+	set res [lindex $params 4];
+	set time [lindex $params 5];
+	set tmpname [lindex $params 6];
+
+	append res $gpfilter(satdef,sat_res_suffix);
+
+	# Convert the sector and channel numbers to names.
+	# Set it to default values in case there is no official name assigned.
+
+	if {[info exists gpfilter(satdef,sat_sector,$sector)]} {
+    	    set sat_sector $gpfilter(satdef,sat_sector,$sector);
+	} else {
+	    append sat_sector "sector" $sector;
+	}
+
+	if {[info exists gpfilter(satdef,sat_channel,$channel)]} {
+    	    set sat_channel $gpfilter(satdef,sat_channel,$channel);
+	} else {
+	    append sat_channel "channel" $channel;
+	}
+
+	set dir [file join $sat_sector $res $sat_channel];
+	set fname "";
+	append fname $sat_channel "_" $time;
+
+	# The mechanism to enable/disable individual types
+	set savedir [file join $satdir $dir];
+	if {[is_sat_rule_enabled $savedir] != 0} {
+	    set status [catch {
+		set pathout [file join $savedir $fname];
+		file mkdir $savedir;
+		file rename -force [file join $sattmpdir $tmpname] $pathout;
+		filter_sat_insert_inventory $dir \
+		    [file join $gpfilter(dec_datadir) $pathout];
+	    } errmsg];
+	}
+    }
+
+    if {$status != 0} {
+	log_msg "Could not process $fpath.";
+	log_msg $errmsg;
+    }
+
+    cd $_pwd;
+}
+
+proc filter_sat_gini_unused {seq fpath} {
+
+# This function assumes that the input file (fpath) has been saved in
+# compressed form. It is to be used if the nbsp processor is configured
+# to save the file frames as they come, in compressed form.
+
+    global gpfilter;
+
+    if {$gpfilter(satdef_sourced) == 0} {
+	return;
+    }
+    set satdir $gpfilter(satdef,satdir);
+
+    set _pwd [pwd];
+    cd $gpfilter(dec_datadir);
+
+    # This command just extracts the information from the nesdis pdb
+    set status [catch {
+        set params [exec nbspsat -i $fpath]
+    } errmsg];
+
+    if {$status == 0} {
+	set sector [lindex $params 2]
+	set channel [lindex $params 3]
+	set res [lindex $params 4]
+	set time [lindex $params 5]
+	set tmpname [lindex $params 6]
+
+	append res $gpfilter(satdef,sat_res_suffix);
+
+	# Convert the sector and channel numbers to names.
+	# Set it to default values in case there is no official name assigned.
+
+	if {[info exists gpfilter(satdef,sat_sector,$sector)]} {
+    	    set sat_sector $gpfilter(satdef,sat_sector,$sector);
+	} else {
+	    append sat_sector "sector" $sector;
+	}
+
+	if {[info exists gpfilter(satdef,sat_channel,$channel)]} {
+    	    set sat_channel $gpfilter(satdef,sat_channel,$channel);
+	} else {
+	    append sat_channel "channel" $channel;
+	}
+
+	set dir [file join $sat_sector $res $sat_channel];
+	set fname "";
+	append fname $sat_channel "_" $time;
+
+	# The mechanism to enable/disable individual types
+	set savedir [file join $satdir $dir];
+	if {[is_sat_rule_enabled $savedir] != 0} {
+	    set status [catch {
+		set pathout [file join $savedir $fname];
+		file mkdir $savedir;
+		file copy -force $fpath $pathout;
+		filter_sat_insert_inventory $dir \
+		    [file join $gpfilter(dec_datadir) $pathout];
+	    } errmsg];
+	}
+    }
+
+    if {$status != 0} {
+	log_msg "Could not process $fpath.";
+	log_msg $errmsg;
+    }
+
+    cd $_pwd;
+}
+
+proc filter_sat_ngini {seq fpath savedir savename} {
     #
     # "savedir" is the subdirectory under the gempak data dir, by default
     # "/var/noaaport/data/gempak"
@@ -342,6 +485,20 @@ proc filter_sat {seq fpath savedir savename} {
     }
 
     cd $_pwd;
+
+    return;
+}
+
+proc filter_sat_polar {seq fpath savedir savename} {
+
+    filter_sat_ngini $seq $fpath $savedir $savename;
+
+    return;
+}
+
+proc filter_sat_goesr {seq fpath savedir savename} {
+
+    filter_sat_ngini $seq $fpath $savedir $savename;
 
     return;
 }

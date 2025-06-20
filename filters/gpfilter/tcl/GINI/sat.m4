@@ -33,35 +33,35 @@ dnl
 dnl
 dnl polar
 dnl
-match_sat($rc(wmoid), ^tip,
-images/sat/viirs/[file join [string range $rc(WMOID) 0 2] $rc(WMOID) $rc(NAWIPS)],
+match_sat_polar($rc(wmoid), ^tip,
+images/sat/viirs/[string range $rc(WMOID) 0 2]/$rc(WMOID)/$rc(NAWIPS),
 $rc(WMOID)$rc(NAWIPS)_${ymd_hm})
 
 dnl
 dnl ixt
 dnl
-match_sat($rc(wmoid), ^ixt,
-images/sat/goesr/[file join [string range $rc(WMOID) 0 2] $rc(WMOID) $rc(NAWIPS)],
+match_sat_goesr($rc(wmoid), ^ixt,
+images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID)$rc(NAWIPS),
 $rc(WMOID)$rc(NAWIPS)_${ymd_hm})
 
 dnl
 dnl goesr - glm
 dnl
-match_sat($rc(wmoid), ^tir[st]00,
-images/sat/glm/[file join [string range $rc(WMOID) 0 2] $rc(WMOID) $rc(NAWIPS)],
+match_sat_goesr($rc(wmoid), ^tir[st]00,
+images/sat/glm/[string range $rc(WMOID) 0 2]/$rc(WMOID)$rc(NAWIPS),
 $rc(WMOID)$rc(NAWIPS)_${ymd_hm})
 
 dnl
 dnl goesr - no need to exclude the glm because they been already catched
 dnl
-match_sat($rc(wmoid), ^ti[rsu],
-images/sat/goesr/[file join [string range $rc(WMOID) 0 2] $rc(WMOID) $rc(NAWIPS)],
+match_sat_goesr($rc(wmoid), ^ti[rsu],
+images/sat/goesr/[string range $rc(WMOID) 0 2]/$rc(WMOID)$rc(NAWIPS),
 $rc(WMOID)$rc(NAWIPS)_${ymd_hm})
 
 dnl
 dnl what used to be the gini (ti[cdgt]) files
 dnl (see command in sat.m4 in dafilter 
 dnl
-match_sat($rc(wmoid), ^ti,
-images/sat/other/[file join [string range $rc(WMOID) 0 2] $rc(WMOID) $rc(NAWIPS)],
+match_sat_goesr($rc(wmoid), ^ti,
+images/sat/other/[string range $rc(WMOID) 0 2]/$rc(WMOID)$rc(NAWIPS),
 $rc(WMOID)$rc(NAWIPS)_${ymd_hm})
