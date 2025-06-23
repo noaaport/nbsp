@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jose F. Nieves <nieves@ltp.uprrpedu>
+ * Copyright (c) 2025 Jose F. Nieves <nieves@ltp.uprrp.edu>
  *
  * See LICENSE
  *

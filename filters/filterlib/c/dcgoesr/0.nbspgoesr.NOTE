@@ -1,11 +1,23 @@
+Sun Jun 22 20:50:10 AST 2025
+
 Given nx, ny, the nbspgoesr tools require a memory at leat of order
+(a <cmi, lon, lat> trio for each point)
 
-sizeof(double) * nx * ny
+3 * sizeof(double) * nx * ny
 
-So, for example, for an OR_ABI file with
+So, for example, for an OR_ABI file with (resolution "1")
 
   nx = ny = 10848
 
-this implies at least ~ 1GB.
+this implies at least ~ 3GB.
 
+For files with resolution "2" (half as many points in each axis)
+the requirement is then ~ 0.7 GB.
 
+For files with resolution "0.5" (.e.g. C02),
+
+  nx = ny = 21696 ==> Npoints ~ 500 x 10^6
+
+In this case (twice as many points in eaxh direction)
+
+  3 * sizeof(double) * nx * ny ~ 12 GB

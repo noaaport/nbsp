@@ -146,8 +146,7 @@ static void cleanup(void) {
 int main(int argc, char **argv){
 
   char *optstr = "be:n:";
-  char *usage = "nbspgoesrasc [-b] [-e <inputstr>]"
-    " [-n <basename>] <ascfile>";
+  char *usage = "nbspgoesrasc [-b] [-e <inputstr>] [-n <basename>] <ascfile>";
   int status = 0;
   int c;
 
