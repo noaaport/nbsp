@@ -10,7 +10,7 @@ proc filter_sat {rc_varname} {
 
     foreach bundle $gisfilter(sat_bundlelist) {
 	set regex $gisfilter(sat_bundle,$bundle,regex);
-	if {[filterlib_uwildmat $regex $rc(wmoid)] == 0} {
+	if {[filterlib_uwildmat $regex $rc(wmoid)$rc(nawips)] == 0} {
 	    continue;
 	}
 	filter_sat_convert_goesr rc $bundle;

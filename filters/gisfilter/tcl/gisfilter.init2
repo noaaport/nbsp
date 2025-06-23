@@ -59,12 +59,12 @@ set gisfilter(sat_bundlelist_seqnum) 0;
 
 # Bundles are of the form
 #
-## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
+## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)}; # matched against wmoidbbb
 ## set gisfilter(sat_bundle,<tag>,fmt) [list shp shx dbf info ...];
 #
-# One example
+# An example for specific file
 #
-## set gisfilter(sat_bundle,<tag>,regex) {tir(e|a)};  # matched against wmoid
+## set gisfilter(sat_bundle,<tag>,regex) {tire05pao}; 
 ## set gisfilter(sat_bundle,<tag>,fmt) "asc";
 #
 # They should be defined via the "bundle" functions
