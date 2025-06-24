@@ -6,8 +6,10 @@ proc filter_sat {rc_varname} {
     global gisfilter;
     upvar $rc_varname rc;
 
+    # the data file is saved if the filters accepts the file
     filter_sat_create_goesr rc;
 
+    # only those in the bundles configured are converted to gis formats
     foreach bundle $gisfilter(sat_bundlelist) {
 	set regex $gisfilter(sat_bundle,$bundle,regex);
 	if {[filterlib_uwildmat $regex $rc(wmoid)$rc(nawips)] == 0} {

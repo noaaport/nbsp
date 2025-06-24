@@ -6,8 +6,10 @@ proc filter_rad {rc_varname} {
     global gisfilter;
     upvar $rc_varname rc;
 
+    # the data file is saved if the filters accepts the file
     filter_rad_create_nids rc;
 
+    # only those in the bundles configured are converted to gis formats
     foreach bundle $gisfilter(rad_bundlelist) {
 	set regex $gisfilter(rad_bundle,$bundle,regex);
 	if {[filterlib_uwildmat $regex $rc(awips)] == 0} {
