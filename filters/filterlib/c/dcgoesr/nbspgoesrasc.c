@@ -6,12 +6,13 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] ascfile
- * nbspgoesrasc [-b] [-p <prefix>] ascfile  < inputstr_list
+ * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
+ * nbspgoesrasc [-b] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
  *
  * -b => background
  * -e => input string, for example "-70,14,-60,24,1"
  * -p => prefix for the name of the output files (default is "z")
+ * -s => suffix for the name of the output files (default is ".asc")
  * If -e is not given the program reads the input strings from stdin.
  * 
  * Example:
@@ -29,14 +30,19 @@
  *
  *   nbspgoesrasc -e "-70,12,-60,22,1" <file>.asc
  *
- * will produce the file "z01.<file>.asc" with the coordinates limited
+ * will produce the file "z01.asc" with the coordinates limited
  * by the rectangle "-70,12,-60,22". The "1" at the end defines the
- * the index of the output file name. In addition the [-n] can be
- * used to set the basename of the output; for example
+ * the index of the output file name. In addition the [-p] can be
+ * used to set the prefix name of the output; for example
  *
  *   nbspgoesrasc -e "-70,12,-60,22,9" -p zone <file>.asc
  *
- * will produce the file with the same contents, but named "zone09.<file>.asc".
+ * will produce the file with the same contents, but named "zone09.asc".
+ * The [-s] option can be used to modify the suffix. For example,
+ *
+ *   nbspgoesrasc -e "-70,12,-60,22,9" -s ".file.asc" <file>.asc
+ *
+ * will produce the file with the same contents, but named "z09.file.asc".
  */
 /*
  * The fixed parameters are:
@@ -67,7 +73,8 @@
 /* MAXINDEX is 99 if the format is %02d */
 #define DCGOESR_GRID_MAP_NODATA -1
 #define DCGOESRASC_OUTPUT_PREFIX "z"
-#define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d.%s"
+#define DCGOESRASC_OUTPUT_SUFFIX ".asc"
+#define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d%s"	/* prefix.nn.suffix */
 #define DCGOESRASC_MAXINDEX	99
 
 struct cutasc_st {
@@ -94,13 +101,14 @@ struct {
   int opt_background;		/* -b */
   char *opt_inputstr;		/* -e */
   char *opt_prefix;             /* -p */
+  char *opt_suffix;             /* -s */
   char *opt_ascfile;		/* the input asc data file */
   /* variables */
   char *outputfile;
   int outfname_length;		/* length of the output file name */
   struct cutasc_st *ca;
   int *data;
-} g = {0, NULL, DCGOESRASC_OUTPUT_PREFIX, NULL,
+} g = {0, NULL, DCGOESRASC_OUTPUT_PREFIX, DCGOESRASC_OUTPUT_SUFFIX, NULL,
        NULL, 0, NULL, NULL};
 
 static void init(void);
@@ -121,8 +129,8 @@ static void init(void) {
   if(g.ca == NULL)
     log_err(1, "%s", "Error from malloc");
 
-  /* The "2 + 1" depends on the DCGOESRASC_OUTPUT_FNAMEFMT */
-  fname_length = strlen(g.opt_prefix) + 2 + 1 + strlen(g.opt_ascfile);
+  /* The "2" depends on the DCGOESRASC_OUTPUT_FNAMEFMT */
+  fname_length = strlen(g.opt_prefix) + 2 + strlen(g.opt_suffix);
   g.outputfile = malloc(fname_length + 1);
   if(g.outputfile == NULL)
     log_err(1, "%s", "Error from malloc");
@@ -144,8 +152,9 @@ static void cleanup(void) {
 
 int main(int argc, char **argv){
 
-  char *optstr = "be:p:";
-  char *usage = "nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] <ascfile>";
+  char *optstr = "be:p:s:";
+  char *usage =
+    "nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s suffix] <ascfile>";
   int status = 0;
   int c;
 
@@ -161,6 +170,9 @@ int main(int argc, char **argv){
       break;
     case 'p':
       g.opt_prefix = optarg;
+      break;
+    case 's':
+      g.opt_suffix = optarg;
       break;      
     default:
       log_info(usage);
@@ -358,7 +370,7 @@ static int process_input(int index) {
 
   /* Open the output file */
   n = snprintf(g.outputfile, g.outfname_length + 1, DCGOESRASC_OUTPUT_FNAMEFMT,
-	       g.opt_prefix, index, g.opt_ascfile);
+	       g.opt_prefix, index, g.opt_suffix);
   assert(n == g.outfname_length);
 
   fp = fopen(g.outputfile, "w");
