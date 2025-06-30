@@ -6,12 +6,12 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-n <basename>] ascfile
- * nbspgoesrasc [-b] [-n <basename>] ascfile  < inputstr_list
+ * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] ascfile
+ * nbspgoesrasc [-b] [-p <prefix>] ascfile  < inputstr_list
  *
  * -b => background
  * -e => input string, for example "-70,14,-60,24,1"
- * -n => basename for the output files (default is "z")
+ * -p => prefix for the name of the output files (default is "z")
  * If -e is not given the program reads the input strings from stdin.
  * 
  * Example:
@@ -29,14 +29,14 @@
  *
  *   nbspgoesrasc -e "-70,12,-60,22,1" <file>.asc
  *
- * will produce the file "z01.asc" with the coordinates limited
+ * will produce the file "z01.<file>.asc" with the coordinates limited
  * by the rectangle "-70,12,-60,22". The "1" at the end defines the
  * the index of the output file name. In addition the [-n] can be
  * used to set the basename of the output; for example
  *
- *   nbspgoesrasc -e "-70,12,-60,22,9" -n zone <file>.asc
+ *   nbspgoesrasc -e "-70,12,-60,22,9" -p zone <file>.asc
  *
- * will produce the file with the same contents, but named "zone09.asc".
+ * will produce the file with the same contents, but named "zone09.<file>.asc".
  */
 /*
  * The fixed parameters are:
@@ -66,10 +66,9 @@
 /* If FNAMEFMT is changed, check fname_length in the function init() */
 /* MAXINDEX is 99 if the format is %02d */
 #define DCGOESR_GRID_MAP_NODATA -1
-#define DCGOESRASC_OUTPUT_BASENAME "z"
-#define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d%s"
+#define DCGOESRASC_OUTPUT_PREFIX "z"
+#define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d.%s"
 #define DCGOESRASC_MAXINDEX	99
-#define DCGOESRASC_OUTPUT_SUFFIX ".asc"
 
 struct cutasc_st {
   size_t nx;
@@ -94,14 +93,14 @@ struct cutasc_st {
 struct {
   int opt_background;		/* -b */
   char *opt_inputstr;		/* -e */
-  char *opt_basename;           /* -n */
+  char *opt_prefix;             /* -p */
   char *opt_ascfile;		/* the input asc data file */
   /* variables */
   char *outputfile;
   int outfname_length;		/* length of the output file name */
   struct cutasc_st *ca;
   int *data;
-} g = {0, NULL, DCGOESRASC_OUTPUT_BASENAME, NULL,
+} g = {0, NULL, DCGOESRASC_OUTPUT_PREFIX, NULL,
        NULL, 0, NULL, NULL};
 
 static void init(void);
@@ -122,8 +121,8 @@ static void init(void) {
   if(g.ca == NULL)
     log_err(1, "%s", "Error from malloc");
 
-  /* The "2" depends on the DCGOESRASC_OUTPUT_FNAMEFMT */
-  fname_length = strlen(g.opt_basename) + 2 + strlen(DCGOESRASC_OUTPUT_SUFFIX);
+  /* The "2 + 1" depends on the DCGOESRASC_OUTPUT_FNAMEFMT */
+  fname_length = strlen(g.opt_prefix) + 2 + 1 + strlen(g.opt_ascfile);
   g.outputfile = malloc(fname_length + 1);
   if(g.outputfile == NULL)
     log_err(1, "%s", "Error from malloc");
@@ -145,8 +144,8 @@ static void cleanup(void) {
 
 int main(int argc, char **argv){
 
-  char *optstr = "be:n:";
-  char *usage = "nbspgoesrasc [-b] [-e <inputstr>] [-n <basename>] <ascfile>";
+  char *optstr = "be:p:";
+  char *usage = "nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] <ascfile>";
   int status = 0;
   int c;
 
@@ -160,8 +159,8 @@ int main(int argc, char **argv){
     case 'e':
       g.opt_inputstr = optarg;
       break;
-    case 'n':
-      g.opt_basename = optarg;
+    case 'p':
+      g.opt_prefix = optarg;
       break;      
     default:
       log_info(usage);
@@ -359,7 +358,7 @@ static int process_input(int index) {
 
   /* Open the output file */
   n = snprintf(g.outputfile, g.outfname_length + 1, DCGOESRASC_OUTPUT_FNAMEFMT,
-	       g.opt_basename, index, DCGOESRASC_OUTPUT_SUFFIX);
+	       g.opt_prefix, index, g.opt_ascfile);
   assert(n == g.outfname_length);
 
   fp = fopen(g.outputfile, "w");
