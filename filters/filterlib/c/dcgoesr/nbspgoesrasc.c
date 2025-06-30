@@ -10,8 +10,8 @@
  * nbspgoesrasc [-b] [-n <basename>] ascfile  < inputstr_list
  *
  * -b => background
- * -e => input string, for example "-70,14,-60,24,1" (conflicts with -f)
- * -n => basename for the output files (default is "output")
+ * -e => input string, for example "-70,14,-60,24,1"
+ * -n => basename for the output files (default is "z")
  * If -e is not given the program reads the input strings from stdin.
  * 
  * Example:
@@ -29,7 +29,7 @@
  *
  *   nbspgoesrasc -e "-70,12,-60,22,1" <file>.asc
  *
- * will produce the file "output01.asc" with the coordinates limited
+ * will produce the file "z01.asc" with the coordinates limited
  * by the rectangle "-70,12,-60,22". The "1" at the end defines the
  * the index of the output file name. In addition the [-n] can be
  * used to set the basename of the output; for example
@@ -66,7 +66,7 @@
 /* If FNAMEFMT is changed, check fname_length in the function init() */
 /* MAXINDEX is 99 if the format is %02d */
 #define DCGOESR_GRID_MAP_NODATA -1
-#define DCGOESRASC_OUTPUT_BASENAME "output"
+#define DCGOESRASC_OUTPUT_BASENAME "z"
 #define DCGOESRASC_OUTPUT_FNAMEFMT "%s%02d%s"
 #define DCGOESRASC_MAXINDEX	99
 #define DCGOESRASC_OUTPUT_SUFFIX ".asc"
