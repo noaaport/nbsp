@@ -1,5 +1,29 @@
-Sun Jun 22 20:50:10 AST 2025
-(See the update in ``1.nbspgoesr.README'')
+* Fri Jul  4 18:09:24 AST 2025
+
+Initially all the (x, y, lon, lat, cmi) variables were declared double.
+We have changed all of them to float to reduce the size of the memory
+requirements. The initial note below (Sun Jun 22 20:50:10 AST 2025)
+refers to the original requirements, which are now reduced by 1/2.
+
+The original [.c .h] files are in dcgoesr-double.tar, and  the scripts used
+for the conversion were as follows.
+--------------------------------------
+In cvt.sed:
+
+  /double/s//float/g
+--------------------------------------
+In cvt.sh:
+
+#!/bin/sh
+
+for file in *.c *.h
+do
+    sed -f cvt.sed $file > ${file}.new
+    mv ${file}.new $file
+done
+---------------------------------------
+* Sun Jun 22 20:50:10 AST 2025
+
 
 Given nx, ny, the nbspgoesr tools require a memory at leat of order
 (a <cmi, lon, lat> trio for each point)
