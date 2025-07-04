@@ -17,8 +17,8 @@
 
 /* The projection-transformed data to lon/lat */
 struct dcgoesr_point_st {
-  double lon;	/* in degrees */
-  double lat;	/* in degrees */
+  float lon;	/* in degrees */
+  float lat;	/* in degrees */
   uint8_t level; /* a copy of the cmi normalized to 0-255 */
 };
 
@@ -28,18 +28,18 @@ struct dcgoesr_point_map_st {
   /*
    * "bounding box" (smallest rectangle that encloses the raw data)
    */
-  double lon_min;
-  double lat_min;
-  double lon_max;
-  double lat_max;
+  float lon_min;
+  float lat_min;
+  float lon_max;
+  float lat_max;
   /*
    * "maximum enclosing rectangle" (largest rectangle excluding background
    * points (level 0) in the determination of the limits).
    */ 
-  double lon_ll;
-  double lat_ll;
-  double lon_ur;
-  double lat_ur;
+  float lon_ll;
+  float lat_ll;
+  float lon_ur;
+  float lat_ur;
   /*
    * Some of the parameters extracted from the nc file are stored/copied here
    * so that public functions only need the pmap structure (not the nc data st)
@@ -47,13 +47,13 @@ struct dcgoesr_point_map_st {
    */
   int nx;
   int ny;
-  double lorigin; /* for the x,y -> lon,lat conversion */
-  double x_min;
-  double y_min;
-  double x_max;
-  double y_max;
-  double dx;
-  double dy;
+  float lorigin; /* for the x,y -> lon,lat conversion */
+  float x_min;
+  float y_min;
+  float x_max;
+  float y_max;
+  float dx;
+  float dy;
 };
 
 /* The regridded data */
@@ -63,13 +63,13 @@ struct dcgoesr_grid_map_st {
   size_t numpoints;	/* nlon * nlat */
   size_t nlon;
   size_t nlat;
-  double lon_min;
-  double lat_min;
-  double lon_max;
-  double lat_max;
-  double dlon;
-  double dlat;
-  double cellsize;	/* for square "asc" cell grids */
+  float lon_min;
+  float lat_min;
+  float lon_max;
+  float lat_max;
+  float dlon;
+  float dlat;
+  float cellsize;	/* for square "asc" cell grids */
 };
 
 /* public functions */

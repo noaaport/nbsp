@@ -21,17 +21,17 @@
 #define RAD_PER_DEG     0.017453		/* pi/180 */
 #define DEG_PER_RAD	57.295780		/* 180/pi */
 
-void xy2lonlat(double x, double y, double *lon, double *lat,
-		      double lorigin) {
+void xy2lonlat(float x, float y, float *lon, float *lat,
+		      float lorigin) {
   /*
    * The parameters x,y,lon,lat in the argument are in radians.
    * The longitude_of_projection_origin(lorigin) is in degrees.
    */
-  double H = PERSPECTIVE_POINT_HEIGHT + SEMI_MAJOR;
-  double req = SEMI_MAJOR;
-  double rpol = SEMI_MINOR;
-  double lambda0;
-  double a, b, c, rs, sx, sy, sz;
+  float H = PERSPECTIVE_POINT_HEIGHT + SEMI_MAJOR;
+  float req = SEMI_MAJOR;
+  float rpol = SEMI_MINOR;
+  float lambda0;
+  float a, b, c, rs, sx, sy, sz;
 
   /* convert to radians */
   lambda0 = lorigin*RAD_PER_DEG;
@@ -49,18 +49,18 @@ void xy2lonlat(double x, double y, double *lon, double *lat,
   *lon = lambda0 - atan(sy/(H - sx));
 }
 
-void lonlat2xy(double lon, double lat, double *x, double *y, 
-	       double lorigin) {
+void lonlat2xy(float lon, float lat, float *x, float *y, 
+	       float lorigin) {
   /*
    * The parameters x,y,lon,lat in the argument are in radians.
    * The longitude_of_projection_origin(lorigin) is in degrees.
    */
-  double H = PERSPECTIVE_POINT_HEIGHT + SEMI_MAJOR;
-  double req = SEMI_MAJOR;
-  double rpol = SEMI_MINOR;
-  double e = 0.0818191910435;
-  double lambda0;
-  double phic, rc, sx, sy, sz;
+  float H = PERSPECTIVE_POINT_HEIGHT + SEMI_MAJOR;
+  float req = SEMI_MAJOR;
+  float rpol = SEMI_MINOR;
+  float e = 0.0818191910435;
+  float lambda0;
+  float phic, rc, sx, sy, sz;
 
   lambda0 = (lorigin * M_PI)/180.0;
   
@@ -88,7 +88,7 @@ void lonlat2xy(double lon, double lat, double *x, double *y,
  *
 int main(void) {
 
-  double x, y, lon, lat;
+  float x, y, lon, lat;
 
   x = -0.024052;
   y = 0.095340;

@@ -1,4 +1,5 @@
 Sun Jun 22 20:50:10 AST 2025
+(See the update in ``1.nbspgoesr.README'')
 
 Given nx, ny, the nbspgoesr tools require a memory at leat of order
 (a <cmi, lon, lat> trio for each point)

@@ -16,11 +16,11 @@
 #include "dcgoesr_xy2lonlat.h"
 
 /* private functions */
-static int get_offset_scale(int ncid, int varid, double *offset, double *scale);
-static int get_xy(int ncid, int varid, double *v, int nv);
-static int get_cmi(int ncid, int varid, double *cmip, int Npoints);
-static int get_lonorigin(int ncid, double *lorigin);
-static int get_tclonlat(int ncid, double *lon, double *lat);
+static int get_offset_scale(int ncid, int varid, float *offset, float *scale);
+static int get_xy(int ncid, int varid, float *v, int nv);
+static int get_cmi(int ncid, int varid, float *cmip, int Npoints);
+static int get_lonorigin(int ncid, float *lorigin);
+static int get_tclonlat(int ncid, float *lon, float *lat);
 static void cmilevel(struct goesr_st *gp);
 static void calc_boundingbox(struct goesr_st *gp);
 
@@ -59,21 +59,21 @@ static struct {
   char *proj_lonorigin_name;
   char *tc_longitude;
   char *tc_latitude;
-  double xy_radians_units_factor;
+  float xy_radians_units_factor;
 } gdcgoesr = {CMI_NAME, CMI_PROJECTION_NAME, CMI_LONORIGIN_NAME,
 	      CMI_TC_LONGITUDE, CMI_TC_LATITUDE, CMI_XY_RADIANS_UNITS_FACTOR};
 
 static int get_offset_scale(int ncid, int varid,
-			    double *offset, double *scale) {
+			    float *offset, float *scale) {
   /*
    * Get the "offset" and "scale" parameters of the variable identified
    * by the varid from the nc file.
    */
   int status;
   
-  status = nc_get_att_double(ncid, varid, "add_offset", offset);
+  status = nc_get_att_float(ncid, varid, "add_offset", offset);
   if(status == 0)
-    status = nc_get_att_double(ncid, varid, "scale_factor", scale);
+    status = nc_get_att_float(ncid, varid, "scale_factor", scale);
 
   /*
    * Not all variables have these two attributes. For example,
@@ -89,11 +89,11 @@ static int get_offset_scale(int ncid, int varid,
   return(status);
 }
 
-static int get_xy(int ncid, int varid, double *v, int nv) {
+static int get_xy(int ncid, int varid, float *v, int nv) {
   /*
    * This function is intended to be used for x or y
    */
-  double offset, scale;
+  float offset, scale;
   int i;
   int status = 0;
 
@@ -102,7 +102,7 @@ static int get_xy(int ncid, int varid, double *v, int nv) {
     return(status);
   
   /* Read the data. */
-  status = nc_get_var_double(ncid, varid, v);
+  status = nc_get_var_float(ncid, varid, v);
   if(status != 0)
     return(status);
 
@@ -117,11 +117,11 @@ static int get_xy(int ncid, int varid, double *v, int nv) {
   return(status);
 }
 
-static int get_cmi(int ncid, int varid, double *cmip, int Npoints) {
+static int get_cmi(int ncid, int varid, float *cmip, int Npoints) {
   /*
    * This function is intended to be used for the cmi.
    */
-  double offset, scale;
+  float offset, scale;
   int k;
   int status = 0;
 
@@ -130,7 +130,7 @@ static int get_cmi(int ncid, int varid, double *cmip, int Npoints) {
     return(status);
 
   /* Read the data. */
-  status = nc_get_var_double(ncid, varid, cmip);
+  status = nc_get_var_float(ncid, varid, cmip);
   if(status != 0)
     return(status);
 
@@ -142,21 +142,21 @@ static int get_cmi(int ncid, int varid, double *cmip, int Npoints) {
   return(status);
 }
 
-static int get_lonorigin(int ncid, double *lorigin) {
+static int get_lonorigin(int ncid, float *lorigin) {
 
   int varid;
   int status;
 
   status = nc_inq_varid(ncid, gdcgoesr.proj_name, &varid);
   if(status == 0) {
-    status = nc_get_att_double(ncid, varid, gdcgoesr.proj_lonorigin_name,
+    status = nc_get_att_float(ncid, varid, gdcgoesr.proj_lonorigin_name,
 			     lorigin);
   }
 
   return(status);
 }
 
-static int get_tclonlat(int ncid, double *lon, double *lat) {
+static int get_tclonlat(int ncid, float *lon, float *lat) {
   /*
    * Get the "tile_center_longitude" and latitude. Apart from those files
    * that we have already configured (OR_ABI and glm) some of the goesr
@@ -167,10 +167,10 @@ static int get_tclonlat(int ncid, double *lon, double *lat) {
   if((gdcgoesr.tc_longitude == NULL) || (gdcgoesr.tc_latitude == NULL))
     return(0);
      
-  status = nc_get_att_double(ncid, NC_GLOBAL, gdcgoesr.tc_longitude, lon);
+  status = nc_get_att_float(ncid, NC_GLOBAL, gdcgoesr.tc_longitude, lon);
      
   if(status == 0)
-    status = nc_get_att_double(ncid, NC_GLOBAL, gdcgoesr.tc_latitude, lat);
+    status = nc_get_att_float(ncid, NC_GLOBAL, gdcgoesr.tc_latitude, lat);
 
   /* Not all files have these attributes */
   if(status == NC_ENOTATT) {
@@ -187,8 +187,8 @@ static void cmilevel(struct goesr_st *gp) {
    * This function calculates the "normalized" cmi.
    */
   int k;
-  double cmi_max, cmi_min, norm, cmi_normalized;
-  double *cmi = gp->cmi;
+  float cmi_max, cmi_min, norm, cmi_normalized;
+  float *cmi = gp->cmi;
   int Npoints = gp->Npoints;
 
   /* determine the max and min */
@@ -319,7 +319,7 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   size_t ndim;		/* for getting nx, ny from nc functions */ 
   int i, j;		/* loop indexes x[i], y[j] */
   size_t k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
-  double lon, lat, lorigin;	/* for the conversion x,y -> lon,lat */
+  float lon, lat, lorigin;	/* for the conversion x,y -> lon,lat */
   int status;
 
   /*
@@ -367,7 +367,7 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
 
   /* See dcgoesr_nc.h for data_size */
   Npoints = nx*ny;	
-  data_size = sizeof(double)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints;
+  data_size = sizeof(float)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints;
   gp->data = malloc(data_size);
 
   /* The transformed data */
@@ -470,8 +470,8 @@ int goesr_create(int ncid, struct goesr_st **goesr) {
   gp->pmap.x_max = gp->x[nx - 1];
   gp->pmap.y_min = gp->y[ny - 1];	/* top to bottom */
   gp->pmap.y_max = gp->y[0];
-  gp->pmap.dx = (gp->pmap.x_max - gp->pmap.x_min)/((double)gp->pmap.nx - 1.0);
-  gp->pmap.dy = (gp->pmap.y_max - gp->pmap.y_min)/((double)gp->pmap.ny - 1.0);
+  gp->pmap.dx = (gp->pmap.x_max - gp->pmap.x_min)/((float)gp->pmap.nx - 1.0);
+  gp->pmap.dy = (gp->pmap.y_max - gp->pmap.y_min)/((float)gp->pmap.ny - 1.0);
 
   /* calculate the normalized "level" values */
   cmilevel(gp);

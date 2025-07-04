@@ -92,7 +92,7 @@ void dcgoesr_shp_insert_uint32_little(unsigned char *p, int pos, uint32_t u){
   b[3] = (u >> 24) & 0xff;
 }
 
-void dcgoesr_shp_insert_double_little(unsigned char *p, int pos, double r){
+void dcgoesr_shp_insert_float_little(unsigned char *p, int pos, float r){
 
   unsigned char *b = p;
   unsigned char *rp;
@@ -105,7 +105,7 @@ void dcgoesr_shp_insert_double_little(unsigned char *p, int pos, double r){
 }
 
 int dcgoesr_shp_insert_point(unsigned char *p, int pos,
-			    int record_number, double lon, double lat){
+			    int record_number, float lon, float lat){
   /*
    * This function inserts:
    *
@@ -139,8 +139,8 @@ int dcgoesr_shp_insert_point(unsigned char *p, int pos,
   dcgoesr_shp_insert_uint32_little(b, 0, shapetype);
   b += 4;
 
-  dcgoesr_shp_insert_double_little(b, 0, lon);
-  dcgoesr_shp_insert_double_little(b, 8, lat);
+  dcgoesr_shp_insert_float_little(b, 0, lon);
+  dcgoesr_shp_insert_float_little(b, 8, lat);
 
   /*
    * Return the total number of 16 bit words consumed.
@@ -151,14 +151,14 @@ int dcgoesr_shp_insert_point(unsigned char *p, int pos,
 
 void dcgoesr_shp_insert_header(unsigned char *p,
 			      int numpoints,
-			      double lon_min, double lat_min,
-			      double lon_max, double lat_max){
+			      float lon_min, float lat_min,
+			      float lon_max, float lat_max){
   unsigned char *b = p;
   uint32_t filecode;
   uint32_t filelength;
   uint32_t version;
   uint32_t shapetype;
-  double unused;
+  float unused;
 
   filecode = 9994;
   version = 1000;
@@ -178,15 +178,15 @@ void dcgoesr_shp_insert_header(unsigned char *p,
   dcgoesr_shp_insert_uint32_little(b, 28, version);
   dcgoesr_shp_insert_uint32_little(b, 32, shapetype);
 
-  dcgoesr_shp_insert_double_little(b, 36, lon_min);
-  dcgoesr_shp_insert_double_little(b, 44, lat_min);
-  dcgoesr_shp_insert_double_little(b, 52, lon_max);
-  dcgoesr_shp_insert_double_little(b, 60, lat_max);
+  dcgoesr_shp_insert_float_little(b, 36, lon_min);
+  dcgoesr_shp_insert_float_little(b, 44, lat_min);
+  dcgoesr_shp_insert_float_little(b, 52, lon_max);
+  dcgoesr_shp_insert_float_little(b, 60, lat_max);
 
-  dcgoesr_shp_insert_double_little(b, 68, unused);
-  dcgoesr_shp_insert_double_little(b, 76, unused);
-  dcgoesr_shp_insert_double_little(b, 84, unused);
-  dcgoesr_shp_insert_double_little(b, 92, unused);  
+  dcgoesr_shp_insert_float_little(b, 68, unused);
+  dcgoesr_shp_insert_float_little(b, 76, unused);
+  dcgoesr_shp_insert_float_little(b, 84, unused);
+  dcgoesr_shp_insert_float_little(b, 92, unused);  
 }
 
 int dcgoesr_shp_point_record_size_words(void){

@@ -270,7 +270,7 @@ static int output_csv(void) {
   int i, j;		/* loop indexes x[i], y[j] */
   size_t k;		/* "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   int status = 0;
-  double lon, lat, cmi;
+  float lon, lat, cmi;
 
   /* print in the order x,y, with x varying faster */
   for (j = 0; j < g.goesr->ny; ++j) {
@@ -300,8 +300,8 @@ static int output_info(void) {
    * The info is output to stdout.
    */
   int status = 0;
-  double tclon, tclat;
-  double lon_min, lat_min, lon_max, lat_max,
+  float tclon, tclat;
+  float lon_min, lat_min, lon_max, lat_max,
     lon_ll, lat_ll, lon_ur, lat_ur;
 
   tclon = g.goesr->tclon;

@@ -80,14 +80,14 @@
 struct cutasc_st {
   size_t nx;
   size_t ny;
-  double xll;
-  double yll;
-  double cellsize;
+  float xll;
+  float yll;
+  float cellsize;
   /* The inputs of the new box */
-  double xmin;
-  double ymin;
-  double xmax;
-  double ymax;
+  float xmin;
+  float ymin;
+  float xmax;
+  float ymax;
   /* The calculated indices of the nex box */
   size_t i1;
   size_t j1;
@@ -210,7 +210,7 @@ static void load_data(void) {
   FILE *fp;
   size_t nx, ny;
   size_t npoints;
-  double x1, x2, x3;
+  float x1, x2, x3;
   int nodata;
   size_t k;
   int status = 0;
@@ -223,7 +223,7 @@ static void load_data(void) {
     status = 1;
 
   if(status == 0) {
-    if(fscanf(fp, " xllcorner %lf yllcorner %lf cellsize %lf nodata_value %d",
+    if(fscanf(fp, " xllcorner %f yllcorner %f cellsize %f nodata_value %d",
 	      &x1, &x2, &x3, &nodata) != 4)
       status = 1;
   }
@@ -319,7 +319,7 @@ static int process_str(char *str) {
   int index;
   int status = 0;
 
-  if(sscanf(str, "%lf,%lf,%lf,%lf,%d",
+  if(sscanf(str, "%f,%f,%f,%f,%d",
 	   &g.ca->xmin, &g.ca->ymin, &g.ca->xmax, &g.ca->ymax, &index) != 5) {
     log_errx(0, "Incomplete input string: %s", str);
   }
@@ -332,7 +332,7 @@ static int process_str(char *str) {
 
 static int process_input(int index) {
   
-  double xur, yur;
+  float xur, yur;
   int n;
   FILE *fp;
   int status = 0;

@@ -17,9 +17,9 @@
 #define LON_ORIGIN_EAST -75.0
 #define LON_ORIGIN_WEST -137.0
 
-void xy2lonlat(double x, double y, double *lon, double *lat,
-	       double lorigin);
+void xy2lonlat(float x, float y, float *lon, float *lat,
+	       float lorigin);
 
-void lonlat2xy(double lon, double lat, double *x, double *y, 
-	       double lorigin);
+void lonlat2xy(float lon, float lat, float *x, float *y, 
+	       float lorigin);
 #endif

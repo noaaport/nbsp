@@ -25,12 +25,12 @@ struct dcgoesr_shp_st {
 
 void dcgoesr_shp_insert_uint32_big(unsigned char *p, int pos, uint32_t u);
 void dcgoesr_shp_insert_uint32_little(unsigned char *p, int pos, uint32_t u);
-void dcgoesr_shp_insert_double_little(unsigned char *p, int pos, double r);
+void dcgoesr_shp_insert_float_little(unsigned char *p, int pos, float r);
 
 void dcgoesr_shp_insert_header(unsigned char *p,
 			      int numpoints,
-			      double lon_min, double lat_min,
-			      double lon_max, double lat_max);
+			      float lon_min, float lat_min,
+			      float lon_max, float lat_max);
 int dcgoesr_shp_point_record_size_words(void);
 int dcgoesr_shp_point_file_size_words(int numpoints);
 int dcgoesr_shp_header_record_size_bytes(void);

@@ -24,13 +24,13 @@
  *
  * data_size is the total size of the data:
  *
- *   sizeof(double)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints
+ *   sizeof(float)*(nx + ny + Npoints) + sizeof(uint8_t)*Npoints
  *
  * where
  *
  *   Npoints = nx*ny.
  *
- * x(i),y(j),cmi(i,j) (doubles)
+ * x(i),y(j),cmi(i,j) (floats)
  * level(i,j) (uint8_t)
  *
  * x,y are given in the file in radians while the
@@ -43,14 +43,14 @@ struct goesr_st {
   int ny;	/* size of y */
   size_t Npoints;	/* nx*ny */
   size_t data_size; /* total size of the data */
-  double lorigin; /* for the x,y -> lon,lat conversion */
-  double *data;	/* data storage */
-  double *x;	/* x[i] - radians */
-  double *y;	/* y[j] - radians */
-  double *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
+  float lorigin; /* for the x,y -> lon,lat conversion */
+  float *data;	/* data storage */
+  float *x;	/* x[i] - radians */
+  float *y;	/* y[j] - radians */
+  float *cmi;	/* size = nx*ny - "cmi(j,i)"  = cmi[k] with k = j*nx + i */
   /* global "attributes - info */
-  double tclon;	/* tile center longitude - not in all files (e.g., tirs) */
-  double tclat; /* tile center latitude - not in all files (e.g., tirs) */
+  float tclon;	/* tile center longitude - not in all files (e.g., tirs) */
+  float tclat; /* tile center latitude - not in all files (e.g., tirs) */
   /* transformed data */
   uint8_t *level; /* cmi normalized to 0-255 - also stored in "data" */
   struct dcgoesr_point_map_st pmap;	/* contains a copy of the "levels" */

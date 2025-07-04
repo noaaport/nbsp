@@ -66,11 +66,11 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
   int *datap;
   size_t i, j, k;
   size_t ii, jj;
-  double ix, jy;	/* indices i,j as doubles */
-  double x, y, lon, lat;
-  double cellsize;	/* asc format requires square cell size */
-  double dlon, dlat;
-  double rlon_min, rlat_min, rlon_max, rlat_max;
+  float ix, jy;	/* indices i,j as floats */
+  float x, y, lon, lat;
+  float cellsize;	/* asc format requires square cell size */
+  float dlon, dlat;
+  float rlon_min, rlat_min, rlon_max, rlat_max;
 
   dlon = (pmap->lon_max - pmap->lon_min)/(pmap->nx - 1);
   dlat = (pmap->lat_max - pmap->lat_min)/(pmap->ny - 1);
@@ -92,7 +92,7 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
 
   /* optional limits */
   if(llur_str != NULL){
-    if(sscanf(llur_str, "%lf,%lf,%lf,%lf",
+    if(sscanf(llur_str, "%f,%f,%f,%f",
 	      &rlon_min, &rlat_min, &rlon_max, &rlat_max) != 4){
       log_errx(0, "Invalid value of enclosing rectangle limits");
       return(1);
@@ -172,14 +172,14 @@ int dcgoesr_regrid_data_asc(struct dcgoesr_point_map_st *pmap,
       lonlat2xy(lon, lat, &x, &y, pmap->lorigin);
 
       /*
-       * Calculate the indices corresponding to these values x,y, as double
+       * Calculate the indices corresponding to these values x,y, as float
        */
       ix = (1.0/pmap->dx) * (x - pmap->x_min);
       jy = (1.0/pmap->dy) * (pmap->y_max - y);
 
-      if((ix < 0.0) || (ix > (double)pmap->nx - 1.0))
+      if((ix < 0.0) || (ix > (float)pmap->nx - 1.0))
 	*datap = DCGOESR_GRID_MAP_NODATA;
-      else if((jy < 0.0) || (jy > (double)pmap->ny - 1.0))
+      else if((jy < 0.0) || (jy > (float)pmap->ny - 1.0))
 	*datap = DCGOESR_GRID_MAP_NODATA;      
       else{
 	ii = LROUND_SIZE_T(ix);
