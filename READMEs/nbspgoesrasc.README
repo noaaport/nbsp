@@ -6,10 +6,11 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
- * nbspgoesrasc [-b] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
+ * nbspgoesrasc [-b] [-q] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
+ * nbspgoesrasc [-b] [-q] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
  *
  * -b => background
+ * -q => write the name of each file produced to stdout
  * -e => input string, for example "-70,14,-60,24,1"
  * -p => prefix for the name of the output files (default is "z")
  * -s => suffix for the name of the output files (default is ".asc")

@@ -6,10 +6,11 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
- * nbspgoesrasc [-b] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
+ * nbspgoesrasc [-b] [-q] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
+ * nbspgoesrasc [-b] [-q] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
  *
  * -b => background
+ * -q => write the name of each file produced to stdout
  * -e => input string, for example "-70,14,-60,24,1"
  * -p => prefix for the name of the output files (default is "z")
  * -s => suffix for the name of the output files (default is ".asc")
@@ -99,6 +100,7 @@ struct cutasc_st {
 
 struct {
   int opt_background;		/* -b */
+  int opt_writeq;		/* -q */
   char *opt_inputstr;		/* -e */
   char *opt_prefix;             /* -p */
   char *opt_suffix;             /* -s */
@@ -108,7 +110,7 @@ struct {
   int outfname_length;		/* length of the output file name */
   struct cutasc_st *ca;
   int *data;
-} g = {0, NULL, DCGOESRASC_OUTPUT_PREFIX, DCGOESRASC_OUTPUT_SUFFIX, NULL,
+} g = {0, 0, NULL, DCGOESRASC_OUTPUT_PREFIX, DCGOESRASC_OUTPUT_SUFFIX, NULL,
        NULL, 0, NULL, NULL};
 
 static void init(void);
@@ -152,9 +154,9 @@ static void cleanup(void) {
 
 int main(int argc, char **argv){
 
-  char *optstr = "be:p:s:";
+  char *optstr = "bqe:p:s:";
   char *usage =
-    "nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s suffix] <ascfile>";
+    "nbspgoesrasc [-bq] [-e <inputstr>] [-p <prefix>] [-s suffix] <ascfile>";
   int status = 0;
   int c;
 
@@ -164,6 +166,9 @@ int main(int argc, char **argv){
     switch(c){
     case 'b':
       g.opt_background = 1;
+      break;
+    case 'q':
+      g.opt_writeq = 1;
       break;
     case 'e':
       g.opt_inputstr = optarg;
@@ -380,12 +385,14 @@ static int process_input(int index) {
   }
   
   status = cutasc_write_data(fp);
+  fclose(fp);
+    
   if(status != 0) {
     log_err(0, "Error writing to %s", g.outputfile);
+  } else if(g.opt_writeq == 1) {
+    fprintf(stdout, "%s\n", g.outputfile);
   }
-
-  fclose(fp);
-
+  
   return(status);
 }
 
