@@ -110,7 +110,7 @@ cleanup(){
     [ $option_k -eq 1 ] && { return; }
 
     # The asc file is removed if it was created
-    [ $option_a -eq 0 ] && rm -f $rc_ascfile
+    [ $f_asc_created -eq 1 ] && rm -f $rc_ascfile
 
     # The map is removed unless the flag is set (via -C)
     [ $f_keep_map -eq 0 ] && { rm -f $gmapfile; }
@@ -237,6 +237,7 @@ goutputfile=
 #
 f_keep_map=0
 f_keep_map_in=0
+f_asc_created=0
 
 #
 # main
@@ -345,6 +346,9 @@ then
 			     _status=$?; }
 
     [ ${_status} -eq 1 ] && { exit 1; }
+
+    # Set the flag that the asc file was created
+    f_asc_created=1
 fi
 
 # Extract the parameters from the asc file
