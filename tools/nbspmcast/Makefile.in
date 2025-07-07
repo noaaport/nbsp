@@ -8,10 +8,10 @@
 @include@ @q@../../Makefile.inc@q@
 
 TARGET = nbspmcast
-SOURCES = nbspmcast.c err.c seqmun.c
-OBJECTS = nbspmcast.o err.o seqnum.o
-HEADERS = err.h seqnum.h
-AUXFILES = config.h err.c err.h
+SOURCES = nbspmcast.c err.c seqmun.c stoi.c
+OBJECTS = nbspmcast.o err.o seqnum.o stoi.o
+HEADERS = err.h seqnum.h stoi.h
+AUXFILES = config.h err.c err.h stoi.h
 
 INCDIRS = -I sbnpack -I mcast
 LIBDIRS = -L sbnpack -L mcast

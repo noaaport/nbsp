@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>	/* sscanf */
+#include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>	/* PRIu */
 #include <libgen.h>	/* basename */
@@ -26,6 +26,7 @@
 #include <sys/socket.h> /* gai_sterror */
 #include <netdb.h>      /* gai_sterror */
 #include "err.h"
+#include "stoi.h"
 #include "sbnpack.h"
 #include "seqnum.h"
 #include "mcast.h"
@@ -199,19 +200,34 @@ int main(int argc, char **argv){
       ++opt_iI;
       break;
     case 's':
-      if(sscanf(optarg, "%" PRIu32, &g.opt_prod_seq_num) != 1){
+      /*
+	if(sscanf(optarg, "%" PRIu32, &g.opt_prod_seq_num) != 1){
+	  log_errx(1, "Invalid argument to -s option: %s", optarg);
+        }
+      */
+      if(strto_u32(optarg, &g.opt_prod_seq_num) != 0) {
 	log_errx(1, "Invalid argument to -s option: %s", optarg);
       }
       break;
     case 'f':
-      if(sscanf(optarg, "%" PRIu32, &g.opt_sbn_seq_num) != 1){
+      /*
+	if(sscanf(optarg, "%" PRIu32, &g.opt_sbn_seq_num) != 1){
+	  log_errx(1, "Invalid argument to -f option: %s", optarg);
+	}
+      */
+      if(strto_u32(optarg, &g.opt_sbn_seq_num) != 0) {
 	log_errx(1, "Invalid argument to -f option: %s", optarg);
-      }
+      }      
       break;
     case 't':
-      if(sscanf(optarg, "%d", &g.opt_mcast_ttl) != 1){
+      /*
+	if(sscanf(optarg, "%d", &g.opt_mcast_ttl) != 1){
+	  log_errx(1, "Invalid argument to -t option: %s", optarg);
+	}
+      */
+      if(strto_int(optarg, &g.opt_mcast_ttl) != 0) {
 	log_errx(1, "Invalid argument to -t option: %s", optarg);
-      }
+      }            
       break;
     case 'm':
       g.opt_mcast_loop_off = 0;

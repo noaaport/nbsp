@@ -10,11 +10,17 @@ LIB_FILES="${LIB_FILES_DIR}/err.h \
 	${LIB_FILES_DIR}/config.h \
 	${LIB_FILES_DIR}/err.c"
 
-# pack_unintN files from src
-SRC_UTIL_FILES="${SRC_FILES_DIR}/util.h \
-	        ${SRC_FILES_DIR}/util.c"
+# stoi files from src
+STOI_FILES_DIR="../../src"
+STOI_FILES="${STOI_FILES_DIR}/stoi.h \
+	 ${STOI_FILES_DIR}/stoi.c"
 
 for f in ${LIB_FILES}
+do
+    cp $f .
+done
+
+for f in ${STOI_FILES}
 do
     cp $f .
 done

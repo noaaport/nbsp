@@ -1,4 +1,4 @@
-22 oct 2024 -
+* 22 oct 2024
 
 The files
 
@@ -13,4 +13,12 @@ err.{c,h}
 
 are copies of the files in the filterlib/c directory.
 
-They are copied here by the configure.sh script.
+* 07 jul 2025
+
+The files
+
+stoi.{c,h}
+
+are copies from src.
+
+* They are copied here by the configure.sh script.
