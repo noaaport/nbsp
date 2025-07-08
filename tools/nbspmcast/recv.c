@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2024 Jose F. Nieves <nieves@ltp.uprrp.edu>
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
