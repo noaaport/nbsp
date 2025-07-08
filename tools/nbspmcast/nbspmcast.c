@@ -3,18 +3,28 @@
  */
 
 /*
- * Usage: npmcast [-b] [-C] [-r] \
+ * Usage: npmcast [-b] [-C] [-m] [-r] [-u frame_rate ] \
  *                [-a mcast_addr] [-p mcast_port] \
  *                [-i ifname | -I ifip] \
- *                [-s prod_seq_num] [-f sbn_seq_num] [-m] \
+ *                [-s prod_seq_num] [-f sbn_seq_num] \
  *                <fpath>
  * (The "sbn_seq_num" is the start of the sequence number for each frame.)
+ *
+ * -b => background
+ * -C => print configuration (and exit)
+ * -m => setsockopt mcast loop off flag
+ * -r => radar (nids) file; default is nwstg
+ *       (also sets the multicast ip and port)
+ * -u => frames per ms (esentially sets the argument to usleep between frames)
+ *        -1 => use the default (10) frames/ms;
+ *              the corresponding useconds for usleep is 0.1 ms or 100 usecs;
+ *              corresponds to about 4KB * 10 * 1000/s = 40 MB/s.
+ *        0  => use usleep with useconds = 0 (the default program setting)
  *
  * Exit codes:
  *   0 => no errors
  *   1 => some error
  */
-
 #include <assert.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -27,8 +37,9 @@
 #include <netdb.h>      /* gai_sterror */
 #include "err.h"
 #include "stoi.h"
-#include "sbnpack.h"
+#include "sbnpack_usleep.h"
 #include "seqnum.h"
+#include "sbnpack.h"
 #include "mcast.h"
 
 /*
@@ -53,11 +64,14 @@
 #define DEF_SBN_SEQ_NUM (UINT32_MAX/4 - 2)
 #define DEF_MCAST_TTL	-1  /* use default: mcast only to the local network */
 #define DEF_MCAST_LOOP -1   /* use default; on */
+#define DEF_FRAMES_PER_MS 0 /* make usleep do nothing */
+/* #define DEF_FRAMES_PER_MS -1 use the default setting of the library */
 
 struct {
   int opt_background;		/* -b */
   int opt_C;			/* -C => print configuration */
   int opt_r;			/* -r => radar (nids) file; default is nwstg */
+  int opt_frames_per_ms;	/* -u frames_per_ms */
   char *opt_mcast_addr;		/* -a */ 
   char *opt_mcast_port;		/* -p */
   char *opt_ifname;		/* -i interface_name (e.g., eth1) */
@@ -73,7 +87,7 @@ struct {
   int sfd;			/* socket fd */
   void *sa;			/* struct sockaddr *sa; */
   socklen_t sa_len;
-} g = {0, 0, 0, DEF_MCAST_ADDR, DEF_MCAST_PORT, NULL, NULL,
+} g = {0, 0, 0, DEF_FRAMES_PER_MS, DEF_MCAST_ADDR, DEF_MCAST_PORT, NULL, NULL,
        DEF_PROD_SEQ_NUM, DEF_SBN_SEQ_NUM, DEF_MCAST_TTL, DEF_MCAST_LOOP, NULL,
        NULL, NULL, -1, NULL, 0};
 
@@ -94,6 +108,8 @@ static int sendto_sbnpack_frame(int fd,
 static void init(void) {
 
   int gai_code;
+
+  init_sendto_sbnpack_usleep(g.opt_frames_per_ms);
 
   /*
    * Open the file descriptor for sending multicast messages
@@ -140,7 +156,9 @@ static void print_conf(void){
 
   fprintf(stdout, "%s: %d\n", "opt_background", g.opt_background);
   fprintf(stdout, "%s: %d\n", "opt_r", g.opt_r);
-  
+
+  fprintf(stdout, "%s: %d\n", "opt_frames_per_ms", g.opt_frames_per_ms);
+    
   fprintf(stdout, "%s: %s\n", "opt_mcast_addr", g.opt_mcast_addr);
   fprintf(stdout, "%s: %s\n", "opt_mcast_port", g.opt_mcast_port);
   fprintf(stdout, "%s: %s\n", "opt_ifname", g.opt_ifname);
@@ -159,12 +177,12 @@ static void print_conf(void){
 
 int main(int argc, char **argv){
 
-  char *optstr = "bCra:p:i:I:s:f:t:m";
-  char *usage = "npmcast [-b] [-C] \
+  char *optstr = "bCmru:a:p:i:I:s:f:t:";
+  char *usage = "npmcast [-b] [-C] [-m] [-r] [-u frames_per_ms] \
                  [-a mcast_addr] [-p mcast_port] \
                  [-i ifname | -I ifip] \
-                 [-s prod_seq_num] [-f sbn_seq_num] [-r] \
-		 [-t mcast_ttl] [-m] \
+                 [-s prod_seq_num] [-f sbn_seq_num] \
+		 [-t mcast_ttl] \
                  <fpath>";
   int status = 0;
   int opt_iI = 0;	/* i and I together is a conflict */
@@ -180,10 +198,18 @@ int main(int argc, char **argv){
     case 'C':
       g.opt_C = 1;
       break;
+    case 'm':
+      g.opt_mcast_loop_off = 0;
+      break;
     case 'r':
       g.opt_r = 1;	/* file is radar (nids) */
       g.opt_mcast_addr = MCAST_ADDR_3;
       g.opt_mcast_port = MCAST_PORT_3;
+      break;
+    case 'u':
+      if(strto_int(optarg, &g.opt_frames_per_ms) != 0) {
+	log_errx(1, "Invalid argument to -u option: %s", optarg);
+      }
       break;
     case 'a':
       g.opt_mcast_addr = optarg;
@@ -228,9 +254,6 @@ int main(int argc, char **argv){
       if(strto_int(optarg, &g.opt_mcast_ttl) != 0) {
 	log_errx(1, "Invalid argument to -t option: %s", optarg);
       }            
-      break;
-    case 'm':
-      g.opt_mcast_loop_off = 0;
       break;
     default:
       log_info(usage);
@@ -348,6 +371,8 @@ static int sendto_sbnpack(int sfd, struct sbnpack_st *sbnpack,
     status = sendto_sbnpack_frame(sfd, sbnpack, i, sa, sa_len);
     if(status != 0)
       break;
+
+    sendto_sbnpack_usleep();
   }
 
   return(status);

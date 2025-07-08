@@ -17,7 +17,7 @@ static useconds_t s_usecs = 0;
 
 void init_sendto_sbnpack_usleep(int frames_per_ms) {
   /*
-   * frames_per_ms = -1 => default
+   * frames_per_ms = -1 => use the default value defined above
    * frames_per_ms = 0  => useconds = 0
    */
   useconds_t useconds;

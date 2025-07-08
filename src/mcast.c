@@ -267,7 +267,7 @@ int mcast_snd(char *host_name, char *service_port, char *ifname, char *ifip,
 	      void **sa_ptr, socklen_t *sa_len, int *gai_code){
   /*
    * If ttl <= 0, then the default is left (see below).
-   * The mcast_loop_flag is used if it 0 or 1; otherwise the default is left.
+   * The mcast_loop_flag is used if it is 0 or 1; otherwise the default is left.
    *
    * (This function, not used by nbsp, was written having in mind the
    * possibility of the noaaport data stream multicast redistribution
