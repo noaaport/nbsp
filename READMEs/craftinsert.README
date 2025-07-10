@@ -35,7 +35,8 @@ Then perform the following:
 
    set craftinsert(nbspd_enable) 1;
 
-   to the file "site/craftfilter.conf" in the nbsp configuration directory.
+   to the file "site/craftfilter.conf" in the nbsp configuration directory
+   (if it is not set in the default configuration).
 
 4) Add the line
 
