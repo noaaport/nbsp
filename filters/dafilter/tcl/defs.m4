@@ -146,6 +146,16 @@ lappend action {
   $5
 })
 
+define(match_sat_aws,
+lappend cond {
+  [regexp {$2} $1]
+}
+lappend action {
+  set rc_status 0;
+  filter_sat $rc(seq) $rc(fpath) "$3" "$4" 1;
+  $5
+})
+
 define(match_sat_archive,
 lappend cond {
   [regexp {$2} $1]

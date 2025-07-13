@@ -1,4 +1,4 @@
-proc filter_sat {seq fpath savedir savename} {
+proc filter_sat {seq fpath savedir savename {aws3flag 0}} {
 
     global dafilter;
 
@@ -53,7 +53,14 @@ proc filter_sat {seq fpath savedir savename} {
 	# is used only when nbspfile adds the gempak header which is not
 	# the case here so we simply pass 0.
 	#
-	filterlib_exec_nbspfile 0 $fpath $savedir $savename "-w";
+	if {$aws3flag == 0} {
+	    filterlib_exec_nbspfile 0 $fpath $savedir $savename "-w";
+	} else {
+	    # aws s3 files do not have a ccb, and the gempak header
+	    # will not be inserted. It is then simpler to
+	    # copy it directly rather than calling nbspfile with options.
+	    file copy -force $fpath $datafpath;
+	}
     } errmsg];
     
     if {$status != 0} {

@@ -70,8 +70,14 @@
 ## set dafilter(sat_namefmt_ixt) \
 ##    {$rc(wmoid)$rc(nawips)_${ymd_hm}}; # no extension, or .nc
 ## set dafilter(sat_dirfmt) \
-##    {[file join [string range $rc(wmoid) 0 2] $rc(wmoid) $rc(nawips)]};
+##    {[file join $rc(wmoid1) $rc(wmoid) $rc(nawips)]};
 #
+#  The files downloaded from aws-s3
+#
+## set dafilter(sat_namefmt_aw01) \
+##     {abi-l1b-radf-m6$rc(wmoid1)-g19-$rc(nawips)_${ymd_hm}.asc};
+## set dafilter(sat_dirfmt_aw01) \
+##     {[file join "g19" $rc(wmoid1)]};
 
 # Configuration to support the directory listing of radar files (Grlevel),
 # ``NOAA's Weather and Climate Toolkit'' (WCT) file name convention

@@ -102,5 +102,19 @@ match_sat_archive($rc(wmoid), ^ti,
 sat/other/[subst $dafilter(archive_sat_dirfmt)],
 [subst $dafilter(archive_sat_namefmt_cdgt)])
 
+dnl
+dnl the files downloaded from aws
+dnl
+match_sat_aws($rc(station), aw01,
+sat/goesr/[subst $dafilter(sat_dirfmt_aw01)],
+[subst $dafilter(sat_namefmt_aw01)])
+
+match_sat_archive($rc(station), aw01,
+sat/goesr/[subst $dafilter(archive_sat_dirfmt_aw01)],
+[subst $dafilter(archive_sat_namefmt_aw01)],
+break;)
+
 match_stop($rc(wmoid), ^(ti|ixt))
 dnl match_stop($rc(wmoid), ^ixt)
+
+match_stop($rc(station), aw01)

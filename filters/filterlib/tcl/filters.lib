@@ -179,6 +179,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(fbasename) "";
     set rc(station) "";
     set rc(wmoid) "";
+    set rc(wmoid1) "";
+    set rc(wmoid2) "";
     set rc(awips) "";
     set rc(awips1) "";
     set rc(awips2) "";
@@ -187,6 +189,8 @@ proc filterlib_get_rcvars {rc_name finfo args} {
     set rc(WMOHEADER) "";
     set rc(STATION) "";
     set rc(WMOID) "";
+    set rc(WMOID1) "";
+    set rc(WMOID2) "";
     set rc(AWIPS) "";
     set rc(AWIPS1) "";
     set rc(AWIPS2) "";
@@ -273,10 +277,15 @@ proc filterlib_get_rcvars {rc_name finfo args} {
 
     if {[string length $rc(wmoid)] == 0} {
 	log_msg "$rc(fname) missing wmo id.";
-    }
+    } else {
+	set rc(wmoid1) [string range $rc(wmoid) 0 2];
+	set rc(wmoid2) [string range $rc(wmoid) 3 end];
+    }    
 
     set rc(STATION) [string toupper $rc(station)];
     set rc(WMOID) [string toupper $rc(wmoid)];
+    set rc(WMOID1) [string toupper $rc(wmoid1)];
+    set rc(WMOID2) [string toupper $rc(wmoid2)];
     set rc(AWIPS) [string toupper $rc(awips)];
     set rc(AWIPS1) [string toupper $rc(awips1)];
     set rc(AWIPS2) [string toupper $rc(awips2)];
