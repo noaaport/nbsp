@@ -55,12 +55,13 @@ set dafilter(sat_namefmt_ixt) \
 set dafilter(sat_dirfmt) \
     {[file join $rc(wmoid1) $rc(wmoid) $rc(nawips)]};
 #
-#  The files downloaded from aws-s3
+#  The files downloaded from aws-s3. The directory structure is
+#  "g19/{z01,z02,...}"
 #
 set dafilter(sat_namefmt_aw01) \
     {abi-l1b-radf-m6$rc(wmoid1)-g19-$rc(nawips)_${ymd_hm}.asc};
 set dafilter(sat_dirfmt_aw01) \
-    {[file join "g19" $rc(wmoid1)]};
+    {[file join "g19" $rc(nawips)]};
 
 #
 # Radar: see comments in dafilter.conf
