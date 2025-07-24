@@ -2,9 +2,10 @@
 #
 # $Id$
 #
-# Usage: nbspqdump <dump_output>
+# Usage: nbspqdump <dbfile|dbdump_output>
 #
-# Here <dump_output> is a file created by executing
+# An input file ending with ".db" is assumed to be a dbfile. Otherwise it is
+# assumed to be the output of "db_dump", created by executing
 #
 #	db_dump -f <dump_output> q0.db	(or q1.db)
 #
@@ -13,6 +14,9 @@
 # and then unpack each record until the line with "DATA=END" is found.
 # The records are unpacked by calling nbspqdc, which essentially uses
 # the unpack() functions in the nbsp sources src/packfpu.{h,c}.
+#
+# If it is a dbfile, then db_dump is called first, and then the output
+# processed as above.
 
 # The directory of the db programs
 set db_bindir "%DB_BINDIR%";
@@ -36,17 +40,23 @@ if {$argc == 0} {
 }
 set dbfile [lindex $argv 0];
 
-# If it is a path name, assume that the dbenv is the parent directory
-# and pass that as the [-h] option to db_dump.
-set dbhome [file dirname $dbfile];
-
 set status [catch {
-    if {$dbhome != "."} {
-	set f [open "|$db_dump_bin -h $dbhome $dbfile" r];
+    if {[file extension $dbfile] eq ".db"} {
+	#
+	# If it is a path name, assume that the dbenv is the parent directory
+	# and pass that as the [-h] option to db_dump.
+	#
+	set dbhome [file dirname $dbfile];
+	if {$dbhome != "."} {
+	    set f [open "|$db_dump_bin -h $dbhome $dbfile" r];
+	} else {
+	    set f [open "|$db_dump_bin $dbfile" r];
+	}
     } else {
-	set f [open "|$db_dump_bin $dbfile" r];
+	set f [open $dbfile r];
     }
 } errmsg];
+
 if {$status != 0} {
     errx "Error opening $dbfile: $errmsg";
 }
