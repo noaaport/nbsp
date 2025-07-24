@@ -20,6 +20,9 @@ if {[file isdirectory $db_bindir]} {
     append env(PATH) ":" $db_bindir;
 }
 
+# The name of the db5 dump program
+set db_dump_bin "%DB_DUMP_BIN%";
+
 proc errx {s} {
     puts $s;
     exit 1;
@@ -39,9 +42,9 @@ set dbhome [file dirname $dbfile];
 
 set status [catch {
     if {$dbhome != "."} {
-	set f [open "|db_dump -h $dbhome $dbfile" r];
+	set f [open "|$db_dump_bin -h $dbhome $dbfile" r];
     } else {
-	set f [open "|db_dump $dbfile" r];
+	set f [open "|$db_dump_bin $dbfile" r];
     }
 } errmsg];
 if {$status != 0} {

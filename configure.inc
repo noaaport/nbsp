@@ -25,6 +25,8 @@ EXPECT=/usr/local/bin/expect
 DB_INCDIR="-I /usr/local/include/db5"
 DB_LIB="db-5"
 DB_BINDIR=/usr/local/bin/db5
+DB_DUMP_BIN="db_dump"
+DB_STAT_BIN="db_stat"
 
 LOCAL_INCDIR="-I /usr/local/include"
 LOCAL_LIBDIR="-L /usr/local/lib"
@@ -68,8 +70,10 @@ case $os in
 	WISH=/usr/pkg/bin/wish
         DB_INCDIR="-I /usr/pkg/include/db5"
         DB_LIB="db5"
-	# See the note in build/netbsd about this setting
-	DB_BINDIR=/usr/pkg/bin/db5
+	DB_BINDIR=
+	DB_DUMP_BIN="db5_dump"
+	DB_STAT_BIN="db5_stat"
+
         LOCAL_LIBDIR="-L /usr/pkg/lib"
 	LOCAL_INCDIR="-I /usr/pkg/include"
         ;;
@@ -89,8 +93,10 @@ case $os in
 	EXPECT=/usr/bin/expect
 	#
 	DB_INCDIR=
-	DB_BINDIR=
 	DB_LIB="db-5.3"
+	DB_BINDIR=
+	DB_DUMP_BIN="db5.3_dump"
+	DB_STAT_BIN="db5.3_stat"
 
 	LOCAL_INCDIR=
 	LOCAL_LIBDIR=
@@ -102,8 +108,10 @@ case $os in
 	   TCL_LIB="tcl8.6"
 	   TCLSH=/usr/bin/tclsh8.6
 	   DB_INCDIR=
-	   DB_BINDIR=
 	   DB_LIB="db-5.3"
+	   DB_BINDIR=
+	   DB_DUMP_BIN="db5.3_dump"
+	   DB_STAT_BIN="db5.3_stat"
 	elif [ $flavor = debian ]
 	then
 	   # debian 11 or 12
@@ -114,6 +122,9 @@ case $os in
 	   	TCLSH=/usr/bin/tclsh8.6
 	   	DB_INCDIR=
 	   	DB_LIB="db-5.3"
+		DB_BINDIR=
+		DB_DUMP_BIN="db5.3_dump"
+		DB_STAT_BIN="db5.3_stat"
 	   elif [ $ubuntu = "20.04" -o $ubuntu = "24.04" ]
 	   then
  	   	TCL_INCDIR="-I /usr/include/tcl8.6"
@@ -121,6 +132,9 @@ case $os in
 	   	TCLSH=/usr/bin/tclsh8.6
 	   	DB_INCDIR=
 	   	DB_LIB="db-5.3"
+		DB_BINDIR=
+		DB_DUMP_BIN="db5.3_dump"
+		DB_STAT_BIN="db5.3_stat"
 	   fi
     	fi
 	;;
@@ -166,6 +180,8 @@ configure_default () {
       -e "/@DB_INCDIR@/ s||$DB_INCDIR|" \
       -e "/@DB_LIB@/ s||$DB_LIB|" \
       -e "/@DB_BINDIR@/ s||$DB_BINDIR|" \
+      -e "/@DB_DUMP_BIN@/ s||$DB_DUMP_BIN|" \
+      -e "/@DB_STAT_BIN@/ s||$DB_STAT_BIN|" \
       -e "/@LOCAL_INCDIR@/ s||$LOCAL_INCDIR|" \
       -e "/@LOCAL_LIBDIR@/ s||$LOCAL_LIBDIR|" \
       $makefile_in > $makefile_out

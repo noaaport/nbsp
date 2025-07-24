@@ -18,6 +18,8 @@ CFLAGS +=	-c -Wall
 
 TCLSH =         @TCLSH@
 DB_BINDIR =	@DB_BINDIR@
+DB_DUMP_BIN =	@DB_DUMP_BIN@
+DB_STAT_BIN =	@DB_STAT_BIN@
 INSTALL =       @INSTALL@
 
 all: ${TARGET} ${TCLTARGET}
@@ -27,10 +29,14 @@ all: ${TARGET} ${TCLTARGET}
 
 nbspqdump: nbspqdump.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%DB_DUMP_BIN%/s##${DB_DUMP_BIN}# \
+	-e /%DB_STAT_BIN%/s##${DB_STAT_BIN}# \
 	-e /%DB_BINDIR%/s##${DB_BINDIR}# nbspqdump.tcl > nbspqdump
 
 nbspqstat: nbspqstat.tcl
 	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%DB_DUMP_BIN%/s##${DB_DUMP_BIN}# \
+	-e /%DB_STAT_BIN%/s##${DB_STAT_BIN}# \
 	-e /%DB_BINDIR%/s##${DB_BINDIR}# nbspqstat.tcl > nbspqstat
 
 ${TARGET}: ${OBJECTS}

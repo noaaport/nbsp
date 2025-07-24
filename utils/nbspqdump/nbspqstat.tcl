@@ -17,6 +17,9 @@ if {[file isdirectory $db_bindir]} {
     append env(PATH) ":" $db_bindir;
 }
 
+# The name of the db5 stat program
+set db_stat_bin "%DB_STAT_BIN%";
+
 # The default directory
 set dbhome "/var/noaaport/nbsp/db";
 
@@ -35,7 +38,7 @@ if {$argc > 1} {
 }
 
 set status [catch {
-    puts [exec db_stat -h $dbhome -m];
+    puts [exec $db_stat_bin -h $dbhome -m];
 } errmsg];
 
 if {$status != 0} {
