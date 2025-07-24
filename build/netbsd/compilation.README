@@ -3,6 +3,31 @@
    Solution: create links in /usr/pkg/bin/db5
    Ej:  ln -s ../db5_xxx db_xxx
 
+===========
+#!/bin/sh
+
+#mkdir /usr/pkg/bin/db5
+cd /usr/pkg/bin/db5
+
+for name in archive\
+    dump\
+    log_verify\
+    replicate\
+    upgrade\
+    checkpoint\
+    hotbackup\
+    printlog\
+    stat\
+    verify\
+    deadlock\
+    load\
+    recover\
+    tuner
+do
+    ln -s ../db5_${name} db_${name}
+done
+===========
+
 2) libpng.{a.so} do not exist.
    Solution: In /usr/pkg/lib
    ln -s libpng16.{a,so} libpng.{a,so}
