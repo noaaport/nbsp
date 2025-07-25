@@ -12,7 +12,7 @@
 #include <curses.h>
 #include <netdb.h>
 #include "libconnth/libconn.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "const.h"
 #include "nbs1.h"
 

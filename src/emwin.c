@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <libgen.h>
 #include <ctype.h>
-#include "readn.h"
+#include "nreadn.h"
 #include "file.h"
 #include "util.h"
 #include "emwin.h"

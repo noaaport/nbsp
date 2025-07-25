@@ -10,7 +10,7 @@
 #include <string.h>
 #include <errno.h>
 #include "util.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "packfp.h"
 #include "packfpu.h"
 

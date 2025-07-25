@@ -20,7 +20,7 @@
 #include "file.h"
 #include "err.h"
 #include "signal.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "packfpu.h"
 #include "nbspq.h"
 #include "util.h"

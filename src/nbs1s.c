@@ -18,7 +18,7 @@
 #include <ctype.h>
 #include "globals.h"
 #include "const.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "util.h"
 #include "file.h"
 #include "nbspmspoolbdb.h"

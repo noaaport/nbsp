@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include "../readn.h"
+#include "../nreadn.h"
 #include "../slave.h"
 #include "../err.h"
 #include "../signal.h"

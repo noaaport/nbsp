@@ -9,8 +9,55 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <poll.h>
-#include "readn.h"
+#include "nreadn.h"
 
+/*
+ * Fri 25 Jul 2025 04:12:15 PM AST
+ * The comment below is taken from the nreadn.c file in npemwin.
+ * The content of this file is identical to that file.
+ *
+ * Mon Nov 18 21:30:19 AST 2024
+ * This is a revised version of the original readn() functions.
+ * The revision is to insert a function in the readn (and writen)
+ * retry loop that can check the quit_flag (which is set by the
+ * signal handler for example), to exit the retry loop. Ordinarily
+ * that is not required (with small values of the timeout and the retry
+ * arguments). But in the development of the emftp application,
+ * it is more convenient to use something around 120 seconds
+ * as the waiting time, to avoid the log message that npemwin 
+ * emits each time it returns empty waiting for input.
+ * But in that case, without the interrupt function the program
+ * could block that long before exiting when receiving a quit instruction.
+ * In the present version the correct thing to do is to keep the timeout
+ * short (perhaps a few seconds) and increase the retry argument
+ * conveniently (.e.g, 5 and 24, respectively).
+ * In the present version, the retry interrupt function is set (optionally)
+ * by calling init_readn() before using the readn/writen functions.
+ */ 
+
+/* initialization of pointer to the retry-interrupt function */
+static retry_interrupt_t retry_interrupt = NULL;
+
+/* calls the retry-interrupt function */
+static int get_retry_interrupt(void);
+
+static int get_retry_interrupt(void) {
+
+  int r = 0;
+  
+  if(retry_interrupt != NULL)
+    r = retry_interrupt();
+
+  return(r);
+}
+
+/* public function to set pointer to the retry-interrupt function */
+void init_readn(retry_interrupt_t function) {
+
+  retry_interrupt = function;
+}
+
+/* readn/writen functions */
 ssize_t read1(int fd, void *buf, size_t size, unsigned int msecs, int retry){
   /*
    * Returns:
@@ -40,7 +87,8 @@ ssize_t read1(int fd, void *buf, size_t size, unsigned int msecs, int retry){
   if(retry < 0)
     retry = 0;
 
-  for(i = 0; (i <= retry) && (status == 0); ++i){
+  for(i = 0; (i <= retry) && (status == 0) && (get_retry_interrupt() == 0);
+      ++i){
     status = poll(&pfd, 1, msecs);
   }
 
@@ -77,7 +125,8 @@ ssize_t write1(int fd, void *buf, size_t size, unsigned int msecs, int retry){
   if(retry < 0)
     retry = 0;
 
-  for(i = 0; (i <= retry) && (status == 0); ++i){
+  for(i = 0; (i <= retry) && (status == 0) && (get_retry_interrupt() == 0);
+      ++i){
     status = poll(&pfd, 1, msecs);
   }
 

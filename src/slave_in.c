@@ -21,7 +21,7 @@
 #include "util.h"
 #include "err.h"
 #include "appdata.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "slavein/slavein.h"
 #include "slavet.h"
 #include "slave.h"

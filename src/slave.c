@@ -22,7 +22,7 @@
 #include "util.h"
 #include "err.h"
 #include "appdata.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "slavenbs/slavenbs.h"
 #include "slavefp/slavefp.h"
 #include "slavein/slavein.h"

@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
-#include "readn.h"
+#include "nreadn.h"
 #include "globals.h"
 #include "err.h"
 #include "nbspq.h"

@@ -24,6 +24,7 @@
 #include "filters.h"
 #include "nbspre.h"
 #include "init.h"
+#include "nreadn.h"	/* to initialize the readn() retry interrupt func */
 #include "nbspq.h"
 #include "per.h"
 #include "qstate.h"
@@ -44,6 +45,9 @@ int main(int argc, char **argv){
 
   init_globals();
   atexit(cleanup);
+
+  /* the readn interrupt function */
+  init_readn(get_quit_flag);
 
   /*
    * PROBLEM

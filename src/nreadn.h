@@ -5,10 +5,16 @@
  *
  * $Id$
  */
-#ifndef READN_H
-#define READN_H
+#ifndef NREADN_H
+#define NREADN_H
 
 #include <sys/types.h>
+
+/* typedef of pointer to a function like get_quit_flag() */
+typedef int (*retry_interrupt_t)(void);
+
+/* public function to set pointer to the retry-interrupt function */
+void init_readn(retry_interrupt_t function);
 
 ssize_t readn(int fd, void *buf, size_t size, unsigned int secs, int retry);
 ssize_t writen(int fd, void *buf, size_t size, unsigned int secs, int retry);

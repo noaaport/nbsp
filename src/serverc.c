@@ -18,7 +18,7 @@
 #include <errno.h>
 #include <pthread.h>
 #include "libconnth/libconn.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "globals.h"
 #include "err.h"
 #include "signal.h"

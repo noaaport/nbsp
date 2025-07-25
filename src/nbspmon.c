@@ -10,7 +10,7 @@
 #include <libgen.h>
 #include <errno.h>
 #include <curses.h>
-#include "readn.h"
+#include "nreadn.h"
 #include "file.h"
 #include "defaults.h"
 

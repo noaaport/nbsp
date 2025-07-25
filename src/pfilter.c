@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include <errno.h>
-#include "readn.h"
+#include "nreadn.h"
 #include "pfilter.h"
 
 static struct pfilter_st *pfilter_open_script(char *script, char *fifo);

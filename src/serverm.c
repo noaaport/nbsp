@@ -20,7 +20,7 @@
 #include <pthread.h>
 #include "libconnth/libconn.h"
 #include "access.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "err.h"
 #include "init.h"
 #include "signal.h"

@@ -17,7 +17,7 @@
 #include <libgen.h>
 #include <ctype.h>
 #include "const.h"
-#include "readn.h"
+#include "nreadn.h"
 #include "util.h"
 #include "file.h"
 #include "nbs1.h"
