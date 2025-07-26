@@ -1,6 +1,6 @@
 #!/bin/sh
 
-subdirs="nbspinsert nbspmcast"
+subdirs="nbspinsert nbspmcast nbspcraftinsert"
 
 for d in $subdirs
 do

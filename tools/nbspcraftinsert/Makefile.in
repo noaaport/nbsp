@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2005-2007 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+#
+# See LICENSE
+#
+# $Id$
+#
+@include@ @q@../../Makefile.inc@q@
+
+TCLSOURCES =	nbspcraftinsert.tcl
+TCLTARGET =	nbspcraftinsert
+
+TARGET =	${TCLTARGET} ${SAMPLES}
+
+TCLSH =		@TCLSH@
+INSTALL =	@INSTALL@
+
+all: ${TARGET}
+
+nbspcraftinsert: nbspcraftinsert.tcl
+	sed -e /%TCLSH%/s##${TCLSH}# nbspcraftinsert.tcl > nbspcraftinsert
+
+install: ${TARGET}
+	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
+
+clean:
+	rm -f *~ ${TARGET} Makefile

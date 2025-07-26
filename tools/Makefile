@@ -6,7 +6,7 @@
 # $Id$
 #
 
-SUBDIRS = nbspinsert nbspmcast
+SUBDIRS = nbspinsert nbspmcast nbspcraftinsert
 
 all:
 	for dir in ${SUBDIRS}; do \

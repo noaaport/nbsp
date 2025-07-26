@@ -83,6 +83,7 @@ bin/nbspinvrm
 bin/nbspexec
 bin/nbspinsert
 bin/nbspmcast
+bin/nbspcraftinsert
 bin/nbsprsscreate
 bin/nbspcapcleanup
 bin/nbspcapcatalog
