@@ -4,15 +4,19 @@
 # The intention here is to process the file in a way similar to craftinsert,
 # but taking the configurable options from the cmd line instead
 # of a configuration file as is the case with craftinsert.
-#
 # For the moment it simply calls craftinsert.
+# NOTE: Remember that craftinsert uses the "umask" function which is in tclx.
 #
 
 proc msg {s} {
 
     global g;
 
-    if($g(background) == 0) {
+    if {$g(verbose) == 0} {
+	return;
+    }
+
+    if {$g(background) == 0} {
 	puts stdout "$g(name): $s";
     } else {
 	exec logger -t $g(name) $s;
@@ -23,11 +27,7 @@ proc err {s} {
     
     global g;
 
-    if($g(verbose) == 0) {
-	return;
-    }
-
-    if($g(background) == 0) {
+    if {$g(background) == 0} {
 	puts stderr "$g(name): $s";
     } else {
 	exec logger -t $g(name) $s;
@@ -42,7 +42,7 @@ set g(background) 1;
 set g(verbose) 0;
 
 # path to craftinsert
-set g(craftinsert) "/usr/local/libexec/npemwin/craftinsert";
+set g(craftinsert) "%CRAFTINSERT_LIBDIR%/craftinsert";
 
 # variables
 set status 0;

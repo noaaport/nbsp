@@ -3,9 +3,11 @@
 #
 Installation instructions -
 
-First of all install TclX, by e.g. (in FreeBSD)
+First of all install TclX, by e.g.
 
-	pkg install tclX
+	pkg install tclX (freebsd)
+	pkgin inatall tclx (netbsd)
+	apt install tclx (debian)
 
 See (6) below for the explanation of this requirement. 
 

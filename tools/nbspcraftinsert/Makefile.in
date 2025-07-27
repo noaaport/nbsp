@@ -15,10 +15,14 @@ TARGET =	${TCLTARGET} ${SAMPLES}
 TCLSH =		@TCLSH@
 INSTALL =	@INSTALL@
 
+CRAFTINSERT_LIBDIR = ${MYLIBEXECDIR}
+
 all: ${TARGET}
 
 nbspcraftinsert: nbspcraftinsert.tcl
-	sed -e /%TCLSH%/s##${TCLSH}# nbspcraftinsert.tcl > nbspcraftinsert
+	sed -e /%TCLSH%/s##${TCLSH}# \
+	-e /%CRAFTINSERT_LIBDIR%/s##${CRAFTINSERT_LIBDIR}# \
+	nbspcraftinsert.tcl > nbspcraftinsert
 
 install: ${TARGET}
 	${INSTALL} -m 755 ${TCLTARGET} ${BINDIR}
