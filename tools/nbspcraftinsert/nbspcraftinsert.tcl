@@ -91,7 +91,8 @@ proc proc_nbsp {input_path} {
     # We use the latter.
     #
     global g;
-	     
+
+    set spooldir $g(nbsp_spooldir);
     set wmoid $g(nbsp_wmoid);
 
     # Extract info from input name
