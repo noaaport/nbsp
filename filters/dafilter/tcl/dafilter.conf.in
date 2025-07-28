@@ -100,12 +100,8 @@
 # can used if the subdirectory names should be all capitals; e.g.,
 # JUA/N0R (as seems to be required by Stormlab).
 #
-# The radar files are saved in their raw compressed form by default. 
-# They can be saved uncompressed if desired, and in that case the variable
-# dafilter(radstripheader) can be set to 1 to strip the ccb header, or 2
-# to strip both the ccb and the wmo header, respectively. A link to 
-# the latest file is made to the file with the name in dafilter(latestname).
-# The ``list'' file is created following
+# A link to the latest file is made to the file with the name in
+# dafilter(latestname). The ``list'' file is created following
 # 	http://nexrad.allisonhouse.com/support/developers/ondas.txt
 # (The list and latest are created by default.)
 #
@@ -204,7 +200,7 @@
 #
 ## set dafilter(slave) [file join $common(libdir) "dafilter"];
 ## set dafilter(slave,types) [list "rad" "sat" "grib" "default"];
-## set dafilter(slave,rad,ure) {_sdus[23578]} ;
+## set dafilter(slave,rad,ure) {_sdus[2-8]} ;
 ## set dafilter(slave,sat,ure) {_ti};
 ## set dafilter(slave,grib,ure) {\+grib};
 ## set dafilter(slave,default,ure) {.*};

@@ -64,7 +64,7 @@ if {$rstfilter(txt_enable) == 1} {
 define(match_rad,
 if {$rstfilter(rad_enable) == 1} {
   lappend cond {
-    [regexp {^sdus[23578]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
+    [regexp {^sdus[235678]} $rc(wmoid)] && [filterlib_uwildmat $2 $1]
   }
   lappend action {
     set rc_status 0;
