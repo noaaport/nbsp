@@ -275,8 +275,8 @@
 #define NBSP_QSTATEFIFO		"/var/run/nbsp/nbspd.fifo"
 #define NBSP_QSTATEFIFO_MODE	 0666
 
-/* log file for the output of dbstats */
-#define NBSP_QDBSTATSLOGFILE    "/var/noaaport/nbsp/stats/nbspd.qdbstats"
+/* log file for the output of dbstats - already defined above */
+/* #define NBSP_QDBSTATSLOGFILE    "/var/noaaport/nbsp/stats/nbspd.qdbstats" */
 
 /* creation modes for the product files and their subdirs */
 #define FILE_PRODUCT_MODE	0666
