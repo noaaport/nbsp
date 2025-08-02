@@ -2,7 +2,7 @@
 #
 # $Id$
 #
-# Usage: nbspgoesrmapc [-v] [-b] [-K] [-L] [-c] [-g] [-d <outputdir>]
+# Usage: nbspgoesrmapc [-v] [-b] [-a] [-K] [-L] [-c] [-g] [-d <outputdir>]
 #	[-i] [-I] [-l <first,last>] [-m] [-o <outputfile>] <inputdir>
 #
 # This is the analog of nbspsatmapc (in rstfilter/gismap), but with
@@ -16,7 +16,12 @@
 #           nbspgoesrcmapc -l end-3,end tire05/pao  (the last four)
 #           nbspgoesrcmapc -g tire05/pao (produces gif)
 #           nbspgoesrcmapc -m tire05/pao (includes the map)
-# 
+#
+# An example to work with the asc files inserted by satftp (from the
+# aws-s3 files)
+#
+#           nbspgoesrmapc -a -i -I sat/goesr/g19/z01/c02
+#
 # This tool can create individual images and/or a loop from them.
 # [-l] The [-l] argument specifies a range of files to process from the list
 #      that are in the specified directory. When -L is not given, the default
@@ -48,11 +53,12 @@
 # -L => create a loop from those images.
 # -K => if -L is specified, keep (do not delete) the individual images
 # -m => includes the map (uses map2img via nbspgoesrmap)
-
-set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-c] [-g] [-m]
+# -a => the files in the inputdir are asc (implies -m)
+#
+set usage {nbspgoesrmapc [-b] [-v] [-I] [-K] [-L] [-a] [-c] [-g] [-m]
     [-d <outputdir>] [-i] [-l <first,last>] [-o <outputfile>] <inputdir>};
 
-set optlist {b v I K L c g i m {d.arg ""} {l.arg ""} {o.arg ""}};
+set optlist {b v I K L a c g i m {d.arg ""} {l.arg ""} {o.arg ""}};
 
 package require cmdline;
 
@@ -167,6 +173,16 @@ set g(inputdir) [lindex $argv 0];    # default is e.g., tire05/pao
 append g(loopfile) \
     [string map {"/" "."} $g(inputdir)] $option(loopext); # e.g., tire05.pao.gif
 
+# Get the (default if [-a] is not given) data file extension
+set fext [file extension $dafilter(sat_namefmt_goesr)];
+#
+# [-a] implies [-m]
+#
+if {$option(a) == 1} {
+    set fext ".asc";
+    set option(m) 1;
+}
+
 # [-L] requires that the output files be gif
 if {$option(L) == 1} {
     set option(g) 1;
@@ -207,9 +223,6 @@ if {$option(o) ne ""} {
     set g(loopfile) $option(o);
     set g(latestfile) $option(o);
 }
-
-# Get the data file extension
-set fext [file extension $dafilter(sat_namefmt_goesr)];
 
 set frange_list [split $option(l) ","];
 if {[llength $frange_list] == 1} {
@@ -252,10 +265,19 @@ foreach f $flist {
 	}
 
 	if {$option(g) == 0} {
-	    exec $g(nbspgoesrimgprog) -o $outputpath $goesrpath;
+	    if {$option(a) == 0} {
+		exec $g(nbspgoesrimgprog) -o $outputpath $goesrpath;
+	    } else {
+		exec $g(nbspgoesrimgprog) -a -o $outputpath $goesrpath;
+	    }
 	} else {
-	    exec $g(nbspgoesrimgprog) $goesrpath \
-		| pngtopam 2> /dev/null | pamtogif > $outputpath 2> /dev/null;
+	    if {$option(a) == 0} {
+		exec $g(nbspgoesrimgprog) $goesrpath \
+		  | pngtopam 2> /dev/null | pamtogif > $outputpath 2> /dev/null;
+	    } else {
+		exec $g(nbspgoesrimgprog) -a $goesrpath \
+		  | pngtopam 2> /dev/null | pamtogif > $outputpath 2> /dev/null;
+	    }
 	}	   
     } errmsg];
 
