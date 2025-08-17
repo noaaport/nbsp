@@ -75,7 +75,7 @@ HEADERS =	config.h const.h common.h defaults.h globals.h \
 		pfilter.h \
 		oscompat.h
 
-TOOLOBJECTS =	nreadn.o util.o file.o nbs1r.o pack.o
+TOOLOBJECTS =	nreadn.o util.o file.o nbs1r.o pack.o stoi.o
 ALLOBJECTS =	nbspmon.o rnbspmon.o rnbspmon1.o nbspstate.o ${OBJECTS} \
 		${INOBJECTS}
 

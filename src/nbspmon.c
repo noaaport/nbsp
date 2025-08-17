@@ -25,6 +25,7 @@
 #include <curses.h>
 #include "nreadn.h"
 #include "file.h"
+#include "stoi.h"
 #include "defaults.h"
 
 /* defaults */
@@ -95,18 +96,18 @@ static int parse_args(int argc, char ** argv){
     case 'r':
       status = strto_int(optarg, &grmon.read_timeout_secs);
       if(status == 1){
-	errx(1, "Invalid argument to [-r] option.");
+	errx(1, "%s", "Invalid argument to [-r] option.");
       }
       break;
     case 's':
       status = strto_int(optarg, &grmon.stats_cycle_secs);
       if(status == 1){
-	errx(1, "Invalid argument to [-s] option.");
+	errx(1, "%s", "Invalid argument to [-s] option.");
       }
       break;
     default:
       status = 1;
-      errx(1, usage);
+      errx(1, "%s", usage);
       break;
     }
   }
