@@ -1,3 +1,16 @@
+/*
+ * Copyright (c) 2005 Jose F. Nieves <nieves@ltp.upr.clu.edu>
+ *
+ * See LICENSE
+ *
+ * $Id$
+ */
+/*
+ * Usage: nbspmon [-r secs] [-s secs]
+ *
+ * -r => read timeout secs (default is 60)
+ * -s => stats cycle secs (for updating the data rate and file count - 10 secs)
+ */
 #include <assert.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -14,6 +27,7 @@
 #include "file.h"
 #include "defaults.h"
 
+/* defaults */
 #define READ_TIMEOUT_SECS   60
 #define STATS_CYCLE_SECS    10  /* for updating the data rate and file count */
 
@@ -24,11 +38,19 @@ struct {
   unsigned int count;
   off_t filesize;
   time_t lasttime;
-  int cycle_secs;
+  int stats_cycle_secs;
+  int read_timeout_secs;
   unsigned int rate;
   int f_quit;
-} grmon = {NBSP_FILTER_DEVDIR, NULL, -1, 0, 0, 0, STATS_CYCLE_SECS, 0, 0};
+} grmon = {NBSP_FILTER_DEVDIR, NULL, -1,
+  0, 0, 0,
+  STATS_CYCLE_SECS, READ_TIMEOUT_SECS,
+  0, 0};
 
+static char *usage = "nbspmon [-r secs] [-s secs]";
+
+static int parse_args(int argc, char **argv);
+static int validate_args(void);
 static int rmon_init(char *progname);
 static int rmon_loop(void);
 static int rmon_run(void);
@@ -36,9 +58,20 @@ static void rmon_cleanup(void);
 static void init_curses(void);
 static void clean_curses(void);
 
-int main(int argc __attribute__((unused)), char **argv){
+/*
+ * int main(int argc __attribute__((unused)), char **argv){
+ */
+
+int main(int argc, char **argv){
 
   int status = 0;
+
+  status = parse_args(argc, argv);
+  if(status == 0)
+    status = validate_args();
+
+  if(status != 0)
+    exit(EXIT_FAILURE);
 
   status = rmon_init(argv[0]);
 
@@ -47,6 +80,53 @@ int main(int argc __attribute__((unused)), char **argv){
 
   if(status == 0)
     status = rmon_run();
+
+  return(status);
+}
+
+static int parse_args(int argc, char ** argv){
+
+  char *optstr = "r:s:";
+  int status = 0;
+  int c;
+
+  while((status == 0) && ((c = getopt(argc, argv, optstr)) != -1)){
+    switch(c){
+    case 'r':
+      status = strto_int(optarg, &grmon.read_timeout_secs);
+      if(status == 1){
+	errx(1, "Invalid argument to [-r] option.");
+      }
+      break;
+    case 's':
+      status = strto_int(optarg, &grmon.stats_cycle_secs);
+      if(status == 1){
+	errx(1, "Invalid argument to [-s] option.");
+      }
+      break;
+    default:
+      status = 1;
+      errx(1, usage);
+      break;
+    }
+  }
+
+  return(status);
+}
+
+static int validate_args(void){
+
+  int status = 0;
+
+  if(grmon.read_timeout_secs <= 0){
+    status = 1;
+    errx(1, "Illegal value of [-r] option.");
+  }
+
+  if(grmon.stats_cycle_secs <= 0){
+    status = 1;
+    errx(1, "Illegal value of [-s] option.");
+  }
 
   return(status);
 }
@@ -116,7 +196,7 @@ static int rmon_loop(void){
   int status = 0;
 
   size = 12;
-  n = readn_fifo(fd, header, size, READ_TIMEOUT_SECS);
+  n = readn_fifo(fd, header, size, grmon.read_timeout_secs);
 
   if(n == 0){
     grmon.f_quit = 1;
@@ -181,8 +261,8 @@ static int rmon_loop(void){
 
   now = time(NULL);
   tmptr = localtime(&now);
-  if(now> grmon.lasttime + grmon.cycle_secs){
-    grmon.rate = grmon.filesize/(grmon.cycle_secs * 1000);
+  if(now> grmon.lasttime + grmon.stats_cycle_secs){
+    grmon.rate = grmon.filesize/(grmon.stats_cycle_secs * 1000);
     grmon.filesize = 0;
     grmon.count = 0;
     grmon.lasttime = now;

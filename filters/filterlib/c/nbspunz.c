@@ -259,7 +259,7 @@ static int process_frame(struct memfile_st *mf, z_stream *zs, int *zstatus){
   return(status);
 }
 
-int main(int argc, char ** argv){
+int main(int argc, char **argv){
 
   int status = 0;
   int buffer_size = -1;	/* just to ensure it is initalized below */
