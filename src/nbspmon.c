@@ -43,10 +43,12 @@ struct {
   int read_timeout_secs;
   unsigned int rate;
   int f_quit;
+  char *p;	/* transmission data */
+  size_t psize;	/* allocated size of p */
 } grmon = {NBSP_FILTER_DEVDIR, NULL, -1,
   0, 0, 0,
-  STATS_CYCLE_SECS, READ_TIMEOUT_SECS,
-  0, 0};
+  STATS_CYCLE_SECS, READ_TIMEOUT_SECS, 0, 0,
+  NULL, 0};
 
 static char *usage = "nbspmon [-r secs] [-s secs]";
 
@@ -74,6 +76,7 @@ int main(int argc, char **argv){
   if(status != 0)
     exit(EXIT_FAILURE);
 
+  atexit(rmon_cleanup);
   status = rmon_init(argv[0]);
 
   if(status == 0)
@@ -152,8 +155,6 @@ static int rmon_init(char *progname){
   unlink(grmon.fname);
   status  = mkfifo(grmon.fname, 0644);
 
-  atexit(rmon_cleanup);
-
   if(status == 0){
     grmon.fd = open(grmon.fname, O_RDONLY | O_NONBLOCK, 0);
   }
@@ -172,7 +173,7 @@ static int rmon_run(void){
 
   int status = 0;
 
-  while(grmon.f_quit == 0){
+  while((status == 0) && (grmon.f_quit == 0)){
     move(0,0);
     status = rmon_loop();
     refresh();
@@ -185,28 +186,29 @@ static int rmon_loop(void){
 
   int n;
   char header[12];
+  int HSIZE = 12;
   char *p = NULL;
+  size_t size;
+  off_t fsize;	/* file size */
   char *fpath;
   char *fname;
   /* int id; */
-  off_t size;
   time_t now;
   struct tm *tmptr;
   int fd = grmon.fd;
-
   int status = 0;
 
-  size = 12;
-  n = readn_fifo(fd, header, size, grmon.read_timeout_secs);
+  n = readn_fifo(fd, header, HSIZE, grmon.read_timeout_secs);
 
   if(n == 0){
+    printw("Timed out before anything could be read (poll timed out)");
     grmon.f_quit = 1;
     return(0);
   }
 
   if(n == -1){
     status = -1;
-  }else if(n != size){
+  }else if(n != HSIZE){
     status = 1;
   }
 
@@ -224,22 +226,29 @@ static int rmon_loop(void){
    * The transmission is the full path name of the file, preceeded
    * by the product data codes (which include the fname).
    */
-  p = malloc(size);
-  if(p == NULL){
-    status = -1;
-    goto end;
-  }
+  if(size > grmon.psize){
+    p = realloc(grmon.p, size);
+    if(p == NULL){
+      status = -1;
+      goto end;
+    } else {
+      grmon.p = p;
+      grmon.psize = size;
+    }    
+  } else
+    p = grmon.p;
 
   n = readn_fifo(fd, p, size, 1);
 
   if(n == 0){
+    printw("Timed out before anything could be read (poll timed out)");
     grmon.f_quit = 1;
     return(0);
   }
 
   if(n == -1){
     status = -1;
-  }else if(n != size){
+  }else if((size_t)n != size){
     status = 1;
   }
 
@@ -255,14 +264,14 @@ static int rmon_loop(void){
   fpath = &p[8 + FNAME_SIZE + 1];
   ++grmon.count; 
   
-  status = get_file_size(fpath, &size);
+  status = get_file_size(fpath, &fsize);
   if(status == 0){
-    grmon.filesize += size;
+    grmon.filesize += fsize;
   }
 
   now = time(NULL);
   tmptr = localtime(&now);
-  if(now> grmon.lasttime + grmon.stats_cycle_secs){
+  if(now > grmon.lasttime + grmon.stats_cycle_secs){
     grmon.rate = grmon.filesize/(grmon.stats_cycle_secs * 1000);
     grmon.filesize = 0;
     grmon.count = 0;
@@ -278,12 +287,9 @@ static int rmon_loop(void){
  end:
 
   if(status == -1)
-    printw("Error reading from fifo or data file. %s", strerror(errno));
+    printw("Error reading from fifo. %s", strerror(errno));
   else if(status != 0)
-    printw("Timed out reading from fifo.");
-
-  if(p != NULL)
-    free(p);
+    printw("Disconnection detected while reading.");
 
   return(status);
 }
