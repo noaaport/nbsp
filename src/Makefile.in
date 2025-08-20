@@ -76,11 +76,11 @@ HEADERS =	config.h const.h common.h defaults.h globals.h \
 		oscompat.h
 
 TOOLOBJECTS =	nreadn.o util.o file.o nbs1r.o pack.o stoi.o
-ALLOBJECTS =	nbspmon.o rnbspmon.o rnbspmon1.o nbspstate.o ${OBJECTS} \
+ALLOBJECTS =	nbspmon.o rnbspmon1.o rnbspmon2.o nbspstate.o ${OBJECTS} \
 		${INOBJECTS}
 
 DAEMON =	nbspd
-TOOLS =		nbspmon rnbspmon rnbspmon1 nbspstate
+TOOLS =		nbspmon rnbspmon1 rnbspmon2 nbspstate
 
 TARGET =	${DAEMON} ${TOOLS}
 
@@ -115,11 +115,11 @@ ${DAEMON}: ${OBJECTS} lib
 nbspmon: nbspmon.o ${TOOLOBJECTS}
 	${CC} -o $@ nbspmon.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
 
-rnbspmon: rnbspmon.o ${TOOLOBJECTS}
-	${CC} -o $@ rnbspmon.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses  -lconn
-
 rnbspmon1: rnbspmon1.o ${TOOLOBJECTS}
 	${CC} -o $@ rnbspmon1.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
+
+rnbspmon2: rnbspmon2.o ${TOOLOBJECTS}
+	${CC} -o $@ rnbspmon2.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
 
 nbspstate: nbspstate.o ${TOOLOBJECTS}
 	${CC} -o $@ nbspstate.o ${TOOLOBJECTS} ${LIBDIRS} -lncurses -lconn
