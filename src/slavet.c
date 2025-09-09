@@ -381,8 +381,8 @@ int slave_table_create(struct slave_table_st **slavet,
 			  char *masterservers,
 			  struct slave_options_st *defaults){
   /*
-   * The masterservers entries can be separated by ': \t\n'. Then the
-   * individual parameters for each entry are separated by ','. This
+   * The masterservers entries can be separated by '| \t\n'. Then the
+   * individual parameters for each entry are separated by ',:'. This
    * is defined in slavet.h.
    */
   struct slave_table_st *slavetp = NULL;
