@@ -31,7 +31,7 @@
 # exclude from the deletion list. For example, alternative specifications
 # for the digatmos/nexrad directory could be
 #
-# H/2:/var/noaaport/data/digatmos/nexrad/nids: -mmin +240
+# H/2:/var/noaaport/data/digatmos/nexrad/nids: -mtime +4h
 # H/2:/var/noaaport/data/digatmos/nexrad/nids: -c 60 -e latest|.+\.list
 #
 # A retention count can be specified only if the files in the directory
@@ -90,19 +90,19 @@
 # The metar/upperair/ws archives are enabled by default; the setting below
 # allows seven days of daily and hourly archives.
 #
-H/5:/var/noaaport/data/inv/rst/txt: -i -mtime +2
+H/5:/var/noaaport/data/inv/rst/txt: -i -mtime +1
 H/2:/var/noaaport/data/inv/rst/rad: -i -mmin +240     
 H:/var/noaaport/data/inv/rst/sat: -i -mmin +240
 #
-H/6:/var/noaaport/data/digatmos:nexrad|sat|hurricane|enso: -mtime +2
+H/6:/var/noaaport/data/digatmos:nexrad|sat|hurricane|enso: -mtime +1
 H/2:/var/noaaport/data/inv/digatmos/nexrad: -i -mmin +240
 H/2:/var/noaaport/data/inv/digatmos/sat: -i -mmin +720
 #
-H/5:/var/noaaport/data/gempak:nexrad|images: -mtime +1
+H/5:/var/noaaport/data/gempak:nexrad|images: -mtime +0
 H/2:/var/noaaport/data/inv/gempak/nexrad: -i -mmin +240
 H:/var/noaaport/data/inv/gempak/images/sat: -i -mmin +240
 #
-H/6:/var/noaaport/data/grib: -mtime +1
+H/6:/var/noaaport/data/grib: -mtime +0
 #
 H=02:/var/noaaport/data/metar/weatherscope: -c 7 -d
 H=02:/var/noaaport/data/upperair: -c 7 -d
@@ -114,11 +114,11 @@ H/6:/var/noaaport/data/gis/img/sat: -mmin +360
 H/6:/var/noaaport/data/inv/gis/sat: -i -mmin +360
 
 # Keep a week of the old www logfiles
-H=01:/var/log/nbsp/www: -mtime +7
+H=01:/var/log/nbsp/www: -mtime +6
 
 # Delete files in the spool directory (see below)
 #
-H=23:/var/noaaport/nbsp/spool: -mtime +1
+H=23:/var/noaaport/nbsp/spool: -mtime +0
 
 # If the parameter "spooldbslots" is not zero in the nbspd.conf file
 # (the default is not zero), then the spool directory is managed

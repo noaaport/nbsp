@@ -18,9 +18,11 @@ case $os in
     	;;
     NetBSD) 
 	RCINIT=nbspd.sh-netbsd
+	HOURLYCONF=hourly-cleanup.conf-bsd
     	;;
     OpenBSD) 
 	RCINIT=nbspd.sh-generic
+	HOURLYCONF=hourly-cleanup.conf-bsd
     	;;
     SunOS)
 	RCINIT=nbspd.sh-generic
@@ -29,7 +31,7 @@ case $os in
     	;;
     Linux)
 	RCINIT=nbspd.sh-${flavor}
-	HOURLYCONF=hourly-cleanup.conf-generic
+	HOURLYCONF=hourly-cleanup.conf-linux
 	STARTCLEANCONF=start-cleanup.conf-generic
 	RCFPATH=/etc/init.d/nbspd
 	SYSTEMDCONF=nbsp.service-generic
@@ -43,6 +45,7 @@ case $os in
     	;;
     Darwin)
 	RCINIT=nbspd.sh-macosx
+	HOURLYCONF=hourly-cleanup.conf-generic
 	STARTSTOPRC=startstop.rc-macosx
 	;;
 esac
