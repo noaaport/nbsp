@@ -1,0 +1,5 @@
+Tue Sep  9 20:28:51 AST 2025
+
+The generic is the same as the bsd version. The freebsd version
+uses -mtime n[h] and the linux version diffes in the interpretation
+of the -mtime +n.
