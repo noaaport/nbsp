@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <stdio.h>
+#include <signal.h>
 #include <time.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -57,6 +58,8 @@ static int rmon_run(void);
 static void rmon_cleanup(void);
 static void init_curses(void);
 static void clean_curses(void);
+static void signal_init(void);
+static void signal_handler(int sig);
 
 int main(int argc, char **argv){
 
@@ -70,6 +73,8 @@ int main(int argc, char **argv){
     exit(EXIT_FAILURE);
 
   atexit(rmon_cleanup);
+
+  signal_init();
   status = rmon_init();
 
   if(status == 0)
@@ -229,20 +234,37 @@ static int rmon_loop(void){
 
 void rmon_cleanup(void){
 
-  if(grmon.fd != -1)
-    close(grmon.fd);
+	if(grmon.fd != -1)
+		close(grmon.fd);
 }
 
 static void init_curses(void){
 
-  initscr(); cbreak(); noecho(); nonl();
-  intrflush(stdscr, FALSE); 
-  keypad(stdscr, TRUE);
+	initscr(); cbreak(); noecho(); nonl();
+	intrflush(stdscr, FALSE); 
+	keypad(stdscr, TRUE);
 
-  atexit(clean_curses);
+	atexit(clean_curses);
 }
 
 static void clean_curses(void){
 
-  (void)endwin();
+	(void)endwin();
+}
+
+static void signal_init(void) {
+
+	struct sigaction sa;
+
+	sa.sa_handler = signal_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask); 
+	
+	sigaction(SIGINT, &sa, NULL);
+}
+
+static void signal_handler(int sig) {
+
+	(void)sig;
+	grmon.f_quit = 1;
 }
