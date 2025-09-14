@@ -205,12 +205,9 @@ static int rmon_loop(void){
   n = readn_fifo(fd, header, HSIZE, grmon.read_timeout_secs);
 
   if(n == 0){
-    printw("Timed out before anything could be read (poll timed out)");
-    grmon.f_quit = 1;
-    return(0);
-  }
-
-  if(n == -1){
+    /* Timed out before anything could be read (poll timed out) */
+	status = -2;
+  }else if(n == -1){
     status = -1;
   }else if(n != HSIZE){
     status = 1;
@@ -233,7 +230,7 @@ static int rmon_loop(void){
   if(size > grmon.psize){
     p = realloc(grmon.p, size);
     if(p == NULL){
-      status = -1;
+      status = -3;
       goto end;
     } else {
       grmon.p = p;
@@ -245,12 +242,9 @@ static int rmon_loop(void){
   n = readn_fifo(fd, p, size, 1);
 
   if(n == 0){
-    printw("Timed out before anything could be read (poll timed out)");
-    grmon.f_quit = 1;
-    return(0);
-  }
-
-  if(n == -1){
+    /* Timed out before anything could be read (poll timed out) */
+	status = -2;
+  }else if(n == -1){
     status = -1;
   }else if((size_t)n != size){
     status = 1;
@@ -290,7 +284,11 @@ static int rmon_loop(void){
 
  end:
 
-  if(status == -1)
+  if(status == -3)
+     printw("Error from realloc(). %s", strerror(errno));
+  else if(status == -2)
+     printw("Timed out before anything could be read (poll timed out)");
+  else if(status == -1)
     printw("Error reading from fifo. %s", strerror(errno));
   else if(status != 0)
     printw("Disconnection detected while reading.");
