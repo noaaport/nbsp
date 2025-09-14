@@ -237,7 +237,7 @@ static int rmon_loop(void){
   if(size > grmon.psize){
     p = realloc(grmon.p, size);
     if(p == NULL){
-      status = -1;
+      status = -3;
       goto end;
     } else {
       grmon.p = p;
@@ -282,6 +282,8 @@ static int rmon_loop(void){
  end:
 
   if(status != 0) {
+	if(status == -3)
+      printw("Error from realloc(). %s", strerror(errno));
     if(status == -2)
       printw("Timed out before anything could be read (poll timed out)");
     else if(status == -1)    

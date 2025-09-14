@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <err.h>
 #include <stdio.h>
+#include <signal.h>
 #include <time.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -60,7 +61,8 @@ static int rmon_run(void);
 static void rmon_cleanup(void);
 static void init_curses(void);
 static void clean_curses(void);
-
+static void signal_init(void);
+static void signal_handler(int sig);
 /*
  * int main(int argc __attribute__((unused)), char **argv){
  */
@@ -77,6 +79,8 @@ int main(int argc, char **argv){
     exit(EXIT_FAILURE);
 
   atexit(rmon_cleanup);
+  
+  signal_init();
   status = rmon_init(argv[0]);
 
   if(status == 0)
@@ -317,4 +321,21 @@ static void init_curses(void){
 static void clean_curses(void){
 
   (void)endwin();
+}
+
+static void signal_init(void) {
+
+	struct sigaction sa;
+
+	sa.sa_handler = signal_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask); 
+	
+	sigaction(SIGINT, &sa, NULL);
+}
+
+static void signal_handler(int sig) {
+
+	(void)sig;
+	grmon.f_quit = 1;
 }
