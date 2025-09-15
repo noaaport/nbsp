@@ -189,7 +189,13 @@ static int rmon_run(void) {
 }
 
 static int rmon_loop(void){
-
+  /*
+   * NOTE: Sun Sep 14 19:50:31 AST 2025 - This repeats the code that
+   * is in the function recv_fp_packet (in  packfp.c), which in turn
+   * calls nbsfp_unpack_fpath in packfpu.c. For consistency we should
+   * at some point use those functions here instead of duplicating
+   * the code.
+   */
   int n;
   char header[12];
   int HSIZE = 12;
