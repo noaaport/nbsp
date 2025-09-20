@@ -20,8 +20,6 @@
  * for
  */
 
-#define NBSFP_PINFO_SIZE	(8 + FNAME_SIZE + 1)
-
 /*
  * This data is extracted from the pce and is used for transmission.
  * The fname and fpath are not independent pointers; they point to
