@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 24.2.7.2 (Linux)"/>
+	<meta name="author" content="Un-named"/>
+	<meta name="created" content="2026-03-16T00:53:37.456000000"/>
+	<meta name="changedby" content="Un-named"/>
+	<meta name="changed" content="2026-03-16T00:53:37.458000000"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 1in }
+		p { line-height: 115%; text-align: left; orphans: 2; widows: 2; margin-bottom: 0.1in; direction: ltr; background: transparent }
+		h1 { color: #1b3a5c; text-align: left; orphans: 2; widows: 2; margin-top: 0.25in; margin-bottom: 0.14in; direction: ltr; background: transparent; page-break-after: avoid }
+		h1.western { font-family: "Arial", sans-serif; font-size: 18pt; font-weight: bold }
+		h1.cjk { font-family: "Arial"; font-size: 18pt; font-weight: bold }
+		h1.ctl { font-family: "Arial"; font-size: 18pt; font-weight: bold }
+		h2 { color: #2e5984; text-align: left; orphans: 2; widows: 2; margin-top: 0.19in; margin-bottom: 0.11in; direction: ltr; background: transparent; page-break-after: avoid }
+		h2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-weight: bold }
+		h2.cjk { font-family: "Arial"; font-size: 14pt; font-weight: bold }
+		h2.ctl { font-family: "Arial"; font-size: 14pt; font-weight: bold }
+		a:link { color: #0563c1; text-decoration: underline }
+	</style>
+</head>
+<body lang="en-US" link="#0563c1" vlink="#800000" dir="ltr"><p style="line-height: 100%; margin-top: 2.08in; margin-bottom: 0in">
+<br/>
+
+</p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.14in"><font color="#1b3a5c"><font face="Arial, serif"><font size="6" style="font-size: 24pt"><b>ARCHITECTURAL
+REPORT</b></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#3d7ab5">────────────────────────────────────────</font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.42in"><font color="#2e5984"><font face="Arial, serif"><font size="4" style="font-size: 16pt">Noaaport
+Broadcast System Processor (Nbsp)</font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#666666"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Repository:
+bitbucket.org/noaaport/nbsp</font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#666666"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Mirror:
+github.com/noaaport/nbsp</font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#666666"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Current
+Version: nbsp-2.3.9r</font></font></font></p>
+<p align="center" style="line-height: 100%; margin-top: 0.42in; margin-bottom: 0.07in">
+<font color="#999999"><font face="Arial, serif"><font size="2" style="font-size: 11pt">March
+2026</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="page-break-before: always">Table of
+Contents</h1>
+<div id="Table of Contents1" dir="ltr"><p style="line-height: 100%; margin-bottom: 0in">
+	</p>
+</div>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+1. Executive Summary</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">The Noaaport
+Broadcast System Processor (Nbsp) is a mature, open-source software
+suite designed to receive, decode, process, and distribute data from
+NOAA’s Satellite Broadcast Network (SBN/NOAAPort). The NOAAPort
+data stream delivers real-time weather data—including satellite
+imagery, radar data, model output, text bulletins, and sensor
+data—via C-band satellite broadcast from the Galaxy 28 satellite.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp’s
+architecture follows a pipeline model: a high-performance C core
+handles real-time packet reception and file reassembly, while a
+comprehensive Tcl-based scripting layer provides extensible
+post-processing through a modular filter system. The system supports
+standalone operation and distributed master-slave topologies, with
+output capabilities spanning HTTP, FTP, NNTP, RSS, LDM queue
+insertion, and UDP-based product arrival notifications.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">The codebase is
+composed of approximately 33.9% Tcl, 33.1% C, 16.4% HTML, and smaller
+portions of M4, Makefile, and Shell scripts, reflecting the
+separation between the performance-critical core and the flexible
+scripting layer. The project has accumulated over 1,487 commits
+across two contributors and is actively maintained, with the latest
+updates (January 2025) adding native GOES-R satellite image
+processing capabilities.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+2. System Context and Domain</h1>
+<h2 class="western">2.1 The NOAAPort Data Stream</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">NOAAPort is a
+one-way satellite broadcast system operated by the National Weather
+Service. Data is uplinked to the Galaxy 28 satellite at 89°W and
+broadcast over multiple logical channels via DVB-S2 modulation. Each
+channel carries a multicast UDP stream on a dedicated IP address
+(224.0.1.1 through 224.0.1.10, plus 224.1.1.1), received by
+consumer-grade DVB-S2 receivers such as the Novra S300N.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">The broadcast
+carries weather products across several channels: NCEP/NWSTG (text
+bulletins, model data), GOES (satellite imagery), NCEP/NWSTG2
+(additional model output), Non-GOES Imagery/DCP Data, and expanded
+channels added during the bandwidth expansion from 30 Mbps to over 60
+Mbps in 2014. The data arrives as fragmented UDP packets that must be
+reassembled into complete product files before further processing.</p>
+<h2 class="western">2.2 Nbsp’s Role in the Ecosystem</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp sits between
+the raw satellite receiver hardware and downstream consumers of
+weather data. It serves as the central data ingest and distribution
+hub, replacing or complementing alternatives such as Unidata’s LDM
+(Local Data Manager). Where LDM focuses on peer-to-peer data relay
+among institutional users, Nbsp provides a self-contained processing
+pipeline with built-in web serving, format conversion, and
+multi-protocol distribution—making it particularly suited for
+independent operators and smaller institutions.</p>
+<h2 class="western">2.3 Supported Platforms</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">The system is
+developed primarily on FreeBSD and packages exist for FreeBSD,
+Almalinux, Debian, and Ubuntu Linux distributions. It has also been
+run under Cygwin on Windows. Platform-specific configuration files
+(e.g., nbspd.conf-linux, nbspd.conf-freebsd) handle OS differences in
+paths and network interface naming.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+3. High-Level Architecture</h1>
+<h2 class="western">3.1 Architectural Overview</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp follows a
+layered pipeline architecture with three primary tiers:</p>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="136"/>
+	<col width="70"/>
+	<col width="386"/>
+	<tr>
+		<td width="136" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Tier</b></font></font></font></p>
+		</td>
+		<td width="70" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Language</b></font></font></font></p>
+		</td>
+		<td width="386" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Responsibility</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Reception
+			Core</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C</font></font></p>
+		</td>
+		<td width="386" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Multicast
+			UDP reception, packet reassembly, frame decoding, spool management</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Filter
+			Pipeline</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="386" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Post-processing,
+			format conversion, file organization, image generation,
+			distribution</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Service
+			Layer</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			/ C</font></font></p>
+		</td>
+		<td width="386" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Web
+			server, network server (EMWIN/NBS), NNTP gateway, RSS feeds, PAN
+			notifications</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0.14in"><br/>
+<br/>
+
+</p>
+<h2 class="western">3.2 Data Flow Pipeline</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">The data flows
+through the system in the following sequence: (1) The DVB-S2 receiver
+demodulates the satellite signal and outputs multicast UDP packets
+onto the local network. (2) The nbspd daemon joins the configured
+multicast groups and receives UDP fragments. (3) The C core
+reassembles fragments into complete product files, decoding WMO
+headers and AWIPS identifiers. (4) Complete files are written to the
+spool directory (/var/noaaport/nbsp/spool). (5) File metadata is
+dispatched to the filter pipeline. (6) Enabled filters process files
+in parallel—converting formats, organizing into directory trees,
+generating images, and distributing to external systems. (7) The
+built-in web server and optional network servers make processed data
+available to clients.</p>
+<h2 class="western">3.3 Deployment Topologies</h2>
+<p style="line-height: 100%; margin-bottom: 0.08in">Nbsp supports
+three operational modes:</p>
+<ul>
+	<li value="1"><p style="line-height: 100%; margin-bottom: 0.06in"><b>Standalone:
+	</b>A single instance handles both reception and processing on one
+	machine. This is the default and simplest configuration.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Master-Slave:
+	</b>The master instance receives the broadcast and forwards
+	reassembled files to one or more slave instances via the NBS1
+	protocol. Slaves handle all post-processing, offloading the
+	reception machine.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.14in"><b>Chained:
+	</b>A slave can itself act as a master to additional downstream
+	slaves, creating a hierarchical distribution tree for large-scale
+	deployments.</p></li>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+4. Repository Structure</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">The repository is
+organized into well-defined directories reflecting the layered
+architecture:</p>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="149"/>
+	<col width="453"/>
+	<tr>
+		<td width="149" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Directory</b></font></font></font></p>
+		</td>
+		<td width="453" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Purpose</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>src/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C
+			source code for the core daemon (nbspd), packet processing, spool
+			database management, and network protocols</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>filters/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Standard
+			filter implementations (rstfilter, dafilter, gribfilter,
+			metarfilter, etc.) in Tcl, each in its own subdirectory</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>conf/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Platform-specific
+			configuration files (nbspd.conf-linux, nbspd.conf-freebsd) and
+			feature toggles (features.conf)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>scripts/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Operational
+			shell scripts for cleanup, maintenance, log rotation, and system
+			monitoring</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclhttpd/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Embedded
+			web server based on TclHttpd 3.5.1, providing the monitoring UI
+			and file serving</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclgempak/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			bindings for GemPak weather data processing libraries</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclgrads/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			bindings for GrADS (Grid Analysis and Display System) integration</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclmetar/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			library for parsing and processing METAR aviation weather
+			observations</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclupperair/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			library for upper air sounding data processing</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclldm/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			interface to Unidata’s LDM for product queue insertion
+			(nbsp2ldm)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclssh/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			SSH library for secure remote file distribution</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>build/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Build
+			system scripts, package generation for multiple platforms (RPM,
+			DEB, TBZ)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tools/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Utility
+			programs for data inspection, testing, and debugging</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>utils/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">General-purpose
+			utility functions and helper programs</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>doc/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Documentation,
+			man pages, and reference materials</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>examples/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Sample
+			configurations, client integration examples (GRLevel3, Digital
+			Atmosphere, IDV)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>QUICK_START/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Getting-started
+			guides for new installations</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>READMEs/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Platform-specific
+			README files and installation notes</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>dev-notes/</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Developer
+			documentation including a 6,497-line data dictionary</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>debug-notes/</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Debugging
+			guides and troubleshooting procedures</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+5. Core Daemon Architecture (nbspd)</h1>
+<h2 class="western">5.1 Packet Reception and Reassembly</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">The nbspd daemon
+is the central process written in C for maximum performance. It opens
+UDP multicast sockets on the configured channels (defaulting to all
+four primary channels: 224.0.1.1 through 224.0.1.4 on ports
+1201–1204) and continuously reads incoming data fragments. Since
+UDP provides no retransmission mechanism, the reception loop must
+keep up with the incoming data rate without being swapped out by the
+OS. The daemon uses careful buffer management and non-blocking I/O to
+maintain real-time throughput.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">Fragment
+reassembly is handled by a spool database that tracks partial files.
+Each incoming fragment is identified by its sequence number and WMO
+product header. When all fragments for a product are received, the
+complete file is written to the spool directory and its metadata is
+dispatched to the filter pipeline. The spool database can be managed
+automatically by nbsp (when the spooldbslots parameter is non-zero)
+or externally via cleanup scripts.</p>
+<h2 class="western">5.2 Configuration System</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Configuration
+uses Tcl as its language, allowing full scripting capabilities in
+configuration files. The primary configuration file is
+/usr/local/etc/nbsp/nbspd.conf, with supporting files including
+features.conf for toggling major subsystems and individual filter
+configuration files (e.g., rstfilter.conf, dafilter.conf). All
+options have compiled-in defaults, so the system can run without any
+configuration file present. Key configurable parameters include:
+multicast group addresses and ports, network interface selection (by
+name or IP), spool directory location, server type and port, and
+filter enable/disable flags.</p>
+<h2 class="western">5.3 Network Server Module</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">When the
+servertype variable is set to a non-zero value, the daemon activates
+a network server that transmits files to connected clients. Server
+type 4 enables EMWIN-compatible QBT (Quick Block Transfer “byte
+blaster”) format, which distributes text bulletins as plain text
+and imagery as JPG/GIF files. The NBS1 protocol is used for
+master-slave communication. The listening port defaults to 1000 but
+is configurable via the serverport variable.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+6. Filter Pipeline Architecture</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">The filter system
+is the primary extension mechanism of Nbsp. When a complete file is
+saved to the spool directory, the core daemon sends metadata (WMO
+header, AWIPS ID, file path, product type) to all enabled filters.
+Filters can be written in any language, though the standard filters
+are implemented in Tcl using a rich set of shared libraries.</p>
+<h2 class="western">6.1 Standard Filters</h2>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="109"/>
+	<col width="493"/>
+	<tr>
+		<td width="109" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Filter</b></font></font></font></p>
+		</td>
+		<td width="493" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Description</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>rstfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">The
+			primary post-processing filter. Converts satellite images to
+			PNG/JPG, saves text files as plain text, and optionally generates
+			radar GIF images. Organizes output into a browsable directory tree
+			under /var/noaaport/data/nbsp with txt/, sat/, and rad/
+			subdirectories. Supports loop sequence generation for animated
+			imagery.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>dafilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Saves
+			files in a format compatible with Digital Atmosphere (DA) for
+			Windows-based weather analysis. Output goes to
+			/var/noaaport/data/digatmos in a naming convention DA can import
+			directly. Also supports NNTP distribution of processed files.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>gpfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">The
+			GemPak compatibility filter. Processes files into the directory
+			structure and naming format expected by GemPak viewers and
+			decoders. Requires the GemPak software package for full radar and
+			annotated satellite image generation.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>gribfilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Processes
+			GRIB (Gridded Binary) data files, which contain numerical weather
+			prediction model output. Organizes GRIB files and makes them
+			accessible for downstream analysis tools.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>metarfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Parses
+			and processes METAR (aviation routine weather reports)
+			observations, extracting structured data from the raw text
+			bulletins for programmatic access.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>panfilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Implements
+			the Product Arrival Notification (PAN) system. Sends UDP messages
+			to configured client machines when specific products arrive,
+			enabling event-driven architectures.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>ldmfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Inserts
+			received products into a Unidata LDM product queue using the
+			nbsp2ldm bridge program, enabling integration with LDM-based
+			processing pipelines.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>nntpfilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Distributes
+			raw data files via NNTP (news protocol) through an INN news server
+			gateway, allowing news reader clients to browse weather products.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>rssfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Generates
+			RSS feeds for text products, accessible through the built-in web
+			server. Template-based for customizable feed formats.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>trackfilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tracks
+			and catalogs received products for monitoring and statistical
+			purposes.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>msgfilter</b></font></font></p>
+		</td>
+		<td width="493" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Handles
+			message-type products and special notifications.</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="109" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>nbspfilter</b></font></font></p>
+		</td>
+		<td width="493" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Core
+			utility filter providing shared functionality used by other
+			filters.</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0.14in"><br/>
+<br/>
+
+</p>
+<h2 class="western">6.2 User-Defined Filters</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Beyond the
+standard filters, Nbsp provides a well-defined interface for custom
+user filters. These can be written in any language and receive the
+same product metadata as standard filters. User filters are installed
+in the configuration directory and enabled through the filterlist
+variable. The system documents both the installation procedure and
+the API for writing custom filters, including the metadata fields
+available and the execution model.</p>
+<h2 class="western">6.3 Filter Configuration Pattern</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Each filter
+follows a consistent configuration pattern: an .rc file (rule
+configuration) that defines matching rules and processing actions, an
+optional .conf file for parameter overrides, and supporting Tcl
+library files. Filters are enabled either through the features.conf
+master toggle or by including them in the filterlist. This pattern
+makes it straightforward to enable, configure, and extend any filter
+independently.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+7. GIS and Satellite Image Processing</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">A significant
+recent architectural addition is the native GIS processing
+capability, eliminating the previous dependency on external
+applications like GemPak for image generation.</p>
+<h2 class="western">7.1 Nbsp GIS Libraries</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">Two companion
+libraries handle GIS transformations. The NbspGisLib (nbspgislib) is
+a C library and set of programs for converting NOAAPort radar (NIDS)
+and satellite (GINI) files to GIS-compatible formats including
+shapefiles. The NbspGisLibMap (nbspgislibmap) extends this with map
+overlay and rendering capabilities. Together, these libraries power
+the nbspgoesr and nbspgoesrinfo programs that produce images directly
+from GOES-R data files without any external dependencies.</p>
+<h2 class="western">7.2 GOES-R Processing Pipeline</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in">As of version
+2.3.9r (January 2025), Nbsp can process GOES-R satellite data files
+automatically through the rstfilter and dafilter. The nbspgoesr
+program decodes GOES-R data products, while nbspgoesrinfo extracts
+metadata. The processing is integrated into the existing filter
+pipeline, so enabling satellite image generation requires no special
+configuration beyond the standard filter setup. This represents a
+major architectural improvement, as previous versions required
+external GemPak decoders for full image processing.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+8. Web Server and Monitoring Interface</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp includes an
+embedded web server based on TclHttpd 3.5.1, listening on port 8015
+by default. The web interface serves a dual purpose: monitoring the
+system’s internal state and serving processed weather data products
+to end users.</p>
+<p style="line-height: 100%; margin-bottom: 0.08in">The monitoring
+interface provides:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in">Real-time
+	statistics about received files, processing rates, and error counts</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in">Browsable
+	directory trees of processed text bulletins, satellite images, and
+	radar products</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in">RSS feed
+	access for text product subscriptions</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in">Device
+	monitoring integration via Npstats for tracking signal quality
+	across multiple receivers</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.14in">Internal
+	state reporting on spool utilization, filter performance, and
+	connection status</p></li>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+9. Technology Stack Summary</h1>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="162"/>
+	<col width="440"/>
+	<tr>
+		<td width="162" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Component</b></font></font></font></p>
+		</td>
+		<td width="440" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Technology
+			Details</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Core
+			Language</b></font></font></p>
+		</td>
+		<td width="440" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C
+			(33.1% of codebase) — used for the nbspd daemon, packet
+			processing, spool management, and performance-critical GIS
+			libraries</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Scripting
+			Language</b></font></font></p>
+		</td>
+		<td width="440" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl
+			(33.9% of codebase) — all filters, configuration files,
+			libraries (tclmetar, tclgempak, tclgrads, tclupperair, tclldm,
+			tclssh), and web server</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Web
+			Interface</b></font></font></p>
+		</td>
+		<td width="440" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">HTML
+			(16.4%) with TclHttpd 3.5.1 embedded server</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Build
+			System</b></font></font></p>
+		</td>
+		<td width="440" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">M4
+			macros (4.6%) with Makefile templates (3.3%) and configure.sh;
+			platform-specific package generation (RPM, DEB, TBZ)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Automation</b></font></font></p>
+		</td>
+		<td width="440" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Shell
+			scripts (3.0%) for system operations, cleanup, log rotation, and
+			monitoring</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Configuration</b></font></font></p>
+		</td>
+		<td width="440" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl-based
+			configuration files with compiled-in defaults; features.conf for
+			subsystem toggles</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Data
+			Formats</b></font></font></p>
+		</td>
+		<td width="440" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">WMO
+			bulletins, GINI satellite, NIDS radar, GRIB model data, GOES-R,
+			METAR, upper air soundings</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Output
+			Formats</b></font></font></p>
+		</td>
+		<td width="440" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">PNG,
+			JPG, GIF imagery; plain text; shapefiles; GemPak format; Digital
+			Atmosphere format; GRIB</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Protocols</b></font></font></p>
+		</td>
+		<td width="440" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">UDP
+			multicast (reception), NBS1 (master-slave), QBT/EMWIN (byte
+			blaster), HTTP, FTP, NNTP, RSS, LDM, UDP PAN</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="162" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Platforms</b></font></font></p>
+		</td>
+		<td width="440" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">FreeBSD
+			(primary development), Almalinux, Debian, Ubuntu; Cygwin (limited)</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+10. External Integrations and Client Support</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp’s
+architecture is designed for extensive interoperability with
+downstream weather analysis software:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>GemPak:
+	</b>The gpfilter organizes data into GemPak’s expected directory
+	structure and file format. With the gpak package, GemPak decoders
+	and viewers work directly against the Nbsp data directory.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Digital
+	Atmosphere: </b>The dafilter saves files in DA-compatible format
+	under /var/noaaport/data/digatmos. Combined with Samba, Windows DA
+	clients can load products directly.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>GRLevel3:
+	</b>Configuration files and server support for GRLevel3 radar
+	visualization software, with the dafilter maintaining the required
+	list files.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Unidata
+	LDM: </b>The ldmfilter and nbsp2ldm bridge allow product insertion
+	into LDM queues for further distribution through pqact-based
+	processing.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>IDV and
+	MetarWeather: </b>Integration documented for Unidata’s Integrated
+	Data Viewer and the MetarWeather client application.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>WeatherScope:
+	</b>Support for the WeatherScope visualization platform via the
+	ONDAS (Open Nbsp Data Access Specification) protocol.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.14in"><b>INN News
+	Server: </b>The nntpfilter and rstnntpfilter enable NNTP
+	distribution through an INN gateway, with the nbsp-news package
+	providing a ready-made configuration.</p></li>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+11. Key Architectural Characteristics</h1>
+<h2 class="western">11.1 Strengths</h2>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Clean
+	Separation of Concerns: </b>The C core handles only real-time
+	reception while Tcl handles all extensible processing, resulting in
+	a system that is both performant and adaptable.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Modular
+	Filter Design: </b>Each filter is independently configurable,
+	enable-able, and replaceable. New output formats require only a new
+	filter, not core changes.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Self-Contained
+	Deployment: </b>The embedded web server, built-in protocol support,
+	and native image processing eliminate most external dependencies.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Scalable
+	Distribution: </b>The master-slave topology with chaining support
+	enables hierarchical data distribution across large installations.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.14in"><b>Comprehensive
+	Protocol Support: </b>Distributing via HTTP, NNTP, RSS, LDM, EMWIN,
+	and PAN from a single installation covers virtually all weather data
+	consumer requirements.</p></li>
+</ul>
+<h2 class="western">11.2 Considerations and Trade-offs</h2>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Niche
+	Technology Stack: </b>Heavy reliance on Tcl may limit the
+	contributor pool, as Tcl is less commonly used in modern software
+	development compared to Python or Go.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Small
+	Team: </b>With only two contributors across the project’s history,
+	there is inherent bus-factor risk for a system used in weather data
+	infrastructure.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><b>Build
+	Complexity: </b>The M4 macro/configure.sh build system and
+	multi-platform packaging require significant expertise to modify and
+	maintain.</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.14in"><b>Legacy
+	Protocol Support: </b>Supporting older protocols like QBT/EMWIN byte
+	blaster adds complexity, though it serves a real user base that
+	still relies on these formats.</p></li>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+12. Companion Projects and Ecosystem</h1>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="149"/>
+	<col width="453"/>
+	<tr>
+		<td width="149" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Project</b></font></font></font></p>
+		</td>
+		<td width="453" bgcolor="#1b3a5c" style="background: #1b3a5c; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Description</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Npemwin</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">A
+			standalone EMWIN server that can operate independently of the full
+			Nbsp installation, providing lighter-weight EMWIN data
+			distribution</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Npstats</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">A
+			global monitoring system for NOAAPort signal quality, receiver
+			performance, and Nbsp processing status across multiple
+			installations</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Novramon</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">A
+			text-console monitoring tool for the Novra S300 DVB-S2 receiver,
+			with device reset and data logging capabilities</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>NbspGisLib</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Standalone
+			C library for NIDS radar and GINI satellite to shapefile
+			conversion; also used as a linked library within Nbsp</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>NbspGisLibMap</b></font></font></p>
+		</td>
+		<td width="453" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Map
+			rendering library extending NbspGisLib with overlay and projection
+			capabilities for image generation</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="149" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>gpak</b></font></font></p>
+		</td>
+		<td width="453" bgcolor="#f2f6fa" style="background: #f2f6fa; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Packaged
+			GemPak distribution designed for easy installation alongside Nbsp
+			on supported platforms</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0.14in"><br/>
+<br/>
+
+</p>
+<h1 class="western">13. Conclusion</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in">Nbsp represents a
+well-engineered, domain-specific software system that has evolved
+over more than 15 years to address the complete lifecycle of NOAAPort
+weather data—from raw satellite reception through processing,
+format conversion, and multi-protocol distribution. Its architecture
+successfully balances the need for real-time performance in the C
+core with the flexibility and extensibility of the Tcl scripting
+layer.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">The modular
+filter pipeline is the key architectural insight, allowing the system
+to serve diverse downstream consumers (GemPak, Digital Atmosphere,
+GRLevel3, LDM, web browsers, news readers) from a single data ingest
+point. The recent addition of native GOES-R processing through the
+GIS libraries marks a significant step toward reducing external
+dependencies while expanding capabilities.</p>
+<p style="line-height: 100%; margin-bottom: 0.14in">For organizations
+and individuals operating NOAAPort receiving stations, Nbsp provides
+a comprehensive, self-contained solution that continues to be
+actively maintained and adapted to evolving NOAA data formats and
+satellite infrastructure.</p>
+</body>
+</html>

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 24.2.7.2 (Linux)"/>
+	<meta name="author" content="Un-named"/>
+	<meta name="created" content="2026-03-16T01:56:48.716000000"/>
+	<meta name="changedby" content="Un-named"/>
+	<meta name="changed" content="2026-03-16T01:56:48.717000000"/>
+	<style type="text/css">
+		@page { size: 8.5in 11in; margin: 1in }
+		p { line-height: 115%; text-align: left; orphans: 2; widows: 2; margin-bottom: 0.1in; direction: ltr; background: transparent }
+		h1 { color: #2c3e50; text-align: left; orphans: 2; widows: 2; margin-top: 0.25in; margin-bottom: 0.14in; direction: ltr; background: transparent; page-break-after: avoid }
+		h1.western { font-family: "Arial", sans-serif; font-size: 18pt; font-weight: bold }
+		h1.cjk { font-family: "Arial"; font-size: 18pt; font-weight: bold }
+		h1.ctl { font-family: "Arial"; font-size: 18pt; font-weight: bold }
+		h2 { color: #34495e; text-align: left; orphans: 2; widows: 2; margin-top: 0.19in; margin-bottom: 0.11in; direction: ltr; background: transparent; page-break-after: avoid }
+		h2.western { font-family: "Arial", sans-serif; font-size: 14pt; font-weight: bold }
+		h2.cjk { font-family: "Arial"; font-size: 14pt; font-weight: bold }
+		h2.ctl { font-family: "Arial"; font-size: 14pt; font-weight: bold }
+		a:link { color: #0563c1; text-decoration: underline }
+	</style>
+</head>
+<body lang="en-US" link="#0563c1" vlink="#800000" dir="ltr"><p style="line-height: 100%; margin-top: 1.81in; margin-bottom: 0in">
+<br/>
+
+</p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.14in"><font color="#2c3e50"><font face="Arial, serif"><font size="6" style="font-size: 24pt"><b>ARCHITECTURAL
+REPORT</b></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#5d6d7e">────────────────────────────────────────</font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.14in"><font color="#34495e"><font face="Arial, serif"><font size="4" style="font-size: 16pt">Noaaport
+Broadcast System Processor (Nbsp)</font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.42in"><font color="#5d6d7e"><font face="Arial, serif"><font size="3" style="font-size: 13pt"><i>Source
+Code Analysis</i></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#999999"><font face="Arial, serif"><font size="2" style="font-size: 9pt"><i>Primary
+Sources: nbspd.conf ($Id v1.40), dafilter.conf.in (211 lines),</i></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#999999"><font face="Arial, serif"><font size="2" style="font-size: 9pt"><i>logrotate.conf
+(61 lines), hourly-cleanup.conf, filter stdin protocol,</i></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-bottom: 0.07in"><font color="#999999"><font face="Arial, serif"><font size="2" style="font-size: 9pt"><i>Perl
+filter example code, Tcl configuration override loader, repository
+file tree</i></font></font></font></p>
+<p align="center" style="line-height: 100%; margin-top: 0.28in; margin-bottom: 0in">
+<font color="#999999"><font face="Arial, serif"><font size="2" style="font-size: 11pt">March
+2026</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="page-break-before: always">Table of
+Contents</h1>
+<div id="Table of Contents1" dir="ltr"><p style="line-height: 100%; margin-bottom: 0in">
+	</p>
+</div>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+1. Executive Summary</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">This
+report analyzes the Nbsp architecture exclusively through its source
+code: the complete nbspd.conf configuration source (identified by CVS
+tag $Id: nbspd.conf,v 1.40 2006/02/28), the dafilter.conf.in Tcl
+filter configuration (211 lines), the logrotate.conf operational
+configuration (61 lines), the hourly-cleanup.conf scripts, the filter
+stdin interface protocol with a working Perl implementation, the Tcl
+configuration override loader, and the repository file tree
+structure.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source code reveals a system with a sophisticated internal
+architecture: a Berkeley DB-backed queue system with soft/hard quota
+management, memory-mapped I/O files for frame buffering, a
+multi-protocol server with three distribution modes (NBS1, NBS2,
+EMWIN), configurable accept/reject regex filtering at four pipeline
+stages, and a Tcl configuration language with hierarchical override
+loading from defaults/ and site/ directories.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+2. Daemon Configuration Architecture (nbspd.conf)</h1>
+<h2 class="western">2.1 Multicast Reception Parameters</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source reveals four default multicast groups with configurable
+interface binding:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+multicastip   &quot;224.0.1.1 224.0.1.2 224.0.1.3 224.0.1.4&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+multicastport &quot;1201 1202 1203 1204&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Interface
+selection supports both name and IP address binding, with kernel
+routing table fallback:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+ifname &quot;&quot;     # e.g., &quot;xl0&quot;, &quot;fxp0&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+ifip   &quot;&quot;     # e.g., &quot;192.168.12.100&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+UDP receive buffer size (udprcvsize) is platform-dependent: FreeBSD
+defaults to 65 KB (max 224 KB), Linux defaults to ~86 KB (max 262
+KB), and Windows can be as low as 8 KB. The source recommends
+256*1024 for Windows. A value ≤ 0 retains the OS default.</font></font></p>
+<h2 class="western">2.2 Memory I/O and Frame Buffering</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Incoming
+SBN frames are buffered using memory-mapped I/O files before
+processing:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+memfileblocksize  2048     # ~average frame size</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+memfileminsize    131072   # 128KB initial allocation</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+blocksize is tuned to average frame sizes, while the minimum
+allocation is sized so most products fit without reallocation. This
+is a performance-critical path—the source comment notes these
+parameters directly impact throughput.</font></font></p>
+<h2 class="western">2.3 Berkeley DB Queue System</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+daemon uses Berkeley DB for persistent queue management with
+configurable soft and hard quotas:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+queuemaxsoft    4096    # warning threshold (elements)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+queuemaxhard    0       # absolute max (0 = disabled)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+qrepquotaperiod 60      # quota report interval (seconds)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Each
+queue element occupies approximately 20 + strlen(full_path) bytes,
+roughly 80 bytes total. The processor control (pctl) subsystem has
+its own independent quota system with both element and memory-based
+limits:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pctlmaxsoft      2048    # element soft limit</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pctlmaxhard      0       # element hard limit</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pctlmaxmemsoft   128     # memory soft limit (MB)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pctlmaxmemhard   0       # memory hard limit (MB)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pctlsyncperiod   3600    # DB sync interval (seconds)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+DB infrastructure lives in /var/noaaport/nbsp/db/ with a 16 MB memory
+cache (dbcachemb) and 0644 file permissions. Queue files are named
+q.db, processor control is pctl.db and pctlmf.db, and the spool
+tracking database is nbsp.db.</font></font></p>
+<h2 class="western">2.4 Four-Stage Accept/Reject Filtering</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source code reveals a sophisticated four-stage regex filtering
+pipeline, each with independent accept and reject patterns:</font></font></p>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="136"/>
+	<col width="230"/>
+	<col width="226"/>
+	<tr valign="top">
+		<td width="136" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Stage</b></font></font></font></p>
+		</td>
+		<td width="230" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Variables</b></font></font></font></p>
+		</td>
+		<td width="226" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Controls</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>1.
+			Reception</b></font></font></p>
+		</td>
+		<td width="230" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">acceptpatt
+			/ rejectpatt</font></font></p>
+		</td>
+		<td width="226" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">What
+			products are saved to spool from the multicast stream</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>2.
+			Filter Queue</b></font></font></p>
+		</td>
+		<td width="230" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">filterqacceptpatt
+			/ filterqrejectpatt</font></font></p>
+		</td>
+		<td width="226" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">What
+			products are dispatched to the filter pipeline</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>3.
+			Server Queue</b></font></font></p>
+		</td>
+		<td width="230" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">serverqacceptpatt
+			/ serverqrejectpatt</font></font></p>
+		</td>
+		<td width="226" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">What
+			products are queued for network server distribution</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="136" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>4.
+			Distribution</b></font></font></p>
+		</td>
+		<td width="230" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">nbsacceptpatt/nbsrejectpatt,
+			emwinacceptpatt/emwinrejectpatt</font></font></p>
+		</td>
+		<td width="226" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Per-protocol
+			control of what clients receive</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0.14in"><br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+algorithm is documented in the source: (1) If acceptpatt is NULL, all
+products are candidates. If it’s an empty string, nothing is
+accepted. If non-null and non-empty, only matches pass. (2)
+Candidates are then checked against rejectpatt—NULL or empty means
+all pass, otherwise matches are rejected. The special string &quot;*&quot;
+matches everything, &quot;&quot; matches nothing. Patterns can be
+loaded from external files using Tcl exec:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+acceptpatt [exec cat &quot;/usr/local/etc/nbsp/noaaport.accept&quot;]</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+3. Server Module Architecture</h1>
+<h2 class="western">3.1 Multi-Protocol Server</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+servertype variable controls which distribution protocol(s) are
+active:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+servertype 0     # 0=none, 1=NBS1, 2=NBS2, 4=EMWIN</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Values
+can be combined (e.g., 5 = NBS1 + EMWIN). NBS1 transmits the full
+file content (similar to EMWIN), while NBS2 transmits only the file
+path information (identical to what filters receive on stdin,
+requiring NFS for file access). EMWIN mode (type 4) uses the QBT
+“byte blaster” protocol. The server listens on a configurable
+port (default 1000) with support for unlimited clients (maxnetclients
+= -1).</font></font></p>
+<h2 class="western">3.2 Timing and Timeout Parameters</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source reveals five distinct timeout parameters controlling different
+I/O paths:</font></font></p>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="202"/>
+	<col width="83"/>
+	<col width="306"/>
+	<tr valign="top">
+		<td width="202" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Parameter</b></font></font></font></p>
+		</td>
+		<td width="83" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Default</b></font></font></font></p>
+		</td>
+		<td width="306" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Purpose</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="202" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">rdbroadcastimeout</font></font></p>
+		</td>
+		<td width="83" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">120s</font></font></p>
+		</td>
+		<td width="306" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Seconds
+			waiting for multicast data before error logging</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="202" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">wrfifotimeout</font></font></p>
+		</td>
+		<td width="83" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">500ms</font></font></p>
+		</td>
+		<td width="306" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Timeout
+			writing to a filter FIFO device file</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="202" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">wrclienttimeout</font></font></p>
+		</td>
+		<td width="83" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">1000ms</font></font></p>
+		</td>
+		<td width="306" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Timeout
+			writing to a network client socket</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="202" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">rdqueuetimeout</font></font></p>
+		</td>
+		<td width="83" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">1000ms</font></font></p>
+		</td>
+		<td width="306" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Timeout
+			reading from filter/server queues</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="202" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Courier New, serif"><font size="2" style="font-size: 9pt">rdprocqueuetimeout</font></font></p>
+		</td>
+		<td width="83" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">1000ms</font></font></p>
+		</td>
+		<td width="306" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Timeout
+			reading from the processor queue</font></font></p>
+		</td>
+	</tr>
+</table>
+<h2 class="western">3.3 Slave Mode Configuration</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source defines three feed modes and client reconnection handling:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+slavemode  0     # 0=master, 1=NBS slave, 2=fpath slave</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+mastername &quot;&quot;    # required when slavemode &gt; 0</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+masterport 1000</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+rdslavetmout      10   # read timeout (seconds)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+reopenslavetmout  2    # reconnect wait (seconds)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Mode
+1 (NBS slave) receives entire file contents over the network. Mode 2
+(fpath slave) receives only file paths, requiring NFS-mounted spool
+access. The inoaaport wiki documents additional reconnection logic:
+the server preserves a disconnected client’s queue state for a
+configurable number of retry cycles (client_reconnect_wait_sleep_secs
+and client_reconnect_wait_sleep_retry), resuming transmission at the
+suspension point if the client reconnects within that window.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+4. Spool and Retransmission Database</h1>
+<h2 class="western">4.1 Spool File Management</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Product
+files are written with configurable permissions and compressed
+storage:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+spooldir      &quot;/var/noaaport/nbsp/spool&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+productmode   0644</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+subdirmode    0755</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+savezacceptpatt parameter controls on-the-fly compression: files
+matching &quot;_(sdus[2357]|tig)&quot; (radar data, satellite images)
+are saved in compressed form if transmitted compressed. The source
+notes that decompression is better deferred to the filter
+post-processing phase.</font></font></p>
+<h2 class="western">4.2 Retransmission Tracking Database</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">A
+Berkeley DB tracks received files to detect and skip retransmissions:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+nbspdbfname        &quot;nbsp.db&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+nbspdbacceptpatt   # default: monitor everything</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+nbspdbrejectpatt</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source documents the performance trade-off: DB operations are
+expensive, so monitoring all files can degrade performance. The
+recommended approach is to filter monitoring to products where
+reprocessing cost exceeds DB overhead. For example, set
+nbspdbacceptpatt {\+(grib|bufr)} monitors only GRIB and BUFR
+retransmissions. The default inserts everything, preventing duplicate
+processing when the original was received successfully.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+5. Filter Pipeline Source Code</h1>
+<h2 class="western">5.1 Filter Input Protocol</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+filter stdin protocol, documented in the source with this exact
+example:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">88164933
+4 1 17 /var/noaaport/nbsp/spool/KMOB/kmob_sdus54-n0rmob.498745</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Fields:
+SBN sequence number (88164933), type (4), category (1), code (17),
+and the full spool file path. The file path encodes the station ID
+(KMOB) in the directory and the WMO/AWIPS identifiers in the
+filename.</font></font></p>
+<h2 class="western">5.2 Reference Perl Filter Implementation</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source includes a complete working Perl filter example:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">if(open(OUT,
+&quot;&gt;/var/noaaport/list.log&quot;) == undef){</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">syslog(&quot;err&quot;,
+&quot;Could not open logfile. $!&quot;);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">exit;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">while($line
+= &lt;STDIN&gt;){</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">chop($line);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">($seq,
+$type, $cat, $code, $fpath) = split(/\s+/, $line);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">$dirname
+= dirname($fpath);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">$fname
+= basename($fpath);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">print(OUT
+&quot;$seq $fname\n&quot;);</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">This
+reveals the filter contract: read lines from STDIN in a loop, split
+on whitespace to extract the five fields, then process the referenced
+file. Filters are long-lived processes—the while loop runs for the
+daemon’s lifetime.</font></font></p>
+<h2 class="western">5.3 Filter Activation Mechanisms</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Two
+mechanisms from the source code:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">#
+Explicit list (colon-separated executables):</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+filterlist &quot;/usr/local/libexec/nbsp/rstfilter:\</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">                 
+<font face="Courier New, serif"><font size="2" style="font-size: 9pt">/usr/local/libexec/nbsp/dafilter:\</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">                 
+<font face="Courier New, serif"><font size="2" style="font-size: 9pt">/usr/local/libexec/nbsp/gpfilter&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">#
+Auto-discovery directory (hot-deploy via SIGHUP):</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+devdir &quot;/var/noaaport/nbsp/dev&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+emwin filter has special lifecycle handling: the emwinfilteralways
+flag (default 1) determines whether the emwin/rst filters run even
+when no clients are connected. Setting it to 0 skips filter
+invocation when no clients exist—an optimization for server-only
+deployments.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+6. Tcl Configuration Override System</h1>
+<h2 class="western">6.1 Hierarchical Override Loader</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+source code at the bottom of nbspd.conf reveals a Tcl-based
+hierarchical configuration override system:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+nbspdconfdir       &quot;/usr/local/etc/nbsp&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+nbspdlocalconfdirs [list $nbspdconfdir/defaults \</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">                              
+<font face="Courier New, serif"><font size="2" style="font-size: 9pt">$nbspdconfdir/site]</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+_confname &quot;nbspd.conf&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">foreach
+_d $nbspdlocalconfdirs {</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+_localconfname ${_d}/${_confname}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">if
+{[file exists ${_localconfname}] == 1} {</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">          <font face="Courier New, serif"><font size="2" style="font-size: 9pt">source
+${_localconfname}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">      <font face="Courier New, serif"><font size="2" style="font-size: 9pt">}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">}</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">unset
+_d; unset _confname; unset _localconfname</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">This
+implements a three-layer configuration precedence: (1) compiled-in
+defaults in the C daemon, (2) defaults/ directory overrides, (3)
+site/ directory overrides. The site/ layer survives package upgrades
+because the package manager only touches the base config, not the
+site/ directory. The Tcl source command executes each override file
+in the current interpreter context, so later files override earlier
+ones. The careful unset of temporary variables prevents namespace
+pollution.</font></font></p>
+<h2 class="western">6.2 dafilter.conf.in Source Analysis</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+211-line dafilter.conf.in reveals the filter’s Tcl configuration
+structure using associative arrays:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(datadir)    [file join $common(datadir) &quot;digatmos&quot;]</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(invdir)     [file join $common(datainvdir) &quot;digatmos&quot;]</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(invformat)  $common(datainvformat)</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(radinvsubdir)  &quot;nexrad&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(satinvsubdir)  &quot;sat&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(rad_inv_enable) 1</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(sat_inv_enable) 1</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+NNTP gateway configuration within the same filter:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(nntp_enable)      0</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(nntp_server)      &quot;news&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(nntp_from)        &quot;nbspfeed@noaaport.net&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(nntp_groupprefix) &quot;noaaport.data&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(hourlyfilefmt)    &quot;%Y%m%d%H&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+filter supports a &quot;lite&quot; configuration mode via an
+alternate rc file:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+dafilter(localrc)  &quot;dafilter-lite.rc&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">A
+common(datadir) variable provides shared path roots across all
+filters, demonstrating that the filter ecosystem shares a Tcl
+namespace for cross-cutting configuration.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+7. Operational Source Files</h1>
+<h2 class="western">7.1 logrotate.conf (61 lines)</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+logrotate source defines rotation for 10 distinct file groups:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.status
+ { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.missing
+ { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.rtx
+     { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.qstate
+  { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.server
+  { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.sthreads
+{ missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.filter
+  { missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/noaaport/nbsp/stats/nbspd.slavestats
+{ missingok daily rotate 7 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">/var/log/noaaport/*log
+{ missingok daily compress rotate 2 }</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+eight stats files map directly to internal daemon subsystems:
+reception status, missing frame tracking, retransmission monitoring,
+queue state, server module, server threads, filter pipeline, and
+slave replication. Decoder logs are compressed (space optimization)
+with shorter 2-day retention.</font></font></p>
+<h2 class="western">7.2 hourly-cleanup.conf Source</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+cleanup script uses a custom DSL for time-based file management:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">H/6:/var/noaaport/data/inv/gis/sat:
+-i -mtime +6h</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">H=01:/var/log/nbsp/www:
+-mtime +7</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">H=23:/var/noaaport/nbsp/spool:
+-mtime +1</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+format is H[=hour|/interval]:path: find-args. H=23 means “run at
+23:00 only,” H/6 means “run every 6 hours.” The -i flag and
+find arguments are passed directly to the find command. The source
+comments document the spooldbslots interaction: when non-zero
+(default), the daemon self-manages the spool, and the H=23 rule
+serves only as a safety net for orphaned files.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+8. Internal State and Monitoring</h1>
+<h2 class="western">8.1 Statistics Generation</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+daemon writes statistics at a configurable interval:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+statsperiod  60   # recompute every 60 seconds</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+statusfile   &quot;/var/noaaport/nbsp/nbspd.status&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+statefifo provides a real-time named pipe interface to the daemon’s
+internal state:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+statefifo     &quot;/var/noaaport/nbsp/nbspd.fifo&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+statefifomode 0644</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">This
+FIFO enables external monitoring tools to read the daemon’s state
+in real-time without polling the statistics files. The 0644 mode
+allows any user to read the state.</font></font></p>
+<h2 class="western">8.2 Process Management</h2>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+pidfile  &quot;/var/run/nbspd.pid&quot;</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in; background: #f5f7fa">
+<font color="#2c3e50">  <font face="Courier New, serif"><font size="2" style="font-size: 9pt">set
+umask    022</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Standard
+Unix daemon conventions: PID file for process management and signal
+delivery, umask 022 for group-readable file creation.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+9. Repository Structure as Code</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+repository file tree (from the GitHub source browser) reveals the
+code organization across 20 top-level directories:</font></font></p>
+<table width="624" cellpadding="5" cellspacing="0">
+	<col width="122"/>
+	<col width="70"/>
+	<col width="400"/>
+	<tr valign="top">
+		<td width="122" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Directory</b></font></font></font></p>
+		</td>
+		<td width="70" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Language</b></font></font></font></p>
+		</td>
+		<td width="400" bgcolor="#2c3e50" style="background: #2c3e50; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font color="#ffffff"><font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>Code
+			Content</b></font></font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>src/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Core
+			daemon: nbspd main loop, multicast reception, frame reassembly,
+			spool DB, queue management, server module, memory-mapped I/O</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>filters/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Standard
+			filter implementations with per-filter subdirs (dafilter/tcl/,
+			gpfilter/, rstfilter/, etc.) containing .conf.in templates and .rc
+			rule files</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>conf/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Platform
+			configs (nbspd.conf-linux 42 lines, nbspd.conf-freebsd 43 lines),
+			features.conf, logrotate.conf (61 lines), nbspd.conf master</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>scripts/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Shell</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Operational
+			automation: hourly-cleanup.conf (platform variants), start/stop
+			scripts, log rotation</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclhttpd/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl/HTML</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Full
+			TclHttpd 3.5.1 source (src/tclhttpd3.5.1/) with htdocs/ web
+			content and .tml server-side templates</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclgempak/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl/C</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">GemPak
+			bindings: Tcl wrappers around C GemPak decoder libraries</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclgrads/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">GrADS
+			bindings with test suite (src/lib/test/) including test-output
+			validation files</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclmetar/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">METAR
+			parser: aviation weather observation text format decoder</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclupperair/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Upper
+			air sounding data processor</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclldm/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl/C</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">LDM
+			bridge (nbsp2ldm): Tcl/C interface to Unidata product queues</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tclssh/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">SSH
+			library for secure remote file distribution</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>build/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Shell/M4</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Platform
+			packaging: bsdng/ (FreeBSD), deb/ (Debian/Ubuntu), rpm/
+			(RHEL/CentOS)</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>dev-notes/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Text</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">dictionary.txt
+			(6,497 lines/305 KB), stations.txt (8,749 lines/679 KB), WMO
+			product definitions</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>examples/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Tcl/Cfg</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Client
+			integration: ondas/ (GRLevel3 configs with 150+ NEXRAD sites),
+			Digital Atmosphere scripts</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>tools/</b></font></font></p>
+		</td>
+		<td width="70" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C/Shell</font></font></p>
+		</td>
+		<td width="400" style="border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Utility
+			programs for data inspection and debugging</font></font></p>
+		</td>
+	</tr>
+	<tr valign="top">
+		<td width="122" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt"><b>utils/</b></font></font></p>
+		</td>
+		<td width="70" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">C/Shell</font></font></p>
+		</td>
+		<td width="400" bgcolor="#ebf0f5" style="background: #ebf0f5; border: 1px solid #bbbbbb; padding: 0.06in 0.08in"><p>
+			<font face="Arial, serif"><font size="2" style="font-size: 10pt">Helper
+			programs and shared utilities</font></font></p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+10. Key Source Code Observations</h1>
+<ul>
+	<li value="1"><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>CVS
+	Heritage: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	$Id tag (v1.40, 2006/02/28) reveals the project’s CVS version
+	control origins before its migration to Git on Bitbucket (~2011) and
+	later GitHub. The code predates modern build tools.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>Berkeley
+	DB as Queue Backend: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	use of Berkeley DB for persistent queue management (with named files
+	q.db, pctl.db, pctlmf.db, nbsp.db) provides crash recovery and
+	durability. The dual soft/hard quota system with separate element
+	and memory limits shows careful capacity planning.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>Memory-Mapped
+	I/O: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	memfileblocksize/memfileminsize parameters reveal a custom
+	memory-mapped file allocator for frame buffering, tuned for the
+	average NOAAPort frame size (~2 KB) with 128 KB pre-allocation.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>Four-Stage
+	Regex Filtering: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">Independent
+	accept/reject patterns at reception, filter queue, server queue, and
+	distribution stages provide fine-grained control over data flow. The
+	NULL vs empty string vs pattern distinction is a precise three-state
+	logic.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>Tcl
+	as Configuration Language: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	hierarchical override loader (defaults/ then site/) with Tcl source
+	is a configuration management pattern that predates modern tools
+	like Ansible’s variable precedence. The filter config namespace
+	(dafilter(), common()) demonstrates Tcl associative arrays as
+	structured configuration.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>Dual
+	Filter Activation: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	filterlist + devdir mechanism provides both explicit control and
+	hot-deploy flexibility. SIGHUP reloads only the devdir, not the
+	filterlist, separating stable from experimental filters.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>NBS2
+	Path-Only Protocol: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">Server
+	type 2 transmits only file paths (not contents), requiring NFS—an
+	elegant optimization for same-network deployments that eliminates
+	duplicate data transmission.</font></font></p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0.06in"><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>State
+	FIFO Interface: </b></font></font><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+	nbspd.fifo named pipe provides a real-time monitoring interface
+	separate from the periodic statsfile writes, enabling zero-latency
+	state queries from external tools.</font></font></p></li>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<h1 class="western" style="margin-top: 0in; page-break-before: always">
+11. Conclusion</h1>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">Reading
+Nbsp through its source code—rather than its documentation or
+README—reveals an engineering depth that descriptive text cannot
+convey. The Berkeley DB queue system with dual element/memory quotas,
+the four-stage regex filtering pipeline, the memory-mapped I/O frame
+allocator, and the Tcl hierarchical configuration loader are
+architectural decisions visible only in the code itself.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+nbspd.conf source file alone, at approximately 300 lines of densely
+commented Tcl, defines over 50 configurable parameters across six
+subsystems (reception, buffering, queuing, filtering, serving, and
+slave replication). Each parameter documents its default value,
+platform-specific behavior, and performance implications in inline
+comments—making the configuration file itself the most
+authoritative architectural reference.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0.14in"><font face="Arial, serif"><font size="2" style="font-size: 11pt">The
+code tells the story of a system designed by an operator: the
+retransmission database with its configurable monitoring scope
+(trading DB overhead against duplicate processing cost), the
+spooldbslots safety-net cleanup, the emwinfilteralways optimization,
+and the client queue state preservation across reconnections are all
+features that emerge from running the system in production and
+solving real problems.</font></font></p>
+</body>
+</html>
