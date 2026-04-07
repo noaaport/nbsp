@@ -8,6 +8,7 @@
 @include@ @q@../../Makefile.inc@q@
 
 TARGET = nbspmcast
+
 SOURCES = nbspmcast.c sbnpack_usleep.c err.c seqmun.c stoi.c
 OBJECTS = nbspmcast.o sbnpack_usleep.o err.o seqnum.o stoi.o
 HEADERS = sbnpack_usleep.h err.h seqnum.h stoi.h
@@ -16,11 +17,11 @@ AUXFILES = config.h err.c err.h stoi.c stoi.h
 INCDIRS = -I sbnpack -I mcast
 LIBDIRS = -L sbnpack -L mcast
 LIBS = -lsbnpack -lmcast
+
 INSTALL =       @INSTALL@
 CC =            @CC@
 CCWFLAGS =      @CCWFLAGS@
 
-CCWFLAGS = @CCWFLAGS@
 CFLAGS += -c ${CCWFLAGS} ${INCDIRS}
 
 all: ${TARGET}
