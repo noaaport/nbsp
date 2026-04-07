@@ -9,10 +9,7 @@ OBJECTS = file.o fill.o util.o sbnpack.o sbn.o
 HEADERS = file.h sbnpack.h sbnpack_private.h sbn.h
 AUXFILES = util.c util.h
 
-CC =            @CC@
-CCWFLAGS =      @CCWFLAGS@
-
-CFLAGS += -c ${CCWFLAGS}
+CFLAGS += -c -Wall
 
 all: ${TARGET}.a
 
@@ -33,5 +30,5 @@ ${TARGET}.a: ${OBJECTS}
 
 clean:
 	rm -f *~
-	rm -f ${OBJECTS} ${TARGET}.a Makefile
+	rm -f ${OBJECTS} ${TARGET}.a
 	rm -f ${AUXFILES}

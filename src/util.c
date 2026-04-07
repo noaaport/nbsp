@@ -89,7 +89,7 @@ char *trimleft(char *s, char *t){
   char *p = s;
 
   if(t == NULL){
-    while(isspace(*p))
+    while(isspace((unsigned char)*p))
       ++p;
   } else {
     while((strchr(t, *p) != NULL) && (*p != '\0'))
@@ -116,7 +116,7 @@ char *trimright(char *s, char *t){
   q = &s[size - 1];
 
   if(t == NULL){
-    while(isspace(*q) && (q != s)){
+    while(isspace((unsigned char)*q) && (q != s)){
       *q = '\0';
       --q;
     }
