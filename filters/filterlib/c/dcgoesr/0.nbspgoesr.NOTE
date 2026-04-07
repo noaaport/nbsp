@@ -1,29 +1,12 @@
-* Fri Jul  4 18:09:24 AST 2025
-
-Initially all the (x, y, lon, lat, cmi) variables were declared double.
-We have changed all of them to float to reduce the size of the memory
-requirements. The initial note below (Sun Jun 22 20:50:10 AST 2025)
-refers to the original requirements, which are now reduced by 1/2.
-
-The original [.c .h] files are in dcgoesr-double.tar, and  the scripts used
-for the conversion were as follows.
---------------------------------------
-In cvt.sed:
-
-  /double/s//float/g
---------------------------------------
-In cvt.sh:
-
-#!/bin/sh
-
-for file in *.c *.h
-do
-    sed -f cvt.sed $file > ${file}.new
-    mv ${file}.new $file
-done
----------------------------------------
+* Tue Apr  7 12:38:53 AST 2026
+  On ``Fri Jul  4 18:09:24 AST 2025'' (revision 9c753d72) I tried to
+  reduce the the memory requirements by using float type for all the
+  (x, y, lon, lat, cmi) variables. But that requires changing the memory
+  copying and packing in various functions, so it must be done carefully.
+  I have not yet done that, and for this reason I have reverted
+  the files to their previous (before the 4 July) state (revision 92a0e7ef).
+----------------------------------------------------------------------
 * Sun Jun 22 20:50:10 AST 2025
-
 
 Given nx, ny, the nbspgoesr tools require a memory at leat of order
 (a <cmi, lon, lat> trio for each point)
@@ -43,6 +26,6 @@ For files with resolution "0.5" (.e.g. C02),
 
   nx = ny = 21696 ==> Npoints ~ 500 x 10^6
 
-In this case (twice as many points in eaxh direction)
+In this case (twice as many points in each direction)
 
   3 * sizeof(double) * nx * ny ~ 12 GB

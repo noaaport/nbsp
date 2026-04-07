@@ -6,11 +6,10 @@
  * $Id$
  *
  * Usage:
- * nbspgoesrasc [-b] [-q] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
- * nbspgoesrasc [-b] [-q] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
+ * nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s <suffix>] ascfile
+ * nbspgoesrasc [-b] [-p <prefix>] [-s <suffix>] ascfile  < inputstr_list
  *
  * -b => background
- * -q => write the name of each file produced to stdout
  * -e => input string, for example "-70,14,-60,24,1"
  * -p => prefix for the name of the output files (default is "z")
  * -s => suffix for the name of the output files (default is ".asc")
@@ -81,14 +80,14 @@
 struct cutasc_st {
   size_t nx;
   size_t ny;
-  float xll;
-  float yll;
-  float cellsize;
+  double xll;
+  double yll;
+  double cellsize;
   /* The inputs of the new box */
-  float xmin;
-  float ymin;
-  float xmax;
-  float ymax;
+  double xmin;
+  double ymin;
+  double xmax;
+  double ymax;
   /* The calculated indices of the nex box */
   size_t i1;
   size_t j1;
@@ -100,7 +99,6 @@ struct cutasc_st {
 
 struct {
   int opt_background;		/* -b */
-  int opt_writeq;		/* -q */
   char *opt_inputstr;		/* -e */
   char *opt_prefix;             /* -p */
   char *opt_suffix;             /* -s */
@@ -110,7 +108,7 @@ struct {
   int outfname_length;		/* length of the output file name */
   struct cutasc_st *ca;
   int *data;
-} g = {0, 0, NULL, DCGOESRASC_OUTPUT_PREFIX, DCGOESRASC_OUTPUT_SUFFIX, NULL,
+} g = {0, NULL, DCGOESRASC_OUTPUT_PREFIX, DCGOESRASC_OUTPUT_SUFFIX, NULL,
        NULL, 0, NULL, NULL};
 
 static void init(void);
@@ -154,9 +152,9 @@ static void cleanup(void) {
 
 int main(int argc, char **argv){
 
-  char *optstr = "bqe:p:s:";
+  char *optstr = "be:p:s:";
   char *usage =
-    "nbspgoesrasc [-bq] [-e <inputstr>] [-p <prefix>] [-s suffix] <ascfile>";
+    "nbspgoesrasc [-b] [-e <inputstr>] [-p <prefix>] [-s suffix] <ascfile>";
   int status = 0;
   int c;
 
@@ -166,9 +164,6 @@ int main(int argc, char **argv){
     switch(c){
     case 'b':
       g.opt_background = 1;
-      break;
-    case 'q':
-      g.opt_writeq = 1;
       break;
     case 'e':
       g.opt_inputstr = optarg;
@@ -215,7 +210,7 @@ static void load_data(void) {
   FILE *fp;
   size_t nx, ny;
   size_t npoints;
-  float x1, x2, x3;
+  double x1, x2, x3;
   int nodata;
   size_t k;
   int status = 0;
@@ -228,7 +223,7 @@ static void load_data(void) {
     status = 1;
 
   if(status == 0) {
-    if(fscanf(fp, " xllcorner %f yllcorner %f cellsize %f nodata_value %d",
+    if(fscanf(fp, " xllcorner %lf yllcorner %lf cellsize %lf nodata_value %d",
 	      &x1, &x2, &x3, &nodata) != 4)
       status = 1;
   }
@@ -324,7 +319,7 @@ static int process_str(char *str) {
   int index;
   int status = 0;
 
-  if(sscanf(str, "%f,%f,%f,%f,%d",
+  if(sscanf(str, "%lf,%lf,%lf,%lf,%d",
 	   &g.ca->xmin, &g.ca->ymin, &g.ca->xmax, &g.ca->ymax, &index) != 5) {
     log_errx(0, "Incomplete input string: %s", str);
   }
@@ -337,7 +332,7 @@ static int process_str(char *str) {
 
 static int process_input(int index) {
   
-  float xur, yur;
+  double xur, yur;
   int n;
   FILE *fp;
   int status = 0;
@@ -385,14 +380,12 @@ static int process_input(int index) {
   }
   
   status = cutasc_write_data(fp);
-  fclose(fp);
-    
   if(status != 0) {
     log_err(0, "Error writing to %s", g.outputfile);
-  } else if(g.opt_writeq == 1) {
-    fprintf(stdout, "%s\n", g.outputfile);
   }
-  
+
+  fclose(fp);
+
   return(status);
 }
 
