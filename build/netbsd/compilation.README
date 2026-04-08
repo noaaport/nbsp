@@ -1,6 +1,8 @@
 1) libpng.{a.so} do not exist.
    Solution: In /usr/pkg/lib
-   ln -s libpng16.{a,so} libpng.{a,so}
+     ln -s libpng16.{a,so} libpng.{a,so}
+   Better: For the purpose of building the package, only install libpng.a,
+           so that it is statically linked.
 
 2) pkgin install ncurses (required package now)
 
